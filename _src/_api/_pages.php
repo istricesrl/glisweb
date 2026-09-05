@@ -893,8 +893,21 @@
     // principale rompe l'autoload: i 404 sugli asset accessori impediscono
     // l'inizializzazione. Skip-list per i pacchetti multi-file noti: restano in
     // page.js.external e vengono caricati direttamente dalla CDN.
+    //
+    // Stessa skip-list per i loader che si autoaggiornano. api.js di reCAPTCHA non e' una
+    // libreria: e' un bootstrap di 977 byte che inserisce a runtime lo script vero da
+    // gstatic, con la release CABLATA nell'URL e un hash SRI. Google ruota quelle release,
+    // e la copia in cache resta ferma alla release del giorno in cui e' stata scaricata:
+    // dopo la rotazione il browser chiede uno script che risponde 404, e con l'integrity
+    // non ha nemmeno la possibilita' di cavarsela. Misurato il 04/09/2026 su questo deploy:
+    // la copia del 10/06 puntava alla release ne1iDVwClkE7nKD3uA9Vqsvl, sparita, mentre
+    // Google serviva 8x-4t2pegToiW8KmThtO4AQt. Effetto in pagina: i bottoni protetti da
+    // reCAPTCHA rispondono al secondo o al terzo clic invece che al primo.
+    //
+    // Non ha senso nemmeno cacharlo: sono 977 byte e non e' il file che pesa.
     $jsCacheSkipPrefixes = array(
         'cdn.ckeditor.com/',
+        'www.google.com/recaptcha/',
     );
     if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
         foreach( $ct['page']['js']['external'] as $idx => $js ) {

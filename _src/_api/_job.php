@@ -248,7 +248,7 @@
                 $job,
                 mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    'SELECT id, totale, corrente, nome, timestamp_apertura, timestamp_esecuzione, timestamp_completamento FROM job WHERE id = ? ',
+                    'SELECT id, totale, corrente, nome, workspace, timestamp_apertura, timestamp_esecuzione, timestamp_completamento FROM job WHERE id = ? ',
                     array(
                         array( 's' => $_REQUEST['__id__'] )
                     )
@@ -269,6 +269,30 @@
 
     // debug
     // echo '<pre>' . print_r( $cf['speed'], true ) . '</pre>';
+
+    /**
+     * risultato del job
+     * =================
+     *
+     * Per convenzione un job tiene il proprio stato nel workspace, che e' l'unica cosa che
+     * _job.php risalva a database a ogni iterazione: e' li' che va scritto anche il risultato
+     * finale ( workspace.result, con 'link' e 'label' ). Il driver dei job in foreground pero'
+     * lo cerca alla radice della risposta, come d.result, e il workspace intero non si espone
+     * perche' contiene lo stato di lavoro. Quindi si porta su il solo result.
+     *
+     * Vale sia per l'iterazione che chiude il job sia per la vista di sola lettura di un job
+     * gia' chiuso: cosi' il link resta recuperabile anche ricaricando la pagina.
+     */
+
+    // il workspace e' un array quando il job e' stato lavorato, una stringa JSON quando arriva
+    // dalla vista di sola lettura
+    $risultato = ( isset( $job['workspace'] ) && is_string( $job['workspace'] ) )
+        ? json_decode( $job['workspace'], true )
+        : ( isset( $job['workspace'] ) ? $job['workspace'] : NULL );
+
+    if( ! isset( $job['result'] ) && isset( $risultato['result'] ) ) {
+        $job['result'] = $risultato['result'];
+    }
 
     // output
     buildJson( array_diff_key( $job, array_flip( array( 'workspace' ) ) ) );
