@@ -23,6 +23,9 @@
         }
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_SISTEMA' );
+
     // scrivo una stringa di test
     logger( 'task di test cron eseguito il ' . date( 'Y-m-d H:i:s' ), 'test' );
 

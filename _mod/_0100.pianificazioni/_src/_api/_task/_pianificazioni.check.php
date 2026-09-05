@@ -14,6 +14,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CORSI' );
+
      // inizializzo l'array del risultato
 	$status = array();
 

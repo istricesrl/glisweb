@@ -16,6 +16,9 @@
 // inclusione del framework
 if (!defined('CRON_RUNNING')) {
     require '../../_config.php';
+
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_ANAGRAFICA' );
 }
 
 // inizializzo l'array del risultato

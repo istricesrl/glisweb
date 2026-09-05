@@ -61,7 +61,7 @@
         );
 
         // elimina documento
-        if( in_array( 'CANCELLAZIONE_RICORSIVA', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+        if( in_array( 'CANCELLAZIONE_RICORSIVA', $_SESSION['account']['privilegi'], true ) ) {
             $ct['page']['contents']['metro']['amministrazione'][] = array(
                 'host' => $ct['site']['url'],
                 'ws' => $base . 'documenti.delete?id='.$_REQUEST[ $ct['form']['table'] ]['id'],

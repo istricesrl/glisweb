@@ -16,11 +16,14 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'CANCELLAZIONE_RICORSIVA' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
     // verifiche formali
-    if( ! in_array( 'CANCELLAZIONE_RICORSIVA', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+    if( ! in_array( 'CANCELLAZIONE_RICORSIVA', $_SESSION['account']['privilegi'], true ) ) {
 
         // status
         $status['err'][] = 'privilegi insufficenti';

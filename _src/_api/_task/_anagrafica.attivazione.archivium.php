@@ -16,6 +16,9 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_ACCOUNT' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -23,7 +26,7 @@
 	logWrite( 'invio anagrafica ad Archivium', 'archivium', LOG_NOTICE );
 
     // esportazione azienda in Archivium
-    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'], true ) ) {
 
         // verifica se l'anagrafica è presente
         if( isset( $_REQUEST['id'] ) ) {

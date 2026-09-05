@@ -17,6 +17,9 @@
     // inclusione del framework
     require '../../../../../_src/_config.php';
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_DOCUMENTI' );
+
     // se è specificata la tipologia di collo
     if( isset( $_REQUEST['tipo'] ) ) {
 

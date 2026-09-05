@@ -497,3 +497,81 @@
 
         return false;
     }
+
+    /**
+     * questa funzione verifica se l'utente corrente ha un privilegio
+     *
+     * I privilegi sono le "azioni speciali e particolari" definite in $cf['auth']['privileges'] e
+     * attribuite ai gruppi e agli account in $cf['auth']['groups'] e $cf['auth']['accounts']; il
+     * runlevel _210.auth.php li fonde in $_SESSION['account']['privilegi'], che e' una LISTA di
+     * codici e non una mappa.
+     *
+     * NOTA il confronto e' volutamente stretto ( terzo parametro di in_array a true ). La forma
+     * in_array( 'X', array_keys( $_SESSION['account']['privilegi'] ) ), usata in giro prima del
+     * 2026-09-05, confronta una stringa con gli indici numerici della lista: su PHP 7 e' sempre
+     * vera ( 'X' == 0 ), quindi lascia passare chiunque, e su PHP 8 e' sempre falsa, quindi blocca
+     * chiunque. Non va reintrodotta.
+     *
+     * @param       string      $p      codice del privilegio
+     *
+     * @return      boolean             true se l'utente ha il privilegio, false altrimenti
+     *
+     */
+    function getPrivilege( $p ) {
+
+        // senza gruppi non c'e' un utente autenticato: stessa semantica di getPagePermission()
+        if( empty( $_SESSION['account']['gruppi'] ) ) {
+            return false;
+        }
+
+        // senza privilegio richiesto e' sufficiente essere autenticati
+        if( empty( $p ) ) {
+            return true;
+        }
+
+        // confronto stretto sulla lista dei privilegi
+        return in_array( $p, (array)( $_SESSION['account']['privilegi'] ?? array() ), true );
+
+    }
+
+    /**
+     * questa funzione protegge un task, interrompendo l'esecuzione se i privilegi non bastano
+     *
+     * Va chiamata in cima al task, subito dopo l'inclusione del framework. Se il task sta girando
+     * da cron non verifica nulla: il dispatcher _cron.php include il file direttamente, senza
+     * passare dal web server, e in quel contesto non esiste una sessione.
+     *
+     * Chiamata senza argomento richiede soltanto una sessione autenticata: e' il caso dei task di
+     * interazione con l'interfaccia ( popup.dismiss, bookmark.* ), che deve poter lanciare
+     * qualunque utente collegato.
+     *
+     * @param       string      $p      codice del privilegio richiesto, oppure NULL
+     *
+     * @return      boolean             true se l'esecuzione puo' proseguire
+     *
+     */
+    function checkTaskPrivilege( $p = NULL ) {
+
+        // da cron non si verifica niente
+        if( defined( 'CRON_RUNNING' ) ) {
+            return true;
+        }
+
+        // verifica del privilegio
+        if( getPrivilege( $p ) === true ) {
+            return true;
+        }
+
+        // log
+        logger( 'privilegi insufficienti per il task ' . ( $_SERVER['REQUEST_URI'] ?? '' ) . ' ( richiesto: ' . ( $p ?? 'sessione autenticata' ) . ' )', 'security', LOG_ERR );
+
+        // risposta
+        http_response_code( 403 );
+
+        // output
+        buildJson( array( 'err' => array( 'privilegi insufficienti' ) ) );
+
+        // interruzione
+        exit;
+
+    }

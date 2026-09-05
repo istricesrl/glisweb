@@ -3,6 +3,9 @@
     // inclusione del framework
     require '../../_config.php';
 
+    // verifica dei privilegi
+    checkTaskPrivilege();
+
     // ...
     unset( $_SESSION['__work__'][ $_REQUEST['__key__'] ]['items'][ $_REQUEST['__item__'] ] );
 

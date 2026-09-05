@@ -21,6 +21,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_COMUNICAZIONI' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -78,7 +81,7 @@
 	// print_r( $_REQUEST );
 
 	// se è specificata una mail di test
-	// if( isset( $_REQUEST['mt'] ) && isset( $_REQUEST['mid'] ) && in_array( 'INVIO_DIRETTO_MAIL', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+	// if( isset( $_REQUEST['mt'] ) && isset( $_REQUEST['mid'] ) && in_array( 'INVIO_DIRETTO_MAIL', $_SESSION['account']['privilegi'], true ) ) {
 	if( isset( $_REQUEST['mt'] ) && isset( $_REQUEST['mid'] ) ) {
 
 		// simulo l'estrazione di una riga dalla coda

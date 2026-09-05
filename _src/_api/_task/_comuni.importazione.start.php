@@ -5,6 +5,9 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_IMPORT' );
+
     // inizializzo l'array del risultato
 	$status = array();
 

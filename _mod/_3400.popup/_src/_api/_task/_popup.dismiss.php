@@ -1,6 +1,9 @@
 <?php
 
 	require '../../../../../_src/_config.php';
+
+    // verifica dei privilegi
+    checkTaskPrivilege();
 	
 /*	if( isset( $_REQUEST['idPopup'] ) ){
 		

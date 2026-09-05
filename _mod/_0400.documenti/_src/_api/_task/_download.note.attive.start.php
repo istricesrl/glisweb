@@ -5,6 +5,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_DOCUMENTI' );
+
     // inizializzo l'array del risultato
 	$status = array();
 

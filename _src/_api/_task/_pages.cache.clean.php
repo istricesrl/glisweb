@@ -17,6 +17,9 @@
         }
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CACHE' );
+
     // inizializzo l'array del risultato
 	$status = array();
 

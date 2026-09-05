@@ -5,6 +5,9 @@
 	    require '../../../../../_src/_config.php';
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_ECOMMERCE' );
+
     // debug
     mysqlQuery(
         $cf['mysql']['connection'],

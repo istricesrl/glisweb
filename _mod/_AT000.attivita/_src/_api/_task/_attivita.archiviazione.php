@@ -9,6 +9,9 @@
         }
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CORSI' );
+
 
     // debug
      ini_set('display_errors', 1);

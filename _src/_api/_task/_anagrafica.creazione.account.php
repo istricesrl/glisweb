@@ -16,13 +16,16 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_ACCOUNT' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
     // log
 	logWrite( 'creazione account anagrafica', 'account', LOG_NOTICE );
 
-    if( in_array( 'GESTIONE_ACCOUNT', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+    if( in_array( 'GESTIONE_ACCOUNT', $_SESSION['account']['privilegi'], true ) ) {
    
         $mail = mysqlSelectValue(
             $cf['mysql']['connection'],

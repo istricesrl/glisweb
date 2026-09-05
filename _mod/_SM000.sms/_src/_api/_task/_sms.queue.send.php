@@ -19,6 +19,9 @@
         }
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_COMUNICAZIONI' );
+
     // inizializzo l'array del risultato
 	$status = array();
 

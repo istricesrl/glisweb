@@ -16,6 +16,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CATALOGO' );
+
     $st = array(); 
 
     //die( print_r( $_REQUEST ) );

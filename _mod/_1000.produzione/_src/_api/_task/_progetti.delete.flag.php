@@ -14,6 +14,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'CANCELLAZIONE_RICORSIVA' );
+
     // TODO usare le funzioni di ACL per verificare se l'azione è autorizzata
 
     // inizializzo l'array del risultato

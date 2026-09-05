@@ -22,6 +22,9 @@
         require '../../../../../_src/_config.php';
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CONTRATTI' );
+
     // inizializzo l'array del risultato
     $status = array();
     

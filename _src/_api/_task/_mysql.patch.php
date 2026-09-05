@@ -77,6 +77,9 @@
         }
     }
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_MYSQL' );
+
     /**
      * configurazioni iniziali
      * =======================

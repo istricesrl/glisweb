@@ -94,12 +94,35 @@
             'privilegi' => array(
                 'EDIT_CONFIGURAZIONE',
                 'GESTIONE_ACCOUNT',
-                'INVIO_DIRETTO_MAIL'
+                'INVIO_DIRETTO_MAIL',
+                'INVIO_ANAGRAFICA_ARCHIVIUM',
+                'CANCELLAZIONE_RICORSIVA',
+                'GESTIONE_SISTEMA',
+                'GESTIONE_MYSQL',
+                'GESTIONE_CACHE',
+                'GESTIONE_IMPORT',
+                'GESTIONE_ANAGRAFICA',
+                'GESTIONE_DOCUMENTI',
+                'GESTIONE_CONTRATTI',
+                'GESTIONE_CORSI',
+                'GESTIONE_COMUNICAZIONI',
+                'GESTIONE_CATALOGO',
+                'GESTIONE_ECOMMERCE'
             )
         ),
         'staff' => array(
             'id' => NULL,
-            'nome' => 'staff'
+            'nome' => 'staff',
+            'privilegi' => array(
+                'GESTIONE_CACHE',
+                'GESTIONE_ANAGRAFICA',
+                'GESTIONE_DOCUMENTI',
+                'GESTIONE_CONTRATTI',
+                'GESTIONE_CORSI',
+                'GESTIONE_COMUNICAZIONI',
+                'GESTIONE_CATALOGO',
+                'GESTIONE_ECOMMERCE'
+            )
         ),
         'users' => array(
             'id' => NULL,
@@ -150,6 +173,50 @@
         'INVIO_DIRETTO_MAIL' => array(
             'id' => NULL,
             'nome' => 'inviare mail da API REST'
+        ),
+        'GESTIONE_SISTEMA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di sistema e di manutenzione del framework'
+        ),
+        'GESTIONE_MYSQL' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task che ricostruiscono viste statiche e strutture della banca dati'
+        ),
+        'GESTIONE_CACHE' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task che svuotano le cache'
+        ),
+        'GESTIONE_IMPORT' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di importazione dati'
+        ),
+        'GESTIONE_ANAGRAFICA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di manutenzione delle anagrafiche e degli indirizzi'
+        ),
+        'GESTIONE_DOCUMENTI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sui documenti contabili'
+        ),
+        'GESTIONE_CONTRATTI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su contratti, rinnovi, tesseramenti, iscrizioni e abbonamenti'
+        ),
+        'GESTIONE_CORSI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su corsi, lezioni, pianificazioni e todo'
+        ),
+        'GESTIONE_COMUNICAZIONI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sulle code di mail e sms e sul mailing'
+        ),
+        'GESTIONE_CATALOGO' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su catalogo, prodotti e articoli'
+        ),
+        'GESTIONE_ECOMMERCE' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su carrelli e coupon'
         )
     );
 

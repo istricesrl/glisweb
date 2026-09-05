@@ -45,7 +45,7 @@
 /* TODO reimplementare
 
     // esportazione azienda in Archivium
-    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'] ) ) {
+    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'], true ) ) {
         if( ! empty( $_REQUEST['anagrafica']['se_gestita'] ) ) {
             if( ! empty( $cf['archivium']['profile'] ) ) {
                 if( ! empty( $_REQUEST['anagrafica']['codice_archivium'] ) ) {
