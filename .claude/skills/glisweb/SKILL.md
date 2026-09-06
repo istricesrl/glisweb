@@ -264,6 +264,46 @@ Riferimenti tipici a `_claude.framework.md`:
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
 
+### 3.1 Come aggiornare il framework in un progetto cliente
+
+Il framework di un deploy cliente si aggiorna **solo** con lo script che il framework stesso spedisce:
+
+```bash
+# path assoluto dello script dentro la document root del deploy, e il branch come argomento
+/var/www/<deploy>/dev/_src/_sh/_gw.upgrade.sh <branch>
+```
+
+Il branch giusto è quello dichiarato in `update.branch.conf` nella root del deploy — il livello che
+contiene `dev/`, non la document root. È lo stesso che usa il cron notturno `/etc/cron.daily/upgrades`:
+allinearsi a quello evita che l'aggiornamento manuale e quello automatico si rincorrano.
+
+**Non è un `git pull`, e non lo si sostituisce con git.** Un deploy cliente non è un checkout del
+framework: `_src/`, `_mod/`, `_etc/` e `_usr/` arrivano dallo zip di GitHub, non da git. Se in macchina
+esiste un checkout del framework (p.es. `/var/www/glisweb.istricesrl.it/dev/`) quello serve a **leggere** —
+`git log`, `git blame`, confronti — e aggiornarlo **non aggiorna nessun deploy cliente**. Confondere le due
+cose porta a credere di essersi allineati e continuare a lavorare sul framework vecchio, che è il modo
+peggiore di sbagliare: silenzioso.
+
+Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy un livello sopra la document root; copia in
+`../disallineamenti.<ts>/` i file modificati dopo l'ultimo upgrade (`_*/` **più** `.claude/`, `.github/`,
+`.htaccess` e `composer.json`); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
+ripristina il vendor `_src/_lib/_ext`; lancia `composer update`; riallinea i permessi con
+`_lamp.permissions.secure.sh`; scrive `var/latest.upgrade.conf`; genera un `.diff` accanto a ogni file
+disallineato.
+
+Tre conseguenze operative:
+
+- **si aggiorna prima di mettere le mani su un file `_*`**, non dopo: partendo da una base vecchia il
+  `.diff` che arriverà al manutentore conterrà anche differenze che non sono tue, e diventa invalutabile.
+- **dopo l'upgrade si legge l'elenco dei disallineati**: sono le modifiche locali che l'aggiornamento ha
+  appena ribaltato. Non sono perse (stanno in `../disallineamenti.<ts>/` col loro `.diff`) ma sul deploy
+  non ci sono più, e se servivano vanno riapplicate. Attenzione ai falsi positivi: il confronto è sulla
+  mtime, quindi un file toccato ma non modificato compare nell'elenco con un `.diff` **vuoto** — quelli
+  si ignorano.
+- **anche `.claude/` viene sovrascritto**: la skill e i suoi file arrivano dallo zip come tutto il resto.
+  Una modifica alla skill fatta su un deploy cliente è temporanea esattamente come una a `_src/`, e segue
+  lo stesso percorso di promozione (disallineamento → valutazione upstream).
+
 ## 4. Configurazione multi-ambiente: `profiles` / `profile`
 
 `_claude.framework.md` documenta l'**ordine di lettura** dei file di configurazione e la forma dei profili
