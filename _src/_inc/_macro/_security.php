@@ -109,7 +109,12 @@
     foreach( $words as $word ) {
 
         // controllo 
-        if( stripos( urldecode( $_SERVER['REQUEST_URI'] ), urldecode( $word ) ) !== false || array_search( $word, $_REQUEST ) ) {
+        // il confronto sulla $_REQUEST e' STRETTO, e non puo' non esserlo: con il confronto
+        // largo PHP converte la parola proibita in numero e '150.php' == 150 e' vero, quindi un
+        // qualsiasi parametro numerico ( p.es. iterazioni=150 ) faceva scattare la regola e finire
+        // l'IP del chiamante in banned.hosts.conf. Serve anche il !== false, perche' array_search
+        // torna la chiave e sulla prima voce dell'array la chiave e' 0, che da sola sarebbe falsa.
+        if( stripos( urldecode( $_SERVER['REQUEST_URI'] ), urldecode( $word ) ) !== false || array_search( $word, $_REQUEST, true ) !== false ) {
 
             // riepilogo
             $attackers[] = $_SERVER['REMOTE_ADDR'];

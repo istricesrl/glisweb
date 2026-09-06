@@ -1202,7 +1202,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `sconto_valore` decimal(9,2) DEFAULT NULL,                    -- sconto in valore assoluto
   `importo_lordo_finale` decimal(16,2) DEFAULT NULL,            -- importo lordo finale
   `nome` char(255) DEFAULT NULL,                                -- nome dell'articolo
-  `specifiche` char(255) DEFAULT NULL,                          -- specifiche dell'articolo
+  `specifiche` text DEFAULT NULL,                               -- specifiche dell'articolo
   `note` text DEFAULT NULL,                                     -- note sull'articolo
   `data_consegna` date DEFAULT NULL,                            -- data di consegna
   `note_consegna` text DEFAULT NULL,                            -- note sulla consegna
