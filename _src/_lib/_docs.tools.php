@@ -15,8 +15,8 @@
      * ambito              | standard                          | custom
      * --------------------|-----------------------------------|----------------------------------
      * il deploy           | _usr/_docs/READ.md e USER.md      | usr/docs/READ.md e USER.md
-     * un componente       | _mod/_<mod>/READ.md e USER.md     | mod/<mod>/READ.md e USER.md
-     * le quickstart       | _usr/_docs/_quickstart/*.md       | usr/docs/quickstart/*.md
+     * un componente       | _mod/_NOME/READ.md e USER.md     | mod/NOME/READ.md e USER.md
+     * le quickstart       | i .md in _usr/_docs/_quickstart/       | i .md in usr/docs/quickstart/
      *
      * I sorgenti portano due tipi di marcatore, entrambi markdown valido: un metadato di sezione, che
      * e' un commento HTML sulla riga successiva al titolo e serve a filtrare, e un callout inline, che
@@ -29,8 +29,8 @@
      * costante                 | spiegazione
      * -------------------------|--------------------------------------------------------------
      * DOCS_META_VOCABOLARIO    | chiavi ammesse nei metadati di sezione
-     * DOCS_PUBBLICO_VOCABOLARIO| valori ammessi per il metadato @pubblico
-     * DOCS_LINEA_VOCABOLARIO   | valori ammessi per il metadato @linea
+     * DOCS_PUBBLICO_VOCABOLARIO| valori ammessi per il metadato \@pubblico
+     * DOCS_LINEA_VOCABOLARIO   | valori ammessi per il metadato \@linea
      * DOCS_CALLOUT_VOCABOLARIO | vocaboli ammessi in testa a un callout
      *
      * funzioni

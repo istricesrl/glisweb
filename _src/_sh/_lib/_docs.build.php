@@ -60,7 +60,7 @@
     /**
      * ricava la linea del deploy corrente
      *
-     * Serve a filtrare le sezioni marcate con @linea. Si legge da var/docs.linea.conf se dichiarata,
+     * Serve a filtrare le sezioni marcate con \@linea. Si legge da var/docs.linea.conf se dichiarata,
      * altrimenti dal remote git: solo i deploy del repository glisdev sono sulla linea di sviluppo,
      * tutti gli altri seguono il ramo di glisweb.
      *
