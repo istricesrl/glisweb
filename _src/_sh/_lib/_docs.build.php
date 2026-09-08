@@ -265,6 +265,45 @@
     }
 
     /**
+     * copia gli screenshot accanto alle pagine generate
+     *
+     * Prima quelli dello standard, poi quelli del progetto: a parita' di nome vince il progetto,
+     * cosi' un'installazione puo' sostituire la figura di una maschera che ha personalizzato.
+     *
+     * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     *
+     * @return  int                         numero di immagini copiate
+     *
+     */
+    function docsBuildScreenshot( $destinazione ) {
+
+        $dest = DOCS_BASE . $destinazione . '/shot';
+        $n    = 0;
+
+        foreach( array( '_usr/_docs/_shot', 'usr/docs/shot' ) as $d ) {
+
+            if( ! $dir = docsBuildPath( $d ) ) {
+                continue;
+            }
+
+            foreach( glob( $dir . '/*.png' ) as $f ) {
+
+                if( ! is_dir( $dest ) ) {
+                    mkdir( $dest, 0750, true );
+                }
+
+                copy( $f, $dest . '/' . basename( $f ) );
+                $n++;
+
+            }
+
+        }
+
+        return $n;
+
+    }
+
+    /**
      * genera le pagine di un manuale
      *
      * @param   string      $tipo           READ oppure USER
@@ -292,6 +331,10 @@
         if( ! is_dir( DOCS_BASE . $destinazione ) ) {
             mkdir( DOCS_BASE . $destinazione, 0750, true );
         }
+
+        // gli screenshot vanno accanto alle pagine: nel markdown sono citati con un percorso
+        // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
+        docsBuildScreenshot( $destinazione );
 
         foreach( $capitoli as $c ) {
 
