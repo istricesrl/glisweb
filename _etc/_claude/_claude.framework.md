@@ -137,6 +137,97 @@ i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una c
 - una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le prossime
   scadenze (funzione disponibile, oggi non usata da nessun progetto).
 
+## Documentazione: `READ.md`, `USER.md` e le quickstart
+
+**La documentazione segue la stessa legge del codice: standard e custom allo stesso percorso, al netto
+degli underscore.** Se non c'è simmetria, la documentazione custom non si trova e non si compone.
+
+Vale su **due livelli**, e sono due perché documentano due cose diverse:
+
+| cosa si documenta | standard | custom |
+|---|---|---|
+| il **deploy** (framework o progetto) | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |
+| un **componente** (modulo, template) | `_mod/_4000.catalogo/READ.md` e `USER.md` | `mod/4000.catalogo/READ.md` e `USER.md` |
+| le **quickstart** | `_usr/_docs/_quickstart/*.md` | `usr/docs/quickstart/*.md` |
+
+`READ.md` è il manuale **sviluppatore**, `USER.md` quello **utente**. I moduli non hanno un
+`_usr/_docs/` proprio: replicano solo `_src/`, e la coppia nella radice del componente è già la
+convenzione viva (`_mod/_CT000.contatti/READ.md`, `_src/_tpl/_athena/READ.md`).
+
+Le **quickstart hanno collocazione propria a ogni livello** — sorgente, output e URL — e non
+confluiscono nei manuali: il loro scopo è far partire, non coprire. Sono quattro documenti in tutto:
+quickstart e manuale, per sviluppatore e per utente, più la reference Doxygen generata dai docblock,
+che è **dichiaratamente lavoro in corso** e porta in testa la copertura misurata.
+
+### ⚠ Il `READ.md` della root del deploy non è documentazione
+
+Un livello **sopra** la document root vive un `READ.md` che contiene gli **accessi** del progetto: CMS,
+SSH, database. Non è sorgente di documentazione, non va scansionato, non va pubblicato, non va citato.
+Non confonderlo con `dev/READ.md`, che è il manuale sviluppatore del framework: sono due file diversi
+con lo stesso nome a due livelli diversi. Tutti i percorsi della generazione sono relativi alla
+document root e `docsBuildPath()` aborta se uno risolve fuori.
+
+### I marcatori
+
+Due tipi, entrambi markdown valido, entrambi invisibili sia al conteggio delle sezioni `### <path>` di
+`READ.md` sia al conteggio `^- [` del burndown.
+
+**Metadato di sezione**, sulla riga subito dopo il titolo, per filtrare:
+
+```markdown
+### chiusura di una lista di prelievo
+<!-- @pubblico: operatore, amministratore -->
+<!-- @linea: stable -->
+<!-- @pagina: app.chiusura.ddt -->
+```
+
+Vocabolario chiuso: `@pubblico` (`operatore`, `amministratore`, `sviluppatore`), `@linea` (`stable`,
+`unstable`), `@pagina`, `@modulo`. Un metadato assente non restringe nulla: si dichiara solo ciò che
+esclude. Scartando una sezione si scartano anche le sue sottosezioni.
+
+**Callout inline**, per il lettore, ed è il modo in cui si segnalano le **divergenze fra le due linee**
+senza duplicare il documento:
+
+```markdown
+> **solo unstable** — il pulsante di duplicazione esiste solo sulla linea di sviluppo.
+> **attenzione** — l'annullamento di un documento fiscale non è reversibile.
+```
+
+Vocabolario chiuso: `solo stable`, `solo unstable`, `solo operatori`, `solo amministratori`,
+`solo sviluppatori`, `nota`, `attenzione`, `esempio`. Fuori vocabolario resta una citazione leggibile.
+
+Gli **screenshot** si dichiarano accanto all'immagine, mai in un elenco separato — così uno scatto
+dichiarato e mai mostrato, o mostrato e mai dichiarato, è impossibile:
+
+```markdown
+![elenco dei prelievi](shot/prelievi.elenco.png)
+<!-- @shot: prelievi.elenco | /prelievi | 1440x900 | #main | 3000 -->
+```
+
+### La generazione
+
+`_src/_sh/_docs.build.sh` (`--user --dev --quickstart --standard --all --dry-run`) compone i sorgenti e
+scrive le pagine; la conversione sta in `_src/_lib/_docs.tools.php`, l'orchestrazione in
+`_src/_sh/_lib/_docs.build.php`. Tre cose non sono dettagli implementativi ma vincoli:
+
+- **l'entry point non fa il bootstrap del framework.** Da CLI `_src/_config.php` trascinerebbe sessione,
+  header, memcache e MySQL, e un errore in un runlevel bloccherebbe la generazione proprio mentre gira
+  dentro `_gw.upgrade.sh`. Per lo stesso motivo `docsMarkdown2Html()` ritorna `false` invece di
+  provocare un fatal quando `league/commonmark` non c'è.
+- **sui deploy cliente si genera solo dentro `usr/`, mai sotto `_*`.** Un file generato là finirebbe fra
+  i disallineamenti che `_gw.upgrade.sh` raccoglie ogni notte (il suo `find ./_* -newer` non ha prune) e
+  verrebbe comunque cancellato dal suo `rm -rf ./_*`. La documentazione dello standard e la reference
+  API si generano **solo dove esiste `etc/docs.build.conf`**.
+- **la protezione è dentro la generazione ed è fail-closed.** La documentazione di progetto descrive le
+  personalizzazioni del cliente e non può essere pubblica: senza `etc/secret/.htpasswd` non si genera
+  nulla. Serve perché `AuthUserFile` vuole un percorso **assoluto**, che cambia fra DEV, TEST e PROD: la
+  riga viene riallineata a ogni giro e il resto del `.htaccess` non viene mai toccato. Un target su cui
+  quel file non fosse mai arrivato servirebbe le personalizzazioni in chiaro, in silenzio.
+
+Due inciampi già pagati: **`/manual/` senza nome file dà 404**, perché la regola di accesso diretto del
+`.htaccess` richiede un file (`-f`), quindi si linka sempre `index.html`; e i `.md` sono negati via HTTP
+dal `FilesMatch`, quindi si pubblica sempre `.html`.
+
 ## Come trovare le credenziali del database (e degli altri servizi)
 
 Le credenziali non sono in un unico file: il bootstrap le assembla leggendo più file in sequenza e fondendoli con
