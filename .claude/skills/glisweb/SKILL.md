@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md, il DONE.md, il CHAT.md o il burndown.md di un progetto, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md, il DONE.md, il CHAT.md o il burndown.md di un progetto, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -45,6 +45,37 @@ un'esigenza sia davvero senza precedenti in questo framework.
 **Se un pattern esistente non va bene**, non deviare in silenzio: dillo all'utente, spiega perché il pattern
 non regge in quel caso e proponi la variante minima che se ne discosta. La deroga è una decisione, non un
 effetto collaterale.
+
+## Release e version: come si capisce che framework ha in mano un deploy
+
+Fonte autorevole: **`READ.md` del framework, sezione `/_etc/_current.release e /_etc/_current.version`**.
+Leggila prima di dedurre alcunché dalle date dei file: le due numerazioni dicono cose diverse.
+
+- **`_etc/_current.release`** — `major.minor.bugfix`. Si cambia **a mano**, quando si crea una nuova
+  release branch, quindi si muove di rado;
+- **`_etc/_current.version`** — un timestamp (`20260908161248`). Lo scrive il git hook
+  `.githooks/pre-commit` **a ogni commit sul repository di sviluppo del framework**, quindi si muove
+  quotidianamente ma **solo dove il framework si sviluppa**, non sui deploy dei clienti.
+
+A runtime `_src/_config/_030.common.php` confronta la version locale con quella pubblicata su
+`https://glisweb.istricesrl.it/current.version`, e **`_src/_api/_status/_framework.php` dice se
+l'installazione è aggiornata, obsoleta o di sviluppo**. Quando serve sapere com'è messo un deploy,
+la risposta viene da lì, non da un `ls -l` su `_src/`.
+
+⚠ **Trappola documentata**: `core.hooksPath` è configurazione locale della copia di lavoro e non
+viaggia col repository. Finché non si esegue `bash .githooks/install.sh`, git cerca gli hook in
+`.git/hooks/` e **la version resta ferma senza che nulla lo segnali** — si vedono commit recenti con
+una version di mesi prima. Se le due cose non tornano, è quasi sempre questo, non un deploy vecchio.
+
+### Quando questa skill vale, e quando no
+
+Vale sui deploy che **dichiarano una release** in `_etc/_current.release`. Un deploy senza quel file
+è su una versione anteriore all'introduzione della release: le convenzioni descritte qui — runlevel
+`N0`/`N5`, `profiles`, `config.yaml`, `_mod/`, l'upgrade — lì non ci sono, e seguirle significa
+cercare strutture inesistenti. In quel caso si guarda **com'è fatto quel codice** e si riusano i
+suoi pattern, che è comunque la regola d'oro.
+
+Il `CLAUDE.md` di quei progetti lo dichiara in testa. Se ci lavori e non lo dice, aggiungilo.
 
 ## Cose da fare: tre file, non uno
 
