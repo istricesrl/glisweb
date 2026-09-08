@@ -55,7 +55,7 @@ echo "lavoro su: $(pwd)"
 # in text/html senza gli header applicativi. Il sito è quindi OFFLINE per tutta la finestra tra
 # open.sh e secure.sh: tenerla il più breve possibile non è un'ottimizzazione, è un requisito.
 
-find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d      -exec chmod 775 {} +
+find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d      -exec chmod 2775 {} +
 find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f      -exec chmod 664 {} +
 find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh' -exec chmod 775 {} +
 
