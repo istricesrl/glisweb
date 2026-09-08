@@ -507,11 +507,17 @@
     define( 'DIR_USR_DEPLOY_GIT'                        , DIR_BASE . '_usr/_deploy/_git/');
     define( 'DIR_USR_DEPLOY_PHING'                      , DIR_BASE . '_usr/_deploy/_phing/');
     define( 'DIR_USR_DOCS'                              , DIR_BASE . '_usr/_docs/' );
-    define( 'DIR_USR_DOCS_BUILD'                        , DIR_BASE . '_usr/_docs/build/' );
-    define( 'DIR_USR_DOCS_BUILD_HTML'                   , DIR_BASE . '_usr/_docs/build/html/' );
-    define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/build/latex/' );
+    // le tre costanti di build puntavano a _usr/_docs/build/, che non e' mai esistita: Doxygen
+    // scrive in _html e _pdf, ed e' li' che il .htaccess instrada /docs/ e /docs/pdf
+    define( 'DIR_USR_DOCS_BUILD'                        , DIR_BASE . '_usr/_docs/' );
+    define( 'DIR_USR_DOCS_BUILD_HTML'                   , DIR_BASE . '_usr/_docs/_html/' );
+    define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/_pdf/' );
     define( 'DIR_USR_DOCS_ETC'                          , DIR_BASE . '_usr/_docs/_etc/' );
     define( 'DIR_USR_DOCS_IMG'                          , DIR_BASE . '_usr/_docs/_img/' );
+    define( 'DIR_USR_DOCS_MD'                           , DIR_BASE . '_usr/_docs/_md/' );
+    define( 'DIR_USR_DOCS_QUICKSTART'                   , DIR_BASE . '_usr/_docs/_quickstart/' );
+    define( 'DIR_USR_DOCS_SHOT'                         , DIR_BASE . '_usr/_docs/_shot/' );
+    define( 'DIR_USR_PAGES'                             , DIR_BASE . '_usr/_pages/' );
     define( 'DIR_USR_EXAMPLES'                          , DIR_BASE . '_usr/_examples/' );
     define( 'DIR_USR_EXAMPLES_CONFIG'                   , DIR_BASE . '_usr/_examples/_config/' );
     define( 'DIR_USR_EXAMPLES_CONFIG_APACHE2'           , DIR_BASE . '_usr/_examples/_config/_apache2/' );
@@ -585,8 +591,16 @@
     define( 'FILE_LOREM'                                , DIR_ETC_COMMON . '_lorem.conf' );
 
     // file della documentazione
+    //
+    // I primi due sono la reference API generata da Doxygen; gli altri tre sono i documenti
+    // generati da _src/_sh/_docs.build.sh per QUESTO progetto, e vivono nella meta' custom
+    // perche' descrivono le sue personalizzazioni. Servono a _030.common.php per decidere se
+    // il link va mostrato: quello che non e' stato generato non si linka.
     define( 'FILE_MANUAL_HTML'                          , DIR_USR_DOCS_BUILD_HTML . 'index.html' );
     define( 'FILE_MANUAL_PDF'                           , DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MANUAL_USER'                          , path2custom( DIR_USR_PAGES ) . 'manual/user/index.html' );
+    define( 'FILE_MANUAL_DEV'                           , path2custom( DIR_USR_PAGES ) . 'manual/read/index.html' );
+    define( 'FILE_MANUAL_QUICKSTART'                    , path2custom( DIR_USR_PAGES ) . 'quickstart/index.html' );
 
     // configurazioni aggiuntive
     define( 'FILE_REDIRECT'                             , path2custom( DIR_ETC ) . 'redirect.csv' );

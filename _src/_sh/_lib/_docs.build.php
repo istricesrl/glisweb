@@ -366,8 +366,9 @@
             return 0;
         }
 
-        $css   = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
-        $fatte = 0;
+        $css    = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
+        $fatte  = 0;
+        $indice = array();
 
         foreach( glob( $dir . '/*.md' ) as $f ) {
 
@@ -414,7 +415,38 @@
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             }
 
+            $indice[] = array( 'nome' => $nome, 'titolo' => $titolo );
             $fatte++;
+
+        }
+
+        // indice delle quickstart: serve un URL stabile da linkare dal template, che non
+        // dipenda da come si chiamano i file di questo progetto
+        if( $fatte ) {
+
+            $voci = '';
+
+            foreach( $indice as $i ) {
+                $voci .= '- [' . $i['titolo'] . '](' . $i['nome'] . '.html)' . "\n";
+            }
+
+            $toc  = array();
+            $html = docsAnchorHeadings( docsMarkdown2Html( "# guide introduttive\n\n" . $voci ), $toc );
+
+            $pagina = docsRenderPage( $html, array(), array(
+                'titolo'      => 'guide introduttive',
+                'descrizione' => 'guide introduttive',
+                'kicker'      => 'quickstart',
+                'sottotitolo' => 'indice',
+                'css'         => $css
+            ) );
+
+            if( $opzioni['secco'] ) {
+                echo "  [prova] $destinazione/index.html\n";
+            } else {
+                file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
+                echo "  generato $destinazione/index.html\n";
+            }
 
         }
 

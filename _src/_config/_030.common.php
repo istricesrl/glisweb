@@ -116,46 +116,67 @@
         599 => 'Network connect timeout error'
     );
 
-    /** 
+    /**
      * link alla documentazione
      * ========================
-     * 
-     * 
-     * 
-     * TODO decidere come gestire la documentazione
-     * sarebbe bello avere un bel manuale su Google Docs che gli utenti possono utilizzare per imparare a usare il CMS del framework,
-     * e una documentazione tecnica in formato HTML e PDF che gli sviluppatori possono consultare per capire come funziona il framework
-     * 
+     * Il framework espone riferimenti distinti perche' hanno pubblici diversi:
+     *
+     *  docs.custom.html        manuale utente DI QUESTO progetto
+     *  docs.custom.dev         manuale sviluppatore DI QUESTO progetto
+     *  docs.custom.quickstart  guide introduttive DI QUESTO progetto
+     *  docs.tech.html / .pdf   reference API generata dai commenti nel codice
+     *  docs.user.html          guida d'uso generica del framework
+     *
+     * I primi cinque sono DERIVATI e non vanno messi in config.json: si compongono da
+     * $cf['site']['url'], che i profili di _025.site.php calcolano gia' per ambiente, quindi
+     * ogni installazione punta alla propria copia senza dichiarare niente.
+     *
+     * Ogni URL locale e' condizionato all'esistenza del file: cio' che non e' stato generato
+     * su questa installazione vale NULL, e i template non ne mostrano il link. E' il motivo
+     * per cui non serve configurare niente per spegnere una voce, basta non generarla.
+     */
 
-    // link al manuale utente
-    $cf['common']['docs']['user']['html'] = array(
-        'url' => 'https://s-url.it/gliswebdocs',
-        'name' => array( 'it-IT' => 'su Google Docs' )
+    // manuale utente del progetto, prodotto da _src/_sh/_docs.build.sh --user
+    $cf['common']['docs']['custom']['html'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_USER ) ) ? $cf['site']['url'] . 'manual/user/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale utente' )
     );
 
-    // link alla documentazione tecnica in formato HTML
+    // manuale sviluppatore del progetto, prodotto da _src/_sh/_docs.build.sh --dev
+    $cf['common']['docs']['custom']['dev'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_DEV ) ) ? $cf['site']['url'] . 'manual/read/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale sviluppatore' )
+    );
+
+    // guide introduttive del progetto, prodotte da _src/_sh/_docs.build.sh --quickstart
+    $cf['common']['docs']['custom']['quickstart'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_QUICKSTART ) ) ? $cf['site']['url'] . 'quickstart/index.html' : NULL,
+        'name' => array( 'it-IT' => 'guide introduttive' )
+    );
+
+    // reference API in formato HTML, prodotta da _src/_sh/_doxygen.build.sh
     $cf['common']['docs']['tech']['html'] = array(
-        'url' => $cf['site']['url'] . FILE_MANUAL_HTML
+        'url'  => ( file_exists( FILE_MANUAL_HTML ) ) ? $cf['site']['url'] . 'docs/' : NULL,
+        'name' => array( 'it-IT' => 'HTML' )
     );
 
-    // link alla documentazione tecnica in formato PDF
+    // reference API in formato PDF
     $cf['common']['docs']['tech']['pdf'] = array(
-        'url' => $cf['site']['url'] . FILE_MANUAL_PDF
+        'url'  => ( file_exists( FILE_MANUAL_PDF ) ) ? $cf['site']['url'] . 'docs/pdf' : NULL,
+        'name' => array( 'it-IT' => 'PDF' )
     );
 
-    */
-
-    // manuale d'uso su Github
+    // guida d'uso generica del framework, non di questo progetto
     $cf['common']['docs']['user']['html'] = array(
-        'url' => 'https://github.com/istricesrl/glisdev/wiki',
+        'url'  => 'https://github.com/istricesrl/glisdev/wiki',
         'name' => array( 'it-IT' => 'su GitHub' )
     );
 
+    // segnalazione dei difetti
     $cf['common']['bugs']['report'] = array(
-        'url' => 'https://github.com/istricesrl/glisdev/issues',
+        'url'  => 'https://github.com/istricesrl/glisdev/issues',
         'name' => array( 'it-IT' => 'su GitHub' )
     );
-
     /* TODO a che epoca risale questa cosa? non sembra essere usata da nessuna parte
 
     // ...

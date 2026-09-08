@@ -36,7 +36,7 @@
 
                 {# JOB IN FOREGROUND #}
                 {% if jobs.foreground|length > 0 %}
-                <div id="widget-docs" class="widget col-auto p-0">
+                <div id="widget-jobs" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-jobs" onclick="$('.slide-info').not('#jobs').slideUp(400,'swing');$('#jobs').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-jobs').removeClass('clicked');$(this).toggleClass('clicked');" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay="1000" title="lavori attivi"><i class="fa fa-cog" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
@@ -52,15 +52,15 @@
                 </div>
 
                 {# ASSISTENZA #}
-                {% if common.helpdesk %}
-                <div id="widget-docs" class="widget col-auto p-0">
+                {% if common.helpdesk.url %}
+                <div id="widget-helpdesk" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.helpdesk.url }}', '_blank' );" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay="1000" title="assistenza via ticket"><i class="fa fa-ticket" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
                 {# DOCUMENTAZIONE #}
-                {% if common.docs.custom %}
-                <div id="widget-docs" class="widget col-auto p-0">
+                {% if common.docs.custom.html.url %}
+                <div id="widget-manuale" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.docs.custom.html.url }}', '_blank' );" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
