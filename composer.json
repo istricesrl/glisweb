@@ -19,7 +19,8 @@
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "*",
-        "codeception/module-asserts": "*"
+        "codeception/module-asserts": "*",
+        "league/commonmark": "^1.6"
     },
     "suggest": {
         "twig/extra-bundle": "*"

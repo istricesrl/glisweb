@@ -1,0 +1,352 @@
+/* ---------------------------------------------------------------- token */
+
+:root {
+    --bg:        #ffffff;
+    --bg-soft:   #f6f7f9;
+    --bg-code:   #f4f5f7;
+    --fg:        #1c1f24;
+    --fg-soft:   #5b636e;
+    --fg-faint:  #8a929d;
+    --line:      #e2e5ea;
+    --line-soft: #eceef2;
+    --accent:    #1f6f5c;
+    --accent-bg: #e8f3ef;
+    --warn:      #9a6407;
+    --warn-bg:   #fdf5e4;
+    --info:      #1f5b8f;
+    --info-bg:   #e8f0f8;
+    --radius:    7px;
+    --mono:      ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg:        #14171b;
+        --bg-soft:   #1b1f25;
+        --bg-code:   #1e2329;
+        --fg:        #dfe3e8;
+        --fg-soft:   #9aa3ae;
+        --fg-faint:  #6d7681;
+        --line:      #2b313a;
+        --line-soft: #232931;
+        --accent:    #5cbfa4;
+        --accent-bg: #17332c;
+        --warn:      #e0aa4a;
+        --warn-bg:   #2e2718;
+        --info:      #6fb3e8;
+        --info-bg:   #16242f;
+    }
+}
+
+/* ---------------------------------------------------------------- base */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+}
+
+.skip {
+    position: absolute;
+    left: -9999px;
+}
+.skip:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 10;
+    background: var(--accent);
+    color: #fff;
+    padding: .5rem .9rem;
+    border-radius: var(--radius);
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.sidebar {
+    position: sticky;
+    top: 0;
+    flex: 0 0 262px;
+    width: 262px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1.6rem 1rem 2rem 1.4rem;
+    border-right: 1px solid var(--line);
+    background: var(--bg-soft);
+}
+
+.sidebar-head {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1rem;
+    margin-bottom: .8rem;
+    border-bottom: 1px solid var(--line);
+}
+.sidebar-head .kicker {
+    font-size: .68rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+}
+.sidebar-head strong {
+    font-size: 1.22rem;
+    letter-spacing: -.01em;
+    margin-top: .15rem;
+}
+.sidebar-head .sub {
+    font-size: .84rem;
+    color: var(--fg-soft);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-nav a {
+    display: block;
+    padding: .3rem .5rem;
+    margin-left: -.5rem;
+    border-radius: 5px;
+    color: var(--fg-soft);
+    text-decoration: none;
+    font-size: .86rem;
+    line-height: 1.35;
+}
+.sidebar-nav a:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+}
+
+.sidebar-foot {
+    margin-top: 1.4rem;
+    padding-top: .8rem;
+    border-top: 1px solid var(--line);
+    font-size: .74rem;
+    color: var(--fg-faint);
+}
+
+.content {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 62rem;
+    padding: 2.6rem 3rem 6rem;
+}
+
+/* ---------------------------------------------------------------- titoli */
+
+h1, h2, h3, h4 {
+    line-height: 1.25;
+    letter-spacing: -.015em;
+    scroll-margin-top: 1.5rem;
+}
+
+h1 {
+    font-size: 2.15rem;
+    margin: 0 0 1.4rem;
+    padding-bottom: .7rem;
+    border-bottom: 2px solid var(--line);
+}
+
+h2 {
+    font-size: 1.52rem;
+    margin: 3.2rem 0 1rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+}
+
+h3 {
+    font-size: 1.14rem;
+    margin: 2.1rem 0 .7rem;
+    color: var(--fg);
+}
+
+h4 {
+    font-size: 1rem;
+    margin: 1.5rem 0 .5rem;
+}
+
+.anchor {
+    float: left;
+    margin-left: -1.1rem;
+    padding-right: .35rem;
+    color: var(--fg-faint);
+    text-decoration: none;
+    opacity: 0;
+    font-weight: 400;
+}
+h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor { opacity: 1; }
+
+/* ---------------------------------------------------------------- testo */
+
+p { margin: 0 0 1rem; }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--line-soft);
+    margin: 2.4rem 0;
+}
+
+ul, ol { margin: 0 0 1rem; padding-left: 1.4rem; }
+li { margin-bottom: .35rem; }
+li > code { white-space: nowrap; }
+
+strong { font-weight: 650; }
+
+/* ---------------------------------------------------------------- codice */
+
+code {
+    font-family: var(--mono);
+    font-size: .855em;
+    background: var(--bg-code);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: .1em .34em;
+}
+
+pre {
+    background: var(--bg-code);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: .95rem 1.1rem;
+    overflow-x: auto;
+    margin: 0 0 1.2rem;
+    line-height: 1.5;
+}
+pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: .82rem;
+    white-space: pre;
+}
+
+/* ---------------------------------------------------------------- citazioni */
+
+blockquote {
+    margin: 0 0 1.2rem;
+    padding: .85rem 1.1rem;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-bg);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+blockquote p:last-child { margin-bottom: 0; }
+blockquote code { background: rgba(127,127,127,.14); }
+
+/* ---------------------------------------------------------------- tabelle */
+
+.tw {
+    overflow-x: auto;
+    margin: 0 0 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: .885rem;
+}
+
+thead th {
+    background: var(--bg-soft);
+    text-align: left;
+    font-weight: 620;
+    white-space: nowrap;
+}
+
+th, td {
+    padding: .5rem .75rem;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--bg-soft); }
+
+td code, th code { white-space: nowrap; }
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 950px) {
+    .layout { display: block; }
+    .sidebar {
+        position: static;
+        width: auto;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 1.2rem 1.2rem 1.4rem;
+    }
+    .sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: .1rem .6rem;
+    }
+    .content { padding: 1.8rem 1.2rem 4rem; max-width: none; }
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.32rem; }
+    .anchor { display: none; }
+}
+
+/* ---------------------------------------------------------------- stampa */
+
+@media print {
+    .sidebar, .skip { display: none; }
+    .content { max-width: none; padding: 0; }
+    body { font-size: 10.5pt; }
+    pre, .tw { break-inside: avoid; }
+    h2 { break-before: page; }
+    a { color: inherit; text-decoration: none; }
+}
+
+/* ---------------------------------------------------------------- callout */
+
+/*
+ * Un callout e' una citazione markdown che si apre con un vocabolo del vocabolario chiuso
+ * ( solo stable, solo unstable, attenzione, nota, ... ). Serve soprattutto a segnalare le
+ * divergenze fra la linea stabile e quella di sviluppo senza duplicare il documento: per questo
+ * le due linee hanno colori diversi e riconoscibili, mentre tutto il resto resta neutro.
+ */
+
+.callout {
+    margin: 1.4rem 0;
+    padding: .85rem 1.1rem;
+    border-left: 3px solid var(--fg-faint);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--bg-soft);
+    color: var(--fg);
+}
+
+.callout p               { margin: 0 0 .6rem; }
+.callout p:last-child    { margin-bottom: 0; }
+.callout code            { background: rgba(127,127,127,.14); }
+
+.callout strong:first-child {
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-size: .78em;
+    color: var(--fg-soft);
+}
+
+.callout-stable         { border-left-color: var(--accent); background: var(--accent-bg); }
+.callout-stable strong:first-child  { color: var(--accent); }
+
+.callout-unstable       { border-left-color: var(--info);   background: var(--info-bg); }
+.callout-unstable strong:first-child { color: var(--info); }
+
+.callout-attenzione     { border-left-color: var(--warn);   background: var(--warn-bg); }
+.callout-attenzione strong:first-child { color: var(--warn); }
