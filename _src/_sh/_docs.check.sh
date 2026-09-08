@@ -257,8 +257,10 @@ if [ $METRICHE -eq 1 ] && [ $TODO -eq 0 ]; then
 
     for d in _src/_lib _src/_api _src/_config _src/_inc; do
         [ -d "./$d" ] || continue
+        # il vendor di composer va escluso da ENTRAMBI i conteggi: escluderlo solo dal
+        # totale confrontava insiemi diversi e produceva numeri piu' alti del vero
         TOT=$( find "./$d" -name '*.php' -not -path '*/_ext/*' | wc -l )
-        CON=$( grep -rl '@file' "./$d" --include='*.php' 2> /dev/null | wc -l )
+        CON=$( grep -rl '@file' "./$d" --include='*.php' --exclude-dir='_ext' 2> /dev/null | wc -l )
         printf '    %-14s @file %s su %s file\n' "$d" "$CON" "$TOT"
     done
 
