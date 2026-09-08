@@ -1,29 +1,9 @@
-# documentazione del template Athena
-Il template Athena è utilizzato per il back-end del framework; si tratta di un template molto complesso e potente,
-pensato per realizzare gestionali, CMS e web application. Comprende numerosissimi strumenti che semplificano
-enormemente il lavoro quando si tratta di creare applicazioni web e include logiche e best practice per realizzare
-tutti gli scenari più comuni in ambito applicativo.
+# il template standard del framework
 
-La schematizzazione del template prevede la suddivisione delle pagine in gruppi, che condividono la stessa struttura
-di massima sia da un punto di vista del front-end che dal punto di vista del back-end. Si può dire che l'intero
-back-end del framework sia costituito da una combinazione di queste tipologie di pagine.
-
-Sintetizzando ai massimi livelli, le pagine del template Athena possono essere raggruppate come segue:
-
-- pagine dashboard (contengono informazioni)
-- pagine tools (contengono strumenti)
-- pagine view (elencano oggetti)
-- pagine form (consentono di gestire oggetti)
-- pagine sub view (elencano oggetti che dipendono da altri oggetti)
-- pagine form tools (contengono strumenti relativi a specifici oggetti)
-
----
-
-## dalla documentazione Doxygen del 2024
-
-> **nota** — sezione travasata il 2026-09-08 dai .dox, ferma al 2024. Descrive la versione
-> legacy del template ( _src/_templates/_athena ); i riferimenti sono stati verificati, ma il
-> testo va letto come traccia da confermare.
+> **nota** — capitolo travasato il 2026-09-08 dalla documentazione Doxygen `.dox`, ferma al
+> 2024. I riferimenti sono stati verificati contro il codice e il database di oggi;
+> dove il testo non e' stato riverificato riga per riga, va letto come una traccia da confermare,
+> non come una descrizione garantita.
 
 
 Guida all'utilizzo del template standard (Athena) del framework.

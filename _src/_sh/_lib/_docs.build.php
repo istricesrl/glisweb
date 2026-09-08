@@ -136,6 +136,34 @@
             $capitoli[] = array( 'chiave' => 'introduzione', 'titolo' => 'introduzione', 'file' => $introduzione );
         }
 
+        // capitoli aggiuntivi: uno per file, in ordine di nome. E' la sede della documentazione
+        // che non appartiene a un modulo ne' e' introduttiva — la reference delle tabelle, quella
+        // delle variabili, le guide pratiche. La coppia standard/custom segue la solita regola.
+        $extra = strtolower( $tipo );
+
+        foreach( array( '_usr/_docs/_' . $extra, 'usr/docs/' . $extra ) as $d ) {
+
+            if( ! $dir = docsBuildPath( $d ) ) {
+                continue;
+            }
+
+            foreach( glob( $dir . '/*.md' ) as $f ) {
+
+                $nome = basename( $f, '.md' );
+
+                // il numero in testa serve solo a ordinare, non e' parte del titolo
+                $titolo = preg_replace( '/^[0-9]+[.-]\s*/', '', $nome );
+
+                $capitoli[] = array(
+                    'chiave' => str_replace( '.', '-', $nome ),
+                    'titolo' => str_replace( '.', ' ', $titolo ),
+                    'file'   => array( $f )
+                );
+
+            }
+
+        }
+
         foreach( docsBuildModuliAttivi() as $m ) {
 
             // la versione custom del modulo sostituisce quella standard
