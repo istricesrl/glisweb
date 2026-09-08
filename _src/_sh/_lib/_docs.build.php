@@ -60,7 +60,7 @@
     /**
      * ricava la linea del deploy corrente
      *
-     * Serve a filtrare le sezioni marcate con @linea. Si legge da etc/docs.linea.conf se dichiarata,
+     * Serve a filtrare le sezioni marcate con @linea. Si legge da var/docs.linea.conf se dichiarata,
      * altrimenti dal remote git: solo i deploy del repository glisdev sono sulla linea di sviluppo,
      * tutti gli altri seguono il ramo di glisweb.
      *
@@ -69,7 +69,7 @@
      */
     function docsBuildLinea() {
 
-        if( $f = docsBuildPath( 'etc/docs.linea.conf' ) ) {
+        if( $f = docsBuildPath( 'var/docs.linea.conf' ) ) {
 
             $l = trim( file_get_contents( $f ) );
 
@@ -258,6 +258,12 @@
         $css   = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
         $fatte = 0;
         $indice = array();
+
+        // il manuale utente e quello sviluppatore hanno cartelle distinte: con la stessa
+        // destinazione si sovrascriverebbero l'indice e l'introduzione a vicenda
+        if( ! is_dir( DOCS_BASE . $destinazione ) ) {
+            mkdir( DOCS_BASE . $destinazione, 0750, true );
+        }
 
         foreach( $capitoli as $c ) {
 
@@ -454,7 +460,7 @@
     if( $tutto || isset( $opt['user'] ) ) {
         echo "manuale utente del progetto:\n";
         if( docsBuildProtezione( 'usr/pages/manual', 'manuale' ) )
-        docsBuildManuale( 'USER', 'usr/pages/manual', array(
+        docsBuildManuale( 'USER', 'usr/pages/manual/user', array(
             'pubblico' => array( 'operatore', 'amministratore' ),
             'linea'    => $linea,
             'titolo'   => 'manuale utente',
@@ -465,7 +471,7 @@
     if( $tutto || isset( $opt['dev'] ) ) {
         echo "manuale sviluppatore del progetto:\n";
         if( docsBuildProtezione( 'usr/pages/manual', 'manuale' ) )
-        docsBuildManuale( 'READ', 'usr/pages/manual', array(
+        docsBuildManuale( 'READ', 'usr/pages/manual/read', array(
             'pubblico' => array( 'sviluppatore', 'amministratore' ),
             'linea'    => $linea,
             'titolo'   => 'manuale sviluppatore',
@@ -474,8 +480,12 @@
     }
 
     // la documentazione dello standard si genera solo dove e' stata richiesta esplicitamente: sui
-    // deploy cliente non serve, e finirebbe fra i disallineamenti raccolti ogni notte da _gw.upgrade.sh
-    if( ( $tutto || isset( $opt['standard'] ) ) && docsBuildPath( 'etc/docs.build.conf' ) ) {
+    // deploy cliente non serve, e finirebbe fra i disallineamenti raccolti ogni notte da _gw.upgrade.sh.
+    //
+    // Il marcatore sta in var/ e non in etc/ perche' e' una proprieta' della SINGOLA installazione:
+    // etc/ viene deployato, quindi un marcatore creato su DEV accenderebbe la generazione anche su
+    // TEST e PROD. var/ e' escluso dal deploy e ignorato da git, come i cutoff delle automazioni.
+    if( ( $tutto || isset( $opt['standard'] ) ) && docsBuildPath( 'var/docs.build.conf' ) ) {
         echo "documentazione dello standard:\n";
         docsBuildQuickstart( '_usr/_docs/_quickstart', '_usr/_pages/_quickstart', array( 'pubblico' => NULL, 'linea' => $linea, 'secco' => $secco ) );
     }

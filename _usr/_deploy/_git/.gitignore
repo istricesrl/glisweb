@@ -30,6 +30,13 @@ robots.*
 sitemap.*
 /*.md
 
+# documentazione: il SORGENTE sta in usr/docs/ ed e' scritto a mano, quindi va versionato;
+# l'output di _src/_sh/_docs.build.sh no, altrimenti ogni rigenerazione produce un diff di
+# migliaia di righe. I marcatori di attivazione stanno in var/, che e' gia' ignorato qui
+# sopra ed e' gia' escluso dal deploy: sono per installazione e non vanno propagati.
+usr/pages/manual/
+usr/pages/quickstart/
+
 # hook spediti dal framework nello zip: si elencano per nome e non come
 # cartella, perche .githooks/ puo contenere anche hook propri del progetto
 # cliente, che vanno versionati. Qui stanno solo i nomi che lo zip sovrascrive.

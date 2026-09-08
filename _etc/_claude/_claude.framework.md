@@ -217,7 +217,7 @@ scrive le pagine; la conversione sta in `_src/_lib/_docs.tools.php`, l'orchestra
 - **sui deploy cliente si genera solo dentro `usr/`, mai sotto `_*`.** Un file generato là finirebbe fra
   i disallineamenti che `_gw.upgrade.sh` raccoglie ogni notte (il suo `find ./_* -newer` non ha prune) e
   verrebbe comunque cancellato dal suo `rm -rf ./_*`. La documentazione dello standard e la reference
-  API si generano **solo dove esiste `etc/docs.build.conf`**.
+  API si generano **solo dove esiste `var/docs.build.conf`**.
 - **la protezione è dentro la generazione ed è fail-closed.** La documentazione di progetto descrive le
   personalizzazioni del cliente e non può essere pubblica: senza `etc/secret/.htpasswd` non si genera
   nulla. Serve perché `AuthUserFile` vuole un percorso **assoluto**, che cambia fra DEV, TEST e PROD: la

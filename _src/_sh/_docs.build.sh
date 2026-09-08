@@ -63,7 +63,7 @@ exit 0
 
 ## NOTA
 #
-# la documentazione dello standard si genera SOLO dove esiste etc/docs.build.conf, cioe' sui deploy
+# la documentazione dello standard si genera SOLO dove esiste var/docs.build.conf, cioe' sui deploy
 # del framework: sui progetti cliente quei file finirebbero fra i disallineamenti che _gw.upgrade.sh
 # raccoglie ogni notte, e verrebbero comunque cancellati dal suo "rm -rf ./_*"
 #
