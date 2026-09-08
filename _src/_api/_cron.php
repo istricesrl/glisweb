@@ -173,6 +173,25 @@
     }
 
     /**
+     * Fix 2026-09-07: quante passate di cron un job puo' restare fermo prima di essere chiuso
+     * d'ufficio.
+     *
+     * Serve a garantire che un job non possa restare aperto per sempre. Un job che a ogni passata
+     * viene preso in carico e non fa avanzare `corrente` non sta lavorando: o e' in attesa di
+     * qualcosa che non arrivera' mai, o muore sempre nello stesso punto. Senza questa guardia il
+     * cron continuerebbe a riprenderlo a ogni giro, in silenzio, finche' qualcuno non se ne
+     * accorge guardando la tabella.
+     *
+     * Trenta passate sono mezz'ora di cron al minuto: larghe per qualunque attesa legittima
+     * ( il polling di un servizio esterno fa avanzare `corrente` a ogni interrogazione, quindi
+     * non e' uno stallo ) e brevi abbastanza perche' un job piantato non resti in giro per
+     * giorni. Sovrascrivibile da `src/config.json` ( chiave `cron.stalli_massimi` ).
+     */
+    if( empty( $cf['cron']['stalli_massimi'] ) ) {
+        $cf['cron']['stalli_massimi'] = 30;
+    }
+
+    /**
      * Fix 2026-07-24: guardia anti-sovrapposizione dei run di cron.
      *
      * Il lock applicato su `task.token` non basta a impedire run concorrenti: `timestamp_esecuzione`
@@ -494,6 +513,56 @@
                 // eseguo il job
                 if( ! empty( $job['iterazioni'] ) ) {
 
+                    /**
+                     * Fix 2026-09-07: guardia contro il job che non finisce mai.
+                     *
+                     * Il contatore si incrementa PRIMA di lavorare e si scrive subito a database,
+                     * con una query sua. E' l'unico modo perche' regga anche quando il job muore
+                     * dentro il require: l'UPDATE del workspace in fondo a questo blocco, in quel
+                     * caso, non viene mai raggiunta, e un contatore incrementato solo alla fine
+                     * non conterebbe proprio le passate che interessano.
+                     *
+                     * Si azzera appena `corrente` avanza, quindi un job che lavora non lo vede
+                     * mai. Un job che invece viene ripreso passata dopo passata senza avanzare
+                     * viene chiuso d'ufficio con un log di errore: meglio un lavoro dichiarato
+                     * fallito che uno che resta aperto in eterno senza che nessuno lo sappia.
+                     */
+                    $avanzamentoIniziale = ( isset( $job['corrente'] ) ) ? $job['corrente'] : 0;
+
+                    $job['workspace']['__stalli__'] = ( isset( $job['workspace']['__stalli__'] ) ) ? $job['workspace']['__stalli__'] + 1 : 1;
+
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET workspace = ? WHERE id = ?',
+                        array(
+                            array( 's' => json_encode( $job['workspace'] ) ),
+                            array( 's' => $job['id'] )
+                        )
+                    );
+
+                    if( $job['workspace']['__stalli__'] > $cf['cron']['stalli_massimi'] ) {
+
+                        // log
+                        logger( 'il job ' . $job['id'] . ' -> ' . $job['job'] . ' non avanza da ' . $cf['cron']['stalli_massimi'] . ' passate ( fermo a ' . $avanzamentoIniziale . ' di ' . $job['totale'] . ' ): lo chiudo d ufficio', 'cron', LOG_ERR );
+
+                        // status
+                        $cf['cron']['job'][ $job['id'] ]['errors'][] = 'chiuso d ufficio dopo ' . $cf['cron']['stalli_massimi'] . ' passate senza avanzamento';
+
+                        // chiusura d'ufficio: si libera anche il lock, altrimenti la riga resta
+                        // appesa a un token che nessuno azzerera' piu'
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE job SET timestamp_completamento = ?, token = NULL WHERE id = ?',
+                            array(
+                                array( 's' => time() ),
+                                array( 's' => $job['id'] )
+                            )
+                        );
+
+                        continue;
+
+                    }
+
                     for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
 
                         /**
@@ -535,6 +604,11 @@
                         // ...
                         loggerLatest( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
 
+                    }
+
+                    // il job ha avanzato: non e' in stallo, azzero il contatore
+                    if( isset( $job['corrente'] ) && $job['corrente'] > $avanzamentoIniziale ) {
+                        unset( $job['workspace']['__stalli__'] );
                     }
 
                     // aggiorno la tabella di avanzamento lavori
