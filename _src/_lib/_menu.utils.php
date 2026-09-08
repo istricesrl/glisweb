@@ -15,6 +15,39 @@
      * TODO documentare
      *
      */
+    /**
+     * sceglie, per ogni lingua, dove porta una voce di menu
+     *
+     * Una pagina con 'forced' valorizzato punta fuori dal sito, e la voce deve usare l'URL
+     * dichiarato invece del percorso interno. Ma 'forced' e' un array PER LINGUA come 'title' e
+     * 'rewrited': puo' esserci in italiano e non in inglese. Percio' la scelta si fa lingua per
+     * lingua, e le lingue senza 'forced' continuano a usare il proprio percorso interno.
+     *
+     * @param   array       $pagina     la definizione della pagina
+     *
+     * @return  array                   percorsi o URL, per lingua
+     *
+     */
+    function menuLocation( $pagina ) {
+
+        $location = ( isset( $pagina['path'] ) ) ? (array) $pagina['path'] : array();
+
+        if( empty( $pagina['forced'] ) ) {
+            return $location;
+        }
+
+        foreach( (array) $pagina['forced'] as $lk => $url ) {
+
+            if( ! empty( $url ) ) {
+                $location[ $lk ] = $url;
+            }
+
+        }
+
+        return $location;
+
+    }
+
     function buildMenu( $menu, $tree, $pages, $active = NULL ) {
 
     // debug
@@ -79,9 +112,11 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
                             ,
                             'ancora' => ( isset( $mv['ancora'] ) ) ? $mv['ancora'] : NULL
                             ,
-//                            'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
-// TODO questa soluzione non è soddisfacente in quanto non tiene conto del fatto che forced potrebbe contenere un valore in una lingua e non in un altra... come si può fare?
-                            'location' => ( ( isset( $pages[ $k ]['forced'] ) && ! isEmptyArray( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
+                            // la scelta fra URL forzato e percorso interno si fa PER LINGUA: una
+                            // pagina puo' avere 'forced' in italiano e non in inglese, e prima la
+                            // decisione era per pagina, quindi le lingue senza 'forced' finivano a
+                            // prendere l'URL assoluto invece del percorso relativo
+                            'location' => menuLocation( $pages[ $k ] )
                             ,
                             'target' => ( ( isset( $mv['target'] ) && ! empty( $mv['target'] ) ) ? $mv['target'] : NULL ) 
                             ,
