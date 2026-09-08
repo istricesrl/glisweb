@@ -98,27 +98,53 @@ fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve
 `zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di
 mettere la data in fondo, che sembra più ordinata, è quella che aggira la protezione.
 
-## Cose da fare: `TODO.md` e `burndown.md`
+## Cose da fare: `TODO.md`, `DONE.md` e `CHAT.md`
 
-Il backlog del progetto sta in `TODO.md`, nella **root del deploy** (il livello che contiene `dev/`), non
-dentro `dev/`. Accanto c'è `burndown.md`, che è **generato**: non si modifica a mano, lo riscrive ogni notte
-`/etc/cron.daily/burndown`.
+Nella **root del deploy** (il livello che contiene `dev/`) vivono tre file di stato, più il
+`burndown.md` che è generato. Fanno tre lavori diversi e hanno tre tempi di vita diversi: tenerli
+separati non è ordine estetico, è la condizione perché restino leggibili.
 
-Li gestisce [avanzamenti-todo](https://github.com/the-linux-nerd/avanzamenti-todo), che conta le voci con
-espressioni **ancorate a inizio riga**. Le regole che seguono non sono questioni di stile: se non le rispetti
-i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una curva che non torna.
+| file | cosa contiene | come si scrive |
+|---|---|---|
+| `TODO.md` | **solo lavoro aperto**: `[ ]` e `[?]` | si aggiunge in fondo, e si **pota** quando una voce chiude |
+| `DONE.md` | l'archivio del fatto: `[v]`, `[x]` e le cronache di come è andata | append, non si rilegge: si consulta con `grep` |
+| `CHAT.md` | lo **stato attuale** della conversazione col cliente | si **riscrive**: non è un diario, è una fotografia di adesso |
+
+La regola che tiene insieme le tre: **una cosa sta in un file solo.** Quando un lavoro finisce esce
+dal `TODO.md` e entra nel `DONE.md`; quando una domanda al cliente ha risposta esce dal `CHAT.md` e
+la decisione entra nel `DONE.md`. Se la stessa riga sta in due file, il prossimo che legge non sa
+quale delle due è vera.
+
+### Perché i tre file esistono
+
+Un `TODO.md` che contiene anche il fatto e anche le conversazioni cresce di migliaia di righe in
+poche settimane, e a quel punto **nessuno lo rilegge**: le informazioni vecchie di due giorni
+diventano invisibili. Da lì nascono i due errori tipici, che si sono visti tutti e due nello stesso
+giorno l'8 settembre 2026:
+
+- si chiede al cliente una cosa **a cui aveva già risposto**, e la risposta era scritta più su
+  nello stesso file — al cliente arriva il messaggio che quello che dice non viene registrato;
+- si dà per "ancora da dire" una cosa **già detta** su un altro canale, perché nel file era scritta
+  con parole diverse da quelle usate parlandogli.
 
 ### I quattro marcatori
 
-| marcatore | significato | stato |
-|---|---|---|
-| `- [ ]` | da fare | aperta |
-| `- [?]` | da fare, ma prima serve un approfondimento | aperta |
-| `- [v]` | fatta | chiusa |
-| `- [x]` | scartata, tenuta solo per memoria storica | chiusa |
+| marcatore | significato | stato | dove vive |
+|---|---|---|---|
+| `- [ ]` | da fare | aperta | `TODO.md` |
+| `- [?]` | da fare, ma prima serve un approfondimento | aperta | `TODO.md` |
+| `- [v]` | fatta | chiusa | `DONE.md` |
+| `- [x]` | scartata, tenuta solo per memoria storica | chiusa | `DONE.md` |
 
-`[ ]` e `[?]` contano entrambe nel residuo. **Non esistono altri marcatori**: se ne incontri uno diverso
-(`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare uno stato nuovo.
+`[ ]` e `[?]` contano entrambe nel residuo. **Non esistono altri marcatori**: se ne incontri uno
+diverso (`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare
+uno stato nuovo.
+
+Li conta [avanzamenti-todo](https://github.com/the-linux-nerd/avanzamenti-todo) con espressioni
+**ancorate a inizio riga**: le aperte le cerca in `TODO.md`, le chiuse in `TODO.md` **e** in
+`DONE.md`, e le somma. Le regole di scrittura che seguono non sono questioni di stile: se non le
+rispetti i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una curva che
+non torna.
 
 ### Come si scrive una voce
 
@@ -128,14 +154,69 @@ i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una c
 - se devi **citare** un marcatore dentro una frase o un esempio, non metterlo a inizio riga, o verrà
   contato come una cosa da fare.
 
-### Come si aggiorna
+### `TODO.md`: come si aggiorna
 
-- le voci si raggruppano in sezioni datate, con l'intestazione `AAAA-MM-GG [HH:MM] TITOLO` sottolineata
-  da `=`; le voci nuove vanno in fondo, in una sezione con la data di oggi;
-- quando un lavoro finisce, si cambia il marcatore in `[v]`: **non si cancella la riga**, la storia serve;
-- quando un lavoro si abbandona, `[x]`, sempre senza cancellare;
-- una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le prossime
-  scadenze (funzione disponibile, oggi non usata da nessun progetto).
+- le voci si raggruppano in sezioni datate, con l'intestazione `AAAA-MM-GG [HH:MM] TITOLO`
+  sottolineata da `=`; le voci nuove vanno in fondo, in una sezione con la data di oggi;
+- quando un lavoro finisce si cambia il marcatore in `[v]` e **si sposta la voce in `DONE.md`**,
+  con la sua sezione se la sezione è chiusa per intero. Non si cancella niente: si trasloca;
+- quando un lavoro si abbandona, `[x]`, stessa strada;
+- **una sezione senza più voci aperte non ha motivo di restare qui**: va spostata intera;
+- niente domande al cliente nel `TODO.md`. Le domande stanno in `CHAT.md`, e qui resta semmai il
+  lavoro che dipende dalla risposta;
+- una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le
+  prossime scadenze.
+
+### `DONE.md`: l'archivio
+
+Stessa forma del `TODO.md` — sezioni datate, stessi marcatori — ma **non si legge dall'inizio**: è
+il posto dove si va a cercare *come era andata* una certa cosa. Ci finiscono anche i blocchi
+narrativi che spiegano una diagnosi, una decisione o una migrazione: sono la memoria del progetto,
+e sono esattamente ciò che rende illeggibile il `TODO.md` se restano lì.
+
+Non si riscrive e non si riordina: si aggiunge in fondo. Se cresce troppo lo si spezza per anno
+(`DONE.2026.md`), mai per argomento.
+
+### `CHAT.md`: lo stato della conversazione col cliente
+
+**È il file da leggere prima di scrivere al cliente**, sempre, anche per un messaggio di una riga.
+Un progetto ha di norma un interlocutore solo; se ne ha più d'uno si trattano come uno (sono in
+copia sulla stessa mail), e le persone si nominano dentro le voci.
+
+Non è un diario e non è un log: contiene **soltanto ciò che è vero adesso**. Struttura fissa:
+
+```markdown
+# Conversazione con <interlocutore> — <progetto>
+
+Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
+
+## Aspetta lui — cosa gli abbiamo chiesto
+  - [ ] <domanda>, chiesta il <data> per <canale>
+
+## Aspettiamo noi — cosa ha chiesto lui
+  - [ ] <richiesta>, arrivata il <data>
+
+## Da dirgli alla prossima occasione
+  - [ ] <cosa fatta che lui non sa ancora>
+
+## Ultimi scambi, in breve
+- <data> — <cosa si è detto, due righe>
+```
+
+Regole, e sono quelle che evitano le figuracce:
+
+- **quando una domanda ha risposta, si toglie da qui**: la risposta diventa una voce di lavoro nel
+  `TODO.md` o una decisione nel `DONE.md`. Una domanda che resta scritta dopo la risposta è una
+  trappola, perché il prossimo che legge la rifà;
+- **le telefonate si scrivono qui il giorno stesso**, con durata e decisioni: una chiamata non
+  trascritta è un buco nero e produce esattamente l'errore di richiedere il già detto;
+- **si annota il canale e la data di ogni contatto**: serve a sapere se una cosa è stata detta a
+  voce o per iscritto, e con quali parole;
+- prima di scrivere "da chiedere a <cliente>" da qualunque parte, **si cerca qui e nel `DONE.md`**
+  se la risposta esiste già;
+- il tono delle voci è quello che si userebbe col cliente: niente nomi di tabelle, niente
+  dettagli interni. Quelli stanno nel `TODO.md`.
+
 
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
 
