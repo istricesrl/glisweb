@@ -7,7 +7,7 @@
 #
 # questo hook serve allo sviluppo dello standard (glisdev e glisweb), non ai
 # progetti che usano il framework; e' attivo solo dove e' stato installato con
-# .githooks/install.sh, che imposta core.hooksPath
+# _src/_sh/_githooks.install.sh, che imposta core.hooksPath
 #
 
 set -euo pipefail

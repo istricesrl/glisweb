@@ -189,12 +189,12 @@ Per approfondire, la skill `glisweb` automatizza il bootstrap di un progetto cli
 In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
 Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.
 
-### /.githooks/pre-commit, /.githooks/commit-msg, /.githooks/post-commit e /.githooks/install.sh
+### /.githooks/pre-commit, /.githooks/commit-msg e /.githooks/post-commit
 Git hook versionati, utili a chi sviluppa il framework e non ai progetti che lo usano. Il pre-commit rigenera
 /_etc/_current.version ad ogni commit; commit-msg e post-commit alimentano /_etc/_changelog.json a partire dal messaggio di
 commit, ma solo sul ramo master. Git cerca gli hook in /.git/hooks/ salvo diversa indicazione e salta in silenzio quelli
 privi del bit di esecuzione: per questo gli hook vanno attivati una volta per copia di lavoro con
-`bash .githooks/install.sh`, che imposta `core.hooksPath` e ripristina i permessi.
+/_src/_sh/_githooks.install.sh, che imposta `core.hooksPath` e ripristina i permessi.
 
 ### /.gitignore
 Questo file (il cui contenuto cambia fra sviluppo del framework e sviluppo dei progetti) impedisce che vengano caricati
@@ -248,7 +248,7 @@ versioni vengono incrementate quotidianamente, mentre le release di rado, solo q
 
 L'aggiornamento della versione è fatto automaticamente dal git hook /.githooks/pre-commit ad ogni commit sul repository di
 sviluppo del framework. Gli hook sono versionati in /.githooks/, ma `core.hooksPath` è configurazione locale della copia di
-lavoro e non viaggia col repository: finché non si esegue `bash .githooks/install.sh` git continua a cercare gli hook in
+lavoro e non viaggia col repository: finché non si esegue /_src/_sh/_githooks.install.sh git continua a cercare gli hook in
 /.git/hooks/ e la versione resta ferma senza che nulla lo segnali.
 
 ```
@@ -2322,6 +2322,12 @@ scrittura di manualistica.
 
 ### /_src/_sh/_folders.check.sh
 Questo script controlla che esistano le cartelle custom solitamente necessarie al funzionamento corretto del framework.
+
+### /_src/_sh/_githooks.install.sh
+Questo file attiva sulla copia di lavoro corrente i git hook versionati in /.githooks/, che servono a chi sviluppa il
+framework e non ai progetti che lo usano. Imposta `core.hooksPath`, che è configurazione locale del clone e non viaggia
+col repository, e rimette il bit di esecuzione sui tre hook, senza il quale git li salterebbe in silenzio. Lanciato con
+l'argomento --check si limita a mostrare lo stato. Per il funzionamento degli hook si veda /_etc/_current.release.
 
 ### /_src/_sh/_gw.clean.sh
 Questo script effettua una pulitura dei file superflui del framework; può essere chiamato in modalità soft o hard a seconda

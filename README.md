@@ -163,7 +163,7 @@ Chi lavora al framework, e non a un progetto che lo usa, deve attivare una volta
 nella propria copia di lavoro:
 
 ```
-bash .githooks/install.sh
+sudo _src/_sh/_githooks.install.sh
 ```
 
 Gli hook sono versionati in */.githooks/*, ma git li cerca in */.git/hooks/* finché non gli si indica il
@@ -176,5 +176,5 @@ dal messaggio di commit, di cui la prima riga viene divisa sul carattere § in t
 git commit -m "titolo della modifica § descrizione estesa della modifica"
 ```
 
-Lo stato dell'installazione si verifica con `bash .githooks/install.sh --check`. Nei progetti che usano il
+Lo stato dell'installazione si verifica con `sudo _src/_sh/_githooks.install.sh --check`. Nei progetti che usano il
 framework gli hook non vanno installati.
