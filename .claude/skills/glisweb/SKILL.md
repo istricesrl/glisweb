@@ -322,8 +322,9 @@ Il framework di un deploy cliente si aggiorna **solo** con lo script che il fram
 ```
 
 Il branch giusto è quello dichiarato in `update.branch.conf` nella root del deploy — il livello che
-contiene `dev/`, non la document root. È lo stesso che usa il cron notturno `/etc/cron.daily/upgrades`:
-allinearsi a quello evita che l'aggiornamento manuale e quello automatico si rincorrano.
+contiene `dev/`, non la document root. È lo stesso che usa il cron notturno
+`/etc/cron.daily/manutenzione-siti`: allinearsi a quello evita che l'aggiornamento manuale e quello
+automatico si rincorrano.
 
 **Non è un `git pull`, e non lo si sostituisce con git.** Un deploy cliente non è un checkout del
 framework: `_src/`, `_mod/`, `_etc/` e `_usr/` arrivano dallo zip di GitHub, non da git. Se in macchina
@@ -333,11 +334,25 @@ cose porta a credere di essersi allineati e continuare a lavorare sul framework 
 peggiore di sbagliare: silenzioso.
 
 Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy un livello sopra la document root; copia in
-`../disallineamenti.<ts>/` i file modificati dopo l'ultimo upgrade (`_*/` **più** `.claude/`, `.github/`,
-`.htaccess` e `composer.json`); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
+`../disallineamenti.<ts>/` i file che questo deploy ha modificato o aggiunto rispetto al framework che ci
+è stato installato (`_*/` **più** `.claude/`, `.github/`, `.htaccess` e `composer.json`, meno il vendor e
+la documentazione generata); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
 ripristina il vendor `_src/_lib/_ext`; lancia `composer update`; riallinea i permessi con
-`_lamp.permissions.secure.sh`; scrive `var/latest.upgrade.conf`; genera un `.diff` accanto a ogni file
-disallineato.
+`_lamp.permissions.secure.sh`; scrive `var/latest.upgrade.conf` e il manifest delle impronte
+`var/latest.upgrade.1.sha256.conf`; genera un `.diff` accanto a ogni file disallineato.
+
+**Il confronto è sul contenuto, non sulle date.** Il manifest scritto in fondo a ogni aggiornamento
+fotografa l'albero appena installato, e al giro dopo la domanda diventa *cosa ha cambiato questo deploy
+da quando è stato installato* — che è il significato di disallineamento. Fino al 9 settembre 2026 il
+confronto era `find -newer var/latest.upgrade.conf`, cioè sulle **mtime**, e aveva due conseguenze che
+conviene conoscere perché spiegano parecchie modifiche sparite: una modifica anteriore all'ultimo
+aggiornamento e mai promossa non veniva più raccolta, e — siccome `mv`, `cp -a` e `tar` conservano
+l'mtime — un file appena **ripristinato da un backup** risultava più vecchio del riferimento e spariva
+dalla raccolta, cioè la trappola scattava addosso a chi stava riparando un guasto.
+
+Il numero nel nome del manifest è la versione del formato: se cambia l'insieme dei file tracciati va
+incrementato, altrimenti il manifest scritto dalla versione precedente verrebbe verificato da quella
+nuova e ogni file entrato o uscito dall'insieme risulterebbe un falso disallineamento.
 
 Tre conseguenze operative:
 
@@ -345,9 +360,12 @@ Tre conseguenze operative:
   `.diff` che arriverà al manutentore conterrà anche differenze che non sono tue, e diventa invalutabile.
 - **dopo l'upgrade si legge l'elenco dei disallineati**: sono le modifiche locali che l'aggiornamento ha
   appena ribaltato. Non sono perse (stanno in `../disallineamenti.<ts>/` col loro `.diff`) ma sul deploy
-  non ci sono più, e se servivano vanno riapplicate. Attenzione ai falsi positivi: il confronto è sulla
-  mtime, quindi un file toccato ma non modificato compare nell'elenco con un `.diff` **vuoto** — quelli
-  si ignorano.
+  non ci sono più, e se servivano vanno riapplicate. Un file semplicemente *toccato* non compare più:
+  col confronto sul contenuto quel falso positivo non esiste. Resta invece corretto ignorare un `.diff`
+  **vuoto**, che vuol dire che nel frattempo la stessa modifica è arrivata da monte.
+- **la cartella `../disallineamenti.<ts>/` viene creata sempre**, anche vuota. Vuota vuol dire "ho
+  guardato e non c'era niente da promuovere"; assente vuol dire che la raccolta non è arrivata a
+  guardare, ed è un'informazione diversa che prima non si poteva avere.
 - **anche `.claude/` viene sovrascritto**: la skill e i suoi file arrivano dallo zip come tutto il resto.
   Una modifica alla skill fatta su un deploy cliente è temporanea esattamente come una a `_src/`, e segue
   lo stesso percorso di promozione (disallineamento → valutazione upstream).

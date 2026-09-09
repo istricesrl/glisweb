@@ -5,6 +5,11 @@ RL="../../"
 
 ## directory corrente
 cd $(dirname "$0")
+
+## funzioni
+. ./_lib/_functions.sh
+
+## passo alla cartella del deploy
 cd $RL
 
 ## informazioni
@@ -53,17 +58,44 @@ else
         tar $EXC -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz .
 
         # salvo i disallineamenti rispetto alla versione correntemente installata
-        # NOTA: ./_* copre solo le cartelle con underscore; il cp del framework qui sotto
-        # sovrascrive anche i dotfile e i file di root, che vanno controllati esplicitamente.
-        # Esclusi .gitignore e .githooks: sui deploy client sono legittimamente diversi dal
-        # framework (il .gitignore arriva da _usr/_deploy/_git/).
-        for f in $( find ./_* ./.claude ./.github ./.htaccess ./composer.json -newer ./var/latest.upgrade.conf 2>/dev/null ); do
-            if [ -f $f ]; then
-                echo "$f è disallineato"
+        #
+        # NOTA: l'elenco dei percorsi tracciati sta in disallineamenti-elenco(), in
+        # _src/_sh/_lib/_functions.sh, insieme al confronto. Copre le cartelle con underscore
+        # piu' i dotfile e i file di root che il cp del framework qui sotto sovrascrive.
+        # Restano fuori .gitignore e .githooks: il .gitignore lo riscrive comunque la riga
+        # dedicata piu' sotto, prendendolo da _usr/_deploy/_git/.
+        #
+        disallineamenti-manifest-controlla
+
+        case $? in
+
+            0)
+                disallineamenti-raccogli "$( disallineamenti-elenca )" "$cartellaDisallineamenti"
+                ;;
+
+            2)
+                echo "ATTENZIONE: $DISALLINEAMENTI_MANIFEST c'è ma non riesco a leggerlo."
+                echo "            Raccolta dei disallineamenti SALTATA: le modifiche locali di questo"
+                echo "            deploy stanno per essere sovrascritte senza essere raccolte."
                 mkdir -p $cartellaDisallineamenti
-                cp --parents $f $cartellaDisallineamenti
-            fi
-        done
+                ;;
+
+            *)
+                echo "ATTENZIONE: manifest dei checksum assente, è il primo aggiornamento da quando"
+                echo "            la raccolta confronta il contenuto. Per questo giro ripiego sul"
+                echo "            confronto per data, che NON vede le modifiche più vecchie"
+                echo "            dell'ultimo aggiornamento. Il manifest viene scritto in fondo a"
+                echo "            questo script, e dal prossimo giro il confronto sarà sul contenuto."
+
+                # stesse esclusioni del confronto per contenuto: senza, il ripiego raccoglierebbe
+                # anche il vendor riscritto da composer e la documentazione generata, che sono
+                # 24.000 file su 28.000 e non sono disallineamenti di nessuno
+                disallineamenti-raccogli "$( find ./_* ./.claude ./.github ./.htaccess ./composer.json \
+                    \( -path './_src/_lib/_ext/*' -o -path './_usr/_docs/_html/*' -o -path './_usr/_docs/_pdf/*' \) -prune \
+                    -o -newer ./var/latest.upgrade.conf -print 2>/dev/null )" "$cartellaDisallineamenti"
+                ;;
+
+        esac
 
         echo "backup completato"
 
@@ -131,6 +163,12 @@ else
         ## salvo la data di aggiornamento
         echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf
 
+        ## fotografo l'albero appena installato, per la raccolta del prossimo giro
+        # va fatto DOPO composer e DOPO i permessi, cosi' il manifest descrive il deploy come
+        # sara' letto domani: un manifest scritto prima segnalerebbe come disallineato tutto
+        # cio' che composer e lo script dei permessi toccano subito dopo
+        disallineamenti-manifest
+
         ## pulizia
         clear
 
@@ -142,10 +180,20 @@ else
         if [ -d "$cartellaDisallineamenti" ]; then
 
             # elimino i disallineamenti già risolti
-            for disallineamento in $( find $cartellaDisallineamenti -type f ); do
+            #
+            # NOTA il -print0 letto con while, e non "for ... in $( find )": nei percorsi
+            # tracciati c'è già un file con lo spazio nel nome ( in _mod/_1200.todo/ ), e col
+            # word splitting il diff finirebbe su due percorsi inesistenti. È lo stesso difetto
+            # che aveva la raccolta qui sopra: correggerne uno solo lascia il lavoro a metà.
+            #
+            # NOTA il "! -name '*.diff'": con la pipe find STREAMMA, quindi senza il filtro
+            # ripescherebbe i .diff che questo stesso ciclo sta creando, e produrrebbe dei
+            # .diff.diff. Col vecchio $( find ) non succedeva perché find completava prima che
+            # il ciclo cominciasse.
+            while IFS= read -r -d '' disallineamento; do
 
                 # file corrispondente nella versione appena installata
-                originale=$( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )
+                originale="${disallineamento#$cartellaDisallineamenti}"
 
                 # debug
                 echo "faccio il diff di $disallineamento"
@@ -154,7 +202,7 @@ else
                 if [ -f "$originale" ]; then
 
                     # faccio il diff del file disallineato rispetto al file standard
-                    diff -u "$originale" "$disallineamento" > $disallineamento.diff
+                    diff -u "$originale" "$disallineamento" > "$disallineamento.diff"
 
                 else
 
@@ -165,11 +213,11 @@ else
                     # risolto e non verrebbe mai promosso. Con /dev/null il file compare per
                     # intero come aggiunta.
                     echo "  NOTA: $originale non esiste a monte, è un file nuovo"
-                    diff -u /dev/null "$disallineamento" > $disallineamento.diff
+                    diff -u /dev/null "$disallineamento" > "$disallineamento.diff"
 
                 fi
 
-            done
+            done < <( find "$cartellaDisallineamenti" -type f ! -name '*.diff' -print0 )
 
         fi
 

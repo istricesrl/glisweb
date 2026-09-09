@@ -5,6 +5,11 @@ RL="../../"
 
 ## directory corrente
 cd $(dirname "$0")
+
+## funzioni
+. ./_lib/_functions.sh
+
+## passo alla cartella del deploy
 cd $RL
 
 ## informazioni
@@ -29,16 +34,40 @@ else
 
     echo "calcolo i disallineamenti rispetto alla versione installata del framework"
 
-    # NOTA: ./_* copre solo le cartelle con underscore; l'aggiornamento sovrascrive anche
-    # i dotfile e i file di root del framework, che vanno quindi controllati esplicitamente.
-    # Esclusi .gitignore e .githooks: sui deploy client sono legittimamente diversi dal
-    # framework (il .gitignore arriva da _usr/_deploy/_git/).
-    for f in $( find ./_* ./.claude ./.github ./.htaccess ./composer.json -newer ./var/latest.upgrade.conf 2>/dev/null ); do
-        if [ -f $f ]; then
-            echo "$f è disallineato"
-            mkdir -p ../disallineamenti.$( date '+%Y%m%d%H%M%S' )/
-            cp --parents $f ../disallineamenti.$( date '+%Y%m%d%H%M%S' )/
-        fi
-    done
+    # una sola data per tutta l'esecuzione: prima veniva ricalcolata dentro il ciclo, una volta
+    # per il mkdir e una per il cp, e a cavallo del secondo i file finivano in una cartella
+    # diversa da quella appena creata
+    cartellaDisallineamenti="../disallineamenti.$( date '+%Y%m%d%H%M%S' )/"
+
+    # il manifest lo scrive _gw.upgrade.sh alla fine di ogni aggiornamento: qui si puo' solo
+    # leggere, perche' questo script non installa niente e quindi non ha nessuna versione di
+    # riferimento da fotografare. Se manca NON si ripiega sul confronto per data: il ripiego ha
+    # senso dentro _gw.upgrade.sh, che il manifest lo scrive subito dopo, mentre qui lascerebbe
+    # credere di aver guardato bene quando non si e' guardato niente — ed e' esattamente il modo
+    # in cui finora le modifiche non promosse sparivano senza che nessuno se ne accorgesse
+    disallineamenti-manifest-controlla
+
+    case $? in
+
+        0)
+            disallineamenti-raccogli "$( disallineamenti-elenca )" "$cartellaDisallineamenti"
+            ;;
+
+        2)
+            echo "il manifest $DISALLINEAMENTI_MANIFEST c'è ma non riesco a leggerlo"
+            echo "lo scrive root con umask 027: rilancia questo script come root"
+            exit 1
+            ;;
+
+        *)
+            echo "il manifest $DISALLINEAMENTI_MANIFEST non c'è"
+            echo "questo deploy non è ancora stato aggiornato da quando il framework ha cominciato"
+            echo "a scriverlo: lancia _src/_sh/_gw.upgrade.sh <branch>, oppure aspetta"
+            echo "l'aggiornamento notturno. Il manifest viene scritto alla fine dell'aggiornamento,"
+            echo "e da lì in poi questo script funziona."
+            exit 1
+            ;;
+
+    esac
 
 fi
