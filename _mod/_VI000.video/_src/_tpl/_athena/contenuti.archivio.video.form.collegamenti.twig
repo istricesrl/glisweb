@@ -1,0 +1,110 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE ANAGRAFICA #}
+            <fieldset>
+                <legend>anagrafiche<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">anagrafica</span>
+                        {{ frm.select({ 'field': { 'name': 'id_anagrafica' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                 
+                </div>
+
+            </fieldset>
+
+            {# SEZIONE PAGINE #}
+            {% if 'PA000.pagine' in mods.active.array %}
+            <fieldset>
+                <legend>pagine<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">pagina</span>
+                        {{ frm.select({ 'field': { 'name': 'id_pagina' }, 'source': { 'values': etc.select.pagine }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                 
+                </div>
+
+            </fieldset>
+            {% endif %}
+
+            {# SEZIONE NOTIZIE #}
+            {% if 'NO000.notizie' in mods.active.array %}
+            <fieldset>
+                <legend>notizie<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">notizie</span>
+                        {{ frm.select({ 'field': { 'name': 'id_notizia' }, 'source': { 'values': etc.select.notizie }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">categorie notizia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_categoria_notizia' }, 'source': { 'values': etc.select.categorie_notizie }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                                     
+                </div>
+
+            </fieldset>
+            {% endif %}
+
+            {# SEZIONE CATALOGO #}
+            {% if 'PR000.prodotti' in mods.active.array %}
+            <fieldset>
+                <legend>catalogo<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">prodotti</span>
+                        {{ frm.select({ 'field': { 'name': 'id_prodotto' }, 'source': { 'values': etc.select.prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>             
+                    <div class="col col-md form-col">
+                        <span class="label-top">categorie prodotti</span>
+                        {{ frm.select({ 'field': { 'name': 'id_categoria_prodotti' }, 'source': { 'values': etc.select.categorie_prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>        
+                </div>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">articoli</span>
+                        {{ frm.select({ 'field': { 'name': 'id_articolo' }, 'source': { 'values': etc.select.articoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                                     
+                </div>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">marchi</span>
+                        {{ frm.select({ 'field': { 'name': 'id_marchio' }, 'source': { 'values': etc.select.marchi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>   
+                </div>
+
+            </fieldset>
+            {% endif %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
