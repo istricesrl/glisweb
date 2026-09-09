@@ -425,6 +425,14 @@ versione la dichiara **ogni template** in `etc/template.yaml`/`template.conf` (`
 carica il template che lo usa**: convertire le classi di un template ancora su BS4 lo rompe, perché
 i nomi BS5 (`ms-`, `me-`, `text-end`, `btn-close`, `g-0`) in BS4 non esistono, e viceversa.
 
+**Due sistemi di templating, e non tutti i deploy hanno entrambi.** Il sistema nuovo vive in
+`_src/_tpl/`, quello vecchio in `_src/_templates/`, e convivono di proposito: è così che un progetto
+migra dal vecchio al nuovo un template per volta, invece che in un colpo solo. La linea **stable**
+(`glisweb`) li ha tutti e due, ed è per questo che la migrazione di un progetto si fa **restando su
+stable**; la linea **latest** (`glisdev`) ha **solo** `_src/_tpl/` e non ha né `_src/_templates/` né
+`_src/_html/` né `_src/_tpl/_arianna`. Prima di cercare uno di quei percorsi, verifica che esista nel
+deploy su cui stai lavorando: l'elenco qui sotto descrive stable, che è il deploy che li contiene tutti.
+
 Stato dei **template di pagina** standard:
 
 - **già su BS5** (`bootstrap@5.3.2`): `_src/_tpl/_athena`, `_src/_tpl/_cassandra`, `_src/_tpl/_minerva`,
