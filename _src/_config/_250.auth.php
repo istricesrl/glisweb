@@ -1191,6 +1191,9 @@
         'tipologie_notizie' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'ruoli_anagrafica' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
     );
  
     // debug

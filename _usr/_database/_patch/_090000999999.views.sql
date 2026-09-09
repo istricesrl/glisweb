@@ -1853,6 +1853,37 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 	GROUP BY notizie.id
 ;
 
+-- | 090000022100
+
+-- notizie_anagrafica_view
+CREATE OR REPLACE VIEW `notizie_anagrafica_view` AS
+	SELECT
+		notizie_anagrafica.id,
+		notizie_anagrafica.id_notizia,
+		notizie.nome AS notizia,
+		notizie_anagrafica.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		notizie_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		notizie_anagrafica.ordine,
+		notizie_anagrafica.id_account_inserimento,
+		notizie_anagrafica.id_account_aggiornamento,
+		concat(                                               --
+			coalesce(                                         --
+                a1.denominazione,                             --
+                concat( a1.cognome, ' ', a1.nome ),           --
+                ''                                            --
+            ),                                                --
+			' / ',                                            --
+			notizie.nome                                 --
+		) AS __label__         
+	FROM notizie_anagrafica
+		LEFT JOIN notizie ON notizie.id = notizie_anagrafica.id_notizia
+		LEFT JOIN anagrafica AS a1 ON a1.id = notizie_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = notizie_anagrafica.id_ruolo
+	GROUP BY notizie_anagrafica.id
+;
+
 -- | 090000022201
 
 -- notizie_categorie_view
