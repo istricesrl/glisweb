@@ -1109,12 +1109,26 @@
                 }
 
                 // aggiungo il percorso con le macro standard e custom
-                // TODO considerare anche 'src/twig/' e '_mod/.../_src/_twig/' e 'mod/.../src/twig/'
+                // TODO considerare anche 'src/twig/' e 'mod/.../src/twig/'
                 if( file_exists( DIR_SRC_TWIG ) ) {
                     $loader->addPath( DIR_SRC_TWIG );
                     if( file_exists( path2custom( DIR_SRC_TWIG ) ) ) {
                         $loader->addPath( path2custom( DIR_SRC_TWIG ) );
                     }
+                }
+
+                // aggiungo i percorsi twig dei moduli attivi
+                //
+                // Un modulo puo' portarsi i propri snippet in _mod/<modulo>/_src/_twig/, cosi' come
+                // porta le proprie librerie e i propri task: e' il modo per tenere fuori dal core il
+                // codice che vale solo dove quel modulo c'e'. La glob gira su DIR_MOD_ATTIVI, quindi
+                // il percorso esiste solo per i moduli ATTIVI, ed e' la ragione per cui uno snippet
+                // di modulo non puo' finire in una pagina di un deploy che quel modulo non ha.
+                //
+                // I percorsi si aggiungono DOPO quello del core, perche' addPath() accoda: a parita'
+                // di nome vince lo snippet standard, e un modulo non puo' scavalcarlo per sbaglio.
+                foreach( array_unique( glob( glob2custom( DIR_MOD_ATTIVI_SRC_TWIG ), GLOB_BRACE ) ) as $add ) {
+                    $loader->addPath( $add );
                 }
 
                 // log

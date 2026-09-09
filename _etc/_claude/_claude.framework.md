@@ -518,6 +518,15 @@ rendering della pagina (`_src/_api/_pages.php`):
 Un modulo `_mod/_XXXXX.name/` è attivo solo se esiste la directory corrispondente in `mod/`. Ogni modulo replica
 la struttura base (`_src/_config/`, `_src/_lib/`, ecc.) e i suoi file vengono caricati dopo quelli base.
 
+**Un modulo può portarsi i propri snippet Twig** in `_mod/<modulo>/_src/_twig/`, con la stessa struttura del core
+(`_inc/`, `_lib/`): il loader li aggiunge solo per i moduli **attivi**, e li aggiunge *dopo* quelli standard, quindi
+a parità di nome vince lo snippet del core e un modulo non può scavalcarlo per sbaglio. È il posto giusto per il
+markup che ha senso solo dove quel modulo c'è: se sta nel core, un deploy che non ha il modulo lo include lo stesso
+e Twig si ferma con `Unable to find template`. Per lo stesso motivo, quando un template del core include qualcosa
+che appartiene a un modulo, **la condizione dell'include va messa sull'esistenza del modulo** — che si riconosce
+dalla sua chiave in `$ct`, popolata dal suo `_035.common.php` — e non su una configurazione che può essere presente
+anche senza di lui.
+
 ---
 
 ## Job in background: come si scrive uno che non si pianta

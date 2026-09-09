@@ -1089,6 +1089,7 @@
     define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'        , DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
     define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'              , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
     define( 'DIR_MOD_ATTIVI_SRC_LIB'                    , DIR_MOD_ATTIVI . '_src/_lib/' );
+    define( 'DIR_MOD_ATTIVI_SRC_TWIG'                   , DIR_MOD_ATTIVI . '_src/_twig/' );
     define( 'DIR_MOD_ATTIVI_ETC_DICTIONARIES'           , DIR_MOD_ATTIVI . '_etc/_dictionaries/' );
 
     // collego $ct

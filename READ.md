@@ -174,6 +174,12 @@ mailing. Ogni modulo rispecchia la struttura base del framework (`_src/_config/`
 L'attivazione richiede solo la presenza della cartella; alcuni moduli, però, si aspettano poi tabelle dedicate
 nel database o proprie chiavi di configurazione.
 
+Un modulo può anche portarsi i propri snippet Twig in `_mod/<modulo>/_src/_twig/`, con la stessa struttura del
+core: `/_src/_api/_pages.php` aggiunge quei percorsi al loader soltanto per i moduli attivi, e dopo quelli
+standard, così a parità di nome vince lo snippet del core. È il posto in cui mettere il markup che ha senso solo
+dove quel modulo c'è, invece di lasciarlo in `/_src/_twig/` dove verrebbe incluso anche da un deploy che il modulo
+non lo ha.
+
 ### normalizzare i permessi
 Una volta completata la configurazione, normalizza i permessi del deploy con
 `sudo _src/_sh/_lamp.permissions.secure.sh`: lo script ripristina lo standard `root:www-data` su file e
