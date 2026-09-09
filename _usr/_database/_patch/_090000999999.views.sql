@@ -1016,7 +1016,30 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.esigibilita, 
-		sum( coalesce( pagamenti.importo_lordo_finale, pagamenti.importo_lordo_totale, 0 ) ) AS totale_lordo_finale,
+		-- Il totale di un documento e' quello che vale la prestazione, non i soli contanti.
+		--
+		-- Fix 2026-09-08. `importo_lordo_finale` e' la sola parte pagata in denaro: una ricevuta
+		-- saldata per intero con un coupon ci metteva dentro ZERO. E non in modo coerente, perche'
+		-- il ripiego su `importo_lordo_totale` scattava solo con NULL e mai con `0.00`, che i vari
+		-- flussi di checkout scrivono uno per uno: due ricevute della stessa tornata finivano cosi'
+		-- a dichiarare l'importo in due modi diversi ( segreteria Polisportiva Masi, 08/09/2026 ).
+		--
+		-- Il coupon e' un modo di pagare, non uno sconto sul dovuto: va sommato al contante. E'
+		-- la stessa somma che la stampa della ricevuta usa da sempre come totale pagato
+		-- ( coupon_valore + importo_lordo_finale ). Il ripiego sul nominale resta per il solo caso
+		-- in cui non si sa ne' quanto e' stato incassato ne' quanto coperto dal buono: la rata
+		-- pianificata e non ancora saldata.
+		--
+		-- NOTA per chi tocchera' questa vista: la `sum()` sta dentro un GROUP BY che ha in JOIN
+		-- anche `relazioni_documenti` ( r1/r2 ), quindi su un documento con N pagamenti e M
+		-- documenti collegati il totale risulta moltiplicato per M. Difetto reale ma indipendente
+		-- da questo, e non verificabile qui: su questo deploy `relazioni_documenti` e' vuota.
+		sum(
+			CASE WHEN pagamenti.importo_lordo_finale IS NULL AND pagamenti.coupon_valore IS NULL
+			     THEN coalesce( pagamenti.importo_lordo_totale, 0 )
+			     ELSE coalesce( pagamenti.importo_lordo_finale, 0 ) + coalesce( pagamenti.coupon_valore, 0 )
+			END
+		) AS totale_lordo_finale,
 		sum( coalesce( pagamenti.coupon_valore, 0 ) ) AS totale_coupon,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
