@@ -18,21 +18,50 @@ echo "lavoro su: $(pwd)"
 ## pulizia schermo
 clear
 
-## prendo il nome del repository
+## prendo il nome del repository e capisco se e' un repository del framework
+#
+# Fix 2026-09-09: fino a qui la guardia guardava SOLO il nome del remote e cercava la stringa
+# 'glisweb'. Bastava quindi che un repository del framework si chiamasse diversamente perche' la
+# guardia non lo intercettasse: glisdev e glistest hanno tutt'e due il remote 'glisdev.git', e su
+# quei due lo script sarebbe partito, avrebbe fatto `rm -rf ./_*` sul sorgente del framework e
+# avrebbe spezzato la condivisione di inode con glisweb. L'unica cosa che li proteggeva era che
+# non hanno update.branch.conf e quindi il cron notturno li salta: una protezione per omissione,
+# che sarebbe caduta al primo lancio a mano.
+#
+# Il controllo che regge davvero e' il secondo, e guarda il CONTENUTO invece del nome: su un
+# repository del framework i file standard sono versionati, perche' sono il sorgente; su un
+# deploy cliente arrivano dallo zip e il .gitignore ( che viene da _usr/_deploy/_git/ ) li
+# esclude con `_*/`. Verificato su tutti i deploy della macchina: 1 sui tre repository del
+# framework, 0 sui cinque deploy cliente. Non si aggira rinominando un remote.
+FRAMEWORK=""
+
 if [[ -d "./.git" ]]; then
+
     for r in $( git remote ); do
         GITNAME="$GITNAME "$( basename $(git remote get-url $r) )
     done
+
+    if [ -n "$( git ls-files -- _src/_config.php 2>/dev/null )" ]; then
+        FRAMEWORK="1"
+    fi
+
 fi
 
 ## se sto lavorando sul framework
-if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
+if [ -n "$FRAMEWORK" ] || [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
 
     echo "stai lavorando sul framework ($GITNAME), utilizza git per rimanere aggiornato"
     echo
-    echo "NOTA: potresti ricevere questo messaggio anche se sei su un repository custom che"
-    echo "però contiene 'glisweb' nel nome; rinomina il tuo repository affinché non contenga"
-    echo "la parola riservata 'glisweb' nel nome"
+
+    if [ -n "$FRAMEWORK" ]; then
+        echo "i file standard _* sono versionati in questo repository, quindi ne è il sorgente:"
+        echo "aggiornarlo da uno zip cancellerebbe il lavoro non ancora pubblicato e, dove i file"
+        echo "sono hard-linked con un altro deploy del framework, spezzerebbe la condivisione"
+    else
+        echo "NOTA: potresti ricevere questo messaggio anche se sei su un repository custom che"
+        echo "però contiene 'glisweb' nel nome; rinomina il tuo repository affinché non contenga"
+        echo "la parola riservata 'glisweb' nel nome"
+    fi
 
 else
 

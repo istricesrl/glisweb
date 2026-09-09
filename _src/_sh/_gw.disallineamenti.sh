@@ -18,15 +18,26 @@ echo "lavoro su: $(pwd)"
 ## pulizia schermo
 clear
 
-## prendo il nome del repository
+## prendo il nome del repository e capisco se e' un repository del framework
+# stessa guardia di _gw.upgrade.sh, e va tenuta allineata a quella: il controllo che regge e' il
+# secondo, che guarda se i file standard sono VERSIONATI qui. Sul nome non ci si puo' fidare,
+# perche' glisdev e glistest hanno tutt'e due il remote 'glisdev.git'
+FRAMEWORK=""
+
 if [[ -d "./.git" ]]; then
+
     for r in $( git remote ); do
         GITNAME="$GITNAME "$( basename $(git remote get-url $r) )
     done
+
+    if [ -n "$( git ls-files -- _src/_config.php 2>/dev/null )" ]; then
+        FRAMEWORK="1"
+    fi
+
 fi
 
 ## se sto lavorando sul framework
-if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
+if [ -n "$FRAMEWORK" ] || [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
 
     echo "stai lavorando sul framework ($GITNAME), utilizza git per rimanere aggiornato"
 
