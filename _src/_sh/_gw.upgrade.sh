@@ -102,9 +102,6 @@ else
         # branch da scaricare
         BRANCH=$1
 
-        # scarico Glisweb
-        wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip
-
         # pulisco il nome del file zip dai prefissi
         BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
         BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
@@ -112,8 +109,45 @@ else
         # pulisco il nome della cartella dai prefissi
         BRANCHDIR=${BRANCH////-}
 
+        # residui di un tentativo precedente andato male: se restassero, i controlli qui sotto
+        # li scambierebbero per il risultato di questo giro e darebbero via libera al rm -rf
+        rm -rf ./glisweb-$BRANCHDIR
+        rm -f ./$BRANCHZIP.zip
+
+        # scarico Glisweb
+        #
+        # ATTENZIONE: da qui alla riga del rm -rf ./_* non si distrugge ancora niente, ed e'
+        # l'unico momento in cui ci si puo' ancora fermare. Fino al 2026-09-09 non ci si fermava:
+        # ne' il wget ne' l'unzip erano controllati, e il rm -rf ./_* partiva comunque. Bastava
+        # che GitHub non rispondesse, o che il branch fosse scritto male, per radere al suolo il
+        # framework di un deploy e lasciarlo senza niente da rimetterci sopra: il cp subito dopo
+        # non aveva nessuna sorgente da cui copiare. Sotto cron, di notte, in silenzio.
+        #
+        # Ogni controllo qui sotto esce PRIMA del rm -rf, quindi il deploy resta esattamente
+        # com'era e riprova al giro successivo.
+        if ! wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip; then
+            echo "ERRORE: scaricamento di $BRANCH.zip fallito, il framework NON viene toccato"
+            exit 1
+        fi
+
+        if [ ! -s ./$BRANCHZIP.zip ]; then
+            echo "ERRORE: ./$BRANCHZIP.zip assente o vuoto dopo il download, il framework NON viene toccato"
+            exit 1
+        fi
+
         # scompatto Glisweb
-        unzip -qq ./$BRANCHZIP.zip
+        if ! unzip -qq ./$BRANCHZIP.zip; then
+            echo "ERRORE: scompattamento di ./$BRANCHZIP.zip fallito, il framework NON viene toccato"
+            exit 1
+        fi
+
+        # controllo che sia davvero un framework e non una pagina di errore rinominata .zip:
+        # _src/_config.php e' il bootstrap, senza quello non c'e' niente da installare
+        if [ ! -f ./glisweb-$BRANCHDIR/_src/_config.php ]; then
+            echo "ERRORE: ./glisweb-$BRANCHDIR/ non contiene _src/_config.php, non sembra una"
+            echo "        distribuzione del framework. Il framework NON viene toccato"
+            exit 1
+        fi
 
         # elimino il vecchio framework
         # NOTA: ./_* comprende anche il vendor _src/_lib/_ext (escluso dal backup):
