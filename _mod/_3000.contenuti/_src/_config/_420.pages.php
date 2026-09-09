@@ -40,6 +40,23 @@
             $joinTable = 'categorie_prodotti';
             $subPages = true;
 
+        } elseif( isset( $cf['contents']['page']['metadati']['id_articolo'] ) ) {
+
+            /**
+             * LA PAGINA DI UN ARTICOLO
+             *
+             * Va PRIMA di quella del prodotto, perche' la pagina di un articolo porta nei metadati
+             * tutti e due gli id: senza questo ramo si leggerebbe sempre il contenuto del prodotto,
+             * e un articolo con un testo suo non lo mostrerebbe mai.
+             *
+             * Il ripiego articolo -> prodotto e' qualche riga piu' sotto, dopo la query: qui si
+             * sceglie un solo campo di aggancio, e il ripiego ha bisogno di una seconda lettura.
+             */
+            $joinField = 'id_articolo';
+            $joinValue = $cf['contents']['page']['metadati']['id_articolo'];
+            $joinTable = 'articoli';
+            $subPages = false;
+
         } elseif( isset( $cf['contents']['page']['metadati']['id_prodotto'] ) ) {
 
             $joinField = 'id_prodotto';
@@ -97,6 +114,29 @@
                 array( 's' => $cf['localization']['language']['id'] )
             )
         );
+
+        /**
+         * IL RIPIEGO ARTICOLO -> PRODOTTO
+         *
+         * Se la pagina e' quella di un articolo che un contenuto suo non ce l'ha, si sale al suo
+         * prodotto. E' la regola del modello a tre tipologie, la stessa che _310.pages.php applica
+         * a contenuti, immagini e metadati: quello che l'articolo ha se lo tiene, il resto lo
+         * prende dal prodotto. Serve alle voci di listino, che una scheda propria non ce l'hanno e
+         * descrivono la macchina del loro modello.
+         */
+        if( empty( $cnt ) && $joinField === 'id_articolo' && ! empty( $cf['contents']['page']['metadati']['id_prodotto'] ) ) {
+
+            $cnt = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT testo AS content, abstract, specifiche, keywords, description, robots FROM contenuti '.
+                'WHERE id_prodotto = ? AND id_lingua = ?',
+                array(
+                    array( 's' => $cf['contents']['page']['metadati']['id_prodotto'] ),
+                    array( 's' => $cf['localization']['language']['id'] )
+                )
+            );
+
+        }
 
         // die( 'contenuto ' . print_r( $cnt, true ) );
 

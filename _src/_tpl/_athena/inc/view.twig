@@ -50,7 +50,7 @@
             {% endfor %}
 
             {% if page.parents.path|length() > 1 and view.dashboard.sezione %}
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="submitFormOkay=true;$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
             {% endif %}
 
             {% if etc.include.insert %}
@@ -83,10 +83,10 @@
                     <th class="{{ view.class[key] }}">
                         {% if view.cols[ key ] %}
                         <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-                        <select class="fa-select form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                        <select class="form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submitFormOkay=true; submit();">
                         <option value="">{{ view.cols[ key ] }}</option>
-                        <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                        <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                        <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25B2;</option>
+                        <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25BC;</option>
                         </select>
                         <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                         {% endif %}
@@ -139,8 +139,8 @@
                 {% if view.data %}
                 <div class="input-group">
                     <input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
-                    <select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submitFormOkay=true; submit(); }"><i class="fa fa-chevron-left"></i></button>
+                    <select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submitFormOkay=true; submit();">
                         {% set spage = session.__view__[ view.id ].__pager__.page - 25 %}
                         {% set lpage = session.__view__[ view.id ].__pager__.page + 25 %}
                         {% if lpage > session.__view__[ view.id ].__pager__.pages %}{% set lpage = session.__view__[ view.id ].__pager__.pages %}{% endif %}
@@ -158,7 +158,7 @@
                         <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
                         {% endif %}
                     </select>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submitFormOkay=true; submit(); }"><i class="fa fa-chevron-right"></i></button>
                 </div>
                 {% endif %}
             </div>

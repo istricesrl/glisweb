@@ -91,7 +91,15 @@
 
         foreach( $figli as $k => $c ) {
 
-            if( ! empty( $c['id_genitore'] ) ) {
+            // il genitore si legge UNA VOLTA SOLA, e solo se non c'e' gia'
+            //
+            // prima la riga veniva riletta e riassegnata per ogni figlio. Due effetti, tutti e due
+            // sbagliati: una query in piu' per ogni caratteristica, e soprattutto la perdita del
+            // valore. Un gruppo puo' avere un valore suo ( e' li' che finiscono le voci di elenco
+            // senza etichetta, per esempio gli accessori in dotazione ): quel valore arriva dalla
+            // prima query, e la rilettura secca lo cancellava perche' SELECT * FROM
+            // caratteristiche_prodotti la colonna valore non ce l'ha.
+            if( ! empty( $c['id_genitore'] ) && ! isset( $ct['page']['contents']['caratteristiche'][ $c['id_genitore'] ] ) ) {
                 $ct['page']['contents']['caratteristiche'][ $c['id_genitore'] ] = mysqlSelectRow(
                     $cf['mysql']['connection'],
                     'SELECT * FROM caratteristiche_prodotti WHERE id = ? ',

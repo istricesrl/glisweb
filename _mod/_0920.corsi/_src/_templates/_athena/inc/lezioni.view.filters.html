@@ -15,7 +15,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">giorno</span>
-		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" onchange="submit();"
+		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" onchange="submitFormOkay=true; submit();"
 			class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK=="" %}selected{% endif
 				%}>tutti</option>
@@ -28,7 +28,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">luogo</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_luogo][LK]" onchange="submit();"
+		<select name="__view__[{{ view.id }}][__filters__][id_luogo][LK]" onchange="submitFormOkay=true; submit();"
 			class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ=="" %}selected{% endif %}>tutti
 			</option>
@@ -47,7 +47,7 @@
 <div class="form-row view-filters d-print-none">
 	<div class="col-12 col-md-auto">
 		<span class="label-top">corso</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="submit();"
+		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="submitFormOkay=true; submit();"
 			class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ=="" %}selected{% endif %}>
 				tutti</option>

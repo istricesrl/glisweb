@@ -1,7 +1,7 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-12 col-md-auto">
 		<span class="label-top">stato</span>
-		<select name="__view__[{{ view.id }}][__filters__][timestamp_archiviazione][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_archiviazione][NL]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_archiviazione.NL == "1" %}selected{% endif %}>attive</option>
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_archiviazione.NL == "" %}selected{% endif %}>archiviate</option>
 		</select>

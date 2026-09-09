@@ -34,6 +34,15 @@
 	    'text' => 'duplica l\'articolo corrente'
 	);
 
+    // cambia il codice
+	$ct['page']['contents']['metro']['azioni'][] = array(
+        'modal' => array('id' => 'codice', 'include' => 'inc/articoli.form.tools.modal.codice.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-barcode',
+	    'title' => 'cambia il codice',
+	    'text' => 'cambia il codice articolo e lo ripunta su tutto quello che ci sta attaccato'
+	);
+
     // aggiunta al carrello
 	if( in_array( "4170.ecommerce", $cf['mods']['active']['array'] ) ) {
 

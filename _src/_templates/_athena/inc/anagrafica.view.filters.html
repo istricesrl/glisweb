@@ -1,7 +1,7 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-6 col-md-auto">
 		<span class="label-top">stato</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_stato][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][id_stato][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_stato.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for stato in etc.select.stati %}
 			<option value="{{ stato.id }}"   {% if request.__view__[ view.id ].__filters__.id_stato.EQ == stato.id %}selected{% endif %}>{{ stato.__label__ }}</option>
@@ -11,7 +11,7 @@
 	{% if request.__view__[ view.id ].__filters__.id_stato.EQ %}
     <div class="col-6 col-md-auto">
 		<span class="label-top">provincia</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_provincia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][id_provincia][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_provincia.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for provincia in etc.select.provincie %}
 			<option value="{{ provincia.id }}"   {% if request.__view__[ view.id ].__filters__.id_provincia.EQ == provincia.id %}selected{% endif %}>{{ provincia.__label__ }}</option>
@@ -21,7 +21,7 @@
 	{% endif %}
     <div class="col-12 col-md-auto">
 		<span class="label-top">categoria</span>
-		<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.categorie.LK == "" %}selected{% endif %}>tutti</option>
 			{% for categoria in etc.select.categorie_anagrafica %}
 			<option value="{{ categoria.__label__ }}" {% if request.__view__[ view.id ].__filters__.categorie.LK == categoria.__label__ %}selected{% endif %}>{{ categoria.__label__ }}</option>

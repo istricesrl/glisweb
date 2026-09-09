@@ -333,6 +333,14 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        // caratteristiche_prodotti e' l'albero vero usato dal modulo prodotti; 'caratteristiche'
+        // qui sopra e' la tabella piatta del framework, che i moduli non usano. Senza questo
+        // permesso l'API REST /api/caratteristiche_prodotti risponde 401 e i campi che si popolano
+        // per ricerca non funzionano
+        'caratteristiche_prodotti' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'listini_gruppi' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )

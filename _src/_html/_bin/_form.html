@@ -91,7 +91,7 @@
 <input type="text" class="{% if disabled %}disabled{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, defval, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled, change, modal ) %}
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, defval, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled, change, modal, restrict ) %}
 {% if subtable %}
     {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
@@ -124,7 +124,18 @@
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">
-	    <input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if defval %} defval="{{ defval }}"{% endif %} {% if not noempty %}empty{% endif %} defval="{{ defval }}" data-live-search="true" populate-api="{{ api }}">
+	    {#
+	       restrict-<campo>="<operatore>:<valore>" restringe la ricerca REST.
+
+	       Non e' un'invenzione: _src/_js/_lib/_selectbox.js ( righe 174-183 ) legge qualunque
+	       attributo che comincia per "restrict-" e lo gira alla chiamata come
+	       __info__[<api>][__restrict__][<campo>][<operatore>]. La macro Twig gemella,
+	       _src/_twig/_lib/_form.twig riga 448, li emetteva gia' allo stesso modo; qui mancavano,
+	       ed e' per questo che nessun campo di questi template poteva essere ristretto.
+
+	       Si passa come array: { 'id_prodotto': { 'IN': 'GS3300|OPZIONI' } }
+	    #}
+	    <input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if defval %} defval="{{ defval }}"{% endif %} {% if not noempty %}empty{% endif %} defval="{{ defval }}" data-live-search="true" populate-api="{{ api }}"{% for res,val in restrict %} restrict-{{ res }}="{{ val|keys|first }}:{{ val|first }}"{% endfor %}>
     </div>
     {% else %}
     <div class="col combobox-container p-0">

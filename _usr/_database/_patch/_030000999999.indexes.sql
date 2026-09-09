@@ -232,6 +232,62 @@ ALTER TABLE `caratteristiche`
 -- caratteristiche
 ALTER TABLE `caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000002910
+
+-- caratteristiche_prodotti
+--
+-- l'indice unico ( nome, id_genitore ) NON protegge le radici: in MySQL i NULL non fanno mai
+-- conflitto su un indice unico, e le radici hanno id_genitore NULL. Chi scrive deve passare la
+-- chiave di ricerca esplicita a mysqlInsertRow().
+ALTER TABLE `caratteristiche_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome_id_genitore` (`nome`,`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
+
+-- | 030000002911
+
+-- caratteristiche_prodotti
+ALTER TABLE `caratteristiche_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000002920
+
+-- prodotti_caratteristiche
+ALTER TABLE `prodotti_caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`);
+
+-- | 030000002921
+
+-- prodotti_caratteristiche
+ALTER TABLE `prodotti_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000002930
+
+-- articoli_caratteristiche
+ALTER TABLE `articoli_caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_articolo`,`id_caratteristica`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`se_assente`);
+
+-- | 030000002931
+
+-- articoli_caratteristiche
+ALTER TABLE `articoli_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003050
 
 -- carrelli_articoli
@@ -618,6 +674,7 @@ ALTER TABLE `documenti`
 	ADD KEY `porto` (`porto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `tipologia_data` (`id_tipologia`,`data`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
 
 -- | 030000009801
@@ -2217,3 +2274,15 @@ ALTER TABLE `istruzioni`
 -- istruzioni
 ALTER TABLE `istruzioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+
+-- | 030000063500
+
+-- taglie
+ALTER TABLE `taglie`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+
+-- | 030000063501
+
+-- taglie
+ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;

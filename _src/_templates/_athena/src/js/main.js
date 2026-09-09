@@ -3,6 +3,34 @@
 	var formChanged = false;
 	var submitFormOkay = false;
 
+    // dice se un modulo e' stato modificato DAVVERO
+    //
+    // formChanged da solo non basta: e' acceso da un binding su 'keyup change' del form, e keyup
+    // scatta anche su Tab, frecce ed Esc, cioe' semplicemente spostandosi fra i campi senza
+    // toccare niente. Da li' il popup "esci da questa pagina" su schede mai modificate.
+    //
+    // Qui si confronta lo stato attuale del modulo con quello fotografato al caricamento. CKEditor
+    // va chiesto a parte, perche' riversa il suo contenuto nella textarea solo al submit e quindi
+    // una sua modifica in serialize() non si vedrebbe.
+    function glisModuloModificato() {
+
+        if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
+            for( var i in CKEDITOR.instances ) {
+                if( CKEDITOR.instances[i].checkDirty() ) { return true; }
+            }
+        }
+
+        var modificato = false;
+
+        $('.warning-if-changed').each( function() {
+            if( $(this).serialize() !== $(this).data('glis-stato-iniziale') ) { modificato = true; }
+        });
+
+        return modificato;
+
+    }
+
+
     // duplica un subform
 	function duplicate( f ) {
 
@@ -278,13 +306,21 @@
 
 	    // attivo le verifiche per le modifiche ai form
 		window.addEventListener("beforeunload", function(e) {
-		    if( formChanged == true && ! submitFormOkay ) {
+		    if( formChanged == true && ! submitFormOkay && glisModuloModificato() ) {
 			var confirmationMessage = 'sei sicuro di voler abbandonare la pagina?';
 			( e || window.event ).returnValue = confirmationMessage;
 		    }
 		});
 
-		$('.warning-if-changed').on( 'keyup change', function() { formChanged = true; } );
+		// fotografia dello stato del modulo appena caricato, per glisModuloModificato()
+        $('.warning-if-changed').each( function() { $(this).data( 'glis-stato-iniziale', $(this).serialize() ); } );
+
+        // i comandi di una vista ( ricerca, filtri, ordinamento, paginazione ) sono navigazione,
+        // non modifiche ai dati: non devono marcare il modulo come sporco
+        $('.warning-if-changed').on( 'keyup change', function( e ) {
+            if( $( e.target ).closest( '.view-filters, .view-controls, .view-table' ).length ) { return; }
+            formChanged = true;
+        } );
 
 		// hardening campi data: normalizzo i timestamp_* (eventuale formato italiano d/m/Y) a ISO
 		// prima che arrivino al server. Copre i browser dove datetime-local degrada a input testo.

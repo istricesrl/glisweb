@@ -1,0 +1,30 @@
+<div class="form-row view-filters d-print-none">
+    <div class="col-6 col-md-auto">
+		<span class="label-top">pubblicazione</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_tipologia_pubblicazione][IN]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
+			<option value="{{ etc.pubblicate }}" {% if request.__view__[ view.id ].__filters__.id_tipologia_pubblicazione.IN == etc.pubblicate %}selected{% endif %}>pubblicati</option>
+			{% for tipologia in etc.select.tipologie_pubblicazioni %}
+			<option value="{{ tipologia.id }}" {% if request.__view__[ view.id ].__filters__.id_tipologia_pubblicazione.IN == tipologia.id %}selected{% endif %}>{{ tipologia.__label__ }}</option>
+			{% endfor %}
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia_pubblicazione.IN == "" %}selected{% endif %}>tutti</option>
+		</select>
+    </div>
+    <div class="col-12 col-md-auto">
+		<span class="label-top">categoria</span>
+		<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.categorie.LK == "" %}selected{% endif %}>tutte</option>
+			{% for categoria in etc.select.categorie_prodotti %}
+			<option value="{{ categoria.__label__ }}" {% if request.__view__[ view.id ].__filters__.categorie.LK == categoria.__label__ %}selected{% endif %}>{{ categoria.__label__ }}</option>
+			{% endfor %}
+		</select>
+    </div>
+	<div class="col">
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+    </div>
+    <div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+    </div>
+</div>

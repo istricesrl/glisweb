@@ -70,7 +70,7 @@
 				<div class="form-row">
 					<div class="col">
 						<span class="label-top">disciplina</span>
-						<select name="__modifica__[id_disciplina]" id="__modifica___id_disciplina" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+						<select name="__modifica__[id_disciplina]" id="__modifica___id_disciplina" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 							<option value="">tutte</option>
 							{% for tipologia in etc.select.discipline %}
 							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>

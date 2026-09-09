@@ -692,10 +692,20 @@
 
         // se il percorso è una cartella
         if( is_dir( $d ) ) {
+
+            // CATCH_GET_CHILD: una sottocartella illeggibile si salta, non ferma tutto
+            //
+            // senza questo flag RecursiveDirectoryIterator::getChildren() lancia una
+            // UnexpectedValueException appena incontra una cartella su cui www-data non ha i
+            // permessi ( il caso tipico e' il .git del deploy ), e siccome nessuno la cattura
+            // la richiesta muore con un fatal error. Chi chiede l'elenco dei file di un albero
+            // vuole i file che puo' leggere, non un'eccezione.
             return new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator( $d, FilesystemIterator::SKIP_DOTS ),
-                RecursiveIteratorIterator::CHILD_FIRST
+                RecursiveIteratorIterator::CHILD_FIRST,
+                RecursiveIteratorIterator::CATCH_GET_CHILD
             );
+
         }
 
         // restituisco false di default

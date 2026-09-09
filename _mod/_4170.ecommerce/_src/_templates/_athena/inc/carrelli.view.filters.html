@@ -2,7 +2,7 @@
 
 	<div class="col-4 col-md-auto">
 		<span class="label-top">sito</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_sito][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][id_sito][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for t in etc.select.siti %}
 			<option value="{{ t.id }}" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == t.id %}selected{% endif %}>{{ t.__label__ }}</option>
@@ -12,7 +12,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">conferma</span>
-		<select name="__view__[{{ view.id }}][__filters__][timestamp_checkout][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_checkout][NL]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "" %}selected{% endif %}>tutti</option>
 			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "-1" %}selected{% endif %}>confermati</option>
 			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "1" %}selected{% endif %}>non confermati</option>
@@ -21,7 +21,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">pagamento</span>
-		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutti</option>
 			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "-1" %}selected{% endif %}>pagati</option>
 			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagati</option>
@@ -30,7 +30,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">provider</span>
-		<select name="__view__[{{ view.id }}][__filters__][provider_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][provider_pagamento][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for provider in ecommerce.profile.provider %}
 			<option value="{{ provider.id }}" x-filter-value="{{ request.__view__[ view.id ].__filters__.provider_pagamento.EQ }}" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == provider.id %}selected{% endif %}>{{ provider.__label__ }}</option>
@@ -40,7 +40,7 @@
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">evasione</span>
-		<select name="__view__[{{ view.id }}][__filters__][timestamp_evasione][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_evasione][NL]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "" %}selected{% endif %}>tutti</option>
 			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "-1" %}selected{% endif %}>evasi</option>
 			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "1" %}selected{% endif %}>non evasi</option>

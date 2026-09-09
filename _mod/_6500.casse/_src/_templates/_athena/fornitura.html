@@ -78,10 +78,10 @@
                         <th class="{{ view.class[key] }}">
                             {% if view.cols[ key ] %}
                             <input type="hidden" name="__view__[clienti][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__.clienti.__sort__[ key ] }}">
-                            <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                            <select class="form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submitFormOkay=true; submit();">
                             <option value="">{{ view.cols[ key ] }}</option>
-                            <option value="ASC"{% if session.__view__.clienti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                            <option value="DESC"{% if session.__view__.clienti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                            <option value="ASC"{% if session.__view__.clienti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25B2;</option>
+                            <option value="DESC"{% if session.__view__.clienti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25BC;</option>
                             </select>
                             <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                             {% endif %}
@@ -116,10 +116,10 @@
                     <th class="{{ view.class[key] }}">
                         {% if view.cols[ key ] %}
                         <input type="hidden" name="__view__[clienti_esistenti][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__.clienti_esistenti.__sort__[ key ] }}">
-                        <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                        <select class="form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submitFormOkay=true; submit();">
                         <option value="">{{ view.cols[ key ] }}</option>
-                        <option value="ASC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                        <option value="DESC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                        <option value="ASC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25B2;</option>
+                        <option value="DESC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25BC;</option>
                         </select>
                         <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                         {% endif %}
@@ -193,10 +193,10 @@
             <th class="{{ view.class[key] }}">
                 {% if view.cols[ key ] %}
                 <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-                <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                <select class="form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submitFormOkay=true; submit();">
                 <option value="">{{ view.cols[ key ] }}</option>
-                <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25B2;</option>
+                <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25BC;</option>
                 </select>
                 <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                 {% endif %}
@@ -252,10 +252,10 @@
             <th class="{{ view.class[key] }}">
                 {% if view.cols[ key ] %}
                 <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-                <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                <select class="form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submitFormOkay=true; submit();">
                 <option value="">{{ view.cols[ key ] }}</option>
-                <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25B2;</option>
+                <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#x25BC;</option>
                 </select>
                 <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                 {% endif %}

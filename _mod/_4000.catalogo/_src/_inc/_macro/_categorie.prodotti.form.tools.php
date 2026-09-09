@@ -56,6 +56,26 @@
         }
     }
 
+    /*
+     * L'ELENCO DEI FILE DA CARICARE VIA FTP QUI NON SERVE, E FACEVA MORIRE LA PAGINA
+     * ============================================================================
+     *
+     * Questo blocco arriva pari pari da _mod/_3000.contenuti/_src/_inc/_macro/_pagine.form.tools.php,
+     * dove pero' e' commentato: serve solo alla modale "pubblica pagina", che qui sopra e'
+     * commentata anche lei. Quindi era codice morto, che nessun template legge.
+     *
+     * Morto ma non gratis: cercava il template con "SELECT template FROM pagine WHERE id = ?"
+     * passando l'id dell'ENTITA' DI QUESTA PAGINA, che non e' un id di pagine. Nessuna riga
+     * tornava, $template restava vuoto, e getRecursiveFileList() finiva per scandire tutta la
+     * document root: sul primo deploy con un .git non leggibile da www-data l'iteratore lanciava
+     * una UnexpectedValueException non gestita e la scheda "azioni" moriva con un fatal error.
+     *
+     * Lasciato commentato come nell'originale invece che corretto: se un domani la modale
+     * "pubblica" viene riattivata, va riscritto leggendo il template dalla tabella dell'entita'
+     * ( $ct['form']['table'], che qui la colonna template ce l'ha ) e filtrando le immagini e i
+     * file per la loro colonna, non per id_pagina.
+     */
+/*
     // ...
     $ct['etc']['upload'] = array_merge(
         mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
@@ -83,6 +103,7 @@
             getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
         );
     }
+*/
 
     // debug
     // die( $template );

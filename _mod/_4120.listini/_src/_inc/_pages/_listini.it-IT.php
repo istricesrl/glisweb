@@ -188,31 +188,24 @@
                                                 ) )
 	);
 
-    // vista reparti
-	$p['reparti.view'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'reparti' ),
-	    'h1'			=> array( $l		=> 'reparti' ),
-	    'parent'		=> array( 'id'		=> 'catalogo' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_reparti.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'reparti.view' ) ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'reparti' ),
-		'priority'	=> '045' ) ) )
-	);
-
-	// gestione reparti
-	$p['reparti.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'reparti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_reparti.form.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
-	);
+    /*
+     * I REPARTI NON SONO DI QUESTO MODULO
+     * ====================================
+     *
+     * Qui c'erano reparti.view e reparti.form, copiate da un altro modulo insieme al commento
+     * "// vista reparti" che in questo file compare anche sopra prezzi.view e sopra sconti.view.
+     * Puntavano a _src/_inc/_macro/_reparti.view.php e _reparti.form.php DENTRO 4120.listini,
+     * che questo modulo non ha e non ha mai avuto.
+     *
+     * Le pagine buone stanno in _mod/_0020.archivio/_src/_inc/_pages/_archivio.it-IT.php, con le
+     * loro macro. Siccome le pagine dei moduli si sommano per chiave e 4120.listini viene caricato
+     * dopo 0020.archivio, queste due sovrascrivevano quelle: la scheda reparti spariva da
+     * /archivio/archivio-amministrazione/ ( 404, riparentata sotto catalogo ) e sotto
+     * /catalogo/reparti.it-IT.html rispondeva "impossibile trovare la macro di pagina".
+     *
+     * Si vedeva solo dove il modulo listini e' attivo, quindi e' rimasto nascosto fino al primo
+     * progetto che l'ha acceso.
+     */
 
 /*
 	TODO spostare nel modulo coupon

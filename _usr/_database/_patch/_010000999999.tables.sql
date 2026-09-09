@@ -343,6 +343,38 @@ CREATE TABLE `articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000001400
+
+-- articoli_caratteristiche
+-- tipologia: tabella gestita
+-- rango: tabella di collegamento
+-- struttura: tabella base
+-- funzione: collega un articolo alle sue caratteristiche
+--
+-- questa tabella collega un articolo all'albero delle caratteristiche ( caratteristiche_prodotti )
+-- e ne porta il valore. E' la gemella di prodotti_caratteristiche, con in piu' la colonna
+-- se_assente, che serve alle voci di listino per dire che una caratteristica su quella voce non
+-- c'e' invece di non dire niente.
+--
+-- NOTA: fino all'08/09/2026 questa tabella e caratteristiche_prodotti e prodotti_caratteristiche
+-- vivevano solo nei database, senza nessuna patch che le creasse. Sono state portate qui insieme
+-- alla correzione di valore, che era decimal(5,2) e non poteva quindi contenere una scheda tecnica.
+--
+CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_articolo` char(32) NOT NULL,                              -- chiave esterna per l'articolo
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000001700
 
 -- asset
@@ -454,6 +486,63 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000002910
+
+-- caratteristiche_prodotti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ad albero
+-- funzione: l'albero delle caratteristiche di prodotti e articoli
+--
+-- e' l'albero vero usato dal modulo prodotti: i nodi di primo livello sono i gruppi ( "Linea
+-- mandrino", "Capacita'" ) e le foglie sono le caratteristiche. La tabella caratteristiche qui
+-- sopra e' la versione piatta del framework, che i moduli non usano.
+--
+-- ATTENZIONE all'indice unico ( nome, id_genitore ): in MySQL i NULL non fanno mai conflitto su un
+-- indice unico, quindi NON protegge i nodi di radice, che id_genitore ce l'hanno NULL. Chi scrive
+-- qui deve passare la chiave di ricerca esplicita a mysqlInsertRow(), altrimenti a ogni
+-- importazione nasce una radice nuova. E' successo davvero, due volte.
+--
+CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il nodo genitore
+  `nome` char(64) DEFAULT NULL,                                 -- nome della caratteristica o del gruppo
+  `font_awesome` char(24) DEFAULT NULL,                         -- icona Font Awesome
+  `html_entity` char(8) DEFAULT NULL,                           -- entity HTML
+  `se_categoria` tinyint(1) DEFAULT NULL,                       -- vale per le categorie di prodotti
+  `se_prodotto` tinyint(1) DEFAULT NULL,                        -- vale per i prodotti
+  `se_articolo` tinyint(1) DEFAULT NULL,                        -- vale per gli articoli
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000002920
+
+-- prodotti_caratteristiche
+-- tipologia: tabella gestita
+-- rango: tabella di collegamento
+-- struttura: tabella base
+-- funzione: collega un prodotto alle sue caratteristiche
+--
+-- gemella di articoli_caratteristiche. L'indice unico e' ( id_prodotto, id_caratteristica ) e NON
+-- comprende la lingua: un prodotto ha un valore solo per caratteristica.
+--
+CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `note` text DEFAULT NULL,                                     -- note
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -3662,3 +3751,26 @@ CREATE TABLE IF NOT EXISTS `istruzioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL               -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- | 010000063500
+
+-- taglie
+-- tipologia: tabella gestita
+-- rango: tabella di appoggio
+-- struttura: tabella base
+-- funzione: le taglie degli articoli
+--
+-- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
+-- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
+-- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
+-- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
+--
+CREATE TABLE IF NOT EXISTS `taglie` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
+  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
+  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
+  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
+  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
+  `circonferenza_testa_max` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

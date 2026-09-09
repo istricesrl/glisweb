@@ -1,6 +1,6 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-12 col-md-auto">
-	<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 	    <option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutti</option>
 	    {% for tipologia in etc.select.tipologie_contratti %}
 	    <option value="{{ tipologia.id }}" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == tipologia.id %}selected{% endif %}>{{ tipologia.__label__ }}</option>

@@ -1,7 +1,7 @@
 <div class="form-row view-filters d-print-none">
     <!--div class="col-4 col-md-auto">
     <span class="label-top">stato</span>
-	<select name="__view__[{{ view.id }}][__filters__][completato][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	<select name="__view__[{{ view.id }}][__filters__][completato][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 	    <option value="0" {% if request.__view__[ view.id ].__filters__.completato.EQ == "0" %}selected{% endif %}>task aperti</option>
 	    <option value="1" {% if request.__view__[ view.id ].__filters__.completato.EQ == "1" %}selected{% endif %}>task in revisione</option>
 	    <option value="2" {% if request.__view__[ view.id ].__filters__.completato.EQ == "2" %}selected{% endif %}>task chiusi</option>
@@ -10,7 +10,7 @@
     </div-->
 	<div class="col-4 col-md-auto">
 		<span class="label-top">tipologia</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutte</option>
 			{% for t in etc.select.tipologie %}
 			<option value="{{ t.id }}" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == t.id %}selected{% endif %}>{{ t.__label__ }}</option>
@@ -19,7 +19,7 @@
 		</div>
     <div class="col-4 col-md-auto">
     <span class="label-top">assegnato a</span>
-	<select name="__view__[{{ view.id }}][__extra__][assegnato]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	<select name="__view__[{{ view.id }}][__extra__][assegnato]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 	    <option value="__me__" {% if request.__view__[ view.id ].__extra__.assegnato == "__me__" %}selected{% endif %}>assegnati a me</option>
 	    <option value="__tutti__" {% if request.__view__[ view.id ].__extra__.assegnato == "__tutti__" %}selected{% endif %}>assegnati a chiunque</option>
 	    <option value="__nessuno__" {% if request.__view__[ view.id ].__extra__.assegnato == "__nessuno__" %}selected{% endif %}>non assegnati</option>
@@ -27,7 +27,7 @@
     </div>
     <div class="col-4 col-md-auto">
     <span class="label-top">cliente</span>
-	<select name="__view__[{{ view.id }}][__filters__][id_cliente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	<select name="__view__[{{ view.id }}][__filters__][id_cliente][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 	    <option value="" {% if request.__view__[ view.id ].__filters__.id_cliente.EQ == "" %}selected{% endif %}>tutti</option>
 	    {% for a in etc.select.id_cliente %}
 	    <option value="{{ a.id }}" {% if request.__view__[ view.id ].__filters__.id_cliente.EQ == a.id %}selected{% endif %}>{{ a.__label__ }}</option>
@@ -36,7 +36,7 @@
     </div>
     <!--div class="col-4 col-md-auto">
     <span class="label-top">priorità</span>
-	<select name="__view__[{{ view.id }}][__filters__][id_priorita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	<select name="__view__[{{ view.id }}][__filters__][id_priorita][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
 	    <option value="1" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "1" %}selected{% endif %}>non urgente né importante</option>
 	    <option value="2" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "2" %}selected{% endif %}>non urgente importante</option>
 	    <option value="3" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "3" %}selected{% endif %}>urgente non importante</option>

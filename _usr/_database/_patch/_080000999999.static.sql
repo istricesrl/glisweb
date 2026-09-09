@@ -189,6 +189,49 @@ CREATE TABLE `attivita_view_static` (                         --
   UNIQUE KEY `codice` (`codice`)                              --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
 
+-- | 080000002300
+
+-- offerte_attive_view_static
+--
+-- offerte_attive_view costa: ha nel WHERE anagrafica_check_gestita( a1.id ), una funzione chiamata
+-- riga per riga su tutti i documenti. Misurata su 12.705 documenti l'08/09/2026: 13,5 secondi con
+-- la funzione, 0,1 senza, e la condizione non ne scarta nemmeno uno. Materializzando la vista quel
+-- costo si paga una riga per volta, quando l'offerta si salva, invece che tutto intero a ogni
+-- apertura dell'elenco.
+--
+-- Le colonne sono quelle della vista, piu' timestamp_inserimento e timestamp_aggiornamento come
+-- nelle altre statiche: la vista non le espone, e' il task di popolazione a scriverle
+-- ( _mod/_0400.documenti/_src/_api/_task/_offerte.attive.view.static.popolazione.php ), che le usa
+-- per sapere quali righe sono rimaste indietro.
+CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
+  `id` bigint(20) PRIMARY KEY NOT NULL,                       --
+  `id_tipologia` bigint(20) DEFAULT NULL,                     --
+  `tipologia` char(255) DEFAULT NULL,                         --
+  `codice` char(64) DEFAULT NULL,                             --
+  `numero` char(32) DEFAULT NULL,                             --
+  `sezionale` char(32) DEFAULT NULL,                          --
+  `data` date DEFAULT NULL,                                   --
+  `nome` char(255) DEFAULT NULL,                              --
+  `id_emittente` bigint(20) DEFAULT NULL,                     --
+  `emittente` varchar(320) DEFAULT NULL,                      --
+  `id_destinatario` bigint(20) DEFAULT NULL,                  --
+  `destinatario` varchar(320) DEFAULT NULL,                   --
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,            --
+  `mastro_provenienza` char(64) DEFAULT NULL,                 --
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,           --
+  `mastro_destinazione` char(64) DEFAULT NULL,                --
+  `id_causale` bigint(20) DEFAULT NULL,                       --
+  `porto` enum('franco','assegnato','-') DEFAULT NULL,        --
+  `id_trasportatore` bigint(20) DEFAULT NULL,                 --
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           --
+  `timestamp_inserimento` int(11) DEFAULT NULL,               --
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         --
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
+  `__label__` text,                                           --
+  UNIQUE KEY `codice` (`codice`),                             --
+  KEY `data` (`data`)                                         --
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
+
 -- | FINE FILE
 
 -- | 080000999020

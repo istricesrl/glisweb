@@ -1,0 +1,75 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function cambiaCodiceArticoli( ) {
+
+		$('#btncodicearticoli').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+		var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_articoli.recode.php?id={{ request[table].id }}&new=' + encodeURIComponent( $('#_nuovocodice').val() );
+
+		getws( call, '', function( d ) {
+
+			if( d && d.err && d.err.length ) {
+				$('#btncodicearticoli').html('<i class="fa fa-times"></i>');
+				$('#esitocodicearticoli').html( d.err.join('<br>') );
+				return;
+			}
+
+			// il codice e' anche la chiave della pagina: senza ricaricare si resterebbe su una
+			// scheda che non esiste piu'
+			$('#btncodicearticoli').html('<i class="fa fa-check"></i>');
+			submitFormOkay = true;
+			window.open( '{{ page.parent.path[ ietf ] }}', '_self' );
+
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="codice">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">cambia il codice l'articolo</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<div class="form-row">
+				<div class="col">
+					<span class="label-top">codice attuale</span>
+					<input type="text" class="form-control form-control-sm" value="{{ request[table].id }}" disabled>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col">
+					<span class="label-top">codice nuovo</span>
+					<input type="text" class="form-control form-control-sm" id="_nuovocodice" maxlength="32">
+				</div>
+			</div>
+		    <div class="form-row">
+                <div class="col-12">
+                    il codice viene cambiato qui e su tutto quello che ci sta attaccato: foto, allegati, testi, caratteristiche, prezzi, righe di documento. Niente viene duplicato e niente resta indietro.
+                </div>
+            </div>
+		    <div class="form-row">
+                <div class="col-12">
+                    <b>attenzione:</b> il codice l'articolo fa parte dell'indirizzo della sua pagina sul sito. Cambiandolo cambia anche quello.
+                </div>
+            </div>
+		    <div class="form-row">
+                <div class="col-12 text-danger" id="esitocodicearticoli"></div>
+            </div>
+		</div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btncodicearticoli" class="btn btn-secondary btn-sm" onclick="cambiaCodiceArticoli();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
