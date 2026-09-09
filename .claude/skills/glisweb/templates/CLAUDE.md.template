@@ -8,14 +8,6 @@
 ## Convenzioni specifiche
 <!-- override puntuali rispetto al framework: librerie custom in src/lib/, moduli attivi in mod/, ecc. -->
 
-## Interlocutore e conversazione
-<!--
-chi e' il referente del cliente, su che canale si parla, come va trattato ( es. "non e' una persona
-tecnica: domande secche, niente nomi di tabelle" ).
-Lo stato aggiornato della conversazione sta in CHAT.md, nella root del deploy: si legge PRIMA di
-scrivergli, ogni volta. Le telefonate si trascrivono li' il giorno stesso.
--->
-
 ## Note operative
 <!--
 - credenziali aggiuntive di servizi esterni (oltre a quelle in src/shadow.yaml)
