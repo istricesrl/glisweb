@@ -2265,7 +2265,7 @@ Questa libreria contiene una collezione di funzioni per la manipolazione delle s
 Questa libreria contiene funzioni per la gestione dell'XML.
 
 ### /_src/_sh/_backup.run.sh
-Questo script crea un backup del sito nella cartella genitore della document root.
+Questo script crea un backup del sito in `<progetto>/backups/`, la sottocartella degli archivi del progetto, un livello sopra la document root. Il nome della sottocartella è definito da `BACKUP_SUBDIR` in `/_src/_sh/_lib/_functions.sh`.
 
 ### /_src/_sh/_codeception.init.sh
 Questo script inizializza le cartelle e il codice per i test. TODO va riordinato e documentato.

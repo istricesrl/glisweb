@@ -1,9 +1,10 @@
 #!/bin/bash
 
-## SCRIPT PER IL BACKUP DELLA DOCUMEBNT ROOT
+## SCRIPT PER IL BACKUP DELLA DOCUMENT ROOT
 #
 # questo script crea un file di backup della document root del sito posizionandolo
-# nella cartella genitore della document root
+# in <progetto>/$BACKUP_SUBDIR/, cioe' nella sottocartella degli archivi del progetto,
+# un livello sopra la document root
 #
 # NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
 #

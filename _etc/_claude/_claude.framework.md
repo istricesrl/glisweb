@@ -93,6 +93,12 @@ un livello sopra la document root, col nome originale del file (l'identificativo
 
 Rusco da non lasciare mai in giro: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`, `nome.php.bak.<data>`.
 
+Da non confondere con **`<progetto>/backups/`**, che è l'archivio degli automatismi: ci scrivono
+`_gw.upgrade.sh` (il `tar` prima di ogni aggiornamento) e `_backup.nightly.sh` (i dump del database), e
+lo pota `/etc/cron.daily/pulizia-backup-siti` a 5 giorni. Non metterci copie fatte a mano: sparirebbero
+dopo cinque giorni senza che nessuno lo dica. Le tue vanno in `<progetto>/var/<identificativo>/`, che
+nessun cron tocca.
+
 Non è ordine, è sicurezza. Il `.htaccess` nega le estensioni pericolose con un `FilesMatch` **ancorato alla
 fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve in chiaro. Verificato:
 `zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di

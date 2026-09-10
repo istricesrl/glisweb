@@ -333,7 +333,8 @@ esiste un checkout del framework (p.es. `/var/www/glisweb.istricesrl.it/dev/`) q
 cose porta a credere di essersi allineati e continuare a lavorare sul framework vecchio, che è il modo
 peggiore di sbagliare: silenzioso.
 
-Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy un livello sopra la document root; copia in
+Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy in `../backups/`, un livello sopra la
+document root; copia in
 `../disallineamenti/<ts>/` i file che questo deploy ha modificato o aggiunto rispetto al framework che ci
 è stato installato (`_*/` **più** `.claude/`, `.github/`, `.htaccess` e `composer.json`, meno il vendor e
 la documentazione generata); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
