@@ -334,7 +334,7 @@ cose porta a credere di essersi allineati e continuare a lavorare sul framework 
 peggiore di sbagliare: silenzioso.
 
 Cosa fa lo script, nell'ordine: backup `tar.gz` del deploy un livello sopra la document root; copia in
-`../disallineamenti.<ts>/` i file che questo deploy ha modificato o aggiunto rispetto al framework che ci
+`../disallineamenti/<ts>/` i file che questo deploy ha modificato o aggiunto rispetto al framework che ci
 è stato installato (`_*/` **più** `.claude/`, `.github/`, `.htaccess` e `composer.json`, meno il vendor e
 la documentazione generata); scarica ed estrae lo zip del branch facendo `rm -rf ./_*`; mette da parte e
 ripristina il vendor `_src/_lib/_ext`; lancia `composer update`; riallinea i permessi con
@@ -359,11 +359,11 @@ Tre conseguenze operative:
 - **si aggiorna prima di mettere le mani su un file `_*`**, non dopo: partendo da una base vecchia il
   `.diff` che arriverà al manutentore conterrà anche differenze che non sono tue, e diventa invalutabile.
 - **dopo l'upgrade si legge l'elenco dei disallineati**: sono le modifiche locali che l'aggiornamento ha
-  appena ribaltato. Non sono perse (stanno in `../disallineamenti.<ts>/` col loro `.diff`) ma sul deploy
+  appena ribaltato. Non sono perse (stanno in `../disallineamenti/<ts>/` col loro `.diff`) ma sul deploy
   non ci sono più, e se servivano vanno riapplicate. Un file semplicemente *toccato* non compare più:
   col confronto sul contenuto quel falso positivo non esiste. Resta invece corretto ignorare un `.diff`
   **vuoto**, che vuol dire che nel frattempo la stessa modifica è arrivata da monte.
-- **la cartella `../disallineamenti.<ts>/` viene creata sempre**, anche vuota. Vuota vuol dire "ho
+- **la cartella `../disallineamenti/<ts>/` viene creata sempre**, anche vuota. Vuota vuol dire "ho
   guardato e non c'era niente da promuovere"; assente vuol dire che la raccolta non è arrivata a
   guardare, ed è un'informazione diversa che prima non si poteva avere.
 - **anche `.claude/` viene sovrascritto**: la skill e i suoi file arrivano dallo zip come tutto il resto.

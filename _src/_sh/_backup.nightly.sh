@@ -50,11 +50,18 @@ check-root
 ## dalla cartella degli script alla document root
 cd $RL
 
-## la document root ( .../dev ) e la cartella che la contiene, dove vanno i backup
+## la document root ( .../dev ) e la sottocartella del progetto dove vanno i backup
+#
+# DEST e' <progetto>/$BACKUP_SUBDIR e non piu' <progetto>: ci finiscono sia i dump del
+# database sia il tar del codice che produce _backup.run.sh, che calcola lo stesso percorso
+# per conto suo. La rotazione in fondo guarda DEST, quindi segue il layout senza altre
+# modifiche.
 SUB=$( basename $( pwd ) )
 DOCROOT=$( pwd )
 cd ..
-DEST=$( pwd )
+DEST=$( pwd )/$BACKUP_SUBDIR
+
+mkdir -p "$DEST"
 
 ## stato dell'ambiente e giorni di retention
 STATO=$1

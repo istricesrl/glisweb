@@ -48,7 +48,7 @@ else
     # una sola data per tutta l'esecuzione: prima veniva ricalcolata dentro il ciclo, una volta
     # per il mkdir e una per il cp, e a cavallo del secondo i file finivano in una cartella
     # diversa da quella appena creata
-    cartellaDisallineamenti="../disallineamenti.$( date '+%Y%m%d%H%M%S' )/"
+    cartellaDisallineamenti="../$DISALLINEAMENTI_SUBDIR/$( date '+%Y%m%d%H%M%S' )/"
 
     # il manifest lo scrive _gw.upgrade.sh alla fine di ogni aggiornamento: qui si puo' solo
     # leggere, perche' questo script non installa niente e quindi non ha nessuna versione di

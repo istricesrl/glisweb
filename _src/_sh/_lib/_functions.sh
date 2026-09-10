@@ -160,6 +160,24 @@ function deploy-invalidate-caches() {
     fi
 
 }
+## layout degli archivi in /var/www/<progetto>/
+#
+# Backup e disallineamenti stanno fuori dalla document root ( che e' <progetto>/dev ) e da
+# oggi ciascuno nella propria sottocartella, invece che sparsi nella root del progetto come
+# file e cartelle datate. Li' si mescolavano a update.branch.conf, devuser.conf e al deploy
+# stesso, e crescevano senza limite: i disallineamenti non li ruotava nessuno.
+#
+# ATTENZIONE questi due nomi sono un contratto con gli script di sistema di web03:
+# /etc/cron.daily/pulizia-backup-siti e /etc/cron.daily/pulizia-disallineamenti-siti cercano
+# esattamente queste sottocartelle. Cambiarli qui senza cambiarli anche li' vuol dire archivi
+# che non vengono piu' ruotati, in silenzio.
+#
+# NOTA vale anche qui l'avvertenza del manifest qui sotto: _gw.upgrade.sh sorgente questa
+# libreria PRIMA del `rm -rf ./_*`, quindi una modifica a queste variabili ha effetto solo
+# dall'aggiornamento successivo a quello che la installa.
+BACKUP_SUBDIR="backups"
+DISALLINEAMENTI_SUBDIR="disallineamenti"
+
 ## manifest delle impronte dell'ultimo aggiornamento
 #
 # ATTENZIONE il numero nel nome e' la versione del FORMATO, cioe' dell'insieme di file che

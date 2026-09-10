@@ -73,7 +73,7 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
-        cartellaDisallineamenti="../disallineamenti.$( date '+%Y%m%d%H%M%S' )/"
+        cartellaDisallineamenti="../$DISALLINEAMENTI_SUBDIR/$( date '+%Y%m%d%H%M%S' )/"
 
         echo "inizio il backup"
 
@@ -83,8 +83,26 @@ else
         done
 
         # faccio il backup della cartella corrente
-        # rm -rf ../backup.tar.gz
-        tar $EXC -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz .
+        #
+        # I backup non stanno piu' sparsi nella root del progetto ma in ../$BACKUP_SUBDIR/:
+        # il mkdir -p serve al primo giro dopo il cambio di layout, quando la sottocartella
+        # ancora non esiste e senza di lui il tar fallirebbe.
+        BACKUPFILE="../$BACKUP_SUBDIR/backup.$( date '+%Y%m%d%H%M%S' ).tar.gz"
+
+        mkdir -p "../$BACKUP_SUBDIR"
+
+        tar $EXC -czf "$BACKUPFILE" .
+
+        # Il backup e' l'UNICA copia di cio' che il `rm -rf ./_*` piu' sotto distrugge: se non
+        # c'e', ci si ferma prima di distruggere, come per il download fallito.
+        #
+        # NOTA non si guarda l'uscita di tar: su un sito vivo vale 1 anche solo perche' un file
+        # e' cambiato mentre lo leggeva, e un aggiornamento che si rifiuta di partire ogni notte
+        # per un warning e' peggio del problema. Si guarda il risultato, come per lo zip.
+        if [ ! -s "$BACKUPFILE" ]; then
+            echo "ERRORE: backup $BACKUPFILE assente o vuoto, il framework NON viene toccato"
+            exit 1
+        fi
 
         # salvo i disallineamenti rispetto alla versione correntemente installata
         #

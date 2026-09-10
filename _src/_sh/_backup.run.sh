@@ -37,7 +37,12 @@ cd $RP
 echo "lavoro su: $(pwd)"
 
 ## nome del file di backup
-BKFILE="backup.$( date +%Y%m%d%H%M%S ).tar.gz"
+#
+# Sta in $BACKUP_SUBDIR/ e non piu' nella root del progetto: la cartella la si crea qui perche'
+# questo script si lancia anche a mano, su un progetto che puo' non averla ancora.
+mkdir -p "$BACKUP_SUBDIR"
+
+BKFILE="$BACKUP_SUBDIR/backup.$( date +%Y%m%d%H%M%S ).tar.gz"
 
 ## file e directory da escludere
 EXCLUDE=".git .github _src/_lib/_ext _usr/_docs/_html _usr/_docs/_pdf tmp var/log var/cache var/spool"
