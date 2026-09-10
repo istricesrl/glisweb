@@ -264,7 +264,13 @@
     logWrite( $status['row']['indirizzo'] . ' gestito: ' . print_r( $status['considerazioni'], true ), 'indirizzi', LOG_ERR );
 
     // aggiornamento anagrafica_view_static
-    updateAnagraficaViewStaticIndirizzi( $status['row']['id_anagrafica'] );
+    // NOTA la guardia serve perche' si arriva qui anche dai rami in cui l'indirizzo non ha
+    // un'anagrafica ( 'indirizzo non associabile per mancanza di anagrafica' ): li'
+    // id_anagrafica e' NULL e updateAnagraficaViewStaticIndirizzi(), chiamata senza $riga,
+    // tenta INSERT INTO anagrafica_view_static ( id ) VALUES ( NULL ) su una colonna NOT NULL
+    if( isset( $status['row']['id_anagrafica'] ) ) {
+        updateAnagraficaViewStaticIndirizzi( $status['row']['id_anagrafica'] );
+    }
 
     // debug
     // die( print_r( $status, true ) );
