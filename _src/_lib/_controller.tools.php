@@ -323,7 +323,22 @@
                 // unisco la tabella di ACL se presente
                 if (!empty($aclTb)) {
                     $q .= " LEFT JOIN $aclTb ON $aclTb.id_entita = $t$rm.id ";
-                    $q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = $aclTb.id_gruppo OR gruppi_path_check( $aclTb.id_gruppo, account_gruppi.id_gruppo ) OR $aclTb.id_account = ? )";
+                    // NOTA il filtro sull'account sta QUI e non solo nella WHERE. Senza, MySQL
+                    // incrocia ogni riga della tabella di ACL con TUTTE le righe di
+                    // account_gruppi, e per ognuna invoca gruppi_path_check(): una funzione
+                    // NOT DETERMINISTIC che fa una SELECT a ogni chiamata. Su crm.eurosnodi.it
+                    // erano oltre 130.000 chiamate per l'elenco anagrafica, 21 secondi di cui 20
+                    // di sola funzione; filtrando qui si scende a 1,3 secondi.
+                    // E' equivalente perche' la WHERE qui sotto pretende comunque
+                    // account_gruppi.id_account = <account>: le righe degli altri account non
+                    // potevano contribuire nemmeno prima, venivano calcolate e scartate.
+                    // Verificato il 10/09/2026 confrontando l'insieme esatto degli id visibili,
+                    // vecchia contro nuova, su tutti e 17 gli account di quel deploy: identici.
+                    // Il valore e' interpolato come intero e non come segnaposto perche' i
+                    // parametri di questa query sono posizionali e aggiungerne uno sposterebbe il
+                    // binding di tutti quelli successivi; id_account e' int(11) e $aclId viene da
+                    // $_SESSION['account']['id'].
+                    $q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_account = " . ( (int) $aclId ) . " AND ( account_gruppi.id_gruppo = $aclTb.id_gruppo OR gruppi_path_check( $aclTb.id_gruppo, account_gruppi.id_gruppo ) OR $aclTb.id_account = ? ) )";
                     $whr[] = "( account_gruppi.id_account = ? OR $t$rm.id_account_inserimento = ? )";
                     $vs[] = array('s' => $aclId);
                     $vs[] = array('s' => $aclId);
