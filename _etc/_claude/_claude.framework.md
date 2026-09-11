@@ -254,6 +254,14 @@ Non confonderlo con `dev/READ.md`, che è il manuale sviluppatore del framework:
 con lo stesso nome a due livelli diversi. Tutti i percorsi della generazione sono relativi alla
 document root e `docsBuildPath()` aborta se uno risolve fuori.
 
+**E per lo stesso motivo la root del deploy non è versionata, di proposito.** Il repository è la
+document root, `dev/`; il livello che la contiene ne sta fuori perché ci vivono le password in chiaro
+e le informazioni del progetto — quel `READ.md` degli accessi, i file di stato, gli script operativi.
+Versionarli significherebbe consegnare le credenziali a chiunque abbia accesso al repository. Quindi
+non proporre di metterli sotto git, non crearci dentro un repository e non trattarli come "non
+protetti": la macchina ha uno snapshot notturno e li comprende. Sono due piani con due meccanismi di
+protezione diversi, e un `git status` pulito su `dev/` non dice — né deve dire — niente su di loro.
+
 ### I marcatori
 
 Due tipi, entrambi markdown valido, entrambi invisibili sia al conteggio delle sezioni `### <path>` di

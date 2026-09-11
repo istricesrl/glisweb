@@ -79,6 +79,17 @@ Il `CLAUDE.md` di quei progetti lo dichiara in testa. Se ci lavori e non lo dice
 
 ## Cose da fare: tre file, non uno
 
+⚠ **La root del deploy non è versionata, ed è voluto.** Il repository è la document root, `dev/`: il
+livello che la contiene ne sta **fuori di proposito**, perché ci vivono le password in chiaro e le
+informazioni del progetto — il `READ.md` degli accessi ( CMS, SSH, database ), i file di stato, gli
+script operativi del deploy. Metterli sotto git significherebbe pubblicare le credenziali a chiunque
+abbia accesso al repository, e in un progetto cliente anche ai suoi fork.
+
+Quindi: **non proporre di versionarli, non crearci dentro un repository, non "metterli al sicuro" su
+git.** Sono già al sicuro — la macchina ha uno snapshot notturno, e quei file ci sono dentro come tutto
+il resto. Un `git status` pulito su `dev/` non dice niente su di loro, e non deve: sono due piani con
+due meccanismi di protezione diversi, entrambi funzionanti.
+
 Nella root del deploy vivono **tre file di stato** con tre tempi di vita diversi, più il `burndown.md` che è
 generato e non si tocca a mano:
 
