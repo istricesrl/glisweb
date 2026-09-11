@@ -31,6 +31,53 @@
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+            </fieldset>
+
+            {# SEZIONE FLAG #}
+            <fieldset>
+                <legend>ruoli dell'applicazione<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_organizzazioni', 'placeholder': 'organizzazioni' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_relazioni', 'placeholder': 'relazioni' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_notizie', 'placeholder': 'notizie' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_progetti', 'placeholder': 'progetti' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>ruoli aziendali<small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_produzione', 'placeholder': 'produzione' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
 
             </fieldset>
 
@@ -38,7 +85,7 @@
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, form.table, request ) }}
             </fieldset>
-
+            
         </form>
     </div>
 </section>

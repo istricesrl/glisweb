@@ -530,6 +530,19 @@
                                                             'anagrafica.archivio.ruoli.anagrafica.form.tools' ) ),
     );
 
+    // anagrafica archivio ruoli.anagrafica form tools
+    $p['anagrafica.archivio.ruoli.anagrafica.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica ruoli.anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.ruoli.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.ruoli.anagrafica.form' )
+    );
+
     // tools anagrafica
     $p['anagrafica.archivio.tools'] = array(
         'sitemap'            => false,

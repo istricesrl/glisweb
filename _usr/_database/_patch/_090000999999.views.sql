@@ -2029,6 +2029,56 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 		pagine.id_account_aggiornamento,					  --
 		pagine_path( pagine.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM pagine										  		  --
+;
+
+-- | 090000025000
+
+-- prezzi_view
+CREATE OR REPLACE VIEW `prezzi_view` AS
+	SELECT
+		prezzi.id,
+		prezzi.id_prodotto,
+		prodotti.nome AS prodotto,
+		prezzi.id_articolo,
+		articoli.nome AS articolo,
+		prezzi.fascia,
+		prezzi.qta_min,
+		prezzi.qta_max,
+		prezzi.sconto_articoli,
+		prezzi.prefisso,
+		prezzi.prezzo,
+		prezzi.suffisso,
+		prezzi.provvigione_percentuale,
+		prezzi.provvigione_fissa,
+		prezzi.id_reparto,
+		reparti.nome AS reparto,
+		prezzi.id_listino,
+		listini.nome AS listino,
+		valute.utf8 AS valuta,
+		prezzi.id_iva,
+		iva.nome AS iva,
+        prezzi.data_inizio,
+        prezzi.data_fine,
+		prezzi.id_account_inserimento,
+		prezzi.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			listini.nome,
+			prodotti.nome,
+			articoli.nome,
+			prezzi.prefisso,
+			prezzi.prezzo,
+			prezzi.suffisso,
+			iva.nome
+		) AS __label__
+	FROM prezzi
+		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
+		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
+		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
+		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN iva ON iva.id = prezzi.id_iva
+	GROUP BY prezzi.id
 ;															  --
 
 -- | 090000026000
@@ -2345,6 +2395,8 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_contratti,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		ruoli_anagrafica.id_account_inserimento,
+		ruoli_anagrafica.id_account_aggiornamento,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;

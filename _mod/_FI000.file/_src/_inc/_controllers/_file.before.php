@@ -36,9 +36,27 @@
 	switch( strtoupper( $a ) ) {
 
         case METHOD_POST:
+
+            // in inserimento il file è sempre obbligatorio
+            if( empty( $d['path'] ) ) {
+
+                logWrite( "inserimento di $t bloccato: campo path assente o vuoto", 'controller', LOG_ERR );
+
+                $i['__status__'] = 422;
+                $a = NULL;
+
+            }
+
+        break;
+
         case METHOD_UPDATE:
 
-            if( empty( $d['path'] ) ) {
+            // in aggiornamento il controllo vale solo se la maschera che ha inviato i dati contiene
+            // davvero il campo path: le altre schede del form file (collegamenti, immagini) non lo
+            // hanno e non devono essere bloccate
+            if( array_key_exists( 'path', $d ) && empty( $d['path'] ) ) {
+
+                logWrite( "aggiornamento di $t bloccato: campo path svuotato", 'controller', LOG_ERR );
 
                 $i['__status__'] = 422;
                 $a = NULL;

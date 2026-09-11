@@ -2108,8 +2108,8 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` bigint(20) NOT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
   `fascia` char(32) DEFAULT NULL,
   `qta_min` int(11) DEFAULT NULL,
   `qta_max` int(11) DEFAULT NULL,
@@ -2119,6 +2119,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `suffisso` char(64) DEFAULT NULL,
   `provvigione_percentuale` decimal(16,5) DEFAULT NULL,
   `provvigione_fissa` decimal(16,5) DEFAULT NULL,
+  `id_reparto` bigint(20) DEFAULT NULL,
   `id_listino` bigint(20) DEFAULT NULL,
   `id_iva` bigint(20) DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
@@ -2509,7 +2510,12 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_immobili` tinyint(1) DEFAULT NULL,
   `se_contratti` tinyint(1) DEFAULT NULL,
   `se_proponente` tinyint(1) DEFAULT NULL,
-  `se_contraente` tinyint(1) DEFAULT NULL
+  `se_contraente` tinyint(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300

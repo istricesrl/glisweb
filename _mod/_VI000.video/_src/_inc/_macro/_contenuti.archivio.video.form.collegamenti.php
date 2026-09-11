@@ -54,7 +54,7 @@
         'SELECT id, __label__ FROM categorie_prodotti_view ORDER BY __label__'
     );
 
-    //tendina prodotti
+    //tendina marchi
     $ct['etc']['select']['marchi'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
@@ -62,7 +62,7 @@
         'SELECT id, __label__ FROM marchi_view ORDER BY __label__'
     );
 
-    //tendina prodotti
+    //tendina articoli
     $ct['etc']['select']['articoli'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],

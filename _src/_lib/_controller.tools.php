@@ -590,6 +590,18 @@
                 logWrite("diritti sufficienti per $t/$a", 'controller');
                 logWrite("modalità di inserimento, modifica, cancellazione per $t/$a: " . print_r($i, true), 'details/controller/'.$t.'.'.$a);
 
+                /**
+                 * Fix 2026-09-11: gli errori segnalati dai controller non vanno più persi
+                 * ----------------------------------------------------------------------
+                 * Un controller before o append può bloccare l'operazione segnalando un errore in
+                 * $i['__status__'] e azzerando $a (p.es. _file.before.php, che rifiuta un file senza
+                 * path); prima di questa fix lo stato veniva però sovrascritto con un 200 subito dopo,
+                 * qui e più sotto, e l'operazione falliva in perfetto silenzio: niente query, niente
+                 * errore a video, niente riga di log. Registro quindi lo stato all'ingresso in $sb, in
+                 * modo da riconoscere un errore segnalato da un controller e conservarlo.
+                 */
+                $sb = $i['__status__'] ?? NULL;
+
                 // controller pre query (before)
                 $cn = 'before.php';
                 $ct = array_merge(
@@ -603,8 +615,13 @@
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
                 }
 
-                // ...
-                $i['__status__'] = 200;
+                // stato di default, a meno che un controller before non abbia segnalato un errore
+                $sg = ( isset( $i['__status__'] ) && $i['__status__'] >= 400 && $i['__status__'] !== $sb );
+                if( $sg ) {
+                    logWrite( "controller before ha bloccato $t/$a con stato " . $i['__status__'], 'controller', LOG_ERR );
+                } else {
+                    $i['__status__'] = 200;
+                }
 
                 // variabile per confronto prima/dopo
                 $before = NULL;
@@ -799,7 +816,11 @@
                 }
 
 
-                $i['__status__'] = 200;
+                // stato di default, a meno che un controller before o append non abbia segnalato un errore
+                $sg = ( isset( $i['__status__'] ) && $i['__status__'] >= 400 && $i['__status__'] !== $sb );
+                if( ! $sg ) {
+                    $i['__status__'] = 200;
+                }
 
                 // gestione degli errori
                 if (isset($e['__codes__']) && is_array($e['__codes__'])) {
@@ -816,19 +837,17 @@
 
                 } elseif (empty($a)) {
 
-                    // di default imposto lo stato a 'OK'
-                    $i['__status__'] = 200;
-
                     // log
-                    logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
+                    if( $sg ) {
+                        logWrite("nessuna azione intrapresa per l'entità $t: bloccata da un controller con stato " . $i['__status__'], 'controller', LOG_ERR);
+                    } else {
+                        logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
+                    }
 
                 } else {
 
                     // log
                     logWrite("row mode / eseguo ($a) la query: $q", 'controller');
-
-                    // di default imposto lo stato a 'OK'
-                    $i['__status__'] = 200;
 
                 }
 
