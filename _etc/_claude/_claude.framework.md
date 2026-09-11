@@ -19,6 +19,13 @@ progetto è ESSENZIALE e i pattern di sviluppo devono RIPETERSI IL PIÙ POSSIBIL
 oppure — se c'è davvero da creare qualcosa di nuovo — lo si fa **a partire da quelli**, rispettando lo stile e la
 struttura del resto del codice.
 
+**Vale da tutt'e due i lati**: quando si sviluppa il framework e quando si sviluppa un progetto che lo usa.
+E il motivo non è estetico, e non è nemmeno solo il costo di manutenzione. Glisweb è facile da imparare e da
+usare **perché ripete il più possibile schemi concettuali che chi sviluppa ha già appreso**: chi ha capito un
+runlevel li ha capiti tutti, chi ha scritto una macro sa scrivere la successiva, chi ha attivato un modulo sa
+attivarli tutti. Ogni soluzione nuova introdotta senza necessità toglie esattamente questa proprietà, e la
+toglie a tutti quelli che verranno dopo, non solo a chi l'ha scritta.
+
 Viene prima di ogni altra regola di questo file e vale per tutto: nomi, forma dei file, ordine dei runlevel,
 firme delle funzioni, struttura dei template, formattazione, commenti, messaggi di log.
 
@@ -41,7 +48,9 @@ identica alle altre venti — leggere e manutenere venti varianti dello stesso p
 guadagno locale.
 
 **Se un pattern esistente non regge**, non si devia in silenzio: lo si dice all'utente, si spiega perché, e si
-propone la variante minima che se ne discosta. La deroga è una decisione, non un effetto collaterale.
+propone la variante minima che se ne discosta. Introdurre una soluzione nuova o modificare il canone
+dev'essere una **scelta consapevole ed espressamente autorizzata**: la deroga si chiede e si ottiene,
+non è un effetto collaterale.
 
 ---
 
