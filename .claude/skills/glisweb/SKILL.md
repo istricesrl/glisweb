@@ -63,7 +63,7 @@ l'installazione è aggiornata, obsoleta o di sviluppo**. Quando serve sapere com
 la risposta viene da lì, non da un `ls -l` su `_src/`.
 
 ⚠ **Trappola documentata**: `core.hooksPath` è configurazione locale della copia di lavoro e non
-viaggia col repository. Finché non si esegue `bash .githooks/install.sh`, git cerca gli hook in
+viaggia col repository. Finché non si esegue `sudo _src/_sh/_githooks.install.sh`, git cerca gli hook in
 `.git/hooks/` e **la version resta ferma senza che nulla lo segnali** — si vedono commit recenti con
 una version di mesi prima. Se le due cose non tornano, è quasi sempre questo, non un deploy vecchio.
 
