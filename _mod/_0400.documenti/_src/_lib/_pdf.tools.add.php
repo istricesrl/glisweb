@@ -1,5 +1,230 @@
 <?php
 
+    /**
+     * Sedi del documento: risoluzione e riparazione al volo.
+     *
+     * `documenti.id_sede_emittente` / `id_sede_destinatario` vengono valorizzate una volta sola,
+     * al momento dell'emissione, da `trovaIdSedeLegale()`. Se in quel momento l'anagrafica non ha
+     * ancora un indirizzo utilizzabile il campo resta NULL, e la stampa muore in
+     * `generaContenutiDocumento()` ( `_mod/_0400.documenti/_src/_lib/_mysql.utils.add.php` ), dove
+     * la query filtra su `anagrafica_indirizzi.id` e con NULL non torna righe: "richiesto
+     * indirizzo sede destinatario". Aggiungere l'indirizzo in anagrafica DOPO non ripara niente,
+     * perché nessun flusso torna indietro a riempire il puntatore: quel documento resta non
+     * stampabile per sempre, mentre i successivi della stessa anagrafica escono senza problemi.
+     *
+     * Le due funzioni qui sotto chiudono il buco a valle, in stampa, e sono idempotenti: al
+     * secondo giro la sede è valida e non si scrive niente.
+     *
+     * @file
+     */
+    if( ! function_exists( 'documentoIdSedeStampabile' ) ) {
+
+        /**
+         * `anagrafica_indirizzi.id` di un'anagrafica utilizzabile come sede di un documento
+         *
+         * Gli INNER JOIN replicano quelli della query di stampa ( comune → provincia → regione →
+         * stato ): un indirizzo senza comune verrebbe scartato lì, quindi non va scelto qui. È la
+         * differenza con `trovaIdSedeLegale()`, che guarda solo `id_ruolo IN ( 1, 4 )` e può
+         * restituire una riga che poi la stampa non sa rendere.
+         *
+         * L'ORDER BY preferisce comunque le sedi legali e di fatturazione, e a parità prende la
+         * più vecchia, per stabilità fra ristampe.
+         *
+         * @param       integer         $idAnagrafica
+         * @return      integer|null
+         */
+        function documentoIdSedeStampabile( $idAnagrafica ) {
+
+            global $cf;
+
+            if( empty( $idAnagrafica ) ) {
+                return null;
+            }
+
+            return mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT anagrafica_indirizzi.id
+                   FROM anagrafica_indirizzi
+                   INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune
+                   INNER JOIN provincie ON provincie.id = comuni.id_provincia
+                   INNER JOIN regioni ON regioni.id = provincie.id_regione
+                   INNER JOIN stati ON stati.id = regioni.id_stato
+                  WHERE anagrafica_indirizzi.id_anagrafica = ?
+                  ORDER BY ( anagrafica_indirizzi.id_ruolo IN ( 1, 4 ) ) DESC, anagrafica_indirizzi.id ASC
+                  LIMIT 1',
+                array( array( 's' => $idAnagrafica ) )
+            );
+
+        }
+
+    }
+
+    if( ! function_exists( 'sedeStampabileAnagrafica' ) ) {
+
+        /**
+         * riga della sede di un'anagrafica, nei campi che servono alla stampa
+         *
+         * Restituisce sempre le stesse chiavi — tipologia, indirizzo, civico, cap, comune,
+         * provincia, sigla_stato — qualunque sia lo schema sotto, così i generatori che la
+         * chiamano non devono sapere da dove arriva il dato.
+         *
+         * Dalla migrazione del 2026-07-10 l'indirizzo sta per esteso su `anagrafica_indirizzi` ed
+         * è quella la fonte: `indirizzi` resta la tabella deduplicata, collegata da
+         * `id_indirizzo`, ma non è più il posto da cui si legge. Sui deploy fermi allo schema
+         * precedente le colonne inline non esistono e si ripiega sulla lettura storica dal
+         * collegato — vedi `anagraficaIndirizziInline()`.
+         *
+         * @param       integer     $idAnagrafica
+         * @param       boolean     $soloSedeLegale     limita alle righe con ruolo di sede legale
+         * @return      array                           riga della sede, vuota se non ce n'è una completa
+         */
+        function sedeStampabileAnagrafica( $idAnagrafica, $soloSedeLegale = false ) {
+
+            global $cf;
+
+            if( empty( $idAnagrafica ) ) {
+                return array();
+            }
+
+            if( anagraficaIndirizziInline() ) {
+
+                return mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, '.
+                    'anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
+                    'comuni.nome AS comune, provincie.sigla AS provincia, '.
+                    'stati.iso31661alpha2 AS sigla_stato '.
+                    'FROM anagrafica_indirizzi '.
+                    ( ( $soloSedeLegale ) ? 'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo ' : '' ).
+                    'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+                    'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+                    'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                    'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                    'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                    'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+                    ( ( $soloSedeLegale ) ? 'AND ruoli_indirizzi.se_sede_legale = 1 ' : '' ),
+                    array( array( 's' => $idAnagrafica ) )
+                );
+
+            }
+
+            return mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
+                'comuni.nome AS comune, provincie.sigla AS provincia, '.
+                'stati.iso31661alpha2 AS sigla_stato '.
+                'FROM anagrafica_indirizzi '.
+                ( ( $soloSedeLegale ) ? 'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo ' : '' ).
+                'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+                'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
+                'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
+                'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+                ( ( $soloSedeLegale ) ? 'AND ruoli_indirizzi.se_sede_legale = 1 ' : '' ),
+                array( array( 's' => $idAnagrafica ) )
+            );
+
+        }
+
+    }
+
+    if( ! function_exists( 'assicuraSediDocumento' ) ) {
+
+        /**
+         * ripara, se serve, `documenti.id_sede_emittente` e `id_sede_destinatario`
+         *
+         * Una sede memorizzata è tenuta buona solo se punta ancora a un indirizzo DELL'ANAGRAFICA
+         * del documento e completo di comune: così si intercettano anche i puntatori azzerati
+         * dalla chiave esterna ON DELETE SET NULL e quelli rimasti appesi a un'anagrafica diversa
+         * dopo una fusione di schede.
+         *
+         * La scrittura è necessaria — non basta calcolare il valore in memoria — perché
+         * `generaContenutiDocumento()` rilegge il documento dal database.
+         *
+         * @param       integer     $idDocumento
+         * @return      array       array( 'emittente' => id|null, 'destinatario' => id|null )
+         */
+        function assicuraSediDocumento( $idDocumento ) {
+
+            global $cf;
+
+            $sedi = array( 'emittente' => null, 'destinatario' => null );
+
+            if( empty( $idDocumento ) ) {
+                return $sedi;
+            }
+
+            $doc = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, id_emittente, id_sede_emittente, id_destinatario, id_sede_destinatario
+                   FROM documenti WHERE id = ?',
+                array( array( 's' => $idDocumento ) )
+            );
+
+            if( empty( $doc ) ) {
+                return $sedi;
+            }
+
+            foreach( array( 'emittente', 'destinatario' ) as $ruolo ) {
+
+                $idAnagrafica = $doc[ 'id_' . $ruolo ];
+                $idSede       = $doc[ 'id_sede_' . $ruolo ];
+
+                // la sede già memorizzata è ancora utilizzabile?
+                $valida = null;
+                if( ! empty( $idSede ) && ! empty( $idAnagrafica ) ) {
+                    $valida = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT anagrafica_indirizzi.id
+                           FROM anagrafica_indirizzi
+                           INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune
+                           INNER JOIN provincie ON provincie.id = comuni.id_provincia
+                           INNER JOIN regioni ON regioni.id = provincie.id_regione
+                           INNER JOIN stati ON stati.id = regioni.id_stato
+                          WHERE anagrafica_indirizzi.id = ? AND anagrafica_indirizzi.id_anagrafica = ?',
+                        array( array( 's' => $idSede ), array( 's' => $idAnagrafica ) )
+                    );
+                }
+
+                if( ! empty( $valida ) ) {
+                    $sedi[ $ruolo ] = $valida;
+                    continue;
+                }
+
+                // ne cerco una valida sull'anagrafica del documento
+                $nuova = documentoIdSedeStampabile( $idAnagrafica );
+
+                if( empty( $nuova ) ) {
+                    // niente da fare: l'indirizzo in anagrafica manca davvero
+                    continue;
+                }
+
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE documenti SET id_sede_' . $ruolo . ' = ? WHERE id = ?',
+                    array( array( 's' => $nuova ), array( 's' => $idDocumento ) )
+                );
+
+                logWrite(
+                    'sede ' . $ruolo . ' del documento #' . $idDocumento . ' riparata in stampa: '
+                    . ( empty( $idSede ) ? 'NULL' : '#' . $idSede ) . ' -> #' . $nuova
+                    . ' ( anagrafica #' . $idAnagrafica . ' )',
+                    'documenti',
+                    LOG_NOTICE      // a LOG_DEBUG il messaggio verrebbe filtrato da LOG_CURRENT_LEVEL
+                );
+
+                $sedi[ $ruolo ] = $nuova;
+
+            }
+
+            return $sedi;
+
+        }
+
+    }
+
     function generaFatturaPdf( &$pdf, $dati, $etc = array() ) {
 
         // intestazione emittente documento

@@ -129,6 +129,144 @@
         );
     }
 
+    /**
+     * verifica se `anagrafica_indirizzi` porta la copia inline dell'indirizzo
+     *
+     * Dalla migrazione del 2026-07-10 `anagrafica_indirizzi` contiene l'indirizzo per esteso
+     * ( id_tipologia, indirizzo, civico, id_comune, localita, cap, coordinate ) e diventa la
+     * fonte canonica: le query di lettura del modulo documenti filtrano su
+     * `anagrafica_indirizzi.id` e leggono l'indirizzo da lì, e `documenti.id_sede_emittente` /
+     * `id_sede_destinatario` hanno la chiave esterna su `anagrafica_indirizzi` invece che su
+     * `indirizzi`. Le due cose sono lo stesso passaggio e si applicano insieme.
+     *
+     * `indirizzi` non viene abbandonata: resta la tabella degli indirizzi deduplicati,
+     * referenziata da una quindicina di altre tabelle ( luoghi, progetti, edifici, todo,
+     * zone_indirizzi, ... ), e `anagrafica_indirizzi.id_indirizzo` continua a collegarla.
+     *
+     * Non tutti i deploy hanno fatto il passaggio: su quelli fermi allo schema precedente le
+     * colonne inline non esistono e qualunque query che le nomini muore con un 1054. Questa
+     * funzione dice quale dei due schemi si ha davanti — una volta sola per richiesta — così
+     * chi la interroga può ripiegare sulla forma storica invece di rompersi.
+     *
+     * @return      boolean     vero se lo schema è quello canonico
+     */
+    function anagraficaIndirizziInline()
+    {
+
+        global $cf;
+
+        static $inline = null;
+
+        if ($inline === null) {
+
+            $colonne = mysqlQuery(
+                $cf['mysql']['connection'],
+                "SHOW COLUMNS FROM anagrafica_indirizzi LIKE 'id_comune'"
+            );
+
+            $inline = ! empty($colonne);
+        }
+
+        return $inline;
+    }
+
+    /**
+     * allinea la copia inline dell'indirizzo sulle righe di `anagrafica_indirizzi` che lo collegano
+     *
+     * Il form dell'anagrafica scrive il sotto-modulo degli indirizzi su `indirizzi`, con
+     * `anagrafica_indirizzi.id_indirizzo` come collegamento, mentre le query di lettura e di
+     * stampa leggono la copia inline: senza questa propagazione la copia resterebbe ferma
+     * all'ultimo allineamento e un documento emesso dopo una correzione mostrerebbe il dato
+     * vecchio. Un indirizzo può essere collegato da più righe ( conviventi, sedi condivise ),
+     * quindi si aggiornano tutte quelle che lo citano.
+     *
+     * È la funzione che i punti di chiamata del framework cercano da tempo con
+     * `function_exists()`: il job di importazione delle anagrafiche, il finally del checkout e
+     * il task di normalizzazione degli indirizzi. Fino al suo ingresso nello standard esisteva
+     * come personalizzazione di un solo deploy, e altrove quelle chiamate non facevano niente.
+     *
+     * Attenzione: `anagrafica_indirizzi` ha la chiave unica ( id_anagrafica, indirizzo ), quindi
+     * riempire la copia inline può far collidere due righe della stessa anagrafica che puntano a
+     * indirizzi diversi ma con la stessa via. È un problema di qualità del dato e va riconciliato
+     * a mano: qui l'UPDATE fallisce e la copia resta indietro, senza toccare nient'altro.
+     *
+     * @param       integer     $idIndirizzo    chiave di `indirizzi` da propagare
+     */
+    function sincronizzaIndirizzoInline($idIndirizzo)
+    {
+
+        global $cf;
+
+        if (empty($idIndirizzo) || ! anagraficaIndirizziInline()) {
+            return;
+        }
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE anagrafica_indirizzi ai
+                INNER JOIN indirizzi i ON i.id = ai.id_indirizzo
+                SET ai.id_tipologia                = i.id_tipologia,
+                    ai.indirizzo                   = i.indirizzo,
+                    ai.civico                      = i.civico,
+                    ai.id_comune                   = i.id_comune,
+                    ai.localita                    = i.localita,
+                    ai.cap                         = i.cap,
+                    ai.latitudine                  = i.latitudine,
+                    ai.longitudine                 = i.longitudine,
+                    ai.token                       = i.token,
+                    ai.timestamp_geolocalizzazione = i.timestamp_geolocalizzazione
+                WHERE ai.id_indirizzo = ?',
+            array(array('s' => $idIndirizzo))
+        );
+    }
+
+    /**
+     * tendina delle sedi di un'anagrafica, nella forma che la colonna di destinazione si aspetta
+     *
+     * Le tendine `id_sedi_emittente` e `id_sedi_destinatario` delle schede documento alimentano
+     * `documenti.id_sede_emittente` e `documenti.id_sede_destinatario`: l'identificativo da
+     * proporre è quindi quello che quelle colonne referenziano, e dalla migrazione del 2026-07-10
+     * è `anagrafica_indirizzi.id`, non più `indirizzi.id`. Proporre l'altro vuol dire scrivere una
+     * sede che la query di stampa non risolve — il documento esce con "richiesto indirizzo sede
+     * destinatario" — o violare la chiave esterna.
+     *
+     * Sui deploy fermi allo schema precedente si ripiega sull'elenco storico, che restituisce
+     * `indirizzi.id`, cioè quello che lì la colonna referenzia davvero.
+     *
+     * @param       integer     $idAnagrafica   anagrafica di cui elencare le sedi
+     * @return      array                       righe id / __label__ per la tendina
+     */
+    function tendinaSediAnagrafica($idAnagrafica)
+    {
+
+        global $cf;
+
+        if (empty($idAnagrafica)) {
+            return array();
+        }
+
+        if (anagraficaIndirizziInline()) {
+
+            return mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT id, __label__ FROM anagrafica_indirizzi_view WHERE id_anagrafica = ?',
+                array(array('s' => $idAnagrafica))
+            );
+        }
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT indirizzi_view.id, __label__ FROM indirizzi_view '.
+            'LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+            'WHERE anagrafica_indirizzi.id_anagrafica = ?',
+            array(array('s' => $idAnagrafica))
+        );
+    }
+
     function aggiungiImmagini(&$p, $id, $f, $r = null)
     {
 
