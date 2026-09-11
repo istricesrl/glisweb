@@ -42,6 +42,7 @@ usr/pages/quickstart/
 # cliente, che vanno versionati. Qui stanno solo i nomi che lo zip sovrascrive.
 .githooks/commit-msg
 .githooks/post-commit
+.githooks/pre-commit
 
 # skill Claude Code spedite dal framework nello zip: l'upgrade notturno le
 # riscrive, quindi versionarle vorrebbe dire un diff spurio a ogni giro. Vale

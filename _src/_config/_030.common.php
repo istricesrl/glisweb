@@ -54,7 +54,7 @@
      * essere vista come un indicatore del livello di patch dell'installazione corrente. La versione è un numero intero formato
      * dalla data corrente in formato YYYYMMDDHHIISS (anno, mese, giorno, ora, minuti, secondi), viene scritta nel file
      * _etc/_current.version dal git hook .githooks/pre-commit ed è quindi presente solo dove quell'hook è stato installato
-     * con .githooks/install.sh (chi sviluppa il framework, non i progetti che lo usano).
+     * con _src/_sh/_githooks.install.sh (chi sviluppa il framework, non i progetti che lo usano).
      *
      *
      *
