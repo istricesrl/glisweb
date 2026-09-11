@@ -263,9 +263,16 @@
                          * anagrafiche con 1.115 righe di Lugo andava bene solo perche' l'id
                          * italiano e' piu' basso, il che e' una coincidenza e non una garanzia.
                          *
-                         * Il tracciato porta `stato`, e alcuni file portano anche `provincia`: si
-                         * usano per disambiguare quando ci sono, e l'ordinamento finale sull'id
-                         * tiene deterministica la scelta quando non bastano.
+                         * Il tracciato porta `comune`, `provincia` e `stato` — sono le colonne 16,
+                         * 17 e 18 di _usr/_examples/_csv/anagrafica.import.csv, che e' il file che
+                         * definisce il formato — e si usano tutte e tre, con l'ordinamento finale
+                         * sull'id a tenere deterministica la scelta quando non bastano.
+                         *
+                         * La PROVINCIA non e' ridondante rispetto allo stato e non va tolta per
+                         * "pulizia": e' l'unica cosa che separa due comuni italiani omonimi, dove
+                         * lo stato vale "Italia" per tutti e due. Nell'archivio di oggi sono
+                         * Calliano ( AT e TN ), Livo ( CO e TN ), Peglio ( CO e PU ) e Samone
+                         * ( TN e TO ), e sono di piu' su un archivio completo.
                          *
                          * Il degrado e' voluto e verificato: con i parametri a NULL le espressioni
                          * booleane valgono NULL per ogni riga, quindi non ordinano niente e si
@@ -300,8 +307,9 @@
                         if( ! empty( $idComune ) ) {
 
                             // TODO trovo l'indirizzo
-                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato, e in alcuni
-                            // tracciati anche provincia, usata per disambiguare le omonimie qui sopra
+                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, provincia, stato
+                            // e localita: l'elenco completo delle 22 colonne del tracciato sta in
+                            // _usr/_examples/_csv/anagrafica.import.csv
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
@@ -329,8 +337,9 @@
                         } else {
 
                             // TODO trovo l'indirizzo
-                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato, e in alcuni
-                            // tracciati anche provincia, usata per disambiguare le omonimie qui sopra
+                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, provincia, stato
+                            // e localita: l'elenco completo delle 22 colonne del tracciato sta in
+                            // _usr/_examples/_csv/anagrafica.import.csv
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
