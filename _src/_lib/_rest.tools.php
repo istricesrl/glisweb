@@ -42,7 +42,7 @@
      * TODO documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL, &$resHeaders = array() ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL, &$resHeaders = array(), $timeout = NULL ) {
 
         // inizializzo l'oggetto CURL
         $curl = curl_init();
@@ -73,8 +73,25 @@
         curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
 
         // imposto un timeout per la connessione
-        curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, 3 );
-        curl_setopt( $curl, CURLOPT_TIMEOUT, 5 );
+        //
+        // Il valore storico — 3 secondi per la connessione, 5 per la risposta — resta il default,
+        // quindi nessun deploy cambia comportamento senza dire niente. Si scavalca in due modi:
+        // per singola chiamata con $timeout, oppure per tutto il deploy definendo le costanti
+        // REST_CONNECTTIMEOUT e REST_TIMEOUT in un runlevel. Le costanti si leggono qui, a ogni
+        // chiamata e non al caricamento della libreria, perché le librerie vengono incluse PRIMA
+        // dei runlevel: un define fatto in un runlevel fa comunque in tempo.
+        //
+        // Perché serve: cinque secondi bastano per una lettura, non sempre per una scrittura su
+        // un gestionale remoto. E una scrittura che va in timeout è il caso peggiore, perché la
+        // risposta non arriva ma la INSERT dall'altra parte può essere passata lo stesso: chi
+        // chiama non sa se ripetere o no. Sul deploy GIMBE questo ha prodotto, fra il marzo 2024
+        // e il maggio 2026, 22 donazioni che il sito dava per non registrate — di cui 8 erano
+        // invece sul gestionale, e una registrata due volte.
+        $connectTimeout = defined( 'REST_CONNECTTIMEOUT' ) ? REST_CONNECTTIMEOUT : 3;
+        $responseTimeout = ( $timeout !== NULL ) ? $timeout : ( defined( 'REST_TIMEOUT' ) ? REST_TIMEOUT : 5 );
+
+        curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $connectTimeout );
+        curl_setopt( $curl, CURLOPT_TIMEOUT, $responseTimeout );
 
         // autenticazione
         if( $user !== NULL && $pasw !== NULL ) {
