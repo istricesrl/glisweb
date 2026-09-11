@@ -1,0 +1,123 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                {# PRIMA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">prodotto</span>
+                        {{ frm.select({ 'field': { 'name': 'id_prodotto' }, 'source': { 'values': etc.select.prodotti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">articolo</span>
+                        {{ frm.select({ 'field': { 'name': 'id_articolo' }, 'source': { 'values': etc.select.articoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+                {# SECONDA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data inizio</span>
+                        {{ frm.input({ 'field': { 'name': 'data_inizio', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data fine</span>
+                        {{ frm.input({ 'field': { 'name': 'data_fine', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">reparto</span>
+                        {{ frm.select({ 'field': { 'name': 'id_reparto' }, 'source': { 'values': etc.select.reparti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">listino</span>
+                        {{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+                {# TERZA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">iva</span>
+                        {{ frm.select({ 'field': { 'name': 'id_iva' }, 'source': { 'values': etc.select.iva }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-3 form-col">
+                        <span class="label-top">prefisso</span>
+                        {{ frm.input({ 'field': { 'name': 'prefisso', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">prezzo</span>
+                        {{ frm.input({ 'field': { 'name': 'prezzo', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-3 form-col">
+                        <span class="label-top">suffisso</span>
+                        {{ frm.input({ 'field': { 'name': 'suffisso', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SEZIONE COMMERCIALE #}
+            <fieldset>
+                <legend>dati commerciali <small>{{ legend }}</small></legend>
+
+                {# PRIMA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">fascia</span>
+                        {{ frm.input({ 'field': { 'name': 'fascia', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-4 col-md form-col">
+                        <span class="label-top">q.tà min</span>
+                        {{ frm.input({ 'field': { 'name': 'qta_min', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-4 col-md form-col">
+                        <span class="label-top">q.tà max</span>
+                        {{ frm.input({ 'field': { 'name': 'qta_max', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-4 col-md form-col">
+                        <span class="label-top">sconto</span>
+                        {{ frm.input({ 'field': { 'name': 'sconto_articoli', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md form-col">
+                        <span class="label-top">provv. %</span>
+                        {{ frm.input({ 'field': { 'name': 'provvigione_percentuale', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md form-col">
+                        <span class="label-top">provv. fissa</span>
+                        {{ frm.input({ 'field': { 'name': 'provvigione_fissa', 'type': 'number', 'step': 0.01 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

@@ -56,12 +56,13 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.file.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.archivio.file.form',
+                                                            'contenuti.archivio.file.form.collegamenti',
                                                             'contenuti.archivio.file.form.tools' ) )
     );
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertSeq( 'contenuti.archivio.file.form', $p['contenuti.archivio.file.form']['etc']['tabs'], 'contenuti.archivio.file.form.immagini' );
+        arrayInsertSeq( 'contenuti.archivio.file.form.collegamenti', $p['contenuti.archivio.file.form']['etc']['tabs'], 'contenuti.archivio.file.form.immagini' );
     }
 
     // tools archivio contenuti
@@ -73,6 +74,18 @@
         'parent'            => array( 'id'        => 'contenuti.archivio.file.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.file.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio.file.form' )
+    );
+
+    // archivio file form collegamenti
+    $p['contenuti.archivio.file.form.collegamenti'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'contenuti file form collegamenti' ),
+        'h1'                => array( $l        => 'collegamenti' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.file.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.file.form.collegamenti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.file.form.collegamenti.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.archivio.file.form' )
     );

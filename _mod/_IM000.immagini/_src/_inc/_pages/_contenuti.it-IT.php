@@ -56,6 +56,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.immagini.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.archivio.immagini.form',
+                                                            'contenuti.archivio.immagini.form.collegamenti',
                                                             'contenuti.archivio.immagini.form.tools' ) )
     );
 
@@ -68,6 +69,18 @@
         'parent'            => array( 'id'        => 'contenuti.archivio.immagini.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.immagini.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio.immagini.form' )
+    );
+
+    // archivio immagini form collegamenti
+    $p['contenuti.archivio.immagini.form.collegamenti'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'contenuti immagini form collegamenti' ),
+        'h1'                => array( $l        => 'collegamenti' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.immagini.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.immagini.form.collegamenti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.immagini.form.collegamenti.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.archivio.immagini.form' )
     );
