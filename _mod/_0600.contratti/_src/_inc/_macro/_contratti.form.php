@@ -15,13 +15,21 @@
     $ct['form']['table'] = 'contratti';
 
 
-    // tendina ruoli progetti
-	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
-    );
+    /**
+     * tendina anagrafica — disattivata il 2026-09-10, il campo ha gia' la ricerca REST
+     *
+     * Era `SELECT id, __label__ FROM anagrafica_view` senza WHERE. Su un deploy con l'anagrafica
+     * grande ( Polmasi: 55.372 righe ) sono circa 5 MB serializzati: oltre il tetto di 1 MB di
+     * memcached, quindi la scrittura in cache fallisce con l'errore 37 e la query si rifa' a ogni
+     * apertura del form.
+     *
+     * Non serviva. Il campo e' reso da `frm.selectBox()` con `populate-api="anagrafica"`
+     * ( _src/_templates/_athena/bin/contratti.form.sub.html ): quando la macro riceve un `api` NON stampa
+     * nemmeno le `<option>` — rende un hidden e lascia cercare via REST a
+     * `_src/_js/_lib/_selectbox.js` da tre caratteri in su, e l'etichetta del valore gia' scelto
+     * la prende da `/api/anagrafica/<id>`. La lista serviva al piu' a risolvere quell'etichetta.
+     */
+    $ct['etc']['select']['anagrafica'] = array();
 
     // tendina ruoli progetti
 	$ct['etc']['select']['ruoli_anagrafica'] = mysqlCachedIndexedQuery(

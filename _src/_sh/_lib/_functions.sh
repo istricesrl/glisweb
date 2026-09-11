@@ -109,9 +109,10 @@ increment-version() {
 #
 # La cache in memcache (contenuti e pagine, `$cf['contents']['pages']`) vive fuori dal
 # filesystem e si svuota chiamando l'endpoint /task/memcache.clean del sito di destinazione:
-# si fa solo se il file properties dichiara DEPLOY_URL, altrimenti si ricorda all'operatore di
-# lanciarlo a mano. Non si prova a indovinare l'host dal config.json: e' un JSON con i profili
-# per ambiente, e leggerlo dalla shell sarebbe piu' fragile del problema che risolve.
+# si fa solo se il file properties dichiara DST_URL con le credenziali DST_AUTH_USER e
+# DST_AUTH_PASS, altrimenti si ricorda all'operatore di lanciarlo a mano. Non si prova a
+# indovinare l'host dal config.json: e' un JSON con i profili per ambiente, e leggerlo dalla
+# shell sarebbe piu' fragile del problema che risolve.
 #
 # $1 percorso della document root di destinazione
 # $2 prefisso di esecuzione remota, opzionale (es. "ssh -i chiave utente@host")
@@ -142,20 +143,52 @@ function deploy-invalidate-caches() {
     fi
 
     # cache in memcache
-    if [ -n "$DEPLOY_URL" ]; then
+    #
+    # AUTENTICAZIONE. Il task vuole il privilegio GESTIONE_CACHE dal 05/09/2026 e da anonimo
+    # risponde 403: e' voluto, senza il controllo chiunque potrebbe svuotare in continuazione la
+    # cache di una produzione. Ci si autentica quindi in HTTP Basic, che _src/_config/_210.auth.php
+    # mappa gia' sul login normale (PHP_AUTH_USER/PHP_AUTH_PW): non serve una sessione, non serve
+    # un cookie jar, e l'endpoint resta chiuso a chi passa di li'. Le credenziali stanno nel file
+    # properties, che non viaggia mai (etc/deploy/ e' in SET_EXCLUDE) e custodisce gia' il percorso
+    # della chiave SSH, cioe' un segreto piu' grosso di questo.
+    #
+    # PORTATA. Si chiama con ?deploy=1, cioe' TUTTI i siti del deploy. Ogni chiave e' prefissata da
+    # un seed per sito e anche l'INDICE delle chiavi lo e', quindi senza il parametro si pulirebbe
+    # il solo sito il cui host si e' chiamato e gli altri continuerebbero a servire la copia
+    # precedente. Un deploy aggiorna tutti i siti insieme, quindi deve svuotarli tutti insieme.
+    #
+    # DA DOVE PARTE LA CHIAMATA. Dal TARGET, quando il target e' remoto: e' la stessa regola del
+    # rm -rf qui sopra, e non e' pignoleria. Un target sulla rete interna del cliente (connor, che
+    # si raggiunge solo saltando da un bastion) NON e' risolvibile dalla macchina che lancia il
+    # deploy: una curl da qui fallirebbe sempre, e il deploy lo direbbe come se fosse un problema
+    # di privilegi. Il target invece il proprio nome lo risolve.
+    #
+    # Le credenziali passano dallo standard input (curl -K -) e non da -u: sulla riga di comando
+    # finirebbero nella lista dei processi del target per tutta la durata della chiamata.
+    if [ -n "$DST_URL" ] && [ -n "$DST_AUTH_USER" ] && [ -n "$DST_AUTH_PASS" ]; then
 
-        echo "svuoto la cache dei contenuti: $DEPLOY_URL/task/memcache.clean"
+        local CACHE_URL="$DST_URL/task/memcache.clean?deploy=1"
 
-        if curl -s -f -o /dev/null --max-time 60 "$DEPLOY_URL/task/memcache.clean"; then
+        echo "svuoto la cache dei contenuti: $CACHE_URL"
+
+        if [ -n "$VIA" ]; then
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | $VIA "curl -s -f -o /dev/null --max-time 60 -K - '$CACHE_URL'"
+        else
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 60 -K - "$CACHE_URL"
+        fi
+
+        if [ $? -eq 0 ]; then
             echo "cache dei contenuti svuotata"
         else
-            echo "ATTENZIONE: chiamata a $DEPLOY_URL/task/memcache.clean fallita, lanciarla a mano dal browser"
+            echo "ATTENZIONE: chiamata a $CACHE_URL fallita, lanciarla a mano"
+            echo "            un 403 vuol dire che l'account DST_AUTH_USER non ha il privilegio GESTIONE_CACHE"
         fi
 
     else
 
-        echo "ATTENZIONE: DEPLOY_URL non indicato nel file properties, la cache dei contenuti in memcache NON e' stata svuotata"
-        echo "            lanciare a mano /task/memcache.clean sul sito di destinazione"
+        echo "ATTENZIONE: DST_URL, DST_AUTH_USER o DST_AUTH_PASS non indicati nel file properties:"
+        echo "            la cache dei contenuti in memcache NON e' stata svuotata"
+        echo "            lanciare a mano /task/memcache.clean?deploy=1 sul sito di destinazione"
 
     fi
 

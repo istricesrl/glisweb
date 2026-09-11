@@ -154,12 +154,21 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_collaboratore = 1 ORDER BY __label__');
 
-    // tendina clienti
-	$ct['etc']['select']['clienti'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'], 
-        $cf['memcache']['connection'], 
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__');
+    /**
+     * tendina clienti — disattivata il 2026-09-10, non la legge nessun template
+     *
+     * Era `SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__` senza WHERE. Su un
+     * deploy con l'anagrafica grande ( Polmasi: 55.372 righe ) sono circa 5 MB serializzati: oltre
+     * il tetto di 1 MB di memcached, quindi la scrittura in cache fallisce con l'errore 37 e la
+     * query — ordinamento compreso — si rifà a ogni apertura della pagina.
+     *
+     * La chiave `etc.select.clienti` non compare in nessun template di questo modulo, né standard
+     * né di progetto: la lista veniva costruita, ordinata e buttata.
+     *
+     * Se serve davvero una tendina sull'anagrafica, la strada è quella che il framework ha già:
+     * `frm.selectBox()` con `populate-api="anagrafica"`, che rende un hidden e lascia cercare via
+     * REST a `_src/_js/_lib/_selectbox.js` da tre caratteri in su.
+     */
 
     // tendina clienti
 	$ct['etc']['select']['luoghi'] = mysqlCachedIndexedQuery(
