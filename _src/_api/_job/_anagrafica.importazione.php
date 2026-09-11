@@ -252,12 +252,47 @@
                             )
                         );
     */
-                        // TODO trovo il comune
+                        /**
+                         * Fix 2026-09-12: il comune si cerca per nome, ma il nome NON e' univoco.
+                         *
+                         * In archivio convivono i comuni italiani e quelli esteri: "Lugo" e' sia in
+                         * provincia di Ravenna sia in Galizia, e le omonimie fitte sono parecchie
+                         * ( Fantanele sette volte, Stefan cel Mare sei, Viisoara sei ). Con la
+                         * vecchia "SELECT id FROM comuni WHERE nome = ?" la riga che tornava
+                         * dipendeva dal piano di esecuzione: su un'importazione di 14.500
+                         * anagrafiche con 1.115 righe di Lugo andava bene solo perche' l'id
+                         * italiano e' piu' basso, il che e' una coincidenza e non una garanzia.
+                         *
+                         * Il tracciato porta `stato`, e alcuni file portano anche `provincia`: si
+                         * usano per disambiguare quando ci sono, e l'ordinamento finale sull'id
+                         * tiene deterministica la scelta quando non bastano.
+                         *
+                         * Il degrado e' voluto e verificato: con i parametri a NULL le espressioni
+                         * booleane valgono NULL per ogni riga, quindi non ordinano niente e si
+                         * scende sull'id, cioe' sul comportamento di prima. Un tracciato senza
+                         * `provincia` o senza `stato` non peggiora.
+                         *
+                         * Lo stato si confronta sia col nome sia col codice ISO perche' il
+                         * tracciato ammette tutt'e due le forme, come gia' prevedeva la ricerca
+                         * del paese qui sopra.
+                         */
                         $idComune = mysqlSelectValue(
                             $cf['mysql']['connection'],
-                            'SELECT id FROM comuni WHERE nome = ?',
+                            'SELECT comuni.id
+                               FROM comuni
+                               LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+                               LEFT JOIN regioni ON regioni.id = provincie.id_regione
+                               LEFT JOIN stati ON stati.id = regioni.id_stato
+                              WHERE comuni.nome = ?
+                              ORDER BY ( provincie.sigla = ? ) DESC,
+                                       ( stati.nome = ? OR stati.iso31661alpha2 = ? ) DESC,
+                                       comuni.id ASC
+                              LIMIT 1',
                             array(
-                                array( 's' => $job['riga']['comune'] )
+                                array( 's' => $job['riga']['comune'] ),
+                                array( 's' => ( ( isset( $job['riga']['provincia'] ) ) ? $job['riga']['provincia'] : NULL ) ),
+                                array( 's' => ( ( isset( $job['riga']['stato'] ) ) ? $job['riga']['stato'] : NULL ) ),
+                                array( 's' => ( ( isset( $job['riga']['stato'] ) ) ? $job['riga']['stato'] : NULL ) )
                             )
                         );
 
@@ -265,7 +300,8 @@
                         if( ! empty( $idComune ) ) {
 
                             // TODO trovo l'indirizzo
-                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato
+                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato, e in alcuni
+                            // tracciati anche provincia, usata per disambiguare le omonimie qui sopra
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
@@ -293,7 +329,8 @@
                         } else {
 
                             // TODO trovo l'indirizzo
-                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato
+                            // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato, e in alcuni
+                            // tracciati anche provincia, usata per disambiguare le omonimie qui sopra
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
