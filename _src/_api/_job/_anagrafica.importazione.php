@@ -87,12 +87,27 @@
             // inizializzo l'array
             $arr = csvFile2array( $job['workspace']['file'], NULL );
 
-            // se memcache è diponibile, salvo $arr
-            if( ! empty( $cf['memcache']['connection'] ) ) {
-                $e = memcacheWrite( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA', $arr );
-                if( ! empty( $e ) ) {
-                    $job['workspace']['status']['info'][] = 'dataset salvato in cache';
-                }
+            /**
+             * DOVE FINISCE IL DATASET, e perche' l'esito va detto ( fix 2026-09-12 ).
+             *
+             * Il dataset serve a ogni iterazione, e il job viene incluso da capo ogni volta: se
+             * non lo si tiene da qualche parte, ogni giro rilegge e riparsa il file di partenza.
+             * Su 14.522 righe sono dodicimila parsing dello stesso file.
+             *
+             * Prima qui c'era solo memcache, e il fallimento non usciva da questa funzione: il
+             * 12/09/2026 la cache ha rifiutato un dataset da 7,13 MB ( limite 1 MB per elemento )
+             * e il job ha lavorato lo stesso, riparsando il CSV a ogni iterazione e riempiendo il
+             * disco di log. L'errore era scritto in var/log/memcache.err, ma chi lancia un import
+             * guarda la barra e il workspace, non quel file.
+             *
+             * Ora il ripiego e' un file di spool dedicato al job, e l'esito arriva dove si vede.
+             */
+            $esitoDataset = jobDatasetScrivi( $job, $arr );
+
+            if( $esitoDataset['dove'] == 'cache' ) {
+                $job['workspace']['status']['info'][] = $esitoDataset['nota'];
+            } else {
+                $job['workspace']['status']['error'][] = $esitoDataset['nota'];
             }
 
             // segno il totale delle cose da fare
@@ -122,10 +137,10 @@
 
         } else {
 
-            // se memcache è diponibile, leggo $arr
-            $arr = memcacheRead( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA' );
+            // rileggo il dataset da dove l'apertura l'ha messo: cache, o file di spool
+            $arr = jobDatasetLeggi( $job );
 
-            // leggo la lista
+            // ultima spiaggia, e costa quanto tutto il file: rileggere il CSV di partenza
             if( empty( $arr ) ) {
                 $arr = csvFile2array( $job['workspace']['file'], NULL );
             }
@@ -137,6 +152,9 @@
 
         // operazioni di chiusura
         if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
+
+            // il file di spool del dataset non serve piu' e puo' pesare parecchio
+            jobDatasetPulisci( $job );
 
             // scrivo la timestamp di completamento
             $jobs = mysqlQuery(

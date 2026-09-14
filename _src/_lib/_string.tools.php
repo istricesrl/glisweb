@@ -564,18 +564,39 @@
 
     function clean_string($string) {
 
+        /**
+         * OGNI CONTROLLO SI CONFRONTA CON IL PASSO PRECEDENTE, NON CON L'ORIGINALE
+         * ( fix 2026-09-12 ).
+         *
+         * Fino a qui tutti e tre i controlli confrontavano $s con $string, cioe' con la stringa
+         * di partenza NON ripulita dal trim(). Effetto: bastava uno spazio in testa o in coda -
+         * il caso piu' comune che esista in un CSV - perche' tutte e tre le condizioni restassero
+         * vere fino in fondo, e la funzione scrivesse TRE righe di log, a LOG_ERR, per una
+         * stringa a cui non era stato fatto niente di anomalo.
+         *
+         * Il 12/09/2026 questo ha prodotto 1,37 GB in var/log/details/csv/cleanstring.err.202609.log
+         * durante una sola importazione: il dataset veniva riparsato a ogni iterazione e ogni
+         * campo con uno spazio di troppo passava di qui. Essendo a LOG_ERR, abbassare il livello
+         * di log del deploy non lo spegne: la correzione doveva stare qui.
+         *
+         * Adesso ogni passo dichiara soltanto cio' che ha cambiato davvero. Il trim non e' un
+         * errore e non si logga; la normalizzazione degli spazi doppi e' normalizzazione e non
+         * un'anomalia di codifica, quindi scende a LOG_INFO.
+         */
         $s = trim( $string );
 
+        $p = $s;
         $s = iconv( "UTF-8", "UTF-8//IGNORE", $s );
-      
-        if( $s != $string ) {
-            logWrite( $string . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
+        $p = $s;
         $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2[\x80-\x8F]{2}|\xE2\x80[\xA4-\xA8]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
 
-        if( $s != $string ) {
-            logWrite( $string . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
         /*
@@ -586,10 +607,11 @@
         }
         */
 
+        $p = $s;
         $s = preg_replace('/\s+/', ' ', $s );
 
-        if( $s != $string ) {
-            logWrite( $string . ' pulito (rimozione spazi doppi) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (rimozione spazi doppi) a ' . $s, 'details/csv/cleanstring', LOG_INFO );
         }
 
         return $s;

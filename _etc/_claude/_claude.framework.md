@@ -663,6 +663,48 @@ avanzare `corrente` per `cron.stalli_massimi` passate (default 30, mezz'ora di c
 d'ufficio** con un log di errore. Il contatore vive in `workspace.__stalli__`, si scrive *prima* di lavorare —
 così regge anche se il job muore dentro il `require` — e si azzera appena `corrente` avanza.
 
+### Il dataset del job, e perché è il punto in cui si fa il danno più grosso
+
+Un job che lavora su un elenco — un CSV da importare, una lista da elaborare — ha un problema che lo
+scheletro qui sopra non risolve: **il file del job viene incluso da capo a ogni iterazione**, quindi
+l'elenco va ricaricato ogni volta. Lo schema storico è memcache, con il ripiego di rileggere il file
+di partenza quando la cache non risponde.
+
+Quel ripiego costa quanto tutto il file, **a ogni iterazione**. Ed è qui che il 12/09/2026 un
+deploy ha riempito un filesystem da 246 GB:
+
+- l'importazione di 14.522 anagrafiche non entrava in memcache — 7,13 MB serializzati contro il
+  limite da **1 MB per elemento**, `set()` rifiutata con `MEMCACHED_E2BIG` — e il job ha riletto e
+  riparsato lo stesso CSV a ogni iterazione, **dodicimila volte**;
+- `csvFile2array()` scriveva nel canale `details/csv` un `print_r` dell'intero file, due volte per
+  chiamata, e in DEV il livello di log standard è `LOG_DEBUG`, quindi lo scriveva davvero: una
+  decina di megabyte a chiamata, per dodicimila chiamate. **122 GB in un file solo**, mai aperto da
+  nessuno;
+- il fallimento della cache **era loggato**, a `LOG_ERR`, in `var/log/memcache.err.AAAAMM.log`,
+  nell'istante esatto in cui il job si apriva. Una riga in un file che nessuno apre non è un
+  allarme.
+
+Da qui tre regole, e la prima vale ben oltre i job:
+
+- **quello che un job scrive va moltiplicato per il numero di iterazioni.** Una riga di log che su
+  una richiesta è innocua, su un job da diecimila giri è un file da gigabyte. Prima di loggare
+  dentro un job, chiedersi quante volte verrà scritta quella riga;
+- **il dataset si salva con `jobDatasetScrivi()` e si rilegge con `jobDatasetLeggi()`**
+  (`_src/_lib/_job.utils.php`), che provano la cache e ripiegano su un file di spool dedicato al job
+  (`var/spool/job/` più l'id): un `unserialize()` per iterazione invece di un parsing completo, e
+  senza limiti di dimensione. La chiusura chiama `jobDatasetPulisci()`, perché quel file pesa;
+- **l'esito del salvataggio va messo nel `workspace`**, non solo nel log: `jobDatasetScrivi()` lo
+  restituisce apposta. Chi lancia un import guarda la barra di avanzamento e lo stato del job, non
+  `var/log/memcache.err`. Un fallimento che cambia il costo del lavoro di tre ordini di grandezza
+  deve comparire dove l'operatore guarda davvero.
+
+E una nota su `csvFile2array()`: dal 12/09/2026 logga **l'impronta** del file — righe, separatore,
+colonne, prime tre righe — e non più il contenuto. Il dump integrale esiste ancora ma va chiesto,
+accendendo `$cf['debug']['csv']['dump']` per il giro in cui serve. Se il dataset serve per intero e
+sistematicamente, la copia leggibile la scrive già `jobDatasetScrivi()` in `var/log/job/` sotto la
+cartella dell'id, nel file `dataset.log`: una volta sola e accanto agli altri log di quel job, molto
+più utile di dodicimila copie accavallate in un canale mensile condiviso.
+
 ### Regole pratiche
 
 - Nel guard iniziale si scrive `>`, **mai** `>=` e mai `==`. Un uguale non è una guardia, è una coincidenza:
@@ -679,6 +721,9 @@ così regge anche se il job muore dentro il `require` — e si azzera appena `co
   prodotto cartesiano. Il difetto resta invisibile finché una delle tabelle è vuota.
 - Il `result` che il driver mostra a fine barra (`d.result` in `main.js`) va scritto in
   `$job['workspace']['result']`, non solo in `$status`: il workspace è l'unica cosa che il motore risalva.
+- **Dopo aver lanciato un job lungo, guardare la prima passata prima di andarsene.** Non la barra:
+  `workspace.status`, e `var/log/memcache.err` se il job usa un dataset. Il difetto che costa caro si
+  vede nei primi sessanta secondi e poi si moltiplica in silenzio per tutte le ore che seguono.
 
 ### Quando un job è piantato
 

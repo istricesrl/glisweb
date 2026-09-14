@@ -188,14 +188,14 @@
         // error_reporting( E_ALL );
         // ini_set( 'display_errors', TRUE );
    
+        // ...
+        global $cf;
+
         // log
         logger( 'lettura file CSV: ' . $f, 'csv' );
 
         // leggo il contenuto del file in un array di righe CSV
         $a = readFromFile( $f );
-
-        // log
-        logger( 'dati letti dal file ' . $f . ': ' . print_r( $a, true ), 'details/csv' );
 
         // se non ho passato le intestazioni, le ricavo dalla prima riga
         if( empty( $h ) ) {
@@ -212,8 +212,50 @@
         // leggo le righe tramite la funzione csvArray2array()
         $r = csvArray2array( $a, $s, $h, $c, $e );
 
-        // log
-        logger( 'righe lette dal file ' . $f . ': ' . print_r( $r, true ), 'details/csv' );
+        /**
+         * IL LOG DEL CSV E' UN'IMPRONTA, NON IL CONTENUTO ( fix 2026-09-12 ).
+         *
+         * Fino a qui questa funzione scriveva nel canale details/csv un print_r dell'INTERO file,
+         * due volte per chiamata: una volta le righe grezze e una volta le righe elaborate. Su un
+         * file da 14.522 righe sono una decina di megabyte a chiamata, e un deploy in DEV scrive
+         * details davvero, perche' il livello di log standard e' LOG_DEBUG.
+         *
+         * Il 12/09/2026 questo ha riempito un filesystem da 246 GB: l'importazione delle
+         * anagrafiche di un cliente ha chiamato csvFile2array() a ogni iterazione del job —
+         * dodicimila volte, perche' il dataset non entrava in memcache — e il solo
+         * csv.debug.202609.log e' arrivato a 122 GB, lasciando il server senza spazio e senza che
+         * nessuno avesse mai aperto quel file.
+         *
+         * Quello che serve davvero per diagnosticare un CSV che non va e' l'impronta: quante
+         * righe, che separatore, che colonne, e le prime righe per vedere se il parsing ha preso
+         * la piega giusta. Il contenuto integrale resta disponibile ma va chiesto, accendendo
+         * $cf['debug']['csv']['dump'] per il giro in cui serve.
+         *
+         * Se il dataset serve per intero e sistematicamente — il caso tipico e' un job di
+         * importazione — il posto giusto non e' questo canale mensile condiviso, dove le copie si
+         * accavallano e non si capisce quale appartenga a quale lavorazione: e' un file per job
+         * sotto var/log/job/, scritto una volta sola all'apertura. Vedi
+         * _src/_api/_job/_anagrafica.importazione.php .
+         */
+        logger(
+            sprintf(
+                'letto %s: %d righe, separatore "%s", %d colonne ( %s )',
+                $f,
+                count( $r ),
+                $s,
+                count( $h ),
+                implode( ', ', $h )
+            ),
+            'csv'
+        );
+
+        // le prime righe bastano a vedere se il parsing ha preso la piega giusta
+        logger( 'prime righe di ' . $f . ': ' . print_r( array_slice( $r, 0, 3 ), true ), 'details/csv' );
+
+        // il contenuto integrale solo se richiesto esplicitamente
+        if( ! empty( $cf['debug']['csv']['dump'] ) ) {
+            logger( 'righe lette dal file ' . $f . ': ' . print_r( $r, true ), 'details/csv' );
+        }
 
         // restituisco l'array di array associativi elaborato da csvArray2array()
         return $r;
