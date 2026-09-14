@@ -41,6 +41,25 @@
     // download fallisce ritornando false e basta
     define( 'GEO_ISTAT_URL', 'https://www.istat.it/storage/codici-unita-amministrative/Elenco-comuni-italiani.xls' );
 
+    // quanti comuni deve avere l'elenco ISTAT perche' sia credibile
+    //
+    // I comuni italiani sono circa 7.900 e calano di qualche decina l'anno per fusione. Un file
+    // con molti meno non e' un aggiornamento, e' un guasto: una pagina di errore, un download
+    // troncato, un cambio di tracciato. Applicarlo non toglierebbe niente — i comuni che qui non
+    // ci sono non vengono cancellati — ma vorrebbe dire lavorare su un file che non e' quello.
+    define( 'GEO_ISTAT_MINIMO', 7000 );
+
+    // quante righe puo' cambiare un allineamento automatico prima di fermarsi e chiedere
+    //
+    // A regime l'ISTAT pubblica variazioni un paio di volte l'anno e sono manciate di fusioni:
+    // un giro mensile che ne cambia piu' di cosi' sta facendo qualcosa che nessuno si aspetta, e
+    // tocca la fonte autorevole di TUTTI i deploy. Si ferma e lo dice; per applicarlo lo stesso
+    // c'e' --forza, che e' un modo di far dire a una persona "si', lo so".
+    define( 'GEO_SOGLIA_AUTOMATICA', 200 );
+
+    // marcatore dell'ultimo allineamento riuscito, per accorgersi se il giro mensile si e' fermato
+    define( 'GEO_MARCATORE', 'var/geografia.latest.conf' );
+
     // colonne del file ISTAT che servono qui, per posizione
     // il tracciato completo e' documentato in _src/_api/_task/_comuni.importazione.start.php
     define( 'GEO_ISTAT_ISTAT',   4 );    // E    codice comune alfanumerico
@@ -139,6 +158,13 @@
         array_shift( $arr );
 
         unlink( $t );
+
+        // un elenco troppo corto non e' un aggiornamento, e' un guasto: si ferma qui invece di
+        // lavorare su un file che non e' quello che dice di essere
+        if( count( $arr ) < GEO_ISTAT_MINIMO ) {
+            printf( "l'elenco ISTAT ha %d righe, meno del minimo credibile di %d: non lo uso\n", count( $arr ), GEO_ISTAT_MINIMO );
+            return false;
+        }
 
         return $arr;
 
@@ -374,15 +400,16 @@
 
     // ------------------------------------------------------------------ esecuzione
 
-    $opt = getopt( '', array( 'istat', 'export', 'all', 'dry-run' ) );
+    $opt = getopt( '', array( 'istat', 'export', 'all', 'dry-run', 'forza' ) );
 
     if( ! $opt ) {
-        fwrite( STDERR, "uso: _geografia.build.sh [--istat] [--export] [--all] [--dry-run]\n" );
+        fwrite( STDERR, "uso: _geografia.build.sh [--istat] [--export] [--all] [--dry-run] [--forza]\n" );
         exit( 1 );
     }
 
     $tutto = isset( $opt['all'] );
     $secco = isset( $opt['dry-run'] );
+    $forza = isset( $opt['forza'] );
 
     // autoload di composer: serve PhpSpreadsheet per leggere il file ISTAT
     $autoload = GEO_BASE . '_src/_lib/_ext/autoload.php';
@@ -439,10 +466,23 @@
 
             } elseif( ! $e['sql'] ) {
 
+                // niente da fare: si aggiorna comunque il marcatore, perche' il giro E' andato a
+                // buon fine. E' la differenza fra "non c'era niente da cambiare" e "non ha girato
+                // nessuno", che senza marcatore non si distinguono
+                file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" );
                 echo "  niente da allineare\n";
+
+            } elseif( count( $e['sql'] ) > GEO_SOGLIA_AUTOMATICA && ! $forza ) {
+
+                // la fonte autorevole di tutti i deploy non si riscrive in blocco senza che una
+                // persona lo sappia: a regime le variazioni ISTAT sono manciate di fusioni
+                printf( "  FERMO: %d righe da cambiare, oltre la soglia di %d per un giro automatico\n", count( $e['sql'] ), GEO_SOGLIA_AUTOMATICA );
+                echo "  guardare cosa cambierebbe con --istat --dry-run, poi --istat --forza per applicare\n";
+                exit( 1 );
 
             } elseif( geoIstatApplica( $c, $e['sql'] ) ) {
 
+                file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" );
                 printf( "  applicate: %d aggiornati, %d inseriti\n", $e['aggiornati'], $e['inseriti'] );
 
             } else {

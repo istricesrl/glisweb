@@ -10,6 +10,7 @@
 #                                     li viene a prendere
 #   _geografia.build.sh --all         tutte e due
 #   _geografia.build.sh --dry-run     mostra cosa farebbe, non scrive e non esegue niente
+#   _geografia.build.sh --forza       applica anche oltre la soglia dell'allineamento automatico
 #
 # NOTA lo script NON esegue "clear": puo' essere invocato da cron, dove ripulire lo schermo
 # cancellerebbe l'output di chi lo ha chiamato
@@ -32,7 +33,7 @@ echo "lavoro su: $(pwd)"
 
 ## verifica delle opzioni
 if [ $# -eq 0 ]; then
-    echo "nessuna opzione: uso $(basename "$0") [--istat] [--export] [--all] [--dry-run]" >&2
+    echo "nessuna opzione: uso $(basename "$0") [--istat] [--export] [--all] [--dry-run] [--forza]" >&2
     exit 1
 fi
 
