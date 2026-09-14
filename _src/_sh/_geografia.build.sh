@@ -6,7 +6,8 @@
 # che i deploy scaricano da dataserver.istricesrl.com
 #
 #   _geografia.build.sh --istat       allinea la tabella comuni all'elenco ISTAT
-#   _geografia.build.sh --export      rigenera i CSV in var/geografia/
+#   _geografia.build.sh --export      rigenera i CSV sotto usr/pages/, da dove il dataserver se
+#                                     li viene a prendere
 #   _geografia.build.sh --all         tutte e due
 #   _geografia.build.sh --dry-run     mostra cosa farebbe, non scrive e non esegue niente
 #
@@ -61,22 +62,30 @@ if [ $GEO_EXIT_CODE -ne 0 ]; then
 fi
 
 ## permessi sui file generati
-if [ -d ./var/geografia ]; then
-    chown -R root:www-data ./var/geografia 2>/dev/null
-    find ./var/geografia -type d -exec chmod 750 {} + 2>/dev/null
-    find ./var/geografia -type f -exec chmod 640 {} + 2>/dev/null
-fi
+#
+# i file nascono con l'umask di root, e Apache non li leggerebbe: senza questo blocco la
+# pubblicazione risponderebbe 403 invece di servire il CSV
+for i in ./usr/pages/geografia ./var/geografia; do
+    if [ -d "$i" ]; then
+        chown -R root:www-data "$i" 2>/dev/null
+        find "$i" -type d -exec chmod 750 {} + 2>/dev/null
+        find "$i" -type f -exec chmod 640 {} + 2>/dev/null
+    fi
+done
 
 ## codice di uscita
 exit 0
 
-## NOTA SULLA PUBBLICAZIONE
+## NOTA SULLA PUBBLICAZIONE, E SULLA SUA DIREZIONE
 #
-# lo script si ferma ai file in var/geografia/: il caricamento su web02 resta a mano, di proposito.
-# Copiarli in automatico vorrebbe dire mettere qui dentro un host e una chiave di accesso a un'altra
-# macchina, e la pubblicazione dei dati standard e' una decisione, non un effetto collaterale di una
-# rigenerazione.
+# lo script si ferma a scrivere sotto usr/pages/, che il .htaccess serve ad accesso diretto: da li'
+# i file sono raggiungibili via HTTP, ed e' IL DATASERVER a venirseli a prendere con un suo cron.
 #
-# La destinazione e' /var/www/dataserver.istricesrl.com/dev/geografia/ su web02, e il READ.md di
-# quel deploy spiega il formato e la verifica.
+# La direzione conta. Se fosse il framework a spingere sul dataserver dovrebbe portarsi dentro
+# l'indirizzo e una chiave di accesso di un'altra macchina, e pubblicare diventerebbe l'effetto
+# collaterale di una rigenerazione invece che una decisione di chi pubblica. Cosi' invece qui non
+# c'e' nessuna credenziale: questa macchina produce e mette a disposizione, il dataserver decide
+# quando prendere, controlla quello che ha preso e pubblica.
+#
+# Il READ.md del dataserver spiega il formato dei file e la verifica che dice se sono buoni.
 #

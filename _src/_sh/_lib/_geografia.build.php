@@ -461,7 +461,16 @@
 
         echo "CSV dei dati geografici:\n";
 
-        $d = GEO_BASE . 'var/geografia/';
+        // si scrive sotto usr/pages/, che il .htaccess serve ad accesso diretto: da li' i file
+        // sono raggiungibili via HTTP ed e' IL DATASERVER a venirseli a prendere, invece di essere
+        // questa macchina a spingerli sulla sua.
+        //
+        // La direzione non e' un dettaglio. Se fosse il framework a spingere dovrebbe portarsi
+        // dentro l'indirizzo e una chiave di accesso di un'altra macchina, e pubblicare
+        // diventerebbe l'effetto collaterale di una rigenerazione invece che una decisione di chi
+        // pubblica. Cosi' qui non c'e' nessuna credenziale, e i dati sono pubblici per definizione
+        // visto che il dataserver li serve pubblicamente da sempre.
+        $d = GEO_BASE . 'usr/pages/geografia/';
 
         if( ! is_dir( $d ) ) {
             mkdir( $d, 0750, true );
@@ -483,7 +492,7 @@
             echo "  prova: confrontare i .prova.csv con i file pubblicati, quelli delle tabelle non\n";
             echo "  toccate devono venire identici byte per byte\n";
         } else {
-            echo "  i file vanno caricati in /var/www/dataserver.istricesrl.com/dev/geografia/ su web02\n";
+            echo "  pubblicati: il dataserver se li viene a prendere col suo cron\n";
         }
 
     }
