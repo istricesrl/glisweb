@@ -188,10 +188,10 @@
                     $mail->DKIM_selector = 'glisweb';
                     $mail->DKIM_passphrase = $dkimPassw;
                     $mail->DKIM_identity = $mail->From;
-                    logWrite('DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . $fromDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
                     logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
                     logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
-                    logWrite('DKIM: ' . readFromFile($mail->DKIM_private, FILE_READ_AS_STRING), 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: chiave ' . $mail->DKIM_private . ' ' . ( is_readable( $mail->DKIM_private ) ? 'sha256=' . hash_file( 'sha256', $mail->DKIM_private ) : 'NON LEGGIBILE' ), 'dkim', LOG_DEBUG);
                 } else {
                     logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
                     logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
