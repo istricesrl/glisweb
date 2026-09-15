@@ -142,6 +142,36 @@ giorno l'8 settembre 2026:
 - si dà per "ancora da dire" una cosa **già detta** su un altro canale, perché nel file era scritta
   con parole diverse da quelle usate parlandogli.
 
+### Concorrenza: non sei l'unico che scrive questi file
+
+**Questi tre file stanno fuori dal repository, e su un progetto vivo ci scrive più di uno.** Due
+sessioni di Claude Code aperte sullo stesso deploy, una persona che apre il `TODO.md` con l'editor,
+uno script che ci aggiunge una riga: nessuno di questi vede gli altri. E fuori da git non c'è
+merge, non c'è conflitto, non c'è storia da cui ripescare — **l'ultimo che salva vince, e quello che
+ha scritto l'altro sparisce senza un messaggio**.
+
+Non è teorico: il 14 settembre 2026 una sessione ha potato dal `CHAT.md` una sezione ormai detta, e
+nel farlo ha cancellato la risposta a una segnalazione del cliente che un'altra sessione aveva
+scritto lì mezz'ora prima. È stata ricostruita dal `DONE.md`, dov'era per fortuna raccontata per
+esteso; se non ci fosse stata, era persa e nessuno se ne sarebbe accorto.
+
+Da qui tre regole, in ordine di importanza:
+
+- **si rilegge il file subito prima di scriverlo**, non ci si fida di quello che si è letto
+  all'inizio del lavoro. Fra la lettura e la scrittura possono essere passati minuti o ore, e in
+  mezzo può esserci passato qualcun altro. Vale anche — soprattutto — quando si è convinti di avere
+  già in testa il contenuto;
+- **si modifica il meno possibile alla volta.** Aggiungere una voce, sostituire un blocco preciso e
+  breve: sono operazioni che al massimo perdono sé stesse. Riscrivere una sezione intera, o
+  rigenerare il file, è l'operazione che cancella il lavoro degli altri — e il `CHAT.md` è il più
+  esposto dei tre, perché è quello che per sua natura si riscrive;
+- **quando una modifica è sostituzione, la si ancora al testo che si sta sostituendo** e si verifica
+  che sia ancora quello di prima. Se non lo è più, si ricomincia dalla rilettura invece di forzare.
+
+E una regola di buon senso che le risparmia quasi tutte: **se si sa che c'è un'altra sessione aperta
+sullo stesso progetto, i file di stato li scrive una sola**, e l'altra lo dice invece di farlo. Alla
+fine di un giro, dire quali dei tre si sono toccati costa una riga e fa risparmiare la ricostruzione.
+
 ### I quattro marcatori
 
 | marcatore | significato | stato | dove vive |

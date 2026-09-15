@@ -27,7 +27,70 @@
 
     }
 
+    /**
+     * Il prossimo numero libero di un sezionale.
+     *
+     * ⚠ NON E' UN CONTATORE ATOMICO, ed e' per questo che qui c'e' un lock.
+     *
+     * Il numero e' un `MAX( numero ) + 1` e chi lo chiede lo usa **piu' tardi**, quando inserisce
+     * il documento. Fra le due cose c'e' una finestra, e due richieste che ci entrano insieme
+     * calcolano lo **stesso numero**. Non finisce con due ricevute pari numero: `documenti` ha
+     * `UNIQUE KEY unica ( id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
+     * `INSERT ... ON DUPLICATE KEY UPDATE`, quindi il secondo INSERT **aggiorna la ricevuta del
+     * primo** e ne restituisce l'id: righe e pagamenti del secondo finiscono nel documento del
+     * primo, intestato a un'altra persona.
+     *
+     * SUCCESSO DAVVERO, due volte, il 2026-09-14 su Polmasi, in piena finestra di iscrizioni:
+     * due catture PayPal di ordini diversi nello stesso secondo, e la tessera da 20 euro di una
+     * socia e' finita sulla ricevuta di un'altra ( nr. 2633 intestata BARRETTA con dentro la
+     * tessera di POLIDORI; e nr. 2526 intestata SANTUNIONE con dentro quella di MARZADORI ).
+     * L'impronta e' il buco negli id: `documenti.id` 3540 e 3433 non esistono, perche' InnoDB
+     * consuma l'auto_increment anche quando l'INSERT diventa UPDATE.
+     *
+     * PERCHE' IL LOCK STA QUI E NON NEI CHIAMANTI. La cassa si proteggeva gia' da sola
+     * ( `GET_LOCK( concat( database(), ".cassa.documenti" ), 10 )` in
+     * `mod/4170.ecommerce/src/inc/macro/ecommerce.pagamento.alt.php` ), ma i chiamanti sono una
+     * dozzina — i `checkout.finally.success` di quattro moduli, il `pagamento.finally.success`,
+     * i task delle pianificazioni e dei coupon — e proteggerli uno per uno vuol dire dimenticarne
+     * uno. Qui passano tutti.
+     *
+     * PERCHE' NON SI RILASCIA. Il lock deve coprire anche l'INSERT, che avviene nel chiamante:
+     * rilasciarlo all'uscita da questa funzione lascerebbe la finestra aperta esattamente com'era.
+     * La connessione MySQL del framework **non e' persistente** ( `mysqli_real_connect()` senza il
+     * prefisso `p:`, `_src/_config/_125.mysql.php:96` ), quindi il lock cade da solo alla fine
+     * della richiesta, che e' il momento giusto. Un `RELEASE_LOCK` esplicito qui sarebbe un
+     * errore, non una pulizia.
+     *
+     * Il nome porta dentro `database()` perche' DEV e PROD stanno sullo stesso server MySQL e i
+     * lock sono visibili a tutta l'istanza: e' la stessa convenzione della cassa e di
+     * `anagrafica.fusione.codice.fiscale.php`.
+     *
+     * Se il lock non si prende entro dieci secondi si **prosegue lo stesso**, con un log di
+     * errore: meglio una ricevuta col rischio residuo che un socio che paga e non vede niente.
+     * E' la stessa scelta gia' fatta in cassa.
+     *
+     * @param  mixed $idTipologia
+     * @param  string $sezionale
+     * @param  mixed $idEmittente
+     * @return int il prossimo numero libero
+     */
     function generaProssimoNumeroDocumento( $idTipologia, $sezionale, $idEmittente ) {
+
+        global $cf;
+
+        $lock = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT GET_LOCK( concat( database(), ".documenti.numerazione" ), 10 ) AS l'
+        );
+
+        if( empty( $lock ) ) {
+            logger(
+                'attenzione: lock della numerazione documenti non acquisito entro 10 secondi, procedo comunque'
+                . ' ( sezionale ' . $sezionale . ', tipologia ' . $idTipologia . ' )',
+                'documenti',
+                LOG_ERR
+            );
+        }
 
         $row = generaInfoNumeroDocumento( $idTipologia, $sezionale, $idEmittente );
 

@@ -1226,6 +1226,33 @@
                 );
             }
 
+            // LA STATICA CHE NON C'E' NON E' UN ERRORE ( 2026-09-14 )
+            //
+            // Non tutte le tabelle hanno una vista materializzata: ne hanno una quelle che
+            // alimentano tendine grosse ( anagrafica, articoli, attivita', offerte_attive, todo ),
+            // e l'elenco canonico sta in _usr/_database/_patch/_080000999999.static.sql. I
+            // controller finally pero' chiamano questa funzione senza chiedersi se la statica
+            // esista: _documenti.articoli.finally.php la chiama per `documenti_articoli`, che una
+            // statica non ce l'ha in nessun deploy.
+            //
+            // Il risultato era una riga a LOG_ERR in var/log/mysql.err a OGNI salvataggio di riga
+            // documento, con scritto "nessuna colonna in comune" - che descrive male anche il
+            // fatto, perche' le colonne non sono incompatibili, la tabella proprio non esiste.
+            // Log a livello di errore che non segnalano un errore sono il modo piu' sicuro per
+            // insegnare a non guardare i log.
+            //
+            // Resta LOG_ERR il caso vero: statica che esiste e non ha nulla da spartire con la
+            // vista, che vuol dire migrazione a meta'.
+            if (empty($cols[$static])) {
+                logger(
+                    'la vista materializzata ' . $static . ' non esiste su questo deploy: niente da aggiornare',
+                    'mysql',
+                    LOG_INFO
+                );
+                $colonne[$t] = array();
+                return false;
+            }
+
             // solo le colonne che esistono da entrambe le parti
             $comuni = array_values(array_intersect($cols[$view], $cols[$static]));
             $manca  = array_diff($cols[$view], $cols[$static]);

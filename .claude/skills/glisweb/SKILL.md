@@ -114,7 +114,13 @@ Due regole che valgono più di tutte le altre:
    delle due è vera;
 2. **prima di scrivere al cliente si legge `CHAT.md`**, e prima di scrivere "da chiedere a X" si cerca in
    `CHAT.md` e `DONE.md` se la risposta esiste già. Chiedere a un cliente una cosa a cui ha già risposto
-   gli dice che quello che ha detto non è stato registrato.
+   gli dice che quello che ha detto non è stato registrato;
+3. **non sei l'unico che scrive questi file.** Stanno fuori dal repository, quindi niente merge e niente
+   storia: due sessioni aperte sullo stesso deploy si sovrascrivono a vicenda in silenzio. Si **rilegge
+   il file subito prima di scriverlo** ( non ci si fida della lettura di mezz'ora fa ), si modifica il
+   meno possibile alla volta, e riscrivere una sezione intera è proprio l'operazione che cancella il
+   lavoro degli altri — il `CHAT.md` è il più esposto, perché è quello che per sua natura si riscrive.
+   Se due sessioni sono aperte, i file di stato li tiene una sola.
 
 I conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di indentazione non sono
 dettagli stilistici: le aperte si contano in `TODO.md`, le chiuse in `TODO.md` **e** `DONE.md`. La regola

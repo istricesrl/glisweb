@@ -29,16 +29,100 @@
             if( ! isset( $ct['form']['__filesystem_mode__'] ) ) {
                 $ct['page']['parents']['h1'][ max( array_keys( $ct['page']['parents']['h1'] ) ) ][ LINGUA_CORRENTE ] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $ct['form']['table'] . getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['form']['table'] ) . ' WHERE id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
             }
+            /**
+             * DA UNA LINGUETTA SI TORNA ALLA SCHEDA, NON ALL'ELENCO ( fix 2026-09-14 ).
+             *
+             * Segnalato da Montanari il 10/09/2026: "se sei dentro ad un preventivo e vuoi tornare
+             * indietro al livello precedente, ti rimanda all'inizio della sezione dove sei entrato
+             * ... e devi rifare diversi passaggi".
+             *
+             * Le linguette di una scheda ( righe, stampe, invio, strumenti, ... ) sono pagine a se'
+             * e nell'albero hanno come genitore l'ELENCO, non la scheda: e' una scelta strutturale
+             * e non si tocca, perche' in glisweb il percorso di una pagina E' la catena degli slug
+             * dei suoi genitori ( _320.pages.php ), quindi cambiare il parent rinomina la pagina e
+             * manda in 404 tutti i suoi indirizzi. Provato, il 14/09, e rimesso a posto.
+             *
+             * Quando pero' non c'e' nessun backurl, i pulsanti di ritorno ripiegano proprio sul
+             * genitore, cioe' sull'elenco: da "righe del preventivo 12" si finiva sull'elenco di
+             * tutti i preventivi, e per tornare alle righe servivano tre passaggi.
+             *
+             * Qui si registra in sessione il backurl che manca: la PRIMA linguetta della scheda,
+             * con l'id del record. Non e' un parametro nuovo — e' la stessa convenzione
+             * <tabella>[id] che la barra delle linguette usa gia' per i propri link — e non tocca
+             * ne' l'albero delle pagine ne' gli indirizzi.
+             *
+             * Si scrive in $_REQUEST['__backurl__'] perche' e' quello che i template leggono
+             * ( `request.__backurl__` ) e che la barra delle linguette propaga da sola passando da
+             * una linguetta all'altra. Solo se non ce n'e' gia' uno: un backurl arrivato da chi ci
+             * ha aperti descrive un percorso piu' preciso di questo e ha la precedenza.
+             *
+             * La prima linguetta e' esclusa: li' il livello precedente e' davvero l'elenco.
+             */
+            if( empty( $_REQUEST['__backurl__'] )
+                && isset( $ct['page']['etc']['tabs'] )
+                && is_array( $ct['page']['etc']['tabs'] )
+                && count( $ct['page']['etc']['tabs'] ) > 1 ) {
+
+                $primaLinguetta = reset( $ct['page']['etc']['tabs'] );
+
+                if( $primaLinguetta != $ct['page']['id'] && ! empty( $ct['pages'][ $primaLinguetta ]['path'][ LINGUA_CORRENTE ] ) ) {
+
+                    $backSchedaUrl = $ct['pages'][ $primaLinguetta ]['path'][ LINGUA_CORRENTE ]
+                                   . '?' . $ct['form']['table'] . '[id]=' . $_REQUEST[ $ct['form']['table'] ]['id']
+                                   . '&' . $ct['form']['table'] . '[__method__]=get';
+
+                    $_REQUEST['__backurl__'] = backurlRegistra( $backSchedaUrl );
+
+                }
+
+            }
+
+            /**
+             * L'INDIRIZZO DI RITORNO DI QUESTA PAGINA
+             *
+             * Spostato qui sotto il blocco delle linguette il 15/09/2026, e non e' un riordino
+             * estetico: quel blocco e' chi il `__backurl__` lo INVENTA quando non c'e', e
+             * backurlRegistra() ci attacca il livello da cui si arriva. Registrando prima, il
+             * cammino si fermava al primo gradino — che e' il difetto del punto 15.
+             *
+             * La spiegazione lunga sta su backurlRegistra(), in _src/_lib/_menu.utils.php.
+             */
             $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ] . '&' . $ct['form']['table'] . '[__method__]=get';
-            $backmd5 = md5( $backurl );
-            $_SESSION['backurls'][ $backmd5 ] = $backurl;
+            $backmd5 = backurlRegistra( $backurl );
             $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
+
+            /**
+             * L'ULTIMA BRICIOLA DI PANE SI PORTA DIETRO ANCHE IL BACKURL ( fix 2026-09-14 ).
+             *
+             * Segnalato da Montanari il 14/09/2026: "il torna indietro da una sotto-entita' a
+             * volte non funziona". Il "a volte" e' questo.
+             *
+             * Le linguette di una scheda propagano il backurl da sole ( _navigation.html ), le
+             * briciole di pane no: la riga qui sopra decora l'ultima briciola con il solo
+             * `<tabella>[id]=<id>`, cioe' con l'indirizzo della pagina corrente ma senza il punto
+             * da cui ci si e' arrivati. Cliccare la briciola della pagina in cui si e' gia' — cosa
+             * che si fa per ricaricare, o tornando indietro col browser — ricarica quindi la stessa
+             * scheda SENZA backurl, e da quel momento il pulsante di ritorno ripiega sul genitore:
+             * dalla riga di un preventivo si finisce sull'elenco di tutti i preventivi invece che
+             * sulle righe di quello aperto. Misurato il 14/09 sulla riga 50305 del preventivo 12733.
+             *
+             * Si decora SOLO l'ultima briciola, che e' la pagina corrente. Le briciole di sopra
+             * sono un "sali di un livello" e un backurl li' riporterebbe l'utente in basso, cioe'
+             * esattamente da dove e' appena salito.
+             *
+             * Va dopo il blocco qui sopra perche' e' quello che, sulle linguette, il backurl lo
+             * inventa quando non c'e'; e va dopo il calcolo di $backurl / $backmd5, che descrivono
+             * un'altra cosa ( l'indirizzo DI questa scheda, quello che le selectBox passano alle
+             * schede che aprono ) e non vanno toccati.
+             */
+            if( ! empty( $_REQUEST['__backurl__'] ) ) {
+                $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ] .= '&__backurl__=' . $_REQUEST['__backurl__'];
+            }
     #		echo 'backurl('.$backmd5.')='.$backurl;
     #	} elseif( isset( $ct['form']['table'] ) && ! empty( $ct['form']['table'] ) ) {
         } else {
             $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ];
-            $backmd5 = md5( $backurl );
-            $_SESSION['backurls'][ $backmd5 ] = $backurl;
+            $backmd5 = backurlRegistra( $backurl );
             $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
             if( isset( $ct['form']['table'] ) ) {
                 $ct['page']['etc']['tabs'] = array( $ct['page']['id'] );

@@ -171,7 +171,8 @@
 		{% elseif request.__backurl__ %}
 
 		{% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
-		{{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
+		{# il salva-e-torna-alla-pagina-precedente usa `back`, non la lettura diretta della sessione: `back` e' gia' calcolato in testa a questo file con il suo ripiego, e la lettura inline qui rendeva una stringa vuota, cioe' un form con action="" che restava dov'era invece di tornare indietro. Fix 2026-09-14 #}
+		{{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ back ~ '");','salva e torna alla pagina precedente' ) }}
 		{% endif %}
 
 		{{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
@@ -179,7 +180,8 @@
 
 		{% else %}
 
-		{{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ localization.language.ietf ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
+{# il salva-e-torna usa `back`, non `page.parent.path`: il parent e' statico e non porta l'id del record, quindi da una riga di documento riportava all'ELENCO invece che al documento da cui si era entrati. `back` e' il backurl di sessione, che l'id ce l'ha, ed e' gia' quello usato dal pulsante "torna indietro senza salvare" qui sopra. Fix 2026-09-14 #}
+		{{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ back ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
 		{{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
 
 		{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}

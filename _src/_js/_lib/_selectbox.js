@@ -83,8 +83,28 @@
         if( current != '' ) {
             // alert( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
             console.log( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
+            /*
+             * L'ID VA PASSATO COME PARAMETRO, NON COME PEZZO DI PERCORSO
+             *
+             * Questa chiamata serve a ripescare l'etichetta leggibile di un valore gia' scelto,
+             * quando la tendina non ha la lista statica in pagina. Se fallisce, il campo resta
+             * con i tre trattini che _form.html mette come segnaposto: e' il difetto segnalato
+             * il 14/09/2026 su Lughese ( "a volte la tendina degli articoli non si popola" ).
+             *
+             * Non era "a volte": la regola di riscrittura dell'API REST accetta come id solo
+             * [a-zA-Z0-9.-] ( .htaccess, "gestione delle API REST generiche" ), e gli id
+             * naturali delle tabelle di catalogo non stanno in quell'alfabeto - su quel deploy
+             * 1.119 articoli su 2.455 e 621 prodotti hanno uno spazio, un underscore, una barra,
+             * un piu' o una virgola dentro l'id. Per tutti quelli la richiesta non trovava
+             * nessuna regola e tornava 404, sempre.
+             *
+             * Allargare l'alfabeto della regola non basterebbe comunque: un id che contiene una
+             * barra non puo' stare in un segmento di percorso, e ce ne sono. Il parametro
+             * __id__ invece lo legge _src/_api/_rest.php ( riga 84 ) esattamente come quello
+             * estratto dal percorso, e regge qualunque carattere.
+             */
             getws(
-                '/api/' + $( select ).attr( 'populate-api' ) + '/' + current,
+                '/api/' + $( select ).attr( 'populate-api' ) + '?__id__=' + encodeURIComponent( current ),
                 null,
                 function( data ) {
                     // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
@@ -166,8 +186,11 @@
 
                 wscall = setTimeout( function() {
 
-                // perché non usiamo encodeURIComponent( filtro ) per normalizzare i caratteri strani tipo & eccetera? boh sembra funzionare comunque
-                var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=id&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=__label__';
+                // il filtro si codifica: e' testo digitato dall'utente e finisce in una query string,
+                // quindi una & o un # dentro la ricerca troncherebbero la chiamata. Fino al 14/09/2026
+                // qui c'era scritto "boh sembra funzionare comunque", ed e' la stessa famiglia del
+                // difetto corretto qui sopra sull'id
+                var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + encodeURIComponent( filtro ) + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=id&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=__label__';
 
                 // OK rendere dinamico call = call + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__restrict__][id_tipologia][IN]=12';
 
@@ -180,7 +203,11 @@
                     // console.log('restrict: ' + key + ' -> ' + value);
                     if (key.indexOf('restrict-') === 0) {
                         var tk = value.split(':');
-                        call += '&__info__[' + $(select).attr('populate-api') + '][__restrict__][' + key.replace('restrict-', '') + '][' + tk[0] + ']=' + tk[1];
+                        // anche il valore del vincolo si codifica: puo' contenere id con spazi
+                        // ( 'id_prodotto': { 'IN': 'GOOD GS3300MY|OPZIONI' } ). La barra verticale che
+                        // separa i valori dell'operatore IN sopravvive, perche' viene decodificata
+                        // prima che _src/_lib/_controller.tools.php la usi per lo split
+                        call += '&__info__[' + $(select).attr('populate-api') + '][__restrict__][' + key.replace('restrict-', '') + '][' + tk[0] + ']=' + encodeURIComponent( tk[1] );
                     }
                 });
                 // console.log( '-----' );

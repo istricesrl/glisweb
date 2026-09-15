@@ -274,3 +274,86 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
         return $nav;
 
     }
+
+    /**
+     * registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
+     *
+     * IL RITORNO A PIU' LIVELLI, ovvero come mai fino al 14/09/2026 il "torna indietro" ne teneva
+     * uno solo.
+     *
+     * Il meccanismo del framework: ogni pagina registra in `$_SESSION['backurls']` il PROPRIO
+     * indirizzo sotto un token md5, e passa quel token a chi apre ( `__backurl__` nella URL ). Chi
+     * riceve il token disegna la freccia di ritorno verso `backurls[ token ]`. Funziona, ma di un
+     * livello solo: l'indirizzo che si registra e' la pagina NUDA, senza il `__backurl__` che la
+     * pagina stessa aveva ricevuto. Tornando indietro ci si ritrova quindi su una pagina senza
+     * ritorno, e da li' la freccia ripiega sul genitore — che e' esattamente la segnalazione di
+     * Montanari: *"ti rimanda all'inizio della sezione dove sei entrato e devi rifare diversi
+     * passaggi"*.
+     *
+     * La correzione e' registrare l'indirizzo CON il proprio `__backurl__` attaccato. Da li' in poi
+     * il cammino si srotola da solo, un livello per click, fino in cima.
+     *
+     * PERCHE' NON UNA PILA. La strada ovvia sarebbe stata un array in sessione con push e pop. E'
+     * peggio, per tre motivi che si pagano subito:
+     *
+     *  - una pila e' UNA SOLA per sessione, e il back-end si usa con piu' schede aperte. Due schede
+     *    su due preventivi diversi si pesterebbero i piedi a ogni click;
+     *  - il pulsante "indietro" del browser e i preferiti non toccano la pila, che resterebbe ferma
+     *    a descrivere un cammino che l'utente non sta piu' facendo;
+     *  - una pila va svuotata, e non esiste un momento buono per farlo. Una cronologia che non si
+     *    svuota mai riporta l'utente in posti che non esistono piu'.
+     *
+     * Il cammino invece vive nelle URL, che e' dove l'utente lo sta gia' costruendo: ogni scheda
+     * aperta ha il suo, il tasto indietro del browser lo rispetta, e non c'e' niente da svuotare.
+     * La sessione resta quello che era, una cache di indirizzi.
+     *
+     * DUE GUARDIE, ed entrambe servono:
+     *
+     *  - non si annida una pagina dentro se stessa. Le linguette di una scheda si passano il
+     *    backurl a vicenda e la briciola di pane dell'ultimo livello rimanda alla pagina corrente:
+     *    senza questa guardia la freccia rimbalzerebbe fra due pagine invece di salire;
+     *  - la mappa degli indirizzi non ha mai avuto un limite e cresceva per tutta la sessione. Con i
+     *    cammini annidati i token sono piu' d'uno per pagina, quindi adesso se ne tiene solo la coda.
+     *    Perdere un token vecchio non rompe niente: quella freccia ripiega sul genitore, cioe' torna
+     *    a comportarsi come prima del 14/09.
+     *
+     * @param   string      $url        l'indirizzo di questa pagina, gia' completo dei suoi parametri
+     *
+     * @return  string                  il token md5 con cui la pagina si fa richiamare
+     *
+     */
+    function backurlRegistra( $url ) {
+
+        global $cf;
+
+    // quanti indirizzi si tengono in sessione
+        $massimi = ( isset( $cf['navigation']['backurls']['massimi'] ) ) ? (int) $cf['navigation']['backurls']['massimi'] : 200;
+
+    // il livello da cui si arriva, se c'e' e se non e' gia' attaccato
+        if( ! empty( $_REQUEST['__backurl__'] )
+            && isset( $_SESSION['backurls'][ $_REQUEST['__backurl__'] ] )
+            && strpos( $url, '__backurl__=' ) === false ) {
+
+        // l'indirizzo del livello precedente, senza il suo di ritorno
+            $precedente = preg_replace( '/[?&]__backurl__=[^&]*/', '', $_SESSION['backurls'][ $_REQUEST['__backurl__'] ] );
+
+        // non si annida una pagina dentro se stessa
+            if( $precedente !== $url ) {
+                $url .= ( ( strpos( $url, '?' ) === false ) ? '?' : '&' ) . '__backurl__=' . $_REQUEST['__backurl__'];
+            }
+
+        }
+
+    // registro
+        $token = md5( $url );
+        $_SESSION['backurls'][ $token ] = $url;
+
+    // poto la coda
+        if( count( $_SESSION['backurls'] ) > $massimi ) {
+            $_SESSION['backurls'] = array_slice( $_SESSION['backurls'], - $massimi, NULL, true );
+        }
+
+    // restituisco il risultato
+        return $token;
+
+    }

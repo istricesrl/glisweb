@@ -72,7 +72,32 @@
 
 	// RELAZIONI CON IL MODULO DOCUMENTI
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'articoli.form.caratteristiche', $p['articoli.form']['etc']['tabs'], 'articoli.form.movimenti' );
+
+		/**
+		 * LA LINGUETTA DEI MOVIMENTI VUOLE ANCHE IL MODULO MASTRI ( fix 2026-09-14 ).
+		 *
+		 * La condizione era sul solo 0400.documenti, ma la macro della linguetta
+		 * ( _articoli.form.movimenti.php, qui in _4100.prodotti ) legge il report
+		 * `__report_movimenti_magazzini__`, che e' una tabella materializzata e a riempirla e'
+		 * un task del modulo _0500.mastri
+		 * ( _mod/_0500.mastri/_src/_api/_task/_report/_report.movimenti.magazzini.popolazione.php ).
+		 *
+		 * Su un deploy con i documenti ma senza i mastri quella tabella non la crea e non la
+		 * popola nessuno, e la linguetta rispondeva 200 con in cima al body
+		 * `Unknown column '__report_movimenti_magazzini__.sezionale' in 'field list'` piu' un
+		 * `Invalid argument supplied for foreach()`. Segnalato da Montanari il 14/09/2026 su
+		 * Lughese, che di magazzino non ne ha: zero mastri, zero righe di documento con un
+		 * mastro, modulo _0500.mastri non attivo.
+		 *
+		 * E' la regola gia' scritta nel manuale del framework: quando una pagina del core usa
+		 * qualcosa che appartiene a un modulo, la condizione va sull'esistenza DI QUEL modulo, e
+		 * non di un altro che capita di avere accanto. Servono tutti e due, perche' il report
+		 * incrocia i documenti con i mastri.
+		 */
+		if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'articoli.form.caratteristiche', $p['articoli.form']['etc']['tabs'], 'articoli.form.movimenti' );
+		}
+
 	}
 
 	// RELAZIONI CON IL MODULO MASTRI
