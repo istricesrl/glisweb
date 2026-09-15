@@ -51,7 +51,17 @@
 -- L'allineamento vero di quei due deploy e' un lavoro a se', registrato nei rispettivi TODO.md
 -- come task ad alta priorita' il 15/09/2026.
 
--- | 202609151500
+--
+-- RINUMERATA UNA SECONDA VOLTA, da 1500 a 1510, il 15/09/2026. La prima stesura era un UPDATE
+-- statico ed e' gia' stata applicata come patch 202609151500 su utensilerialughese, bernispa e
+-- polmasi. Trasformandola in SET + PREPARE + EXECUTE + DEALLOCATE le patch sono diventate
+-- quattro, e su quei tre deploy la prima ( il SET ) sarebbe stata saltata come obsoleta mentre le
+-- altre tre giravano: un PREPARE su una variabile mai assegnata, cioe' un errore che avrebbe
+-- fermato il task. Con i numeri 1510-1513 il gruppo gira intero ovunque; dove il backfill e' gia'
+-- stato fatto l'UPDATE non trova piu' righe da toccare, che e' esattamente cosa vuol dire essere
+-- idempotente.
+
+-- | 202609151510
 
 -- il backfill vero e proprio
 SET @backfill = IF(
@@ -79,17 +89,17 @@ WHERE ai.id_indirizzo IS NOT NULL
     "SELECT 'anagrafica_indirizzi non ha id_comune: schema precedente al 2026-07-10, niente da backfillare' AS nota"
 );
 
--- | 202609151501
+-- | 202609151511
 
 -- si prepara
 PREPARE backfill FROM @backfill;
 
--- | 202609151502
+-- | 202609151512
 
 -- si esegue
 EXECUTE backfill;
 
--- | 202609151503
+-- | 202609151513
 
 -- e si libera
 DEALLOCATE PREPARE backfill;
