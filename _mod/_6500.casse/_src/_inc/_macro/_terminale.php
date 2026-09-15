@@ -311,9 +311,12 @@
 
                     $id_iva = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_iva FROM reparti WHERE id = ?', array( array( 's' => $reparto ) ) );
 
+                    // id_tipologia_documento, non id_tipologia ( 2026-09-15 ): default_tipologia
+                    // viene da tipologie_documenti ed e' la tipologia del DOCUMENTO; la colonna
+                    // id_tipologia dal 15/09/2026 e' la tipologia della RIGA
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza, id_tipologia )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza, id_tipologia_documento )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
                                     array( 's' => $ct['etc']['default_listino'] ),
                                     array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),

@@ -152,7 +152,12 @@
             } else {
                 $insert = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO documenti_articoli ( id_prodotto, id_documento, quantita, id_udm, id_mastro_provenienza, id_tipologia )  VALUES (?, ?, ?, ?, ?, ? )",
+                    // id_tipologia_documento, non id_tipologia ( 2026-09-15 ): default_tipologia viene da
+                    // tipologie_documenti ( "ordine" ), ed e' quindi la tipologia del DOCUMENTO. Dal
+                    // 15/09/2026 documenti_articoli.id_tipologia e' la tipologia della RIGA e ha la
+                    // chiave esterna verso tipologie_documenti_articoli: scriverci un id di
+                    // tipologie_documenti fa fallire l'INSERT dove la chiave esterna c'e'
+                    "INSERT INTO documenti_articoli ( id_prodotto, id_documento, quantita, id_udm, id_mastro_provenienza, id_tipologia_documento )  VALUES (?, ?, ?, ?, ?, ? )",
                     array( 
                         array( 's' => $_REQUEST['__p__'] ),
                         array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),

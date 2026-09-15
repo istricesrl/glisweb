@@ -30,7 +30,11 @@
 
         // die( print_r( $_REQUEST[ $ct['form']['table'] ], true ) );
 
-        $idTipologiaRiga = 4;
+        // la riga di prelievo non porta piu' la tipologia: ci si scriveva 4 - la tipologia del
+        // DDT - quando documenti_articoli.id_tipologia significava "tipologia del DOCUMENTO".
+        // Dal 15/09/2026 quella colonna e' la tipologia della RIGA e punta a
+        // tipologie_documenti_articoli, dove il 4 non vuol dire niente. Nessuno la legge piu':
+        // le righe di prelievo si riconoscono da id_genitore + id_missione.
 
         $idGenitoreRiga = mysqlSelectRow(
             $cf['mysql']['connection'],
@@ -75,11 +79,10 @@
         // ...
         mysqlQuery(
             $cf['mysql']['connection'],
-            'INSERT INTO documenti_articoli ( id, id_genitore, id_tipologia, id_missione, id_articolo, quantita, id_mastro_provenienza, id_mastro_destinazione )
-            VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE 
+            'INSERT INTO documenti_articoli ( id, id_genitore, id_missione, id_articolo, quantita, id_mastro_provenienza, id_mastro_destinazione )
+            VALUES ( ?, ?, ?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE 
                 id=VALUES(id), 
                 id_genitore=VALUES(id_genitore), 
-                id_tipologia=VALUES(id_tipologia), 
                 id_missione=VALUES(id_missione), 
                 id_articolo=VALUES(id_articolo), 
                 quantita=VALUES(quantita),
@@ -88,7 +91,6 @@
             array(
                 array( 's' => $idRiga['id'] ),
                 array( 's' => $idGenitoreRiga['id'] ),
-                array( 's' => $idTipologiaRiga ),
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                 array( 's' => $_REQUEST['__bip__']['__codice__'] ),
                 array( 's' => $idRiga['quantita'] + 1 ),
@@ -118,12 +120,13 @@
     // ...
     foreach( $ct['etc']['dati'] as &$row ) {
 
+        // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
+        // + id_missione. La nota distesa e' in src/inc/macro/missione.php del progetto.
         $row['qta_prelevata'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_tipologia = ? AND id_articolo = ? GROUP BY id_genitore',
+            'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
-                array( 's' => 4 ),
                 array( 's' => $row['id_articolo'] )
             )
         );

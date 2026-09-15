@@ -410,12 +410,13 @@
         // recupero le collocazioni
         foreach( $r['doc']['missione']['righe'] as &$row ) {
 
+            // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
+            // + id_missione. La nota distesa e' in src/inc/macro/missione.php.
             $row['qta_prelevata'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_tipologia = ? AND id_articolo = ? GROUP BY id_genitore',
+                'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',
                 array( 
                     array( 's' => $r['doc']['id'] ),
-                    array( 's' => 4 ),
                     array( 's' => $row['id_articolo'] )
                 )
             );
