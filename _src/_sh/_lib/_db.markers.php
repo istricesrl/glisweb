@@ -224,3 +224,73 @@
         return $esito;
 
     }
+
+    /**
+     * controlla i marcatori di patch `-- |` dei file dello schema
+     *
+     * Il task _mysql.patch.php accumula le righe e ESEGUE la patch quando incontra il marcatore
+     * SUCCESSIVO. Da qui tre modi di perdere SQL senza un errore e senza una riga di log:
+     *
+     *  - SQL dopo l'ultimo marcatore: non lo esegue nessuno. E' il motivo per cui ogni file
+     *    finisce con la sentinella `-- | FINE FILE`, che serve solo a scaricare l'ultima patch;
+     *  - marcatori non crescenti: il patch level del database e' l'id piu' alto gia' applicato, e
+     *    il confronto e' fra STRINGHE. Un marcatore piu' basso di uno precedente non gira mai;
+     *  - marcatori duplicati: il secondo viene saltato per lo stesso motivo.
+     *
+     * Il caso peggiore e' `FINE FILE` in mezzo al file: 'F' viene dopo '9', quindi se qualcuno ci
+     * infila dell'SQL sotto, quella patch viene registrata con id "FINE FILE" e da quel momento
+     * OGNI patch successiva risulta gia' applicata.
+     *
+     * @param   array   $file   percorsi dei .sql da controllare
+     *
+     * @return  array           un rilievo per riga, vuoto se e' tutto a posto
+     */
+    function dbMarkersPatch( $file ) {
+
+        $rilievi = array();
+
+        foreach( $file as $f ) {
+
+            $righe = explode( "\n", file_get_contents( $f ) );
+            $nome  = basename( $f );
+
+            $marc = array();
+            foreach( $righe as $i => $r ) {
+                if( strpos( trim( $r ), '-- |' ) === 0 ) {
+                    $marc[] = array( $i, trim( substr( trim( $r ), 4 ) ) );
+                }
+            }
+
+            if( ! $marc ) {
+                $rilievi[] = sprintf( '%-46s nessun marcatore di patch', $nome );
+                continue;
+            }
+
+            $ids = array_column( $marc, 1 );
+
+            foreach( array_count_values( $ids ) as $id => $n ) {
+                if( $n > 1 ) {
+                    $rilievi[] = sprintf( '%-46s marcatore duplicato: %s', $nome, $id );
+                }
+            }
+
+            for( $i = 1; $i < count( $ids ); $i++ ) {
+                if( ! ( $ids[ $i - 1 ] < $ids[ $i ] ) ) {
+                    $rilievi[] = sprintf( '%-46s marcatori non crescenti: %s -> %s', $nome, $ids[ $i - 1 ], $ids[ $i ] );
+                }
+            }
+
+            $coda = 0;
+            for( $i = end( $marc )[0] + 1; $i < count( $righe ); $i++ ) {
+                if( preg_match( '/^\s*[A-Za-z]/', $righe[ $i ] ) ) { $coda++; }
+            }
+
+            if( $coda ) {
+                $rilievi[] = sprintf( '%-46s %d righe di SQL dopo l\'ultimo marcatore: non le esegue nessuno', $nome, $coda );
+            }
+
+        }
+
+        return $rilievi;
+
+    }

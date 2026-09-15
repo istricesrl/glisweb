@@ -4704,8 +4704,6 @@ CREATE
 
 END;
 
--- | FINE FILE
-
 -- | 070000057000
 
 -- attivita_path
@@ -5113,3 +5111,5 @@ CREATE
 		RETURN p2;
 
 END;
+
+-- | FINE FILE

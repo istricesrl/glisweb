@@ -66,6 +66,24 @@ php -d error_reporting=E_ALL -r '
         exit( 2 );
     }
 
+    // prima di toccare qualunque cosa, i marcatori di patch di TUTTI i file, comprese le
+    // migrazioni datate: vedi dbMarkersPatch() per il perche
+    //
+    // NOTA per chi tocca questo blocco: sta dentro php -r con virgolette semplici, quindi un
+    // apostrofo lo spezza. Il resto del blocco ne e privo per lo stesso motivo, non per stile.
+    $tutti = array_merge(
+        glob( "_usr/_database/_patch/*.sql" ) ?: array(),
+        glob( "usr/database/patch/*.sql" ) ?: array()
+    );
+
+    $rilievi = dbMarkersPatch( $tutti );
+
+    if( $rilievi ) {
+        echo "marcatori di patch:\n";
+        foreach( $rilievi as $r ) { echo "  ! " . $r . "\n"; }
+        echo "\n";
+    }
+
     $voci = dbMarkersAnalizza( $tab, $tab );
 
     $e = dbMarkersRiscrivi( $voci, (bool) $argv[1] );
@@ -75,7 +93,7 @@ php -d error_reporting=E_ALL -r '
         $e["gia_giusti"], $e["corretti"], $e["senza_marcatore"], $e["dubbie"]
     );
 
-    exit( ( $e["corretti"] + $e["senza_marcatore"] + $e["dubbie"] ) > 0 ? 1 : 0 );
+    exit( ( $e["corretti"] + $e["senza_marcatore"] + $e["dubbie"] + count( $rilievi ) ) > 0 ? 1 : 0 );
 ' "$SECCO"
 
 exit $?
