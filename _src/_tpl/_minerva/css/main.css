@@ -379,11 +379,18 @@ header .btn-sqr {
     flex: 0 0 auto;
 }
 
-/* un filo d'aria a destra: senza gutter l'ultimo pulsante ( logout ) restava a
-   filo del bordo del viewport e sembrava tagliato anche quando non lo era. */
-header nav.navbar-light .icons,
-header .col-auto.d-flex {
+/* un filo d'aria a destra: senza gutter l'ultimo pulsante ( logout ) resta a
+   filo del bordo del viewport e sembra tagliato anche quando non lo e'.
+   Sul contenitore delle icone si usa il MARGINE e non il padding: il markup gli
+   mette addosso p-0, che e' una utility Bootstrap con !important, quindi il
+   padding-right scritto qui dal 2026-09-01 al 2026-09-15 non ha mai fatto
+   niente ( misurato: padding-right calcolato 0px, logout a filo a ogni
+   larghezza ). Sull'ul .icons il padding invece passa, perche' li' p-0 non c'e'. */
+header nav.navbar-light .icons {
     padding-right: .35em;
+}
+header .col-auto.d-flex {
+    margin-right: .35em;
 }
 
 /* l'header a 1.8em rendeva voci e icone enormi su tablet, mandando la barra a
@@ -439,4 +446,20 @@ header nav.navbar-light li.nav-item > a.nav-link {
 main .form-row.row.d-flex > [class*="col-"] {
     min-width: 0;
     overflow-wrap: anywhere;
+}
+
+
+/* header sticky e schermi bassi. Una barra che va a capo due o tre volte e' la
+   cosa giusta da fare quando il menu e' lungo — meglio alta che monca — ma su un
+   telefono in landscape ( 320-390px di altezza utile ) arriva a un terzo dello
+   schermo, e sticky-top gliela lascia per sempre. Sotto i 450px di viewport la
+   barra torna quindi a scorrere via col contenuto: il menu si raggiunge
+   risalendo, che costa meno che lavorare in due terzi di schermo. Il limite e'
+   sull'ALTEZZA e non sulla larghezza perche' e' l'altezza la risorsa scarsa qui:
+   un tablet in portrait e' stretto ma alto, e la barra fissa gli serve.
+   !important perche' .sticky-top di Bootstrap e' a sua volta !important. */
+@media ( max-height: 450px ) {
+    header.sticky-top {
+        position: static !important;
+    }
 }
