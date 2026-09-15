@@ -14,6 +14,88 @@
 
     // verifico la presenza di un ID documento
     if( ! isset( $_REQUEST['__documento__'] ) || empty( $_REQUEST['__documento__'] ) ) { dieText('ID documento mancante'); }
+
+    /*
+     * L'AUTORIZZAZIONE STA QUI, PRIMA DI generaContenutiDocumento().
+     *
+     * Stava dopo, settantacinque righe piu' sotto, e sono due problemi in uno. Il primo: la
+     * generazione legge tutto il documento dal database per conto di chi non e' ancora stato
+     * autorizzato, e non e' gratis. Il secondo, peggiore: se la generazione muore — su un deploy
+     * mancava anagraficaGetLogo(), che stava dentro un modulo non installato — il rifiuto non
+     * arriva mai, perche' il codice che lo scrive sta sotto. Segnalato da BERNI il 15/09.
+     *
+     * Per autorizzare non serve il documento intero: bastano il destinatario e il token, quindi
+     * si legge una riga sola. generaContenutiDocumento() resta dov'e', ma dopo il cancello.
+     */
+    $docAutorizzazione = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT id, id_destinatario, token FROM documenti WHERE id = ? LIMIT 1',
+        array( array( 's' => $_REQUEST['__documento__'] ) )
+    );
+
+    if( empty( $docAutorizzazione['id'] ) ) { dieText('documento non trovato'); }
+
+    $anagraficheAutorizzate = array();
+
+    if( ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
+
+        $anagraficheAutorizzate[] = (string) $_SESSION['account']['id_anagrafica'];
+
+        if( ! empty( $_SESSION['account']['relazioni'] )
+            && is_array( $_SESSION['account']['relazioni'] )
+            && count( $_SESSION['account']['relazioni'] ) <= 50 ) {
+            /*
+             * Si legge l'id DAL VALORE della riga, non dalla chiave.
+             *
+             * `mysqlCachedIndexedQuery()` ritorna una lista numerica ( 0, 1, 2, ... ): l'"indexed"
+             * del nome e' l'indice di invalidazione della cache, non la chiave del risultato.
+             * Con `array_keys()` questo controllo autorizzava le anagrafiche 0, 1 e 2 — che non
+             * esistono — e di fatto solo la propria, negando ai familiari le loro ricevute.
+             *
+             * Su polmasi era stato corretto reindicizzando in `src/config/210.auth.php`, ma un
+             * file standard non puo' dipendere da un file di progetto: quel file lo standard non
+             * lo vede e non lo puo' verificare, e su ogni deploy che non ha fatto la stessa
+             * reindicizzazione il controllo torna a negare in silenzio. Letto per valore funziona
+             * in tutt'e due i casi, indicizzato o no, e non chiede niente a nessuno.
+             *
+             * L'espressione e' la stessa gia' usata da quella reindicizzazione: se la riga non
+             * porta un id si ricade sulla chiave, cosi' non si perde nessuna voce.
+             */
+            foreach( $_SESSION['account']['relazioni'] as $chiave => $relazione ) {
+                $idFamiliare = ( is_array( $relazione ) && isset( $relazione['id'] ) ) ? $relazione['id'] : $chiave;
+                $anagraficheAutorizzate[] = (string) $idFamiliare;
+            }
+        }
+
+    }
+
+    $autorizzatoAlDocumento =
+           in_array( 'roots', array_keys( ( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) ? $_SESSION['groups'] : array() ), true )
+        || ( ! empty( $docAutorizzazione['id_destinatario'] )
+             && in_array( (string) $docAutorizzazione['id_destinatario'], $anagraficheAutorizzate, true ) )
+        || ( ! empty( $_REQUEST['t'] ) && ! empty( $docAutorizzazione['token'] )
+             && hash_equals( (string) $docAutorizzazione['token'], (string) $_REQUEST['t'] ) );
+
+    // verifico l'identità dell'utente
+    if( ! $autorizzatoAlDocumento ) {
+
+        // ...
+        /*
+         * Il 403 va messo a mano: dieText() emette gli header del contenuto e muore, ma non tocca
+         * lo status, quindi questo rifiuto usciva come 200. Non era un buco — il documento non
+         * veniva servito — ma era invisibile a chiunque controlli gli status: provando questo
+         * endpoint da anonimo si leggeva 200 e lo si dava per aperto, mentre gli endpoint chiusi
+         * con checkTaskPrivilege() rispondono 403. Due rifiuti che si presentano in due modi
+         * diversi non si possono nemmeno contare insieme.
+         */
+        http_response_code( 403 );
+
+        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_ERR );
+
+        dieText('autorizzazioni insufficienti a visualizzare il documento');
+
+    }
+
 /*
     // recupero i dati del documento
     $doc = mysqlSelectRow(
@@ -73,66 +155,6 @@
      * NB: file FRAMEWORK, condiviso da tutti i progetti GlisWeb e riscritto da `_gw.upgrade.sh`,
      * che gira da cron.daily: questa patch vive un giorno e va portata upstream.
      */
-    $anagraficheAutorizzate = array();
-
-    if( ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
-
-        $anagraficheAutorizzate[] = (string) $_SESSION['account']['id_anagrafica'];
-
-        if( ! empty( $_SESSION['account']['relazioni'] )
-            && is_array( $_SESSION['account']['relazioni'] )
-            && count( $_SESSION['account']['relazioni'] ) <= 50 ) {
-            /*
-             * Si legge l'id DAL VALORE della riga, non dalla chiave.
-             *
-             * `mysqlCachedIndexedQuery()` ritorna una lista numerica ( 0, 1, 2, ... ): l'"indexed"
-             * del nome e' l'indice di invalidazione della cache, non la chiave del risultato.
-             * Con `array_keys()` questo controllo autorizzava le anagrafiche 0, 1 e 2 — che non
-             * esistono — e di fatto solo la propria, negando ai familiari le loro ricevute.
-             *
-             * Su polmasi era stato corretto reindicizzando in `src/config/210.auth.php`, ma un
-             * file standard non puo' dipendere da un file di progetto: quel file lo standard non
-             * lo vede e non lo puo' verificare, e su ogni deploy che non ha fatto la stessa
-             * reindicizzazione il controllo torna a negare in silenzio. Letto per valore funziona
-             * in tutt'e due i casi, indicizzato o no, e non chiede niente a nessuno.
-             *
-             * L'espressione e' la stessa gia' usata da quella reindicizzazione: se la riga non
-             * porta un id si ricade sulla chiave, cosi' non si perde nessuna voce.
-             */
-            foreach( $_SESSION['account']['relazioni'] as $chiave => $relazione ) {
-                $idFamiliare = ( is_array( $relazione ) && isset( $relazione['id'] ) ) ? $relazione['id'] : $chiave;
-                $anagraficheAutorizzate[] = (string) $idFamiliare;
-            }
-        }
-
-    }
-
-    $autorizzatoAlDocumento =
-           in_array( 'roots', array_keys( ( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) ? $_SESSION['groups'] : array() ), true )
-        || ( ! empty( $dati['doc']['id_destinatario'] )
-             && in_array( (string) $dati['doc']['id_destinatario'], $anagraficheAutorizzate, true ) )
-        || ( ! empty( $_REQUEST['t'] ) && ! empty( $dati['doc']['token'] )
-             && hash_equals( (string) $dati['doc']['token'], (string) $_REQUEST['t'] ) );
-
-    // verifico l'identità dell'utente
-    if( ! $autorizzatoAlDocumento ) {
-
-        // ...
-        /*
-         * Il 403 va messo a mano: dieText() emette gli header del contenuto e muore, ma non tocca
-         * lo status, quindi questo rifiuto usciva come 200. Non era un buco — il documento non
-         * veniva servito — ma era invisibile a chiunque controlli gli status: provando questo
-         * endpoint da anonimo si leggeva 200 e lo si dava per aperto, mentre gli endpoint chiusi
-         * con checkTaskPrivilege() rispondono 403. Due rifiuti che si presentano in due modi
-         * diversi non si possono nemmeno contare insieme.
-         */
-        http_response_code( 403 );
-
-        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_ERR );
-
-        dieText('autorizzazioni insufficienti a visualizzare il documento');
-
-    }
 
     // ...
     if( ! isset( $cnf['estensione'] ) || empty( $cnf['estensione'] ) ) {
