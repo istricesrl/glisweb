@@ -32,7 +32,7 @@
 
 -- la tabella delle tipologie di riga
 CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_genitore` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
@@ -45,14 +45,14 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 202609151101
 
 -- indici della tabella nuova
 ALTER TABLE `tipologie_documenti_articoli`
-	ADD PRIMARY KEY IF NOT EXISTS (`id`),
 	ADD UNIQUE KEY IF NOT EXISTS `unica` (`id_genitore`,`nome`),
 	ADD KEY IF NOT EXISTS `id_genitore` (`id_genitore`),
 	ADD KEY IF NOT EXISTS `ordine` (`ordine`),
@@ -67,8 +67,19 @@ ALTER TABLE `tipologie_documenti_articoli`
 
 -- | 202609151102
 
--- auto increment della tabella nuova
-ALTER TABLE `tipologie_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- l'auto increment NON si mette qui con un MODIFY, ed e' scritto perche' non sembri una
+-- dimenticanza: sta nella CREATE TABLE qui sopra.
+--
+-- Il MODIFY c'era, ed e' fallito il 15/09/2026 applicando su utensilerialughese:
+--   ERROR 1833 Cannot change column 'id': used in a foreign key constraint
+--   'documenti_articoli_ibfk_20_nofollow'
+-- Li' la tabella esisteva gia' — la migrazione era stata fatta a mano — con `id` int( 11 ) e con
+-- la chiave esterna da documenti_articoli gia' in piedi: il tipo di una colonna referenziata non
+-- si cambia. Su un database di prova senza chiavi esterne il MODIFY passava, ed e' il motivo per
+-- cui provare una patch solo su un database pulito non basta.
+--
+-- Nei file di base la separazione resta, perche' li' l'ordine e' un altro: gli indici ( 03 )
+-- girano prima dei vincoli ( 06 ) e quando il MODIFY passa di chiavi esterne non ce n'e' ancora.
 
 -- | 202609151103
 
