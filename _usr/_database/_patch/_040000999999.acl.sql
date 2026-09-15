@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
 
 -- __acl_attivita__
 -- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella base
+-- funzione: contiene i permessi sulle attivita per gruppo e per account
 -- verifica: 2021-05-28 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -50,7 +52,9 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
 
 -- __acl_pagine__
 -- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella base
+-- funzione: contiene i permessi sulle pagine per gruppo e per account
 -- verifica: 2021-05-28 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

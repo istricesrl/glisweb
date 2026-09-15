@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella di relazione
+-- funzione: mette in relazione gli account e i gruppi a cui appartengono
 -- funzioni: associa molti a molti gli account ai gruppi
 --
 -- questa tabella contiene le associazioni molti a molti tra gli account e i gruppi
@@ -476,7 +477,10 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
 -- | 010000002900
 
 -- caratteristiche
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle caratteristiche di prodotti, articoli, immobili e categorie
 CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -695,7 +699,9 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle categorie di prodotti
 CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -758,7 +764,9 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
 
 -- colli
 -- tipologia: tabella gestita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
+-- funzione: contiene i colli di una spedizione, con dimensioni, peso e raggruppamento
 CREATE TABLE IF NOT EXISTS `colli` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per il collo che contiene questo
@@ -1495,7 +1503,9 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 
 -- iva
 -- tipologia: tabella standard
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene le aliquote IVA
 -- verifica: 2021-09-23 16:52 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `iva` (
   `id` bigint(20) NOT NULL,
@@ -1650,6 +1660,7 @@ CREATE TABLE IF NOT EXISTS `mail` (                           --
 -- | 010000018800
 
 -- mail_out
+-- tipologia: tabella gestita
 -- tipolgia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
@@ -1689,6 +1700,7 @@ CREATE TABLE IF NOT EXISTS `mail_out` (
 -- | 010000018900
 
 -- mail_sent
+-- tipologia: tabella gestita
 -- tipolgia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
@@ -1729,7 +1741,9 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 
 -- marchi
 -- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene i marchi dei prodotti
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` bigint(20) NOT NULL,
   `id_produttore` bigint(20) NOT NULL,
@@ -1960,7 +1974,10 @@ CREATE TABLE IF NOT EXISTS `notizie` (
 -- | 010000022100
 
 -- notizie_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella base
+-- funzione: mette in relazione le notizie e le anagrafiche, con il ruolo di ciascuna
 CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_notizia` bigint(20) DEFAULT NULL,
@@ -2103,7 +2120,9 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
 
 -- periodicita
 -- tipologia: tabella di supporto
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene le periodicita, espresse in giorni
 CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` bigint(20) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -2114,7 +2133,9 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 
 -- prezzi
 -- tipologia: tabella gestita
+-- rango: tabella secondaria
 -- struttura: tabella base
+-- funzione: contiene i prezzi di prodotti e articoli per fascia, listino, reparto e periodo
 CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` bigint(20) NOT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
@@ -2178,7 +2199,9 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella base
+-- funzione: mette in relazione i prodotti e le categorie, con il ruolo di ciascuna
 CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
   `id` bigint(20) NOT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
@@ -2452,7 +2475,10 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
 -- | 010000030300
 
 -- relazioni_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella base
+-- funzione: mette in relazione due anagrafiche, con il ruolo che le lega
 CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_anagrafica` bigint(20) DEFAULT NULL,
@@ -2490,7 +2516,9 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 
 -- reparti
 -- tipologia: tabella assistita
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene i reparti, con l aliquota IVA e il settore di appartenenza
 CREATE TABLE IF NOT EXISTS `reparti` (
   `id` bigint(20) NOT NULL,
   `id_iva` bigint(20) DEFAULT NULL,
@@ -2506,7 +2534,10 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 -- | 010000034000
 
 -- ruoli_anagrafica
+-- tipologia: tabella standard
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero dei ruoli che le anagrafiche possono svolgere
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -2931,7 +2962,10 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
 -- | 010000050700
 
 -- tipologie_colli
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle tipologie di collo, con dimensioni e peso
 CREATE TABLE IF NOT EXISTS `tipologie_colli` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3182,7 +3216,9 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle tipologie di pagamento
 -- verifica: 2021-11-15 11:00 Chiara GDL
 CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `id` bigint(20) NOT NULL,
@@ -3200,7 +3236,10 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
 -- | 010000054600
 
 -- tipologie_prodotti
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle tipologie di prodotto e le caratteristiche che abilitano
 CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3231,7 +3270,9 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
 
 -- tipologie_progetti
 -- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle tipologie di progetto e le modalita che abilitano
 CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3283,7 +3324,9 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle tipologie di rinnovo e gli ambiti che abilitano
 CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3460,7 +3503,9 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
 
 -- udm
 -- tipologia: tabella standard
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene le unita di misura, con la conversione verso la propria base
 CREATE TABLE IF NOT EXISTS `udm` (
   `id` bigint(20) NOT NULL,
   `id_base` bigint(20) DEFAULT NULL,
@@ -3645,7 +3690,10 @@ CREATE TABLE IF NOT EXISTS `test` (                           --
 -- | 010000999001
 
 -- carrelli
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene i carrelli, con i dati del destinatario e della spedizione
 CREATE TABLE IF NOT EXISTS `carrelli` (
   `id` bigint(20) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -3749,7 +3797,10 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
 -- | 010000999002
 
 -- rinnovi
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene i rinnovi di contratti, licenze, progetti e pianificazioni
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
@@ -3774,7 +3825,10 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 -- | 010000999003
 
 -- contratti_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
 -- struttura: tabella di relazione
+-- funzione: mette in relazione i contratti e le anagrafiche, con il ruolo di ciascuna
 CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_contratto` bigint(20) DEFAULT NULL,
@@ -3790,7 +3844,10 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
 -- | 010000999004
 
 -- licenze
+-- tipologia: tabella gestita
+-- rango: tabella principale
 -- struttura: tabella base
+-- funzione: contiene le licenze distribuite, con validita, rinnovo e postazioni
 CREATE TABLE IF NOT EXISTS `licenze` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
@@ -3815,7 +3872,10 @@ CREATE TABLE IF NOT EXISTS `licenze` (
 -- | 010000999020
 
 -- istruzioni
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
 -- struttura: tabella base
+-- funzione: contiene le istruzioni associate a un prodotto o a un articolo
 -- Istruzioni di lavorazione, usate dal modulo produzione e citate da todo_view.
 -- Sta nei patch base come tutto il resto: il database non e' partizionato per modulo, perche'
 -- ci sono tabelle che afferirebbero a piu' moduli e separarle genererebbe confusione o ridondanza.
