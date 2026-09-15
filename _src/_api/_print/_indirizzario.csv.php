@@ -3,7 +3,30 @@
     // inclusione del framework
 	require '../../_config.php';
 
-    // controllo autorizzazioni
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * ⚠ Fix 2026-09-15 — QUESTO ENDPOINT CONSEGNAVA LA RUBRICA INTERA A CHIUNQUE. Verificato su un
+     * deploy reale ( Polmasi, una polisportiva ) **da anonimo, senza nessuna sessione**:
+     * `GET /print/indirizzario.csv` rispondeva `200` con **3,5 MB** di nomi, indirizzi, civici,
+     * CAP, comuni e province di tutti gli iscritti, minori compresi. Non serviva nemmeno un
+     * parametro.
+     *
+     * La causa era il segnaposto `if( true )` con il ramo `else` gia' scritto e mai raggiungibile:
+     * il controllo era previsto e non e' mai stato messo.
+     *
+     * Si usa lo stesso meccanismo introdotto il 05/09 per gli endpoint `/task/`:
+     * `checkTaskPrivilege()`, che verifica il privilegio, logga il tentativo nel canale `security`,
+     * risponde 403 ed esce. `GESTIONE_ANAGRAFICA` e' attribuito a `roots` e a `staff`, quindi chi
+     * usa davvero l'esportazione non se ne accorge; `users` non ce l'ha.
+     *
+     * ⚠ NON basta "essere autenticati" qui, come invece basta in `_default.csv.php`: quello passa
+     * da `controller()` e si prende l'ACL per tabella, questo ha una query sua e l'ACL non lo
+     * vede. La stessa distinzione vale per `_anagrafica.csv.php`.
+     */
+	checkTaskPrivilege( 'GESTIONE_ANAGRAFICA' );
+
 	if( true ) {
 
 	    $where = array();

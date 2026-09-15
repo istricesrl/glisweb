@@ -3,6 +3,21 @@
     // inclusione del framework
 	require '../../../../../_src/_config.php';
 
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * ⚠ Fix 2026-09-15: stesso segnaposto `if( true )` degli endpoint di /print/ del core, con
+     * il ramo `else` scritto e mai raggiungibile.
+     *
+     * Qui il lavoro lo fa `controller()` su `liste_mail`, che applica gia' l'ACL per tabella:
+     * mancava solo il gradino prima, cioe' pretendere che ci sia qualcuno collegato. Stessa
+     * cura di `_src/_api/_print/_default.csv.php`, e per la stessa ragione: sovrapporre un
+     * privilegio d'area a un ACL che c'e' gia' taglierebbe fuori usi legittimi senza aggiungere
+     * niente. Il modulo non e' attivo su nessun deploy: la correzione e' preventiva.
+     */
+	checkTaskPrivilege();
+
     // controllo autorizzazioni
 	if( true ) {
 

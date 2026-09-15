@@ -11,7 +11,21 @@
 			// die( 'contenuto: '.print_r( $_REQUEST, true ) );
 
 
-    // controllo autorizzazioni
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * ⚠ Fix 2026-09-15 — gemello di `_indirizzario.csv.php`, stesso segnaposto `if( true )` mai
+     * chiuso. Qui il danno era mitigato per caso e non per scelta: senza `__categoria__` la query
+     * non parte e la risposta e' vuota, quindi da anonimo si otteneva `200` e zero byte. Con una
+     * categoria qualsiasi in querystring — e sono numeri piccoli, si indovinano al primo colpo —
+     * usciva l'anagrafica.
+     *
+     * Ha una query sua e non passa da `controller()`, quindi l'ACL per tabella non lo protegge:
+     * serve il privilegio dell'area, non la sola autenticazione. Vedi la nota lunga nel gemello.
+     */
+	checkTaskPrivilege( 'GESTIONE_ANAGRAFICA' );
+
 	if( true ) {
 
 	    $where = array();

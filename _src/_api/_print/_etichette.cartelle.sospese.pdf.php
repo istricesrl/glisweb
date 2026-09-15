@@ -13,6 +13,19 @@
     // inclusione del framework
     require '../../_config.php';
 
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * ⚠ Fix 2026-09-15, insieme agli altri endpoint di /print/. Qui non c'era nemmeno il
+     * segnaposto `if( true )`: non c'era proprio niente, e l'endpoint leggeva `anagrafica_view`
+     * per `id` preso da `$_REQUEST` e ne stampava un PDF. Da anonimo, un id per volta.
+     *
+     * Ha una query sua e non passa da `controller()`, quindi l'ACL per tabella non lo vede:
+     * serve il privilegio d'area, come per `_anagrafica.csv.php` e `_indirizzario.csv.php`.
+     */
+    checkTaskPrivilege( 'GESTIONE_ANAGRAFICA' );
+
     // oggetto del documento
 	$dobj = 'etichette cartelle sospese';
 

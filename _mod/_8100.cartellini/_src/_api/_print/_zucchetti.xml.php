@@ -3,6 +3,18 @@
     // inclusione del framework
 	require '../../../../../_src/_config.php';
 
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * ⚠ Fix 2026-09-15: stesso segnaposto `if( true )` mai chiuso. Questo endpoint ha una query
+     * sua che unisce `attivita` e `anagrafica` e produce l'export delle ore per la busta paga,
+     * con i codici dipendente: non passa da `controller()`, quindi l'ACL per tabella non lo
+     * protegge e serve il privilegio d'area. Il modulo non e' attivo su nessun deploy: la
+     * correzione e' preventiva.
+     */
+	checkTaskPrivilege( 'GESTIONE_ANAGRAFICA' );
+
     // controllo autorizzazioni
 	if( true ) {
 
