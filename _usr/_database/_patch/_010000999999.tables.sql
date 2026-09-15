@@ -347,7 +347,7 @@ CREATE TABLE `articoli` (
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
--- rango: tabella di collegamento
+-- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: collega un articolo alle sue caratteristiche
 --
@@ -497,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
 -- rango: tabella principale
--- struttura: tabella ad albero
+-- struttura: tabella ricorsiva
 -- funzione: l'albero delle caratteristiche di prodotti e articoli
 --
 -- e' l'albero vero usato dal modulo prodotti: i nodi di primo livello sono i gruppi ( "Linea
@@ -528,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
--- rango: tabella di collegamento
+-- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: collega un prodotto alle sue caratteristiche
 --
@@ -1771,8 +1771,8 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
 
 -- mastri_veicoli
 -- tipologia: tabella gestita
--- rango: tabella secondaria
--- struttura: tabella di relazione
+-- rango: tabella di relazione
+-- struttura: tabella base
 -- funzione: contiene la relazione molti a molti tra mastri e veicoli
 --
 -- questa tabella contiene la relazione molti a molti tra mastri e veicoli, con le chiavi esterne per il mastro
@@ -3488,8 +3488,8 @@ CREATE TABLE IF NOT EXISTS `url` (                            --
 -- | 010000063000
 
 -- valute
--- tipologia: tabella principale
--- rango: tabella standard
+-- tipologia: tabella standard
+-- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene le valute utilizzate nel sistema
 --
@@ -3793,7 +3793,7 @@ CREATE TABLE IF NOT EXISTS `istruzioni` (
 
 -- taglie
 -- tipologia: tabella gestita
--- rango: tabella di appoggio
+-- rango: tabella principale
 -- struttura: tabella base
 -- funzione: le taglie degli articoli
 --
