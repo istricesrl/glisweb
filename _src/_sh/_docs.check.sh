@@ -19,6 +19,13 @@
 # REGOLA sul perimetro: si guarda SOLO dentro la document root. Un livello sopra vive il READ.md
 # del deploy, che contiene gli accessi del progetto e non e' documentazione.
 #
+# REGOLA sulla linea: si documenta la linea NUOVA e non il legacy, che convive di proposito per
+# lasciare migrare un progetto un pezzo per volta. I due si riconoscono dal nome, senza guardare
+# dentro i file: un modulo della linea nuova ha il codice a CINQUE caratteri ( _CT000.contatti )
+# contro i quattro del legacy ( _4000.catalogo ), e un template nuovo sta in _src/_tpl/ e usa
+# Twig contro i .html di _src/_templates/. Contare anche il legacy non e' prudenza: e' un muro
+# che non scende mai, e un numero che non scende smette di essere letto.
+#
 
 ## livelli per la root del sito
 RL="../../"
@@ -134,15 +141,19 @@ fi
 
 ## ------------------------------------------------------------------ 3. manuali dei moduli
 #
-# si controllano i moduli ATTIVI, non tutti: documentare un modulo che nessuno ha acceso non
-# serve a nessuno, e il conteggio su tutti e 79 sarebbe un muro invece di una curva
-MODULI=$( php -r '
-    $p = "src/config.json";
-    if( ! file_exists( $p ) ) exit;
-    $c = json_decode( file_get_contents( $p ), true );
-    if( isset( $c["mods"]["active"]["array"] ) )
-        foreach( $c["mods"]["active"]["array"] as $m ) echo $m . "\n";
-' 2> /dev/null )
+# si controllano i moduli della LINEA NUOVA, riconosciuti dal codice a cinque caratteri.
+#
+# Il criterio di prima erano i moduli ATTIVI, letti da src/config.json, e misurava l'insieme
+# esattamente sbagliato: qui i quaranta attivi sono tutti e quaranta legacy, quindi il rilievo
+# chiedeva di documentare quaranta moduli che nessuno documentera' mai e taceva sui ventisei
+# nuovi, che sono quelli che contano. "Attivo" dice quali moduli servono a QUESTO deploy;
+# "nuovo" dice quali il framework mantiene, e la documentazione segue il secondo.
+#
+# Il criterio e' il nome e non la presenza sull'altro deploy di sviluppo, che pure oggi
+# coincide quasi: dev'essere leggibile da un deploy cliente, dove l'altro deploy non esiste.
+# Regge da solo, ed e' verificabile con un segnale indipendente: nessuno dei cinquantatre
+# moduli a quattro caratteri usa _src/_tpl/, e lo usano ventiquattro dei ventisei a cinque.
+MODULI=$( ls -d ./_mod/_?????.*/ 2> /dev/null | sed 's|^\./_mod/_||; s|/$||' )
 
 for tipo in READ USER; do
 
@@ -157,12 +168,48 @@ for tipo in READ USER; do
     done )
 
     N=$( echo "$SENZA" | grep -c . )
-    [ "$N" -gt 0 ] && echo "$SENZA" | sed "s|^|manca $tipo.md al modulo attivo |" \
-        | emetti "$cat_" "$N" "moduli attivi senza $tipo.md"
+    [ "$N" -gt 0 ] && echo "$SENZA" | sed "s|^|manca $tipo.md al modulo |" \
+        | emetti "$cat_" "$N" "moduli della linea nuova senza $tipo.md"
 
 done
 
-## ------------------------------------------------------------------ 4. vocabolario dei marcatori
+## ------------------------------------------------------------------ 4. manuali dei template
+#
+# si documentano i template NUOVI, quelli a Twig sotto _src/_tpl/. I diciassette sotto
+# _src/_templates/ sono il sistema vecchio a .html e restano fuori: i due convivono di
+# proposito, perche' un progetto migri un template per volta invece che in un colpo solo, ma
+# scrivere il manuale di cio' che si sta lasciando e' lavoro che nasce gia' da buttare.
+#
+# Un template senza nemmeno un .twig e' un guscio ( oggi arianna, demetra e sarah ): non si
+# segnala. Chiedere il manuale di una cartella vuota manda a documentare il nulla, e la
+# domanda vera su un guscio non e' "gli manca il manuale" ma "ha ancora senso che esista".
+# Se il guscio diventa un template, il rilievo compare da solo.
+TEMPLATE=$( for t in ./_src/_tpl/_*/; do
+    [ -d "$t" ] || continue
+    [ -n "$( find "$t" -name '*.twig' -print -quit 2> /dev/null )" ] || continue
+    n="$( basename "$t" )"
+    echo "${n#_}"
+done )
+
+for tipo in READ USER; do
+
+    cat_=$( echo "template-$tipo" | tr 'A-Z' 'a-z' )
+    attiva "$cat_" || continue
+
+    SENZA=$( echo "$TEMPLATE" | while IFS= read -r t; do
+        [ -n "$t" ] || continue
+        [ -f "./src/tpl/$t/$tipo.md" ] && continue
+        [ -f "./_src/_tpl/_$t/$tipo.md" ] && continue
+        echo "$t"
+    done )
+
+    N=$( echo "$SENZA" | grep -c . )
+    [ "$N" -gt 0 ] && echo "$SENZA" | sed "s|^|manca $tipo.md al template |" \
+        | emetti "$cat_" "$N" "template nuovi senza $tipo.md"
+
+done
+
+## ------------------------------------------------------------------ 5. vocabolario dei marcatori
 #
 # i marcatori hanno un vocabolario chiuso: un refuso non produce un errore, produce una
 # sezione che non viene mai filtrata o un callout che resta una citazione qualunque
@@ -194,7 +241,7 @@ $( grep -hoiE '^> \*\*solo [^*]+\*\*' $SORGENTI 2> /dev/null \
 
 fi
 
-## ------------------------------------------------------------------ 5. screenshot
+## ------------------------------------------------------------------ 6. screenshot
 #
 # ogni immagine deve avere la sua dichiarazione e viceversa: e' il controllo che rende
 # impossibile uno scatto orfano o una dichiarazione senza uso
@@ -218,7 +265,7 @@ if attiva screenshot; then
 
 fi
 
-## ------------------------------------------------------------------ 6. protezione del manuale
+## ------------------------------------------------------------------ 7. protezione del manuale
 #
 # il manuale di progetto descrive le personalizzazioni del cliente: se la protezione non c'e',
 # le sta servendo in chiaro a chiunque
@@ -230,13 +277,13 @@ if attiva protezione && [ -d ./usr/pages/manual ]; then
     fi
 fi
 
-## ------------------------------------------------------------------ 7. legacy da travasare
+## ------------------------------------------------------------------ 8. legacy da travasare
 if attiva legacy && [ -d ./_usr/_docs/_legacy ]; then
     N=$( find ./_usr/_docs/_legacy -name '*.dox' | wc -l )
     [ "$N" -gt 0 ] && rilievo legacy "restano .dox in _usr/_docs/_legacy da travasare nei READ.md e USER.md"
 fi
 
-## ------------------------------------------------------------------ 8. sorgente piu' recente
+## ------------------------------------------------------------------ 9. sorgente piu' recente
 #
 # CLAUDE.md e' scritto per un agente e non e' documentazione, ma e' la sorgente da cui si
 # scrive il manuale sviluppatore del progetto: se e' piu' recente, il manuale e' indietro
@@ -245,7 +292,7 @@ if attiva sorgente && [ -f ../CLAUDE.md ] && [ -f ./usr/docs/READ.md ]; then
         rilievo sorgente "CLAUDE.md e' piu' recente del manuale sviluppatore che ne discende"
 fi
 
-## ------------------------------------------------------------------ 9. metriche
+## ------------------------------------------------------------------ 10. metriche
 #
 # non sono rilievi e non diventano voci: sono numeri che si guardano per capire se il debito
 # scende. Una voce per ciascuno verrebbe riaperta a ogni variazione.
@@ -264,9 +311,31 @@ if [ $METRICHE -eq 1 ] && [ $TODO -eq 0 ]; then
         printf '    %-14s @file %s su %s file\n' "$d" "$CON" "$TOT"
     done
 
-    TD=$( grep -rl 'TODO documentare' ./_src ./_mod --include='*.php' 2> /dev/null \
-          | grep -v '/_ext/' | wc -l )
-    printf '    %-14s %s file\n' "TODO documentare" "$TD"
+    # 'TODO documentare' spezzato per area. In un numero solo faceva 482, e la gran parte erano
+    # moduli legacy che non si documentano: un totale che comprende cio' che non si fara' mai
+    # non misura il debito, lo nasconde, e chi lo guarda smette di guardarlo perche' non scende
+    # mai. Spezzato, la riga che deve scendere si vede, e le altre due dicono solo quanto e'
+    # grande la parte di cui non ci si occupa.
+    #
+    # La lista vuota va intercettata: grep -rl senza directory legge lo standard input. Da cron
+    # lo stdin e' /dev/null e tornerebbe zero per caso, ma lanciato a mano dal terminale lo
+    # script resterebbe li' fermo senza dire perche'.
+    td() {
+        [ $# -gt 0 ] || { echo 0; return; }
+        grep -rl 'TODO documentare' "$@" --include='*.php' 2> /dev/null | grep -v '/_ext/' | wc -l
+    }
+
+    NUOVI=()
+    LEGACY=()
+    for m in ./_mod/*/; do
+        [ -d "$m" ] || continue
+        cod="$( basename "$m" )"; cod="${cod#_}"; cod="${cod%%.*}"
+        if [ ${#cod} -eq 5 ]; then NUOVI+=( "$m" ); else LEGACY+=( "$m" ); fi
+    done
+
+    printf '    %-14s %s file\n' "TODO core"      "$( td ./_src )"
+    printf '    %-14s %s file\n' "TODO moduli"    "$( td "${NUOVI[@]}" )"
+    printf '    %-14s %s file\n' "TODO legacy"    "$( td "${LEGACY[@]}" )"
 
     if [ -f ./var/log/doxygen.warn.log ]; then
         printf '    %-14s %s\n' "avvisi doxygen" "$( wc -l < ./var/log/doxygen.warn.log )"
