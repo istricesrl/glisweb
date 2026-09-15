@@ -388,13 +388,26 @@ header .col-auto.d-flex {
 
 /* l'header a 1.8em rendeva voci e icone enormi su tablet, mandando la barra a
    ridosso dei bordi. 1.5em resta ben leggibile a distanza di braccio ma lascia
-   respiro. La navbar non deve mai produrre scroll orizzontale. */
+   respiro. */
 header {
     font-size: 1.5em;
 }
-header nav.navbar {
-    flex-wrap: nowrap;
-    overflow-x: hidden;
+
+/* la navbar non deve produrre scroll orizzontale, ma soprattutto non deve
+   nascondere voci. Il primo tentativo ( flex-wrap: nowrap + overflow-x: hidden,
+   2026-09-01 ) toglieva lo scroll nascondendo quello che non entrava: niente
+   scrollbar, e nessun modo di arrivarci. Misurato col browser headless il
+   2026-09-15 su un menu di nove voci: fra i 768px e la larghezza naturale della
+   barra venivano tagliati fino a 230px, e a sparire erano gli ultimi elementi,
+   cioe' proprio l'icona account, il carrello e il LOGOUT; su un tablet in
+   portrait l'utente non aveva modo di disconnettersi. Sotto i 768px il nowrap
+   colpiva anche il menu collassato, che restava sulla riga del toggler,
+   schiacciato a meta' schermo, invece di scendere sotto.
+   Il wrap della navbar quindi si lascia a Bootstrap, che lo usa per far scendere
+   il menu collassato, e si manda a capo l'elenco delle voci: la barra cresce in
+   altezza una riga per volta e non perde mai niente. */
+header nav.navbar .navbar-nav {
+    flex-wrap: wrap;
 }
 
 /* voci di menu: su tablet il tap target conta più della compattezza. Diamo

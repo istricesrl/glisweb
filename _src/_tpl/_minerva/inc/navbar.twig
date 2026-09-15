@@ -1,20 +1,31 @@
+{# ORDINE DEGLI ELEMENTI DELLA BARRA
+    Bootstrap 5 ha le utility da order-0 a order-5 ( piu' order-first e order-last ):
+    gli order-10 e order-12 che stavano qui erano rimasti dalla 4.x, dove la scala
+    arrivava a 12, e in 5.x non corrispondono a nessuna regola, quindi valevano 0.
+    Finche' la barra era tenuta su una riga sola la cosa non si vedeva; da quando il
+    menu collassato scende sotto il toggler ( vedi css/main.css ) l'ordine conta, e
+    senza queste classi i pulsanti account/carrello/logout finivano su una terza riga.
+    Sotto i 768px: icone (1), toggler (2), menu (3, che ha flex-basis 100% e prende
+    da solo la riga successiva). Da 768px in su il toggler sparisce e restano menu (2)
+    e icone (3), spinte a destra da ms-md-auto. #}
+
 {# LIBRERIE #}
 {% import '_lib/_navigation.twig' as nav %}
 
 <!-- file {{ _self }} -->
 <div class="col d-flex flex-column p-0">
     <nav class="navbar navbar-expand-md navbar-light mt-auto mb-auto">
-        <button class="navbar-toggler ms-auto mx-3 my-1 order-10 order-md-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler ms-auto mx-3 my-1 order-2 order-md-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse order-12" id="navbarNav">
+        <div class="collapse navbar-collapse order-3 order-md-2" id="navbarNav">
             <ul class="navbar-nav me-auto text-end">
                 {{ nav.menu( page.template.menu.app, localization.language.ietf ) }}
             </ul>
         </div>
         {% if session.account.username %}
         <!-- utente connesso {{ session.account.username }} -->
-        <div class="col-auto d-flex flex-row p-0 ms-md-auto order-1 order-md-12">
+        <div class="col-auto d-flex flex-row p-0 ms-md-auto order-1 order-md-3">
             <ul class="navbar-nav ms-auto text-end icons">
                 {{ nav.menu( page.template.menu['appicons'], localization.language.ietf ) }}
             </ul>
