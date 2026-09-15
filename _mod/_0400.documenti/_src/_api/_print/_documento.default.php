@@ -82,7 +82,25 @@
         if( ! empty( $_SESSION['account']['relazioni'] )
             && is_array( $_SESSION['account']['relazioni'] )
             && count( $_SESSION['account']['relazioni'] ) <= 50 ) {
-            foreach( array_keys( $_SESSION['account']['relazioni'] ) as $idFamiliare ) {
+            /*
+             * Si legge l'id DAL VALORE della riga, non dalla chiave.
+             *
+             * `mysqlCachedIndexedQuery()` ritorna una lista numerica ( 0, 1, 2, ... ): l'"indexed"
+             * del nome e' l'indice di invalidazione della cache, non la chiave del risultato.
+             * Con `array_keys()` questo controllo autorizzava le anagrafiche 0, 1 e 2 — che non
+             * esistono — e di fatto solo la propria, negando ai familiari le loro ricevute.
+             *
+             * Su polmasi era stato corretto reindicizzando in `src/config/210.auth.php`, ma un
+             * file standard non puo' dipendere da un file di progetto: quel file lo standard non
+             * lo vede e non lo puo' verificare, e su ogni deploy che non ha fatto la stessa
+             * reindicizzazione il controllo torna a negare in silenzio. Letto per valore funziona
+             * in tutt'e due i casi, indicizzato o no, e non chiede niente a nessuno.
+             *
+             * L'espressione e' la stessa gia' usata da quella reindicizzazione: se la riga non
+             * porta un id si ricade sulla chiave, cosi' non si perde nessuna voce.
+             */
+            foreach( $_SESSION['account']['relazioni'] as $chiave => $relazione ) {
+                $idFamiliare = ( is_array( $relazione ) && isset( $relazione['id'] ) ) ? $relazione['id'] : $chiave;
                 $anagraficheAutorizzate[] = (string) $idFamiliare;
             }
         }
