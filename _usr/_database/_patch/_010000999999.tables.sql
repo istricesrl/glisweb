@@ -476,6 +476,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
 -- | 010000002900
 
 -- caratteristiche
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -694,6 +695,7 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -756,6 +758,7 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
 
 -- colli
 -- tipologia: tabella gestita
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `colli` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per il collo che contiene questo
@@ -1492,6 +1495,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 
 -- iva
 -- tipologia: tabella standard
+-- struttura: tabella base
 -- verifica: 2021-09-23 16:52 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `iva` (
   `id` bigint(20) NOT NULL,
@@ -1725,6 +1729,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 
 -- marchi
 -- tipologia: tabella gestita
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` bigint(20) NOT NULL,
   `id_produttore` bigint(20) NOT NULL,
@@ -1955,6 +1960,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
 -- | 010000022100
 
 -- notizie_anagrafica
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_notizia` bigint(20) DEFAULT NULL,
@@ -2097,6 +2103,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (                           --
 
 -- periodicita
 -- tipologia: tabella di supporto
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` bigint(20) NOT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -2107,6 +2114,7 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 
 -- prezzi
 -- tipologia: tabella gestita
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` bigint(20) NOT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
@@ -2170,6 +2178,7 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
   `id` bigint(20) NOT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
@@ -2443,6 +2452,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
 -- | 010000030300
 
 -- relazioni_anagrafica
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_anagrafica` bigint(20) DEFAULT NULL,
@@ -2480,6 +2490,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 
 -- reparti
 -- tipologia: tabella assistita
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `reparti` (
   `id` bigint(20) NOT NULL,
   `id_iva` bigint(20) DEFAULT NULL,
@@ -2495,6 +2506,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 -- | 010000034000
 
 -- ruoli_anagrafica
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -2919,6 +2931,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
 -- | 010000050700
 
 -- tipologie_colli
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `tipologie_colli` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3169,6 +3182,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
+-- struttura: tabella ricorsiva
 -- verifica: 2021-11-15 11:00 Chiara GDL
 CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `id` bigint(20) NOT NULL,
@@ -3186,6 +3200,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
 -- | 010000054600
 
 -- tipologie_prodotti
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3216,6 +3231,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
 
 -- tipologie_progetti
 -- tipologia: tabella gestita
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3267,6 +3283,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
+-- struttura: tabella ricorsiva
 CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -3443,6 +3460,7 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
 
 -- udm
 -- tipologia: tabella standard
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `udm` (
   `id` bigint(20) NOT NULL,
   `id_base` bigint(20) DEFAULT NULL,
@@ -3627,6 +3645,7 @@ CREATE TABLE IF NOT EXISTS `test` (                           --
 -- | 010000999001
 
 -- carrelli
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `carrelli` (
   `id` bigint(20) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -3730,6 +3749,7 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
 -- | 010000999002
 
 -- rinnovi
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
@@ -3754,6 +3774,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 -- | 010000999003
 
 -- contratti_anagrafica
+-- struttura: tabella di relazione
 CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id` bigint(20) NOT NULL,
   `id_contratto` bigint(20) DEFAULT NULL,
@@ -3769,6 +3790,7 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
 -- | 010000999004
 
 -- licenze
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `licenze` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
@@ -3793,6 +3815,7 @@ CREATE TABLE IF NOT EXISTS `licenze` (
 -- | 010000999020
 
 -- istruzioni
+-- struttura: tabella base
 -- Istruzioni di lavorazione, usate dal modulo produzione e citate da todo_view.
 -- Sta nei patch base come tutto il resto: il database non e' partizionato per modulo, perche'
 -- ci sono tabelle che afferirebbero a piu' moduli e separarle genererebbe confusione o ridondanza.

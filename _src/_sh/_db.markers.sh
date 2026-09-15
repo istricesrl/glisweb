@@ -89,11 +89,11 @@ php -d error_reporting=E_ALL -r '
     $e = dbMarkersRiscrivi( $voci, (bool) $argv[1] );
 
     printf(
-        "\n  %d gia corretti, %d riscritti, %d senza marcatore, %d dubbi\n",
-        $e["gia_giusti"], $e["corretti"], $e["senza_marcatore"], $e["dubbie"]
+        "\n  %d gia corretti, %d riscritti, %d aggiunti, %d senza blocco, %d dubbi\n",
+        $e["gia_giusti"], $e["corretti"], $e["aggiunti"], $e["senza_marcatore"], $e["dubbie"]
     );
 
-    exit( ( $e["corretti"] + $e["senza_marcatore"] + $e["dubbie"] + count( $rilievi ) ) > 0 ? 1 : 0 );
+    exit( ( $e["corretti"] + $e["aggiunti"] + $e["senza_marcatore"] + $e["dubbie"] + count( $rilievi ) ) > 0 ? 1 : 0 );
 ' "$SECCO"
 
 exit $?

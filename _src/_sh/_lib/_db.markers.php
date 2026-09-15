@@ -88,6 +88,7 @@
             $nome = NULL;
             $rigaStruttura = NULL;
             $dichiarata = NULL;
+            $dopo = NULL;
 
             foreach( $righe as $i => $r ) {
 
@@ -95,12 +96,22 @@
                     $nome = $m[1];
                     $rigaStruttura = NULL;
                     $dichiarata = NULL;
+                    // dove andrebbe inserito il marcatore se manca: subito sotto l'intestazione,
+                    // e poi via via piu' in basso man mano che si incontrano i campi che lo precedono
+                    $dopo = $i;
                     continue;
                 }
 
                 if( preg_match( '/^-- struttura: (.+)$/', $r, $m ) ) {
                     $rigaStruttura = $i;
                     $dichiarata = trim( $m[1] );
+                    continue;
+                }
+
+                // l'ordine dei quattro campi e' tipologia, rango, struttura, funzione: il posto
+                // della struttura e' dopo l'ultimo dei due che la precedono
+                if( preg_match( '/^-- (tipologia|rango): /', $r ) ) {
+                    $dopo = $i;
                     continue;
                 }
 
@@ -140,6 +151,7 @@
                     'intestazione'=> $nome,
                     'file'        => $f,
                     'riga'        => $rigaStruttura,
+                    'dopo'        => $dopo,
                     'dichiarata'  => $dichiarata,
                     'derivata'    => $derivata,
                     'ricorsiva'   => $ricorsiva,
@@ -172,10 +184,11 @@
      */
     function dbMarkersRiscrivi( $voci, $secco = false ) {
 
-        $esito = array( 'corretti' => 0, 'gia_giusti' => 0, 'senza_marcatore' => 0, 'dubbie' => 0 );
+        $esito = array( 'corretti' => 0, 'aggiunti' => 0, 'gia_giusti' => 0, 'senza_marcatore' => 0, 'dubbie' => 0 );
 
         // si raggruppa per file: si legge e si riscrive una volta sola, cosi' l'inode non balla
         $perFile = array();
+        $inserimenti = array();
 
         foreach( $voci as $v ) {
 
@@ -185,9 +198,28 @@
             }
 
             if( $v['riga'] === NULL ) {
-                echo sprintf( "  - %-32s nessun marcatore: andrebbe %s\n", $v['tabella'], $v['derivata'] );
-                $esito['senza_marcatore']++;
+
+                // si INSERISCE, ma solo dove il blocco di commento esiste: il punto e'
+                // deterministico perche' l'ordine dei quattro campi e' fisso ( tipologia, rango,
+                // struttura, funzione ), quindi la struttura va dopo l'ultimo dei due che la
+                // precedono, o sotto l'intestazione se non c'e' nessuno dei due.
+                //
+                // Dove il blocco non c'e' affatto non si inventa niente: un commento intero
+                // andrebbe scritto da una persona, e tre dei quattro campi sono decisioni di
+                // progetto che non si derivano da nessuna parte.
+                if( $v['dopo'] === NULL ) {
+                    echo sprintf( "  - %-32s nessun blocco di commento: andrebbe %s\n", $v['tabella'], $v['derivata'] );
+                    $esito['senza_marcatore']++;
+                    continue;
+                }
+
+                echo sprintf( "  + %-32s manca: aggiungo %s\n", $v['tabella'], $v['derivata'] );
+                $esito['aggiunti']++;
+
+                $inserimenti[ $v['file'] ][ $v['dopo'] ][] = '-- struttura: ' . $v['derivata'];
+
                 continue;
+
             }
 
             if( $v['dichiarata'] === $v['derivata'] ) {
@@ -206,12 +238,22 @@
             return $esito;
         }
 
-        foreach( $perFile as $f => $sostituzioni ) {
+        foreach( array_unique( array_merge( array_keys( $perFile ), array_keys( $inserimenti ) ) ) as $f ) {
 
             $righe = explode( "\n", file_get_contents( $f ) );
 
-            foreach( $sostituzioni as $i => $nuova ) {
+            foreach( ( $perFile[ $f ] ?? array() ) as $i => $nuova ) {
                 $righe[ $i ] = $nuova;
+            }
+
+            // gli inserimenti si applicano dal fondo verso l'alto: inserire una riga sposta in
+            // giu' tutte quelle sotto, e partendo dall'alto gli indici raccolti prima non
+            // varrebbero piu' niente
+            $punti = $inserimenti[ $f ] ?? array();
+            krsort( $punti );
+
+            foreach( $punti as $i => $nuove ) {
+                array_splice( $righe, $i + 1, 0, $nuove );
             }
 
             // file_put_contents scrive sul posto e non tocca l'inode: gli hard link con l'altro

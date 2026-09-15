@@ -9,6 +9,7 @@
 -- | 080000000400
 
 -- anagrafica_view_static
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
   `id_tipologia` bigint(20) DEFAULT NULL,                         --
@@ -60,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
 -- | 080000001300
 
 -- articoli_view_static
+-- struttura: tabella base
 CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `id` bigint(20) PRIMARY KEY NOT NULL,
   `codice` char(32) DEFAULT NULL,                             --
@@ -108,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
 -- | 080000001800
 
 -- attivita_view_static
+-- struttura: tabella base
 CREATE TABLE `attivita_view_static` (                         --
   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
   `id_tipologia` bigint(20) DEFAULT NULL,                        --
@@ -192,6 +195,7 @@ CREATE TABLE `attivita_view_static` (                         --
 -- | 080000002300
 
 -- offerte_attive_view_static
+-- struttura: tabella base
 --
 -- offerte_attive_view costa: ha nel WHERE anagrafica_check_gestita( a1.id ), una funzione chiamata
 -- riga per riga su tutti i documenti. Misurata su 12.705 documenti l'08/09/2026: 13,5 secondi con
@@ -235,6 +239,7 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
 -- | 080000999020
 
 -- todo_view_static
+-- struttura: tabella base
 -- Materializzazione di todo_view. Le colonne devono restare le STESSE della vista; l'ordine
 -- invece non conta, ed e' bene dirlo perche' qui c'era scritto il contrario.
 --
