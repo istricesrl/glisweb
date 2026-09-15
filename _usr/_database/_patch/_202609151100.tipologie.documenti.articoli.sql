@@ -127,7 +127,6 @@ ALTER TABLE `documenti_articoli`
 
 -- e si ricostruiscono sulla colonna giusta, piu' la chiave semplice sulla tipologia della riga
 ALTER TABLE `documenti_articoli`
-	ADD UNIQUE KEY IF NOT EXISTS `unico_codice` (`codice`,`id_tipologia_documento`),
 	ADD KEY IF NOT EXISTS `id_tipologia_documento` (`id_tipologia_documento`),
 	ADD KEY IF NOT EXISTS `id_tipologia` (`id_tipologia`),
 	ADD KEY IF NOT EXISTS `indice` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
@@ -297,166 +296,19 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 
 -- | 202609151141
 
--- documenti_articoli_view: id_tipologia e tipologia restano la tipologia DEL DOCUMENTO, perche' e'
--- quello che leggono oggi stampe, elenchi e report; la tipologia della riga si affianca come
--- id_tipologia_riga / tipologia_riga invece di prendere il posto di qualcosa
-CREATE OR REPLACE VIEW `documenti_articoli_view` AS
-    SELECT
-		documenti_articoli.id,
-		documenti_articoli.id_genitore,
-        documenti_articoli.codice,
-		coalesce( documenti_articoli.id_tipologia_documento, documenti.id_tipologia ) AS id_tipologia,
-		tipologie_documenti.nome AS tipologia,
-		documenti_articoli.id_tipologia AS id_tipologia_riga,
-		tipologie_documenti_articoli.nome AS tipologia_riga,
-		documenti_articoli.ordine,
-		documenti_articoli.id_documento,
-		documenti.codice AS codice_documento,
-        concat(
-			tipologie_documenti.sigla,
-			' ',
-			documenti.numero,
-			'/',
-			documenti.sezionale,
-			' del ',
-			documenti.data
-		) AS documento,
-		coalesce( documenti_articoli.data, documenti.data ) AS data,
-		documenti_articoli.id_packing_list,
-		documenti_articoli.id_missione,
-		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario ) AS id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti_articoli.id_reparto,
-		documenti_articoli.id_progetto,
-		documenti_articoli.id_todo,
-		documenti_articoli.id_attivita,
-		documenti_articoli.id_articolo,
-		udm_riga.sigla AS udm,
-				concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			articoli.nome,
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-					' ',
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-					' ',
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-					' ',
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-					' ',
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-					' ',
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS articolo,
-		documenti_articoli.id_prodotto,
-		IF( documenti_articoli.id_articolo IS NOT NULL ,prodotti.nome, p.nome ) AS prodotto,
-		documenti_articoli.id_mastro_provenienza,
-		mastri_path( m1.id ) AS mastro_provenienza,
-		documenti_articoli.id_mastro_destinazione,
-		mastri_path( m2.id ) AS mastro_destinazione,
-		documenti_articoli.id_udm,
-		documenti_articoli.quantita,
-        -- LA QUANTITA' DELLE SOTTO RIGHE: SOTTOQUERY, NON JOIN PIU' GROUP BY
-        --
-        -- era una LEFT JOIN su se stessa piu' un sum() sotto GROUP BY, ed e' l'unica ragione per
-        -- cui questa vista aveva un GROUP BY. Costava carissimo, ma solo dove non si vedeva: con
-        -- un valore letterale nel WHERE l'ottimizzatore spinge la condizione dentro la vista e
-        -- legge una riga sola, con un SEGNAPOSTO non ci riesce e materializza tutte le righe
-        -- passando per venti join. Il framework interroga SEMPRE con statement preparati, quindi
-        -- pagava sempre il prezzo pieno.
-        --
-        -- Misurato l'08/09/2026 su 50.213 righe: SELECT * ... WHERE id = ? passa da 11,1 secondi a
-        -- 0,012, e la tendina delle righe genitore da 9,0 a 0,17. Le due versioni danno righe
-        -- identiche, verificate una per una.
-        ( SELECT coalesce( sum( sotto_righe.quantita ), 0 )
-            FROM documenti_articoli AS sotto_righe
-           WHERE sotto_righe.id_genitore = documenti_articoli.id
-        ) AS sotto_righe_quantita,
-		documenti_articoli.id_listino,		
-		documenti_articoli.id_pianificazione,
-		listini.id_valuta,
-		valute.utf8 AS valuta,
-		documenti_articoli.importo_netto_totale,
-		documenti_articoli.sconto_percentuale,
-		documenti_articoli.sconto_valore,
-		documenti_articoli.id_matricola,
-		matricole.matricola AS matricola,
-		documenti_articoli.id_rinnovo,
-		documenti_articoli.id_collo,
-		colli.codice AS codice_collo,
-		colli.nome AS nome_collo,
-        colli.ordine AS ordine_collo,
-		matricole.data_scadenza,
-		documenti_articoli.nome,
-		documenti_articoli.data_consegna,
-        documenti.data_archiviazione,
-		documenti_articoli.id_account_inserimento,
-		documenti_articoli.id_account_aggiornamento,
-		concat_ws(
-            ' / ',
-			coalesce( documenti_articoli.data, documenti.data, NULL ),
-			coalesce( tipologie_documenti.sigla, NULL ),
-            concat(
-			    coalesce( documenti.numero, NULL ),
-                '/',
-                coalesce( documenti.sezionale, NULL )
-            ),
-            concat(
-                coalesce( documenti_articoli.quantita, 0 ),
-                ' x ',
-                coalesce( documenti_articoli.id_articolo, '' )
-            ),
-			coalesce( documenti_articoli.nome, NULL ),
-            concat(
-                coalesce( documenti_articoli.importo_netto_totale, NULL ),
-                ' ',
-                coalesce( valute.utf8, '' )
-            )
-		) AS __label__
-	FROM
-		documenti_articoli
-        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti_articoli.id_emittente, documenti.id_emittente )
-		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario )
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti_articoli.id_tipologia_documento, documenti.id_tipologia )
-		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
-		LEFT JOIN valute ON valute.id = listini.id_valuta
-		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
-		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-		LEFT JOIN prodotti AS p ON p.id = documenti_articoli.id_prodotto
-		LEFT JOIN colli ON colli.id = documenti_articoli.id_collo
-		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
-		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
-		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
-		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
-		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
-		LEFT JOIN tipologie_documenti_articoli ON tipologie_documenti_articoli.id = documenti_articoli.id_tipologia
-;
+-- documenti_articoli_view NON si ricrea qui, e nemmeno l'unicita' sul codice: le fa entrambe
+-- _202609151200, dopo aver allineato le colonne di documenti_articoli.
+--
+-- Il motivo, misurato il 15/09/2026 su tutti e cinque i deploy: la vista dei file base legge 34
+-- colonne di documenti_articoli e tre deploy su cinque non le hanno tutte ( a crmfia ne mancano
+-- 3, a gimbe 4, a polmasi 1 ), e l'unicita' `unico_codice` vuole la colonna `codice`, che gimbe
+-- non ha. Tenendole qui la migrazione si fermava a meta': e' successo davvero su crmfia, che e'
+-- rimasto con lo schema migrato e la vista vecchia, cioe' con la tipologia vuota a video su
+-- 6.106 righe.
+--
+-- Separarle serve a questo: la migrazione dello schema passa ovunque, e quello che dipende da
+-- colonne che un deploy potrebbe non avere sta in una patch successiva, che le aggiunge prima
+-- di usarle.
 
 -- | 202609151142
 
