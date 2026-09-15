@@ -539,7 +539,17 @@
 
     // autoload di composer e libreria di conversione: prima di qualunque uso, perche' e' la libreria
     // a definire i vocabolari su cui si appoggia il resto
-    $autoload = getenv( 'DOCS_AUTOLOAD' ) ?: DOCS_BASE . '_src/_lib/_ext/autoload.php';
+    //
+    // il file_exists() resta ed e' voluto: senza il vendor questo require sarebbe un fatal, e
+    // l'entry point deve poter girare lo stesso perche' viene chiamato da _gw.upgrade.sh. Chi non
+    // trova la libreria non genera pagine, e lo dice — e' la stessa scelta di docsMarkdown2Html(),
+    // che ritorna false invece di morire.
+    //
+    // c'era qui una variabile d'ambiente DOCS_AUTOLOAD per puntare a un vendor diverso: serviva
+    // quando league/commonmark non era installato e bisognava pescarlo altrove. Dal 15/09/2026 la
+    // libreria e' nel vendor del framework, e la variabile era una strada che non prendeva nessuno
+    // su nessuno dei sei deploy: un ramo che non si percorre e' un ramo che non si collauda.
+    $autoload = DOCS_BASE . '_src/_lib/_ext/autoload.php';
 
     if( file_exists( $autoload ) ) {
         require_once $autoload;
