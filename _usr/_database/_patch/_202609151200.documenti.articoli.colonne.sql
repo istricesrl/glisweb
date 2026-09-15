@@ -64,6 +64,22 @@ ALTER TABLE `documenti_articoli`
 
 -- | 202609151202
 
+-- la vista non legge solo documenti_articoli: di `documenti` usa nove colonne, e anche li' i
+-- deploy non le hanno tutte. A crmfia manca data_archiviazione, a gimbe anche codice; verificato
+-- il 15/09/2026, e scoperto nel modo peggiore: la prima versione di questa patch guardava solo
+-- documenti_articoli ed e' morta su crmfia con "Unknown column 'documenti.data_archiviazione'".
+ALTER TABLE `documenti`
+	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `data` date DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `id_destinatario` bigint(20) DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `id_emittente` bigint(20) DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `numero` char(32) DEFAULT NULL,
+	ADD COLUMN IF NOT EXISTS `sezionale` char(32) DEFAULT NULL;
+
+-- | 202609151203
+
 -- e finalmente la vista, identica a quella dei file di base
 CREATE OR REPLACE VIEW `documenti_articoli_view` AS
     SELECT
