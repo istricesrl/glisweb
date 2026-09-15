@@ -241,7 +241,51 @@ $( grep -hoiE '^> \*\*solo [^*]+\*\*' $SORGENTI 2> /dev/null \
 
 fi
 
-## ------------------------------------------------------------------ 6. screenshot
+## ------------------------------------------------------------------ 6. vocabolario dei marcatori dello schema
+#
+# lo schema si documenta da se', con commenti '--', e in testa a ogni tabella quattro campi ne
+# dichiarano la natura: tipologia, rango, struttura, funzione. I primi tre hanno un vocabolario
+# chiuso; 'funzione' e' prosa libera e non si controlla.
+#
+# E' lo stesso controllo della sezione precedente, puntato su un altro file, e per lo stesso
+# motivo: un valore fuori vocabolario non produce nessun errore, produce una tabella classificata
+# in un modo che non esiste, e nessuno se ne accorge finche' qualcuno non prova a raggruppare.
+#
+# Al 15/09/2026 erano sette marcatori alla deriva su sei tabelle, sopravvissuti perche' questi
+# commenti non li leggeva niente, ne' la catena della documentazione ne' un controllo. Due erano
+# i campi tipologia e rango SCAMBIATI sulla stessa tabella: un errore che rileggendo non si vede,
+# perche' i due valori sono plausibili tutt'e due, e che un elenco di valori ammessi trova subito.
+#
+# Si segnala il VALORE e non la tabella che lo porta, come nella sezione precedente: uno stesso
+# termine alla deriva e' una decisione sola di vocabolario, anche quando compare su piu' tabelle,
+# e la tabella e' comunque a un grep di distanza.
+if attiva schema; then
+
+    # standard e custom allo stesso percorso al netto degli underscore, come per tutto il resto.
+    # Da non confondere con usr/database/, che accanto ospita gli snapshot datati delle
+    # migrazioni: quelli sono dump, non sorgenti, e marcatori non ne portano.
+    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null )
+
+    if [ -n "$SCHEMA" ]; then
+
+        FUORI=$( {
+            grep -hoE '^-- tipologia: .*' $SCHEMA 2> /dev/null \
+                | grep -vxE '^-- tipologia: tabella (gestita|standard|assistita|di supporto)$'
+            grep -hoE '^-- rango: .*' $SCHEMA 2> /dev/null \
+                | grep -vxE '^-- rango: tabella (principale|secondaria|di relazione)$'
+            grep -hoE '^-- struttura: .*' $SCHEMA 2> /dev/null \
+                | grep -vxE '^-- struttura: tabella (base|ricorsiva)$'
+        } | sed 's/^-- //' | sort -u )
+
+        N=$( echo "$FUORI" | grep -c . )
+        [ "$N" -gt 0 ] && echo "$FUORI" | sed 's/^/marcatore dello schema fuori vocabolario: /' \
+            | emetti schema "$N" "marcatori fuori vocabolario nei commenti dello schema"
+
+    fi
+
+fi
+
+## ------------------------------------------------------------------ 7. screenshot
 #
 # ogni immagine deve avere la sua dichiarazione e viceversa: e' il controllo che rende
 # impossibile uno scatto orfano o una dichiarazione senza uso
@@ -265,7 +309,7 @@ if attiva screenshot; then
 
 fi
 
-## ------------------------------------------------------------------ 7. protezione del manuale
+## ------------------------------------------------------------------ 8. protezione del manuale
 #
 # il manuale di progetto descrive le personalizzazioni del cliente: se la protezione non c'e',
 # le sta servendo in chiaro a chiunque
@@ -277,13 +321,13 @@ if attiva protezione && [ -d ./usr/pages/manual ]; then
     fi
 fi
 
-## ------------------------------------------------------------------ 8. legacy da travasare
+## ------------------------------------------------------------------ 9. legacy da travasare
 if attiva legacy && [ -d ./_usr/_docs/_legacy ]; then
     N=$( find ./_usr/_docs/_legacy -name '*.dox' | wc -l )
     [ "$N" -gt 0 ] && rilievo legacy "restano .dox in _usr/_docs/_legacy da travasare nei READ.md e USER.md"
 fi
 
-## ------------------------------------------------------------------ 9. sorgente piu' recente
+## ------------------------------------------------------------------ 10. sorgente piu' recente
 #
 # CLAUDE.md e' scritto per un agente e non e' documentazione, ma e' la sorgente da cui si
 # scrive il manuale sviluppatore del progetto: se e' piu' recente, il manuale e' indietro
@@ -292,7 +336,7 @@ if attiva sorgente && [ -f ../CLAUDE.md ] && [ -f ./usr/docs/READ.md ]; then
         rilievo sorgente "CLAUDE.md e' piu' recente del manuale sviluppatore che ne discende"
 fi
 
-## ------------------------------------------------------------------ 10. metriche
+## ------------------------------------------------------------------ 11. metriche
 #
 # non sono rilievi e non diventano voci: sono numeri che si guardano per capire se il debito
 # scende. Una voce per ciascuno verrebbe riaperta a ogni variazione.
@@ -332,6 +376,15 @@ if [ $METRICHE -eq 1 ] && [ $TODO -eq 0 ]; then
         cod="$( basename "$m" )"; cod="${cod#_}"; cod="${cod%%.*}"
         if [ ${#cod} -eq 5 ]; then NUOVI+=( "$m" ); else LEGACY+=( "$m" ); fi
     done
+
+    # quanto dello schema dichiara la propria natura. Non e' un rilievo: le tabelle senza i
+    # marcatori sono una coda che si accorcia lavorando, non un elenco su cui agire una per una.
+    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null )
+    if [ -n "$SCHEMA" ]; then
+        TAB=$( grep -hE '^CREATE TABLE' $SCHEMA 2> /dev/null | wc -l )
+        MAR=$( grep -hE '^-- tipologia: ' $SCHEMA 2> /dev/null | wc -l )
+        printf '    %-14s %s su %s tabelle\n' "schema" "$MAR" "$TAB"
+    fi
 
     printf '    %-14s %s file\n' "TODO core"      "$( td ./_src )"
     printf '    %-14s %s file\n' "TODO moduli"    "$( td "${NUOVI[@]}" )"
