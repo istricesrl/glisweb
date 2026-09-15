@@ -39,10 +39,29 @@
 -- righe escluse sono un problema di qualita' del dato (due sedi con lo stesso indirizzo
 -- sotto la stessa anagrafica) e vanno riconciliate a mano: questo patch non e' il posto per
 -- decidere quale delle due tenere. Per elencarle, invertire il NOT EXISTS in EXISTS.
+--
+-- PERCHE' L'UPDATE E' DENTRO UN PREPARE ( 15/09/2026 ). Su crmfia e gimbe anagrafica_indirizzi non
+-- ha la colonna `id_comune`: la migrazione del 10/07/2026 li' non e' mai arrivata. Un UPDATE
+-- statico morirebbe con "Unknown column 'ai.id_comune'" e, siccome il task si ferma al primo
+-- errore, lascerebbe indietro ogni patch successiva su quei due deploy. La guardia su
+-- information_schema fa si' che dove lo schema e' quello vecchio la patch non faccia niente e lo
+-- dica, invece di rompere. L'UPDATE e' identico a quello scritto a luglio, guardia sulle
+-- collisioni compresa.
+--
+-- L'allineamento vero di quei due deploy e' un lavoro a se', registrato nei rispettivi TODO.md
+-- come task ad alta priorita' il 15/09/2026.
+
 -- | 202609151500
 
 -- il backfill vero e proprio
-UPDATE anagrafica_indirizzi ai
+SET @backfill = IF(
+    EXISTS (
+        SELECT 1 FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = database()
+          AND TABLE_NAME   = 'anagrafica_indirizzi'
+          AND COLUMN_NAME  = 'id_comune'
+    ),
+    "UPDATE anagrafica_indirizzi ai
 JOIN indirizzi i ON i.id = ai.id_indirizzo
 SET ai.id_comune = COALESCE( ai.id_comune, i.id_comune ),
     ai.indirizzo = COALESCE( NULLIF( ai.indirizzo, '' ), i.indirizzo ),
@@ -56,6 +75,23 @@ WHERE ai.id_indirizzo IS NOT NULL
       WHERE x.id_anagrafica = ai.id_anagrafica
         AND x.id <> ai.id
         AND x.indirizzo = COALESCE( NULLIF( ai.indirizzo, '' ), i.indirizzo )
-  );
+  )",
+    "SELECT 'anagrafica_indirizzi non ha id_comune: schema precedente al 2026-07-10, niente da backfillare' AS nota"
+);
+
+-- | 202609151501
+
+-- si prepara
+PREPARE backfill FROM @backfill;
+
+-- | 202609151502
+
+-- si esegue
+EXECUTE backfill;
+
+-- | 202609151503
+
+-- e si libera
+DEALLOCATE PREPARE backfill;
 
 -- | FINE FILE
