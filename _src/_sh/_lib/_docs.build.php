@@ -378,8 +378,10 @@
 
             if( $opzioni['secco'] ) {
                 echo "  [prova] $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
+            } else if( file_put_contents( DOCS_BASE . $file, $pagina ) === false ) {
+                fwrite( STDERR, "  NON generato $file: scrittura fallita\n" );
+                continue;
             } else {
-                file_put_contents( DOCS_BASE . $file, $pagina );
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             }
 
@@ -441,6 +443,13 @@
         $fatte  = 0;
         $indice = array();
 
+        // la cartella di destinazione va creata, come fa gia' docsBuildManuale(). Mancava, e
+        // siccome piu' sotto non si guardava l'esito della scrittura, la generazione diceva
+        // "generato" per ogni pagina mentre file_put_contents falliva a ogni giro.
+        if( ! $opzioni['secco'] && ! is_dir( DOCS_BASE . $destinazione ) ) {
+            mkdir( DOCS_BASE . $destinazione, 0750, true );
+        }
+
         foreach( glob( $dir . '/*.md' ) as $f ) {
 
             $md      = file_get_contents( $f );
@@ -481,8 +490,10 @@
 
             if( $opzioni['secco'] ) {
                 echo "  [prova] $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
+            } else if( file_put_contents( DOCS_BASE . $file, $pagina ) === false ) {
+                fwrite( STDERR, "  NON generato $file: scrittura fallita\n" );
+                continue;
             } else {
-                file_put_contents( DOCS_BASE . $file, $pagina );
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             }
 
@@ -514,8 +525,9 @@
 
             if( $opzioni['secco'] ) {
                 echo "  [prova] $destinazione/index.html\n";
+            } else if( file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina ) === false ) {
+                fwrite( STDERR, "  NON generato $destinazione/index.html: scrittura fallita\n" );
             } else {
-                file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
                 echo "  generato $destinazione/index.html\n";
             }
 
