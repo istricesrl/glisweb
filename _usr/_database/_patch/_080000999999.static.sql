@@ -235,8 +235,19 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
 -- | 080000999020
 
 -- todo_view_static
--- Materializzazione di todo_view. Le colonne devono restare le stesse della vista, nello stesso
--- ordine: refreshStaticView() ci scrive dentro e le due firme vanno tenute insieme.
+-- Materializzazione di todo_view. Le colonne devono restare le STESSE della vista; l'ordine
+-- invece non conta, ed e' bene dirlo perche' qui c'era scritto il contrario.
+--
+-- refreshStaticView() elenca i campi esplicitamente ( REPLACE INTO ... ( campi ) SELECT campi ),
+-- proprio per non dipendere dall'ordine: il vecchio `REPLACE INTO ... SELECT *` accoppiava le
+-- colonne per POSIZIONE ed e' stato abbandonato dopo che una divergenza di una colonna sola ha
+-- fatto fallire l'aggiornamento in silenzio per giorni. Una colonna che sta nella vista e non
+-- nella statica non e' piu' un guasto ma un LOG_WARNING, e non viene copiata finche' non la si
+-- aggiunge.
+--
+-- In pratica: allineare le colonne serve, riordinarle no. Il 15/09/2026 la patch _202609151400 le
+-- ha aggiunte in coda su tre deploy, che quindi hanno le stesse 40 colonne in ordine diverso — e
+-- va bene cosi'.
 CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
