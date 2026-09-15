@@ -13,6 +13,24 @@
     // inclusione del framework
 	require_once '../../../../../_src/_config.php';
 
+	/**
+	 * Controllo autorizzazioni
+	 * ========================
+	 *
+	 * Fix 2026-09-15: questo endpoint rispondeva 200 a chiunque, senza sessione. Non aveva
+	 * nemmeno il segnaposto `if( true )` dei quattro del core: non aveva proprio niente.
+	 *
+	 * Non passa da `controller()` — ha una query sua — quindi l'ACL per tabella non lo vede
+	 * e non basta essere autenticati per ereditare un permesso: NON esiste un privilegio d'area per questa famiglia, e inventarne uno adesso
+     * chiuderebbe fuori tutti finche' qualcuno non lo attribuisce a un gruppo. Si pretende quindi
+     * il minimo che chiude il buco vero, cioe' che ci sia qualcuno collegato. Il privilegio
+     * d'area resta da decidere: vedi la voce nel TODO.
+	 *
+	 * Stesso meccanismo degli endpoint `/task/` e dei sei di `/print/` chiusi lo stesso
+	 * giorno: verifica, log nel canale `security` a LOG_ERR, 403, exit.
+	 */
+	checkTaskPrivilege(  );
+
     // recupero i dati del documento
 	$doc = mysqlSelectRow(
         $cf['mysql']['connection'],

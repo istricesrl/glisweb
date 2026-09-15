@@ -118,6 +118,18 @@
     if( ! $autorizzatoAlDocumento ) {
 
         // ...
+        /*
+         * Il 403 va messo a mano: dieText() emette gli header del contenuto e muore, ma non tocca
+         * lo status, quindi questo rifiuto usciva come 200. Non era un buco — il documento non
+         * veniva servito — ma era invisibile a chiunque controlli gli status: provando questo
+         * endpoint da anonimo si leggeva 200 e lo si dava per aperto, mentre gli endpoint chiusi
+         * con checkTaskPrivilege() rispondono 403. Due rifiuti che si presentano in due modi
+         * diversi non si possono nemmeno contare insieme.
+         */
+        http_response_code( 403 );
+
+        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_ERR );
+
         dieText('autorizzazioni insufficienti a visualizzare il documento');
 
     }

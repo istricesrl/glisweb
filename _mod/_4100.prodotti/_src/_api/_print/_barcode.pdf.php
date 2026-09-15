@@ -13,6 +13,22 @@
     // inclusione del framework
     require '../../../../../_src/_config.php';
 
+    /**
+     * Controllo autorizzazioni
+     * ========================
+     *
+     * Fix 2026-09-15: questo endpoint rispondeva 200 a chiunque, senza sessione. Non aveva
+     * nemmeno il segnaposto `if( true )` dei quattro del core: non aveva proprio niente.
+     *
+     * Non passa da `controller()` — ha una query sua — quindi l'ACL per tabella non lo vede
+     * e non basta essere autenticati per ereditare un permesso: cartellini, barcode e listini sono dati commerciali.
+     * `GESTIONE_CATALOGO` e' attribuito a `roots` e a `staff`; `users` non ce l'ha.
+     *
+     * Stesso meccanismo degli endpoint `/task/` e dei sei di `/print/` chiusi lo stesso
+     * giorno: verifica, log nel canale `security` a LOG_ERR, 403, exit.
+     */
+    checkTaskPrivilege( 'GESTIONE_CATALOGO' );
+
     // oggetto del documento
 	$dobj = 'cartellini articoli';
 
