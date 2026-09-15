@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 -- account_gruppi
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzioni: associa molti a molti gli account ai gruppi
 --
 -- questa tabella contiene le associazioni molti a molti tra gli account e i gruppi
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
 -- anagrafica_categorie
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: associa molti a molti le anagrafiche alle categorie
 --
 -- questa tabella contiene le associazioni molti a molti tra le anagrafiche e le categorie
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: associa molti a molti le anagrafiche agli indirizzi
 --
 -- questa tabella contiene le associazioni molti a molti tra le anagrafiche e gli indirizzi
@@ -348,7 +348,7 @@ CREATE TABLE `articoli` (
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: collega un articolo alle sue caratteristiche
 --
 -- questa tabella collega un articolo all'albero delle caratteristiche ( caratteristiche_prodotti )
@@ -380,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 -- asset
 -- tipologia: tabella gestita
 -- rango: tabella principale
--- struttura: tabella base
+-- struttura: tabella ricorsiva
 -- funzione: contiene gli asset (beni aziendali)
 --
 -- questa tabella contiene gli asset (beni aziendali) che possono essere collegati a molte altre entità del framework
@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: collega un prodotto alle sue caratteristiche
 --
 -- gemella di articoli_caratteristiche. L'indice unico e' ( id_prodotto, id_caratteristica ) e NON
@@ -1247,7 +1247,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
 -- documenti_articoli
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
--- struttura: tabella base
+-- struttura: tabella ricorsiva
 -- funzione: contiene gli articoli associati ai documenti emessi
 --
 -- questa tabella contiene gli articoli associati ai documenti emessi, con le informazioni principali
@@ -2244,7 +2244,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (                       --
 -- progetti_categorie
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: tabella di relazione molti a molti tra progetti e categorie
 --
 -- questa tabella contiene la relazione molti a molti tra progetti e categorie, con le informazioni relative
@@ -2459,7 +2459,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
 -- relazioni_documenti
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella base
+-- struttura: tabella di relazione
 -- funzione: tabella di relazione molti a molti tra documenti
 --
 -- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
