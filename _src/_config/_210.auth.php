@@ -585,6 +585,63 @@
                             )
                         );
 
+                        // relazioni con altre anagrafiche ( familiari e collegamenti )
+                        //
+                        // Si INIZIALIZZA SEMPRE, anche per un account senza anagrafica: chi legge
+                        // queste relazioni per autorizzare deve poter fare foreach senza guardia, e
+                        // un notice dentro una stampa PDF non e' un avviso in un log — manda "Undefined
+                        // index" nel corpo della risposta e da li' TCPDF non puo' piu' mandare il file.
+                        // Ci sono account senza anagrafica ( su un deploy erano 19 soci ): per loro
+                        // l'array resta vuoto, che e' la risposta giusta, non un caso da gestire altrove.
+                        //
+                        // La query sta QUI, dentro il ramo del login, e non in un runlevel che gira a
+                        // ogni richiesta: le relazioni non cambiano fra una pagina e l'altra e $_SESSION
+                        // le conserva.
+                        //
+                        // ATTENZIONE: le tre UNION hanno tutte il loro WHERE, e vanno tenuti. Su un
+                        // deploy la stessa query era finita senza WHERE, con il commento "dati di test
+                        // per il login da root": caricava tutte le 55.372 anagrafiche a ogni richiesta
+                        // anonima, bot e passate di cron comprese. Serializzate sono circa 5 MB, oltre
+                        // il tetto di 1 MB di memcached, quindi la cache la rifiutava e la query veniva
+                        // rieseguita ogni volta — 1.199 fallimenti in undici ore sulla stessa chiave — e
+                        // agli account senza anagrafica l'app costruiva la tendina "cambia persona" con
+                        // 55.372 opzioni, mostrando i nomi di tutti i soci a chi non doveva vederli.
+                        //
+                        // I tre rami sono: se stessi, le anagrafiche collegate a noi, le anagrafiche a
+                        // cui siamo collegati. La relazione si legge nei due versi perche' in
+                        // relazioni_anagrafica e' registrata una volta sola.
+                        //
+                        // TODO fare una funzione aggiungiRelazioniAccount() in _auth.utils.php
+                        $_SESSION['account']['relazioni'] = array();
+
+                        if( ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
+
+                            $_SESSION['account']['relazioni'] = mysqlCachedIndexedQuery(
+                                $cf['memcache']['index'],
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ '.
+                                'FROM anagrafica_view_static '.
+                                'WHERE anagrafica_view_static.id = ? '.
+                                'UNION '.
+                                'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ '.
+                                'FROM anagrafica_view_static '.
+                                'INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id '.
+                                'WHERE relazioni_anagrafica.id_anagrafica = ? '.
+                                'UNION '.
+                                'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ '.
+                                'FROM anagrafica_view_static '.
+                                'INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica = anagrafica_view_static.id '.
+                                'WHERE relazioni_anagrafica.id_anagrafica_collegata = ?',
+                                array(
+                                    array( 's' => $_SESSION['account']['id_anagrafica'] ),
+                                    array( 's' => $_SESSION['account']['id_anagrafica'] ),
+                                    array( 's' => $_SESSION['account']['id_anagrafica'] )
+                                )
+                            );
+
+                        }
+
                         // attribuzione dei gruppi e dei privilegi di gruppo
                         // TODO fare una funzione aggiungiPrivilegiAccount() in _auth.utils.php
                         if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
