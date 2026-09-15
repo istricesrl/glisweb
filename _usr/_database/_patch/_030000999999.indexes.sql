@@ -688,8 +688,9 @@ ALTER TABLE `documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `codice` (`codice`),
-	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia`),
+	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia_documento`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_tipologia_documento` (`id_tipologia_documento`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
@@ -716,13 +717,13 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`),
 	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`),
 	ADD KEY `importo_lordo_finale` (`importo_lordo_finale`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
-	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
-	ADD KEY `indice_todo_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_todo_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
-	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
+	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
+	ADD KEY `indice_todo_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_todo_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
+	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
+	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
 
 -- | 030000010001
 
@@ -1843,6 +1844,28 @@ ALTER TABLE `tipologie_documenti`
 
 -- tipologie_documenti
 ALTER TABLE `tipologie_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000052700
+
+-- tipologie_documenti_articoli
+ALTER TABLE `tipologie_documenti_articoli`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `sigla` (`sigla`),
+	ADD KEY `se_raggruppamento` (`se_raggruppamento`),
+	ADD KEY `se_somma` (`se_somma`),
+	ADD KEY `se_alternativa` (`se_alternativa`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`se_raggruppamento`,`se_somma`,`se_alternativa`);
+
+-- | 030000052701
+
+-- tipologie_documenti_articoli
+ALTER TABLE `tipologie_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053000
 

@@ -61,8 +61,17 @@
 				{{ frm.date( table, '', '', 'data', '', '', request, default_data, '', 1 ) }}
 			</div>
 			<div class="col-md-auto col-4">
+				{# TIPOLOGIA DELLA RIGA, NON DEL DOCUMENTO ( fix 2026-09-14 )
+				   Fino al 14/09/2026 questo campo proponeva le tipologie di DOCUMENTO
+				   ( offerta, fattura, DDT ), obbligatorie e precompilate con quella del documento
+				   che contiene la riga: non c'era niente da scegliere e si scriveva rumore.
+				   Adesso `documenti_articoli.id_tipologia` e' la tipologia della RIGA e la
+				   tendina legge `tipologie_documenti_articoli`. Il campo non e' piu' obbligatorio
+				   e non ha un default: la maggior parte delle righe una tipologia non ce l'ha.
+				   La vecchia colonna si chiama `id_tipologia_documento` e non e' piu' a video:
+				   era un caso di bordo, valorizzato su dieci righe su cinquantamila. #}
 				<span class="label-top">tipologia</span>
-				{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, etc.id_tipologia ) }}
+				{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti_articoli, request ) }}
 			</div>	
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">ordine</span>

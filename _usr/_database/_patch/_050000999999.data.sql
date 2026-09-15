@@ -508,6 +508,15 @@ INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `num
 (9,	    NULL,	NULL,	NULL,	'S',	'scontrino',	'scontr.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	    NULL,	NULL,	NULL,	'T',	'documento di trasporto',	'DDT',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000052700
+
+-- tipologie_documenti_articoli
+-- le due righe che il framework usa da se' per raggruppare le righe di un documento; INSERT
+-- IGNORE perche' un deploy puo' averne gia' di proprie con gli stessi id
+INSERT IGNORE INTO `tipologie_documenti_articoli` (`id`, `id_genitore`, `ordine`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_raggruppamento`, `se_somma`, `se_alternativa`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	1,	'raggruppamento a sommare',	'somma',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	2,	'raggruppamento in alternativa',	'alt.',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000053000
 
 -- tipologie_indirizzi

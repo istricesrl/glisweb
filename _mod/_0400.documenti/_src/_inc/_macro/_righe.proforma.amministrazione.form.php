@@ -110,12 +110,26 @@
 	    'SELECT id, __label__ FROM matricole_view '
 	);
 
-        // tendina tipologie anagrafica
+    /**
+     * TENDINA DELLE TIPOLOGIE DI RIGA ( fix 2026-09-14 )
+     *
+     * Leggeva `tipologie_documenti_view`, cioe' le tipologie di DOCUMENTO: offerta, fattura, DDT.
+     * Era la stessa identica query della tendina `tipologie_documenti` qui sopra, e nessun template
+     * la usava — i template leggevano l'altra chiave. Il campo `id_tipologia` della riga quindi
+     * proponeva le tipologie di documento, obbligatorie e precompilate con quella del documento
+     * stesso: su questo deploy ha prodotto dieci righe con la tipologia del loro stesso documento
+     * e nient'altro.
+     *
+     * Dal 14/09/2026 `documenti_articoli.id_tipologia` punta a `tipologie_documenti_articoli`, la
+     * tipologia della RIGA, e la vecchia colonna si chiama `id_tipologia_documento`. La tendina
+     * adesso legge la tabella giusta, e la chiave — che era gia' quella corretta — finalmente
+     * corrisponde a quello che contiene.
+     */
 	$ct['etc']['select']['tipologie_documenti_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_view'
+	    'SELECT id, __label__ FROM tipologie_documenti_articoli_view ORDER BY ordine, nome'
 	);
 
     // tendina mittenti

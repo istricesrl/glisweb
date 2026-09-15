@@ -128,11 +128,19 @@
 //	die( print_r( $ct['etc'], true ) );
 
     // tendina tipologie anagrafica
+    /**
+     * TENDINA DELLE TIPOLOGIE DI RIGA ( fix 2026-09-14 )
+     *
+     * Leggeva `tipologie_documenti_view`, cioe' le tipologie di DOCUMENTO. Dal 14/09/2026
+     * `documenti_articoli.id_tipologia` punta a `tipologie_documenti_articoli`, la tipologia della
+     * RIGA, e la vecchia colonna si chiama `id_tipologia_documento`. Spiegazione lunga in
+     * _documenti.articoli.form.php.
+     */
 	$ct['etc']['select']['tipologie_documenti_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_view'
+	    'SELECT id, __label__ FROM tipologie_documenti_articoli_view ORDER BY ordine, nome'
 	);
 /*
     // tendina mittenti

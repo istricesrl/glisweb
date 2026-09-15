@@ -29,9 +29,15 @@
         if( !empty( $status['current'] ) && !empty( $status['current']['id_tipologia'] ) && !empty( $status['current']['id_destinatario'] ) & !empty( $status['current']['id_emittente'] )  ){
 
             // recupero tutte le righe della stessa tipologia del documento e dello stesso cliente che non sono legate a documenti
+            //
+            // il confronto e' su id_tipologia_documento e non piu' su id_tipologia ( 2026-09-15 ): dal
+            // 15/09/2026 documenti_articoli.id_tipologia e' la tipologia della RIGA e la tipologia del
+            // DOCUMENTO sta in id_tipologia_documento. Qui si confronta con documenti.id_tipologia, che
+            // e' appunto una tipologia di documento: senza questa correzione la query non tornava piu'
+            // nessuna riga da aggregare, in silenzio
             $status['righe'] = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT * FROM documenti_articoli WHERE id_documento IS NULL AND id_tipologia = ? AND id_destinatario = ? AND id_emittente = ?',
+                'SELECT * FROM documenti_articoli WHERE id_documento IS NULL AND id_tipologia_documento = ? AND id_destinatario = ? AND id_emittente = ?',
                 array(
                     array( 's' => $status['current']['id_tipologia']),
                     array( 's' => $status['current']['id_destinatario']),
