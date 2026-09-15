@@ -15,12 +15,16 @@
 -- che la migrazione non tocca, poi rifa' l'unicita' sul codice e la vista. Sono tutte nullable e
 -- tutte prese pari pari dai file di base, quindi su un deploy che le ha gia' non succede niente.
 --
--- PERCHE' IL NUMERO E' PIU' ALTO DELLA MIGRAZIONE. Il task salta un intero file quando il livello
--- ricavato dal NOME e' minore o uguale al patch level del database. crmfia, fermandosi a meta',
--- e' rimasto a 202609151140: un file numerato piu' in basso non lo leggerebbe nemmeno. Con
--- 202609151200 il file passa su tutti e cinque, e dove non c'e' niente da fare non fa niente.
+-- PERCHE' IL NUMERO E' PIU' ALTO DELLA MIGRAZIONE, E PERCHE' E' 1300 E NON 1200. Il task salta un
+-- intero file quando il livello ricavato dal NOME e' minore o uguale al patch level del database.
+-- crmfia, fermandosi a meta' sulla migrazione, era rimasto a 202609151140: un file numerato piu'
+-- in basso non lo avrebbe letto. La prima stesura si chiamava _202609151200, ci ha applicato due
+-- patch ( crmfia e' salito a 202609151201 ) e poi e' morta sulla vista; a quel punto lo stesso
+-- file, corretto, non veniva piu' letto proprio perche' il suo nome diceva 1200. Da qui 1300, che
+-- sta sopra a tutti e passa su tutti e cinque i deploy; le patch gia' applicate rifanno cose
+-- idempotenti e non cambiano niente.
 
--- | 202609151200
+-- | 202609151300
 
 -- le colonne che la vista usa e che su qualche deploy non ci sono
 ALTER TABLE `documenti_articoli`
@@ -56,13 +60,13 @@ ALTER TABLE `documenti_articoli`
 	ADD COLUMN IF NOT EXISTS `sconto_percentuale` decimal(9,2) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `sconto_valore` decimal(9,2) DEFAULT NULL;
 
--- | 202609151201
+-- | 202609151301
 
 -- l'unicita' sul codice, che vuole la colonna `codice` appena allineata
 ALTER TABLE `documenti_articoli`
 	ADD UNIQUE KEY IF NOT EXISTS `unico_codice` (`codice`,`id_tipologia_documento`);
 
--- | 202609151202
+-- | 202609151302
 
 -- la vista non legge solo documenti_articoli: di `documenti` usa nove colonne, e anche li' i
 -- deploy non le hanno tutte. A crmfia manca data_archiviazione, a gimbe anche codice; verificato
@@ -78,7 +82,7 @@ ALTER TABLE `documenti`
 	ADD COLUMN IF NOT EXISTS `numero` char(32) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `sezionale` char(32) DEFAULT NULL;
 
--- | 202609151203
+-- | 202609151303
 
 -- e finalmente la vista, identica a quella dei file di base
 CREATE OR REPLACE VIEW `documenti_articoli_view` AS
