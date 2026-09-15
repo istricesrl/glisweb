@@ -1514,6 +1514,7 @@ ALTER TABLE `regioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_documento`,`id_documento_collegato`,`id_ruolo`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
