@@ -2099,6 +2099,17 @@ ALTER TABLE `valute`
 -- valute
 ALTER TABLE `valute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000063500
+
+-- taglie
+ALTER TABLE `taglie`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+
+-- | 030000063501
+
+-- taglie
+ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000065000
 
 -- video
@@ -2144,38 +2155,6 @@ ALTER TABLE `test`
 -- test
 ALTER TABLE `test` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
--- | FINE FILE
-
--- | 030000999010
-
--- ruoli_anagrafica
--- NB: senza questa PRIMARY KEY il vincolo notizie_anagrafica.id_ruolo -> ruoli_anagrafica.id
--- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
-ALTER TABLE `ruoli_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_genitore` (`id_genitore`);
-
--- | 030000999011
-
--- ruoli_anagrafica
-ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000999012
-
--- notizie_anagrafica
-ALTER TABLE `notizie_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_notizia` (`id_notizia`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-
--- | 030000999013
-
--- notizie_anagrafica
-ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999002
 
 -- carrelli
@@ -2210,11 +2189,6 @@ ALTER TABLE `carrelli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
 
--- | 030000999102
-
--- carrelli
-ALTER TABLE `carrelli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999003
 
 -- rinnovi
@@ -2235,30 +2209,6 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `rinnovi_ibfk_08_nofollow` (`id_pianificazione`);
 
--- | 030000999103
-
--- rinnovi
-ALTER TABLE `rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000999003
-
--- contratti_anagrafica
-ALTER TABLE `contratti_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`),
-	ADD KEY `id_contratto` (`id_contratto`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `ordine` (`ordine`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
-
--- | 030000999103
-
--- contratti_anagrafica
-ALTER TABLE `contratti_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
 -- | 030000999004
 
 -- licenze
@@ -2278,10 +2228,49 @@ ALTER TABLE `licenze`
 	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`),
 	ADD KEY `licenze_ibfk_03_nofollow` (`id_rivenditore`);
 
--- | 030000999104
+-- | 030000999005
 
--- licenze
-ALTER TABLE `licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+-- | 030000999010
+
+-- ruoli_anagrafica
+-- NB: senza questa PRIMARY KEY il vincolo notizie_anagrafica.id_ruolo -> ruoli_anagrafica.id
+-- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
+ALTER TABLE `ruoli_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000999011
+
+-- ruoli_anagrafica
+ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999012
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000999013
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000999020
 
@@ -2298,14 +2287,24 @@ ALTER TABLE `istruzioni`
 ALTER TABLE `istruzioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 
--- | 030000063500
+-- | 030000999102
 
--- taglie
-ALTER TABLE `taglie`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+-- carrelli
+ALTER TABLE `carrelli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
--- | 030000063501
+-- | 030000999103
 
--- taglie
-ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- rinnovi
+ALTER TABLE `rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999104
+
+-- licenze
+ALTER TABLE `licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999105
+
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | FINE FILE

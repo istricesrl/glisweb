@@ -31,6 +31,9 @@ CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
 -- id_disciplina_progetto / disciplina_progetto usano max() perche' il LEFT JOIN su
 -- progetti_categorie produce comunque una riga per ogni categoria del progetto
 -- (anche non-disciplina): max() scarta i NULL e tiene la sola foglia-disciplina.
+-- | 100000020551
+
+-- __report_iscrizioni_anagrafica__
 CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
     SELECT
         contratti.id AS id,

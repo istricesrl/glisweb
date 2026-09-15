@@ -232,8 +232,6 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
   KEY `data` (`data`)                                         --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
 
--- | FINE FILE
-
 -- | 080000999020
 
 -- todo_view_static
@@ -282,3 +280,4 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `__label__` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | FINE FILE

@@ -3503,6 +3503,28 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000063500
+
+-- taglie
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: le taglie degli articoli
+--
+-- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
+-- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
+-- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
+-- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
+--
+CREATE TABLE IF NOT EXISTS `taglie` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
+  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
+  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
+  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
+  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
+  `circonferenza_testa_max` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- | 010000064000
 
 -- veicoli
@@ -3601,8 +3623,6 @@ CREATE TABLE IF NOT EXISTS `test` (                           --
   `codice` char(32) DEFAULT NULL,                             -- codice univoco
   `nome` char(255) DEFAULT NULL                               -- dato di test
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
-
--- | FINE FILE
 
 -- | 010000999001
 
@@ -3788,26 +3808,4 @@ CREATE TABLE IF NOT EXISTS `istruzioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL               -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- | 010000063500
-
--- taglie
--- tipologia: tabella gestita
--- rango: tabella principale
--- struttura: tabella base
--- funzione: le taglie degli articoli
---
--- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
--- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
--- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
--- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
---
-CREATE TABLE IF NOT EXISTS `taglie` (
-  `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
-  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
-  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
-  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
-  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
-  `circonferenza_testa_max` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- | FINE FILE
