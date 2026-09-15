@@ -456,6 +456,23 @@ I file dei moduli vengono caricati dopo quelli base ad ogni passata di runlevel.
 | `_job.php` | job in background |
 | `_user.php` | azioni account utente |
 
+### Le definizioni delle pagine stanno in cache, e modificarle non basta
+
+L'array delle pagine — quello che nasce dai file `_src/_inc/_pages/*.php`, dai loro corrispettivi custom
+e dal database — **non viene ricostruito a ogni richiesta**: `_src/_config/_300.pages.php` lo legge da
+memcache (`CONTENTS_PAGES_KEY`, insieme ad albero, indice, reverse e shortcut) e lo rigenera solo se la
+cache manca o se `CONTENTS_PAGES_UPDATED` è più recente di `CONTENTS_PAGES_CACHED`.
+
+La conseguenza pratica è che **si modifica un file di definizione pagine e non cambia niente**: nessun
+errore, nessun avviso, la pagina continua a rispondere con la definizione vecchia. Non è opcache — quella
+rivalida i timestamp e dopo pochi secondi ricompila da sola — ed è per questo che ci si perde tempo: ogni
+altra modifica al framework (il CSS di un template, uno snippet Twig, una libreria) si vede subito, e
+solo questa no. Il 2026-09-15 ha nascosto per una decina di minuti una correzione di una riga.
+
+Per farli rileggere: `/task/memcache.clean` (vuole il privilegio `GESTIONE_CACHE`), con `?deploy=1` se
+il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente.
+Vale per tutto ciò che finisce nell'array delle pagine: `menu`, `auth.groups`, `template`, `macro`.
+
 ### Librerie (`_src/_lib/`)
 
 Convenzione di nome `_<nome>.<tipo>.php`:
@@ -499,9 +516,10 @@ Stato dei **template di pagina** standard:
 Tabella di conversione (BS4 morto in BS5 -> BS5): `ml-*`/`mr-*`->`ms-*`/`me-*`, `pl-*`/`pr-*`->`ps-*`/`pe-*`,
 `text-left`/`text-right`->`text-start`/`text-end`, `no-gutters`->`g-0`, `float-left`/`float-right`->
 `float-start`/`float-end`, `font-weight-*`->`fw-*`, `.close`->`.btn-close`, `.badge-X`->`.text-bg-X`,
-`.media`/`.media-body`->flex utilities, `data-toggle`/`data-target`/`data-dismiss`->`data-bs-*`.
+`.media`/`.media-body`->flex utilities, `data-toggle`/`data-target`/`data-dismiss`->`data-bs-*`,
+`order-6`..`order-12`->non esistono (vedi sotto).
 
-Due trappole imparate convertendo:
+Tre trappole imparate convertendo:
 - **`form-row` NON si tocca**: è morto in BS5, ma nel markup sta sempre come `class="form-row row"`
   (`row` porta il flex, quindi funziona), e dei CSS di progetto ci **agganciano selettori**
   (es. `.form-row.row.d-flex`). Rimuoverlo per "pulizia" rompe quei selettori senza guadagno.
@@ -510,6 +528,15 @@ Due trappole imparate convertendo:
   sia BS4 sia BS5. Lì le classi BS4 **non si possono convertire** finché esiste anche un solo template
   di pagina su BS4: è questo che tiene ferma la migrazione. Si sblocca solo quando **tutti** i template
   di pagina sono passati a BS5; allora si migrano in blocco condivisi e moduli.
+- **`order-*` si ferma a 5**: in BS4 le utility di ordinamento flex andavano da `order-1` a `order-12`,
+  in BS5 esistono solo `order-0`..`order-5` più `order-first` (-1) e `order-last` (6). Un `order-10` o
+  `order-12` rimasto nel markup **non è un errore visibile**: semplicemente non corrisponde a nessuna
+  regola, l'elemento resta a `order: 0` e finisce nell'ordine del DOM. Il danno emerge solo quando
+  qualcos'altro cambia — in `_src/_tpl/_minerva/inc/navbar.twig` è saltato fuori il 2026-09-15, quando
+  togliendo un `flex-wrap: nowrap` la barra ha ricominciato ad andare a capo e i pulsanti
+  account/carrello/logout, che si credevano `order-1` prima del menu, sono finiti su una terza riga.
+  Quando si converte un template, `grep -rn "order-\(6\|7\|8\|9\|1[012]\)\b"` sui suoi file è un
+  passaggio obbligato, perché è l'unica classe morta che non dà nessun segno di sé.
 
 I **tooltip** in BS5 (`data-bs-toggle="tooltip"`) vanno **inizializzati via JS**: il solo attributo non
 li accende (il `title` nativo del browser sì). Nei template non sono inizializzati, quindi la conversione
@@ -579,6 +606,46 @@ e Twig si ferma con `Unable to find template`. Per lo stesso motivo, quando un t
 che appartiene a un modulo, **la condizione dell'include va messa sull'esistenza del modulo** — che si riconosce
 dalla sua chiave in `$ct`, popolata dal suo `_035.common.php` — e non su una configurazione che può essere presente
 anche senza di lui.
+
+### Le due generazioni dei moduli, e come si riconoscono
+
+I moduli sono in mezzo a una migrazione, esattamente come i template, e per lo stesso motivo: le due
+generazioni convivono perche' un progetto ne sposti uno per volta. Prima di toccare un modulo bisogna
+sapere in quale delle due sta, e **il prefisso non si legge a occhio**:
+
+| generazione | forma del nome | esempio | template che si porta dietro |
+|---|---|---|---|
+| vecchia | `_NNNN.nome` — quattro cifre | `_4000.catalogo` | `_src/_templates/`, file `.html` |
+| vecchia | `_XNNN.nome` — **una** lettera e tre cifre | `_V300.immobiliari` | `_src/_templates/`, file `.html` |
+| nuova | `_NNNNN.nome` — cinque cifre, per **area** | `_04000.catalogo` | `_src/_tpl/`, file `.twig` |
+| nuova | `_XXNNN.nome` — **due** lettere e tre cifre, per **entita'** | `_AN000.anagrafica` | `_src/_tpl/`, file `.twig` |
+
+La trappola e' la seconda riga: **un prefisso di lettere non vuol dire "nuovo"**. `_V300.immobiliari`,
+`_V900.software`, `_F030.pagamenti`, `_V150.macchine` ed `_E300.modula` hanno una lettera sola e sono
+della generazione vecchia; `_AN000`, `_CT000`, `_DO000` ne hanno due e sono della nuova. A contarle
+male si tratta un modulo vecchio come nuovo, e ci si porta dietro l'albero di template sbagliato.
+
+Per questo la prova solida non e' il nome ma la **struttura**: si guarda quale albero di template il
+modulo si porta dietro. I moduli vecchi hanno `_mod/<modulo>/_src/_templates/`, i nuovi
+`_mod/<modulo>/_src/_tpl/`, e **non esiste un modulo che abbia tutt'e due** — verificato su tutti e 79
+i moduli di oldstable. Da qui la regola pratica: i due fronti di migrazione, moduli e templating, si
+muovono insieme. Un deploy fermo sui moduli vecchi lo e' quasi sempre anche sui template.
+
+**Stesso nome non vuol dire stesso modulo.** `_4000.catalogo` e `_04000.catalogo` condividono due macro
+su ventuno; `_0400.documenti` ha 130 macro e `_DO000.documenti` ne ha 18, e non ne hanno **nessuna** in
+comune. Il modulo nuovo e' quasi sempre una riscrittura, non una rinumerazione, e a volte si occupa di
+cose diverse. Migrare un deploy da `_4000.catalogo` a `_04000.catalogo` **non e' rinominare una
+cartella**: e' un lavoro di adattamento, da preventivare come tale.
+
+**Latest non ha nessun modulo della generazione vecchia.** E' la stessa scelta fatta per
+`_src/_templates/`, e ha la stessa conseguenza: e' la disponibilita' del modulo a decidere se un deploy
+puo' passare a latest, non lo stato dei suoi template. Un progetto che usa anche un solo modulo vecchio
+privo di controparte resta su oldstable a prescindere da quanto ha migrato dei template.
+
+Sulla macchina del framework l'inventario aggiornato lo produce `./moduli-migrazione.sh` dalla cartella
+esterna di glisdev, che scrive in `moduli-migrazione.log`: generazione di ogni modulo dedotta dal nome e
+dai file ( e le eventuali incoerenze fra le due letture ), stato per deploy, moduli vecchi in uso senza
+controparte in latest, e quanto condividono davvero le coppie omonime. Va rilanciato: e' una fotografia.
 
 ---
 
