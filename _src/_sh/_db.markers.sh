@@ -50,7 +50,7 @@ echo "lavoro su: $(pwd)$( [ $SECCO -eq 1 ] && echo ' (prova, non scrivo)' )"
 
 ## sorgenti: standard e custom allo stesso percorso al netto degli underscore
 php -d error_reporting=E_ALL -r '
-    require "_src/_sh/_lib/_db.markers.php";
+    require "_src/_cli/_db.markers.php";
 
     // lo schema DI RIFERIMENTO sono i file il cui numero finisce per 999999: tables, indexes,
     // views e compagnia. I file datati ( _AAAAMMGGHHMM.*.sql ) sono migrazioni, e una CREATE TABLE

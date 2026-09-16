@@ -38,7 +38,7 @@ if [ $# -eq 0 ]; then
 fi
 
 ## generazione
-php ./_src/_sh/_lib/_docs.build.php "$@"
+php ./_src/_cli/_docs.build.php "$@"
 DOCS_EXIT_CODE=$?
 
 if [ $DOCS_EXIT_CODE -ne 0 ]; then

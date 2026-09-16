@@ -54,7 +54,7 @@ if [ ! -f ./var/geografia.build.conf ]; then
 fi
 
 ## esecuzione
-php ./_src/_sh/_lib/_geografia.build.php "$@"
+php ./_src/_cli/_geografia.build.php "$@"
 GEO_EXIT_CODE=$?
 
 if [ $GEO_EXIT_CODE -ne 0 ]; then

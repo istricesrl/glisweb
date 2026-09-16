@@ -441,7 +441,7 @@ dichiarato e mai mostrato, o mostrato e mai dichiarato, è impossibile:
 
 `_src/_sh/_docs.build.sh` (`--user --dev --quickstart --standard --all --dry-run`) compone i sorgenti e
 scrive le pagine; la conversione sta in `_src/_lib/_docs.tools.php`, l'orchestrazione in
-`_src/_sh/_lib/_docs.build.php`. Tre cose non sono dettagli implementativi ma vincoli:
+`_src/_cli/_docs.build.php`. Tre cose non sono dettagli implementativi ma vincoli:
 
 - **l'entry point non fa il bootstrap del framework.** Da CLI `_src/_config.php` trascinerebbe sessione,
   header, memcache e MySQL, e un errore in un runlevel bloccherebbe la generazione proprio mentre gira

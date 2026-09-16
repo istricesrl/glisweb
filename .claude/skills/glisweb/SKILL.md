@@ -188,7 +188,7 @@ quelli su cui il lavoro in corso è divergente. Fotografia al **2026-09-16: 1151
 
 ⚠ **"le cartelle di framework sono condivise" è la regola, non una constatazione.** Il 2026-09-16 si è
 scoperto che 62 sorgenti della documentazione (`_usr/_docs/_read/`, `_quickstart/`, `_img/`) e l'intera
-catena che li genera (`_src/_sh/_docs.build.sh`, `_src/_sh/_lib/_docs.build.php`,
+catena che li genera (`_src/_sh/_docs.build.sh`, `_src/_cli/_docs.build.php`,
 `_src/_lib/_docs.tools.php`) esistevano **solo su glisweb**, senza che nessun inventario lo segnalasse.
 Prima di dare per condivisa un'area, si verifica. Vedi il punto cieco qui sotto.
 
@@ -311,7 +311,7 @@ Cosa c'è in ciascuna, in una riga:
 | cartella | cosa ci sta |
 |---|---|
 | `_etc/` | configurazione di supporto: dizionari di traduzione, liste di sicurezza, robots, Doxygen, release e version |
-| `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script), `_twig/` e `_tpl/` (template) |
+| `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point HTTP), `_cli/` (entry point da riga di comando), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script di shell), `_twig/` e `_tpl/` (template) |
 | `_mod/` | i moduli; un modulo è attivo **solo se esiste** la cartella omonima in `mod/` |
 | `_usr/` | quello che non è codice: `_database/_patch/`, `_docs/`, `_examples/`, `_test/` |
 | `var/` | stato locale: log, cache, spool, sitemap, marcatori. **Gitignored, escluso dal deploy** |
