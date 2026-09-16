@@ -6,7 +6,7 @@
      * La scheda strumenti e' fra i tab di offerte.commerciale.form fin da quando le pagine delle
      * offerte sono state scritte, ma questa macro non esisteva: aprendola si otteneva
      * "impossibile trovare la macro di pagina". Gli strumenti si aggiungono qui, con la stessa
-     * forma usata in _documenti.form.tools.php ( voci in $ct['page']['contents']['metro'][ <gruppo> ]
+     * forma usata in _documenti.form.tools.php ( voci in $ct['page']['contents']['metro'][ \<gruppo\> ]
      * e gruppi dichiarati in $ct['page']['contents']['metros'] ).
      *
      * @file

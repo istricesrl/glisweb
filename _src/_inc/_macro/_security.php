@@ -22,7 +22,7 @@
      * 
      * 
      * 
-     * i file var/spool/security/<ip>.log
+     * i file var/spool/security/\<ip\>.log
      * ----------------------------------
      * 
      * TODO documentare

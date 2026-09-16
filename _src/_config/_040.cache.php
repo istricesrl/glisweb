@@ -11,17 +11,17 @@
      * relativamente semplici (come la cache) fino a quelli più complessi come i database. Lo schema prevede sempre la
      * stessa sequenza di passi, anche se alcuni possono essere assenti in determinati contesti; la sequenza nel primo file è:
      *
-     * -# dichiarazione dei server disponibili ($cf[<servizio>]['servers'])
-     * -# dichiarazione dei profili per ogni status ($cf[<servizio>]['profiles'][<status>][...])
-     * -# inizializzazione dell'array delle connessioni ($cf[<servizio>]['connections'])
-     * -# applicazione della configurazione extra ($cx[<servizio>] su $cf[<servizio>])
-     * -# collegamento di $ct ($cf[<servizio>] collegato a $ct[<servizio>])
+     * -# dichiarazione dei server disponibili ($cf[\<servizio\>]['servers'])
+     * -# dichiarazione dei profili per ogni status ($cf[\<servizio\>]['profiles'][\<status\>][...])
+     * -# inizializzazione dell'array delle connessioni ($cf[\<servizio\>]['connections'])
+     * -# applicazione della configurazione extra ($cx[\<servizio\>] su $cf[\<servizio\>])
+     * -# collegamento di $ct ($cf[\<servizio\>] collegato a $ct[\<servizio\>])
      *
      * Nel secondo file, quello esecutivo, la sequenza è:
      *
-     * -# collegamento del profilo corrente ($cf[<servizio>]['profile'] collegato a $cf[<servizio>]['profiles'][<status>])
-     * -# collegamento della connessione corrente ($cf[<servizio>]['connection'] collegato a $cf[<servizio>]['connections'][0])
-     * -# collegamento del server corrente ($cf[<servizio>]['server'] collegato a $cf[<servizio>]['servers'][0])
+     * -# collegamento del profilo corrente ($cf[\<servizio\>]['profile'] collegato a $cf[\<servizio\>]['profiles'][\<status\>])
+     * -# collegamento della connessione corrente ($cf[\<servizio\>]['connection'] collegato a $cf[\<servizio\>]['connections'][0])
+     * -# collegamento del server corrente ($cf[\<servizio\>]['server'] collegato a $cf[\<servizio\>]['servers'][0])
      *
      * La rigidità e la ripetitività di questo schema
      *
@@ -43,7 +43,7 @@
      * 
      * 
      * [...]
-     * maxmemory <N>gb
+     * maxmemory \<N\>gb
      * maxmemory-policy allkeys-lru
      * 
      * 

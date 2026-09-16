@@ -22,8 +22,8 @@
      * - lo standard ISO 3166-1 alpha-3        http://it.wikipedia.org/wiki/ISO_3166-1_alpha-3
      * - lo standard ISO 3166-2            https://it.wikipedia.org/wiki/ISO_3166-2
      *
-     * Questi codici sono registrati nel \ref database "database di supporto", nelle tabelle
-     * geografiche.
+     * Questi codici sono registrati nel database di supporto, nelle tabelle geografiche: il
+     * dettaglio sta nei capitoli `3xx.database.*` del manuale sviluppatore ( /manual/read/ ).
      *
      * per le bandiere nazionali
      * -------------------------

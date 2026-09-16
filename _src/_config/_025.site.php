@@ -9,8 +9,8 @@
      * =======================
      * Lo scopo di questo file è ricavare dalla configurazione del sito i dati e le informazioni che vengono utilizzati
      * più spesso in modo da facilitarne il reperimento nell'output space. Per un esame dettagliato delle chiavi e dei
-     * sotto array di $cf['site'] si veda il \ref variabili "capitolo dedicato alle variabili della documentazione
-     * tecnica".
+     * sotto array di $cf['site'] si veda il capitolo `200.variabili` del manuale sviluppatore
+     * ( /manual/read/ ).
      *
      * definizione di costanti del sito
      * --------------------------------

@@ -10,7 +10,7 @@
      * Le tre strutture, in ordine di precedenza:
      *
      *   ricorsiva      la tabella ha `id_genitore`, cioe' fa riferimento a se stessa. Si porta
-     *                  dietro tre funzioni SQL ( <tabella>_path, _path_check, _ancestor ).
+     *                  dietro tre funzioni SQL ( \<tabella\>_path, _path_check, _ancestor ).
      *   di relazione   la tabella ha un indice UNIQUE su due o tre colonne `id_*`, che sono i capi
      *                  della relazione. E' il pattern del molti-a-molti.
      *   base           tutto il resto.

@@ -39,6 +39,9 @@
     }
 
     /**
+     * ottenere un refresh token di Google dal prompt dei comandi di Windows
+     *
+     * @code
      * set CLIENT_ID=your_client_id
      * set CLIENT_SECRET=your_client_secret
      * set SCOPE=https://www.googleapis.com/auth/business.manage
@@ -60,8 +63,7 @@
      * --data redirect_uri=%REDIRECT_URI% ^
      * --data grant_type=authorization_code ^
      * https://www.googleapis.com/oauth2/v4/token
-     * 
-     * 
+     * @endcode
      */
 
     function yt_api_get($url, $timeoutSec = 5) {

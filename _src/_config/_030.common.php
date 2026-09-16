@@ -134,6 +134,12 @@
      * Ogni URL locale e' condizionato all'esistenza del file: cio' che non e' stato generato
      * su questa installazione vale NULL, e i template non ne mostrano il link. E' il motivo
      * per cui non serve configurare niente per spegnere una voce, basta non generarla.
+     *
+     * La reference API ha una condizione in piu', ed e' la stessa che usa il .htaccess:
+     * esistere e essere raggiungibile sono due cose diverse. _usr/_docs/.htaccess apre /docs/
+     * e /docs/pdf solo dove esiste var/docs.public.conf, quindi guardare il solo file
+     * generato offrirebbe un link che risponde 403 - che e' esattamente quello che faceva
+     * fino al 16/09/2026 su ogni deploy che avesse generato la reference senza pubblicarla.
      */
 
     // manuale utente del progetto, prodotto da _src/_sh/_docs.build.sh --user
@@ -156,13 +162,13 @@
 
     // reference API in formato HTML, prodotta da _src/_sh/_doxygen.build.sh
     $cf['common']['docs']['tech']['html'] = array(
-        'url'  => ( file_exists( FILE_MANUAL_HTML ) ) ? $cf['site']['url'] . 'docs/' : NULL,
+        'url'  => ( file_exists( FILE_MANUAL_HTML ) && file_exists( FILE_MANUAL_PUBLIC ) ) ? $cf['site']['url'] . 'docs/' : NULL,
         'name' => array( 'it-IT' => 'HTML' )
     );
 
     // reference API in formato PDF
     $cf['common']['docs']['tech']['pdf'] = array(
-        'url'  => ( file_exists( FILE_MANUAL_PDF ) ) ? $cf['site']['url'] . 'docs/pdf' : NULL,
+        'url'  => ( file_exists( FILE_MANUAL_PDF ) && file_exists( FILE_MANUAL_PUBLIC ) ) ? $cf['site']['url'] . 'docs/pdf' : NULL,
         'name' => array( 'it-IT' => 'PDF' )
     );
 

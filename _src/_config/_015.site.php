@@ -26,7 +26,7 @@
      * l'array $cf['site']
      * ===================
      * Le variabili del ramo 'site' definiscono in generale il sito corrente. Si veda la
-     * \ref variabili "sezione della documentazione dedicata alle variabili" per il dettaglio delle chiavi di $cf['site'],
+     * capitolo `200.variabili` del manuale sviluppatore ( /manual/read/ ) per il dettaglio delle chiavi di $cf['site'],
      * in questa sede è solo necessario sottolineare che questo array contiene tutti i dati di configurazione del
      * sito corrente.
      *

@@ -63,7 +63,7 @@
      * per valore scrivevano tutti in una copia locale che veniva buttata via al `return`. Il
      * chiamante — `_src/_config/_750.controller.php`, che gli passa `$cf['speed']` — non ne vedeva
      * nessuno, e nel log delle richieste lente ( `var/log/slow/` ) tutto il lavoro del controller
-     * compariva come **un passo solo e opaco**, `fine elaborazione blocco <tabella>`.
+     * compariva come **un passo solo e opaco**, `fine elaborazione blocco \<tabella\>`.
      *
      * Non è un dettaglio estetico: su una scheda con dei sottomoduli quel passo è quasi sempre la
      * voce più cara della richiesta, e senza i tempi interni non c'è modo di sapere se il tempo se

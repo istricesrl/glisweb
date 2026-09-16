@@ -11,44 +11,44 @@
      *
      * ottenere una collezione di dati
      * -------------------------------
-     * GET /api/<entità>
+     * GET /api/\<entità\>
      *
      *
      *
      * creare un nuovo oggetto
      * -----------------------
-     * POST /api/<entità>
+     * POST /api/\<entità\>
      *
      *
      *
      * ottenere uno specifico oggetto
      * ------------------------------
-     * GET /api/<entità>/<id>
+     * GET /api/\<entità\>/\<id\>
      *
      *
      *
      * ottenere uno specifico oggetto in view mode
      * -------------------------------------------
-     * GET /api/<entità>/<id>?<entità>[__view_mode__]=1
+     * GET /api/\<entità\>/\<id\>?\<entità\>[__view_mode__]=1
      *
      *
      *
      * aggiornare uno specifico oggetto
      * --------------------------------
-     * PUT /api/<entità>/<id>
+     * PUT /api/\<entità\>/\<id\>
      *
      *
      *
      * eliminare uno specifico oggetto
      * -------------------------------
-     * DELETE /api/<entità>/<id>
+     * DELETE /api/\<entità\>/\<id\>
      *
      *
      *
      *
      * filtrare la collezione
      * ----------------------
-     * GET /api/<entità>?<entità>[<campo>]=<valore>
+     * GET /api/\<entità\>?\<entità\>[\<campo\>]=\<valore\>
      *
      *
      *

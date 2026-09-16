@@ -12,55 +12,33 @@
     la possibilità di realizzare siti e soprattutto web applications a partire da codice gratuito e aperto, semplice
     e ben documentato, con un'ampia community a supporto.
 
-    struttura di questa documentazione
-    ==================================
+    che cos'è questa pagina, e che cosa non è
+    =========================================
 
-    TODO finire questo paragrafo
+    Queste pagine sono la **reference delle API**: le genera Doxygen leggendo i commenti nel codice, ed elencano
+    file, funzioni, parametri e valori di ritorno. È il posto dove si va a guardare la firma di una funzione o
+    dove è definita una costante.
 
-    caratteristiche principali
-    ==========================
+    **Non è il manuale.** Il manuale è scritto a mano, in markdown, e sta altrove:
 
-    TODO finire questo paragrafo
+    - il manuale sviluppatore, in `/manual/read/index.html`, generato dai sorgenti di `_usr/_docs/_read/`;
+    - il manuale utente, in `/manual/user/index.html`, generato dai sorgenti di `_usr/_docs/_user/`;
+    - le guide introduttive, in `/quickstart/index.html`, generate dai sorgenti di `_usr/_docs/_quickstart/`.
 
-    sistema di versioni e release
-    =============================
+    È lì che si trovano l'installazione, l'architettura, i runlevel, le cartelle del framework, i file di
+    configurazione, le entità, i moduli, i template e le procedure. Qui dentro quella roba non si ripete: una
+    cosa sta scritta in un posto solo, altrimenti chi legge non sa quale delle due versioni sia quella vera.
 
-    TODO finire questo paragrafo
+    Il collegamento vale anche al contrario: i capitoli del manuale che parlano di una libreria o di una API
+    rimandano a queste pagine per i dettagli delle firme.
 
-    installazione e configurazione
-    ==============================
+    lo stato di questa reference
+    ============================
 
-    TODO finire questo paragrafo
-
-    architettura generale
-    =====================
-
-    TODO finire questo paragrafo
-
-    il file .htaccess
-    -----------------
-
-    TODO finire questo paragrafo
-
-    il file _src/_config.php
-    ------------------------
-
-    TODO finire questo paragrafo
-
-    i file di libreria
-    ------------------
-
-    TODO finire questo paragrafo
-
-    i file di configurazione
-    ------------------------
-
-    TODO finire questo paragrafo
-
-    i file dei runlevel
-    -------------------
-
-    TODO finire questo paragrafo
+    La copertura dei commenti nel codice è **lavoro in corso** e non è uniforme: alcune librerie hanno il
+    docblock su ogni funzione, altre non ce l'hanno affatto. La misura per area si ottiene con
+    `_src/_sh/_docs.check.sh --metriche`, e finché quella copertura non è ragionevole l'assenza di una funzione
+    da queste pagine non dice niente sul fatto che la funzione esista o no.
 
     ringraziamenti
     ==============
@@ -104,7 +82,8 @@
     - Twig template engine (http://twig.sensiolabs.org/)
     - Doxygen (https://www.doxygen.nl/)
 
-    TODO questa lista è da completare e verificare
+    Questo elenco è più corto di quello vero: le dipendenze dichiarate stanno in `composer.json` e si
+    installano in `_src/_lib/_ext/`, e vanno riportate qui tutte.
 
     Qualora i titolari dei software sopra citati rilevino un'irregolarità, o nel caso le licenze di
     distribuzione dei loro software entri per qualsiasi ragione in contrasto con quella del framework

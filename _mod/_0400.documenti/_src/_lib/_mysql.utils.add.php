@@ -791,8 +791,8 @@
      * La funzione e' idempotente e fail-forward: ogni passo e' una INSERT IGNORE con una chiave
      * deterministica, quindi rilanciarla non duplica nulla e, se muore a meta', il giro successivo
      * completa il lavoro. Le chiavi di idempotenza sono:
-     *   - testata : documenti.codice = 'DDT-' . <codice lista>            (UNIQUE)
-     *   - riga    : documenti_articoli.codice = 'DDT-R-' . <codice riga>  (UNIQUE)
+     *   - testata : documenti.codice = 'DDT-' . \<codice lista\>            (UNIQUE)
+     *   - riga    : documenti_articoli.codice = 'DDT-R-' . \<codice riga\>  (UNIQUE)
      *   - legami  : relazioni_documenti UNIQUE( id_documento, id_documento_collegato, id_ruolo )
      *
      * NOTA sulla quantita': la riga del DDT riporta la quantita' ORDINATA della riga di lista, non

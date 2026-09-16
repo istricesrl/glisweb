@@ -516,7 +516,7 @@
      * risolve le misure di un'etichetta scalandole sul formato in uso
      *
      * Le API di stampa delle etichette dichiarano le misure del proprio contenuto ( margini, altezze, corpi
-     * dei caratteri ) calibrate su un formato di riferimento, e ricevono da $cf['etichette'][ <etichetta> ]
+     * dei caratteri ) calibrate su un formato di riferimento, e ricevono da $cf['etichette'][ \<etichetta\> ]
      * il formato del supporto effettivamente montato sulla stampante; questa funzione applica al contenuto
      * i fattori di scala fra i due formati, in modo che cambiare il formato in configurazione basti a
      * riproporzionare la stampa senza toccare il codice.

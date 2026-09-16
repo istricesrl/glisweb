@@ -11,7 +11,7 @@
      *
      * TODO documentare
      *
-     * NOTA per convenzione passare sempre al template mail le seguenti chiavi 'ct' => $ct e 'dt' => <datiDellaMail>
+     * NOTA per convenzione passare sempre al template mail le seguenti chiavi 'ct' => $ct e 'dt' => \<datiDellaMail\>
      *
      */
 

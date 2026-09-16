@@ -514,7 +514,8 @@
     define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/_pdf/' );
     define( 'DIR_USR_DOCS_ETC'                          , DIR_BASE . '_usr/_docs/_etc/' );
     define( 'DIR_USR_DOCS_IMG'                          , DIR_BASE . '_usr/_docs/_img/' );
-    define( 'DIR_USR_DOCS_MD'                           , DIR_BASE . '_usr/_docs/_md/' );
+    // DIR_USR_DOCS_MD puntava a _usr/_docs/_md/, che non e' mai esistita e che non usava
+    // nessuno: i sorgenti del manuale stanno in _usr/_docs/_read/ e _usr/_docs/_user/
     define( 'DIR_USR_DOCS_QUICKSTART'                   , DIR_BASE . '_usr/_docs/_quickstart/' );
     define( 'DIR_USR_DOCS_SHOT'                         , DIR_BASE . '_usr/_docs/_shot/' );
     define( 'DIR_USR_PAGES'                             , DIR_BASE . '_usr/_pages/' );
@@ -601,6 +602,11 @@
     define( 'FILE_MANUAL_USER'                          , path2custom( DIR_USR_PAGES ) . 'manual/user/index.html' );
     define( 'FILE_MANUAL_DEV'                           , path2custom( DIR_USR_PAGES ) . 'manual/read/index.html' );
     define( 'FILE_MANUAL_QUICKSTART'                    , path2custom( DIR_USR_PAGES ) . 'quickstart/index.html' );
+
+    // marcatore di pubblicazione della reference: _usr/_docs/.htaccess apre le rotte /docs/ e
+    // /docs/pdf solo dove questo file esiste, quindi l'esistenza del manuale non basta a
+    // decidere se il link va mostrato ( vedi _030.common.php )
+    define( 'FILE_MANUAL_PUBLIC'                        , DIR_VAR . 'docs.public.conf' );
 
     // configurazioni aggiuntive
     define( 'FILE_REDIRECT'                             , path2custom( DIR_ETC ) . 'redirect.csv' );
@@ -712,8 +718,8 @@
      * Tutte le informazioni di configurazione e di lavoro del framework sono contenute nell'array associativo multidimensionale $cf.
      * Questo array viene popolato in due modi:
      * 
-     * - file PHP standard (_scr/_config/_<stage>.<factory>.php) e controparte moduli (_mod/_<modulo>/_src/_config/_<stage>.<factory>.php)
-     * - file PHP custom (src/config/<stage>.<factory>.php) e controparte moduli (mod/<modulo>/src/config/<stage>.<factory>.php)
+     * - file PHP standard (_scr/_config/_\<stage\>.\<factory\>.php) e controparte moduli (_mod/_\<modulo\>/_src/_config/_\<stage\>.\<factory\>.php)
+     * - file PHP custom (src/config/\<stage\>.\<factory\>.php) e controparte moduli (mod/\<modulo\>/src/config/\<stage\>.\<factory\>.php)
      * 
      */
 

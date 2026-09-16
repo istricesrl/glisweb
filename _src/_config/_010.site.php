@@ -20,7 +20,7 @@
      * -------------------------
      * Ogni sotto array di $cf['sites'] rappresenta un sito gestito dalla piattaforma, e come tale possiede
      * chiavi e sotto array che lo definiscono. Per una trattazione completa della struttura del sotto array sito
-     * si rimanda alla \ref variabili "pagina del manuale che tratta le variabili del framework". In questa sede
+     * si rimanda al capitolo `200.variabili` del manuale sviluppatore ( /manual/read/ ). In questa sede
      * è sufficiente evidenziare il ruolo svolto da $cf['sites']. L'installazione base del framework prevede
      * un solo sito, di default, a scopo principalmente dimostrativo; volendo utilizzare GlisWeb come piattaforma
      * per pubblicare contenuti sul web, la prima cosa da fare dovrebbe essere personalizzare in custom
@@ -32,7 +32,7 @@
      * installata anche in una sottocartella della root del sito senza che si verifichino
      * problemi. In altre parole la piattaforma GlisWeb non necessita di essere collocata
      * nella radice dello spazio web per funzionare, ma può lavorare anche in una
-     * sottocartella come ad esempio <protocollo>://<url>/[path/].
+     * sottocartella come ad esempio \<protocollo\>://\<url\>/[path/].
      *
      * lingue disponibili per il sito
      * ------------------------------

@@ -187,7 +187,7 @@
      * campo                    | descrizione
      * -------------------------|---------------------------------------------------
      * template.type            | l'unico valore ammesso per ora è twig, ma in futuro potrebbero essere implementati altri template manager
-     * template.menu.<m>        | un array contenente le chiavi <m> dei menu da generare
+     * template.menu.\<m\>        | un array contenente le chiavi \<m\> dei menu da generare
      * template.login           | il nome del file di schema da utilizzare in caso di permessi insufficienti
      * template.default         | il nome del file di schema da utilizzare in caso di schema non specificato
      * css.external             | un array contenente i percorsi dei file CSS esterni (ossia quelli che vengono caricati da un URL esterno)
@@ -867,7 +867,7 @@
      * ====================================
      *
      * Per ogni risorsa CSS/JS dichiarata in page.css.external / page.js.external il framework scarica il
-     * contenuto in DIR_VAR_CACHE/<tipo>/<host>/<path>, lo serve dal filesystem locale e sposta l'URL
+     * contenuto in DIR_VAR_CACHE/\<tipo\>/\<host\>/\<path\>, lo serve dal filesystem locale e sposta l'URL
      * dall'array external all'array cached. I CSS estraggono anche le risorse riferite via url(); i JS
      * cachano solo il file principale. Le URL contenenti marker Twig ({{, {%, {#) non vengono cachate.
      */
