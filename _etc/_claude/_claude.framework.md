@@ -321,33 +321,74 @@ e sono esattamente ciò che rende illeggibile il `TODO.md` se restano lì.
 Non si riscrive e non si riordina: si aggiunge in fondo. Se cresce troppo lo si spezza per anno
 (`DONE.2026.md`), mai per argomento.
 
-### `CHAT.md`: lo stato della conversazione col cliente
+### `CHAT.md`: lo stato della conversazione col cliente, e il canale fra i claude
 
 **È il file da leggere prima di scrivere al cliente**, sempre, anche per un messaggio di una riga.
-Un progetto ha di norma un interlocutore solo; se ne ha più d'uno si trattano come uno (sono in
-copia sulla stessa mail), e le persone si nominano dentro le voci.
 
-Non è un diario e non è un log: contiene **soltanto ciò che è vero adesso**. Struttura fissa:
+⚠ **Dal 16/09/2026 non è più solo nostro.** È il canale con cui l'assistente generale di Fabio ci
+passa quello che arriva da **mail e WhatsApp** — l'unica cosa che ha lui e noi no — e con cui noi
+gli diciamo come siamo messi. Da qui discendono le due novità: le sezioni per destinatario e il
+lock.
+
+Non è un diario e non è un log: contiene **soltanto ciò che è vero adesso**.
+
+#### Una sezione per conversazione e destinatario
+
+Non un blocco unico, e non più "un progetto, un interlocutore": **una sezione `##` per persona**.
+Due che scrivono su due persone diverse non si toccano nemmeno, e chi legge trova l'interlocutore
+senza scorrere tutto il file.
 
 ```markdown
-# Conversazione con <interlocutore> — <progetto>
+# CHAT.md — <progetto>
+
+## <Nome Cognome> — <ruolo>
 
 Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
 
-## Aspetta lui — cosa gli abbiamo chiesto
+### Aspetta lui — cosa gli abbiamo chiesto
   - [ ] <domanda>, chiesta il <data> per <canale>
 
-## Aspettiamo noi — cosa ha chiesto lui
+### Aspettiamo noi — cosa ha chiesto lui
   - [ ] <richiesta>, arrivata il <data>
 
-## Da dirgli alla prossima occasione
+### Da dirgli alla prossima occasione
   - [ ] <cosa fatta che lui non sa ancora>
 
-## Ultimi scambi, in breve
+### Ultimi scambi, in breve
 - <data> — <cosa si è detto, due righe>
+
+## <Altra persona> — <ruolo>
+...
+
+## lock
 ```
 
-Regole, e sono quelle che evitano le figuracce:
+#### Il lock, ultima sezione del file
+
+Vale per tutto il file:
+
+```markdown
+## lock
+
+- libero
+```
+
+Chi scrive: legge il lock; se dice `libero` lo sostituisce con la propria riga; **rilegge per
+verificare di avercela ancora** ( se compaiono due righe ha vinto chi sta per primo: l'altro toglie
+la sua e riprova ); scrive **solo nella sezione di quella persona**; rimette `libero`.
+
+```markdown
+- preso da: claude-<progetto>@web03 — 2026-09-16 13:42
+```
+
+- un lock **più vecchio di dieci minuti è stantio**: si prende e si annota che è stato forzato,
+  perché una sessione può essere morta tenendolo;
+- da shell si usa anche `flock` sul file: rende atomica la singola scrittura. La sezione serve ai
+  claude, che `flock` non lo vedono;
+- ⚠ **non riscrivere mai il file intero quando basta la sezione di una persona**: rigenerare il
+  file è l'operazione che cancella il lavoro degli altri.
+
+#### Le regole che evitano le figuracce
 
 - **quando una domanda ha risposta, si toglie da qui**: la risposta diventa una voce di lavoro nel
   `TODO.md` o una decisione nel `DONE.md`. Una domanda che resta scritta dopo la risposta è una
@@ -358,8 +399,19 @@ Regole, e sono quelle che evitano le figuracce:
   voce o per iscritto, e con quali parole;
 - prima di scrivere "da chiedere a <cliente>" da qualunque parte, **si cerca qui e nel `DONE.md`**
   se la risposta esiste già;
-- il tono delle voci è quello che si userebbe col cliente: niente nomi di tabelle, niente
-  dettagli interni. Quelli stanno nel `TODO.md`.
+- il tono delle voci è quello che si userebbe col cliente: niente nomi di tabelle, niente dettagli
+  interni. Quelli stanno nel `TODO.md`;
+- **il materiale lungo non ci va**: allegati, screenshot, trascrizioni dei vocali e diagnosi stanno
+  in `var/<cartella-parlante>/`, e qui ci va il **rimando**;
+- ⚠ **se da un messaggio nasce una cosa da fare, quella va nel `TODO.md`** — anche o soltanto lì, a
+  seconda dell'urgenza. Lo stato della conversazione non è il lavoro da fare, e il carico si conta
+  nel TODO.
+
+#### I file ancora nel formato vecchio
+
+Il `CHAT.md` di questo deploy può essere ancora un blocco unico col solo `## lock` aggiunto in
+fondo: **la prima volta che ci si mette mano si riorganizza per destinatario**. È il momento
+giusto, perché il contesto per capire chi è chi ce l'ha chi ci sta lavorando.
 
 
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
