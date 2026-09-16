@@ -226,27 +226,52 @@ E una regola di buon senso che le risparmia quasi tutte: **se si sa che c'è un'
 sullo stesso progetto, i file di stato li scrive una sola**, e l'altra lo dice invece di farlo. Alla
 fine di un giro, dire quali dei tre si sono toccati costa una riga e fa risparmiare la ricostruzione.
 
-### I quattro marcatori
+### I cinque marcatori
 
 | marcatore | significato | stato | dove vive |
 |---|---|---|---|
-| `- [ ]` | da fare | aperta | `TODO.md` |
-| `- [?]` | da fare, ma prima serve un approfondimento | aperta | `TODO.md` |
+| `- [ ]` | da fare, ed è lavoro **tuo** | aperta, **conta nel carico** | `TODO.md` |
+| `- [=]` | da fare, ma la palla è di **un altro** | aperta, **fuori dal carico** | `TODO.md` |
+| `- [?]` | da fare, ma prima serve un approfondimento | aperta, **fuori dal carico** | `TODO.md` |
 | `- [v]` | fatta | chiusa | `DONE.md` |
 | `- [x]` | scartata, tenuta solo per memoria storica | chiusa | `DONE.md` |
 
 ⚠ **`[?]` non conta nel residuo.** Deciso da Fabio il 15/09/2026: `[?]` è il posto dove mettere una
 cosa senza doverla né fare né buttare, e serve proprio a **poter lasciar cadere qualcosa senza
-perderlo**. Se contasse come lavoro aperto non servirebbe a niente. (Lo strumento di conteggio oggi
-somma ancora `[ ]` e `[?]`: finché non è allineato, un residuo che non torna può essere questo.)
+perderlo**. Se contasse come lavoro aperto non servirebbe a niente.
+
+⚠ **`[=]` — in attesa di qualcuno.** Aggiunto da Fabio il **16/09/2026**. Il buco che chiude: quel
+giorno il punto della giornata diceva *"72 todo aperti, 32 con la palla mia e vivi, 29 in attesa di
+altri"*, e **quel conto era fatto a mano**, perché nei file le 29 voci erano `[ ]` come tutte le
+altre. Il carico risultava più che doppio di quello vero.
+
+**Non è un doppione di `[?]`:** `[?]` vuol dire *non so se va fatta* — nessuno l'aspetta, può
+restare lì per sempre; `[=]` vuol dire *va fatta, è decisa, e tornerà*, ma adesso è ferma su
+qualcun altro. Mettere in `[?]` una voce ferma su un cliente è una bugia; lasciarla in `[ ]` gonfia
+il numero.
+
+**Due cose sono obbligatorie su ogni `[=]`**, altrimenti diventa il posto dove finisce tutto quello
+che non si vuole guardare, cioè un secondo `[?]`: **il nome di chi si aspetta** e **la data da cui
+si aspetta**. Una cosa ferma su un altro da tre settimane non è "in attesa", è **da sollecitare**.
+
+    - [=] (-!!) il primo listino vero compilato
+    -- **Matteo Montanari, dal 10/09** — ricordato il 15/09. Finché non arriva restano ferme le
+       righe con articoli di altre macchine e le opzioni valide per qualsiasi macchina
+
+È la stessa informazione che il `CHAT.md` tiene in *"Aspetta lui — cosa gli abbiamo chiesto"*, messa
+però dove si conta il lavoro: i due file si tengono allineati.
 
 **Non esistono altri marcatori**: se ne incontri uno
-diverso (`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare
+diverso (`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei cinque invece di inventare
 uno stato nuovo.
 
 Li conta [avanzamenti-todo](https://github.com/the-linux-nerd/avanzamenti-todo) con espressioni
 **ancorate a inizio riga**: le aperte le cerca in `TODO.md`, le chiuse in `TODO.md` **e** in
-`DONE.md`, e le somma. Le regole di scrittura che seguono non sono questioni di stile: se non le
+`DONE.md`, e le somma. ⚠ **Allineato il 16/09/2026**: il carico è ora **solo `[ ]`**, mentre `[=]` e
+`[?]` finiscono nella colonna *attesa* del cruscotto; la burndown chart conta `[ ]` + `[=]`, perché
+una `[=]` è lavoro che tornerà e una `[?]` può non tornare mai. Fino a quel giorno lo strumento
+sommava `[ ]` e `[?]`, quindi **una curva che scende di uno scalino il 16/09 è il cambio di
+criterio, non lavoro chiuso**. Le regole di scrittura che seguono non sono questioni di stile: se non le
 rispetti i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una curva che
 non torna.
 
