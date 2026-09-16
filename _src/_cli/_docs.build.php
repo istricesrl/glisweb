@@ -93,17 +93,59 @@
      */
     function docsBuildModuliAttivi() {
 
-        if( ! $f = docsBuildPath( 'src/config.json' ) ) {
-            return array();
+        $attivi = array();
+
+        // 1. l'elenco esplicito nella configurazione
+        if( $f = docsBuildPath( 'src/config.json' ) ) {
+
+            $cx = json_decode( file_get_contents( $f ), true );
+
+            if( isset( $cx['mods']['active']['array'] ) && is_array( $cx['mods']['active']['array'] ) ) {
+                $attivi = $cx['mods']['active']['array'];
+            }
+
         }
 
-        $cx = json_decode( file_get_contents( $f ), true );
-
-        if( ! isset( $cx['mods']['active']['array'] ) || ! is_array( $cx['mods']['active']['array'] ) ) {
-            return array();
+        // 2. l'auto-discovery delle cartelle di mod/
+        //
+        // Il framework usa TUTT'E DUE le strategie ( _src/_config.php ), e creare la cartella e' il
+        // modo che la quickstart insegna. Guardare il solo elenco esplicito lasciava senza capitolo
+        // i moduli di ogni deploy che non lo compila, in silenzio.
+        foreach( glob( DOCS_BASE . 'mod/*', GLOB_ONLYDIR ) as $d ) {
+            $attivi[] = basename( $d );
         }
 
-        return $cx['mods']['active']['array'];
+        return array_values( array_unique( $attivi ) );
+
+    }
+
+    /**
+     * elenca TUTTI i moduli presenti nell'albero, attivi o no
+     *
+     * La documentazione di un modulo si genera anche quando il modulo e' spento, perche' per
+     * decidere se accenderlo bisogna prima sapere cosa fa: un capitolo che compare solo dopo
+     * l'attivazione non serve a chi deve ancora scegliere. Quelli spenti lo dichiarano, nel titolo
+     * del capitolo e in testa alla pagina, cosi' nessuno cerca nell'applicazione una maschera che
+     * non c'e'.
+     *
+     * @return  array                       nomi dei moduli senza l'underscore iniziale
+     *
+     */
+    function docsBuildModuli() {
+
+        $moduli = array();
+
+        foreach( array( '_mod/_*', 'mod/*' ) as $p ) {
+            foreach( glob( DOCS_BASE . $p, GLOB_ONLYDIR ) as $d ) {
+                $moduli[ preg_replace( '/^_/', '', basename( $d ) ) ] = 1;
+            }
+        }
+
+        $moduli = array_keys( $moduli );
+
+        sort( $moduli );
+
+        return $moduli;
 
     }
 
@@ -184,7 +226,9 @@
 
         }
 
-        foreach( docsBuildModuliAttivi() as $m ) {
+        $attivi = docsBuildModuliAttivi();
+
+        foreach( docsBuildModuli() as $m ) {
 
             // la versione custom del modulo sostituisce quella standard
             $f = docsBuildPath( 'mod/' . $m . '/' . $tipo . '.md' );
@@ -197,7 +241,14 @@
                 continue;
             }
 
-            $capitoli[] = array( 'chiave' => $m, 'titolo' => 'modulo ' . $m, 'file' => array( $f ) );
+            $acceso = in_array( $m, $attivi, true );
+
+            $capitoli[] = array(
+                'chiave' => $m,
+                'titolo' => 'modulo ' . $m . ( $acceso ? '' : ' ( non attivo )' ),
+                'file'   => array( $f ),
+                'spento' => ! $acceso
+            );
 
         }
 
@@ -436,13 +487,59 @@
     }
 
     /**
-     * genera le pagine di un manuale
+     * toglie dalla cartella le pagine che non corrispondono piu' a nessun capitolo
      *
-     * @param   string      $tipo           READ oppure USER
-     * @param   string      $destinazione   cartella di destinazione, relativa alla document root
-     * @param   array       $opzioni        chiavi pubblico, linea, titolo, secco
+     * La generazione scriveva e basta: un capitolo rinominato, tolto o diventato inattivo lasciava
+     * la sua pagina dov'era, raggiungibile via HTTP e ferma a com'era prima. Nessuno se ne accorge,
+     * perche' l'indice non la linka piu' e quindi non la si incontra navigando: la si incontra da
+     * un segnalibro o da un motore di ricerca, che e' il modo peggiore.
      *
-     * @return  int                         numero di pagine generate
+     * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     * @param   array       $chiavi         chiavi dei capitoli vivi, come indice dell'array
+     * @param   bool        $secco          se vero dice cosa toglierebbe e non tocca niente
+     *
+     * @return  int                         numero di pagine tolte
+     *
+     */
+    function docsBuildPota( $destinazione, $chiavi, $secco ) {
+
+        $tolte = 0;
+
+        // si guardano i soli .html della cartella: il .htaccess che la protegge e la sottocartella
+        // shot/ degli screenshot non sono pagine e non si toccano
+        foreach( glob( DOCS_BASE . $destinazione . '/*.html' ) as $p ) {
+
+            $k = basename( $p, '.html' );
+
+            if( isset( $chiavi[ $k ] ) ) {
+                continue;
+            }
+
+            if( $secco ) {
+                echo "  [prova] tolgo $destinazione/$k.html, non corrisponde a nessun capitolo\n";
+            } else if( unlink( $p ) ) {
+                echo "  tolto $destinazione/$k.html, non corrisponde a nessun capitolo\n";
+            } else {
+                fwrite( STDERR, "  NON tolto $destinazione/$k.html: cancellazione fallita\n" );
+                continue;
+            }
+
+            $tolte++;
+
+        }
+
+        return $tolte;
+
+    }
+
+    /**
+     * compone le pagine di un manuale
+     *
+     * @param   string      $tipo           READ o USER
+     * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     * @param   array       $opzioni        pubblico, linea, titolo, secco
+     *
+     * @return  int                         pagine scritte
      *
      */
     function docsBuildManuale( $tipo, $destinazione, $opzioni ) {
@@ -480,6 +577,14 @@
         foreach( $capitoli as $c ) {
 
             $md = '';
+
+            // un modulo spento lo dichiara in testa, oltre che nel titolo del capitolo: il titolo
+            // si vede dall'indice, questo si vede da chi e' arrivato alla pagina da un link
+            if( ! empty( $c['spento'] ) ) {
+                $md .= "> **nota** — questo modulo non è attivo su questa installazione: il capitolo c'è\n"
+                     . "> lo stesso, perché per decidere se accenderlo bisogna prima sapere cosa fa. Quello\n"
+                     . "> che descrive non si trova nell'applicazione finché il modulo non viene attivato.\n\n";
+            }
 
             foreach( $c['file'] as $f ) {
                 $md .= file_get_contents( $f ) . "\n\n";
@@ -569,6 +674,14 @@
             file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
             echo "  generato $destinazione/index.html\n";
         }
+
+        $chiavi = array( 'index' => 1 );
+
+        foreach( $indice as $i ) {
+            $chiavi[ $i['chiave'] ] = 1;
+        }
+
+        docsBuildPota( $destinazione, $chiavi, $opzioni['secco'] );
 
         return $fatte;
 
@@ -689,6 +802,14 @@
             } else {
                 echo "  generato $destinazione/index.html\n";
             }
+
+            $chiavi = array( 'index' => 1 );
+
+            foreach( $indice as $i ) {
+                $chiavi[ $i['nome'] ] = 1;
+            }
+
+            docsBuildPota( $destinazione, $chiavi, $opzioni['secco'] );
 
         }
 
