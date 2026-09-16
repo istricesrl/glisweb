@@ -449,3 +449,51 @@ il meccanismo dei bookmarks
 [...] la funzione aggiornaBookmarks(), dichiarata nel file _src/_templates/_athena/src/js/main.js, aggiorna la tendina [...]
 
 [...] il salvataggio vero e prorio dei bookmarks in sessione avviene nel file _src/_config/_715.session.php
+
+## domande frequenti su Athena
+
+> **nota** — sezione travasata il 2026-09-16 dalla FAQ che stava nel `READ.md` della radice del
+> framework. Sta qui perché riguarda solo questo template.
+
+### qual è la struttura base di una pagina di tipo form?
+
+Le pagine di tipo form possono essere create a partire da questa struttura base:
+
+```twig
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
+```

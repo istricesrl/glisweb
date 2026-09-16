@@ -8,6 +8,7 @@
 #   _docs.check.sh                elenco leggibile dei rilievi ( tace se non ce ne sono )
 #   _docs.check.sh --todo         li scrive nel formato delle voci di TODO.md
 #   _docs.check.sh --metriche     stampa anche le metriche di copertura, che non sono rilievi
+#   _docs.check.sh --copertura    inventario: ogni file standard e DOVE e' documentato
 #   _docs.check.sh --only <cat>   limita a una categoria
 #
 # codice di uscita: 0 se non c'e' niente da segnalare, 1 se ci sono rilievi, 2 in caso di errore
@@ -44,12 +45,14 @@ BASE="$(pwd)"
 ## opzioni
 TODO=0
 METRICHE=0
+COPERTURA=0
 ONLY=""
 while [ $# -gt 0 ]; do
     case "$1" in
-        --todo)     TODO=1 ;;
-        --metriche) METRICHE=1 ;;
-        --only)     shift; ONLY="$1" ;;
+        --todo)      TODO=1 ;;
+        --metriche)  METRICHE=1 ;;
+        --copertura) COPERTURA=1 ;;
+        --only)      shift; ONLY="$1" ;;
         *)          echo "opzione non riconosciuta: $1" >&2; exit 2 ;;
     esac
     shift
@@ -63,9 +66,57 @@ SOGLIA=10
 ELENCO="$( mktemp )"
 trap 'rm -f "$ELENCO"' EXIT
 
-## il manuale sviluppatore: in _usr/_docs/ dopo il riordino, in radice prima
-READMD="./_usr/_docs/READ.md"
-[ -f "$READMD" ] || READMD="./READ.md"
+## i sorgenti della documentazione, tutti
+#
+# Le sezioni "### <percorso>" non stanno piu' in un file solo: dal travaso del 16/09/2026 il
+# manuale e' fatto di capitoli ( _usr/_docs/_read/ ), e la documentazione di un modulo o di un
+# template vive NEL modulo o NEL template. Cercare in un file solo direbbe che manca tutto.
+#
+# Vale la coppia standard/custom di sempre, e vale la REGOLA sulla linea: niente legacy.
+sorgenti_doc() {
+    ls -1 ./_usr/_docs/READ.md ./_usr/_docs/USER.md ./usr/docs/READ.md ./usr/docs/USER.md \
+          ./_usr/_docs/_read/*.md ./_usr/_docs/_user/*.md ./_usr/_docs/_quickstart/*.md \
+          ./usr/docs/read/*.md    ./usr/docs/user/*.md    ./usr/docs/quickstart/*.md \
+          ./_src/_tpl/*/READ.md   ./_src/_tpl/*/USER.md \
+          ./src/tpl/*/READ.md     ./src/tpl/*/USER.md \
+          2> /dev/null
+    # i moduli: solo la linea nuova, che si riconosce dal codice a cinque caratteri
+    for m in ./_mod/*/ ./mod/*/; do
+        [ -d "$m" ] || continue
+        cod="$( basename "$m" )"; cod="${cod#_}"; cod="${cod%%.*}"
+        [ ${#cod} -eq 5 ] || continue
+        ls -1 "$m"READ.md "$m"USER.md 2> /dev/null
+    done
+    # il manuale in radice, finche' esiste: prima del travaso era l'unico sorgente
+    [ -f ./READ.md ] && echo ./READ.md
+    return 0
+}
+
+# espande l'intestazione di una sezione nei percorsi che dichiara
+#
+# Un'intestazione puo' descrivere piu' file ( "/a, /b e /c" ): contarne uno solo lasciava gli
+# altri fra i non documentati pur essendo documentati nella stessa riga.
+espandi_percorsi() {
+    echo "$1" | sed 's/,/ /g; s/ e / /g' | tr ' ' '\n' | grep '^/' | sed 's/[[:space:]]*$//'
+}
+
+## mappa percorso -> sorgente che lo documenta, e i percorsi documentati in piu' di un posto
+declare -A DOVE
+declare -A DOPPI
+
+while IFS= read -r f; do
+    while IFS= read -r r; do
+        case "$r" in *'<'*) continue ;; esac
+        while IFS= read -r p; do
+            [ -n "$p" ] || continue
+            if [ -n "${DOVE[$p]}" ] && [ "${DOVE[$p]}" != "${f#./}" ]; then
+                DOPPI[$p]="${DOVE[$p]} e ${f#./}"
+            else
+                DOVE[$p]="${f#./}"
+            fi
+        done < <( espandi_percorsi "${r#\#\#\# }" )
+    done < <( grep '^### /' "$f" 2> /dev/null )
+done < <( sorgenti_doc )
 
 # emette un rilievo
 #   $1 categoria   $2 testo ( stabile: niente numeri, niente date )
@@ -91,28 +142,33 @@ emetti() {
 
 attiva() { [ -z "$ONLY" ] || [ "$ONLY" = "$1" ]; }
 
-## ------------------------------------------------------------------ 1. copertura di READ.md
+## l'insieme dei file standard che vanno documentati uno per uno
 #
-# ogni file standard deve avere la sua sezione "### <percorso>". Si escludono i template e gli
-# asset, che non si descrivono file per file, e il vendor di composer, che non e' nostro.
-if attiva read-md && [ -f "$READMD" ]; then
-
-    declare -A SEZIONI
-    while IFS= read -r r; do SEZIONI["${r#\#\#\# }"]=1; done < <( grep '^### ' "$READMD" )
-
-    MANCANTI=$( while IFS= read -r f; do
-        [ -n "${SEZIONI[${f#.}]}" ] || echo "${f#.}"
-    done < <( find ./_src ./_etc ./_usr -type f \
+# Si escludono i template e gli asset, che non si descrivono file per file, e il vendor di
+# composer, che non e' nostro.
+da_documentare() {
+    find ./_src ./_etc ./_usr -type f \
         -not -path "./_src/_tpl/*"      -not -path "./_src/_twig/*" \
         -not -path "./_src/_templates/*" -not -path "./_src/_lib/_ext/*" \
         -not -path "./_src/_js/*"        -not -path "./_src/_img/*" \
         -not -path "./_usr/_docs/*"      -not -path "./_usr/_test/*" \
         -not -path "./_usr/_examples/*"  -not -path "./_usr/_pages/*" \
-        -not -path "./_etc/_dictionaries/*" | sort ) )
+        -not -path "./_etc/_dictionaries/*" | sort
+}
+
+## ------------------------------------------------------------------ 1. copertura della reference
+#
+# ogni file standard deve avere la sua sezione "### <percorso>", in QUALUNQUE sorgente della
+# documentazione: il capitolo del manuale, il READ.md del suo modulo, quello del suo template.
+if attiva read-md; then
+
+    MANCANTI=$( while IFS= read -r f; do
+        [ -n "${DOVE[${f#.}]}" ] || echo "${f#.}"
+    done < <( da_documentare ) )
 
     N=$( echo "$MANCANTI" | grep -c . )
-    [ "$N" -gt 0 ] && echo "$MANCANTI" | sed 's/^/manca la sezione in READ.md per /' \
-        | emetti read-md "$N" "file standard senza una sezione in READ.md"
+    [ "$N" -gt 0 ] && echo "$MANCANTI" | sed 's/^/manca la sezione di documentazione per /' \
+        | emetti read-md "$N" "file standard senza una sezione nella documentazione"
 
 fi
 
@@ -120,22 +176,30 @@ fi
 #
 # il controllo inverso: una sezione che descrive un file che non esiste piu' e' documentazione
 # che mente, ed e' il residuo tipico di una rinomina
-if attiva read-md-orfane && [ -f "$READMD" ]; then
+if attiva read-md-orfane; then
 
-    ORFANE=$( grep '^### /' "$READMD" | sed 's/^### //' | while IFS= read -r p; do
-        # un'intestazione con segnaposto ( _<dictionary>.<lang>-<country>.conf ) descrive una
-        # famiglia di file, non un file: non c'e' niente da verificare
-        case "$p" in *'<'*) continue ;; esac
-        # le intestazioni multi-file hanno la forma "/a, /b e /c": si controlla il primo, e la
-        # virgola va tolta o il percorso non esiste mai
-        primo="${p%% *}"
-        primo="${primo%,}"
-        [ -e ".$primo" ] || echo "$p"
-    done )
+    ORFANE=$( for p in "${!DOVE[@]}"; do
+        [ -e ".$p" ] || echo "$p ( ${DOVE[$p]} )"
+    done | sort )
 
     N=$( echo "$ORFANE" | grep -c . )
-    [ "$N" -gt 0 ] && echo "$ORFANE" | sed 's/^/sezione di READ.md senza il file corrispondente: /' \
-        | emetti read-md-orfane "$N" "sezioni di READ.md che descrivono file inesistenti"
+    [ "$N" -gt 0 ] && echo "$ORFANE" | sed 's/^/sezione senza il file corrispondente: /' \
+        | emetti read-md-orfane "$N" "sezioni che descrivono file inesistenti"
+
+fi
+
+## ------------------------------------------------------------------ 2b. sezioni in doppio
+#
+# la regola dei file di progetto vale anche qui: una cosa sta in un posto solo. Lo stesso file
+# descritto in due sorgenti produce due verita' che divergono al primo aggiornamento, e chi
+# legge non sa quale delle due vale.
+if attiva read-md-doppie; then
+
+    DOPPIE=$( for p in "${!DOPPI[@]}"; do echo "$p documentato in ${DOPPI[$p]}"; done | sort )
+
+    N=$( echo "$DOPPIE" | grep -c . )
+    [ "$N" -gt 0 ] && echo "$DOPPIE" | sed 's/^/in doppio: /' \
+        | emetti read-md-doppie "$N" "file descritti in piu' di un sorgente di documentazione"
 
 fi
 
@@ -394,6 +458,37 @@ if [ $METRICHE -eq 1 ] && [ $TODO -eq 0 ]; then
         printf '    %-14s %s\n' "avvisi doxygen" "$( wc -l < ./var/log/doxygen.warn.log )"
     fi
     } >> "$ELENCO"
+
+fi
+
+## ------------------------------------------------------------------ 12. inventario di copertura
+#
+# non e' un rilievo ed esce fuori da $ELENCO, cosi' non cambia il codice di uscita: e' l'elenco
+# per esteso di dove ogni file e' documentato. Serve quando si travasa o si riordina, perche' il
+# rilievo aggregato dice QUANTI file non sono coperti e non QUALI, ne' dove stanno gli altri.
+if [ $COPERTURA -eq 1 ] && [ $TODO -eq 0 ]; then
+
+    echo "  copertura: file standard e sorgente che lo documenta"
+    echo
+
+    COP=0
+    SCO=0
+
+    while IFS= read -r f; do
+        p="${f#.}"
+        if [ -n "${DOVE[$p]}" ]; then
+            COP=$(( COP + 1 ))
+            printf '    %-58s %s\n' "$p" "${DOVE[$p]}"
+        else
+            SCO=$(( SCO + 1 ))
+            printf '    %-58s %s\n' "$p" "NON DOCUMENTATO"
+        fi
+    done < <( da_documentare )
+
+    echo
+    printf '    %s documentati, %s no, su %s file\n' "$COP" "$SCO" "$(( COP + SCO ))"
+    printf '    sorgenti letti: %s\n' "$( sorgenti_doc | wc -l )"
+    echo
 
 fi
 

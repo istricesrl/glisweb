@@ -122,3 +122,53 @@ il modulo o il messaggio di ringraziamento (o eventuali messaggi di errore):
 Diversamente, la logica andrà spezzata su due pagine, nella prima il modulo e nella seconda il
 messaggio di thank-you; anche in questo caso può giovare l'uso di Twig per intercettare eventuali
 errori.
+
+## i file del modulo
+
+> **nota** — la reference dei file di questo modulo è stata travasata il 2026-09-16 dal
+> `READ.md` che stava nella radice del framework. I percorsi sono verificati contro l'albero.
+
+### /_mod/_CT000.contatti/READ.md
+Questo file contiene la documentazione del modulo contatti: logica generale dei form con prefisso __ct__,
+configurazione delle controller e dei consensi privacy, integrazione con reCAPTCHA, log degli invii in var/spool/contatti
+e gestione del front-end (approccio pagina unica o pagina + thank-you page).
+
+### /_mod/_CT000.contatti/_src/_config/_030.common.php
+In questo file vengono definiti i moduli di contatto standard del framework.
+
+### /_mod/_CT000.contatti/_src/_config/_035.common.php
+In questo file le configurazioni presenti in $cx vengono unite a $cf, inoltre $ct viene collegato a $cf tramite puntatore.
+
+### /_mod/_CT000.contatti/_src/_config/_750.controller.php
+Questa è la controller del modulo contatti, si occupa di gestire in primo luogo le richieste che arrivano dai moduli presenti
+sul sito valutandole in base al prefisso __ct__.
+
+### /_mod/_CT000.contatti/_src/_inc/_controllers/_form/_default.php
+Questa è la controller standard del modulo di contatti di default.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.archiviazione.php
+Questa è la macro della pagina archiviazione della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.dati.php
+Questa è la macro della pagina di gestione dati della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.php
+Questa è la macro della pagina di gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.tools.php
+Questa è la macro della pagina strumenti della gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.tools.php
+Questa è la macro della pagina degli strumenti della view contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.view.archiviati.php
+Questa è la macro della view dei contatti archiviati.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.view.php
+Questa è la macro della view dei contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_pages/_contenuti.it-IT.php
+Qui vengono definite le pagine del modulo contatti.
+
+### /_mod/_CT000.contatti/_src/_lib/_mysql.utils.add.php
+Questa libreria contiene funzioni specifiche per i contatti da aggiungere a /_src/_lib/_mysql.tools.php.
