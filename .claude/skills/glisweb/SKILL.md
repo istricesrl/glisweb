@@ -260,28 +260,57 @@ Se il check dice **CLIENTE**, applica questa regola in modo assoluto: nessuna mo
 nessun motivo. Se dice **UPSTREAM**, vedi sezione "Modalità B — Operatività" e il manuale framework per
 le specificità della valutazione disallineamenti e del rispetto degli hard link fra glisweb e glisdev.
 
-## ⚠ Regola fondamentale: nessun backup dentro la document root
+## ⚠ Regola fondamentale: il materiale di progetto sta in `var/`, mai dentro la document root
 
-La document root di un progetto è `<progetto>/dev/` (o il ramo deployato). **Non ci va mai un backup**:
-né una copia di sicurezza prima di una modifica, né un file di appoggio, né uno scarto — e nemmeno dentro
-`dev/var/`, che è comunque sotto la document root.
+La document root di un progetto è `<progetto>/dev/` (o il ramo deployato), e **dentro ci sta il sito,
+nient'altro**. Non ci va nessun materiale di progetto:
 
-I backup vanno in **`<progetto>/var/<identificativo>/`**, un livello **sopra** la document root,
-conservando il nome originale del file e, se serve a distinguerlo, il suo percorso relativo:
+- copie di sicurezza prima di una modifica, file di appoggio, prove, scarti;
+- allegati arrivati dal cliente: listini, anagrafiche, immagini, PDF, mail salvate;
+- documenti di specifiche, preventivi, analisi, tracciati di import/export, appunti di riunione;
+- dump del database, export, log tirati giù da qualche parte per guardarli, screenshot.
+
+**Nemmeno dentro `dev/var/`**, che è comunque sotto la document root.
+
+Tutto questo vive in **`<progetto>/var/<sottocartella parlante>/`**, un livello **sopra** la document root,
+coi file che tengono il **nome originale** (e, se serve a distinguerli, il loro percorso relativo):
 
 ```
 <progetto>/
 ├── var/
-│   └── 20260827-pulizia/          <- identificativo: data, o data-motivo
-│       └── composer.json          <- nome originale, non composer.json.bak
-└── dev/                           <- document root: qui dentro niente backup
+│   ├── 20260827-pulizia-composer/    <- copia di sicurezza prima di una modifica
+│   │   └── composer.json             <- nome originale, non composer.json.bak
+│   ├── 20260914-specifiche-listini/
+│   │   ├── listini.xlsx              <- l'allegato come è arrivato dal cliente
+│   │   └── analisi.md                <- l'analisi lunga a cui rimanda la voce del TODO
+│   └── fatturazione-elettronica/     <- nome tematico, quando la cosa non ha una data
+└── dev/                              <- document root: qui dentro solo il sito
 ```
 
-Sono da considerare rusco, ovunque nell'albero: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`,
-`nome.php.bak.<data>`. Se ne trovi, spostali in `var/<identificativo>/` — non lasciarli dove sono.
+**⚠ Il nome della sottocartella è quello che rende la regola utile.** `var/roba/`, `var/tmp2/`, `var/varie/`,
+`var/file/` sono rusco quanto un file lasciato nella document root: la cartella deve dire a chi legge fra sei
+mesi cosa c'è dentro senza doverla aprire. Data (`20260827-<motivo>`), argomento, o tutt'e due — e una
+sottocartella per cosa, non un raccoglitore unico in cui si sedimenta di tutto.
 
-**Perché non è una questione di ordine ma di sicurezza.** Il `.htaccess` del framework nega l'accesso alle
-estensioni pericolose con un `FilesMatch` **ancorato alla fine del nome**:
+E vale sempre la regola del nome: **l'identificativo va nel nome della cartella, non appiccicato dopo
+l'estensione vera**. Non `config.json.bak.20260910`, ma `20260910-<motivo>/config.json`.
+
+Sono da considerare rusco, ovunque nell'albero: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`,
+`nome.php.bak.<data>`. Se ne trovi, **spostali** in `var/<sottocartella>/` — non lasciarli dove sono.
+
+Da non confondere con **`<progetto>/backups/`**, che è l'archivio degli automatismi: ci scrivono
+`_gw.upgrade.sh` (il `tar` prima di ogni aggiornamento) e `_backup.nightly.sh` (i dump del database), e lo pota
+`/etc/cron.daily/pulizia-backup-siti` a 5 giorni. Non metterci copie fatte a mano: sparirebbero dopo cinque
+giorni senza che nessuno lo dica. Le tue vanno in `<progetto>/var/<sottocartella>/`, che nessun cron tocca.
+
+### Perché non è una questione di ordine ma di sicurezza
+
+**Quello che sta nella document root, Apache lo serve.** Un `.xlsx` di listini, un PDF di specifiche, un export
+di anagrafiche non fanno match col `FilesMatch` delle estensioni pericolose: vengono serviti a chiunque ne
+indovini l'URL, e i motori li indicizzano. È materiale del cliente pubblicato per sbaglio, e non se ne accorge
+nessuno perché non c'è niente che si rompa.
+
+E per i file di codice la protezione c'è, ma il `FilesMatch` è **ancorato alla fine del nome**:
 
 ```apache
 <FilesMatch "(?i)\.(bak|blt|cfg|conf|config|...|sql|sqlite|swp|templ|trace|twig)$">
@@ -289,13 +318,17 @@ estensioni pericolose con un `FilesMatch` **ancorato alla fine del nome**:
 </FilesMatch>
 ```
 
-Un file chiamato `pagina.php.bak.20260827` finisce per `.20260827`, non fa match, e Apache lo serve in
-chiaro: è codice sorgente pubblico. Verificato il 2026-08-27 su un deploy reale — `zz.test.php.bak`
-risponde **403**, `zz.test.php.bak.20260827` risponde **200 con il contenuto**. La convenzione di
-aggiungere la data in coda al nome, che sembra più ordinata, è proprio quella che aggira la protezione.
+Un file chiamato `pagina.php.bak.20260827` finisce per `.20260827`, non fa match, e Apache lo serve in chiaro:
+è codice sorgente pubblico. Verificato il 2026-08-27 su un deploy reale — `zz.test.php.bak` risponde **403**,
+`zz.test.php.bak.20260827` risponde **200 con il contenuto**. La convenzione di aggiungere la data in coda al
+nome, che sembra più ordinata, è proprio quella che aggira la protezione.
 
 Dentro `dev/var/` il download API del framework para il colpo (`400 richiesta bloccata`), ma è una rete di
 sicurezza, non un permesso: il posto giusto resta sopra la document root.
+
+C'è poi un terzo motivo, che non è di sicurezza ma costa lo stesso: `_gw.upgrade.sh` confronta ogni notte
+l'albero `_*` con lo standard e mette da parte i disallineamenti. Un file di appoggio lasciato lì dentro ci
+finisce in mezzo tutte le notti, e il suo `rm -rf ./_*` prima o poi se lo porta via senza dirlo a nessuno.
 
 ## 1. Come capire il contesto
 
@@ -556,6 +589,10 @@ configurazione — è spool.
   vedi la "Regola fondamentale" in cima a questo file.
 - **Non modificare mai un file `_*` senza prima un `stat` e dopo un `stat` di verifica.** Il framework potrebbe
   essere hard-linked con un'altra istanza (oldstable). Vedi sezione hard link in `_claude.framework.md`.
+- **Non lasciare materiale di progetto dentro la document root.** Allegati del cliente, specifiche, dump,
+  export, screenshot, copie di sicurezza e file di appoggio vanno in `<progetto>/var/<sottocartella parlante>/`,
+  un livello sopra `dev/` — e `dev/var/` non è un'alternativa, è sempre sotto la document root. Apache serve
+  quello che sta lì dentro. Vedi la "Regola fondamentale" sul materiale di progetto in cima a questo file.
 - **Non committare `shadow.*` files.** Contengono credenziali. Sono già coperti dal `.gitignore` del framework
   e dovrebbero esserlo anche dal `.gitignore` del progetto cliente.
 - **Non mettere credenziali in `config.yaml`.** Quel file è committato — usa `shadow.yaml` per ogni cosa

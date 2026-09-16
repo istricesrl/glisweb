@@ -94,13 +94,38 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 
 ---
 
-## Backup: mai dentro la document root
+## Il materiale di progetto sta in `var/`, mai dentro la document root
 
-La document root è `<progetto>/dev/`. **Nessun backup ci va dentro**, nemmeno in `dev/var/`: né copie di
-sicurezza prima di una modifica, né file di appoggio, né scarti. Vanno in **`<progetto>/var/<identificativo>/`**,
-un livello sopra la document root, col nome originale del file (l'identificativo è la data, o `data-motivo`).
+La document root è `<progetto>/dev/`, e **dentro ci sta il sito, nient'altro**. Non ci va nessun materiale di
+progetto: né copie di sicurezza prima di una modifica, né gli allegati arrivati dal cliente, né i documenti di
+specifiche, né export, dump, tracciati, screenshot, analisi, appunti, prove, scarti. **Nemmeno in `dev/var/`**,
+che è comunque sotto la document root.
 
-Rusco da non lasciare mai in giro: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`, `nome.php.bak.<data>`.
+Tutto questo vive in **`<progetto>/var/<sottocartella parlante>/`**, un livello **sopra** la document root, coi
+file che tengono il **nome originale**:
+
+```
+<progetto>/
+├── var/
+│   ├── 20260827-pulizia-composer/    <- copia di sicurezza prima di una modifica
+│   │   └── composer.json             <- nome originale, non composer.json.bak
+│   ├── 20260914-specifiche-listini/
+│   │   ├── listini.xlsx              <- l'allegato come è arrivato dal cliente
+│   │   └── analisi.md                <- l'analisi lunga a cui rimanda la voce del TODO
+│   └── fatturazione-elettronica/     <- nome tematico, quando la cosa non ha una data
+└── dev/                              <- document root: qui dentro solo il sito
+```
+
+**⚠ Il nome della sottocartella è quello che rende la regola utile.** `var/roba/`, `var/tmp2/`, `var/varie/`
+sono rusco quanto un file lasciato nella document root: la cartella deve dire a chi legge fra sei mesi cosa c'è
+dentro senza doverla aprire. Data (`20260827-<motivo>`), argomento, o tutt'e due.
+
+E vale sempre la regola del nome: **l'identificativo va nel nome della cartella, non appiccicato dopo
+l'estensione vera**. Non `config.json.bak.20260910`, ma `20260910-<motivo>/config.json` — su Linux troppe cose
+decidono guardando l'estensione finale, e un suffisso datato la nasconde (vedi sotto).
+
+Rusco da non lasciare mai in giro, ovunque nell'albero: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`,
+`nome.php.bak.<data>`. Se ne trovi, **spostali** in `<progetto>/var/<sottocartella>/`, non lasciarli dove sono.
 
 Da non confondere con **`<progetto>/backups/`**, che è l'archivio degli automatismi: ci scrivono
 `_gw.upgrade.sh` (il `tar` prima di ogni aggiornamento) e `_backup.nightly.sh` (i dump del database), e
@@ -108,10 +133,21 @@ lo pota `/etc/cron.daily/pulizia-backup-siti` a 5 giorni. Non metterci copie fat
 dopo cinque giorni senza che nessuno lo dica. Le tue vanno in `<progetto>/var/<identificativo>/`, che
 nessun cron tocca.
 
-Non è ordine, è sicurezza. Il `.htaccess` nega le estensioni pericolose con un `FilesMatch` **ancorato alla
-fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve in chiaro. Verificato:
-`zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di
-mettere la data in fondo, che sembra più ordinata, è quella che aggira la protezione.
+Non è ordine, è sicurezza, e per due motivi distinti.
+
+Il primo: quello che sta nella document root **Apache lo serve**. Un `.xlsx` di listini, un PDF di specifiche,
+un export di anagrafiche non fanno match col `FilesMatch` delle estensioni pericolose — vengono serviti a
+chiunque ne indovini l'URL, e i motori li indicizzano. Materiale del cliente pubblicato per sbaglio, senza che
+nessuno se ne accorga.
+
+Il secondo: il `FilesMatch` è **ancorato alla fine del nome**, quindi `pagina.php.bak.20260827` non fa match e
+Apache lo serve in chiaro. Verificato: `zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col
+contenuto**. Proprio la convenzione di mettere la data in fondo, che sembra più ordinata, è quella che aggira
+la protezione.
+
+C'è anche un terzo motivo, che non è di sicurezza ma costa lo stesso: `_gw.upgrade.sh` confronta l'albero `_*`
+coi file dello standard e raccoglie ogni notte i disallineamenti. Un file di appoggio lasciato lì dentro ci
+finisce in mezzo tutte le notti, e il suo `rm -rf ./_*` prima o poi se lo porta via senza dirlo a nessuno.
 
 ## I cinque file di un progetto: `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`
 
