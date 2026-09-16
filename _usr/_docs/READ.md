@@ -33,7 +33,7 @@ richiedente.
 
 ## com'è organizzato questo manuale
 
-I capitoli seguono cinque fasce, e il numero in testa al nome serve solo a tenerle in ordine:
+Il numero in testa al nome di un capitolo serve solo a tenerlo in ordine, e raccoglie in fasce:
 
 | fascia | cosa ci sta |
 |---|---|
@@ -41,8 +41,9 @@ I capitoli seguono cinque fasce, e il numero in testa al nome serve solo a tener
 | `1xx` | le funzioni del framework, una per capitolo: cache, task, job, autenticazione, mail, stampe, template, privacy, deploy, test |
 | `2xx` | la reference: le variabili globali, e i file del framework descritti uno per uno |
 | `3xx` | la reference del database, spezzata per iniziale della tabella |
-| `4xx` e `5xx` | le guide pratiche e le integrazioni con i servizi esterni |
-| `9xx` | le raccomandazioni |
+| `4xx` | gli **howto**: una procedura per sezione, cercata per compito e non per argomento |
+| `5xx` | le integrazioni con i servizi esterni |
+| `9xx` | quello che si consulta: le raccomandazioni, le domande frequenti, il glossario |
 
 Dopo i capitoli numerati vengono quelli dei **template** e dei **moduli**. Quelli non sono scritti qui:
 il loro sorgente vive dentro il template e dentro il modulo, accanto al codice che descrivono, e il

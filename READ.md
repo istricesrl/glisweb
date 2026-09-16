@@ -29,7 +29,8 @@ porta un'installazione appena scompattata fino a un sito con pagine, database, C
 | reference dei file del core | `_usr/_docs/_read/21x.file.*.md`, un capitolo per area dell'albero |
 | reference dei file dei moduli | il `READ.md` **dentro ciascun modulo** |
 | la domanda sul form di Athena | il `READ.md` **dentro il template** |
-| FAQ | `_usr/_docs/_read/403.faq.md` |
+| FAQ, le domande che erano procedure | i capitoli `howto` della fascia `4xx`, o il capitolo del loro argomento |
+| FAQ, quello che resta | `_usr/_docs/_read/910.faq.md` |
 | glossario | `_usr/_docs/_read/950.glossario.md` |
 
 La regola che spiega la seconda metà della tabella: **la documentazione di un componente sta nel

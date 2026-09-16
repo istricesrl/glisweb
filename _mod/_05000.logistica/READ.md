@@ -34,3 +34,12 @@ Questa è la macro della scheda strumenti della dashboard della logistica.
 
 ### /_mod/_05000.logistica/_src/_inc/_pages/_logistica.it-IT.php
 In questo file vengono definite le pagine del modulo logistica.
+
+## come si fa
+
+> **nota** — travasato il 2026-09-16 dalla FAQ, dove era una domanda: la procedura sta nel
+> capitolo del suo argomento, che esisteva gia'.
+
+### come funziona l'aggiornamento dei report di magazzino?
+Di base l'aggiornamento dei report di magazzino viene attivata dalla controller su documenti_articoli nel modulo mastri. In pratica ogni volta che
+una riga di documento viene salvata, le relative informazioni di magazzino vengono aggiornate.
