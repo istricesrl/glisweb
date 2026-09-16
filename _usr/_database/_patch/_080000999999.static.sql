@@ -2,7 +2,32 @@
 -- VISTE STATICHE
 -- ==============
 -- questo file contiene le query per la creazione delle tabelle per le view statiche
--- 
+--
+-- ATTENZIONE: LE VISTE STATICHE VANNO IN InnoDB, NON IN MyISAM.
+--
+-- Nascevano MyISAM, e per il modo in cui vengono usate era la scelta peggiore possibile. Una vista
+-- statica e' per definizione **letta da tutti e riscritta di continuo**: la si aggiorna con
+-- `REPLACE INTO <t>_view_static SELECT * FROM <t>_view WHERE id = ?`, che tiene il lock in
+-- scrittura per tutta la durata della SELECT sulla vista viva. MyISAM ha il lock a livello di
+-- **tabella**, quindi mentre una riga viene riscritta ogni lettore di quella tabella aspetta, e i
+-- REPLACE finiscono per aspettarsi anche fra loro.
+--
+-- Misurato il 2026-09-16 su un deploy in esercizio, contando solo le scritture sopra il mezzo
+-- secondo: 161 scritture, 304,6 secondi di tabella bloccata in una giornata di lavoro. La
+-- conseguenza si vede da fuori come "piu' si lavora, piu' il gestionale rallenta", ed era stata
+-- segnalata dal cliente in quei termini prima che qualcuno la misurasse.
+--
+-- Dopo la conversione, a traffico comparabile: tempo perso in richieste lente da 5,79 a 3,65
+-- secondi al minuto, mediana della scheda piu' usata da 0,76 a 0,57 s, caso peggiore da 10,40 a
+-- 4,69 s. Le otto tabelle di quel deploy pesavano 26,6 MB in tutto e gli ALTER sono durati 4,8
+-- secondi.
+--
+-- Prima di convertire una statica gia' esistente vanno verificate due cose: che abbia una PRIMARY
+-- KEY ( senza, REPLACE smette di essere un REPLACE e duplica le righe ) e che non abbia indici
+-- FULLTEXT, che sono l'unica incompatibilita' seria fra i due motori. Dopo, i conteggi si
+-- controllano con count(*) e non con information_schema, che su InnoDB appena convertito riporta
+-- zero righe finche' non ricalcola le statistiche.
+--
 -- TODO documentare
 --
 
@@ -58,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 080000001300
 
@@ -109,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 080000001800
 
@@ -196,7 +221,7 @@ CREATE TABLE `attivita_view_static` (                         --
   `data_archiviazione` date DEFAULT NULL,                     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 080000002300
 
@@ -242,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`),                             --
   KEY `data` (`data`)                                         --
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 080000999020
 

@@ -568,16 +568,93 @@ ini_set("display_errors", 1);
                         // eliminazione articolo dal carrello
                         if( empty( $dati['quantita'] ) && ! empty( $dati['id_articolo'] ) ) {
 
-                            // elimino l'articolo
-                            // TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
-                            mysqlQuery(
+                            /**
+                             * NON si cancella una riga su cui è già entrato del denaro.
+                             *
+                             * `pagamenti.id_carrelli_articoli` ha una FK **ON DELETE CASCADE**:
+                             * cancellare una riga di carrello porta via anche i pagamenti incassati
+                             * su quella riga. `documenti_articoli.id_carrelli_articoli` invece è
+                             * SET NULL, quindi il documento sopravvive — **senza pagamento**.
+                             *
+                             * Il risultato è un documento che stampa 0 e risulta da saldare mentre
+                             * il cliente ha pagato: il totale del corpo lettera nasce dai pagamenti,
+                             * non dalle righe. Da fuori sembra un difetto della stampa, e ci si
+                             * arriva solo se qualcuno reclama. Su un deploy dove è stato misurato
+                             * erano 17 ricevute in cinque giorni.
+                             *
+                             * La condizione di salvaguardia — denaro incassato
+                             * ( `timestamp_pagamento` ) oppure documentato ( `id_documento` ) — è la
+                             * stessa già usata da `carrelliAbbandonati()` e dalla chiusura dei
+                             * carrelli saldati: sono tre punti che devono dare la stessa risposta
+                             * sulla stessa riga. I pagamenti ancora aperti NON proteggono niente:
+                             * sono artefatti di checkout e devono poter sparire con la riga.
+                             *
+                             * TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
+                             */
+                            $righeProtette = mysqlSelectColumn(
+                                'id',
                                 $cf['mysql']['connection'],
-                                'DELETE FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
+                                'SELECT carrelli_articoli.id
+                                   FROM carrelli_articoli
+                                  WHERE carrelli_articoli.id_articolo = ?
+                                    AND carrelli_articoli.id_carrello = ?
+                                    AND ( EXISTS (
+                                              SELECT 1 FROM pagamenti
+                                               WHERE pagamenti.id_carrelli_articoli = carrelli_articoli.id
+                                                 AND ( pagamenti.timestamp_pagamento IS NOT NULL
+                                                       OR pagamenti.id_documento IS NOT NULL )
+                                          )
+                                          OR EXISTS (
+                                              SELECT 1 FROM documenti_articoli
+                                               WHERE documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
+                                                 AND documenti_articoli.id_documento IS NOT NULL
+                                          )
+                                        )',
                                 array(
                                     array( 's' => $dati['id_articolo'] ),
                                     array( 's' => $_SESSION['carrello']['id'] )
                                 )
                             );
+
+                            // elimino l'articolo
+                            mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'DELETE FROM carrelli_articoli
+                                  WHERE id_articolo = ?
+                                    AND id_carrello = ?
+                                    AND NOT EXISTS (
+                                            SELECT 1 FROM pagamenti
+                                             WHERE pagamenti.id_carrelli_articoli = carrelli_articoli.id
+                                               AND ( pagamenti.timestamp_pagamento IS NOT NULL
+                                                     OR pagamenti.id_documento IS NOT NULL )
+                                        )
+                                    AND NOT EXISTS (
+                                            SELECT 1 FROM documenti_articoli
+                                             WHERE documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
+                                               AND documenti_articoli.id_documento IS NOT NULL
+                                        )',
+                                array(
+                                    array( 's' => $dati['id_articolo'] ),
+                                    array( 's' => $_SESSION['carrello']['id'] )
+                                )
+                            );
+
+                            /**
+                             * Se qualcosa è stato trattenuto lo si dice, e a LOG_ERR: sui deploy in
+                             * produzione il livello di log è ERR, quindi una riga più in basso non
+                             * verrebbe scritta affatto — ed è proprio lì che serve sapere che un
+                             * utente ha provato a togliere dal carrello qualcosa di già pagato.
+                             */
+                            if( ! empty( $righeProtette ) ) {
+                                logWrite(
+                                    'NON cancellate dal carrello ' . $_SESSION['carrello']['id']
+                                    . ' le righe ' . implode( ',', $righeProtette )
+                                    . ' dell\'articolo ' . $dati['id_articolo']
+                                    . ': hanno pagamenti incassati o documenti emessi',
+                                    'cart',
+                                    LOG_ERR
+                                );
+                            }
 
                             // debug
                             // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' rowKey ' . $rowKey . PHP_EOL );

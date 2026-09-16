@@ -56,7 +56,46 @@
      * TODO documentare
      *
      */
-    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = array()) {
+    /**
+     * `$timer` va passato per RIFERIMENTO, altrimenti i cronometri interni non escono.
+     *
+     * Questa funzione contiene otto `timerCheck( $timer, ... )`, ma finché `$timer` era passato
+     * per valore scrivevano tutti in una copia locale che veniva buttata via al `return`. Il
+     * chiamante — `_src/_config/_750.controller.php`, che gli passa `$cf['speed']` — non ne vedeva
+     * nessuno, e nel log delle richieste lente ( `var/log/slow/` ) tutto il lavoro del controller
+     * compariva come **un passo solo e opaco**, `fine elaborazione blocco <tabella>`.
+     *
+     * Non è un dettaglio estetico: su una scheda con dei sottomoduli quel passo è quasi sempre la
+     * voce più cara della richiesta, e senza i tempi interni non c'è modo di sapere se il tempo se
+     * ne va nel record principale, negli hook o nella cascata sui sottomoduli. Su un deploy dove è
+     * stato misurato valeva il 74% del tempo della pagina, e la cascata da sola i due terzi di
+     * quello: informazioni che lo strumento sapeva già produrre e che non arrivavano a nessuno.
+     *
+     * È una modifica di **sola osservazione**: `$cf['speed']` viene letto unicamente da
+     * `_src/_api/_pages.php` e `_src/_api/_rest.php`, che lo stampano nel log quando la richiesta
+     * supera la soglia. Nessun ramo di logica cambia.
+     *
+     * Il parametro resta opzionale — in PHP un parametro per riferimento può avere un default — e
+     * tutti i chiamanti che si fermano prima dell'undicesimo argomento continuano a funzionare
+     * identici.
+     *
+     * Le chiamate ricorsive passano `$timer` a loro volta, così il log mostra anche i tempi dei
+     * singoli sottomoduli e non solo il totale della cascata.
+     *
+     * Gli si passa anche `$ci` perché è il decimo argomento e serve riempirlo per arrivare
+     * all'undicesimo. ⚠ `$ci` **non è documentato da nessuna parte** — compare solo in questa
+     * firma e nell'inizializzazione del chiamante, dove ha un commento vuoto — e dentro questa
+     * funzione non viene letto da nessuno: verificato con `grep` su tutto `_src/` e `_mod/`. Non è
+     * quindi "inutilizzato", è **riservato e mai definito**. Passandolo giù si è scelto di
+     * condividerlo lungo la ricorsione come già si fa con `$e` e `$i`: se un giorno gli si dà un
+     * significato — per esempio raccogliere gli id dei figli creati — quella è la semantica che
+     * quasi certamente si vuole. Chi glielo dà, però, sappia che da qui in poi è condiviso.
+     *
+     * ⚠ Chi tocca questa firma controlli i chiamanti: passare un'espressione invece di una
+     * variabile al decimo o all'undicesimo argomento diventa un fatal *"Only variables can be
+     * passed by reference"*.
+     */
+    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), &$timer = array()) {
 
         /**
          * inizializzazione delle variabili
@@ -249,7 +288,7 @@
             // elaborazione subform
             foreach ($s as $x => $y) {
                 logWrite("elaborazione subform: $x", 'controller');
-                controller($c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__']);
+                controller($c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__'], $ci, $timer);
             }
 
         } else
@@ -913,7 +952,7 @@
                             foreach ($d as $k => $v) {
                                 if (is_array($v)) {
                                     foreach ($v as $x => $y) {
-                                        controller($c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__']);
+                                        controller($c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'], $ci, $timer);
                                     }
                                 }
                             }
@@ -935,7 +974,29 @@
                                         $refCols[] = $colName . " = '" . $d['id'] . "'";
                                     }
 
-                                    $idx = array_column(mysqlQuery($c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"'), 'Column_name');
+                                    /**
+                                     * L'indice SORTING si chiede a memcache, non al database.
+                                     *
+                                     * Questa riga sta dentro il ciclo sulle tabelle figlie, quindi
+                                     * gira una volta per figlia a ogni apertura di scheda — e di
+                                     * nuovo, per ogni riga figlia, sulle figlie di quella. Su una
+                                     * scheda con qualche sottomodulo sono facilmente una dozzina di
+                                     * `SHOW INDEX` per caricamento, cioè il grosso delle query
+                                     * della cascata, tutte per chiedere sempre la stessa cosa: se
+                                     * una tabella ha o non ha l'indice `SORTING`.
+                                     *
+                                     * È **schema**, non dato: cambia quando qualcuno fa una
+                                     * migrazione, non quando un utente salva un record. La riga qui
+                                     * sopra, che interroga `information_schema` per scoprire quali
+                                     * sono le tabelle figlie, passa già da `mysqlCachedQuery()` per
+                                     * lo stesso identico motivo.
+                                     *
+                                     * TTL esplicito di un'ora invece del default: dove
+                                     * `MEMCACHE_DEFAULT_TTL` vale 0 uno schema resterebbe in cache
+                                     * per sempre e non si riallineerebbe più dopo una migrazione
+                                     * senza un flush a mano.
+                                     */
+                                    $idx = array_column(mysqlCachedQuery($mc, $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"', false, 3600), 'Column_name');
                                     $q = "SELECT id FROM " . $ref['TABLE_NAME'] . " WHERE " . implode(' OR ', $refCols) . ((count($idx)) ? ' ORDER BY ' . implode(', ', $idx) : NULL);
                                     $rows = mysqlQuery($c, $q);
                                     logWrite("cerco le referenze a " . $ref['TABLE_NAME'] . " dove " . implode($ref['COLUMN_NAME']) . " è " . $d['id'] . ", " . count($rows) . " referenze trovate", 'controller');
@@ -946,7 +1007,7 @@
                                             $d[$ref['TABLE_NAME']][$ix]['id'] = $row['id'];
                                             $e[$ref['TABLE_NAME']][$ix] = array();
                                             $i[$ref['TABLE_NAME']][$ix] = array();
-                                            controller($c, $mc, $d[$ref['TABLE_NAME']][$ix], $ref['TABLE_NAME'], $a, NULL, $e[$ref['TABLE_NAME']][$ix], $i[$ref['TABLE_NAME']][$ix], $i['__auth__']);
+                                            controller($c, $mc, $d[$ref['TABLE_NAME']][$ix], $ref['TABLE_NAME'], $a, NULL, $e[$ref['TABLE_NAME']][$ix], $i[$ref['TABLE_NAME']][$ix], $i['__auth__'], $ci, $timer);
                                             $ix++;
                                         }
                                     }
