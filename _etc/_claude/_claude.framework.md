@@ -113,19 +113,37 @@ fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve
 `zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di
 mettere la data in fondo, che sembra più ordinata, è quella che aggira la protezione.
 
-## Cose da fare: `TODO.md`, `DONE.md` e `CHAT.md`
+## I cinque file di un progetto: `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`
 
-Nella **root del deploy** (il livello che contiene `dev/`) vivono tre file di stato, più il
-`burndown.md` che è generato. Fanno tre lavori diversi e hanno tre tempi di vita diversi: tenerli
-separati non è ordine estetico, è la condizione perché restino leggibili.
+Nella **root del deploy** (il livello che contiene `dev/`) vivono cinque file, più il `burndown.md`
+che è generato. Fanno cinque lavori diversi e hanno cinque tempi di vita diversi: tenerli separati
+non è ordine estetico, è la condizione perché restino leggibili.
 
-| file | cosa contiene | come si scrive |
+| file | risponde a | come si scrive |
 |---|---|---|
-| `TODO.md` | **solo lavoro aperto**: `[ ]` e `[?]` | si aggiunge in fondo, e si **pota** quando una voce chiude |
-| `DONE.md` | l'archivio del fatto: `[v]`, `[x]` e le cronache di come è andata | append, non si rilegge: si consulta con `grep` |
-| `CHAT.md` | lo **stato attuale** della conversazione col cliente | si **riscrive**: non è un diario, è una fotografia di adesso |
+| `CLAUDE.md` | **come ci si deve comportare qui** | stabile, cambia di rado |
+| `READ.md` | **cosa serve sapere per metterci le mani** | stabile, si aggiorna quando cambia l'infrastruttura |
+| `TODO.md` | **cosa c'è da fare**: solo `[ ]` e `[?]` | si **pota** quando una voce chiude |
+| `DONE.md` | **cosa è successo, e perché si è deciso così**: `[v]`, `[x]` e le cronache | append, non si rilegge: si consulta con `grep` |
+| `CHAT.md` | **come siamo messi col cliente** | si **riscrive**: non è un diario, è una fotografia di adesso |
 
-La regola che tiene insieme le tre: **una cosa sta in un file solo.** Quando un lavoro finisce esce
+Il confine fra i primi due: il `CLAUDE.md` dice **come comportarsi** (le regole, cosa non fare, le
+convenzioni), il `READ.md` dice **i fatti** (dove sta la roba, come ci si entra, quali comandi). Se
+una riga comincia con "non fare mai" va nel CLAUDE; se comincia con "il database sta su" va nel READ.
+
+⚠ **Nel `READ.md` di progetto non va la documentazione del framework.** Snippet e tecniche che
+valgono su qualunque deploy glisweb non sono informazioni di *questo* progetto: vanno nella
+documentazione del framework (questo file, `dev/READ.md`, o la skill). Il READ di progetto tiene
+sette cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
+credenziali utili, o il posto preciso dove trovarle; **3)** architettura e risorse — macchine,
+database, servizi esterni, domini; **4)** mappa delle personalizzazioni — cosa in questo deploy è
+diverso dallo standard, e perché; **5)** FAQ di progetto; **6)** soluzioni ai problemi frequenti —
+il sintomo, e cosa si fa; **7)** procedure proprie del progetto.
+
+Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
+trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
+
+La regola che tiene insieme i tre file di stato: **una cosa sta in un file solo.** Quando un lavoro finisce esce
 dal `TODO.md` e entra nel `DONE.md`; quando una domanda al cliente ha risposta esce dal `CHAT.md` e
 la decisione entra nel `DONE.md`. Se la stessa riga sta in due file, il prossimo che legge non sa
 quale delle due è vera.
@@ -181,7 +199,12 @@ fine di un giro, dire quali dei tre si sono toccati costa una riga e fa risparmi
 | `- [v]` | fatta | chiusa | `DONE.md` |
 | `- [x]` | scartata, tenuta solo per memoria storica | chiusa | `DONE.md` |
 
-`[ ]` e `[?]` contano entrambe nel residuo. **Non esistono altri marcatori**: se ne incontri uno
+⚠ **`[?]` non conta nel residuo.** Deciso da Fabio il 15/09/2026: `[?]` è il posto dove mettere una
+cosa senza doverla né fare né buttare, e serve proprio a **poter lasciar cadere qualcosa senza
+perderlo**. Se contasse come lavoro aperto non servirebbe a niente. (Lo strumento di conteggio oggi
+somma ancora `[ ]` e `[?]`: finché non è allineato, un residuo che non torna può essere questo.)
+
+**Non esistono altri marcatori**: se ne incontri uno
 diverso (`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare
 uno stato nuovo.
 
@@ -201,12 +224,51 @@ non torna.
 
 ### `TODO.md`: come si aggiorna
 
-- le voci si raggruppano in sezioni datate, con l'intestazione `AAAA-MM-GG [HH:MM] TITOLO`
-  sottolineata da `=`; le voci nuove vanno in fondo, in una sezione con la data di oggi;
-- quando un lavoro finisce si cambia il marcatore in `[v]` e **si sposta la voce in `DONE.md`**,
-  con la sua sezione se la sezione è chiusa per intero. Non si cancella niente: si trasloca;
+⚠ **Il `TODO.md` si organizza per aree del progetto, non in ordine cronologico.** Deciso da Fabio il
+15/09/2026: la data in cui una cosa è stata scritta è l'unico ordine che non aiuta mai a decidere
+cosa fare. Le aree reggono per anni, i capitoli datati crescono all'infinito. La cronologia ha un
+posto suo, ed è il `DONE.md`.
+
+- le voci si raggruppano **per area del progetto** (`## catalogo`, `## preventivazione`,
+  `## infrastruttura`, …), con l'intestazione sottolineata da `=` o un `##`. Una voce nuova va
+  nell'area a cui appartiene, non in fondo al file;
+- quando un lavoro finisce si cambia il marcatore in `[v]` e **si sposta la voce in `DONE.md`**, nel
+  capitolo della giornata. Non si cancella niente: si trasloca;
 - quando un lavoro si abbandona, `[x]`, stessa strada;
-- **una sezione senza più voci aperte non ha motivo di restare qui**: va spostata intera;
+- **un'area senza più voci aperte resta**, vuota o no: è una struttura, non un capitolo;
+
+#### I tre flag: urgenza, rilevanza, impatto
+
+Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
+
+    - [ ] (!!!)   urgente, rilevante, impattante
+    - [ ] (-!!)   non urgente, ma qualcuno l'aspetta e se non si fa si blocca qualcosa
+    - [ ] (!--)   urgente ma non rilevante e senza impatto — si fa e si dimentica
+    - [ ] (---)   nessuna delle tre: candidata naturale a cadere
+
+1. **urgente** — ha una scadenza vicina, o qualcuno è fermo ad aspettare **adesso**;
+2. **rilevante** — c'è **qualcuno** che l'aspetta: un cliente, un collega, un altro lavoro. Se non
+   l'aspetta nessuno, è `-`;
+3. **impattante** — se non si fa, qualcosa **si rompe o resta bloccato**; oppure se si fa, cambia
+   parecchio. Una cosa che si può non fare per sempre senza conseguenze è `-`.
+
+Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
+niente.
+
+#### Quanto dettaglio ci sta in una voce
+
+⚠ **Nel TODO ci sta quello che serve per decidere e per cominciare. Niente di più.** Ogni compito
+occupa **una riga sola**; i dettagli stanno in un paragrafo sotto la voce, e l'analisi lunga va in un
+file suo **sotto `var/`**, con la voce che ci rimanda in una o due righe:
+
+    - [ ] (-!!) i report, e il registro presenze per primo
+    -- chiesto da Melania il 14/09: "ci serve al più presto". Piano in
+       var/2026-08-07-report-melania/piano.md
+
+Il motivo, parole di Fabio: *"per lavorare una specifica linea di todo si legge solo la sua analisi e
+non tutto il file todo con l'analisi anche di roba che non c'entra niente"*. Ventidue righe per voce
+non è una lista, è prosa con dei quadratini dentro.
+
 - niente domande al cliente nel `TODO.md`. Le domande stanno in `CHAT.md`, e qui resta semmai il
   lavoro che dipende dalla risposta;
 - una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le
@@ -214,7 +276,8 @@ non torna.
 
 ### `DONE.md`: l'archivio
 
-Stessa forma del `TODO.md` — sezioni datate, stessi marcatori — ma **non si legge dall'inizio**: è
+**Un capitolo per giornata di lavoro**, in ordine di tempo, con gli stessi marcatori — ma **non si
+legge dall'inizio**: è
 il posto dove si va a cercare *come era andata* una certa cosa. Ci finiscono anche i blocchi
 narrativi che spiegano una diagnosi, una decisione o una migrazione: sono la memoria del progetto,
 e sono esattamente ciò che rende illeggibile il `TODO.md` se restano lì.

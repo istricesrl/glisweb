@@ -30,3 +30,4 @@ src/py/*/*/lib64
 *.old
 *.log
 .#*
+/_usr/_pages*

@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md, il DONE.md, il CHAT.md o il burndown.md di un progetto, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] sospesa e NON conteggiata, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -85,7 +85,7 @@ suoi pattern, che è comunque la regola d'oro.
 
 Il `CLAUDE.md` di quei progetti lo dichiara in testa. Se ci lavori e non lo dice, aggiungilo.
 
-## Cose da fare: tre file, non uno
+## I cinque file di un progetto
 
 ⚠ **La root del deploy non è versionata, ed è voluto.** Il repository è la document root, `dev/`: il
 livello che la contiene ne sta **fuori di proposito**, perché ci vivono le password in chiaro e le
@@ -98,10 +98,19 @@ git.** Sono già al sicuro — la macchina ha uno snapshot notturno, e quei file
 il resto. Un `git status` pulito su `dev/` non dice niente su di loro, e non deve: sono due piani con
 due meccanismi di protezione diversi, entrambi funzionanti.
 
-Nella root del deploy vivono **tre file di stato** con tre tempi di vita diversi, più il `burndown.md` che è
+Nella root del deploy vivono **cinque file** con cinque tempi di vita diversi, più il `burndown.md` che è
 generato e non si tocca a mano:
 
-- **`TODO.md`** — solo lavoro **aperto** ( `- [ ]` da fare, `- [?]` da approfondire ). Quando una voce
+- **`CLAUDE.md`** — **come ci si deve comportare qui**: le regole, cosa non fare, le convenzioni. Stabile,
+  cambia di rado. Se una riga comincia con "non fare mai", il suo posto è questo;
+- **`READ.md`** — **cosa serve sapere per metterci le mani**: i fatti. Sette voci e solo quelle —
+  descrizione generale, credenziali ( o dove trovarle ), architettura e risorse, **mappa delle
+  personalizzazioni**, FAQ, problemi frequenti, procedure del progetto. Se una riga comincia con "il
+  database sta su", il suo posto è questo. ⚠ **Non ci va la documentazione del framework**: uno snippet
+  che vale su qualunque deploy non è informazione di questo progetto. E vale il limite di lunghezza del
+  TODO — il fatto e il riferimento, non la trattazione: una procedura lunga sta in un file suo sotto
+  `var/`;
+- **`TODO.md`** — solo lavoro **aperto** ( `- [ ]` da fare, `- [?]` sospesa ). Quando una voce
   chiude non resta qui: si sposta;
 - **`DONE.md`** — l'archivio del **fatto** ( `- [v]` fatta, `- [x]` scartata ) e delle cronache di come è
   andata. Si consulta con `grep`, non si rilegge;
@@ -122,10 +131,35 @@ Due regole che valgono più di tutte le altre:
    lavoro degli altri — il `CHAT.md` è il più esposto, perché è quello che per sua natura si riscrive.
    Se due sessioni sono aperte, i file di stato li tiene una sola.
 
+### Come si scrive il `TODO.md` ( deciso il 15/09/2026 )
+
+⚠ **Per aree del progetto, non in ordine cronologico.** La data in cui una cosa è stata scritta è l'unico
+ordine che non aiuta mai a decidere cosa fare: le aree reggono per anni, i capitoli datati crescono
+all'infinito. La cronologia ha un posto suo, ed è il `DONE.md`, dove si tiene **un capitolo per giornata**.
+
+⚠ **Una riga per compito**, con **tre flag** fra parentesi subito dopo il marcatore — urgenza, rilevanza,
+impatto, `!` se sì e `-` se no:
+
+    - [ ] (!!!)   urgente, rilevante, impattante
+    - [ ] (-!!)   non urgente, ma qualcuno l'aspetta e se non si fa si blocca qualcosa
+    - [ ] (!--)   urgente ma non rilevante e senza impatto — si fa e si dimentica
+    - [ ] (---)   nessuna delle tre: candidata naturale a cadere
+
+**urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
+l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
+tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
+
+⚠ **`[?]` non conta nel residuo**: è il posto dove mettere una cosa senza doverla né fare né buttare.
+
+⚠ **Nel TODO ci sta quello che serve per decidere e per cominciare, niente di più.** L'analisi lunga va in
+un file sotto `var/`, e la voce ci rimanda con un sunto di una o due righe: *"per lavorare una specifica
+linea di todo si legge solo la sua analisi e non tutto il file todo con l'analisi anche di roba che non
+c'entra niente"*.
+
 I conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di indentazione non sono
 dettagli stilistici: le aperte si contano in `TODO.md`, le chiuse in `TODO.md` **e** `DONE.md`. La regola
-completa sta nella sezione **"Cose da fare"** di `_etc/_claude/_claude.framework.md`, che è la fonte
-autorevole: leggila prima di modificare uno di questi file.
+completa sta nella sezione **"I cinque file di un progetto"** di `_etc/_claude/_claude.framework.md`, che è
+la fonte autorevole: leggila prima di modificare uno di questi file.
 
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
