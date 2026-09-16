@@ -181,9 +181,21 @@ modifica fatta da una parte è già dall'altra, perché è lo stesso file su dis
 La regola di cosa si condivide segue la solita convenzione dell'underscore: **le cartelle di framework
 (`_src/`, `_mod/`, `_etc/`, `_usr/`) sono condivise**, quelle di istanza (`src/`, `mod/`, `etc/`, `usr/`,
 `var/`, `tmp/`) no, insieme a `composer.lock`, `.gitignore`, `_etc/_current.version`,
-`_etc/_current.release`, `_src/_lib/_ext`, `_usr/_docs/_html|_pdf`, `_usr/_examples`, `_usr/_test`. Dentro
-l'area condivisa resta un pugno di file deliberatamente forkati, quelli su cui il lavoro in corso è
-divergente. Al 2026-08-27: **1115 file condivisi, 13 forkati**.
+`_etc/_current.release`, `_src/_lib/_ext`, `_src/_js/_lib/_ext`, `_usr/_docs/_html|_pdf`,
+`_usr/_examples`, `_usr/_test`. Dentro l'area condivisa resta un pugno di file deliberatamente forkati,
+quelli su cui il lavoro in corso è divergente. Fotografia al **2026-09-16: 1151 file condivisi** (erano
+1115 il 2026-08-27) — è un numero che cambia di ora in ora, va riletto non citato.
+
+⚠ **"le cartelle di framework sono condivise" è la regola, non una constatazione.** Il 2026-09-16 si è
+scoperto che 62 sorgenti della documentazione (`_usr/_docs/_read/`, `_quickstart/`, `_img/`) e l'intera
+catena che li genera (`_src/_sh/_docs.build.sh`, `_src/_sh/_lib/_docs.build.php`,
+`_src/_lib/_docs.tools.php`) esistevano **solo su glisweb**, senza che nessun inventario lo segnalasse.
+Prima di dare per condivisa un'area, si verifica. Vedi il punto cieco qui sotto.
+
+⚠ **Non tutto ciò che manca da una parte è un buco.** Su latest mancano **di proposito**
+`_src/_templates/` (templating vecchio), `_src/_html/` (deprecato, è la versione retrocompatibile di
+`_src/_twig/`) e tutti i moduli di generazione vecchia (`_mod/_NNNN.*` e `_mod/_XNNN.*`). Quelli non si
+linkano: si creerebbero da quella parte cartelle fantasma di componenti che latest non ha.
 
 ### Gli strumenti per il lavoro in parallelo
 
@@ -192,6 +204,7 @@ non scriverne altri.**
 
 | comando | cosa fa |
 |---|---|
+| `./sync-check.sh` | **lo strumento buono**: deriva l'insieme condiviso dal vivo e lo **classifica** — i file identici ma slegati li ricollega con `--ripara`, quelli divergenti non li tocca, perché lì ricollegare vuol dire buttare una delle due versioni. Sostituisce l'idea di un elenco statico di riferimento |
 | `./sync-glisweb.sh` | inventario. Scrive `sync-glisweb.log` con l'elenco dei file **non** condivisi (`find -links 1`, più una lista di esclusioni) e di quelli condivisi. È il modo per accorgersi di un link rotto |
 | `./sync-add.sh <path>` | aggiunge un singolo file all'insieme condiviso, linkandolo da glisweb |
 | `./sync-tpl.sh` · `./sync-mod.sh <modulo>` · `./sync-bkg.sh` · `./sync-flags.sh` | `sync-add` in blocco su interi sottoalberi (template, un modulo, immagini di sfondo, bandiere) |
@@ -200,6 +213,24 @@ non scriverne altri.**
 
 Il flusso è: si forka un file semplicemente modificandolo in modo che perda il link, ci si lavora, e quando
 è pronto lo si mette in `resync.txt` e si lancia lo script che fa vincere il lato giusto.
+
+#### ⚠ Il punto cieco: gli strumenti guardano in una direzione sola
+
+**Tutti e due gli inventari partono dall'albero di glisdev**, perché è lì che vivono:
+`sync-glisweb.sh` fa `find . -type f -links 1` dalla propria root, e `sync-check.sh` itera
+`find "$DEV/$radice" -type f` dove `$DEV` è il `dev/` di glisdev. Ne segue che **un file che esiste
+soltanto su glisweb è invisibile a entrambi**: non compare fra i non condivisi, non compare da nessuna
+parte, e il log dice "tutto a posto" perché guarda solo quello che glisdev già ha.
+
+**Un `sync-glisweb.log` pulito non è una prova di allineamento.** Il 2026-09-16 la sezione dei non
+sincronizzati aveva una riga sola mentre mancavano 62 sorgenti di documentazione e tre file di codice.
+Quando si cerca un disallineamento il confronto va fatto **nei due versi**: si elenca il sottoalbero su
+glisweb e per ogni voce si prova l'esistenza della stessa voce nel sottoalbero gemello di glisdev.
+
+⚠ **Cancellare un hard link da una parte non distrugge il contenuto**: `rm` toglie quella sola voce di
+directory, il file resta dall'altra parte con `links` sceso a 1. Il danno è più subdolo — il file
+sparisce dalla vista di chi lavora sull'altro deploy, e il prossimo inventario lo classifica come "non
+condiviso" invece che "cancellato", cioè come una cosa normale.
 
 ### Come si rompono i link senza accorgersene
 
@@ -259,6 +290,69 @@ pwd | grep -qE '/var/www/(glisweb\.istricesrl\.it|glisdev\.istricesrl\.com)' \
 Se il check dice **CLIENTE**, applica questa regola in modo assoluto: nessuna modifica all'upstream, per
 nessun motivo. Se dice **UPSTREAM**, vedi sezione "Modalità B — Operatività" e il manuale framework per
 le specificità della valutazione disallineamenti e del rispetto degli hard link fra glisweb e glisdev.
+
+## La mappa delle cartelle: tre famiglie, non due
+
+Le cartelle di primo livello della document root si dividono in **tre** famiglie. La distinzione fra
+le prime due è la regola dell'underscore, che tutti conoscono; è la terza quella che si dimentica, ed
+è quella che genera i fraintendimenti.
+
+| famiglia | esempi | chi le scrive | all'aggiornamento | in git |
+|---|---|---|---|---|
+| standard | `_etc/ _mod/ _src/ _usr/` | chi sviluppa il framework | **sovrascritte** | sì |
+| custom | `etc/ mod/ src/ usr/` | chi sviluppa il progetto | restano | sì |
+| stato del deploy | `var/ tmp/` | il framework, a runtime | restano | **no** |
+
+**`var/` e `tmp/` non sono cartelle custom.** Non sono la controparte senza underscore di niente, non
+contengono codice e **non contengono configurazione**. Contengono lo stato locale di quel deploy.
+
+Cosa c'è in ciascuna, in una riga:
+
+| cartella | cosa ci sta |
+|---|---|
+| `_etc/` | configurazione di supporto: dizionari di traduzione, liste di sicurezza, robots, Doxygen, release e version |
+| `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script), `_twig/` e `_tpl/` (template) |
+| `_mod/` | i moduli; un modulo è attivo **solo se esiste** la cartella omonima in `mod/` |
+| `_usr/` | quello che non è codice: `_database/_patch/`, `_docs/`, `_examples/`, `_test/` |
+| `var/` | stato locale: log, cache, spool, sitemap, marcatori. **Gitignored, escluso dal deploy** |
+| `tmp/` | temporanei di lavoro, senza aspettativa di sopravvivenza |
+
+### ⚠ `var/` non è il posto della configurazione
+
+La configurazione sta in **`etc/`** e **`src/`**. In `var/` si trovano però alcuni file `.conf`, e il
+nome inganna: **non sono configurazione, sono marcatori di stato locale**. Due tipi:
+
+- **marcatori a contenuto nullo**, dove il segnale è la sola esistenza del file: `var/docs.build.conf`
+  (0 byte) abilita la generazione della documentazione dello standard, `var/geografia.build.conf`
+  (0 byte) la rigenerazione dei dati geografici;
+- **stato locale derivato**, che ha contenuto ma è la copia locale di un dato calcolato altrove e
+  rigenerabile: `var/latest.release.conf`, `var/latest.version.conf`, `var/geografia.latest.conf`.
+
+Il motivo sta nel commento di `_src/_sh/_geografia.build.sh`: *«il marcatore sta in `var/` e non in
+`etc/` perché `etc/` viene deployato, quindi un marcatore creato qui accenderebbe lo script anche
+altrove; `var/` è escluso dal deploy e ignorato da git»*. La regola per qualunque marcatore nuovo:
+
+- descrive il **comportamento** e deve arrivare agli altri deploy → è configurazione, va in `etc/` o
+  `src/`, si versiona;
+- accende o spegne qualcosa **su questa macchina soltanto**, o è una copia di un dato ricavabile → è
+  stato, va in `var/`, non si versiona.
+
+Un marcatore messo in `etc/` per ordine è un marcatore che prima o poi accende una funzione su un
+deploy cliente che non l'ha mai chiesta.
+
+### ⚠ Le due cartelle `var/` non sono la stessa cosa
+
+| percorso | dov'è | cosa contiene |
+|---|---|---|
+| `<progetto>/dev/var/` | **dentro** la document root | stato del deploy: log, cache, marcatori, spool |
+| `<progetto>/var/` | **fuori** dalla document root | materiale di progetto: copie di sicurezza, allegati, analisi, dump |
+
+Un marcatore di build messo in `<progetto>/var/` non verrebbe mai letto: il codice li risolve relativi
+alla document root, e `docsBuildPath()` aborta se un percorso risolve fuori di lì. All'inverso vale la
+regola della sezione che segue.
+
+Il dettaglio completo, cartella per cartella, è nel capitolo `_usr/_docs/_read/030.cartelle.md`
+del manuale sviluppatore.
 
 ## ⚠ Regola fondamentale: il materiale di progetto sta in `var/`, mai dentro la document root
 
