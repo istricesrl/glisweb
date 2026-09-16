@@ -244,7 +244,14 @@ Quindi:
 1. modificare i file **sul posto**;
 2. per aggiornare un branch remoto quando è un fast-forward, spingere il ref senza toccare la working
    copy — `git push origin <branch>:<destinazione>` invece di `checkout` + `merge` + `push`;
-3. **dopo qualunque operazione git su questi due deploy, lanciare `./sync-glisweb.sh`** e confrontare
+3. ⚠ **il commit va fatto su tutti e due i repository.** L'hard link propaga il **contenuto**, non
+   lo **stato git**: git non sa niente degli hard link, quindi un file modificato da una parte
+   compare come `M` (o `??`, se e' nuovo) anche dall'altra, e li' **nessuno lo vede**. Se resta
+   cosi', il primo `checkout` o `reset` che passa di la' se lo porta via — e rompe pure il link.
+   Quindi dopo aver lavorato su file condivisi: `git -C <l'altro deploy> status --short`, e si
+   committa anche li'. Il 2026-09-16 e' successo **tre volte in una giornata**, sempre nella stessa
+   direzione: lavoro su glisweb, modifiche non committate su glisdev;
+4. **dopo qualunque operazione git su questi due deploy, lanciare `./sync-glisweb.sh`** e confrontare
    l'elenco dei non condivisi con quello che ci si aspetta; se un file è finito lì per sbaglio,
    rimetterlo in sincronia con `resync.sh` o `resync-da-glisweb.sh`.
 
