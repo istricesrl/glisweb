@@ -995,6 +995,25 @@
                                      * `MEMCACHE_DEFAULT_TTL` vale 0 uno schema resterebbe in cache
                                      * per sempre e non si riallineerebbe più dopo una migrazione
                                      * senza un flush a mano.
+                                     *
+                                     * VERIFICATO che l'ordinamento non cambi, perché è l'unica cosa
+                                     * che questa riga può rompere. Il dubbio è il ramo di cache HIT:
+                                     * `memcacheWrite()` salva `serialize( $data )` e
+                                     * `memcacheRead()` rileva la stringa serializzata e la
+                                     * deserializza, quindi un risultato **vuoto** torna come
+                                     * `array()` e non come `false` — che è ciò che conta, perché
+                                     * `mysqlCachedQuery()` decide se usare la cache con
+                                     * `$r === false`. Provato contro un memcached vivo su tutti e
+                                     * tre i casi: tabella senza indice ( nessun ORDER BY, prima e
+                                     * dopo ), con `SORTING` su una colonna, e con `SORTING` su due
+                                     * colonne — dove si verifica anche che l'ordine delle colonne
+                                     * sopravviva al giro. Identici.
+                                     *
+                                     * Nota di contorno: sul deploy da cui questa modifica è nata
+                                     * **nessuna tabella ha l'indice `SORTING`**, e nemmeno gli
+                                     * schemi standard lo definiscono. Quelle query tornavano sempre
+                                     * vuote: si pagava una dozzina di interrogazioni a richiesta
+                                     * per non aggiungere mai nessun ORDER BY.
                                      */
                                     $idx = array_column(mysqlCachedQuery($mc, $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"', false, 3600), 'Column_name');
                                     $q = "SELECT id FROM " . $ref['TABLE_NAME'] . " WHERE " . implode(' OR ', $refCols) . ((count($idx)) ? ' ORDER BY ' . implode(', ', $idx) : NULL);
