@@ -36,7 +36,7 @@ exit $CODECEPTION_EXIT_CODE
 ## NOTA
 #
 # per eseguire i test è sufficiente lanciare questo file
-# per approfondire vedi _usr/_docs/_dox/_test.dox
+# per approfondire vedi _usr/_docs/_read/180.test.md
 #
 # per approfondire vedi anche https://codeception.com/docs/AcceptanceTests
 #

@@ -131,12 +131,19 @@
      * aggancia gli id ai titoli e raccoglie l'indice
      *
      * A ogni titolo viene assegnato l'id ricavato con docsSlugify() e viene anteposta un'ancora
-     * cliccabile. I titoli del livello richiesto vengono raccolti in $toc, che la funzione popola per
-     * riferimento.
+     * cliccabile. I titoli fino al livello richiesto vengono raccolti in $toc, che la funzione popola
+     * per riferimento.
+     *
+     * Il **primo** titolo di primo livello non entra nell'indice: e' il titolo del capitolo, e
+     * ripeterlo fra le sue stesse sezioni non aiuta nessuno. Gli altri ci entrano, ed e' il motivo
+     * per cui qui si raccoglie fino a un livello invece che un livello solo: i capitoli travasati dai
+     * `.dox` scrivono le sezioni in stile setext, dove `===` e' un `h1` e `---` un `h2`, quindi un
+     * indice dei soli `h2` lascerebbe fuori le sezioni principali — e un capitolo fatto di sole
+     * sezioni principali resterebbe senza indice del tutto.
      *
      * @param   string      $html           HTML generato dalla conversione
      * @param   array       $toc            indice, popolato per riferimento
-     * @param   int         $livello        livello dei titoli da raccogliere nell'indice
+     * @param   int         $livello        livello massimo dei titoli da raccogliere nell'indice
      *
      * @return  string                      HTML con id e ancore
      *
@@ -145,16 +152,25 @@
 
         $toc = array();
 
+        $titolo = false;
+
         return preg_replace_callback(
             '#<h([1-6])>(.*?)</h\1>#s',
-            function( $m ) use ( &$toc, $livello ) {
+            function( $m ) use ( &$toc, &$titolo, $livello ) {
 
                 $lvl  = (int) $m[1];
                 $text = html_entity_decode( strip_tags( $m[2] ), ENT_QUOTES, 'UTF-8' );
                 $id   = docsSlugify( $text );
 
-                if( $lvl === $livello ) {
-                    $toc[] = array( 'id' => $id, 'label' => $text );
+                if( $lvl === 1 && ! $titolo ) {
+
+                    // il titolo del capitolo, che non e' una sua sezione
+                    $titolo = true;
+
+                } else if( $lvl <= $livello ) {
+
+                    $toc[] = array( 'id' => $id, 'label' => $text, 'livello' => $lvl );
+
                 }
 
                 return '<h' . $lvl . ' id="' . htmlspecialchars( $id, ENT_QUOTES, 'UTF-8' ) . '">'
@@ -465,9 +481,16 @@
      * leggibile anche copiato altrove. Il markup e' quello del template della documentazione, con
      * l'indice laterale a sinistra.
      *
+     * La barra laterale porta DUE indici e non uno: le sezioni di questa pagina, e l'elenco degli
+     * altri capitoli del manuale. Il secondo e' quello che rende la documentazione percorribile —
+     * senza, un capitolo e' un vicolo cieco e per passare al successivo bisogna uscire dal
+     * documento e tornare all'indice. Per lo stesso motivo in fondo alla pagina ci sono il capitolo
+     * precedente e il successivo, che e' il modo in cui si legge un manuale dall'inizio alla fine.
+     *
      * @param   string      $body           corpo della pagina
      * @param   array       $toc            indice raccolto da docsAnchorHeadings()
-     * @param   array       $meta           chiavi titolo, descrizione, nome, sottotitolo, css, data
+     * @param   array       $meta           chiavi titolo, descrizione, nome, sottotitolo, css, data,
+     *                                      piu' capitoli ( elenco di chiave e titolo ) e corrente
      *
      * @return  string                      pagina HTML completa
      *
@@ -481,7 +504,10 @@
             'nome'          => 'GlisWeb',
             'sottotitolo'   => '',
             'css'           => '',
-            'data'          => date( 'Y-m-d' )
+            'data'          => date( 'Y-m-d' ),
+            'capitoli'      => array(),
+            'corrente'      => '',
+            'altrove'       => array()
         );
 
         $meta = array_replace( $d, $meta );
@@ -495,10 +521,82 @@
                 continue;
             }
 
-            $nav .= '<a href="#' . htmlspecialchars( $v['id'], ENT_QUOTES, 'UTF-8' ) . '">'
+            // le sottosezioni rientrano, cosi' si legge la gerarchia del capitolo
+            $classe = ( isset( $v['livello'] ) && $v['livello'] > 1 ) ? ' class="sotto"' : '';
+
+            $nav .= '<a' . $classe . ' href="#' . htmlspecialchars( $v['id'], ENT_QUOTES, 'UTF-8' ) . '">'
                   . htmlspecialchars( $v['label'], ENT_QUOTES, 'UTF-8' ) . '</a>';
 
         }
+
+        if( $nav !== '' ) {
+            $nav = '<span class="sidebar-sez">in questa pagina</span>' . $nav;
+        }
+
+        // indice del manuale: gli altri capitoli, col corrente segnato e non cliccabile
+        $capitoli = '';
+        $prima    = null;
+        $dopo     = null;
+        $vista    = false;
+
+        foreach( $meta['capitoli'] as $c ) {
+
+            $etichetta = htmlspecialchars( $c['titolo'], ENT_QUOTES, 'UTF-8' );
+            $file      = htmlspecialchars( $c['chiave'], ENT_QUOTES, 'UTF-8' ) . '.html';
+
+            if( $c['chiave'] === $meta['corrente'] ) {
+
+                $capitoli .= '<a class="corrente" href="#contenuto">' . $etichetta . '</a>';
+                $vista     = true;
+
+            } else {
+
+                $capitoli .= '<a href="' . $file . '">' . $etichetta . '</a>';
+
+                if( ! $vista ) {
+                    $prima = array( 'file' => $file, 'titolo' => $etichetta );
+                } else if( $dopo === null ) {
+                    $dopo = array( 'file' => $file, 'titolo' => $etichetta );
+                }
+
+            }
+
+        }
+
+        if( $capitoli !== '' ) {
+            $capitoli = '<span class="sidebar-sez">capitoli</span>'
+                      . '<a href="index.html">indice del manuale</a>'
+                      . $capitoli;
+        }
+
+        // gli altri documenti del deploy: i manuali e le quickstart sono alberi separati, e senza
+        // questo rimando si esce dalla documentazione per passare dall'uno all'altro
+        if( $meta['altrove'] ) {
+
+            $capitoli .= '<span class="sidebar-sez">altri documenti</span>';
+
+            foreach( $meta['altrove'] as $a ) {
+
+                $capitoli .= '<a href="' . htmlspecialchars( $a['href'], ENT_QUOTES, 'UTF-8' ) . '">'
+                           . htmlspecialchars( $a['titolo'], ENT_QUOTES, 'UTF-8' ) . '</a>';
+
+            }
+
+        }
+
+        // piede di navigazione: si mette solo dove c'e' un manuale attorno alla pagina
+        $pager = '';
+
+        if( $meta['capitoli'] && $meta['corrente'] !== '' ) {
+
+            $pager = '<nav class="pager" aria-label="capitoli">'
+                   . ( $prima ? '<a class="pager-prima" href="' . $prima['file'] . '"><span>capitolo precedente</span>' . $prima['titolo'] . '</a>' : '<span></span>' )
+                   . ( $dopo  ? '<a class="pager-dopo" href="'  . $dopo['file']  . '"><span>capitolo successivo</span>' . $dopo['titolo']  . '</a>' : '<span></span>' )
+                   . '</nav>';
+
+        }
+
+        $body = $body . "\n" . $pager;
 
         $titolo      = htmlspecialchars( $meta['titolo'], ENT_QUOTES, 'UTF-8' );
         $descrizione = htmlspecialchars( $meta['descrizione'], ENT_QUOTES, 'UTF-8' );
@@ -535,6 +633,7 @@
         </div>
         <div class="sidebar-nav">
 {$nav}
+{$capitoli}
         </div>
         <div class="sidebar-foot">aggiornata il {$generato}</div>
     </nav>

@@ -164,6 +164,26 @@
 
         }
 
+        // i template: la loro documentazione vive NEL template, accanto al codice, e non in un
+        // capitolo del manuale che la ripeterebbe. Perche' sia raggiungibile deve pero' entrare nel
+        // manuale come capitolo, altrimenti resta un file che nessuno apre.
+        foreach( docsBuildTemplate() as $t ) {
+
+            // la versione custom del template sostituisce quella standard
+            $f = docsBuildPath( 'src/tpl/' . $t . '/' . $tipo . '.md' );
+
+            if( $f === false ) {
+                $f = docsBuildPath( '_src/_tpl/_' . $t . '/' . $tipo . '.md' );
+            }
+
+            if( $f === false ) {
+                continue;
+            }
+
+            $capitoli[] = array( 'chiave' => 'tpl-' . $t, 'titolo' => 'template ' . $t, 'file' => array( $f ) );
+
+        }
+
         foreach( docsBuildModuliAttivi() as $m ) {
 
             // la versione custom del modulo sostituisce quella standard
@@ -177,11 +197,123 @@
                 continue;
             }
 
-            $capitoli[] = array( 'chiave' => $m, 'titolo' => $m, 'file' => array( $f ) );
+            $capitoli[] = array( 'chiave' => $m, 'titolo' => 'modulo ' . $m, 'file' => array( $f ) );
 
         }
 
         return $capitoli;
+
+    }
+
+    /**
+     * elenca gli altri documenti del deploy, con il link per arrivarci
+     *
+     * I quattro documenti — i due manuali e le due quickstart — sono alberi separati, ciascuno col
+     * suo indice. Senza un rimando esplicito da uno all'altro chi legge deve sapere a memoria che
+     * esistono e a che indirizzo stanno, cioe' deve uscire dalla documentazione per continuare a
+     * leggerla: e' esattamente cio' che questa funzione evita.
+     *
+     * L'esistenza di un documento si decide dai SORGENTI e non dalle pagine gia' scritte: in un giro
+     * completo i quattro si generano in sequenza, e guardando l'output i primi non vedrebbero mai gli
+     * ultimi.
+     *
+     * I link sono relativi, non assoluti dalla radice: un deploy puo' stare in una sottocartella, e
+     * `/manual/read/` sarebbe sbagliato. Si risolvono rispetto all'URL riscritto dal `.htaccess`
+     * ( `usr/pages/` e `_usr/_pages/` non compaiono nell'indirizzo ), quindi valgono via HTTP e non
+     * aprendo i file dal filesystem — che e' il modo in cui la documentazione va letta, visto che e'
+     * protetta da Basic auth.
+     *
+     * @param   string      $destinazione   cartella del documento corrente, relativa alla document root
+     *
+     * @return  array                       voci con titolo e href, senza il documento corrente
+     *
+     */
+    function docsBuildAltrove( $destinazione ) {
+
+        $documenti = array(
+            array( 'dir' => 'usr/pages/manual/read', 'titolo' => 'manuale dello sviluppatore', 'c' => 'READ' ),
+            array( 'dir' => 'usr/pages/manual/user', 'titolo' => 'manuale utente',             'c' => 'USER' ),
+            array( 'dir' => 'usr/pages/quickstart',  'titolo' => 'guide introduttive del progetto', 'q' => 'usr/docs/quickstart' ),
+            array( 'dir' => '_usr/_pages/_quickstart', 'titolo' => 'guide introduttive',       'q' => '_usr/_docs/_quickstart' )
+        );
+
+        // dalla cartella di destinazione all'indirizzo: i due prefissi delle cartelle ad accesso
+        // diretto non compaiono nell'URL, perche' e' il .htaccess a rimetterceli
+        $url = function( $d ) {
+            foreach( array( '_usr/_pages/', 'usr/pages/' ) as $p ) {
+                if( strpos( $d, $p ) === 0 ) {
+                    return substr( $d, strlen( $p ) );
+                }
+            }
+            return $d;
+        };
+
+        $qui   = $url( $destinazione );
+        $su    = str_repeat( '../', count( explode( '/', $qui ) ) );
+        $voci  = array();
+
+        foreach( $documenti as $d ) {
+
+            if( $d['dir'] === $destinazione ) {
+                continue;
+            }
+
+            if( isset( $d['c'] ) && ! docsBuildCapitoli( $d['c'] ) ) {
+                continue;
+            }
+
+            if( isset( $d['q'] ) ) {
+
+                $dir = docsBuildPath( $d['q'] );
+
+                if( $dir === false || ! glob( $dir . '/*.md' ) ) {
+                    continue;
+                }
+
+            }
+
+            $voci[] = array( 'titolo' => $d['titolo'], 'href' => $su . $url( $d['dir'] ) . '/index.html' );
+
+        }
+
+        return $voci;
+
+    }
+
+    /**
+     * elenca i template del deploy corrente
+     *
+     * Si elencano TUTTI i template presenti, non solo quelli in uso: a differenza dei moduli, che
+     * hanno nella cartella senza underscore un interruttore esplicito, un template e' in uso o no a
+     * seconda di cosa dicono le singole pagine, e un template standard resta documentazione utile
+     * anche dove nessuna pagina lo usa. Quelli custom si aggiungono in coda.
+     *
+     * @return  array                       nomi dei template senza underscore, in ordine
+     *
+     */
+    function docsBuildTemplate() {
+
+        $template = array();
+
+        foreach( array( '_src/_tpl', 'src/tpl' ) as $d ) {
+
+            if( ! $dir = docsBuildPath( $d ) ) {
+                continue;
+            }
+
+            foreach( glob( $dir . '/*', GLOB_ONLYDIR ) as $t ) {
+
+                $nome = ltrim( basename( $t ), '_' );
+
+                if( ! in_array( $nome, $template ) ) {
+                    $template[] = $nome;
+                }
+
+            }
+
+        }
+
+        return $template;
 
     }
 
@@ -326,6 +458,9 @@
         $fatte = 0;
         $indice = array();
 
+        // gli altri documenti del deploy, per non lasciare la pagina senza uscite
+        $altrove = docsBuildAltrove( $destinazione );
+
         // il manuale utente e quello sviluppatore hanno cartelle distinte: con la stessa
         // destinazione si sovrascriverebbero l'indice e l'introduzione a vicenda
         if( ! is_dir( DOCS_BASE . $destinazione ) ) {
@@ -335,6 +470,12 @@
         // gli screenshot vanno accanto alle pagine: nel markdown sono citati con un percorso
         // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
         docsBuildScreenshot( $destinazione );
+
+        // PRIMA PASSATA: si compone il corpo di ogni capitolo e si raccoglie l'indice. Le pagine si
+        // scrivono solo dopo, perche' ognuna porta in barra laterale l'elenco degli altri capitoli e
+        // in fondo il precedente e il successivo: quell'elenco non e' noto finche' non si sa quali
+        // capitoli sopravvivono al filtro delle sezioni.
+        $corpi = array();
 
         foreach( $capitoli as $c ) {
 
@@ -366,12 +507,24 @@
             $html = docsRenderCallouts( $html );
             $html = docsStripMarkers( $html );
 
-            $pagina = docsRenderPage( $html, $toc, array(
+            $corpi[] = array( 'chiave' => $c['chiave'], 'titolo' => $c['titolo'], 'html' => $html, 'toc' => $toc );
+
+            $indice[] = array( 'chiave' => $c['chiave'], 'titolo' => $c['titolo'] );
+
+        }
+
+        // SECONDA PASSATA: le pagine, ciascuna con l'indice completo attorno
+        foreach( $corpi as $c ) {
+
+            $pagina = docsRenderPage( $c['html'], $c['toc'], array(
                 'titolo'      => $opzioni['titolo'] . ' — ' . $c['titolo'],
                 'descrizione' => $opzioni['titolo'] . ', capitolo ' . $c['titolo'],
                 'kicker'      => $opzioni['titolo'],
                 'sottotitolo' => $c['titolo'],
-                'css'         => $css
+                'css'         => $css,
+                'capitoli'    => $indice,
+                'corrente'    => $c['chiave'],
+                'altrove'     => $altrove
             ) );
 
             $file = $destinazione . '/' . $c['chiave'] . '.html';
@@ -385,7 +538,6 @@
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             }
 
-            $indice[] = array( 'chiave' => $c['chiave'], 'titolo' => $c['titolo'] );
             $fatte++;
 
         }
@@ -406,7 +558,9 @@
             'descrizione' => $opzioni['titolo'],
             'kicker'      => 'documentazione',
             'sottotitolo' => $opzioni['titolo'],
-            'css'         => $css
+            'css'         => $css,
+            'capitoli'    => $indice,
+            'altrove'     => $altrove
         ) );
 
         if( $opzioni['secco'] ) {
@@ -442,6 +596,9 @@
         $css    = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
         $fatte  = 0;
         $indice = array();
+
+        // gli altri documenti del deploy, per non lasciare la pagina senza uscite
+        $altrove = docsBuildAltrove( $destinazione );
 
         // la cartella di destinazione va creata, come fa gia' docsBuildManuale(). Mancava, e
         // siccome piu' sotto non si guardava l'esito della scrittura, la generazione diceva
@@ -483,7 +640,8 @@
                 'descrizione' => $titolo,
                 'kicker'      => 'quickstart',
                 'sottotitolo' => $titolo,
-                'css'         => $css
+                'css'         => $css,
+                'altrove'     => $altrove
             ) );
 
             $file = $destinazione . '/' . $nome . '.html';
@@ -520,7 +678,8 @@
                 'descrizione' => 'guide introduttive',
                 'kicker'      => 'quickstart',
                 'sottotitolo' => 'indice',
-                'css'         => $css
+                'css'         => $css,
+                'altrove'     => $altrove
             ) );
 
             if( $opzioni['secco'] ) {
