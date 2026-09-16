@@ -1081,3 +1081,219 @@
         );
 
     }
+
+    /**
+     * ACCESSORI GENERICI DELL'ANAGRAFICA
+     * ==================================
+     *
+     * Logo, PEC e sede legale di un'anagrafica. Stavano in
+     * `_mod/_0010.anagrafica/_src/_lib/_anagrafica.utils.php`, cioe' dentro un MODULO, e sono
+     * arrivati qui nel core il 15/09/2026 perche' li chiama codice che con quel modulo non
+     * c'entra niente: `generaContenutiDocumento()` e undici file di stampa di `_0400.documenti`,
+     * e `anagraficaGetIdSedeLegale()` il checkout dell'ecommerce.
+     *
+     * Su un deploy che monta un'anagrafica diversa - bernispa ha `AN000.anagrafica` e non
+     * `0010.anagrafica` - quelle chiamate morivano tutte con "Call to undefined function", dal CMS
+     * come da `/print/`, e nessuno se n'era accorto perche' li' i documenti si stampano dal
+     * gestionale. Un modulo che dipende dalle funzioni di un altro modulo e' il difetto; la cura
+     * e' che quello che leggono tabelle del CORE - `anagrafica`, `immagini`, `ruoli_immagini`,
+     * `mail`, `anagrafica_indirizzi`, `ruoli_indirizzi` - stia nel core.
+     *
+     * Le sei funzioni `*AnagraficaViewStatic*` NON sono venute qui: quelle mantengono la vista
+     * materializzata dell'anagrafica, che e' roba del modulo, e su bernispa le definisce
+     * `AN000.anagrafica`. Portarle qui le farebbe collidere.
+     */
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetLogo( $id ) {
+
+	// config globale
+	    global $cf;
+
+	// debug
+	    // die( 'id -> ' . $id );
+
+	// prelevo la riga
+	$r = mysqlSelectValue(
+		$cf['mysql']['connection'],
+		'SELECT path FROM immagini '.
+		'INNER JOIN anagrafica ON immagini.id_anagrafica = anagrafica.id '.
+		'LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo '.
+		'WHERE ruoli_immagini.nome = "logo" '.
+		'AND anagrafica.id = ? '.
+		'LIMIT 1',
+		array(
+		    array( 's' => $id )
+		)
+	    );
+
+	// full path
+	if( ! empty( $r ) ) {
+
+	    fullPath( $r );
+
+		}
+
+
+	// debug
+	    // die( 'risultato -> ' . $r );
+
+	// valore di ritorno
+	    return $r;
+
+    }
+
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetSedeLegale( $id ) {
+
+		// config globale
+			global $cf;
+
+		// debug
+			// die( 'id -> ' . $id );
+/*
+		// prelevo la riga
+			$r = mysqlSelectRow(
+				$cf['mysql']['connection'],
+				'SELECT * FROM indirizzi_view '.
+				'INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+				'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+				'WHERE ruoli_indirizzi.se_sede_legale = 1 '.
+				'AND anagrafica_indirizzi.id_anagrafica = ? '.
+				'LIMIT 1',
+				array(
+					array( 's' => $id )
+				)
+			);
+*/
+
+		// prelevo la riga
+		// Fix 2026-07-10: alias esplicito su `anagrafica_indirizzi.id`. Con `SELECT *`
+		// su un JOIN, la colonna `id` di ruoli_indirizzi sovrascrive quella di
+		// anagrafica_indirizzi nell'array associativo: $r['id'] valeva l'id del RUOLO.
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT anagrafica_indirizzi.*, '.
+			'anagrafica_indirizzi.id AS id_anagrafica_indirizzi, '.
+			'ruoli_indirizzi.se_sede_legale '.
+			'FROM anagrafica_indirizzi '.
+			'LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC '.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+
+		// Fix 2026-07-10: l'id della sede è quello di `anagrafica_indirizzi`, ed è ciò
+		// che anagraficaGetIdSedeLegale() scrive in `documenti.id_sede_*` (FK migrata
+		// su anagrafica_indirizzi il 2026-07-10). Va conservato prima che il blocco
+		// sottostante rimpiazzi $r con la riga di `indirizzi_view`, che ha un altro id.
+		$idSedeAnagraficaIndirizzi = isset( $r['id_anagrafica_indirizzi'] ) ? $r['id_anagrafica_indirizzi'] : null;
+/*
+		die(print_r($r,true));
+
+		// prelevo la riga
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view '.
+			'INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+			'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC'.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+*/
+
+		// ...
+		if( isset( $r['id_indirizzo'] ) && ! empty( $r['id_indirizzo'] ) ) {
+
+		// ...
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view WHERE id = ?',
+			array( array( 's' => $r['id_indirizzo'] ) )
+		);
+
+		// Fix 2026-07-10: `indirizzi_view.id` è l'id di `indirizzi`; ripristino l'id
+		// della sede (anagrafica_indirizzi) che i chiamanti scrivono in documenti.id_sede_*.
+		// I campi indirizzo/civico/cap/comune/sigla restano quelli arricchiti dalla view.
+		$r['id'] = $idSedeAnagraficaIndirizzi;
+
+		// riassemblaggio dell'indirizzo per linee (ad es. per le buste)
+			if( empty($r['indirizzo']) || empty($r['civico']) || empty($r['cap']) || empty($r['comune']) || empty($r['sigla']) ){
+				$r['linee'][0]='              ';
+				$r['linee'][1]='              ';
+			} else {
+				$r['linee'][0] = $r['indirizzo'] . ' ' . $r['civico'];
+				$r['linee'][1] = $r['cap'] . ' ' . $r['comune'] . ' ' . $r['sigla'];
+			}
+
+		// debug
+		 	// die( 'risultato -> ' . print_r( $r, true ) );
+
+		} else {
+
+			$r = array();
+
+		}
+
+		// valore di ritorno
+			return $r;
+
+	}
+
+    function anagraficaGetIdSedeLegale( $id ) {
+
+		$r = anagraficaGetSedeLegale( $id );
+
+		return isset( $r['id'] ) ? $r['id'] : null;
+
+	}
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetPEC( $id ) {
+
+	// config globale
+	    global $cf;
+
+	// debug
+	    // die( 'id -> ' . $id );
+
+	// prelevo la riga
+	    $r = mysqlSelectValue(
+		$cf['mysql']['connection'],
+		'SELECT indirizzo FROM mail '.
+		'INNER JOIN anagrafica ON mail.id_anagrafica = anagrafica.id '.
+		'WHERE mail.se_pec = 1 '.
+		'AND anagrafica.id = ? '.
+		'LIMIT 1',
+		array(
+		    array( 's' => $id )
+		)
+	    );
+
+	// debug
+	    // die( 'risultato -> ' . $r );
+
+	// valore di ritorno
+	    return $r;
+
+    }
+

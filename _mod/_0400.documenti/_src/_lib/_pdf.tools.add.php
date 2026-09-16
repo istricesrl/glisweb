@@ -1280,3 +1280,31 @@
         }
 
     }
+
+    /*
+     * NB: qui stavano, dal 15/09/2026 e per poche ore, due fallback di `anagraficaGetLogo()` e
+     * `anagraficaGetPEC()`, messi perche' le due funzioni vivevano in `_mod/_0010.anagrafica/` e
+     * dove quel modulo non c'e' ogni stampa di documento moriva. Sono stati tolti lo stesso
+     * giorno perche' la cura vera e' un'altra ed e' stata applicata: le quattro funzioni generiche
+     * dell'anagrafica sono andate nel core, in `_src/_lib/_mysql.utils.php`, dove le vede
+     * qualunque deploy. Se un giorno tornassero in un modulo, questo file e' il posto dove il
+     * difetto si ripresenta per primo.
+     */
+
+    /*
+     * NB: qui stava, per un pomeriggio, autorizzaStampaDocumento() - la regola "roots, oppure il
+     * destinatario e i suoi familiari, oppure il token" estratta da _documento.default.php e messa
+     * in comune fra tutti gli endpoint di stampa. E' stata tolta il 15/09/2026, e il motivo vale
+     * piu' del codice: QUESTO FILE E' STANDARD, e una regola piu' larga scritta qui sarebbe salita
+     * nei disallineamenti e da li' nel framework, diventando la regola di tutti i deploy. Cioe'
+     * proprio la decisione che Fabio aveva appena preso al contrario - nello standard stampa lo
+     * staff, chi ha bisogno di far stampare ai clienti amplia in custom - ottenuta per inerzia
+     * invece che per scelta.
+     *
+     * Il suffisso `.add.php` inganna, perche' sembra la convenzione del custom: la convenzione e'
+     * il PERCORSO senza underscore, non il suffisso. La controparte custom di questo file e'
+     * mod/0400.documenti/src/lib/pdf.tools.add.php, ed e' li' che va il codice di progetto.
+     *
+     * Gli endpoint di questo modulo usano ora checkTaskPrivilege( 'GESTIONE_DOCUMENTI' ), che e' la
+     * regola standard; _documento.default.php si tiene la sua, che e' quella per l'intestatario.
+     */

@@ -155,16 +155,33 @@
     );
 
     // indirizzo fiscale
+    //
+    // Un'anagrafica senza indirizzo utilizzabile non deve impedire la stampa: la guardia c'era
+    // gia' ma copriva la sola riga dell'indirizzo, e quella sotto leggeva cap, comune e provincia
+    // di un array vuoto. Tre notice, e un notice qui basta a rompere il PDF - TCPDF non puo' piu'
+    // mandare il file quando qualcosa e' gia' uscito, ed e' il motivo per cui invece del documento
+    // arrivavano poche centinaia di byte che il lettore rifiuta. Visto su bernispa il 15/09/2026,
+    // dove l'anagrafica dell'azienda emittente non ha nessuna riga in `anagrafica_indirizzi`.
+    //
+    // Le righe dell'indirizzo si saltano quando non c'e' niente da scriverci, invece di stampare
+    // una riga vuota e un " ()" al posto di comune e provincia.
     if( empty($sri) ){
 		// die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
 		$sri['indirizzo_fiscale'] = '';
+		$sri['cap'] = '';
+		$sri['comune'] = '';
+		$sri['provincia'] = '';
 	 } else {
 		 $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
  
 	 }
     $sdef['linee'][] = $src['denominazione_fiscale'];
-    $sdef['linee'][] = $sri['indirizzo_fiscale'];
-	$sdef['linee'][] = $sri['cap'] . ' ' . $sri['comune'] . ' (' . $sri['provincia'] . ')';
+    if( ! empty( $sri['indirizzo_fiscale'] ) ) {
+        $sdef['linee'][] = $sri['indirizzo_fiscale'];
+    }
+    if( ! empty( $sri['cap'] ) || ! empty( $sri['comune'] ) || ! empty( $sri['provincia'] ) ) {
+	    $sdef['linee'][] = $sri['cap'] . ' ' . $sri['comune'] . ' (' . $sri['provincia'] . ')';
+    }
     $sdef['linee'][] = 'P.IVA ' . $src['partita_iva'];
 	$sdef['linee'][] = 'cod.fisc. ' . $src['codice_fiscale'];
 	// if( ! empty( $emittente['codice_sdi'] ) ) {
