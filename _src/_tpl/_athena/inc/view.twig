@@ -210,12 +210,12 @@
                     {# bottone salva e rimani nella pagina attuale #}
                     {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
 
-                {% elseif request.__backurl__ %}
+                {# la barra tonda e' quella dei SOTTO-OGGETTI: si sceglie su `page.__sottooggetto__` e non su `request.__backurl__`, che dal 14/09 ce l'hanno anche le linguette di una scheda — e una linguetta e' lo stesso oggetto di primo livello, quindi vuole i dischetti. Regola e calcolo in _src/_inc/_macro/_default.form.php. Fix 2026-09-16 #}
+                {% elseif page.__sottooggetto__ %}
 
                     {# bottone torna indietro #}
-                    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
+                    {# la guardia che nascondeva questo bottone e' stata tolta il 16/09/2026. Cercava `?<tabella>[id]` nell'indirizzo di ritorno per non offrire "torna al genitore" quando il genitore era la scheda di se stessi; nascondeva pero' anche i genitori VERI della stessa tabella ( pagina dentro pagina, preventivo dentro preventivo ), ed era ancorata al `?`, quindi vedeva l'id solo se era il primo parametro della query. Il caso "il genitore sono io" lo riconosce ora `page.__sottooggetto__`, che qui e' gia' vero: se siamo in questo ramo un oggetto genitore c'e', e il bottone ci va sempre. #}
                     {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-left"></i>', 'onclick': 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ form.table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");' } } ) }}
-                    {% endif %}
 
                     {# costruzione della stringa dei preset #}
                     {% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ form.table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}

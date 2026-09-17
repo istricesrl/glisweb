@@ -1,0 +1,16 @@
+<div class="form-row view-filters d-print-none">
+	<div class="col-12 col-md-auto">
+		<span class="label-top">stato</span>
+		<select name="__view__[{{ view.id }}][__filters__][se_allarme][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
+			<option value="1" {% if request.__view__[ view.id ].__filters__.se_allarme.EQ == "1" %}selected{% endif %}>solo quelle in allarme</option>
+			<option value=""  {% if request.__view__[ view.id ].__filters__.se_allarme.EQ == "" %}selected{% endif %}>tutte le ubicazioni sorvegliate</option>
+			<option value="0" {% if request.__view__[ view.id ].__filters__.se_allarme.EQ == "0" %}selected{% endif %}>solo quelle a posto</option>
+		</select>
+	</div>
+	<div class="col">
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+	</div>
+	<div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+	</div>
+</div>

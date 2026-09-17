@@ -58,8 +58,9 @@
              *
              * La prima linguetta e' esclusa: li' il livello precedente e' davvero l'elenco.
              */
-            if( empty( $_REQUEST['__backurl__'] )
-                && isset( $ct['page']['etc']['tabs'] )
+            $backSchedaUrl = '';
+
+            if( isset( $ct['page']['etc']['tabs'] )
                 && is_array( $ct['page']['etc']['tabs'] )
                 && count( $ct['page']['etc']['tabs'] ) > 1 ) {
 
@@ -71,9 +72,47 @@
                                    . '?' . $ct['form']['table'] . '[id]=' . $_REQUEST[ $ct['form']['table'] ]['id']
                                    . '&' . $ct['form']['table'] . '[__method__]=get';
 
-                    $_REQUEST['__backurl__'] = backurlRegistra( $backSchedaUrl );
+                    if( empty( $_REQUEST['__backurl__'] ) ) {
+                        $_REQUEST['__backurl__'] = backurlRegistra( $backSchedaUrl );
+                    }
 
                 }
+
+            }
+
+            /**
+             * DISCHETTI O PALLINI: LA FORMA DELL'ICONA DICE A CHE LIVELLO SI E' ( fix 2026-09-16 ).
+             *
+             * Regola, da Fabio il 16/09/2026: se si arriva da una VISTA si e' al primo livello e si
+             * vedono i DISCHETTI; se da dentro un oggetto se ne apre un altro — una sotto-vista, la
+             * matitina o il piu' accanto a una tendina — si vedono i PALLINI, e la forma tonda e'
+             * proprio il segnale che avvisa l'utente di essere dentro un sotto-oggetto.
+             *
+             * I template sceglievano la barra guardando `request.__backurl__`, che pero' vuol dire
+             * un'altra cosa: "qualcuno mi ha aperto da qualche parte". Finche' il backurl ce
+             * l'avevano solo i sotto-oggetti le due cose coincidevano; da quando il blocco qui
+             * sopra lo INVENTA per le linguette ( fix Montanari del 14/09 ) non coincidono piu', e
+             * ogni linguetta che non sia la prima ha perso i dischetti: segnalato da Sara Colciago
+             * il 16/09 sulla sorgente delle pagine, "non compare piu' il tasto di salvataggio".
+             * Una linguetta non e' un sotto-oggetto: e' lo stesso oggetto di primo livello.
+             *
+             * Si e' dentro un sotto-oggetto quando l'indirizzo di ritorno punta a un OGGETTO
+             * ( contiene `[id]=` ) che non e' la scheda di questo stesso record. Un ritorno a una
+             * vista non ha id, e quindi resta primo livello; il ritorno che le linguette si
+             * inventano e' la scheda di se stessi, e quindi non conta.
+             *
+             * Va dopo il blocco delle linguette perche' quello e' chi il backurl lo inventa.
+             */
+            $ct['page']['__sottooggetto__'] = false;
+
+            if( ! empty( $_REQUEST['__backurl__'] ) ) {
+
+                $urlRitorno = ( isset( $_SESSION['backurls'][ $_REQUEST['__backurl__'] ] ) )
+                            ? preg_replace( '/[?&]__backurl__=[^&]*/', '', $_SESSION['backurls'][ $_REQUEST['__backurl__'] ] )
+                            : '';
+
+                $ct['page']['__sottooggetto__'] = ( strpos( $urlRitorno, '[id]=' ) !== false
+                                                    && $urlRitorno !== $backSchedaUrl );
 
             }
 
@@ -121,6 +160,7 @@
     #		echo 'backurl('.$backmd5.')='.$backurl;
     #	} elseif( isset( $ct['form']['table'] ) && ! empty( $ct['form']['table'] ) ) {
         } else {
+            $ct['page']['__sottooggetto__'] = false;
             $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ];
             $backmd5 = backurlRegistra( $backurl );
             $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
