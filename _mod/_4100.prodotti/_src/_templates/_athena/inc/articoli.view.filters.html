@@ -1,4 +1,5 @@
 <div class="form-row view-filters d-print-none">
+	{% if 'id_tipologia_pubblicazione' in etc.colonne %}
     <div class="col-6 col-md-auto">
 		<span class="label-top">pubblicazione</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_tipologia_pubblicazione][IN]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
@@ -9,6 +10,9 @@
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia_pubblicazione.IN == "" %}selected{% endif %}>tutti</option>
 		</select>
     </div>
+	{# la tendina c'e' solo dove la vista espone la colonna: dove le viste sono indietro filtrare su una colonna che non esiste e' un errore SQL, non un elenco vuoto. Vedi _inc/_macro/_articoli.view.php #}
+	{% endif %}
+	{% if 'tipologia_listino' in etc.colonne %}
     <div class="col-6 col-md-auto">
 		<span class="label-top">tipologia</span>
 		<select name="__view__[{{ view.id }}][__filters__][tipologia_listino][EQ]" onchange="$('#pager').val('0'); submitFormOkay=true; submit();" class="form-control form-control-sm">
@@ -18,6 +22,8 @@
 			{% endfor %}
 		</select>
     </div>
+	{# come sopra: la tipologia di voce a listino non c'e' su tutte le viste #}
+	{% endif %}
 	<div class="col">
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>

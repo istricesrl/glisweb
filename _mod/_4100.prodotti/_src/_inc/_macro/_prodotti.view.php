@@ -32,6 +32,60 @@
 	    'pubblicazione' => 'pubblicazione'
 	);
     /**
+     * ALLA VISTA NON SI CHIEDONO COLONNE CHE LA VISTA NON HA ( 17/09/2026 )
+     *
+     * Le colonne nuove di questo elenco - la pubblicazione, e le categorie - sono arrivate fra l'8 e il
+     * 16/09/2026 insieme alle viste che le espongono. Un deploy le cui viste sono piu' vecchie
+     * quelle colonne non le ha, ma il controller costruisce lo stesso la SELECT su prodotti_view
+     * chiedendogliele, e MySQL risponde
+     *
+     *     Unknown column 'id_tipologia_pubblicazione' in 'where clause'
+     *
+     * cioe' l'elenco non si apre affatto. Non e' un caso di scuola: su gimbe, il 17/09/2026,
+     * alla vista mancavano pubblicazione, categorie, codice_produttore e id_tipologia_pubblicazione, e le due
+     * maschere del catalogo erano inservibili.
+     *
+     * Qui si chiede alla vista che colonne abbia davvero e si tolgono dall'elenco quelle che non
+     * ci sono, invece di tenere a mano la lista di quali deploy sono indietro. Dove la vista e'
+     * allineata non cambia niente; dove non lo e', l'elenco perde una colonna e si apre.
+     *
+     * E' schema e non dato, quindi si chiede a memcache con un'ora di TTL, come fa il controller
+     * per l'indice SORTING. Il TTL e' esplicito perche' dove MEMCACHE_DEFAULT_TTL vale 0 uno
+     * schema resterebbe in cache per sempre e non si riallineerebbe piu' dopo una migrazione.
+     *
+     * Se la domanda non si puo' fare - memcache o il database non rispondono - non si pota
+     * niente e si fa come prima: meglio l'errore di prima che un elenco svuotato da un guasto
+     * di contorno. La chiave vuota di $ct['view']['cols'] e' la colonna delle azioni, che nel
+     * database non esiste e non va cercata.
+     */
+    $colonneVista = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SHOW COLUMNS FROM ' . $ct['view']['table'] . '_view',
+        false,
+        3600
+    );
+
+    if( is_array( $colonneVista ) && count( $colonneVista ) ) {
+
+        $ct['etc']['colonne'] = array_column( $colonneVista, 'Field' );
+
+        foreach( $ct['view']['cols'] as $colonna => $etichetta ) {
+            if( $colonna !== '' && ! in_array( $colonna, $ct['etc']['colonne'] ) ) {
+                unset( $ct['view']['cols'][ $colonna ] );
+            }
+        }
+
+    } else {
+
+        $ct['etc']['colonne'] = array_merge(
+            array_keys( $ct['view']['cols'] ),
+            array( 'id_tipologia_pubblicazione', 'categorie' )
+        );
+
+    }
+
+    /**
      * FILTRO PER PUBBLICAZIONE, CON I PUBBLICATI IN PARTENZA
      * =======================================================
      *
@@ -70,7 +124,8 @@
         'SELECT id FROM pubblicazioni LIMIT 1'
     );
 
-    if( ! empty( $ct['etc']['pubblicazioni'] ) ) {
+    if( ! empty( $ct['etc']['pubblicazioni'] )
+        && in_array( 'id_tipologia_pubblicazione', $ct['etc']['colonne'] ) ) {
         $ct['view']['__filters__'] = array(
             'id_tipologia_pubblicazione' => array( 'IN' => $ct['etc']['pubblicate'] )
         );
