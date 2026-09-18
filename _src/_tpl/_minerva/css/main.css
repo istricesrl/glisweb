@@ -389,8 +389,16 @@ header .btn-sqr {
 header nav.navbar-light .icons {
     padding-right: .35em;
 }
+/* il filo d'aria a destra vale .75rem e non .35em: .75rem e' meta' del gutter
+   Bootstrap ( --bs-gutter-x: 1.5rem ), cioe' esattamente il padding con cui il
+   container-fluid stacca il contenuto dal bordo. Con .35em il margine seguiva il
+   font-size dell'header ( 1.5em -> 24px -> 8.4px ) e l'ultimo pulsante finiva
+   3,6px OLTRE il bordo destro del contenuto sottostante: misurato a 1280px, logout
+   a destra 1271,6 contro 1268 dell'h1 e delle tabelle. Sembrava spaziatura a caso
+   perche' non era allineato a niente. In rem il valore non dipende piu' dal corpo
+   dell'header: cambiando quello, la colonna resta allineata. */
 header .col-auto.d-flex {
-    margin-right: .35em;
+    margin-right: .75rem;
 }
 
 /* l'header a 1.8em rendeva voci e icone enormi su tablet, mandando la barra a

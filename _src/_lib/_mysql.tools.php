@@ -1278,6 +1278,36 @@
         $sql   = 'REPLACE INTO `' . $static . '` ( ' . $campi . ' ) SELECT ' . $campi . ' FROM `' . $view . '`';
         $args  = array();
 
+        /**
+         * Gli id interi vanno scritti DENTRO la query, non legati come parametri.
+         *
+         * Stessa ragione della lettura per id nel controller: MariaDB 10.3 non spinge la
+         * condizione dentro una vista con GROUP BY quando il valore arriva da un segnaposto, e la
+         * vista viene materializzata per intero e poi filtrata. Su un deploy con 5.400 contratti,
+         * `SELECT * FROM iscrizioni_view WHERE id = ?` costa 0,636 s contro 0,013 s della stessa
+         * query col valore scritto — e questa funzione la chiamano i controller `finally` a ogni
+         * salvataggio, anche piu' volte.
+         *
+         * Si scrivono nella query solo gli id fatti di sole cifre e senza zeri iniziali
+         * ( `(string) $u === (string) (int) $u` ), passati per `(int)`: il valore che finisce nel
+         * testo SQL e' identico a quello che si sarebbe legato, mai una sua reinterpretazione, e
+         * niente che arrivi da fuori puo' raggiungere la query. Gli id non interi ( es. quelli degli
+         * articoli, `1784825140.7973` ) restano sul prepared statement.
+         *
+         * ⚠ La rete sotto e la sua chiave di configurazione sono le stesse del controller, e per lo
+         * stesso motivo: sulle viste che raggruppano su due colonne `id` di tabelle diverse il
+         * valore scritto fa fallire la query con `ERRORE 1052 ... in order clause is ambiguous`. Un
+         * deploy che le conosce le dichiara in `$cf['controller']['no_id_inline'][ <tabella> ]`;
+         * se una scappa, la query si rifa' col segnaposto e la tabella si segna per il resto della
+         * richiesta, cosi' l'unico costo e' un giro in piu' e mai il risultato.
+         */
+        $intero = function ($u) {
+            return ctype_digit((string) $u) && (string) $u === (string) (int) $u;
+        };
+
+        $dove       = '';
+        $doveInline = '';
+
         if (is_array($i)) {
 
             // elenco di id: un segnaposto per ciascuno
@@ -1285,17 +1315,47 @@
             if (empty($i)) {
                 return true;
             }
-            $sql .= ' WHERE id IN ( ' . implode(', ', array_fill(0, count($i), '?')) . ' )';
+            $dove = ' WHERE id IN ( ' . implode(', ', array_fill(0, count($i), '?')) . ' )';
             foreach ($i as $uno) {
                 $args[] = array('s' => $uno);
             }
+            if (count(array_filter($i, $intero)) === count($i)) {
+                $doveInline = ' WHERE id IN ( ' . implode(', ', array_map('intval', $i)) . ' )';
+            }
 
         } elseif (! is_null($i)) {
-            $sql .= ' WHERE id = ?';
+            $dove = ' WHERE id = ?';
             $args = array(array('s' => $i));
+            if ($intero($i)) {
+                $doveInline = ' WHERE id = ' . (int) $i;
+            }
         }
 
-        $esito = mysqlQuery($c, $sql, $args);
+        // viste dichiarate ambigue in configurazione, o gia' scoperte tali in questa richiesta
+        if (! empty($GLOBALS['cf']['controller']['no_id_inline'][$t])) {
+            $doveInline = '';
+        }
+
+        $esito = false;
+
+        if (! empty($doveInline)) {
+
+            $esito = mysqlQuery($c, $sql . $doveInline);
+
+            if (! empty(mysqli_errno($c))) {
+                $GLOBALS['cf']['controller']['no_id_inline'][$t] = true;
+                logger(
+                    'aggiornamento di ' . $static . ' con id nella query non riuscito ( ' . mysqli_error($c) . ' ): '
+                    . 'si riprova con il parametro, e per il resto della richiesta si usa il parametro',
+                    'mysql',
+                    LOG_WARNING
+                );
+                $esito = mysqlQuery($c, $sql . $dove, $args);
+            }
+
+        } else {
+            $esito = mysqlQuery($c, $sql . $dove, $args);
+        }
 
         if (! empty(mysqli_errno($c))) {
             logger(

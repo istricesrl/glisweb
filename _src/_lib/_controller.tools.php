@@ -1088,7 +1088,67 @@
                         case METHOD_REPLACE:
                         case METHOD_UPDATE:
 
-                            $w = mysqlSelectRow($c, "SELECT * FROM $t$rm WHERE id = ?", array(array('s' => $d['id'])));
+                            /**
+                             * Lettura per id da una VISTA: il valore va scritto DENTRO la query,
+                             * non legato come parametro.
+                             *
+                             * MariaDB 10.3 non spinge la condizione dentro una vista con GROUP BY
+                             * se il valore arriva da un segnaposto: il piano passa da `const` su una
+                             * riga a `ALL` sull'intera tabella, con tutti i JOIN della vista
+                             * eseguiti per ognuna. Misurato in produzione su `contratti_view` il
+                             * 17/09/2026: 0,014 s con il valore nella query, 0,5-1,8 s con il `?`, a
+                             * parita' di tutto il resto ( EXPLAIN: `contratti const 1` contro
+                             * `contratti ALL 5384`, derived stimato 7.774.496 righe ). La cascata di
+                             * una scheda ne fa decine: sono i 7 secondi che la segreteria vede sulla
+                             * scheda iscrizione, e il motivo per cui togliere i lock delle statiche
+                             * non era bastato.
+                             *
+                             * Si interpola SOLO un id fatto di sole cifre, castato a intero: nessun
+                             * altro valore raggiunge la query, quindi non c'e' spazio per
+                             * un'iniezione. Tutto il resto — id non interi come quelli degli
+                             * articoli, viste statiche, tabelle vere — resta sul prepared statement,
+                             * dove il problema non si pone perche' si legge da una tabella con la
+                             * chiave primaria.
+                             *
+                             * ⚠ La rete sotto, imparata da un errore in produzione il 17/09. Su
+                             * alcune viste il valore scritto fa fallire la query con
+                             * `ERRORE 1052 Column 'id' in order clause is ambiguous`: sono quelle che
+                             * raggruppano su due colonne `id` di tabelle diverse
+                             * ( `group by contratti.id, anagrafica.id` ), dove la condizione spinta
+                             * dentro la vista diventa ambigua. Col segnaposto non succede, perche' la
+                             * vista viene materializzata prima; nessun alias esterno lo evita.
+                             *
+                             * Due livelli, e nessuno dei due nomina le viste di un deploy:
+                             * - `$cf['controller']['no_id_inline'][ <tabella> ]` le dichiara in
+                             *   configurazione, per chi le conosce gia' e non vuole pagare nemmeno il
+                             *   primo errore ( la stessa chiave la legge refreshStaticView() );
+                             * - se una query interpolata fallisce lo stesso, si ripiega SUBITO sul
+                             *   prepared statement e la tabella si segna per il resto della
+                             *   richiesta, cosi' l'errore si paga una volta sola e mai il risultato.
+                             */
+                            $idInline = ( $rm === '_view' )
+                                     && ctype_digit( (string) ( $d['id'] ?? '' ) )
+                                     && empty( $GLOBALS['cf']['controller']['no_id_inline'][ $t ] );
+
+                            $w = array();
+
+                            if( $idInline ) {
+
+                                $eInline = array();
+                                $w = mysqlSelectRow($c, "SELECT * FROM $t$rm WHERE id = " . (int) $d['id'], false, $eInline);
+
+                                if( ! empty( $eInline ) ) {
+                                    $GLOBALS['cf']['controller']['no_id_inline'][ $t ] = true;
+                                    $idInline = false;
+                                    $w = array();
+                                    logWrite( 'lettura per id inline non utilizzabile su ' . $t . $rm . ', si ripiega sul parametro per il resto della richiesta', 'controller', LOG_WARNING );
+                                }
+
+                            }
+
+                            if( ! $idInline ) {
+                                $w = mysqlSelectRow($c, "SELECT * FROM $t$rm WHERE id = ?", array(array('s' => $d['id'])));
+                            }
 
                             timerCheck( $timer, '-> -> fine integrazione blocco dati' );
 
