@@ -457,9 +457,17 @@ Vale su **due livelli**, e sono due perché documentano due cose diverse:
 convenzione viva (`_mod/_CT000.contatti/READ.md`, `_src/_tpl/_athena/READ.md`).
 
 Le **quickstart hanno collocazione propria a ogni livello** — sorgente, output e URL — e non
-confluiscono nei manuali: il loro scopo è far partire, non coprire. Sono quattro documenti in tutto:
-quickstart e manuale, per sviluppatore e per utente, più la reference Doxygen generata dai docblock,
-che è **dichiaratamente lavoro in corso** e porta in testa la copertura misurata.
+confluiscono nei manuali: il loro scopo è far partire, non coprire. I documenti sono la quickstart e
+il manuale, per sviluppatore e per utente, più la reference Doxygen generata dai docblock, che è
+**dichiaratamente lavoro in corso** e porta in testa la copertura misurata.
+
+⚠ **Di ciascuno esistono due copie con due destini diversi**, e dal 20/09/2026 la differenza è
+l'accesso. Quella dello **standard** si genera dai soli sorgenti `_*`, sta sotto `_usr/_pages/`
+( `/_manual/read/`, `/_manual/user/`, `/_quickstart/` ) ed è **pubblica**: descrive il framework, non
+un cliente, ed è il link che l'applicazione può mostrare ai suoi utenti, che la password del manuale
+non ce l'hanno. Quella del **progetto** somma standard e custom, sta sotto `usr/pages/`
+( `/manual/read/`, `/manual/user/`, `/quickstart/` ) ed è dietro **Basic auth**, perché descrive le
+personalizzazioni. Ogni documento rimanda agli altri, e uno pubblico rimanda ai soli pubblici.
 
 ### ⚠ Il `READ.md` della root del deploy non è documentazione
 
@@ -530,7 +538,8 @@ scrive le pagine; la conversione sta in `_src/_lib/_docs.tools.php`, l'orchestra
   API si generano **solo dove esiste `var/docs.build.conf`**.
 - **la protezione è dentro la generazione ed è fail-closed.** La documentazione di progetto descrive le
   personalizzazioni del cliente e non può essere pubblica: senza `etc/secret/.htpasswd` non si genera
-  nulla. Serve perché `AuthUserFile` vuole un percorso **assoluto**, che cambia fra DEV, TEST e PROD: la
+  nulla. Vale per i documenti di progetto e **solo** per quelli: quelli dello standard non passano di
+  qui, perché stanno sotto `_usr/_pages/` e sono pubblici di proposito. Serve perché `AuthUserFile` vuole un percorso **assoluto**, che cambia fra DEV, TEST e PROD: la
   riga viene riallineata a ogni giro e il resto del `.htaccess` non viene mai toccato. Un target su cui
   quel file non fosse mai arrivato servirebbe le personalizzazioni in chiaro, in silenzio.
 

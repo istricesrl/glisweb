@@ -5,17 +5,30 @@ manuale sviluppatore per intero — architettura, quick start, la reference di t
 glossario — ed era l'unico posto in cui quel materiale stava. Adesso ognuno di quei pezzi vive dove
 appartiene, e questo file rimanda.
 
-## i quattro documenti
+## i documenti
 
-La documentazione si genera con `_src/_sh/_docs.build.sh --all` e si legge via HTTP, dietro Basic auth.
-I sorgenti sono markdown e stanno nel repository; le pagine no.
+La documentazione si genera con `_src/_sh/_docs.build.sh --all` e si legge via HTTP. I sorgenti sono
+markdown e stanno nel repository; le pagine no.
 
-| documento | sorgente | si legge in |
-|---|---|---|
-| manuale sviluppatore | `_usr/_docs/READ.md` e `_usr/_docs/_read/*.md` | `/manual/read/index.html` |
-| manuale utente | `_usr/_docs/USER.md` e `_usr/_docs/_user/*.md` | `/manual/user/index.html` |
-| quickstart sviluppatore | `_usr/_docs/_quickstart/*.md` | `/_quickstart/index.html` |
-| reference delle API | i docblock nel codice, via Doxygen | `_src/_sh/_doxygen.build.sh` |
+⚠ **Quelli dello standard sono pubblici, quelli del progetto no.** I primi descrivono il framework e
+si mostrano a chiunque — sono il link che l'applicazione offre ai suoi utenti, che la password del
+manuale non ce l'hanno; i secondi descrivono le personalizzazioni del cliente e stanno dietro Basic
+auth, con l'utente `docs`.
+
+| documento | sorgente | si legge in | accesso |
+|---|---|---|---|
+| manuale sviluppatore dello standard | `_usr/_docs/READ.md` e `_usr/_docs/_read/*.md` | `/_manual/read/index.html` | pubblico |
+| manuale utente dello standard | `_usr/_docs/USER.md` e `_usr/_docs/_user/*.md` | `/_manual/user/index.html` | pubblico |
+| quickstart sviluppatore | `_usr/_docs/_quickstart/*.md` | `/_quickstart/index.html` | pubblico |
+| manuale sviluppatore del progetto | i sorgenti dello standard **più** `usr/docs/READ.md` e `usr/docs/read/*.md` | `/manual/read/index.html` | Basic auth |
+| manuale utente del progetto | i sorgenti dello standard **più** `usr/docs/USER.md` e `usr/docs/user/*.md` | `/manual/user/index.html` | Basic auth |
+| quickstart del progetto | `usr/docs/quickstart/*.md` | `/quickstart/index.html` | Basic auth |
+| reference delle API | i docblock nel codice, via Doxygen | `/docs/`, dove esiste `var/docs.public.conf` | pubblico |
+
+I tre dello standard si generano solo dove esiste `var/docs.build.conf`, cioè sui deploy del
+framework: un deploy cliente genera i suoi e basta. Ogni documento rimanda agli altri, quindi da uno
+qualsiasi si arriva a tutti — e da uno pubblico si arriva ai soli pubblici, per non mandare un
+utente a sbattere contro una richiesta di password.
 
 **Chi parte da zero legge la quickstart**, non il manuale: `_usr/_docs/_quickstart/010.da-zero-a-hero.md`
 porta un'installazione appena scompattata fino a un sito con pagine, database, CMS e moduli.
