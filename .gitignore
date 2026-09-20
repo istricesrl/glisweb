@@ -31,3 +31,5 @@ src/py/*/*/lib64
 *.log
 .#*
 /_usr/_pages*
+__pycache__/
+*.pyc
