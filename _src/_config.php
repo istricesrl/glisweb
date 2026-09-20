@@ -603,6 +603,16 @@
     define( 'FILE_MANUAL_DEV'                           , path2custom( DIR_USR_PAGES ) . 'manual/read/index.html' );
     define( 'FILE_MANUAL_QUICKSTART'                    , path2custom( DIR_USR_PAGES ) . 'quickstart/index.html' );
 
+    // i tre documenti dello standard, generati da _src/_sh/_docs.build.sh --standard
+    //
+    // Vivono nella meta' STANDARD e sono pubblici di proposito: descrivono il framework e non
+    // le personalizzazioni di un cliente, quindi _usr/_pages/ non e' protetta e il link del
+    // template li puo' mostrare a chiunque — compreso l'utente dell'applicazione, che la
+    // password dell'utente `docs` non ce l'ha. I tre qui sopra restano dietro Basic auth.
+    define( 'FILE_MANUAL_USER_STANDARD'                 , DIR_USR_PAGES . '_manual/user/index.html' );
+    define( 'FILE_MANUAL_DEV_STANDARD'                  , DIR_USR_PAGES . '_manual/read/index.html' );
+    define( 'FILE_MANUAL_QUICKSTART_STANDARD'           , DIR_USR_PAGES . '_quickstart/index.html' );
+
     // marcatore di pubblicazione della reference: _usr/_docs/.htaccess apre le rotte /docs/ e
     // /docs/pdf solo dove questo file esiste, quindi l'esistenza del manuale non basta a
     // decidere se il link va mostrato ( vedi _030.common.php )

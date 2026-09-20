@@ -125,9 +125,16 @@
      *  docs.custom.dev         manuale sviluppatore DI QUESTO progetto
      *  docs.custom.quickstart  guide introduttive DI QUESTO progetto
      *  docs.tech.html / .pdf   reference API generata dai commenti nel codice
-     *  docs.user.html          guida d'uso generica del framework
+     *  docs.user.html          manuale utente DELLO STANDARD
+     *  docs.user.dev           manuale sviluppatore DELLO STANDARD
+     *  docs.user.quickstart    guide introduttive DELLO STANDARD
      *
-     * I primi cinque sono DERIVATI e non vanno messi in config.json: si compongono da
+     * I documenti di progetto descrivono le personalizzazioni del cliente e stanno dietro Basic
+     * auth; quelli dello standard descrivono il framework e sono PUBBLICI. E' una distinzione che
+     * conta proprio qui: il punto interrogativo dell'applicazione lo premono gli utenti, che la
+     * password dell'utente `docs` non ce l'hanno.
+     *
+     * Sono tutti DERIVATI e non vanno messi in config.json: si compongono da
      * $cf['site']['url'], che i profili di _025.site.php calcolano gia' per ambiente, quindi
      * ogni installazione punta alla propria copia senza dichiarare niente.
      *
@@ -172,10 +179,26 @@
         'name' => array( 'it-IT' => 'PDF' )
     );
 
-    // guida d'uso generica del framework, non di questo progetto
+    // documentazione dello standard, prodotta da _src/_sh/_docs.build.sh --standard
+    //
+    // Fino al 20/09/2026 questa voce portava alla wiki di istricesrl/glisdev, chiusa quel giorno
+    // perche' non si tengono due posti da aggiornare: quel contenuto e' nei capitoli di
+    // _usr/_docs/_user/. I tre documenti stanno sotto _usr/_pages/, che non e' protetta.
     $cf['common']['docs']['user']['html'] = array(
-        'url'  => 'https://github.com/istricesrl/glisdev/wiki',
-        'name' => array( 'it-IT' => 'su GitHub' )
+        'url'  => ( file_exists( FILE_MANUAL_USER_STANDARD ) ) ? $cf['site']['url'] . '_manual/user/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale utente' )
+    );
+
+    // manuale sviluppatore dello standard
+    $cf['common']['docs']['user']['dev'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_DEV_STANDARD ) ) ? $cf['site']['url'] . '_manual/read/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale sviluppatore' )
+    );
+
+    // guide introduttive dello standard
+    $cf['common']['docs']['user']['quickstart'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_QUICKSTART_STANDARD ) ) ? $cf['site']['url'] . '_quickstart/index.html' : NULL,
+        'name' => array( 'it-IT' => 'guide introduttive' )
     );
 
     // segnalazione dei difetti

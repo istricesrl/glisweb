@@ -54,9 +54,21 @@
         {% endif %}
     </p>
     {% endif %}
-    {% if common.docs.user.html.url %}
-    <p>manuale d'uso GlisWeb
-        <strong><a href="{{ common.docs.user.html.url }}" target="_blank">{{ common.docs.user.html.name[ localization.language.ietf ] }}</a></strong></p>
+    {# documentazione dello STANDARD: descrive il framework e non questa installazione, e per
+       questo e' pubblica. E' il link che si puo' mostrare a un utente dell'applicazione, che la
+       password del manuale di progetto qui sopra non ce l'ha. #}
+    {% if common.docs.user.quickstart.url or common.docs.user.html.url or common.docs.user.dev.url %}
+    <p>documentazione di GlisWeb
+        {% if common.docs.user.quickstart.url %}
+        <strong><a href="{{ common.docs.user.quickstart.url }}" target="_blank">{{ common.docs.user.quickstart.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.user.html.url or common.docs.user.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.user.html.url %}
+        <strong><a href="{{ common.docs.user.html.url }}" target="_blank">{{ common.docs.user.html.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.user.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.user.dev.url %}
+        <strong><a href="{{ common.docs.user.dev.url }}" target="_blank">{{ common.docs.user.dev.name[ localization.language.ietf ] }}</a></strong>
+        {% endif %}
+    </p>
     {% endif %}
     <p>segnalazione di bug e richieste di funzionalità
         <strong><a href="{{ common.bugs.report.url }}" target="_blank">{{ common.bugs.report.name[ localization.language.ietf ] }}</a></strong></p> 
