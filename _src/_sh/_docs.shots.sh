@@ -39,6 +39,32 @@
 # font e immagini continuano a caricarsi; e si fotografa il file locale. Nessuna credenziale
 # passa da chromium e nessun endpoint nuovo viene esposto.
 #
+# LE TRE TRAPPOLE, TUTTE PAGATE IL 2026-09-20
+#
+# Sono venute fuori facendo a mano i due scatti del capitolo di athena, e valgono su qualunque
+# deploy, non solo qui. Fino a che non erano risolte questo script non fotografava niente:
+#
+# 1. IL LOGIN COL POST DEL FORM LO RIFIUTA L'ANTI-SPAM. Dove reCAPTCHA v3 e' configurato, una
+#    POST di __login__[user]/__login__[pasw] senza token finisce in var/log/auth.err con
+#    "check anti spam al login fallito per token non ricevuto", e la sessione non si apre. La
+#    via che funziona e' HTTP Basic: _src/_config/_210.auth.php intercetta PHP_AUTH_USER /
+#    PHP_AUTH_PW, definisce LOGIN_VIA_HTTP_HEADER e su quella costante il controllo anti-spam
+#    viene saltato ( "check anti spam al login saltato per login via HTTP header" ). Le
+#    credenziali si mandano quindi con --user, su OGNI richiesta e non solo sul login: il
+#    login via header e' stateless, non rigenera l'id di sessione, e ripeterlo costa niente
+#    mentre rende lo scatto immune a una sessione scaduta a meta' giro.
+#
+# 2. CHROMIUM BLOCCA I FONT DELLE ICONE. La pagina si fotografa da file://, quindi tutto cio'
+#    che il <base href> fa scaricare dal sito e' cross-origin, e sui @font-face vale CORS: le
+#    icone escono tutte a quadratino. Si spegne con --disable-web-security, che chromium
+#    accetta solo insieme a un --user-data-dir suo ( per questo se ne crea uno usa-e-getta
+#    dentro la cartella temporanea dello scatto ).
+#
+# 3. IL PANNELLO DEL CONSENSO AI COOKIE COPRE LA MASCHERA. Finche' il consenso non e' espresso
+#    l'overlay di _inc/_cookie.overlay.twig torna su ogni pagina, ed e' esattamente quello che
+#    si vede nella figura. Si dichiara una volta sola sul cookie jar, prima di scaricare le
+#    pagine: vedi il blocco "consenso ai cookie" piu' sotto.
+#
 # GLI SCATTI SI GENERANO SU DEV E SI VERSIONANO
 #
 # I PNG entrano nel repository come qualunque altro sorgente: sui progetti cliente chromium non
@@ -98,7 +124,11 @@ if [ -z "$HOST" ]; then
 fi
 
 ## raccolta delle dichiarazioni dai sorgenti della documentazione
-SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs -name '*.md' 2> /dev/null )
+#
+# Gli alberi sono gli stessi che compone _src/_cli/_docs.build.php: i capitoli di _usr/_docs,
+# i READ.md/USER.md dei moduli e quelli dei template. Senza _src/_tpl e src/tpl qui dentro gli
+# unici scatti dichiarati oggi — i quattro del capitolo di athena — non li vedrebbe nessuno.
+SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs ./_src/_tpl ./src/tpl -name '*.md' 2> /dev/null )
 [ -n "$SORGENTI" ] || { echo "nessun sorgente markdown, niente da fare"; exit 0; }
 
 DICHIARAZIONI=$( grep -h -oE '^<!--[[:space:]]*@shot:[[:space:]]*[^>]+-->' $SORGENTI 2> /dev/null \
@@ -112,27 +142,66 @@ RECENTE=$( find ./_src/_tpl ./_src/_twig ./_src/_templates ./_src/_css ./_src/_j
                 ./_mod ./mod ./src -type f \( -name '*.twig' -o -name '*.html' -o -name '*.css' -o -name '*.php' \) \
                 -newer ./_etc/_current.release -print 2> /dev/null | head -1 )
 
-## login una volta sola, poi si riusa il cookie jar
+## autenticazione: HTTP Basic, su ogni richiesta
 #
-# Il login si fa qui e non con _smoke.curl.sh, che pure conosce la stessa ricetta, per due
+# Il login si fa qui e non con _smoke.curl.sh, che pure conosce una ricetta simile, per due
 # motivi: quello script ha come default un host CABLATO ( glisdev ) e su un altro progetto
 # interrogherebbe il sito sbagliato in silenzio; e il suo `get` antepone la riga di stato al
-# corpo, quindi non e' un downloader. La ricetta e' comunque la sua: POST di __login__[user] e
-# __login__[pasw], nessun token CSRF, cookie jar in var/tmp.
+# corpo, quindi non e' un downloader.
+#
+# La ricetta pero' non e' la sua: il POST di __login__[user]/__login__[pasw] lo rifiuta
+# l'anti-spam ( trappola 1 in testa al file ), quindi le credenziali viaggiano in HTTP Basic
+# con --user, su ogni richiesta. Il cookie jar resta, ma non serve piu' a tenere la sessione:
+# serve a tenere il consenso ai cookie.
 JAR="./var/tmp/docs-shots-cookies.txt"
 mkdir -p ./var/tmp && rm -f "$JAR"
 
-CURL=( curl --silent --show-error --location --insecure --max-time 30 --cookie "$JAR" --cookie-jar "$JAR" )
+# --globoff perche' gli indirizzi delle maschere sono pieni di parentesi quadre ( i filtri di
+# una vista si scrivono __view__[<id>][__search__]=... ) e senza di lui curl le legge come un
+# intervallo da espandere e non scarica niente
+CURL=( curl --silent --show-error --location --insecure --max-time 30 --globoff \
+       --user "$DOCS_USER:$DOCS_PASS" --cookie "$JAR" --cookie-jar "$JAR" )
 LOGIN_PATH="${DOCS_LOGIN_PATH:-/admin}"
 
+## consenso ai cookie: senza, l'overlay copre ogni maschera
+#
+# Quali cookie di terze parti dichiari il deploy non si sa da qui, e cambia da progetto a
+# progetto: si leggono dal markup dell'overlay i campi __cookie__[<nome>][value] e si rimanda
+# la stessa richiesta dichiarando "non autorizzo". La risposta setta il cookie `privacy`
+# ( _src/_config/_065.privacy.php ) nel jar, e da li' in avanti l'overlay non compare piu'.
+# Il "no" e' anche la risposta giusta per una figura: la pagina fotografata non deve caricare
+# gli analytics di nessuno.
 if [ $SECCO -eq 0 ]; then
 
-    "${CURL[@]}" --output /dev/null "$HOST$LOGIN_PATH"
+    PAGINA=$( mktemp )
+    "${CURL[@]}" --output "$PAGINA" "$HOST$LOGIN_PATH"
 
-    "${CURL[@]}" --output /dev/null \
-        --data-urlencode "__login__[user]=$DOCS_USER" \
-        --data-urlencode "__login__[pasw]=$DOCS_PASS" \
-        "$HOST$LOGIN_PATH"
+    CONSENSI=()
+    while read -r NOME; do
+
+        [ -n "$NOME" ] || continue
+
+        ## owner e tipo stanno negli hidden accanto al campo del valore: si leggono di li'
+        ## invece di darli per scontati, perche' il giorno che l'overlay chiedera' anche per
+        ## i cookie propri questo continuera' a funzionare
+        OWNER=$( grep -oE "__cookie__\[$NOME\]\[owner\]\"[^>]*value=\"[^\"]+\"" "$PAGINA" \
+                 | sed -E 's/.*value="([^"]+)".*/\1/' | head -1 )
+        TIPO=$( grep -oE "__cookie__\[$NOME\]\[type\]\"[^>]*value=\"[^\"]+\"" "$PAGINA" \
+                | sed -E 's/.*value="([^"]+)".*/\1/' | head -1 )
+
+        CONSENSI+=( --data-urlencode "__cookie__[$NOME][value]=no" \
+                    --data-urlencode "__cookie__[$NOME][owner]=${OWNER:-terzi}" \
+                    --data-urlencode "__cookie__[$NOME][type]=${TIPO:-analitici}" )
+
+    done < <( grep -oE 'name="__cookie__\[[^]]+\]\[value\]"' "$PAGINA" \
+              | sed -E 's/.*__cookie__\[([^]]+)\].*/\1/' | sort -u )
+
+    if [ ${#CONSENSI[@]} -gt 0 ]; then
+        echo "consenso dichiarato per $(( ${#CONSENSI[@]} / 3 )) cookie di terze parti"
+        "${CURL[@]}" --output /dev/null "${CONSENSI[@]}" "$HOST$LOGIN_PATH"
+    fi
+
+    rm -f "$PAGINA"
 
 fi
 
@@ -152,7 +221,7 @@ echo "$DICHIARAZIONI" | while IFS='|' read -r ID PERCORSO DIM SELETTORE ATTESA; 
 
     ## lo scatto dello standard sta sotto _usr, quello di progetto sotto usr
     DEST="./_usr/_docs/_shot/$ID.png"
-    grep -ql "@shot:[[:space:]]*$ID" ./usr/docs/*.md ./usr/docs/*/*.md ./mod/*/*.md 2> /dev/null \
+    grep -ql "@shot:[[:space:]]*$ID" ./usr/docs/*.md ./usr/docs/*/*.md ./mod/*/*.md ./src/tpl/*/*.md 2> /dev/null \
         && DEST="./usr/docs/shot/$ID.png"
 
     ## serve rigenerare?
@@ -195,7 +264,11 @@ echo "$DICHIARAZIONI" | while IFS='|' read -r ID PERCORSO DIM SELETTORE ATTESA; 
         fi
     fi
 
+    ## --disable-web-security: dalla pagina locale tutto cio' che il <base href> fa scaricare
+    ## dal sito e' cross-origin, e sui @font-face CORS vale davvero — senza, ogni icona esce a
+    ## quadratino. Chromium lo accetta solo con un profilo tutto suo, che muore col TMP
     "$CHROME" --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
+              --disable-web-security --user-data-dir="$TMP/chrome" \
               --window-size="${DIM/x/,}" --virtual-time-budget="$ATTESA" \
               --screenshot="$TMP/s.png" "file://$TMP/p.html" > /dev/null 2>&1
 
