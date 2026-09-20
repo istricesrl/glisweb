@@ -27,6 +27,41 @@
 		// normalizzazione ID carrello
 		$idCarrello = $_SESSION['carrello']['id'];
 
+        /**
+         * Senza il carrello non si cattura.
+         * =================================
+         *
+         * Fix 2026-09-18, stessa guardia messa nella cattura dei pagamenti in sospeso
+         * ( `_mod/_F030.pagamenti/_src/_api/_paypal.advanced.capture.php` ) e per lo stesso
+         * motivo. Qui il carrello arriva dalla sessione: se la sessione e' scaduta o e' stata
+         * azzerata mentre l'ordine era aperto su PayPal, `$idCarrello` e' NULL e lo script
+         * proseguiva lo stesso — catturava i soldi e poi chiamava `mysqlInsertRow` su
+         * `carrelli` senza id, che non aggiorna niente e INSERISCE: un carrello nuovo, vuoto e
+         * marcato pagato, con l'incasso dentro e nessuna riga a cui attribuirlo.
+         *
+         * La cattura e' il punto in cui i soldi si muovono davvero: se non c'e' niente a cui
+         * agganciarli, non si prendono. L'ordine resta approvato e non catturato, che per
+         * PayPal e' uno stato legittimo e scade da solo.
+         */
+        if( empty( $idCarrello ) ) {
+
+            // log
+            logWrite( 'cattura rifiutata: nessun carrello in sessione per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_ERR );
+
+            // log
+            appendToFile(
+                'cattura rifiutata: nessun carrello in sessione per l\'ordine ' . $_REQUEST['id'],
+                DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', 0 ) . '.log'
+            );
+
+            // esito
+            buildJson( array( 'error' => 'carrello non trovato per l\'ordine ' . $_REQUEST['id'] ) );
+
+            // fine script
+            exit;
+
+        }
+
         // nome del file di ricevuta
         $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 

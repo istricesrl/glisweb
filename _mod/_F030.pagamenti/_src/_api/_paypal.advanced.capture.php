@@ -48,6 +48,47 @@
             array( array( 's' => $_REQUEST['id'] ) )
         );
 
+        /**
+         * Senza il pagamento dell'ordine non si cattura.
+         * =============================================
+         *
+         * Fix 2026-09-18. La SELECT qui sopra puo' non trovare niente: fra la creazione
+         * dell'ordine e il ritorno della cattura passa tutto il tempo che vuole chi paga, e
+         * nel frattempo il pagamento master puo' essere stato cancellato ( resta senza figli
+         * quando si annullano le pendenze accodate, e c'e' anche una pulizia dei residui che
+         * lo toglie ). Fino a oggi lo script proseguiva lo stesso: catturava i soldi e poi,
+         * con `$pagamento['id']` a NULL, chiamava `mysqlInsertRow` — che senza id non
+         * aggiorna niente, INSERISCE. Ne usciva una riga di `pagamenti` con dentro soltanto
+         * codice, stato e importo della cattura: niente debitore, niente riga di carrello,
+         * niente documento. I soldi entrati e non attribuibili a nessuno, e il socio che
+         * continua a vedere il debito.
+         *
+         * Successo il 17/09/2026 su polmasi: 343,00 EUR, ordine 7CB375780G565764X. La socia
+         * e' rientrata nell'app il giorno dopo e stava per pagare una seconda volta.
+         *
+         * La cattura e' il punto in cui i soldi si muovono davvero: se non c'e' niente a cui
+         * agganciarli, non si prendono. L'ordine resta approvato e non catturato, che per
+         * PayPal e' uno stato legittimo e scade da solo.
+         */
+        if( empty( $pagamento['id'] ) ) {
+
+            // log
+            logWrite( 'cattura rifiutata: nessun pagamento per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_ERR );
+
+            // log
+            appendToFile(
+                'cattura rifiutata: nessun pagamento con ordine_pagamento = ' . $_REQUEST['id'],
+                DIR_VAR_SPOOL_PAYMENT . 'details/paypal-advanced/pagamenti.' . sprintf( '%08d', 0 ) . '.log'
+            );
+
+            // esito
+            buildJson( array( 'error' => 'pagamento non trovato per l\'ordine ' . $_REQUEST['id'] ) );
+
+            // fine script
+            exit;
+
+        }
+
         // recupero i dettagli da memcache
         $dettagli = memcacheRead( $cf['memcache']['connection'], $pagamento['token_pagamento'] );
 
