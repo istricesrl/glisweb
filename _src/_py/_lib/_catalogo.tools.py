@@ -92,6 +92,27 @@ PROTETTE = frozenset( (
 ) )
 
 
+##  le viste materializzate
+#
+#   `<entita>_view_static` non è né standard né gestita: è una **copia** di `<entita>_view`,
+#   tenuta ferma su disco perché alimenta le tendine grosse senza rifare il join a ogni
+#   richiesta. Non contiene dati propri — il suo contenuto si ricalcola per intero dalla
+#   vista — quindi riscriverla non è "scrivere dati", è rimettere in pari una cache. Per
+#   questo sta fuori dalle tre categorie e ha una funzione sua.
+#
+#   L'elenco canonico delle statiche di un deploy è in
+#   `_usr/_database/_patch/_080000999999.static.sql`; qui si guarda il database, che è la
+#   cosa che si sta per toccare.
+SUFFISSO_VISTA_STATICA = '_view_static'
+
+
+def vista_statica( tabella ):
+
+    ##  \brief vero se la tabella è una vista materializzata
+
+    return tabella.endswith( SUFFISSO_VISTA_STATICA )
+
+
 ##  categorie, in ordine di severità decrescente
 SCONOSCIUTA = 'sconosciuta'
 STANDARD_ETICHETTA = 'standard'

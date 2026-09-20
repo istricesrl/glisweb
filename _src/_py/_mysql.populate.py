@@ -17,6 +17,10 @@
 #     unità di misura, ruoli ) e quelle assistite ( tipologie, categorie, listini ) si
 #     leggono per pescare valori coerenti, e non si toccano mai: il loro contenuto è parte
 #     del framework o della configurazione del deploy;
+#   - le **viste materializzate** ( `<entita>_view_static` ) si rifanno a fine giro, nella
+#     stessa transazione: sono copie tenute ferme su disco per non rifare il join a ogni
+#     tendina, e dopo aver cancellato o inserito righe stanno indietro. Una demo che nelle
+#     tendine mostra anagrafiche che non esistono più è peggio di una demo vuota;
 #   - tutto il giro è una transazione sola, e con --secco si vede l'SQL senza eseguirlo.
 #
 #   \code
@@ -24,6 +28,7 @@
 #   _src/_py/_mysql.populate.py anagrafica --quantita 200
 #   _src/_py/_mysql.populate.py anagrafica catalogo documenti --svuota
 #   _src/_py/_mysql.populate.py anagrafica --con iban,url --senza contatti --secco
+#   _src/_py/_mysql.populate.py --viste solo
 #   \endcode
 
 import argparse
@@ -128,6 +133,10 @@ def analizza_argomenti():
 
     analizzatore.add_argument( '--svuota', action = 'store_true',
         help = 'cancella prima i dati esistenti delle entità selezionate' )
+
+    analizzatore.add_argument( '--viste', default = 'auto', choices = ( 'auto', 'no', 'solo' ),
+        help = 'viste materializzate *_view_static: auto = si rifanno a fine giro ( default ),'
+               ' no = si lasciano come sono, solo = si rifanno e basta, senza generare niente' )
 
     analizzatore.add_argument( '--secco', action = 'store_true',
         help = 'non scrive niente: stampa l\'SQL che eseguirebbe' )
@@ -294,7 +303,7 @@ def stampa_elenco():
     print( 'ruoli coerenti: questo strumento non ci scrive mai.' )
 
 
-def stampa_riepilogo( piano, conteggi_svuotamento ):
+def stampa_riepilogo( piano, conteggi_svuotamento, passi_viste ):
 
     if conteggi_svuotamento:
 
@@ -320,12 +329,20 @@ def stampa_riepilogo( piano, conteggi_svuotamento ):
 
     print( '  %-34s %8d righe in totale' % ( '', totale ) )
 
+    if passi_viste:
+
+        print( '\nviste materializzate rifatte dalla loro vista:' )
+
+        for passo in passi_viste:
+            print( '  = %-32s <- %-24s %2d colonne'
+                   % ( passo[ 'statica' ], passo[ 'vista' ], passo[ 'colonne' ] ) )
+
 
 ## ---------------------------------------------------------------------------------------
 ##  costruzione dell'SQL
 ## ---------------------------------------------------------------------------------------
 
-def costruisci_sql( piano, passi_svuotamento, schema ):
+def costruisci_sql( piano, passi_svuotamento, passi_viste, schema ):
 
     pezzi = [
         '-- generato da _src/_py/_mysql.populate.py il %s'
@@ -349,6 +366,12 @@ def costruisci_sql( piano, passi_svuotamento, schema ):
     for aggiornamento in piano.aggiornamenti:
         pezzi.append( '%s;' % aggiornamento )
 
+    ##  le viste materializzate si rifanno per ultime: devono vedere i dati nuovi e le
+    ##  cancellazioni, e stanno dentro la stessa transazione di tutto il resto
+    for passo in passi_viste:
+        for istruzione in passo[ 'istruzioni' ]:
+            pezzi.append( '%s;' % istruzione )
+
     pezzi.append( 'COMMIT;' )
 
     return '\n'.join( pezzi ) + '\n'
@@ -362,12 +385,13 @@ def principale():
 
     opzioni, analizzatore = analizza_argomenti()
 
-    if opzioni.elenco or not opzioni.entita:
+    if opzioni.elenco or ( not opzioni.entita and opzioni.viste != 'solo' ):
 
         stampa_elenco()
 
         if not opzioni.entita and not opzioni.elenco:
             print( '\nnessuna entità indicata: non è stato fatto niente.' )
+            print( 'per rimettere in pari le sole viste materializzate: --viste solo' )
             analizzatore.print_usage()
 
         return 0
@@ -471,7 +495,7 @@ def _lavora( opzioni, selezionate, attivi_per_entita, generale, per_entita, mysq
     passi_svuotamento = []
     conteggi_svuotamento = []
 
-    if opzioni.svuota:
+    if opzioni.svuota and opzioni.viste != 'solo':
 
         obiettivi = [ entita.tabella for entita in selezionate ]
         passi_svuotamento = schema.piano_svuotamento( obiettivi, catalogo_tools.PROTETTE )
@@ -502,7 +526,7 @@ def _lavora( opzioni, selezionate, attivi_per_entita, generale, per_entita, mysq
     ##  lo si può fare ( la cancellazione non è ancora avvenuta ), quindi si continua dagli
     ##  id attuali. Non è un problema, sono AUTO_INCREMENT e i buchi non danno fastidio.
 
-    for entita in selezionate:
+    for entita in ( [] if opzioni.viste == 'solo' else selezionate ):
 
         quanti = per_entita.get( entita.nome, generale )
 
@@ -526,7 +550,23 @@ def _lavora( opzioni, selezionate, attivi_per_entita, generale, per_entita, mysq
 
     piano = contesto.piano
 
-    if piano.vuoto() and not passi_svuotamento:
+    ## -----------------------------------------------------------------------------------
+    ##  viste materializzate
+    ## -----------------------------------------------------------------------------------
+
+    ##  sono copie di <entita>_view tenute ferme su disco per non rifare il join a ogni
+    ##  tendina: dopo aver cancellato o inserito righe stanno indietro, e una demo che
+    ##  mostra nelle tendine anagrafiche che non esistono più è peggio di una demo vuota
+    passi_viste = []
+
+    if opzioni.viste != 'no':
+
+        passi_viste, avvisi_viste = schema.piano_viste_statiche()
+
+        for avviso in avvisi_viste:
+            print( 'attenzione: %s' % avviso, file = sys.stderr )
+
+    if piano.vuoto() and not passi_svuotamento and not passi_viste:
         print( '\nnon c\'è niente da fare.' )
         return 0
 
@@ -546,9 +586,9 @@ def _lavora( opzioni, selezionate, attivi_per_entita, generale, per_entita, mysq
     ##  esecuzione
     ## -----------------------------------------------------------------------------------
 
-    sql = costruisci_sql( piano, passi_svuotamento, schema )
+    sql = costruisci_sql( piano, passi_svuotamento, passi_viste, schema )
 
-    stampa_riepilogo( piano, conteggi_svuotamento )
+    stampa_riepilogo( piano, conteggi_svuotamento, passi_viste )
 
     if opzioni.sql:
 

@@ -24,7 +24,7 @@
 #   dai figli ai padri e con i controlli di integrità ACCESI, così se il piano è sbagliato
 #   il database lo dice invece di lasciar passare il guasto.
 
-from _catalogo_tools import scrivibile
+from _catalogo_tools import SUFFISSO_VISTA_STATICA, scrivibile
 
 
 class Schema( object ):
@@ -228,6 +228,94 @@ class Schema( object ):
             ordine.append( scelta )
 
         return ordine
+
+    ## -----------------------------------------------------------------------------------
+    ##  viste materializzate
+    ## -----------------------------------------------------------------------------------
+
+    def viste_statiche( self ):
+
+        ##  \brief elenca le viste materializzate del deploy con la loro sorgente
+
+        elenco = []
+
+        for tabella in sorted( self.colonne ):
+
+            if not tabella.endswith( SUFFISSO_VISTA_STATICA ):
+                continue
+
+            entita = tabella[ : -len( SUFFISSO_VISTA_STATICA ) ]
+            vista = '%s_view' % entita
+
+            elenco.append( {
+                'entita': entita,
+                'statica': tabella,
+                'vista': vista if vista in self.colonne else None,
+            } )
+
+        return elenco
+
+    def piano_viste_statiche( self, soltanto = None ):
+
+        ##  \brief rifà le viste materializzate a partire dalle viste vere
+        #   \param soltanto elenco di entità da rifare, None per tutte
+        #   \return una tupla ( passi, avvisi )
+        #
+        #   È la stessa cosa che fa refreshStaticView() in _src/_lib/_mysql.tools.php, e
+        #   per le stesse ragioni: si elencano **le colonne comuni** alle due parti invece
+        #   di affidarsi a SELECT *, che accoppia per posizione e sbaglia in silenzio appena
+        #   vista e statica divergono di una colonna. Una statica senza la sua vista non è
+        #   un errore, è un deploy che quella vista non ce l'ha.
+        #
+        #   ⚠ Una differenza sola, e voluta: il task del framework
+        #   ( _src/_api/_task/_mysql.view.static.refresh.php ) svuota con TRUNCATE, qui si
+        #   usa DELETE. TRUNCATE provoca un COMMIT implicito, e tutto il giro di questo
+        #   strumento è una transazione sola: con TRUNCATE in mezzo, un errore successivo
+        #   non tornerebbe più indietro.
+
+        passi = []
+        avvisi = []
+
+        for voce in self.viste_statiche():
+
+            if soltanto is not None and voce[ 'entita' ] not in soltanto:
+                continue
+
+            if not voce[ 'vista' ]:
+                avvisi.append( 'la vista %s_view non esiste: %s non si può rifare'
+                               % ( voce[ 'entita' ], voce[ 'statica' ] ) )
+                continue
+
+            colonne_vista = list( self.colonne[ voce[ 'vista' ] ].keys() )
+            colonne_statica = self.colonne[ voce[ 'statica' ] ]
+
+            comuni = [ colonna for colonna in colonne_vista if colonna in colonne_statica ]
+            manca = [ colonna for colonna in colonne_vista if colonna not in colonne_statica ]
+
+            if not comuni:
+                avvisi.append( 'nessuna colonna in comune fra %s e %s: migrazione a metà, statica saltata'
+                               % ( voce[ 'vista' ], voce[ 'statica' ] ) )
+                continue
+
+            if manca:
+                avvisi.append( '%s ha colonne che %s non ha ( %s ): non vengono copiate'
+                               % ( voce[ 'vista' ], voce[ 'statica' ], ', '.join( manca ) ) )
+
+            campi = '`%s`' % '`, `'.join( comuni )
+
+            passi.append( {
+                'entita': voce[ 'entita' ],
+                'statica': voce[ 'statica' ],
+                'vista': voce[ 'vista' ],
+                'colonne': len( comuni ),
+                'istruzioni': [
+                    'DELETE FROM `%s`' % voce[ 'statica' ],
+                    'REPLACE INTO `%s` ( %s ) SELECT %s FROM `%s`'
+                    % ( voce[ 'statica' ], campi, campi, voce[ 'vista' ] ),
+                ],
+            } )
+
+        return passi, avvisi
 
     ## -----------------------------------------------------------------------------------
     ##  svuotamento
