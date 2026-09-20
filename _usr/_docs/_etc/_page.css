@@ -170,6 +170,19 @@ body {
     padding: 2.6rem 3rem 6rem;
 }
 
+/* ------------------------------------------------------------- immagini */
+
+/* gli scatti delle maschere sono larghi quanto la finestra fotografata
+   ( 1440px ), cioe' piu' della colonna del testo: senza questo escono dal
+   margine destro invece di rimpicciolirsi */
+
+.content img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+}
+
 /* ---------------------------------------------------------------- titoli */
 
 h1, h2, h3, h4 {
