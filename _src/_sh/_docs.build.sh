@@ -9,6 +9,9 @@
 #   _docs.build.sh --dev          manuale sviluppatore del progetto  -> usr/pages/manual/
 #   _docs.build.sh --quickstart   quickstart del progetto            -> usr/pages/quickstart/
 #   _docs.build.sh --standard     documentazione dello standard      -> _usr/_pages/    (vedi NOTA)
+#                                 quickstart, manuale utente e manuale sviluppatore dello standard
+#                                 sono PUBBLICI: descrivono il framework e non le personalizzazioni
+#                                 di un cliente, che restano dietro Basic auth in usr/pages/
 #   _docs.build.sh --all          tutte le precedenti
 #   _docs.build.sh --dry-run      elenca cosa genererebbe, non scrive niente
 #

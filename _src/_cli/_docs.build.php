@@ -157,18 +157,30 @@
      * personalizzazioni e non alternative. Seguono i capitoli dei moduli attivi, uno per modulo, dove
      * invece la versione custom sostituisce la standard secondo la regola dell'underscore.
      *
+     * Con $standard vero si prendono i SOLI sorgenti dello standard, e il manuale che ne esce
+     * descrive il framework e non l'installazione: e' la versione pubblica, quella che il link del
+     * template mostra a chiunque, e proprio per questo non deve contenere niente di un singolo
+     * cliente. I manuali di progetto restano la somma dei due, e restano protetti da Basic auth.
+     *
      * @param   string      $tipo           READ per il manuale sviluppatore, USER per quello utente
+     * @param   bool        $standard       se vero ignora la meta' custom e documenta il solo standard
      *
      * @return  array                       capitoli, ciascuno con chiave, titolo e file sorgente
      *
      */
-    function docsBuildCapitoli( $tipo ) {
+    function docsBuildCapitoli( $tipo, $standard = false ) {
 
         $capitoli = array();
 
         $introduzione = array();
 
-        foreach( array( '_usr/_docs/' . $tipo . '.md', 'usr/docs/' . $tipo . '.md' ) as $p ) {
+        $sorgenti = array( '_usr/_docs/' . $tipo . '.md' );
+
+        if( ! $standard ) {
+            $sorgenti[] = 'usr/docs/' . $tipo . '.md';
+        }
+
+        foreach( $sorgenti as $p ) {
             if( $f = docsBuildPath( $p ) ) {
                 $introduzione[] = $f;
             }
@@ -183,7 +195,13 @@
         // delle variabili, le guide pratiche. La coppia standard/custom segue la solita regola.
         $extra = strtolower( $tipo );
 
-        foreach( array( '_usr/_docs/_' . $extra, 'usr/docs/' . $extra ) as $d ) {
+        $cartelle = array( '_usr/_docs/_' . $extra );
+
+        if( ! $standard ) {
+            $cartelle[] = 'usr/docs/' . $extra;
+        }
+
+        foreach( $cartelle as $d ) {
 
             if( ! $dir = docsBuildPath( $d ) ) {
                 continue;
@@ -212,7 +230,7 @@
         foreach( docsBuildTemplate() as $t ) {
 
             // la versione custom del template sostituisce quella standard
-            $f = docsBuildPath( 'src/tpl/' . $t . '/' . $tipo . '.md' );
+            $f = ( $standard ) ? false : docsBuildPath( 'src/tpl/' . $t . '/' . $tipo . '.md' );
 
             if( $f === false ) {
                 $f = docsBuildPath( '_src/_tpl/_' . $t . '/' . $tipo . '.md' );
@@ -231,7 +249,7 @@
         foreach( docsBuildModuli() as $m ) {
 
             // la versione custom del modulo sostituisce quella standard
-            $f = docsBuildPath( 'mod/' . $m . '/' . $tipo . '.md' );
+            $f = ( $standard ) ? false : docsBuildPath( 'mod/' . $m . '/' . $tipo . '.md' );
 
             if( $f === false ) {
                 $f = docsBuildPath( '_mod/_' . $m . '/' . $tipo . '.md' );
@@ -241,7 +259,9 @@
                 continue;
             }
 
-            $acceso = in_array( $m, $attivi, true );
+            // in un manuale dello standard l'attivazione non c'entra niente: e' una proprieta'
+            // della singola installazione, e li' si documenta il framework
+            $acceso = ( $standard ) ? true : in_array( $m, $attivi, true );
 
             $capitoli[] = array(
                 'chiave' => $m,
@@ -259,7 +279,7 @@
     /**
      * elenca gli altri documenti del deploy, con il link per arrivarci
      *
-     * I quattro documenti — i due manuali e le due quickstart — sono alberi separati, ciascuno col
+     * I sei documenti — i due manuali dello standard, i due del progetto e le due quickstart — sono alberi separati, ciascuno col
      * suo indice. Senza un rimando esplicito da uno all'altro chi legge deve sapere a memoria che
      * esistono e a che indirizzo stanno, cioe' deve uscire dalla documentazione per continuare a
      * leggerla: e' esattamente cio' che questa funzione evita.
@@ -281,11 +301,24 @@
      */
     function docsBuildAltrove( $destinazione ) {
 
+        // i documenti dello standard esistono solo dove la generazione e' stata chiesta, cioe' dove
+        // c'e' var/docs.build.conf: i sorgenti ci sono su ogni deploy, le pagine no, e senza questa
+        // condizione il rimando sarebbe un 404 su tutti i deploy cliente
+        $std = ( docsBuildPath( 'var/docs.build.conf' ) !== false );
+
+        // da un documento PUBBLICO si rimanda ai soli documenti pubblici: i manuali di progetto
+        // stanno dietro Basic auth, e un lettore arrivato dal punto interrogativo dell'applicazione
+        // si troverebbe davanti una richiesta di password — cioe' esattamente il difetto per cui
+        // questi documenti sono stati resi pubblici
+        $qui_std = ( strpos( $destinazione, '_usr/_pages/' ) === 0 );
+
         $documenti = array(
-            array( 'dir' => 'usr/pages/manual/read', 'titolo' => 'manuale dello sviluppatore', 'c' => 'READ' ),
-            array( 'dir' => 'usr/pages/manual/user', 'titolo' => 'manuale utente',             'c' => 'USER' ),
-            array( 'dir' => 'usr/pages/quickstart',  'titolo' => 'guide introduttive del progetto', 'q' => 'usr/docs/quickstart' ),
-            array( 'dir' => '_usr/_pages/_quickstart', 'titolo' => 'guide introduttive',       'q' => '_usr/_docs/_quickstart' )
+            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale dello sviluppatore',              'c' => 'READ', 'std' => true ),
+            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                          'c' => 'USER', 'std' => true ),
+            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',                      'q' => '_usr/_docs/_quickstart', 'std' => true ),
+            array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'manuale dello sviluppatore del progetto', 'c' => 'READ' ),
+            array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'manuale utente del progetto',             'c' => 'USER' ),
+            array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive del progetto',         'q' => 'usr/docs/quickstart' )
         );
 
         // dalla cartella di destinazione all'indirizzo: i due prefissi delle cartelle ad accesso
@@ -309,7 +342,15 @@
                 continue;
             }
 
-            if( isset( $d['c'] ) && ! docsBuildCapitoli( $d['c'] ) ) {
+            if( ! empty( $d['std'] ) && ! $std ) {
+                continue;
+            }
+
+            if( empty( $d['std'] ) && $qui_std ) {
+                continue;
+            }
+
+            if( isset( $d['c'] ) && ! docsBuildCapitoli( $d['c'], ! empty( $d['std'] ) ) ) {
                 continue;
             }
 
@@ -451,19 +492,28 @@
      * copia gli screenshot accanto alle pagine generate
      *
      * Prima quelli dello standard, poi quelli del progetto: a parita' di nome vince il progetto,
-     * cosi' un'installazione puo' sostituire la figura di una maschera che ha personalizzato.
+     * cosi' un'installazione puo' sostituire la figura di una maschera che ha personalizzato. Nel
+     * manuale dello standard, che e' pubblico, gli scatti del progetto non entrano: mostrerebbero
+     * le maschere personalizzate di un cliente a chiunque apra il link.
      *
      * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     * @param   bool        $standard       se vero copia i soli scatti dello standard
      *
      * @return  int                         numero di immagini copiate
      *
      */
-    function docsBuildScreenshot( $destinazione ) {
+    function docsBuildScreenshot( $destinazione, $standard = false ) {
 
         $dest = DOCS_BASE . $destinazione . '/shot';
         $n    = 0;
 
-        foreach( array( '_usr/_docs/_shot', 'usr/docs/shot' ) as $d ) {
+        $cartelle = array( '_usr/_docs/_shot' );
+
+        if( ! $standard ) {
+            $cartelle[] = 'usr/docs/shot';
+        }
+
+        foreach( $cartelle as $d ) {
 
             if( ! $dir = docsBuildPath( $d ) ) {
                 continue;
@@ -537,14 +587,16 @@
      *
      * @param   string      $tipo           READ o USER
      * @param   string      $destinazione   cartella delle pagine, relativa alla document root
-     * @param   array       $opzioni        pubblico, linea, titolo, secco
+     * @param   array       $opzioni        pubblico, linea, titolo, secco, standard
      *
      * @return  int                         pagine scritte
      *
      */
     function docsBuildManuale( $tipo, $destinazione, $opzioni ) {
 
-        $capitoli = docsBuildCapitoli( $tipo );
+        $standard = ! empty( $opzioni['standard'] );
+
+        $capitoli = docsBuildCapitoli( $tipo, $standard );
 
         if( ! $capitoli ) {
             echo "  nessun sorgente $tipo.md trovato, salto\n";
@@ -566,7 +618,7 @@
 
         // gli screenshot vanno accanto alle pagine: nel markdown sono citati con un percorso
         // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
-        docsBuildScreenshot( $destinazione );
+        docsBuildScreenshot( $destinazione, $standard );
 
         // PRIMA PASSATA: si compone il corpo di ogni capitolo e si raccoglie l'indice. Le pagine si
         // scrivono solo dopo, perche' ognuna porta in barra laterale l'elenco degli altri capitoli e
@@ -890,9 +942,34 @@
     // Il marcatore sta in var/ e non in etc/ perche' e' una proprieta' della SINGOLA installazione:
     // etc/ viene deployato, quindi un marcatore creato su DEV accenderebbe la generazione anche su
     // TEST e PROD. var/ e' escluso dal deploy e ignorato da git, come i cutoff delle automazioni.
+    //
+    // ⚠ i tre documenti dello standard sono PUBBLICI, e non per dimenticanza: descrivono il
+    // framework e non un cliente, e il punto interrogativo dell'applicazione lo premono gli utenti,
+    // che la password dell'utente `docs` non ce l'hanno. Per questo qui non si chiama
+    // docsBuildProtezione() e per questo stanno sotto _usr/_pages/, che _usr/_docs/.htaccess lascia
+    // aperta di proposito. Quello che va protetto e' il manuale DEL PROGETTO, qui sopra.
     if( ( $tutto || isset( $opt['standard'] ) ) && docsBuildPath( 'var/docs.build.conf' ) ) {
+
         echo "documentazione dello standard:\n";
+
         docsBuildQuickstart( '_usr/_docs/_quickstart', '_usr/_pages/_quickstart', array( 'pubblico' => NULL, 'linea' => $linea, 'secco' => $secco ) );
+
+        docsBuildManuale( 'USER', '_usr/_pages/_manual/user', array(
+            'pubblico' => array( 'operatore', 'amministratore' ),
+            'linea'    => $linea,
+            'titolo'   => 'manuale utente',
+            'standard' => true,
+            'secco'    => $secco
+        ) );
+
+        docsBuildManuale( 'READ', '_usr/_pages/_manual/read', array(
+            'pubblico' => array( 'sviluppatore', 'amministratore' ),
+            'linea'    => $linea,
+            'titolo'   => 'manuale sviluppatore',
+            'standard' => true,
+            'secco'    => $secco
+        ) );
+
     }
 
     exit( 0 );
