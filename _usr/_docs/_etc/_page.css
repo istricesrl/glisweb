@@ -155,6 +155,46 @@ body {
     font-weight: 600;
 }
 
+/*
+ * i template e i moduli sono decine: in fila con gli altri capitoli coprirebbero l'indice, e stanno
+ * percio' in un sottomenu che si apre. E' un <details>, quindi funziona senza una riga di
+ * JavaScript e resta aperto sul gruppo che si sta leggendo; la sua testata e' insieme
+ * l'interruttore e la voce del capitolo che documenta la famiglia.
+ */
+.sidebar-nav details.gruppo > summary {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    margin-left: -.9rem;
+    list-style: none;
+    cursor: pointer;
+}
+.sidebar-nav details.gruppo > summary::-webkit-details-marker {
+    display: none;
+}
+.sidebar-nav details.gruppo > summary::before {
+    content: "\25B8";
+    width: .7rem;
+    font-size: .7rem;
+    color: var(--fg-faint);
+}
+.sidebar-nav details.gruppo[open] > summary::before {
+    content: "\25BE";
+}
+.sidebar-nav details.gruppo > summary a {
+    flex: 1 1 auto;
+}
+.sidebar-nav .gruppo-voci {
+    display: flex;
+    flex-direction: column;
+    margin: .1rem 0 .3rem .1rem;
+    padding-left: .45rem;
+    border-left: 1px solid var(--line);
+}
+.sidebar-nav .gruppo-voci a {
+    font-size: .8rem;
+}
+
 .sidebar-foot {
     margin-top: 1.4rem;
     padding-top: .8rem;

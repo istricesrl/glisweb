@@ -507,6 +507,7 @@
             'data'          => date( 'Y-m-d' ),
             'capitoli'      => array(),
             'corrente'      => '',
+            'gruppo'        => '',
             'altrove'       => array()
         );
 
@@ -534,33 +535,71 @@
         }
 
         // indice del manuale: gli altri capitoli, col corrente segnato e non cliccabile
+        //
+        // I capitoli di una FAMIGLIA — i template, i moduli — sono decine, e in fila con gli altri
+        // coprirebbero l'indice: stanno in un sottomenu che si apre, la cui testata e' insieme
+        // l'interruttore e la voce del capitolo generale della famiglia. Il sottomenu e' un
+        // <details>, quindi si apre e si chiude senza una riga di JavaScript, e resta aperto sul
+        // gruppo che si sta leggendo.
         $capitoli = '';
         $prima    = null;
         $dopo     = null;
         $vista    = false;
+        $aperto   = '';
 
         foreach( $meta['capitoli'] as $c ) {
 
-            $etichetta = htmlspecialchars( $c['titolo'], ENT_QUOTES, 'UTF-8' );
+            $gruppo  = ( ! empty( $c['gruppo'] ) ) ? $c['gruppo'] : '';
+            $testata = ! empty( $c['testata'] );
+
+            // il sottomenu precedente si chiude appena si esce dal suo gruppo
+            if( $aperto !== '' && $gruppo !== $aperto ) {
+                $capitoli .= '</div></details>';
+                $aperto    = '';
+            }
+
+            // nel menu di un gruppo il nome del capitolo basta da solo: "template" e "moduli" li
+            // dice gia' la testata, e ripeterli a ogni voce mangia la meta' della riga
+            $etichetta = htmlspecialchars( ( ! empty( $c['breve'] ) ) ? $c['breve'] : $c['titolo'], ENT_QUOTES, 'UTF-8' );
+            $pieno     = htmlspecialchars( $c['titolo'], ENT_QUOTES, 'UTF-8' );
             $file      = htmlspecialchars( $c['chiave'], ENT_QUOTES, 'UTF-8' ) . '.html';
 
             if( $c['chiave'] === $meta['corrente'] ) {
 
-                $capitoli .= '<a class="corrente" href="#contenuto">' . $etichetta . '</a>';
-                $vista     = true;
+                $voce  = '<a class="corrente" href="#contenuto">' . $etichetta . '</a>';
+                $vista = true;
 
             } else {
 
-                $capitoli .= '<a href="' . $file . '">' . $etichetta . '</a>';
+                $voce = '<a href="' . $file . '">' . $etichetta . '</a>';
 
                 if( ! $vista ) {
-                    $prima = array( 'file' => $file, 'titolo' => $etichetta );
+                    $prima = array( 'file' => $file, 'titolo' => $pieno );
                 } else if( $dopo === null ) {
-                    $dopo = array( 'file' => $file, 'titolo' => $etichetta );
+                    $dopo = array( 'file' => $file, 'titolo' => $pieno );
                 }
 
             }
 
+            if( $testata ) {
+
+                $apri = ( $meta['corrente'] === $c['chiave'] || $meta['gruppo'] === $c['chiave'] ) ? ' open' : '';
+
+                $capitoli .= '<details class="gruppo"' . $apri . '><summary>' . $voce . '</summary>'
+                           . '<div class="gruppo-voci">';
+
+                $aperto = $c['chiave'];
+
+            } else {
+
+                $capitoli .= $voce;
+
+            }
+
+        }
+
+        if( $aperto !== '' ) {
+            $capitoli .= '</div></details>';
         }
 
         if( $capitoli !== '' ) {
@@ -570,14 +609,28 @@
         }
 
         // gli altri documenti del deploy: i manuali e le quickstart sono alberi separati, e senza
-        // questo rimando si esce dalla documentazione per passare dall'uno all'altro
+        // questo rimando si esce dalla documentazione per passare dall'uno all'altro. Arrivano gia'
+        // divisi per sezione — quelli del progetto da una parte, quelli dello standard dall'altra —
+        // e la sezione si apre quando cambia, cosi' l'ordine dell'elenco e' l'unica cosa che decide
+        // il menu.
         if( $meta['altrove'] ) {
 
-            $capitoli .= '<span class="sidebar-sez">altri documenti</span>';
+            $sezione = '';
 
             foreach( $meta['altrove'] as $a ) {
 
-                $capitoli .= '<a href="' . htmlspecialchars( $a['href'], ENT_QUOTES, 'UTF-8' ) . '">'
+                $s = ( ! empty( $a['sezione'] ) ) ? $a['sezione'] : 'altri documenti';
+
+                if( $s !== $sezione ) {
+                    $capitoli .= '<span class="sidebar-sez">' . htmlspecialchars( $s, ENT_QUOTES, 'UTF-8' ) . '</span>';
+                    $sezione   = $s;
+                }
+
+                // il documento in cui ci si trova e' segnato come il capitolo corrente, e porta al
+                // proprio indice: e' l'unico punto del menu che dice dove si e' finiti
+                $classe = ( ! empty( $a['corrente'] ) ) ? ' class="corrente"' : '';
+
+                $capitoli .= '<a' . $classe . ' href="' . htmlspecialchars( $a['href'], ENT_QUOTES, 'UTF-8' ) . '">'
                            . htmlspecialchars( $a['titolo'], ENT_QUOTES, 'UTF-8' ) . '</a>';
 
             }

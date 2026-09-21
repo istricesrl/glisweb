@@ -3,8 +3,12 @@
 Questo è il manuale di chi **usa** un'applicazione GlisWeb: non descrive il codice, ma le maschere,
 i pulsanti e le operazioni quotidiane.
 
-I capitoli che seguono questo sono uno per modulo attivo, e descrivono solo i moduli che questa
-installazione ha davvero: se un modulo non è attivo, il suo capitolo non compare.
+Dopo i capitoli generali vengono due sezioni: **template**, che è la forma delle pagine e il modo
+in cui ci si muove dentro, e **moduli**, cioè le aree dell'applicazione descritte una per una.
+
+I moduli ci sono tutti, non solo quelli accesi su questa installazione: se una maschera descritta
+non si trova, quasi sempre quel modulo qui non è attivo, oppure il proprio utente non ha il permesso
+di aprirlo.
 
 > **nota** — per una panoramica rapida, prima del manuale, c'è la guida introduttiva: è breve e serve
 > a far partire, non a coprire tutto.

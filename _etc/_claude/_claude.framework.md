@@ -456,6 +456,35 @@ Vale su **due livelli**, e sono due perché documentano due cose diverse:
 `_usr/_docs/` proprio: replicano solo `_src/`, e la coppia nella radice del componente è già la
 convenzione viva (`_mod/_CT000.contatti/READ.md`, `_src/_tpl/_athena/READ.md`).
 
+### Come si compone un manuale: i capitoli, e le due sezioni
+
+Un manuale nasce in quest'ordine: l'**introduzione** dal documento di deploy, i **capitoli
+numerati** di `_usr/_docs/_read/` e `_usr/_docs/_user/` ( il numero serve solo a ordinare e non
+finisce nel titolo ), e infine due **sezioni** — *template* e *moduli* — che nel menu sono
+sottomenu a espansione e nell'indice due elenchi rientrati. Sono decine di capitoli: in fila con gli
+altri coprirebbero l'indice.
+
+⚠ **La testata di una sezione è il capitolo numerato che porta il nome della famiglia.**
+`_usr/_docs/_read/155.template.md` e `_usr/_docs/_read/050.moduli.md` non restano in fila con gli
+altri: diventano la voce da cui il sottomenu si apre, cioè la documentazione **generale** della
+famiglia, e la loro pagina elenca in fondo i capitoli che raccoglie. Il vocabolario è chiuso —
+`template` e `moduli`, `DOCS_FAMIGLIE` in `_src/_cli/_docs.build.php` — e chiamare la testata in un
+altro modo la lascia in fila con gli altri capitoli, **senza errori e senza segnali**. La coppia
+standard/custom qui si somma, come nell'introduzione.
+
+⚠ **L'attivazione di un modulo non si documenta.** I manuali raccolgono i `READ.md` e gli
+`USER.md` di **tutti** i moduli e di **tutti** i template dell'albero, accesi o spenti: qui si
+documenta il framework, e per decidere se accendere un modulo bisogna prima poter leggere cosa fa.
+Se un modulo sia attivo è una proprietà della singola installazione, e scritta nel capitolo sarebbe
+sbagliata su ogni altro deploy oltre che inutile a chi studia il framework. Deciso da Fabio il
+**21/09/2026**: fino a quel giorno il titolo del capitolo di un modulo spento portava un
+` ( non attivo )`, ed è stato tolto da tutte e due i manuali.
+
+I **rimandi agli altri documenti** in fondo al menu sono a loro volta due sezioni —
+*documentazione progetto* e *documentazione del framework* — col documento in cui ci si trova
+segnato: un elenco unico obbligava a dire nel titolo di ciascuno a quale dei due piani
+appartenesse.
+
 Le **quickstart hanno collocazione propria a ogni livello** — sorgente, output e URL — e non
 confluiscono nei manuali: il loro scopo è far partire, non coprire. I documenti sono la quickstart e
 il manuale, per sviluppatore e per utente, più la reference Doxygen generata dai docblock, che è

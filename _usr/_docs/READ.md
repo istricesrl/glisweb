@@ -37,19 +37,26 @@ Il numero in testa al nome di un capitolo serve solo a tenerlo in ordine, e racc
 
 | fascia | cosa ci sta |
 |---|---|
-| `0xx` | i fondamenti: installazione, aggiornamento, cartelle, entità, moduli |
-| `1xx` | le funzioni del framework, una per capitolo: cache, task, job, autenticazione, mail, stampe, template, privacy, deploy, test |
+| `0xx` | i fondamenti: installazione, aggiornamento, cartelle, entità |
+| `1xx` | le funzioni del framework, una per capitolo: cache, task, job, autenticazione, mail, stampe, privacy, deploy, test |
 | `2xx` | la reference: le variabili globali, e i file del framework descritti uno per uno |
 | `3xx` | la reference del database, spezzata per iniziale della tabella |
 | `4xx` | gli **howto**: una procedura per sezione, cercata per compito e non per argomento |
 | `5xx` | le integrazioni con i servizi esterni |
 | `9xx` | quello che si consulta: le raccomandazioni, le domande frequenti, il glossario |
 
-Dopo i capitoli numerati vengono quelli dei **template** e dei **moduli**. Quelli non sono scritti qui:
-il loro sorgente vive dentro il template e dentro il modulo, accanto al codice che descrivono, e il
-manuale li raccoglie senza copiarli. È la regola che tiene insieme tutta la documentazione — **una cosa
-sta in un posto solo** — ed è il motivo per cui un modulo che non è attivo su questa installazione non
-ha un capitolo.
+Dopo i capitoli numerati vengono le due **sezioni** dei **template** e dei **moduli**. Ciascuna si
+apre con la sua testata — *template*, *moduli* — che è la documentazione generale della famiglia, e
+sotto ha un capitolo per ogni template e per ogni modulo.
+
+Quelli non sono scritti qui: il loro sorgente vive dentro il template e dentro il modulo, accanto al
+codice che descrivono, e il manuale li raccoglie senza copiarli. È la regola che tiene insieme tutta
+la documentazione — **una cosa sta in un posto solo**.
+
+> **nota** — nelle due sezioni ci sono **tutti** i template e **tutti** i moduli dell'albero, non
+> solo quelli in uso su questa installazione. Qui si documenta il framework, e per decidere se
+> accendere un modulo bisogna prima poter leggere cosa fa; se sia acceso o spento è una proprietà
+> del singolo deploy, e nel manuale sarebbe un'informazione sbagliata ovunque tranne che lì.
 
 ## la reference dei file, e come si legge
 

@@ -29,6 +29,17 @@
     define( 'DOCS_BASE', rtrim( getcwd(), '/' ) . '/' );
 
     /**
+     * le famiglie di componenti che nel manuale stanno in un sottomenu
+     *
+     * Sono i due insiemi di cui il manuale raccoglie la documentazione un pezzo per volta: i
+     * template e i moduli. Il nome vale tre volte — e' la chiave del gruppo, il nome del capitolo
+     * che ne fa da testata e la voce del menu — e per questo e' un vocabolario chiuso: chiamare la
+     * testata in un altro modo la lascia in fila con gli altri capitoli, senza errori e senza
+     * segnali.
+     */
+    define( 'DOCS_FAMIGLIE', array( 'template', 'moduli' ) );
+
+    /**
      * verifica che un percorso resti dentro la document root
      *
      * Guardia deliberata e non ridondante: un livello sopra la document root vive il READ.md del
@@ -86,47 +97,16 @@
     }
 
     /**
-     * elenca i moduli attivi del progetto
-     *
-     * @return  array                       identificativi dei moduli, nell'ordine di attivazione
-     *
-     */
-    function docsBuildModuliAttivi() {
-
-        $attivi = array();
-
-        // 1. l'elenco esplicito nella configurazione
-        if( $f = docsBuildPath( 'src/config.json' ) ) {
-
-            $cx = json_decode( file_get_contents( $f ), true );
-
-            if( isset( $cx['mods']['active']['array'] ) && is_array( $cx['mods']['active']['array'] ) ) {
-                $attivi = $cx['mods']['active']['array'];
-            }
-
-        }
-
-        // 2. l'auto-discovery delle cartelle di mod/
-        //
-        // Il framework usa TUTT'E DUE le strategie ( _src/_config.php ), e creare la cartella e' il
-        // modo che la quickstart insegna. Guardare il solo elenco esplicito lasciava senza capitolo
-        // i moduli di ogni deploy che non lo compila, in silenzio.
-        foreach( glob( DOCS_BASE . 'mod/*', GLOB_ONLYDIR ) as $d ) {
-            $attivi[] = basename( $d );
-        }
-
-        return array_values( array_unique( $attivi ) );
-
-    }
-
-    /**
      * elenca TUTTI i moduli presenti nell'albero, attivi o no
      *
      * La documentazione di un modulo si genera anche quando il modulo e' spento, perche' per
      * decidere se accenderlo bisogna prima sapere cosa fa: un capitolo che compare solo dopo
-     * l'attivazione non serve a chi deve ancora scegliere. Quelli spenti lo dichiarano, nel titolo
-     * del capitolo e in testa alla pagina, cosi' nessuno cerca nell'applicazione una maschera che
-     * non c'e'.
+     * l'attivazione non serve a chi deve ancora scegliere.
+     *
+     * L'attivazione non compare pero' da nessuna parte nel capitolo, ne' nel titolo ne' in testa
+     * alla pagina: e' una proprieta' della singola INSTALLAZIONE e non del modulo, mentre qui si
+     * documenta il framework. Scritta nel manuale sarebbe sbagliata su ogni altro deploy, e
+     * irrilevante per chi il framework lo sta studiando.
      *
      * @return  array                       nomi dei moduli senza l'underscore iniziale
      *
@@ -193,7 +173,15 @@
         // capitoli aggiuntivi: uno per file, in ordine di nome. E' la sede della documentazione
         // che non appartiene a un modulo ne' e' introduttiva — la reference delle tabelle, quella
         // delle variabili, le guide pratiche. La coppia standard/custom segue la solita regola.
-        $extra = strtolower( $tipo );
+        //
+        // Fra questi c'e' la TESTATA delle due famiglie: il capitolo che porta il nome di una
+        // famiglia ( template, moduli ) non resta in fila con gli altri ma diventa la voce da cui
+        // si apre il sottomenu dei suoi. E' la documentazione generale di quella famiglia, e il suo
+        // posto e' in cima ai capitoli che generalizza, non a meta' dell'elenco dove la porterebbe
+        // il numero d'ordine. La coppia standard/custom qui si SOMMA, come nell'introduzione: la
+        // versione di progetto descrive personalizzazioni, non alternative.
+        $testate = array();
+        $extra   = strtolower( $tipo );
 
         $cartelle = array( '_usr/_docs/_' . $extra );
 
@@ -214,6 +202,18 @@
                 // il numero in testa serve solo a ordinare, non e' parte del titolo
                 $titolo = preg_replace( '/^[0-9]+[.-]\s*/', '', $nome );
 
+                if( in_array( $titolo, DOCS_FAMIGLIE, true ) ) {
+
+                    if( ! isset( $testate[ $titolo ] ) ) {
+                        $testate[ $titolo ] = array( 'chiave' => $titolo, 'titolo' => $titolo, 'file' => array(), 'testata' => true );
+                    }
+
+                    $testate[ $titolo ]['file'][] = $f;
+
+                    continue;
+
+                }
+
                 $capitoli[] = array(
                     'chiave' => str_replace( '.', '-', $nome ),
                     'titolo' => str_replace( '.', ' ', $titolo ),
@@ -227,6 +227,16 @@
         // i template: la loro documentazione vive NEL template, accanto al codice, e non in un
         // capitolo del manuale che la ripeterebbe. Perche' sia raggiungibile deve pero' entrare nel
         // manuale come capitolo, altrimenti resta un file che nessuno apre.
+        //
+        // I template sono tanti: stanno sotto la testata della famiglia, che e' il capitolo della
+        // loro documentazione generale, e nel menu si aprono da li'.
+        $gruppo = false;
+
+        if( isset( $testate['template'] ) ) {
+            $capitoli[] = $testate['template'];
+            $gruppo     = 'template';
+        }
+
         foreach( docsBuildTemplate() as $t ) {
 
             // la versione custom del template sostituisce quella standard
@@ -240,11 +250,23 @@
                 continue;
             }
 
-            $capitoli[] = array( 'chiave' => 'tpl-' . $t, 'titolo' => 'template ' . $t, 'file' => array( $f ) );
+            $capitoli[] = array(
+                'chiave' => 'tpl-' . $t,
+                'titolo' => 'template ' . $t,
+                'breve'  => $t,
+                'file'   => array( $f ),
+                'gruppo' => $gruppo
+            );
 
         }
 
-        $attivi = docsBuildModuliAttivi();
+        // i moduli, con la stessa struttura dei template
+        $gruppo = false;
+
+        if( isset( $testate['moduli'] ) ) {
+            $capitoli[] = $testate['moduli'];
+            $gruppo     = 'moduli';
+        }
 
         foreach( docsBuildModuli() as $m ) {
 
@@ -259,15 +281,12 @@
                 continue;
             }
 
-            // in un manuale dello standard l'attivazione non c'entra niente: e' una proprieta'
-            // della singola installazione, e li' si documenta il framework
-            $acceso = ( $standard ) ? true : in_array( $m, $attivi, true );
-
             $capitoli[] = array(
                 'chiave' => $m,
-                'titolo' => 'modulo ' . $m . ( $acceso ? '' : ' ( non attivo )' ),
+                'titolo' => 'modulo ' . $m,
+                'breve'  => $m,
                 'file'   => array( $f ),
-                'spento' => ! $acceso
+                'gruppo' => $gruppo
             );
 
         }
@@ -294,9 +313,18 @@
      * aprendo i file dal filesystem — che e' il modo in cui la documentazione va letta, visto che e'
      * protetta da Basic auth.
      *
+     * Le voci escono divise in due SEZIONI, che sono i due piani della documentazione: quella del
+     * progetto descrive questo deploy e sta dietro Basic auth, quella del framework descrive lo
+     * standard ed e' pubblica. Tenerle in un elenco unico obbligava a distinguerle dal titolo, e il
+     * titolo di un documento non e' il posto dove dire a chi appartiene.
+     *
+     * Il documento CORRENTE resta nell'elenco, segnato: una sezione che elenca i due manuali del
+     * progetto e ne mostra uno solo — l'altro — non dice a chi legge dove si trova, e la sezione
+     * cambia forma da una pagina all'altra.
+     *
      * @param   string      $destinazione   cartella del documento corrente, relativa alla document root
      *
-     * @return  array                       voci con titolo e href, senza il documento corrente
+     * @return  array                       voci con titolo, href, sezione e il segno del corrente
      *
      */
     function docsBuildAltrove( $destinazione ) {
@@ -313,12 +341,12 @@
         $qui_std = ( strpos( $destinazione, '_usr/_pages/' ) === 0 );
 
         $documenti = array(
-            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale dello sviluppatore',              'c' => 'READ', 'std' => true ),
-            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                          'c' => 'USER', 'std' => true ),
-            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',                      'q' => '_usr/_docs/_quickstart', 'std' => true ),
-            array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'manuale dello sviluppatore del progetto', 'c' => 'READ' ),
-            array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'manuale utente del progetto',             'c' => 'USER' ),
-            array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive del progetto',         'q' => 'usr/docs/quickstart' )
+            array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'documentazione utente',         'c' => 'USER', 'sez' => 'documentazione progetto' ),
+            array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'documentazione sviluppatore',   'c' => 'READ', 'sez' => 'documentazione progetto' ),
+            array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive',            'q' => 'usr/docs/quickstart', 'sez' => 'documentazione progetto' ),
+            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione del framework' ),
+            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale dello sviluppatore',    'c' => 'READ', 'std' => true, 'sez' => 'documentazione del framework' ),
+            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione del framework' )
         );
 
         // dalla cartella di destinazione all'indirizzo: i due prefissi delle cartelle ad accesso
@@ -337,10 +365,6 @@
         $voci  = array();
 
         foreach( $documenti as $d ) {
-
-            if( $d['dir'] === $destinazione ) {
-                continue;
-            }
 
             if( ! empty( $d['std'] ) && ! $std ) {
                 continue;
@@ -364,7 +388,12 @@
 
             }
 
-            $voci[] = array( 'titolo' => $d['titolo'], 'href' => $su . $url( $d['dir'] ) . '/index.html' );
+            $voci[] = array(
+                'titolo'   => $d['titolo'],
+                'href'     => $su . $url( $d['dir'] ) . '/index.html',
+                'sezione'  => $d['sez'],
+                'corrente' => ( $d['dir'] === $destinazione )
+            );
 
         }
 
@@ -620,23 +649,15 @@
         // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
         docsBuildScreenshot( $destinazione, $standard );
 
-        // PRIMA PASSATA: si compone il corpo di ogni capitolo e si raccoglie l'indice. Le pagine si
-        // scrivono solo dopo, perche' ognuna porta in barra laterale l'elenco degli altri capitoli e
-        // in fondo il precedente e il successivo: quell'elenco non e' noto finche' non si sa quali
-        // capitoli sopravvivono al filtro delle sezioni.
-        $corpi = array();
+        // PRIMA PASSATA: si compone e si filtra il markdown di ogni capitolo, per sapere quali
+        // sopravvivono. Le pagine si scrivono solo dopo, perche' ognuna porta in barra laterale
+        // l'elenco degli altri capitoli e in fondo il precedente e il successivo: quell'elenco non
+        // e' noto finche' non si sa quali capitoli il filtro delle sezioni lascia in piedi.
+        $vivi = array();
 
         foreach( $capitoli as $c ) {
 
             $md = '';
-
-            // un modulo spento lo dichiara in testa, oltre che nel titolo del capitolo: il titolo
-            // si vede dall'indice, questo si vede da chi e' arrivato alla pagina da un link
-            if( ! empty( $c['spento'] ) ) {
-                $md .= "> **nota** — questo modulo non è attivo su questa installazione: il capitolo c'è\n"
-                     . "> lo stesso, perché per decidere se accenderlo bisogna prima sapere cosa fa. Quello\n"
-                     . "> che descrive non si trova nell'applicazione finché il modulo non viene attivato.\n\n";
-            }
 
             foreach( $c['file'] as $f ) {
                 $md .= file_get_contents( $f ) . "\n\n";
@@ -645,12 +666,69 @@
             $sezioni = docsParseSections( $md );
             $sezioni = docsFilterSections( $sezioni, array( 'pubblico' => $opzioni['pubblico'], 'linea' => $opzioni['linea'] ) );
 
+            $md = docsRenderSections( $sezioni );
+
             // un capitolo che il filtro ha svuotato non produce una pagina vuota
-            if( ! trim( docsRenderSections( $sezioni ) ) ) {
+            if( ! trim( $md ) ) {
                 continue;
             }
 
-            $html = docsMarkdown2Html( docsRenderSections( $sezioni ) );
+            $c['md'] = $md;
+
+            $vivi[ $c['chiave'] ] = $c;
+
+        }
+
+        // un capitolo la cui testata non e' sopravvissuta al filtro torna in fila con gli altri:
+        // appeso a una voce di menu che non esiste non lo raggiungerebbe nessuno
+        foreach( $vivi as $k => $c ) {
+
+            if( ! empty( $c['gruppo'] ) && ! isset( $vivi[ $c['gruppo'] ] ) ) {
+                $vivi[ $k ]['gruppo'] = false;
+            }
+
+        }
+
+        // l'indice del manuale, quello che ogni pagina si porta in barra laterale
+        foreach( $vivi as $c ) {
+
+            $indice[] = array(
+                'chiave'  => $c['chiave'],
+                'titolo'  => $c['titolo'],
+                'breve'   => ( ! empty( $c['breve'] ) ) ? $c['breve'] : $c['titolo'],
+                'gruppo'  => ( ! empty( $c['gruppo'] ) ) ? $c['gruppo'] : '',
+                'testata' => ! empty( $c['testata'] )
+            );
+
+        }
+
+        // la testata di un gruppo elenca i suoi capitoli: e' la pagina che si apre cliccando
+        // "template" o "moduli", e senza l'elenco sarebbe l'unico punto della documentazione da cui
+        // i capitoli del gruppo non si raggiungono
+        foreach( $vivi as $k => $c ) {
+
+            if( empty( $c['testata'] ) ) {
+                continue;
+            }
+
+            $voci = '';
+
+            foreach( $indice as $i ) {
+                if( $i['gruppo'] === $k ) {
+                    $voci .= '- [' . $i['breve'] . '](' . $i['chiave'] . '.html)' . "\n";
+                }
+            }
+
+            if( $voci !== '' ) {
+                $vivi[ $k ]['md'] .= "\n\n## i capitoli di questa sezione\n\n" . $voci;
+            }
+
+        }
+
+        // SECONDA PASSATA: le pagine, ciascuna con l'indice completo attorno
+        foreach( $vivi as $c ) {
+
+            $html = docsMarkdown2Html( $c['md'] );
 
             if( $html === false ) {
                 fwrite( STDERR, "league/commonmark non disponibile: nessuna pagina generata\n" );
@@ -664,16 +742,7 @@
             $html = docsRenderCallouts( $html );
             $html = docsStripMarkers( $html );
 
-            $corpi[] = array( 'chiave' => $c['chiave'], 'titolo' => $c['titolo'], 'html' => $html, 'toc' => $toc );
-
-            $indice[] = array( 'chiave' => $c['chiave'], 'titolo' => $c['titolo'] );
-
-        }
-
-        // SECONDA PASSATA: le pagine, ciascuna con l'indice completo attorno
-        foreach( $corpi as $c ) {
-
-            $pagina = docsRenderPage( $c['html'], $c['toc'], array(
+            $pagina = docsRenderPage( $html, $toc, array(
                 'titolo'      => $opzioni['titolo'] . ' — ' . $c['titolo'],
                 'descrizione' => $opzioni['titolo'] . ', capitolo ' . $c['titolo'],
                 'kicker'      => $opzioni['titolo'],
@@ -681,6 +750,7 @@
                 'css'         => $css,
                 'capitoli'    => $indice,
                 'corrente'    => $c['chiave'],
+                'gruppo'      => ( ! empty( $c['gruppo'] ) ) ? $c['gruppo'] : '',
                 'altrove'     => $altrove
             ) );
 
@@ -699,11 +769,23 @@
 
         }
 
-        // indice del manuale
+        // indice del manuale: i capitoli di un gruppo rientrano sotto la loro testata, come nel menu
         $voci = '';
 
         foreach( $indice as $i ) {
+
+            if( $i['gruppo'] !== '' ) {
+                continue;
+            }
+
             $voci .= '- [' . $i['titolo'] . '](' . $i['chiave'] . '.html)' . "\n";
+
+            foreach( $indice as $j ) {
+                if( $j['gruppo'] === $i['chiave'] ) {
+                    $voci .= '    - [' . $j['breve'] . '](' . $j['chiave'] . '.html)' . "\n";
+                }
+            }
+
         }
 
         $html = docsMarkdown2Html( '# ' . $opzioni['titolo'] . "\n\n## indice\n\n" . $voci );
