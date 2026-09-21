@@ -339,7 +339,7 @@
             array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'documentazione sviluppatore',   'c' => 'READ', 'sez' => 'documentazione progetto' ),
             array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive',            'q' => 'usr/docs/quickstart', 'sez' => 'documentazione progetto' ),
             array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione del framework' ),
-            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale dello sviluppatore',    'c' => 'READ', 'std' => true, 'sez' => 'documentazione del framework' ),
+            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale sviluppatore',          'c' => 'READ', 'std' => true, 'sez' => 'documentazione del framework' ),
             array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione del framework' )
         );
 
