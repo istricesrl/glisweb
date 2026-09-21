@@ -84,6 +84,15 @@
                 // TODO implementare il log dei consensi
         */
 
+        // i consensi gia' espressi sono la base su cui si scrive
+        //
+        // Senza questa riga $consensi nasce vuoto e raccoglie soltanto i cookie arrivati nella
+        // POST, mentre il setcookie() qui sotto riscrive il cookie 'privacy' per intero: chi manda
+        // un cookie solo — ed e' quello che fa ogni pulsante consenti/revoca della tabella nella
+        // pagina privacy, che e' un form per cookie — cancella in silenzio il consenso di tutti
+        // gli altri. Dal banner non si vedeva, perche' il banner li manda tutti insieme.
+        $consensi = ( isset( $_COOKIE['privacy'] ) ) ? ( unserialize( $_COOKIE['privacy'], array( 'allowed_classes' => false ) ) ?: array() ) : array();
+
         // TODO questa cosa non si può semplificare? c'è bisogno di fare due assegnazioni?
         foreach( $_REQUEST['__cookie__'] as $cookie => $val ) {
             $cf['privacy']['cookie'][ $val['owner'] ][ $val['type'] ][ $cookie ]['consenso'] = $_REQUEST['__cookie__'][ $cookie ]['value'];
