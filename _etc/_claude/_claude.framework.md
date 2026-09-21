@@ -512,6 +512,36 @@ errore: le pagine di un giro precedente vengono **tolte** ( `docsBuildVuoto()` )
 da solo perché `_src/_config/_030.common.php` lo mostra solo se la pagina esiste. Su un deploy così
 i manuali sono quelli dello standard, sotto `/_manual/`.
 
+### La versione stampabile, e il PDF
+
+Ogni manuale esce **anche** in pagina unica e in PDF, accanto ai capitoli: `tutto.html` mette tutti i
+capitoli di seguito nell'ordine dell'indice, e `<titolo-del-manuale>.pdf` ne è la stampa. Sono linkati
+dalla barra laterale di ogni pagina, subito sotto *indice del manuale*, e dall'indice.
+
+Il PDF lo produce **chromium headless** ( `--print-to-pdf` ), che è lo stesso binario con cui
+`_src/_sh/_docs.shots.sh` fotografa le maschere: nessuna libreria nuova, nessuna conversione a mano
+del markup, e il risultato usa il CSS di stampa che le pagine hanno già. Il formato del foglio lo
+impone `@page { size: A4 }` in `_usr/_docs/_etc/_page.css`, perché il default di chromium è **letter**.
+
+⚠ **Dove chromium non c'è — i deploy cliente, di norma — il PDF non si genera e non è un errore**: la
+voce di menu punta alla pagina unica, che il browser stampa lo stesso, e la generazione prosegue.
+Deve proseguire: gira dentro `_gw.upgrade.sh`, e c'è un `timeout 300` sul comando perché un chromium
+che non torna più bloccherebbe l'aggiornamento invece della sola documentazione.
+
+Tre cose non sono dettagli implementativi:
+
+- **`tutto.html` va dichiarata fra le chiavi della potatura** ( `$chiavi` in `docsBuildManuale()` ):
+  non è un capitolo, e `docsBuildPota()` la toglierebbe a ogni giro subito dopo averla scritta;
+- **il PDF si converte dal file già pubblicato**, non da una copia temporanea: la pagina cita gli
+  screenshot con percorso relativo ( `shot/<id>.png` ), e da un'altra cartella uscirebbe senza figure
+  senza che l'esito del comando lo dica;
+- **la versione stampabile si compone prima che le pagine vengano scritte**, perché è da lì che si sa
+  se il PDF c'è davvero, e ogni pagina se lo linka in barra laterale.
+
+Quando un manuale resta senza capitoli, `docsBuildVuoto()` porta via anche il PDF: `docsBuildPota()`
+guarda i soli `.html`, e il PDF sarebbe l'unico pezzo ancora servito — per giunta quello che li
+contiene tutti.
+
 ### ⚠ Il `READ.md` della root del deploy non è documentazione
 
 Un livello **sopra** la document root vive un `READ.md` che contiene gli **accessi** del progetto: CMS,

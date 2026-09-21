@@ -425,6 +425,16 @@ td code, th code { white-space: nowrap; }
 
 /* ---------------------------------------------------------------- stampa */
 
+/*
+ * il formato del foglio lo decide questa regola e non chi stampa: chromium, che e' lo strumento
+ * con cui nasce il PDF, senza @page userebbe il suo default, che e' letter — un foglio che in
+ * Italia non esiste, e che in stampa taglia o scala tutto.
+ */
+@page {
+    size: A4;
+    margin: 18mm 15mm;
+}
+
 @media print {
     .sidebar, .skip { display: none; }
     .content { max-width: none; padding: 0; }
@@ -432,6 +442,19 @@ td code, th code { white-space: nowrap; }
     pre, .tw { break-inside: avoid; }
     h2 { break-before: page; }
     a { color: inherit; text-decoration: none; }
+}
+
+/*
+ * la pagina unica — tutti i capitoli di seguito, ed e' quella da cui nasce il PDF — si stampa al
+ * contrario di una pagina di capitolo: li' ogni sezione comincia su un foglio nuovo, qui sarebbe
+ * un foglio per sezione per cento capitoli. Il salto va sul capitolo, cioe' sull'h1.
+ */
+@media print {
+    .unica h2 { break-before: auto; }
+    .unica h1 { break-before: page; }
+    .unica h1:first-child { break-before: auto; }
+    .unica section { break-before: page; }
+    .unica section:first-of-type { break-before: auto; }
 }
 
 /* ---------------------------------------------------------------- callout */

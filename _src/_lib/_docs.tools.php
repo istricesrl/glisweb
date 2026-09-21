@@ -508,6 +508,8 @@
             'capitoli'      => array(),
             'corrente'      => '',
             'gruppo'        => '',
+            'stampabile'    => array(),
+            'classe'        => '',
             'altrove'       => array()
         );
 
@@ -603,9 +605,19 @@
         }
 
         if( $capitoli !== '' ) {
+
+            // la versione stampabile sta accanto all'indice e non in fondo: e' l'altro modo di
+            // prendere il manuale intero, e chi la cerca la cerca li'
+            $stampabile = ( $meta['stampabile'] )
+                        ? '<a href="' . htmlspecialchars( $meta['stampabile']['href'], ENT_QUOTES, 'UTF-8' ) . '">'
+                          . htmlspecialchars( $meta['stampabile']['titolo'], ENT_QUOTES, 'UTF-8' ) . '</a>'
+                        : '';
+
             $capitoli = '<span class="sidebar-sez">capitoli</span>'
                       . '<a href="index.html">indice del manuale</a>'
+                      . $stampabile
                       . $capitoli;
+
         }
 
         // gli altri documenti del deploy: i manuali e le quickstart sono alberi separati, e senza
@@ -659,6 +671,11 @@
         $css         = $meta['css'];
         $generato    = $meta['data'];
 
+        // la versione in pagina unica si dichiara nel markup ( class="content unica" ) perche' in
+        // stampa si comporta al contrario delle altre: il salto pagina va sul capitolo e non su
+        // ogni sezione, altrimenti un manuale di cento capitoli esce con una sezione per foglio
+        $classe      = ( $meta['classe'] !== '' ) ? ' ' . htmlspecialchars( $meta['classe'], ENT_QUOTES, 'UTF-8' ) : '';
+
         return <<<HTML
 <!DOCTYPE html>
 <html lang="it-IT">
@@ -691,7 +708,7 @@
         <div class="sidebar-foot">aggiornata il {$generato}</div>
     </nav>
 
-    <main id="contenuto" class="content">
+    <main id="contenuto" class="content{$classe}">
 {$body}
     </main>
 

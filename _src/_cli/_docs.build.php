@@ -606,6 +606,145 @@
     }
 
     /**
+     * compone la versione in pagina unica di un manuale e ne ricava il PDF
+     *
+     * Un manuale spezzato in capitoli si consulta bene e si stampa male: chi lo vuole su carta, o
+     * lo vuole leggere dove la rete non c'e', dovrebbe stampare centoquattro pagine una per una.
+     * La versione unica raccoglie tutti i capitoli in un documento solo, nello stesso ordine
+     * dell'indice, e da quella nasce il PDF.
+     *
+     * Il PDF lo produce **chromium**, che e' lo stesso strumento con cui il framework fotografa le
+     * maschere della documentazione ( `_src/_sh/_docs.shots.sh` ): niente libreria nuova, niente
+     * conversione a mano del markup, e il risultato usa il CSS di stampa che le pagine hanno gia'.
+     * Dove chromium non c'e' — i deploy cliente, di norma — resta la pagina unica, che il browser
+     * stampa lo stesso: la generazione non si ferma, perche' gira dentro `_gw.upgrade.sh`.
+     *
+     * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     * @param   array       $capitoli       capitoli gia' resi, con chiave, titolo e html
+     * @param   array       $opzioni        titolo, css, pdf ( nome del file ), secco
+     *
+     * @return  bool                        true se il PDF e' stato prodotto
+     *
+     */
+    function docsBuildUnica( $destinazione, $capitoli, $opzioni ) {
+
+        $corpo = '<h1 id="documento">' . htmlspecialchars( $opzioni['titolo'], ENT_QUOTES, 'UTF-8' ) . '</h1>'
+               . '<p>Versione in pagina unica, da leggere di seguito e da stampare. I capitoli sono'
+               . ' quelli dell\'<a href="index.html">indice del manuale</a>, nello stesso ordine.</p>'
+               . '<h2 id="indice">indice</h2><ul>';
+
+        foreach( $capitoli as $c ) {
+
+            $corpo .= '<li><a href="#' . htmlspecialchars( $c['chiave'], ENT_QUOTES, 'UTF-8' ) . '">'
+                    . htmlspecialchars( $c['titolo'], ENT_QUOTES, 'UTF-8' ) . '</a></li>';
+
+        }
+
+        $corpo .= '</ul>';
+
+        foreach( $capitoli as $c ) {
+            $corpo .= '<section id="' . htmlspecialchars( $c['chiave'], ENT_QUOTES, 'UTF-8' ) . '">' . $c['html'] . '</section>';
+        }
+
+        $pagina = docsRenderPage( $corpo, array(), array(
+            'titolo'      => $opzioni['titolo'] . ' — versione stampabile',
+            'descrizione' => $opzioni['titolo'] . ', tutti i capitoli in una pagina sola',
+            'kicker'      => $opzioni['titolo'],
+            'sottotitolo' => 'versione stampabile',
+            'css'         => $opzioni['css'],
+            'classe'      => 'unica'
+        ) );
+
+        $html = $destinazione . '/tutto.html';
+        $pdf  = $destinazione . '/' . $opzioni['pdf'];
+
+        if( $opzioni['secco'] ) {
+            echo "  [prova] $html (" . number_format( strlen( $pagina ) ) . " byte) e $pdf\n";
+            return false;
+        }
+
+        if( file_put_contents( DOCS_BASE . $html, $pagina ) === false ) {
+            fwrite( STDERR, "  NON generato $html: scrittura fallita\n" );
+            return false;
+        }
+
+        echo "  generato $html (" . number_format( strlen( $pagina ) ) . " byte)\n";
+
+        return docsBuildPdf( $html, $pdf );
+
+    }
+
+    /**
+     * converte una pagina gia' scritta nel suo PDF
+     *
+     * Si converte il file GIA' PUBBLICATO e non una copia temporanea, perche' la pagina cita gli
+     * screenshot con un percorso relativo ( `shot/<id>.png` ): convertita da un'altra cartella
+     * uscirebbe senza figure, e nessuno se ne accorgerebbe guardando il solo esito del comando.
+     *
+     * @param   string      $sorgente       pagina da convertire, relativa alla document root
+     * @param   string      $destinazione   PDF da scrivere, relativo alla document root
+     *
+     * @return  bool                        true se il PDF esiste e non e' vuoto
+     *
+     */
+    function docsBuildPdf( $sorgente, $destinazione ) {
+
+        $chrome = '';
+
+        foreach( array( 'chromium', 'chromium-browser', 'google-chrome' ) as $c ) {
+            if( trim( (string) shell_exec( 'command -v ' . escapeshellarg( $c ) . ' 2>/dev/null' ) ) !== '' ) {
+                $chrome = $c;
+                break;
+            }
+        }
+
+        if( $chrome === '' ) {
+            echo "  chromium non installato: niente PDF, resta la pagina unica\n";
+            return false;
+        }
+
+        // il profilo usa-e-getta e' obbligatorio per chromium headless, e var/tmp e' la stessa
+        // cartella di appoggio che usa _docs.shots.sh
+        $tmp = DOCS_BASE . 'var/tmp/docs-pdf-' . getmypid();
+
+        if( ! is_dir( DOCS_BASE . 'var/tmp' ) ) {
+            mkdir( DOCS_BASE . 'var/tmp', 0750, true );
+        }
+
+        @unlink( DOCS_BASE . $destinazione );
+
+        // le due grafie del "niente intestazione": la prima e' quella di chromium fino alla 111,
+        // la seconda quella delle versioni nuove. Senza, in testa a ogni foglio finiscono la data
+        // e l'indirizzo file:// del server, che non e' un'informazione da stampare.
+        //
+        // il timeout non e' pignoleria: questo gira dentro _gw.upgrade.sh, di notte, e un chromium
+        // che non torna piu' bloccherebbe l'aggiornamento invece della sola documentazione
+        $comando = 'timeout 300 ' . escapeshellarg( $chrome )
+                 . ' --headless=new --disable-gpu --no-sandbox'
+                 . ' --user-data-dir=' . escapeshellarg( $tmp )
+                 . ' --print-to-pdf-no-header --no-pdf-header-footer'
+                 . ' --print-to-pdf=' . escapeshellarg( DOCS_BASE . $destinazione )
+                 . ' ' . escapeshellarg( 'file://' . DOCS_BASE . $sorgente )
+                 . ' > /dev/null 2>&1';
+
+        exec( $comando, $uscita, $esito );
+
+        exec( 'rm -rf ' . escapeshellarg( $tmp ) );
+
+        if( ! file_exists( DOCS_BASE . $destinazione ) || filesize( DOCS_BASE . $destinazione ) === 0 ) {
+            fwrite( STDERR, "  NON generato $destinazione: chromium non ha prodotto il PDF ( codice $esito )\n" );
+            return false;
+        }
+
+        chmod( DOCS_BASE . $destinazione, 0640 );
+
+        echo "  generato $destinazione (" . number_format( filesize( DOCS_BASE . $destinazione ) ) . " byte)\n";
+
+        return true;
+
+    }
+
+    /**
      * toglie le pagine di un manuale che non ha piu' niente da dire
      *
      * Un manuale di progetto vuoto e' la condizione NORMALE di un deploy senza personalizzazioni da
@@ -628,6 +767,18 @@
         }
 
         docsBuildPota( $destinazione, array(), $secco );
+
+        // la versione stampabile non e' un capitolo e docsBuildPota() non la vede: resterebbe
+        // l'unico pezzo del manuale ancora servito, per giunta quello che li contiene tutti
+        foreach( glob( DOCS_BASE . $destinazione . '/*.pdf' ) as $f ) {
+
+            if( $secco ) {
+                echo "  [prova] tolgo $destinazione/" . basename( $f ) . "\n";
+            } else {
+                unlink( $f );
+            }
+
+        }
 
         // gli screenshot copiati accanto alle pagine non servono piu' a nessuno: la cartella e'
         // generata da docsBuildScreenshot() e non contiene altro
@@ -780,7 +931,12 @@
             docsBuildScreenshot( $destinazione, $standard );
         }
 
-        // SECONDA PASSATA: le pagine, ciascuna con l'indice completo attorno
+        // SECONDA PASSATA: da markdown a HTML, e basta. I corpi si tengono da parte perche' servono
+        // due volte — alla pagina del capitolo e alla versione stampabile, che li rimette in fila in
+        // un documento solo — e perche' la versione stampabile va composta PRIMA che le pagine
+        // vengano scritte: e' da li' che si sa se il PDF c'e' davvero, e ogni pagina se lo linka.
+        $corpi = array();
+
         foreach( $vivi as $c ) {
 
             $html = docsMarkdown2Html( $c['md'] );
@@ -797,7 +953,36 @@
             $html = docsRenderCallouts( $html );
             $html = docsStripMarkers( $html );
 
-            $pagina = docsRenderPage( $html, $toc, array(
+            $corpi[] = array(
+                'chiave' => $c['chiave'],
+                'titolo' => $c['titolo'],
+                'gruppo' => ( ! empty( $c['gruppo'] ) ) ? $c['gruppo'] : '',
+                'html'   => $html,
+                'toc'    => $toc
+            );
+
+        }
+
+        // la versione stampabile: tutti i capitoli in una pagina sola, e il PDF che ne esce
+        $pdf = docsSlugify( $opzioni['titolo'] ) . '.pdf';
+
+        $stampato = docsBuildUnica( $destinazione, $corpi, array(
+            'titolo' => $opzioni['titolo'],
+            'css'    => $css,
+            'pdf'    => $pdf,
+            'secco'  => $opzioni['secco']
+        ) );
+
+        // la voce di menu porta al PDF dove c'e', alla pagina unica dove chromium non e' installato:
+        // la versione stampabile esiste comunque, e un link che non apre niente e' peggio di niente
+        $stampabile = ( $stampato )
+                    ? array( 'href' => $pdf,         'titolo' => 'versione stampabile ( PDF )' )
+                    : array( 'href' => 'tutto.html', 'titolo' => 'versione stampabile' );
+
+        // TERZA PASSATA: le pagine, ciascuna con l'indice completo attorno
+        foreach( $corpi as $c ) {
+
+            $pagina = docsRenderPage( $c['html'], $c['toc'], array(
                 'titolo'      => $opzioni['titolo'] . ' — ' . $c['titolo'],
                 'descrizione' => $opzioni['titolo'] . ', capitolo ' . $c['titolo'],
                 'kicker'      => $opzioni['titolo'],
@@ -805,7 +990,8 @@
                 'css'         => $css,
                 'capitoli'    => $indice,
                 'corrente'    => $c['chiave'],
-                'gruppo'      => ( ! empty( $c['gruppo'] ) ) ? $c['gruppo'] : '',
+                'gruppo'      => $c['gruppo'],
+                'stampabile'  => $stampabile,
                 'altrove'     => $altrove
             ) );
 
@@ -849,7 +1035,12 @@
                                        . "> dallo standard: non è una copia del manuale del framework, ne è la correzione. Tutto\n"
                                        . "> il resto è nel manuale del framework, qui a fianco sotto *documentazione del framework*.\n\n";
 
-        $html = docsMarkdown2Html( '# ' . $opzioni['titolo'] . "\n\n" . $premessa . "## indice\n\n" . $voci );
+        // la versione stampabile si annuncia anche qui, e non solo in barra laterale: l'indice e' la
+        // pagina da cui si comincia, ed e' dove uno cerca il documento intero da portarsi via
+        $stampa = 'Tutto il manuale in un documento solo: [versione stampabile](tutto.html)'
+                . ( ( $stampato ) ? ', oppure il [PDF](' . $pdf . ').' : '.' ) . "\n\n";
+
+        $html = docsMarkdown2Html( '# ' . $opzioni['titolo'] . "\n\n" . $premessa . $stampa . "## indice\n\n" . $voci );
         $toc  = array();
         $html = docsAnchorHeadings( $html, $toc );
 
@@ -860,6 +1051,7 @@
             'sottotitolo' => $opzioni['titolo'],
             'css'         => $css,
             'capitoli'    => $indice,
+            'stampabile'  => $stampabile,
             'altrove'     => $altrove
         ) );
 
@@ -870,7 +1062,9 @@
             echo "  generato $destinazione/index.html\n";
         }
 
-        $chiavi = array( 'index' => 1 );
+        // 'tutto' non e' un capitolo ma e' una pagina viva: senza questa riga la potatura la
+        // toglierebbe a ogni giro, subito dopo averla scritta
+        $chiavi = array( 'index' => 1, 'tutto' => 1 );
 
         foreach( $indice as $i ) {
             $chiavi[ $i['chiave'] ] = 1;
