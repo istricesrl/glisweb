@@ -614,7 +614,7 @@
                         : '';
 
             $capitoli = '<span class="sidebar-sez">capitoli</span>'
-                      . '<a href="index.html">indice del manuale</a>'
+                      . '<a href="index.html">indice</a>'
                       . $stampabile
                       . $capitoli;
 

@@ -481,7 +481,7 @@ sbagliata su ogni altro deploy oltre che inutile a chi studia il framework. Deci
 ` ( non attivo )`, ed è stato tolto da tutte e due i manuali.
 
 I **rimandi agli altri documenti** in fondo al menu sono a loro volta due sezioni —
-*documentazione progetto* e *documentazione del framework* — col documento in cui ci si trova
+*documentazione progetto* e *documentazione framework* — col documento in cui ci si trova
 segnato: un elenco unico obbligava a dire nel titolo di ciascuno a quale dei due piani
 appartenesse.
 

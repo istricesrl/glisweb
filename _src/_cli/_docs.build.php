@@ -338,9 +338,9 @@
             array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'documentazione utente',         'c' => 'USER', 'sez' => 'documentazione progetto' ),
             array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'documentazione sviluppatore',   'c' => 'READ', 'sez' => 'documentazione progetto' ),
             array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive',            'q' => 'usr/docs/quickstart', 'sez' => 'documentazione progetto' ),
-            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione del framework' ),
-            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale sviluppatore',          'c' => 'READ', 'std' => true, 'sez' => 'documentazione del framework' ),
-            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione del framework' )
+            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione framework' ),
+            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale sviluppatore',          'c' => 'READ', 'std' => true, 'sez' => 'documentazione framework' ),
+            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione framework' )
         );
 
         // dalla cartella di destinazione all'indirizzo: i due prefissi delle cartelle ad accesso
@@ -1033,7 +1033,7 @@
         // tutto: senza questa riga un indice di tre voci sembra un manuale scritto a meta'
         $premessa = ( $standard ) ? '' : "> **nota** — questo manuale raccoglie **soltanto** ciò che in questo deploy è diverso\n"
                                        . "> dallo standard: non è una copia del manuale del framework, ne è la correzione. Tutto\n"
-                                       . "> il resto è nel manuale del framework, qui a fianco sotto *documentazione del framework*.\n\n";
+                                       . "> il resto è nel manuale del framework, qui a fianco sotto *documentazione framework*.\n\n";
 
         // la versione stampabile si annuncia anche qui, e non solo in barra laterale: l'indice e' la
         // pagina da cui si comincia, ed e' dove uno cerca il documento intero da portarsi via
