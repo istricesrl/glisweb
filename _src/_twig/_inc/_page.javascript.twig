@@ -1,0 +1,15 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> CON IL JAVASCRIPT DELLA SINGOLA PAGINA #}
+{# NOTA: IL CONTENUTO ARRIVA DALLA COLONNA javascript DELLA TABELLA pagine, LETTA DAL MODULO DELLE PAGINE #}
+{# NOTA: VIENE RENDERIZZATO COME TEMPLATE, QUINDI PUO' USARE LE VARIABILI TWIG DELLA PAGINA #}
+{# NOTA: VA INCLUSO DENTRO IL BLOCCO javascript DEL LAYOUT, CHE E' IL PUNTO PREVISTO PER IL JS DI PAGINA #}
+
+{% if page.javascript is not empty %}
+<!-- javascript della pagina -->
+<script type="text/javascript">
+    {{ include( template_from_string( page.javascript ) | raw ) }}
+</script>
+<!-- fine javascript della pagina -->
+{% else %}
+<!-- nessuno script Javascript per pagina specificato -->
+{% endif %}

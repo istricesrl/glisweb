@@ -92,7 +92,7 @@
 
         {% include '_inc/_page.close.twig' %}
 
-        {% block javascript %}{% endblock %}
+        {% block javascript %}{% include '_inc/_page.javascript.twig' %}{% endblock javascript %}
 
     </body>
 </html>

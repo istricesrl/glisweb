@@ -52,7 +52,7 @@
         {% include '_inc/_page.close.twig' %}
 
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
-        {% block javascript %}{% endblock javascript %}
+        {% block javascript %}{% include '_inc/_page.javascript.twig' %}{% endblock javascript %}
 
     </body>
 </html>
