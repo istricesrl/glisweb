@@ -132,18 +132,24 @@
     /**
      * compone l'elenco dei capitoli di un manuale
      *
-     * Il primo capitolo e' l'introduzione, che nasce dal documento di deploy: prima la versione
-     * standard, poi quella del progetto, che si aggiunge invece di sostituire perche' descrive
-     * personalizzazioni e non alternative. Seguono i capitoli dei moduli attivi, uno per modulo, dove
-     * invece la versione custom sostituisce la standard secondo la regola dell'underscore.
+     * I due manuali non sono due versioni dello stesso documento: sono due documenti con due
+     * perimetri. Quello dello STANDARD nasce dai soli sorgenti `_*` e descrive il framework — e'
+     * pubblico, ed e' il link che l'applicazione mostra ai suoi utenti. Quello del PROGETTO nasce
+     * dai soli sorgenti custom e descrive che cosa in questo deploy e' diverso.
      *
-     * Con $standard vero si prendono i SOLI sorgenti dello standard, e il manuale che ne esce
-     * descrive il framework e non l'installazione: e' la versione pubblica, quella che il link del
-     * template mostra a chiunque, e proprio per questo non deve contenere niente di un singolo
-     * cliente. I manuali di progetto restano la somma dei due, e restano protetti da Basic auth.
+     * ⚠ La documentazione di progetto non e' MAI ridondante rispetto a quella del framework: e'
+     * soltanto CORRETTIVA, SOSTITUTIVA o ADDITIVA. Regola data da Fabio il 21/09/2026. Fino a quel
+     * giorno il manuale di progetto era la somma dei due, cioe' portava dentro una copia integrale
+     * del manuale del framework: due copie della stessa pagina da tenere allineate a mano, che si
+     * scoprono divergenti mesi dopo. Il manuale dello standard e' pubblico e ogni pagina di quello
+     * di progetto ci rimanda dalla barra laterale, quindi non c'e' niente da ricopiare.
+     *
+     * Il primo capitolo e' l'introduzione, che nasce dal documento di deploy del proprio piano.
+     * Seguono i capitoli numerati e le due sezioni dei template e dei moduli, dove in un manuale di
+     * progetto entrano i soli componenti che quel deploy documenta per conto suo.
      *
      * @param   string      $tipo           READ per il manuale sviluppatore, USER per quello utente
-     * @param   bool        $standard       se vero ignora la meta' custom e documenta il solo standard
+     * @param   bool        $standard       se vero documenta lo standard, se falso il solo progetto
      *
      * @return  array                       capitoli, ciascuno con chiave, titolo e file sorgente
      *
@@ -154,16 +160,10 @@
 
         $introduzione = array();
 
-        $sorgenti = array( '_usr/_docs/' . $tipo . '.md' );
-
-        if( ! $standard ) {
-            $sorgenti[] = 'usr/docs/' . $tipo . '.md';
-        }
-
-        foreach( $sorgenti as $p ) {
-            if( $f = docsBuildPath( $p ) ) {
-                $introduzione[] = $f;
-            }
+        // la radice dei sorgenti dice tutto: `_usr/_docs/` per lo standard, `usr/docs/` per il
+        // progetto, e nessuno dei due legge i file dell'altro
+        if( $f = docsBuildPath( ( ( $standard ) ? '_usr/_docs/' : 'usr/docs/' ) . $tipo . '.md' ) ) {
+            $introduzione[] = $f;
         }
 
         if( $introduzione ) {
@@ -172,22 +172,17 @@
 
         // capitoli aggiuntivi: uno per file, in ordine di nome. E' la sede della documentazione
         // che non appartiene a un modulo ne' e' introduttiva — la reference delle tabelle, quella
-        // delle variabili, le guide pratiche. La coppia standard/custom segue la solita regola.
+        // delle variabili, le guide pratiche. Lo standard legge le proprie, il progetto le proprie.
         //
         // Fra questi c'e' la TESTATA delle due famiglie: il capitolo che porta il nome di una
         // famiglia ( template, moduli ) non resta in fila con gli altri ma diventa la voce da cui
         // si apre il sottomenu dei suoi. E' la documentazione generale di quella famiglia, e il suo
         // posto e' in cima ai capitoli che generalizza, non a meta' dell'elenco dove la porterebbe
-        // il numero d'ordine. La coppia standard/custom qui si SOMMA, come nell'introduzione: la
-        // versione di progetto descrive personalizzazioni, non alternative.
+        // il numero d'ordine.
         $testate = array();
         $extra   = strtolower( $tipo );
 
-        $cartelle = array( '_usr/_docs/_' . $extra );
-
-        if( ! $standard ) {
-            $cartelle[] = 'usr/docs/' . $extra;
-        }
+        $cartelle = array( ( $standard ) ? '_usr/_docs/_' . $extra : 'usr/docs/' . $extra );
 
         foreach( $cartelle as $d ) {
 
@@ -239,12 +234,12 @@
 
         foreach( docsBuildTemplate() as $t ) {
 
-            // la versione custom del template sostituisce quella standard
-            $f = ( $standard ) ? false : docsBuildPath( 'src/tpl/' . $t . '/' . $tipo . '.md' );
-
-            if( $f === false ) {
-                $f = docsBuildPath( '_src/_tpl/_' . $t . '/' . $tipo . '.md' );
-            }
+            // nel manuale di progetto entrano i soli template che quel deploy documenta per conto
+            // suo: il template standard e' gia' descritto nel manuale dello standard, e ricopiarlo
+            // qui vorrebbe dire tenere allineate due copie della stessa pagina
+            $f = ( $standard )
+               ? docsBuildPath( '_src/_tpl/_' . $t . '/' . $tipo . '.md' )
+               : docsBuildPath( 'src/tpl/' . $t . '/' . $tipo . '.md' );
 
             if( $f === false ) {
                 continue;
@@ -270,12 +265,11 @@
 
         foreach( docsBuildModuli() as $m ) {
 
-            // la versione custom del modulo sostituisce quella standard
-            $f = ( $standard ) ? false : docsBuildPath( 'mod/' . $m . '/' . $tipo . '.md' );
-
-            if( $f === false ) {
-                $f = docsBuildPath( '_mod/_' . $m . '/' . $tipo . '.md' );
-            }
+            // come i template: nel manuale di progetto entrano i soli moduli che questo deploy
+            // documenta per conto suo
+            $f = ( $standard )
+               ? docsBuildPath( '_mod/_' . $m . '/' . $tipo . '.md' )
+               : docsBuildPath( 'mod/' . $m . '/' . $tipo . '.md' );
 
             if( $f === false ) {
                 continue;
@@ -612,6 +606,48 @@
     }
 
     /**
+     * toglie le pagine di un manuale che non ha piu' niente da dire
+     *
+     * Un manuale di progetto vuoto e' la condizione NORMALE di un deploy senza personalizzazioni da
+     * documentare, e il framework la regge gia' da solo: il link al manuale compare soltanto se la
+     * pagina esiste ( _src/_config/_030.common.php ). Quello che non regge e' lasciare sul posto le
+     * pagine di un giro precedente, che continuerebbero a essere servite ferme a com'erano — e per
+     * un manuale di progetto vorrebbe dire servire per sempre la copia del manuale del framework
+     * che fino al 21/09/2026 ci finiva dentro.
+     *
+     * @param   string      $destinazione   cartella delle pagine, relativa alla document root
+     * @param   bool        $secco          se vero dice cosa toglierebbe e non tocca niente
+     *
+     * @return  void
+     *
+     */
+    function docsBuildVuoto( $destinazione, $secco ) {
+
+        if( ! is_dir( DOCS_BASE . $destinazione ) ) {
+            return;
+        }
+
+        docsBuildPota( $destinazione, array(), $secco );
+
+        // gli screenshot copiati accanto alle pagine non servono piu' a nessuno: la cartella e'
+        // generata da docsBuildScreenshot() e non contiene altro
+        foreach( glob( DOCS_BASE . $destinazione . '/shot/*.png' ) as $f ) {
+
+            if( $secco ) {
+                echo "  [prova] tolgo $destinazione/shot/" . basename( $f ) . "\n";
+            } else {
+                unlink( $f );
+            }
+
+        }
+
+        if( ! $secco && is_dir( DOCS_BASE . $destinazione . '/shot' ) ) {
+            @rmdir( DOCS_BASE . $destinazione . '/shot' );
+        }
+
+    }
+
+    /**
      * compone le pagine di un manuale
      *
      * @param   string      $tipo           READ o USER
@@ -628,8 +664,13 @@
         $capitoli = docsBuildCapitoli( $tipo, $standard );
 
         if( ! $capitoli ) {
-            echo "  nessun sorgente $tipo.md trovato, salto\n";
+
+            echo "  nessun sorgente $tipo.md, niente da documentare\n";
+
+            docsBuildVuoto( $destinazione, $opzioni['secco'] );
+
             return 0;
+
         }
 
         $css   = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
@@ -638,16 +679,6 @@
 
         // gli altri documenti del deploy, per non lasciare la pagina senza uscite
         $altrove = docsBuildAltrove( $destinazione );
-
-        // il manuale utente e quello sviluppatore hanno cartelle distinte: con la stessa
-        // destinazione si sovrascriverebbero l'indice e l'introduzione a vicenda
-        if( ! is_dir( DOCS_BASE . $destinazione ) ) {
-            mkdir( DOCS_BASE . $destinazione, 0750, true );
-        }
-
-        // gli screenshot vanno accanto alle pagine: nel markdown sono citati con un percorso
-        // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
-        docsBuildScreenshot( $destinazione, $standard );
 
         // PRIMA PASSATA: si compone e si filtra il markdown di ogni capitolo, per sapere quali
         // sopravvivono. Le pagine si scrivono solo dopo, perche' ognuna porta in barra laterale
@@ -725,6 +756,30 @@
 
         }
 
+        // un manuale i cui capitoli sono tutti caduti nel filtro non e' diverso da un manuale
+        // senza sorgenti: non si scrive nemmeno l'indice, che sarebbe un elenco vuoto
+        if( ! $indice ) {
+
+            echo "  nessun capitolo sopravvive al filtro, niente da documentare\n";
+
+            docsBuildVuoto( $destinazione, $opzioni['secco'] );
+
+            return 0;
+
+        }
+
+        // il manuale utente e quello sviluppatore hanno cartelle distinte: con la stessa
+        // destinazione si sovrascriverebbero l'indice e l'introduzione a vicenda
+        if( ! $opzioni['secco'] && ! is_dir( DOCS_BASE . $destinazione ) ) {
+            mkdir( DOCS_BASE . $destinazione, 0750, true );
+        }
+
+        // gli screenshot vanno accanto alle pagine: nel markdown sono citati con un percorso
+        // relativo ( shot/<id>.png ), che dalla pagina generata deve risolvere
+        if( ! $opzioni['secco'] ) {
+            docsBuildScreenshot( $destinazione, $standard );
+        }
+
         // SECONDA PASSATA: le pagine, ciascuna con l'indice completo attorno
         foreach( $vivi as $c ) {
 
@@ -788,7 +843,13 @@
 
         }
 
-        $html = docsMarkdown2Html( '# ' . $opzioni['titolo'] . "\n\n## indice\n\n" . $voci );
+        // un manuale di progetto porta le sole differenze, e chi lo apre deve sapere che quello e'
+        // tutto: senza questa riga un indice di tre voci sembra un manuale scritto a meta'
+        $premessa = ( $standard ) ? '' : "> **nota** — questo manuale raccoglie **soltanto** ciò che in questo deploy è diverso\n"
+                                       . "> dallo standard: non è una copia del manuale del framework, ne è la correzione. Tutto\n"
+                                       . "> il resto è nel manuale del framework, qui a fianco sotto *documentazione del framework*.\n\n";
+
+        $html = docsMarkdown2Html( '# ' . $opzioni['titolo'] . "\n\n" . $premessa . "## indice\n\n" . $voci );
         $toc  = array();
         $html = docsAnchorHeadings( $html, $toc );
 

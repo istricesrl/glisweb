@@ -494,9 +494,23 @@ il manuale, per sviluppatore e per utente, più la reference Doxygen generata da
 l'accesso. Quella dello **standard** si genera dai soli sorgenti `_*`, sta sotto `_usr/_pages/`
 ( `/_manual/read/`, `/_manual/user/`, `/_quickstart/` ) ed è **pubblica**: descrive il framework, non
 un cliente, ed è il link che l'applicazione può mostrare ai suoi utenti, che la password del manuale
-non ce l'hanno. Quella del **progetto** somma standard e custom, sta sotto `usr/pages/`
+non ce l'hanno. Quella del **progetto** nasce dai **soli** sorgenti custom, sta sotto `usr/pages/`
 ( `/manual/read/`, `/manual/user/`, `/quickstart/` ) ed è dietro **Basic auth**, perché descrive le
 personalizzazioni. Ogni documento rimanda agli altri, e uno pubblico rimanda ai soli pubblici.
+
+⚠ **La documentazione di progetto non è mai ridondante rispetto a quella del framework: è soltanto
+CORRETTIVA, SOSTITUTIVA o ADDITIVA.** Regola data da Fabio il **21/09/2026**. Fino a quel giorno il
+manuale di progetto era la *somma* dei due, cioè si portava dentro una copia integrale del manuale
+del framework: due copie della stessa pagina da tenere allineate a mano, che si scoprono divergenti
+mesi dopo. Adesso un capitolo entra nel manuale di progetto **solo se esiste il sorgente custom** —
+`usr/docs/READ.md` e `USER.md`, `usr/docs/read/*.md` e `usr/docs/user/*.md`, il `READ.md` di un
+modulo sotto `mod/`, quello di un template sotto `src/tpl/` — e tutto il resto lo copre il manuale
+dello standard, che è pubblico e a cui ogni pagina rimanda dalla barra laterale.
+
+⚠ **Un deploy senza personalizzazioni documentate non ha il manuale di progetto**, e non è un
+errore: le pagine di un giro precedente vengono **tolte** ( `docsBuildVuoto()` ), e il link sparisce
+da solo perché `_src/_config/_030.common.php` lo mostra solo se la pagina esiste. Su un deploy così
+i manuali sono quelli dello standard, sotto `/_manual/`.
 
 ### ⚠ Il `READ.md` della root del deploy non è documentazione
 
