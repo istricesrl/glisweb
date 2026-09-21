@@ -508,7 +508,6 @@
             'capitoli'      => array(),
             'corrente'      => '',
             'gruppo'        => '',
-            'stampabile'    => array(),
             'classe'        => '',
             'altrove'       => array()
         );
@@ -606,16 +605,11 @@
 
         if( $capitoli !== '' ) {
 
-            // la versione stampabile sta accanto all'indice e non in fondo: e' l'altro modo di
-            // prendere il manuale intero, e chi la cerca la cerca li'
-            $stampabile = ( $meta['stampabile'] )
-                        ? '<a href="' . htmlspecialchars( $meta['stampabile']['href'], ENT_QUOTES, 'UTF-8' ) . '">'
-                          . htmlspecialchars( $meta['stampabile']['titolo'], ENT_QUOTES, 'UTF-8' ) . '</a>'
-                        : '';
-
+            // la versione stampabile NON sta qui: e' un documento che si prende una volta sola, e
+            // una voce che si usa una volta in barra laterale la si legge a ogni pagina. Sta
+            // nell'indice, che e' dove si va quando si cerca il manuale intero
             $capitoli = '<span class="sidebar-sez">capitoli</span>'
                       . '<a href="index.html">indice</a>'
-                      . $stampabile
                       . $capitoli;
 
         }

@@ -933,8 +933,8 @@
 
         // SECONDA PASSATA: da markdown a HTML, e basta. I corpi si tengono da parte perche' servono
         // due volte — alla pagina del capitolo e alla versione stampabile, che li rimette in fila in
-        // un documento solo — e perche' la versione stampabile va composta PRIMA che le pagine
-        // vengano scritte: e' da li' che si sa se il PDF c'e' davvero, e ogni pagina se lo linka.
+        // un documento solo — e convertirli una seconda volta sarebbe lavoro doppio e, il giorno che
+        // una delle due conversioni cambia, due documenti che non dicono la stessa cosa.
         $corpi = array();
 
         foreach( $vivi as $c ) {
@@ -973,12 +973,6 @@
             'secco'  => $opzioni['secco']
         ) );
 
-        // la voce di menu porta al PDF dove c'e', alla pagina unica dove chromium non e' installato:
-        // la versione stampabile esiste comunque, e un link che non apre niente e' peggio di niente
-        $stampabile = ( $stampato )
-                    ? array( 'href' => $pdf,         'titolo' => 'versione stampabile ( PDF )' )
-                    : array( 'href' => 'tutto.html', 'titolo' => 'versione stampabile' );
-
         // TERZA PASSATA: le pagine, ciascuna con l'indice completo attorno
         foreach( $corpi as $c ) {
 
@@ -991,7 +985,6 @@
                 'capitoli'    => $indice,
                 'corrente'    => $c['chiave'],
                 'gruppo'      => $c['gruppo'],
-                'stampabile'  => $stampabile,
                 'altrove'     => $altrove
             ) );
 
@@ -1035,8 +1028,9 @@
                                        . "> dallo standard: non è una copia del manuale del framework, ne è la correzione. Tutto\n"
                                        . "> il resto è nel manuale del framework, qui a fianco sotto *documentazione framework*.\n\n";
 
-        // la versione stampabile si annuncia anche qui, e non solo in barra laterale: l'indice e' la
-        // pagina da cui si comincia, ed e' dove uno cerca il documento intero da portarsi via
+        // la versione stampabile si annuncia SOLO qui: l'indice e' la pagina da cui si comincia ed e'
+        // dove uno cerca il documento intero da portarsi via, mentre in barra laterale sarebbe una
+        // voce riletta a ogni pagina per una cosa che si prende una volta sola
         $stampa = 'Tutto il manuale in un documento solo: [versione stampabile](tutto.html)'
                 . ( ( $stampato ) ? ', oppure il [PDF](' . $pdf . ').' : '.' ) . "\n\n";
 
@@ -1051,7 +1045,6 @@
             'sottotitolo' => $opzioni['titolo'],
             'css'         => $css,
             'capitoli'    => $indice,
-            'stampabile'  => $stampabile,
             'altrove'     => $altrove
         ) );
 

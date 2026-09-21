@@ -516,7 +516,9 @@ i manuali sono quelli dello standard, sotto `/_manual/`.
 
 Ogni manuale esce **anche** in pagina unica e in PDF, accanto ai capitoli: `tutto.html` mette tutti i
 capitoli di seguito nell'ordine dell'indice, e `<titolo-del-manuale>.pdf` ne è la stampa. Sono linkati
-dalla barra laterale di ogni pagina, subito sotto *indice del manuale*, e dall'indice.
+**dall'indice del manuale e solo da lì**: è la pagina da cui si comincia, ed è dove si cerca il
+documento intero da portarsi via. In barra laterale sarebbero una voce riletta a ogni pagina per una
+cosa che si prende una volta sola.
 
 Il PDF lo produce **chromium headless** ( `--print-to-pdf` ), che è lo stesso binario con cui
 `_src/_sh/_docs.shots.sh` fotografa le maschere: nessuna libreria nuova, nessuna conversione a mano
@@ -535,8 +537,9 @@ Tre cose non sono dettagli implementativi:
 - **il PDF si converte dal file già pubblicato**, non da una copia temporanea: la pagina cita gli
   screenshot con percorso relativo ( `shot/<id>.png` ), e da un'altra cartella uscirebbe senza figure
   senza che l'esito del comando lo dica;
-- **la versione stampabile si compone prima che le pagine vengano scritte**, perché è da lì che si sa
-  se il PDF c'è davvero, e ogni pagina se lo linka in barra laterale.
+- **i corpi dei capitoli si convertono una volta sola** e si tengono da parte: servono alla pagina del
+  capitolo e alla versione stampabile, e una seconda conversione sarebbe due documenti che il giorno
+  che una delle due cambia non dicono più la stessa cosa.
 
 Quando un manuale resta senza capitoli, `docsBuildVuoto()` porta via anche il PDF: `docsBuildPota()`
 guarda i soli `.html`, e il PDF sarebbe l'unico pezzo ancora servito — per giunta quello che li
