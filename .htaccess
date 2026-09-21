@@ -167,6 +167,15 @@ Options -MultiViews
     # gestione della documentazione HTML
     RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_html/$1 [L,QSA]
 
+    # pagina di disimpegno della documentazione
+    #
+    # E' l'indirizzo da mandare a chi deve documentarsi: la pagina elenca tutti i documenti del
+    # deploy - guide introduttive, manuali, reference - e la genera _docs.build.sh insieme agli
+    # altri. Sta in un file al primo livello di _usr/_pages/ e non in una cartella perche' i suoi
+    # rimandi sono relativi: cosi' /doc e /_doc.html hanno la stessa base e i link valgono da
+    # tutt'e due. Non va confusa con /docs/ qui sopra, che e' la reference generata da Doxygen.
+    RewriteRule ^doc$ _usr/_pages/_doc.html [L]
+
     # gestione del browser delle variabili
     RewriteRule ^cf$ _src/_api/_status/_cf.php [L,QSA]
 

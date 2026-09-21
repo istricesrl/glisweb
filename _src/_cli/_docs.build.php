@@ -316,12 +316,19 @@
      * progetto e ne mostra uno solo — l'altro — non dice a chi legge dove si trova, e la sezione
      * cambia forma da una pagina all'altra.
      *
-     * @param   string      $destinazione   cartella del documento corrente, relativa alla document root
+     * Con $tutti la funzione cambia mestiere: non e' piu' la barra laterale di un documento, ma
+     * l'elenco completo per la pagina di disimpegno. Allora entrano anche i documenti di PROGETTO,
+     * che stanno dietro Basic auth, e la REFERENCE del codice, che una barra laterale non nomina
+     * mai. Deciso da Fabio il 21/09/2026: quella pagina e' l'unico indirizzo da mandare a chi deve
+     * documentarsi, e un indice che tace tre documenti su sette obbliga a mandarne altri tre.
      *
-     * @return  array                       voci con titolo, href, sezione e il segno del corrente
+     * @param   string      $destinazione   cartella o file del documento corrente, relativo alla document root
+     * @param   bool        $tutti          elenco completo, per la pagina di disimpegno
+     *
+     * @return  array                       voci con titolo, nota, href, sezione e il segno del corrente
      *
      */
-    function docsBuildAltrove( $destinazione ) {
+    function docsBuildAltrove( $destinazione, $tutti = false ) {
 
         // i documenti dello standard esistono solo dove la generazione e' stata chiesta, cioe' dove
         // c'e' var/docs.build.conf: i sorgenti ci sono su ogni deploy, le pagine no, e senza questa
@@ -335,12 +342,22 @@
         $qui_std = ( strpos( $destinazione, '_usr/_pages/' ) === 0 );
 
         $documenti = array(
-            array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'documentazione utente',         'c' => 'USER', 'sez' => 'documentazione progetto' ),
-            array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'documentazione sviluppatore',   'c' => 'READ', 'sez' => 'documentazione progetto' ),
-            array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive',            'q' => 'usr/docs/quickstart', 'sez' => 'documentazione progetto' ),
-            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione framework' ),
-            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale sviluppatore',          'c' => 'READ', 'std' => true, 'sez' => 'documentazione framework' ),
-            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione framework' )
+            array( 'dir' => 'usr/pages/manual/user',    'titolo' => 'documentazione utente',         'c' => 'USER', 'sez' => 'documentazione progetto',
+                   'nota' => 'come si usa questa applicazione, dove è diversa dallo standard' ),
+            array( 'dir' => 'usr/pages/manual/read',    'titolo' => 'documentazione sviluppatore',   'c' => 'READ', 'sez' => 'documentazione progetto',
+                   'nota' => 'le personalizzazioni di questo deploy, per chi ci mette mano' ),
+            array( 'dir' => 'usr/pages/quickstart',     'titolo' => 'guide introduttive',            'q' => 'usr/docs/quickstart', 'sez' => 'documentazione progetto',
+                   'nota' => 'i percorsi per cominciare, su questo progetto' ),
+            array( 'dir' => '_usr/_pages/_manual/user', 'titolo' => 'manuale utente',                'c' => 'USER', 'std' => true, 'sez' => 'documentazione framework',
+                   'nota' => 'le maschere del framework, per chi le usa tutti i giorni' ),
+            array( 'dir' => '_usr/_pages/_manual/read', 'titolo' => 'manuale sviluppatore',          'c' => 'READ', 'std' => true, 'sez' => 'documentazione framework',
+                   'nota' => 'architettura, runlevel, moduli e template: il manuale di riferimento' ),
+            array( 'dir' => '_usr/_pages/_quickstart',  'titolo' => 'guide introduttive',            'q' => '_usr/_docs/_quickstart', 'std' => true, 'sez' => 'documentazione framework',
+                   'nota' => 'da dove si comincia: installare il framework e farci il primo sito' ),
+            array( 'ref' => 'docs/',    'file' => '_usr/_docs/_html/index.html', 'titolo' => 'reference API',        'sez' => 'reference del codice',
+                   'nota' => 'generata dai commenti nel codice: ogni file, ogni funzione, ogni parametro' ),
+            array( 'ref' => 'docs/pdf', 'file' => '_usr/_docs/_pdf/refman.pdf',  'titolo' => 'reference API in PDF', 'sez' => 'reference del codice',
+                   'nota' => 'la stessa, in un documento solo da portarsi via' )
         );
 
         // dalla cartella di destinazione all'indirizzo: i due prefissi delle cartelle ad accesso
@@ -354,17 +371,48 @@
             return $d;
         };
 
+        // la destinazione e' una CARTELLA per i documenti, che sono alberi di pagine, e un FILE per
+        // la pagina di disimpegno, che sta al primo livello di _usr/_pages/: i livelli da risalire
+        // si contano sulla cartella che contiene la pagina e non sul nome del file, altrimenti la
+        // pagina di disimpegno rimanderebbe un livello sopra la document root
         $qui   = $url( $destinazione );
-        $su    = str_repeat( '../', count( explode( '/', $qui ) ) );
+        $dove  = ( substr( $qui, -5 ) === '.html' ) ? dirname( $qui ) : $qui;
+        $su    = ( $dove === '.' || $dove === '' ) ? '' : str_repeat( '../', count( explode( '/', $dove ) ) );
         $voci  = array();
 
         foreach( $documenti as $d ) {
+
+            // la reference del codice compare SOLO nella pagina di disimpegno, e solo dove e'
+            // davvero raggiungibile: _usr/_docs/.htaccess la apre dove esiste var/docs.public.conf,
+            // quindi senza questa condizione il rimando sarebbe un 403 — lo stesso difetto corretto
+            // il 16/09/2026 nel pannello informazioni di athena, che offriva un link chiuso
+            if( isset( $d['ref'] ) ) {
+
+                if( ! $tutti
+                 || docsBuildPath( 'var/docs.public.conf' ) === false
+                 || docsBuildPath( $d['file'] ) === false ) {
+                    continue;
+                }
+
+                $voci[] = array(
+                    'titolo'   => $d['titolo'],
+                    'nota'     => $d['nota'],
+                    'href'     => $su . $d['ref'],
+                    'sezione'  => $d['sez'],
+                    'corrente' => false
+                );
+
+                continue;
+
+            }
 
             if( ! empty( $d['std'] ) && ! $std ) {
                 continue;
             }
 
-            if( empty( $d['std'] ) && $qui_std ) {
+            // dalla pagina di disimpegno si rimanda anche ai documenti di progetto: e' un indice e
+            // non un documento, e chi ci arriva senza la password vede comunque che esistono
+            if( empty( $d['std'] ) && $qui_std && ! $tutti ) {
                 continue;
             }
 
@@ -384,6 +432,7 @@
 
             $voci[] = array(
                 'titolo'   => $d['titolo'],
+                'nota'     => $d['nota'],
                 'href'     => $su . $url( $d['dir'] ) . '/index.html',
                 'sezione'  => $d['sez'],
                 'corrente' => ( $d['dir'] === $destinazione )
@@ -1199,6 +1248,119 @@
 
     }
 
+    /**
+     * genera la pagina di disimpegno della documentazione
+     *
+     * E' l'unico indirizzo da dare a chi deve documentarsi: una pagina sola che elenca TUTTI i
+     * documenti del deploy — le guide introduttive, i due manuali, la reference del codice, per il
+     * progetto e per lo standard — invece dei sei indirizzi che bisognava mandare uno per uno.
+     * Chiesta da Fabio il 21/09/2026.
+     *
+     * Non e' un documento e non ha capitoli: e' l'elenco che docsBuildAltrove() calcola gia' per la
+     * barra laterale, reso come pagina. Per questo non ha un sorgente in _usr/_docs/ e non passa dal
+     * filtro delle sezioni — quello che dice lo sa gia' la generazione, ed e' quali documenti questo
+     * deploy ha davvero.
+     *
+     * ⚠ Sta sotto _usr/_pages/ come gli altri documenti dello standard, quindi si genera SOLO dove
+     * esiste var/docs.build.conf: su un deploy cliente un file scritto sotto _* finirebbe fra i
+     * disallineamenti che _gw.upgrade.sh raccoglie ogni notte, e il suo rm -rf ./_* se lo
+     * porterebbe via lo stesso.
+     *
+     * L'indirizzo breve /doc lo fa il .htaccess, nella sezione SCORCIATOIE insieme a /docs/, /cf e
+     * /status. La pagina sta in un FILE al primo livello di _usr/_pages/ e non in una cartella
+     * perche' i suoi rimandi sono relativi: cosi' /doc e /_doc.html hanno la stessa base e i link
+     * valgono da tutt'e due, mentre da dentro una cartella varrebbero solo dall'indirizzo lungo.
+     *
+     * @param   string      $destinazione   file da scrivere, relativo alla document root
+     * @param   array       $opzioni        chiavi secco
+     *
+     * @return  int                         numero di pagine generate
+     *
+     */
+    function docsBuildDisimpegno( $destinazione, $opzioni ) {
+
+        $voci = docsBuildAltrove( $destinazione, true );
+
+        // nessun documento generato: un indirizzo che risponde con un elenco di niente e' peggio di
+        // uno che non risponde, e la pagina di un giro precedente mentirebbe
+        if( ! $voci ) {
+
+            echo "  nessun documento da elencare\n";
+
+            if( ! $opzioni['secco'] && file_exists( DOCS_BASE . $destinazione ) ) {
+                unlink( DOCS_BASE . $destinazione );
+                echo "  tolta $destinazione\n";
+            }
+
+            return 0;
+
+        }
+
+        $css = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
+
+        $md      = "# documentazione GlisWeb\n\nTutti i documenti di questo deploy, in un indirizzo solo.\n\n";
+        $sezione = '';
+
+        foreach( $voci as $v ) {
+
+            if( $v['sezione'] !== $sezione ) {
+
+                $md     .= '## ' . $v['sezione'] . "\n\n";
+                $sezione = $v['sezione'];
+
+                // chi riceve questo indirizzo non ha la password del manuale di progetto: dirglielo
+                // qui costa una riga, fargliela scoprire dalla finestra del browser costa una mail
+                if( $sezione === 'documentazione progetto' ) {
+                    $md .= "> **nota** — i documenti di progetto descrivono le personalizzazioni di questo\n"
+                         . "> deploy e chiedono una password. Quelli del framework, più sotto, sono aperti.\n\n";
+                }
+
+            }
+
+            $md .= '- [' . $v['titolo'] . '](' . $v['href'] . ')'
+                 . ( ( ! empty( $v['nota'] ) ) ? ' — ' . $v['nota'] : '' ) . "\n";
+
+        }
+
+        $html = docsMarkdown2Html( $md );
+
+        if( $html === false ) {
+            fwrite( STDERR, "league/commonmark non disponibile: nessuna pagina generata\n" );
+            return 0;
+        }
+
+        $toc  = array();
+        $html = docsAnchorHeadings( $html, $toc );
+        $html = docsRenderCallouts( $html );
+        $html = docsStripMarkers( $html );
+
+        // in barra laterale ci va il solo indice delle sezioni e NON l'elenco dei documenti: qui i
+        // documenti sono il contenuto della pagina, e un menu identico al corpo ripete la stessa
+        // cosa a due dita di distanza
+        $pagina = docsRenderPage( $html, $toc, array(
+            'titolo'      => 'documentazione GlisWeb',
+            'descrizione' => 'tutti i manuali e le guide di questo deploy, in un indirizzo solo',
+            'kicker'      => 'documentazione',
+            'sottotitolo' => 'da dove si comincia',
+            'css'         => $css
+        ) );
+
+        if( $opzioni['secco'] ) {
+            echo "  [prova] $destinazione (" . number_format( strlen( $pagina ) ) . " byte)\n";
+            return 1;
+        }
+
+        if( file_put_contents( DOCS_BASE . $destinazione, $pagina ) === false ) {
+            fwrite( STDERR, "  NON generato $destinazione: scrittura fallita\n" );
+            return 0;
+        }
+
+        echo "  generato $destinazione (" . number_format( strlen( $pagina ) ) . " byte)\n";
+
+        return 1;
+
+    }
+
     // ------------------------------------------------------------------ esecuzione
 
     $opt = getopt( '', array( 'user', 'dev', 'quickstart', 'standard', 'all', 'dry-run' ) );
@@ -1299,6 +1461,20 @@
             'standard' => true,
             'secco'    => $secco
         ) );
+
+    }
+
+    // la pagina di disimpegno: un indirizzo solo — /doc — da mandare a chi deve documentarsi,
+    // invece dei sei dei singoli documenti.
+    //
+    // Si rifa' a ogni giro qualunque sia il bersaglio, e non solo con --standard, perche' quello che
+    // dice e' quali documenti ESISTONO: l'elenco cambia proprio quando se ne genera uno. Vale pero'
+    // la stessa condizione dei documenti dello standard, e per lo stesso motivo — scrive sotto _*.
+    if( docsBuildPath( 'var/docs.build.conf' ) ) {
+
+        echo "pagina di disimpegno:\n";
+
+        docsBuildDisimpegno( '_usr/_pages/_doc.html', array( 'secco' => $secco ) );
 
     }
 
