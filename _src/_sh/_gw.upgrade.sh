@@ -244,6 +244,30 @@ else
         ## salvo la data di aggiornamento
         echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf
 
+        ## documentazione
+        #
+        # le pagine della documentazione nascono dai sorgenti appena installati, quindi vanno
+        # rifatte a ogni aggiornamento: fino al 21/09/2026 non le rigenerava nessuno - questo
+        # script lo dichiarava in testa a _docs.build.sh e non lo faceva - e una pagina vecchia
+        # non lo dice a chi la legge
+        #
+        # va DOPO i permessi, perche' _docs.build.sh richiude da se' i file che scrive, e PRIMA
+        # del manifest qui sotto, per la stessa ragione per cui ci va composer: tutto cio' che
+        # si scrive dopo la fotografia dell'albero torna domani notte fra i disallineamenti
+        #
+        # su un deploy cliente --all genera i soli documenti di progetto sotto usr/: quelli
+        # dello standard vogliono var/docs.build.conf, che sul cliente non c'e'. Un fallimento
+        # non ferma l'aggiornamento: il sito sta in piedi lo stesso, la documentazione no
+        if [ -x ./_src/_sh/_docs.build.sh ]; then
+
+            if ./_src/_sh/_docs.build.sh --all; then
+                echo "documentazione rigenerata"
+            else
+                echo "ATTENZIONE: generazione della documentazione fallita"
+            fi
+
+        fi
+
         ## fotografo l'albero appena installato, per la raccolta del prossimo giro
         # va fatto DOPO composer e DOPO i permessi, cosi' il manifest descrive il deploy come
         # sara' letto domani: un manifest scritto prima segnalerebbe come disallineato tutto
