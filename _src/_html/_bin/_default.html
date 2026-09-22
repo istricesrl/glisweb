@@ -70,19 +70,120 @@
 {{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
 {% endmacro %}
 
-{% macro video( page, lang, site, role, num, autoplay, loop ) %}
+{% macro video( page, lang, site, role, num, autoplay, loop, privacy, pages ) %}
 {# nota sull'autoplay vedi https://developer.chrome.com/blog/autoplay?hl=it #}
+{# NOTA privacy e pages servono al consenso e stanno in fondo apposta: le chiamate gia' scritte
+   non cambiano, e chi non li passa ottiene il comportamento di prima ( vedi cms.videoEmbed() ) #}
+{% import _self as cms %}
 {% if page.contents.video[ role ][ num ].id_embed == 3 %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
-    <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0{% if autoplay %}&autoplay=1&mute=1{% endif %}{% if loop %}&loop=1{% endif %}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+    {{ cms.videoEmbed( page.contents.video[ role ][ num ].codice_embed, privacy, pages, lang, page, '?rel=0' ~ ( autoplay ? '&autoplay=1&mute=1' : '' ) ~ ( loop ? '&loop=1' : '' ), 'embed-responsive-item lazyload', '', '', 'YouTube', true ) }}
 </div>
 {% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
-VIMEO
+{# Vimeo non e' implementato: prima di questa riga la macro stampava la parola VIMEO nel corpo
+   della pagina, che e' il modo peggiore di dire che manca qualcosa. Quando si implementera',
+   l'incorporamento passa da cms.iframeEmbed() come quello di YouTube, col suo servizio
+   dichiarato in privacy.cookie.terzi.analitici #}
+<!-- video {{ num }} del ruolo {{ role }}: Vimeo non e' ancora implementato in {{ _self }}::video() -->
 {% else %}
 <video controls width="100%" {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}  >
     <source src="{{ site.root }}{{ page.contents.video[ role ][ num ].path }}" type="video/mp4">
 </video>
+{% endif %}
+{% endmacro %}
+
+{% macro videoEmbed( codice, privacy, pages, lang, page, parametri, classe, width, height, servizio, lazy ) %}
+{# INCORPORAMENTO DI UN VIDEO YOUTUBE SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' la macro da usare ogni volta che in una pagina compare un video di YouTube, sia dai template
+   sia dal testo dei contenuti ( dove il redattore, altrimenti, incolla l'iframe a mano e quel video
+   si carica anche a consenso rifiutato ). Stessa forma degli snippet di terze parti di _src/_html/_inc/
+   ( _analytics.head.html, _gtm.head.html, ... ): prima si guarda la configurazione del servizio, poi
+   il consenso, e nel ramo che non emette niente ci va un commento HTML che dice perche'.
+
+   codice     il codice di incorporamento del video ( la parte dopo /embed/ )
+   privacy    l'array privacy della pagina: serve per il consenso, nelle macro il contesto non arriva
+   pages      l'array delle pagine: serve al segnaposto per il link alla privacy policy
+   lang       il codice IETF della lingua
+   page       la pagina corrente: il segnaposto ci fa sopra la POST del consenso
+   parametri  la query string del video, compreso il '?' ( p.es. '?rel=0&mute=1' )
+   classe     le classi dell'iframe, che vanno anche al segnaposto perche' ne prende il posto
+   width      l'attributo width dell'iframe, se serve
+   height     l'attributo height dell'iframe, se serve
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici, di default 'YouTube'
+   lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+
+   NOTA servizio sceglie soltanto il consenso da verificare: l'URL e' comunque quello di YouTube,
+   Vimeo non e' implementato ne' qui ne' in cms.video()
+   NOTA senza privacy la macro non puo' verificare niente e il video esce come prima: e' quello che
+   succede alle chiamate di cms.video() gia' scritte, e lo dichiara un commento nella pagina #}
+{% import _self as cms %}
+{% if not servizio %}{% set servizio = 'YouTube' %}{% endif %}
+{% if not codice %}
+<!-- nessun codice video passato a {{ _self }}::videoEmbed() -->
+{% else %}
+{{ cms.iframeEmbed( 'https://www.youtube.com/embed/' ~ codice ~ parametri, servizio, privacy, pages, lang, page, classe, width, height, 'Il video', 'title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen', lazy ) }}
+{% endif %}
+{% endmacro %}
+
+{% macro iframeEmbed( url, servizio, privacy, pages, lang, page, classe, width, height, contenuto, attributi, lazy ) %}
+{# INCORPORAMENTO DI UN IFRAME DI TERZE PARTI SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' il gate, e sta in un posto solo: cms.videoEmbed() e' il caso YouTube che passa di qui, e una
+   mappa, un calendario o qualunque altro incorporamento di terze parti si scrivono allo stesso
+   modo. La forma e' quella degli snippet di _src/_html/_inc/: prima la configurazione del servizio,
+   poi il consenso, e nel ramo che non emette niente un commento HTML che dice perche'.
+
+   url        l'URL completo dell'iframe, query string compresa
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   attributi  gli attributi propri del servizio, gia' scritti come vanno nel tag
+   lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+
+   NOTA il gate scatta solo se il servizio e' DICHIARATO e non e' anonimo: dove non e' dichiarato
+   il framework non ha niente da far rispettare, l'iframe esce e un commento lo dice #}
+{% import _self as cms %}
+{% if not lang %}{% set lang = 'it-IT' %}{% endif %}
+{% set dettagli = privacy.cookie.terzi.analitici[ servizio ] %}
+{% if not url %}
+<!-- nessun url passato a {{ _self }}::iframeEmbed() -->
+{% elseif dettagli and not dettagli.anonimo and dettagli.consenso != 'ok' %}
+<!-- {{ contenuto|default( 'Questo contenuto' ) }} non si carica: consenso {{ servizio }} {% if dettagli.consenso %}negato{% else %}non prestato{% endif %} ( {{ url }} ) -->
+{{ cms.consensoMancante( servizio, privacy, pages, lang, page, contenuto, classe ) }}
+{% else %}
+{% if not dettagli %}<!-- {{ servizio }} non e' dichiarato in privacy.cookie.terzi.analitici: l'iframe esce senza verifica del consenso -->{% endif %}
+<iframe{% if classe %} class="{{ classe }}"{% endif %}{% if width %} width="{{ width }}"{% endif %}{% if height %} height="{{ height }}"{% endif %} {% if lazy %}data-src{% else %}src{% endif %}="{{ url }}"{% if attributi %} {{ attributi|raw }}{% endif %}></iframe>
+{% endif %}
+{% endmacro %}
+
+{% macro consensoMancante( servizio, privacy, pages, lang, page, contenuto, classe ) %}
+{# SEGNAPOSTO DI UN CONTENUTO DI TERZE PARTI NON CARICATO PER MANCANZA DI CONSENSO
+
+   Prende il posto del contenuto che non si vede e dice di chi e' il cookie, quanto dura e dove va
+   il trattamento, coi testi presi dalla dichiarazione dei cookie e non riscritti. Il pulsante e' la
+   stessa POST di __cookie__ dell'overlay dei cookie: niente JavaScript, niente meccanismi nuovi.
+
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   classe     le classi del contenuto sostituito, perche' il segnaposto ne occupa il posto #}
+{% set dettagli = privacy.cookie.terzi.analitici[ servizio ] %}
+{% if dettagli %}
+<div class="consenso-mancante{% if classe %} {{ classe }}{% endif %}">
+    <form action="{{ page.path[ lang ] }}" method="post">
+        <input type="hidden" name="__cookie__[{{ servizio }}][owner]" value="terzi">
+        <input type="hidden" name="__cookie__[{{ servizio }}][type]" value="analitici">
+        <input type="hidden" name="__cookie__[{{ servizio }}][value]" value="ok">
+        <p>{% if contenuto %}{{ contenuto }}{% else %}Questo contenuto{% endif %} non si carica perché non hai dato il consenso ai cookie di
+        <strong>{{ dettagli.nome[ lang ] }}</strong>.</p>
+        <p class="dettaglio">Il cookie è conservato {{ dettagli.conservazione[ lang ] }} e il trattamento
+        dei dati ad esso collegati è effettuato {{ dettagli.luogo[ lang ] }}; puoi cambiare idea in
+        qualsiasi momento dalla <a href="{{ pages.privacy.url[ lang ] }}">privacy policy del sito</a>.</p>
+        <input type="submit" class="btn btn-light" value="ACCETTA E MOSTRA">
+    </form>
+</div>
+{% else %}
+<!-- nessun segnaposto per {{ servizio }}: non e' dichiarato in privacy.cookie.terzi.analitici -->
 {% endif %}
 {% endmacro %}
 

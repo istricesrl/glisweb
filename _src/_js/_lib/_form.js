@@ -14,7 +14,26 @@ function checkEmail(obj, l) {
         return 0;
     } else {
         // valore valido
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(obj.val())) {
+        //
+        // ATTENZIONE: qui non ci va il vecchio /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        // che rifiutava indirizzi perfettamente legittimi e lo faceva in un modo che non sembra
+        // un errore di validazione: il browser quegli indirizzi li accetta ( checkValidity() e'
+        // true ), quindi il campo non si colora e chi guarda vede solo che preme e non succede
+        // niente. Due difetti distinti:
+        //
+        //   - niente '+' nella parte locale, cioe' niente plus-addressing;
+        //   - dominio di primo livello limitato a 2 o 3 lettere, quindi fuori .info, .online,
+        //     .name, .email, .cloud e tutti i nuovi gTLD.
+        //
+        // Trovato il 21/09/2026 sul form di donazione di sostienigimbe.it, dove checkForm() gata
+        // il submit: chi aveva una di quelle mail non poteva donare. Il regex nuovo e' un
+        // sovrainsieme del vecchio su tutto cio' che e' realistico — l'unica cosa che non accetta
+        // piu' e' un TLD che comincia per cifra, che non esiste ( i punycode cominciano per 'xn' ).
+        //
+        // Non e' una validazione RFC 5322 completa, e non deve esserlo: e' un controllo di buon
+        // senso lato client. La verifica vera la fa Emailable sul blur, e il backend comunque non
+        // puo' fidarsi di nessuno dei due.
+        if (/^[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?\.)+[A-Za-z][A-Za-z0-9_-]*[A-Za-z0-9_]$/.test(obj.val())) {
             return 1;
         }
         // valore NON valido

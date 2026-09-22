@@ -201,13 +201,18 @@
 
 {# TODO documentare #}
 {% macro video( options ) %}
-    <!-- macro {{ _self }}::image() -->
+    <!-- macro {{ _self }}::video() -->
+
+    {# le altre macro di questa libreria #}
+    {% import _self as cms %}
 
     {# valori di default #}
     {% set options = {
         'source': [],
         'site': [],
-        'page': []
+        'page': [],
+        'privacy': [],
+        'pages': []
     }|merge( options ) %}
 
     {# valori di default per l'array source #}
@@ -217,7 +222,8 @@
         'ietf': 'it-IT',
         'class': '',
         'width': '100%',
-        'height': ''
+        'height': '',
+        'servizio': 'YouTube'
     }|merge( options.source ) %}
 
     {# valori di default per l'array site #}
@@ -248,20 +254,29 @@
 
     <!-- YOUTUBE -->
     <div class="ratio ratio-{{ rt }}">
-        <iframe
-            {% if source.width %}width="{{ source.width }}"{% endif %}
-            {% if source.height %}height="{{ source.height }}"{% endif %}
-            src="https://www.youtube.com/embed/{{ page.contents.video[ source.ruolo ][ source.ordine ].codice_embed }}"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-        </iframe>
+        {{ cms.videoEmbed( {
+            'source': {
+                'codice': page.contents.video[ source.ruolo ][ source.ordine ].codice_embed,
+                'ietf': source.ietf,
+                'class': source.class,
+                'width': source.width,
+                'height': source.height,
+                'servizio': source.servizio
+            },
+            'page': options.page,
+            'privacy': options.privacy,
+            'pages': options.pages
+        } ) }}
     </div>
 
-    {% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
+    {% elseif page.contents.video[ source.ruolo ][ source.ordine ].id_embed == 2 %}
 
-    <!-- VIMEO -->
+    {# ⚠ qui c'era `page.contents.video[ role ][ num ]`, ma in questa macro le variabili si chiamano
+       source.ruolo e source.ordine: `role` e `num` non esistono, il confronto era sempre falso e un
+       video Vimeo finiva nel ramo del player HTML5 con un path vuoto. Corretto il 21/09/2026.
+       Vimeo non e' implementato: quando lo sara', l'incorporamento passa da iframeEmbed() come
+       quello di YouTube, col suo servizio dichiarato in privacy.cookie.terzi.analitici #}
+    <!-- video {{ source.ordine }} del ruolo {{ source.ruolo }}: Vimeo non e' ancora implementato in {{ _self }}::video() -->
 
     {% else %}
 
@@ -275,5 +290,221 @@
 
     {% endif %}
 
-    <!-- fine macro {{ _self }}::image() -->
+    <!-- fine macro {{ _self }}::video() -->
 {% endmacro video %}
+
+{# INCORPORAMENTO DI UN VIDEO YOUTUBE SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' la macro da usare ogni volta che in una pagina compare un video di YouTube, sia dai template
+   sia dal testo dei contenuti ( dove il redattore, altrimenti, incolla l'iframe a mano e quel video
+   si carica anche a consenso rifiutato ). Stessa forma degli snippet di terze parti di _src/_twig/_inc/
+   ( _analytics.head.twig, _gtm.head.twig, ... ): prima si guarda la configurazione del servizio, poi
+   il consenso, e nel ramo che non emette niente ci va un commento HTML che dice perche'.
+
+   source.codice     il codice di incorporamento del video ( la parte dopo /embed/ )
+   source.parametri  la query string del video, compreso il '?' ( p.es. '?rel=0&mute=1' )
+   source.ietf       il codice IETF della lingua
+   source.class      le classi dell'iframe, che vanno anche al segnaposto perche' ne prende il posto
+   source.width      l'attributo width dell'iframe, se serve
+   source.height     l'attributo height dell'iframe, se serve
+   source.servizio   la chiave del servizio in privacy.cookie.terzi.analitici, di default 'YouTube'
+   source.lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+   privacy           l'array privacy: serve per il consenso, nelle macro il contesto non arriva
+   pages             l'array delle pagine: serve al segnaposto per il link alla privacy policy
+   page              la pagina corrente: il segnaposto ci fa sopra la POST del consenso
+
+   NOTA servizio sceglie soltanto il consenso da verificare: l'URL e' comunque quello di YouTube,
+   Vimeo non e' implementato ne' qui ne' in cms.video()
+   NOTA senza privacy la macro non puo' verificare niente e il video esce come prima, dichiarandolo
+   in un commento nella pagina: e' quello che succede alle chiamate gia' scritte che non lo passano #}
+{% macro videoEmbed( options ) %}
+    <!-- macro {{ _self }}::videoEmbed() -->
+
+    {# le altre macro di questa libreria #}
+    {% import _self as cms %}
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'page': [],
+        'privacy': [],
+        'pages': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'codice': '',
+        'parametri': '',
+        'ietf': 'it-IT',
+        'class': '',
+        'width': '',
+        'height': '',
+        'servizio': 'YouTube',
+        'lazy': false
+    }|merge( options.source ) %}
+
+    {% if not source.codice %}
+
+    <!-- nessun codice video passato a {{ _self }}::videoEmbed() -->
+
+    {% else %}
+
+    {{ cms.iframeEmbed( {
+        'source': {
+            'url': 'https://www.youtube.com/embed/' ~ source.codice ~ source.parametri,
+            'servizio': source.servizio,
+            'contenuto': 'Il video',
+            'ietf': source.ietf,
+            'class': source.class,
+            'width': source.width,
+            'height': source.height,
+            'lazy': source.lazy,
+            'attributi': 'title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen'
+        },
+        'page': options.page,
+        'privacy': options.privacy,
+        'pages': options.pages
+    } ) }}
+
+    {% endif %}
+
+    <!-- fine macro {{ _self }}::videoEmbed() -->
+{% endmacro videoEmbed %}
+
+{# INCORPORAMENTO DI UN IFRAME DI TERZE PARTI SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' il gate, e sta in un posto solo: `videoEmbed()` e' il caso YouTube che passa di qui, e una
+   mappa, un calendario o qualunque altro incorporamento di terze parti si scrivono allo stesso
+   modo. La forma e' quella degli snippet di _src/_twig/_inc/: prima la configurazione del
+   servizio, poi il consenso, e nel ramo che non emette niente un commento HTML che dice perche'.
+
+   source.url        l'URL completo dell'iframe, query string compresa
+   source.servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   source.contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   source.attributi  gli attributi propri del servizio, gia' scritti come vanno nel tag
+   source.lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+
+   NOTA il gate scatta solo se il servizio e' DICHIARATO e non e' anonimo: dove non e' dichiarato
+   il framework non ha niente da far rispettare, l'iframe esce e un commento lo dice #}
+{% macro iframeEmbed( options ) %}
+    <!-- macro {{ _self }}::iframeEmbed() -->
+
+    {# le altre macro di questa libreria #}
+    {% import _self as cms %}
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'page': [],
+        'privacy': [],
+        'pages': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'url': '',
+        'servizio': '',
+        'contenuto': 'Questo contenuto',
+        'attributi': '',
+        'ietf': 'it-IT',
+        'class': '',
+        'width': '',
+        'height': '',
+        'lazy': false
+    }|merge( options.source ) %}
+
+    {# dettagli del servizio nella dichiarazione dei cookie #}
+    {% set dettagli = options.privacy.cookie.terzi.analitici[ source.servizio ] %}
+
+    {% if not source.url %}
+
+    <!-- nessun url passato a {{ _self }}::iframeEmbed() -->
+
+    {% elseif dettagli and not dettagli.anonimo and dettagli.consenso != 'ok' %}
+
+    <!-- {{ source.contenuto }} non si carica: consenso {{ source.servizio }} {% if dettagli.consenso %}negato{% else %}non prestato{% endif %} ( {{ source.url }} ) -->
+    {{ cms.consensoMancante( {
+        'source': {
+            'servizio': source.servizio,
+            'ietf': source.ietf,
+            'class': source.class,
+            'contenuto': source.contenuto
+        },
+        'page': options.page,
+        'privacy': options.privacy,
+        'pages': options.pages
+    } ) }}
+
+    {% else %}
+
+    {% if not dettagli %}<!-- {{ source.servizio }} non e' dichiarato in privacy.cookie.terzi.analitici: l'iframe esce senza verifica del consenso -->{% endif %}
+    <iframe
+        {% if source.class %}class="{{ source.class }}"{% endif %}
+        {% if source.width %}width="{{ source.width }}"{% endif %}
+        {% if source.height %}height="{{ source.height }}"{% endif %}
+        {% if source.lazy %}data-src{% else %}src{% endif %}="{{ source.url }}"
+        {% if source.attributi %}{{ source.attributi|raw }}{% endif %}>
+    </iframe>
+
+    {% endif %}
+
+    <!-- fine macro {{ _self }}::iframeEmbed() -->
+{% endmacro iframeEmbed %}
+
+{# SEGNAPOSTO DI UN CONTENUTO DI TERZE PARTI NON CARICATO PER MANCANZA DI CONSENSO
+
+   Prende il posto del contenuto che non si vede e dice di chi e' il cookie, quanto dura e dove va
+   il trattamento, coi testi presi dalla dichiarazione dei cookie e non riscritti. Il pulsante e' la
+   stessa POST di __cookie__ dell'overlay dei cookie: niente JavaScript, niente meccanismi nuovi.
+
+   source.servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   source.contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   source.class      le classi del contenuto sostituito, perche' il segnaposto ne occupa il posto
+   source.ietf       il codice IETF della lingua #}
+{% macro consensoMancante( options ) %}
+    <!-- macro {{ _self }}::consensoMancante() -->
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'page': [],
+        'privacy': [],
+        'pages': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'servizio': '',
+        'contenuto': 'Questo contenuto',
+        'class': '',
+        'ietf': 'it-IT'
+    }|merge( options.source ) %}
+
+    {# dettagli del servizio nella dichiarazione dei cookie #}
+    {% set dettagli = options.privacy.cookie.terzi.analitici[ source.servizio ] %}
+
+    {% if dettagli %}
+
+    <div class="consenso-mancante{% if source.class %} {{ source.class }}{% endif %}">
+        <form action="{{ options.page.path[ source.ietf ] }}" method="post">
+            <input type="hidden" name="__cookie__[{{ source.servizio }}][owner]" value="terzi">
+            <input type="hidden" name="__cookie__[{{ source.servizio }}][type]" value="analitici">
+            <input type="hidden" name="__cookie__[{{ source.servizio }}][value]" value="ok">
+            <p>{{ source.contenuto }} non si carica perché non hai dato il consenso ai cookie di
+            <strong>{{ dettagli.nome[ source.ietf ] }}</strong>.</p>
+            <p class="dettaglio">Il cookie è conservato {{ dettagli.conservazione[ source.ietf ] }} e il
+            trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ source.ietf ] }}; puoi
+            cambiare idea in qualsiasi momento dalla
+            <a href="{{ options.pages.privacy.url[ source.ietf ] }}">privacy policy del sito</a>.</p>
+            <input type="submit" class="btn btn-light" value="ACCETTA E MOSTRA">
+        </form>
+    </div>
+
+    {% else %}
+
+    <!-- nessun segnaposto per {{ source.servizio }}: non e' dichiarato in privacy.cookie.terzi.analitici -->
+
+    {% endif %}
+
+    <!-- fine macro {{ _self }}::consensoMancante() -->
+{% endmacro consensoMancante %}

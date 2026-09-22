@@ -283,8 +283,110 @@
     // restituzione contenuto
     if( $authorized === true ) {
 
+        /**
+         * validatori di cache e richieste parziali
+         * ========================================
+         *
+         * Finche' una cartella di var/ sfuggiva a questa API ( bastava un RewriteEngine On in un
+         * .htaccess locale, come era per var/contenuti/ fino al 21/09/2026 ) i suoi file li
+         * serviva Apache, che di suo manda Last-Modified, ETag e Accept-Ranges. Ricondurre quei
+         * file qui dentro per poterli tracciare li faceva regredire in silenzio su tre fronti:
+         * niente 304 sul secondo accesso, niente ripresa di un trasferimento interrotto, e un
+         * Cache-Control: no-store ereditato dalla sessione che impedisce al browser perfino di
+         * tenerne una copia. Su un PDF da 30 MB scaricato in diretta durante la presentazione di
+         * un Rapporto, e' la differenza fra un download che riparte da dove si era rotto e uno
+         * che ricomincia da capo ogni volta.
+         *
+         * Il Cache-Control e' 'private': i file di var/ non sono tutti pubblici, quindi si
+         * consente la copia nel browser di chi ha fatto la richiesta ma non nelle cache
+         * condivise, e si impone comunque la rivalidazione a ogni accesso.
+         */
+        $percorsoFile   = DIR_BASE . $_REQUEST['__download__'];
+        $dimensioneFile = filesize( $percorsoFile );
+        $modificaFile   = filemtime( $percorsoFile );
+        $etag           = '"' . dechex( $dimensioneFile ) . '-' . dechex( $modificaFile ) . '"';
+
+        // i validatori sostituiscono quelli che la sessione ha gia' emesso
+        header_remove( 'Expires' );
+        header_remove( 'Pragma' );
+        header( 'Cache-Control: private, max-age=0, must-revalidate' );
+        header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', $modificaFile ) . ' GMT' );
+        header( 'ETag: ' . $etag );
+        header( 'Accept-Ranges: bytes' );
+
+        // il client ha gia' la copia buona: 304 e non si trasmette niente
+        $etagClient = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? trim( $_SERVER['HTTP_IF_NONE_MATCH'] ) : NULL;
+        $dataClient = isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ? strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) : NULL;
+
+        if( ( $etagClient !== NULL && $etagClient === $etag ) || ( $etagClient === NULL && $dataClient !== NULL && $dataClient >= $modificaFile ) ) {
+
+            http_response_code( 304 );
+            exit;
+
+        }
+
+        /**
+         * richiesta parziale
+         * ==================
+         *
+         * Si gestisce il solo intervallo singolo ( bytes=inizio-fine ), che e' quello che mandano
+         * i browser e i gestori di download quando riprendono un trasferimento interrotto. Le
+         * richieste multi-intervallo vogliono una risposta multipart/byteranges che qui non
+         * servirebbe a nessuno: si ignorano e si risponde con il file intero, che e' un
+         * comportamento lecito.
+         */
+        $inizio = 0;
+        $fine   = $dimensioneFile - 1;
+        $parziale = false;
+
+        if( isset( $_SERVER['HTTP_RANGE'] ) && preg_match( '/^bytes=(\d*)-(\d*)$/', trim( $_SERVER['HTTP_RANGE'] ), $intervallo ) ) {
+
+            if( $intervallo[1] === '' && $intervallo[2] === '' ) {
+
+                // 'bytes=-' non chiede niente di sensato
+                $parziale = false;
+
+            } elseif( $intervallo[1] === '' ) {
+
+                // suffisso: gli ultimi N byte
+                $lunghezza = (int) $intervallo[2];
+                $inizio    = max( 0, $dimensioneFile - $lunghezza );
+                $parziale  = ( $lunghezza > 0 );
+
+            } else {
+
+                $inizio   = (int) $intervallo[1];
+                $fine     = ( $intervallo[2] === '' ) ? $dimensioneFile - 1 : (int) $intervallo[2];
+                $parziale = true;
+
+            }
+
+            // intervallo fuori dal file: 416 e si dice quanto e' lungo davvero
+            if( $parziale && ( $inizio > $fine || $inizio >= $dimensioneFile ) ) {
+
+                http_response_code( 416 );
+                header( 'Content-Range: bytes */' . $dimensioneFile );
+                exit;
+
+            }
+
+            if( $fine >= $dimensioneFile ) {
+                $fine = $dimensioneFile - 1;
+            }
+
+        }
+
         // header
         header( 'content-type: ' . $mimetype );
+
+        if( $parziale ) {
+
+            http_response_code( 206 );
+            header( 'Content-Range: bytes ' . $inizio . '-' . $fine . '/' . $dimensioneFile );
+
+        }
+
+        header( 'Content-Length: ' . ( $fine - $inizio + 1 ) );
 
         // debug
         // var_dump( $mimetype );
@@ -292,7 +394,58 @@
         // die();
 
         // download
-        echo file_get_contents( DIR_BASE . $_REQUEST['__download__'] );
+        //
+        // ATTENZIONE: qui non ci va file_get_contents(), che carica in memoria l'intero file
+        // prima di mandarne un solo byte. Ogni worker Apache che serve un download si porta
+        // dietro il peso del file: su un PDF da 29 MB ( il Rapporto GIMBE ) sono 29 MB di
+        // picco PHP a richiesta contro i 2 MB di readfile(), che manda a blocchi. Con
+        // mpm_prefork e MaxRequestWorkers a 150 la differenza e' fra qualche centinaio di
+        // megabyte e una decina di gigabyte, cioe' fra reggere e farsi uccidere dall'OOM
+        // killer proprio nel momento in cui il file serve: la presentazione in diretta di un
+        // Rapporto, quando tutti scaricano nello stesso minuto.
+        //
+        // set_time_limit( 0 ) perche' un file grosso su una linea lenta puo' durare piu' del
+        // max_execution_time: il download non e' calcolo, e non va interrotto a meta'.
+        set_time_limit( 0 );
+
+        if( ! $parziale ) {
+
+            readfile( $percorsoFile );
+
+        } else {
+
+            // stesso principio di readfile(): si manda a blocchi, senza mai tenere in memoria
+            // piu' di un blocco per volta, partendo dall'offset chiesto dal client
+            $maniglia = fopen( $percorsoFile, 'rb' );
+
+            if( $maniglia !== false ) {
+
+                fseek( $maniglia, $inizio );
+                $restano = $fine - $inizio + 1;
+
+                while( $restano > 0 && ! feof( $maniglia ) ) {
+
+                    $blocco = fread( $maniglia, min( 8192, $restano ) );
+
+                    if( $blocco === false ) {
+                        break;
+                    }
+
+                    echo $blocco;
+                    $restano -= strlen( $blocco );
+
+                    // il client puo' chiudere a meta': inutile continuare a leggere il disco
+                    if( connection_aborted() ) {
+                        break;
+                    }
+
+                }
+
+                fclose( $maniglia );
+
+            }
+
+        }
 
     } else {
 

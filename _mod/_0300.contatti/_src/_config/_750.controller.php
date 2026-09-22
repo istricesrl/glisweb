@@ -254,11 +254,36 @@
 
         }
         } else {
-            // ie('SPAM detected');
+
+            /**
+             * blocco scartato dal controllo antispam
+             *
+             * Finora questo ramo non faceva niente — nemmeno una riga di log, solo un
+             * ie() commentato — e subito sotto lo stato veniva messo a 'OK' comunque.
+             * Il risultato: chi veniva classificato come bot leggeva "controlla la tua
+             * casella di posta" davanti a un modulo che non era stato elaborato, e da
+             * nessuna parte restava traccia di quante richieste legittime venissero
+             * buttate via. Si logga a LOG_ERR e si dice all'utente che qualcosa non ha
+             * funzionato, che delle due e' l'unica cosa vera.
+             */
+            logWrite(
+                'blocco ' . $k . ' scartato dal controllo antispam ( score '
+                . ( isset($v['spam']['score']) ? $v['spam']['score'] : '?' )
+                . ( isset($v['spam']['status']) ? ', ' . $v['spam']['status'] : '' ) . ' )'
+                . ( isset($v['email']) ? ' per ' . $v['email'] : '' ),
+                'contatti',
+                LOG_ERR
+            );
+
+            // esito dell’operazione
+            $v['__status__'] = 'NO';
+
         }
 
         // esito dell’operazione
-        $v['__status__'] = 'OK';
+        if (! isset($v['__status__'])) {
+            $v['__status__'] = 'OK';
+        }
     }
 }
 
