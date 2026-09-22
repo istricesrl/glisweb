@@ -119,8 +119,25 @@
 {% if autosubmit %}
     {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
 {% endif %}
-{# NOTA SE PL NON È VALORIZZATO DI SOLITO È PERCHÉ LA LABEL NON VIENE GENERATA DALLA VIEW OPPURE PERCHÉ VA RIPOPOLATA LA VIEW STATIC O SVUOTATA LA CACHE #}
-{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% if not pl %}{% set pl = '---' %}{% endif %}{% endif %}
+{#
+   pl e' cio' che il campo mostra PRIMA che il JavaScript risolva l'etichetta.
+
+   Se la label non sta in etc si ripiega sul VALORE, non piu' sui tre trattini ( 22/09/2026 ).
+   Con una tendina intelligente etc e' quasi sempre vuoto - e lo e' diventato su molte maschere
+   in piu' dall'11/09/2026, da quando le liste sull'anagrafica intera non si caricano piu' -
+   quindi i trattini erano la condizione NORMALE di partenza, e restavano li' per sempre ogni
+   volta che la chiamata REST di _src/_js/_lib/_selectbox.js non andava a buon fine ( il caso
+   piu' comune: l'entita' non e' fra i permessi e l'API risponde 401 ).
+
+   Il guaio dei trattini e' che dicono "vuoto" a un campo che vuoto non e': l'operatore crede di
+   dover riscegliere il valore. L'id non e' bello da leggere ma e' vero, e sparisce comunque
+   appena arriva l'etichetta. E' anche cio' che fa gia' la macro gemella _src/_twig/_lib/_form.twig,
+   che di segnaposto non ne ha mai avuto uno.
+
+   NOTA se pl resta il valore anche a pagina caricata, di solito e' perche' la label non viene
+   generata dalla view, oppure va ripopolata la view static o svuotata la cache.
+#}
+{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% if not pl %}{% set pl = vl %}{% endif %}{% endif %}
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">

@@ -80,9 +80,20 @@
             box.val( current );
         }
 
-        if( current != '' ) {
-            // alert( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
-            console.log( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
+        /*
+         * SENZA API NON C'E' NIENTE DA RIPESCARE
+         *
+         * Una tendina statica ha gia' le sue <option> in pagina e il box e' gia' valorizzato con
+         * l'etichetta giusta: la chiamata non servirebbe a niente. Ma la macro Twig emette
+         * populate-api anche quando e' vuoto, quindi senza questa guardia partiva una
+         * GET /api/?__id__=<etichetta> per OGNI select con un valore selezionato - 58 richieste
+         * in due giorni su un solo deploy, tutte 404, e ciascuna col suo bootstrap del framework.
+         */
+        var api = $( select ).attr( 'populate-api' );
+
+        if( current != '' && typeof api !== 'undefined' && api != '' ) {
+            // alert( 'prelevo #' + current + ' da ' + api );
+            console.log( 'prelevo #' + current + ' da ' + api );
             /*
              * L'ID VA PASSATO COME PARAMETRO, NON COME PEZZO DI PERCORSO
              *
@@ -103,24 +114,39 @@
              * __id__ invece lo legge _src/_api/_rest.php ( riga 84 ) esattamente come quello
              * estratto dal percorso, e regge qualunque carattere.
              */
+            /*
+             * IL FALLIMENTO NON DEVE ESSERE SILENZIOSO
+             *
+             * Se la chiamata non torna un'etichetta si rimette nel campo il VALORE, che e'
+             * l'unica cosa vera che si ha in mano. Fino al 22/09/2026 qui non si faceva niente:
+             * il campo restava col segnaposto di _src/_html/_bin/_form.html, che erano tre
+             * trattini, e all'operatore sembrava vuoto un campo che invece era valorizzato -
+             * l'hidden ha sempre avuto il suo id, e il salvataggio infatti non perdeva niente.
+             *
+             * Il caso piu' comune non e' un guasto ma un permesso: un'entita' che non sta in
+             * $cf['auth']['permissions'] fa rispondere 401 all'API REST, e ogni tendina che la
+             * interroga resta indietro. Perche' si veda senza doverlo cercare, l'errore va in
+             * console.error con dentro il campo, l'entita' e il codice HTTP.
+             */
             getws(
-                '/api/' + $( select ).attr( 'populate-api' ) + '?__id__=' + encodeURIComponent( current ),
+                '/api/' + api + '?__id__=' + encodeURIComponent( current ),
                 null,
                 function( data ) {
-                    // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+                    // alert( 'prelevato ' + data.__label__ + ' da ' + api );
                     console.log( 'prelevo i dati' );
-                    if( data ) {
-                        if( data.hasOwnProperty('__label__') ) {
-                            console.log( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
-                            console.log( data );
-                            box.val( data.__label__ );
-                            $( select ).val( current );
-                        } else {
-                            console.log( 'label non trovata' );
-                        }
+                    if( data && data.hasOwnProperty( '__label__' ) ) {
+                        console.log( 'prelevato ' + data.__label__ + ' da ' + api );
+                        console.log( data );
+                        box.val( data.__label__ );
+                        $( select ).val( current );
                     } else {
-                        console.log( 'dati non ricevuti' );
+                        box.val( current );
+                        console.error( 'selectbox ' + base_id + ': /api/' + api + ' non ha restituito __label__ per ' + current + ', resta il valore' );
                     }
+                },
+                function( jqxhr ) {
+                    box.val( current );
+                    console.error( 'selectbox ' + base_id + ': /api/' + api + ' ha risposto ' + ( ( jqxhr && jqxhr.status ) ? jqxhr.status : 'errore' ) + ' per ' + current + ', resta il valore' );
                 }
             );
         }
