@@ -17,6 +17,13 @@ Options -Indexes
 # disabilito le MultiViews
 Options -MultiViews
 
+# dichiaro il tipo MIME del webp
+# il webp non e' in /etc/mime.types, quindi senza questa riga Apache serve i .webp senza
+# Content-Type e i browser non li trattano come immagini. Sta qui, fuori dal blocco
+# mod_rewrite, perche' copra tutto il sito: prima viveva solo nel .htaccess di
+# var/contenuti/ dei deploy e valeva per quella cartella sola
+AddType image/webp .webp
+
 ## BLOCCHI DI SICUREZZA
 #
 # Questa sezione ha lo scopo di bloccare richieste potenzialmente dannose sulla base del tipo di file richiesto;
@@ -224,6 +231,14 @@ Options -MultiViews
 
     # gestione dell'API di download generica
     # questa regola reindirizza qualunque richiesta diretta al contenuto di var/ all'api _src/_api/_download.php (vedi la documentazione dell'API per i dettagli)
+    # attenzione: la regola smette di applicarsi se una sottocartella di var/ accende il
+    # proprio RewriteEngine. Un "RewriteEngine On" in un .htaccess di sottocartella azzera
+    # l'ereditarieta' delle regole del padre, quindi la richiesta non arriva piu' a
+    # _download.php, la macro src/inc/macro/download.php non viene invocata e i download
+    # smettono di finire in attivita con id_tipologia = 43. Non si vede: nessun errore, e
+    # il file continua a essere servito — a mancare e' solo la riga nel registro.
+    # Un .htaccess di sottocartella SENZA direttive rewrite invece non rompe niente:
+    # var/gimbeducation/old_fatture/ ne ha uno e i suoi download si registrano regolarmente.
     RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [B,L,QSA]
 
     # gestione dell'API di download per il mailing
