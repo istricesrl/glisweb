@@ -338,7 +338,8 @@
     {% set source = {
         'values': [],
         'api': '',
-        'restrict': []
+        'restrict': [],
+        'sort': []
     }|merge( options.source ) %}
 
     {# valori di default per l'array tooltip #}
@@ -446,6 +447,7 @@
             <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" class="selectbox"
                 populate-api="{{ source.api }}" min-filter="3" data-live-search="true"
                 {% for res,val in source.restrict %} restrict-{{ res }}="{{ val|keys|first }}:{{ val|first }}"{% endfor %}
+                {% for cam,dir in source.sort %} sort-{{ cam }}="{{ dir }}"{% endfor %}
                 {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
                 {% if field.disabled %}disabled{% endif %}
                 {% if field.required %}data-required="true"{% endif %}

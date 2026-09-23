@@ -31,11 +31,21 @@
 	 * Si guarda la configurazione dell'automazione e non la presenza della tabella perche' un file
 	 * di _inc/_pages/ non interroga il database: qui dentro non c'e' una sola query in tutto il
 	 * framework, e metterne una costerebbe un giro a ogni richiesta per rispondere sempre lo stesso.
-	 * Il ramo ['profile'] lo compone _src/_config/_705.automazioni.php dal profilo dell'ambiente
-	 * corrente: se il progetto non dichiara il sottoscorta in src/config/700.automazioni.php, qui e'
-	 * vuoto e la scheda non nasce.
+	 *
+	 * E LA SI LEGGE DA $cx, NON DA $cf ( corretto il 22/09/2026 ). Le automazioni si dichiarano al
+	 * runlevel 700 e questo file viene incluso dal 310: quando l'array delle pagine si costruisce,
+	 * $cf['automazioni'] NON ESISTE ANCORA, quindi una guardia su $cf['automazioni']['profile'] e'
+	 * sempre falsa e la scheda non nasce MAI. Il difetto non da' nessun segno di se': una pagina che
+	 * non c'e' non e' un errore, e' un 404 - e la barra delle schede dei magazzini si ritrova una
+	 * linguetta in meno senza che niente lo dica.
+	 *
+	 * La configurazione esterna, $cx, la legge invece _src/_config.php PRIMA di ogni runlevel: e' la
+	 * stessa strada da cui arrivano i moduli attivi, ed e' l'unica disponibile qui. Si guarda percio'
+	 * l'interruttore del profilo dell'ambiente corrente in config.json, che per convenzione e' il
+	 * posto degli interruttori ( i parametri di lavoro stanno in src/config/700.automazioni.php ).
+	 * Dove il task non e' acceso non c'e' niente da mostrare, quindi la scheda non nasce.
 	 */
-	if( ! empty( $cf['automazioni']['profile']['sottoscorta'] ) ) {
+	if( ! empty( $cx['automazioni']['profiles'][ SITE_STATUS ]['sottoscorta']['attivo'] ) ) {
 
 		/**
 		 * SCHEDA SOTTOSCORTA

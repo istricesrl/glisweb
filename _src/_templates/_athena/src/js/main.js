@@ -30,6 +30,24 @@
 
     }
 
+    // il salvataggio si vede ( segnalazione di Stefano Zoli del 22/09/2026 )
+    //
+    // "quando si salva non si ha la percezione che il sistema stia salvando": una scheda con molte
+    // righe ci mette qualche secondo, la pagina resta identica e l'operatore clicca una seconda
+    // volta. Qui si stende un velo sopra la pagina, che dice cosa sta succedendo e intanto
+    // impedisce di toccare altro.
+    //
+    // Non si toglie mai a mano, e non serve: la richiesta che lo ha acceso ricarica la pagina, e
+    // il velo se ne va con lei. E' anche il motivo per cui chi invia un modulo verso un'altra
+    // finestra ( target ) non lo accende: li' la pagina resta dov'e' e il velo resterebbe appeso.
+    function glisAttendi( messaggio ) {
+
+        if( $( '#glis-attendi' ).length ) { return; }
+
+        $( '<div id="glis-attendi"><div class="glis-attendi-box"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i> ' + messaggio + '</div></div>' ).appendTo( 'body' );
+
+    }
+
 
     // duplica un subform
 	function duplicate( f ) {
@@ -330,6 +348,10 @@
 		});
 		$( document ).on( 'submit', 'form.form-main', function() {
 		    glisNormalizeTimestampFields( this );
+		    var finestra = $( this ).attr( 'target' );
+		    if( ! finestra || finestra === '_self' ) {
+		        glisAttendi( submitFormOkay ? 'salvataggio in corso' : 'attendere' );
+		    }
 		});
 
 		if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {

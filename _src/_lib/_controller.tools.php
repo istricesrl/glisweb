@@ -443,6 +443,27 @@
                  * 
                  */
 
+                /*
+                 * UNA DATA SI CERCA COM'E' SCRITTA A VIDEO ( segnalazione Stefano Zoli del
+                 * 22/09/2026 )
+                 *
+                 * Gli elenchi mostrano le date all'italiana ( GG/MM/AAAA, _inc/_macro/
+                 * _default.view.php ), ma a database stanno in ISO: cercando "22/09/2026" il LIKE
+                 * non trovava niente, e l'operatore non ha modo di saperlo. Qui i termini che hanno
+                 * la forma di una data italiana si riscrivono in AAAA-MM-GG prima di entrare nella
+                 * WHERE; tutto il resto della stringa non viene toccato.
+                 *
+                 * Il callback serve per lo zero davanti: "1/9/2026" a database e' "2026-09-01", e
+                 * una sostituzione secca darebbe "2026-9-1", che non corrisponde a nessuna riga.
+                 */
+                if (isset($i['__search__']) && !empty($i['__search__'])) {
+                    $i['__search__'] = preg_replace_callback(
+                        '#\b([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})\b#',
+                        function( $data ) { return sprintf( '%04d-%02d-%02d', $data[3], $data[2], $data[1] ); },
+                        $i['__search__']
+                    );
+                }
+
                 // ricerca nella vista
                 if (isset($i['__fields__']) && isset($i['__search__']) && !empty($i['__search__'])) {
                     foreach (explode(' ', $i['__search__']) as $tks) {

@@ -454,16 +454,35 @@ $( document ).ready( function() {
         $(this).attr('img-hover', src );
     });
 
-    /* sezione tooltip e hint */
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    /* sezione tooltip e hint
+     *
+     * I TOOLTIP VANNO ACCESI PER TUTTE E DUE LE VERSIONI DI BOOTSTRAP, e fino al 22/09/2026 non lo
+     * erano: qui c'era il solo giro su [data-bs-toggle="tooltip"], che e' la sintassi di Bootstrap
+     * 5, mentre il bind jQuery per l'attributo data-toggle di Bootstrap 4 stava sotto, commentato.
+     * Il framework e' in mezzo al guado fra le due versioni - la dichiara ogni template nel suo
+     * etc/template.yaml o template.conf - quindi su un deploy fermo a BS4, come tutti quelli col
+     * back-end su athena, NESSUN tooltip si accendeva: non quelli delle tab, non quelli della
+     * toolbar, non quelli dei pulsanti accanto alle tendine, che pure l'attributo ce l'hanno da
+     * sempre. Si vedeva solo il title nativo del browser, dove c'era.
+     *
+     * Segnalato da Montanari il 22/09 ( "sulle tab con l'icona non appaiono le tooltip" ), e la tab
+     * con l'icona aveva anche un difetto suo: il title non lo emetteva proprio
+     * ( _src/_html/_bin/_navigation.html, macro tabs ).
+     *
+     * I due giri non si pestano i piedi: ognuno cerca il proprio attributo, e un deploy ha caricato
+     * una sola delle due librerie. Le guardie servono perche' su BS4 l'oggetto `bootstrap` non
+     * esiste e su BS5 `$().tooltip` non esiste, e in tutti e due i casi il metodo mancante
+     * fermerebbe il resto di questo file.
+     */
+    if( typeof bootstrap !== 'undefined' && bootstrap.Tooltip ) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
 
-    /*
     // faccio il bind della funzione tooltip() ai campi con l'attributo data-toggle impostato a tooltip
-    if( $('[data-toggle="tooltip"]').length ) {
+    if( typeof $.fn.tooltip === 'function' && $('[data-toggle="tooltip"]').length ) {
         $('[data-toggle="tooltip"]').tooltip();
     }
-    */
 
     /*
     // ???

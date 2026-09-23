@@ -235,6 +235,19 @@
                         // prima che _src/_lib/_controller.tools.php la usi per lo split
                         call += '&__info__[' + $(select).attr('populate-api') + '][__restrict__][' + key.replace('restrict-', '') + '][' + tk[0] + ']=' + encodeURIComponent( tk[1] );
                     }
+                    // e allo stesso modo gli attributi che iniziano con sort-, che dicono con che
+                    // ordine si vogliono i risultati: sort-id="ASC" diventa __sort__[id]=ASC, che
+                    // _src/_lib/_controller.tools.php mette nella ORDER BY.
+                    //
+                    // AGGIUNTO IL 22/09/2026, punto 10 di Montanari: "nella tendina di scelta
+                    // dell'articolo le righe vanno ordinate per codice". Non lo erano, e non per
+                    // un difetto: questa chiamata un ordinamento non lo ha mai chiesto, quindi i
+                    // risultati arrivavano nell'ordine naturale della vista. Si e' rifatto il giro
+                    // dei restrict- invece di inventare un meccanismo nuovo: stesso posto, stessa
+                    // forma, e vale per ogni campo a tendina del framework
+                    if (key.indexOf('sort-') === 0) {
+                        call += '&__info__[' + $(select).attr('populate-api') + '][__sort__][' + key.replace('sort-', '') + ']=' + encodeURIComponent( value );
+                    }
                 });
                 // console.log( '-----' );
 

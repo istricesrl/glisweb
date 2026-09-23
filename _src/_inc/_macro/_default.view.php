@@ -241,10 +241,48 @@
 
     // debug
 
+    /**
+     * IL COLSPAN DELLA RIGA DI TOTALE
+     * ==============================
+     *
+     * Il footer della vista stampa una cella di etichetta larga quanto le colonne che precedono
+     * quella totalizzata, e poi il valore: serve a mettere il totale ESATTAMENTE sotto la colonna
+     * dei numeri che somma.
+     *
+     * CORRETTO IL 22/09/2026, ed era sbagliato da sempre. La ricerca girava su
+     * `array_values( $ct['view']['cols'] )`, cioe' sulle ETICHETTE delle colonne ( "descrizione",
+     * "imponibile" ), mentre $field e' il NOME del campo ( "importo_netto_totale" ): le due cose
+     * coincidono solo per caso, quindi array_search() tornava `false` quasi sempre e nel markup
+     * usciva `colspan=""`. Un attributo vuoto non e' un numero, e ogni browser decide da se' cosa
+     * farne: e' il "in alcuni browser il totale non e' incolonnato" segnalato da Montanari.
+     *
+     * Va contata la POSIZIONE della colonna, quindi array_keys(); e vanno contate le colonne come
+     * le rende il template, che itera su `view.fields` e non su `view.cols` - una colonna presente
+     * nei dati ma senza etichetta occupa comunque la sua cella in ogni riga. Con un ripiego su
+     * `cols` per le viste che i `fields` non li dichiarano.
+     */
 	if( isset( $ct['view']['footer']['cols'] ) ) {
+
+		$colonne = ( ( ! empty( $ct['view']['fields'] ) && is_array( $ct['view']['fields'] ) )
+			? array_values( $ct['view']['fields'] )
+			: array_keys( $ct['view']['cols'] ) );
+
+        // le colonne nascoste non occupano spazio a video: se stanno PRIMA di quella totalizzata e
+        // le si conta, il totale scivola a destra di altrettante caselle
+		$colonne = array_values( array_filter( $colonne, function( $campo ) use ( $ct ) {
+			return ( strpos( (string) ( isset( $ct['view']['class'][ $campo ] ) ? $ct['view']['class'][ $campo ] : '' ), 'd-none' ) === false );
+		} ) );
+
 		foreach( $ct['view']['footer']['cols'] as $field => $data ) {
-			$ct['view']['footer']['cols'][ $field ]['colspan'] = array_search( $field, array_values( $ct['view']['cols'] ) );
+
+			$posizione = array_search( $field, $colonne );
+
+            // una colonna che non c'e' non puo' dettare un colspan: si lascia 1, che e' il minimo
+            // valido, invece di scrivere un attributo vuoto
+			$ct['view']['footer']['cols'][ $field ]['colspan'] = ( ( $posizione === false ) ? 1 : max( 1, (int) $posizione ) );
+
 		}
+
 	}
 
     if( ! empty( $ct['view']['data'] ) && is_array( $ct['view']['data'] ) ) {
@@ -266,6 +304,31 @@
 						if( ! empty( $value ) ) {
 							if( preg_match( '/^([0-9]{2}):([0-9]{2}):([0-9]{2})$/', $value ) ) {
 								$row[ $field ] = substr( $value, 0, 5 );
+							}
+						}
+					}
+                    /*
+                     * LE DATE SI LEGGONO ALL'ITALIANA ( segnalazione Stefano Zoli del 22/09/2026 )
+                     *
+                     * Le viste tornano le date come le scrive MySQL, AAAA-MM-GG, e il template le
+                     * stampa cosi' come sono ( {{ row[key]|raw }} in _inc/view.html ): in ogni
+                     * elenco e in ogni ricerca si leggeva "2026-09-22". Qui diventano GG/MM/AAAA,
+                     * con lo stesso criterio del ramo delle ore qui sopra: si guarda il NOME del
+                     * campo e poi si converte solo se il valore ha davvero la forma di una data.
+                     *
+                     * Il preg_match non e' un di piu'. Un campo che porta "data" nel nome puo'
+                     * contenere un timestamp, una data gia' formattata o una stringa vuota, e una
+                     * conversione a scatola chiusa le rovinerebbe tutte; l'anno maggiore di zero
+                     * scarta le date nulle di MySQL, che altrimenti uscirebbero come 00/00/0000.
+                     *
+                     * L'ordinamento non passa di qui — lo fa MySQL sulla colonna vera — e la
+                     * ricerca per data continua a funzionare perche' _controller.tools.php
+                     * riconosce anche i termini scritti all'italiana e li ritraduce in ISO.
+                     */
+					if( strpos( $field, 'data' ) !== FALSE ) {
+						if( ! empty( $value ) ) {
+							if( preg_match( '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $value, $data ) && $data[1] > 0 ) {
+								$row[ $field ] = $data[3] . '/' . $data[2] . '/' . $data[1];
 							}
 						}
 					}

@@ -32,9 +32,9 @@
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
     <div class="col-auto">
-		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm" placeholder="cerca" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="cerca"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
-		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" placeholder="inserisci una nuova anagrafica" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="inserisci una nuova anagrafica" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
 		{% endif %}
     </div>
 </div>
