@@ -179,6 +179,35 @@ il sintomo, e cosa si fa; **7)** procedure proprie del progetto.
 Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
 trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
 
+⚠ **Nella voce 3 ci vanno anche i deploy e le relazioni fra loro**, non solo le macchine: quali
+deploy esistono di questo progetto ( produzione, test, dev ), **su quale macchina sta ciascuno**,
+qual è la document root di ognuno, cosa si propaga da dove e in che direzione, e se il deploy è
+dentro o fuori l'aggiornamento notturno del framework. Un cliente può avere **due deploy su due
+macchine diverse** — il sito su una, il gestionale legacy su un'altra: se il READ non lo dice,
+nessuno lo sa.
+
+### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
+
+Detto da Fabio il 23/09/2026: *"mi fanno domande riguardo a cose che dovrebbero essere descritte
+dal READ.md"*. Una domanda del tipo *"su che macchina sta questo?"*, *"dove sta il database?"*,
+*"qual è il deploy di produzione?"*, *"come si fa il rilascio qui?"* **è un buco nel READ**, non è
+una domanda. Prima di farla:
+
+1. **si cerca nel READ** — le sette voci, non solo quella che sembra;
+2. se non c'è, **si guarda**: la macchina risponde. `ssh`, `src/config.json`, `/etc/cron.d`,
+   `git remote -v`, `update.branch.conf`, il vhost;
+3. **si scrive nel READ**, nella voce che le compete, **nello stesso turno in cui si è scoperta** —
+   non "poi", non in un todo;
+4. **si chiede a Fabio solo quello che sa solo lui**: una decisione, cosa vuole il cliente, una
+   credenziale che non è scritta da nessuna parte.
+
+Il metro è quello del suo `CLAUDE.md`: **se una risposta gli aumenta il lavoro invece di ridurlo, è
+sbagliata.** Fargli da indice dell'infrastruttura di un progetto che è nostro è esattamente questo.
+
+⚠ **Il READ non è mai "finito".** Ogni volta che si scopre un fatto stabile — una macchina, un
+percorso, un cron, un vincolo, una procedura che si è dovuta ricostruire — si aggiunge. Un READ che
+non cresce mai è un READ che nessuno sta usando, e la prossima sessione rifarà la stessa domanda.
+
 La regola che tiene insieme i tre file di stato: **una cosa sta in un file solo.** Quando un lavoro finisce esce
 dal `TODO.md` e entra nel `DONE.md`; quando una domanda al cliente ha risposta esce dal `CHAT.md` e
 la decisione entra nel `DONE.md`. Se la stessa riga sta in due file, il prossimo che legge non sa
