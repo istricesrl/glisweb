@@ -357,6 +357,13 @@ lock.
 
 Non è un diario e non è un log: contiene **soltanto ciò che è vero adesso**.
 
+⚠ **Quando una voce chiude, il cliente non lo sa.** Regola data da Fabio il **22/09/2026**:
+nel momento in cui una voce passa dal `TODO.md` al `DONE.md`, se è una cosa che il cliente vede o
+che stava aspettando, **la stessa riga va anche nel `CHAT.md`**, nella sezione
+`### Da dirgli alla prossima occasione` della persona giusta, **il giorno stesso**. Uno sviluppo
+finito e non comunicato, per il cliente, non è finito — e nessuno se ne accorge, perché da noi
+risulta fatto.
+
 #### Una sezione per conversazione e destinatario
 
 Non un blocco unico, e non più "un progetto, un interlocutore": **una sezione `##` per persona**.
