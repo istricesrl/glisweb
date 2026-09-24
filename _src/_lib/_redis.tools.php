@@ -242,18 +242,65 @@
     /**
      * cancella tutti i dati dalla cache
      * 
-     * Questa funzione esegue FLUSHALL sul server, cancellando tutte le chiavi di tutti i database: non soltanto quelle
-     * del sito corrente ma anche quelle degli altri siti che condividono lo stesso server. A differenza delle altre
-     * funzioni della libreria non controlla che la connessione esista, e con una connessione vuota PHP va in errore.
+     * Questa funzione cancella dalla cache tutte le chiavi del sito corrente, cioè quelle che cominciano con
+     * REDIS_UNIQUE_SEED ( vedi redisUniqueKey() ), comprese le rispettive chiavi _AGE; le chiavi degli altri siti che
+     * condividono lo stesso server non vengono toccate. Le chiavi vengono cercate con SCAN, a blocchi, e non con KEYS,
+     * che su un server con molte chiavi lo bloccherebbe fino alla fine della ricerca.
+     * 
+     * La funzione restituisce false se la connessione non è valida, se REDIS_UNIQUE_SEED non è definita o è vuota, o se
+     * il server solleva un'eccezione; altrimenti restituisce true, anche se non c'erano chiavi da cancellare.
+     * 
+     * NB: fino al 2026-09-24 la funzione eseguiva FLUSHALL, che cancella tutte le chiavi di tutti i database del server,
+     * comprese quelle degli altri deploy; FLUSHDB non sarebbe bastato, perché _src/_config/_045.cache.php non sceglie un
+     * database e tutti i deploy scrivono nel database 0. Si è seguito lo schema di memcacheFlush(), che cancella solo le
+     * chiavi col seme del sito. Una chiave che contiene il seme ma non all'inizio ( redisUniqueKey() in quel caso non lo
+     * antepone ) non viene cancellata; viceversa, poiché il seme è solo il FQDN, un sito il cui seme è l'inizio di quello
+     * di un altro ( EXAMPLE_COM_ e EXAMPLE_COM_IT_ ) cancella anche le chiavi dell'altro.
      * 
      * @param       object      $conn       la connessione a Redis
      * 
-     * @return      mixed                   il risultato del comando FLUSHALL
+     * @return      bool                    true se le chiavi del sito sono state cancellate, false altrimenti
      * 
      */
     function redisFlush( $conn ) {
 
-        return $conn->flushall();
+        // validazione connessione
+        if( ! is_object( $conn ) ) {
+            logWrite( 'connessione al server assente o non valida per il flush', 'redis', LOG_ERR );
+            return false;
+        }
+
+        // seed obbligatorio, altrimenti il filtro sulle chiavi prenderebbe tutto il server
+        if( ! defined( 'REDIS_UNIQUE_SEED' ) || trim( (string) REDIS_UNIQUE_SEED ) === '' ) {
+            logWrite( 'REDIS_UNIQUE_SEED non definito o vuoto', 'redis', LOG_ERR );
+            return false;
+        }
+
+        // cancello a blocchi le chiavi del sito corrente
+        try {
+
+            $cursor = 0;
+            $count = 0;
+
+            do {
+
+                list( $cursor, $keys ) = $conn->scan( $cursor, array( 'MATCH' => REDIS_UNIQUE_SEED . '*', 'COUNT' => 1000 ) );
+
+                if( ! empty( $keys ) ) {
+                    $count += $conn->del( $keys );
+                }
+
+            } while( $cursor != 0 );
+
+        } catch( \Throwable $e ) {
+            logWrite( 'eccezione nel flush: ' . $e->getMessage(), 'redis', LOG_ERR );
+            return false;
+        }
+
+        // log
+        logWrite( 'flush delle chiavi ' . REDIS_UNIQUE_SEED . '*: ' . $count . ' chiavi cancellate', 'redis', LOG_INFO );
+
+        return true;
 
     }
 
