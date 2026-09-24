@@ -362,7 +362,7 @@ progetto:
 | | **glisweb** ( questa linea ) | **glisdev** |
 |---|---|---|
 | ruolo | stable | unstable, dove avviene lo sviluppo |
-| release attuale | 2.0 | 2.1 |
+| release corrente | [`_etc/_current.release`](https://github.com/istricesrl/glisweb/blob/develop/_etc/_current.release) | [`_etc/_current.release`](https://github.com/istricesrl/glisdev/blob/develop/_etc/_current.release) |
 | contenuto | il framework completo | il framework riscritto, un sottoinsieme che cresce |
 | moduli | 79, di due generazioni | 24, solo di nuova generazione |
 | integrazioni | tutte quelle elencate sopra | in porting: per ora mail, reCAPTCHA, FTP, Redis, Memcached |
