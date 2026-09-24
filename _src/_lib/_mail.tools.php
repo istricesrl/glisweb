@@ -441,7 +441,6 @@
                     $allegati    = ((isset($t[$l]['attach'])) ? $t[$l]['attach'] : array());
                     $allegati    = array_merge($allegati, ((isset($attach[$l])) ? $attach[$l] : array()));
 
-                    // TODO implementare la stessa cosa per i destinatari CC e BCC
                     // NOTA i destinatari partono vuoti e si riempiono solo con le versioni elaborate da Twig qui sotto: copiando
                     // $to, $to_cc e $to_bcc in coda finiva anche la forma con i placeholder ( 2026-09-24 )
                     $destinatari = array();
