@@ -1361,7 +1361,7 @@
      * @param       string      $t      il nome della tabella
      * @param       string      $d      l'ID del record da eliminare
      *
-     * @return      void
+     * @return      mixed               il numero di righe eliminate dalla DELETE della riga richiesta, false se la query fallisce
      *
      */
     function mysqlDeleteRowRecursive($m, $c, $t, $d)
@@ -1438,6 +1438,9 @@
                 array('s' => $d)
             )
         );
+        // restituisco l'esito della cancellazione ( _todo.delete.php lo mette in $status, e fino al 2026-09-24 riceveva NULL )
+        return $r;
+
     }
 
     /**

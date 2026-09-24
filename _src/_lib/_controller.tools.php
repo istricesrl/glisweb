@@ -807,7 +807,7 @@
                     $eInline = array();
                     $d = mysqlQuery($c, $q, $vs, $eInline);
 
-                    // senza parametri mysqlQuery() non valorizza $e: l'errore si legge dalla connessione
+                    // mysqlPreparedQuery() non valorizza $e ( mysqlQuery() senza parametri sì, dal 2026-09-24 ): l'errore si legge dalla connessione
                     if( $d === false || mysqli_errno( $c ) ) {
                         $eInline[] = mysqli_errno( $c );
                     }
