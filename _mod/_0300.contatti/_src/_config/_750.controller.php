@@ -46,17 +46,26 @@
             // verifico la challenge reCAPTCHA
             if (isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
 
-                // registro il valore di bot
-                $bot = reCaptchaVerifyV3($v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private']);
+                // registro il valore di bot e l'esito della verifica
+                $esito = NULL;
+                $bot = reCaptchaVerifyV3($v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'], $esito);
 
                 // integrazione dei dati
                 $v['spam']['score'] = $bot;
+                $v['spam']['status'] = $esito;
 
                 // pulisco il modulo
                 unset($v['__recaptcha_token__']);
 
                 // punteggio di spam
-                $v['spam']['check'] = ($bot > 0.1) ? true : false;
+                // NB: stessa regola di reCaptchaVerifyFormV3() in _src/_lib/_recaptcha.tools.php: il punteggio decide solo se
+                // Google l'ha dato o ha rifiutato il token; un token scaduto o un servizio non raggiungibile non sono prove di
+                // bot, e il messaggio passa marcato dall'esito in status invece di essere scartato come spam ( 2026-09-24 )
+                if ($esito == 'score' || $esito == 'token rifiutato') {
+                    $v['spam']['check'] = ($bot > 0.1) ? true : false;
+                } else {
+                    $v['spam']['check'] = true;
+                }
             } elseif (! isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
 
                 // integrazione dei dati
