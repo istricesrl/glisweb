@@ -134,7 +134,7 @@ modifica fatta da una parte è già dall'altra, perché è lo stesso file su dis
 La regola di cosa si condivide segue la solita convenzione dell'underscore: **le cartelle di framework
 (`_src/`, `_mod/`, `_etc/`, `_usr/`) sono condivise**, quelle di istanza (`src/`, `mod/`, `etc/`, `usr/`,
 `var/`, `tmp/`) no, insieme a `composer.lock`, `.gitignore`, `_etc/_current.version`,
-`_etc/_current.release`, `_src/_lib/_ext`, `_src/_js/_lib/_ext`, `_usr/_docs/_html|_pdf`,
+`_etc/_current.release`, `_etc/_changelog.json` ( la cronologia è di ciascuna linea ), `_src/_lib/_ext`, `_src/_js/_lib/_ext`, `_usr/_docs/_html|_pdf`,
 `_usr/_examples`, `_usr/_test`. Dentro l'area condivisa resta un pugno di file deliberatamente forkati,
 quelli su cui il lavoro in corso è divergente. Fotografia al **2026-09-16: 1151 file condivisi** (erano
 1115 il 2026-08-27) — è un numero che cambia di ora in ora, va riletto non citato.
