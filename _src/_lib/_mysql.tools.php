@@ -408,12 +408,11 @@
      * Il riconoscimento del comando distingue maiuscole e minuscole: un comando scritto in minuscolo, o uno che non è in
      * tabella ( es. WITH, EXPLAIN, DESCRIBE ), viene loggato come sconosciuto e la funzione restituisce false senza eseguire
      * niente. Le query che impiegano più di mezzo secondo vengono registrate nei log speed e slow/mysql/query. In caso di
-     * errore MySQL l'errore viene loggato, aggiunto all'array $e sotto il suo codice e la funzione restituisce false;
-     * se mysqli solleva un'eccezione l'errore viene loggato e la funzione restituisce false senza toccare $e.
+     * errore MySQL l'errore viene loggato, aggiunto all'array $e sotto il suo codice e la funzione restituisce false,
+     * anche quando mysqli lo segnala con un'eccezione ( il comportamento di default da PHP 8.1 ); un'eccezione senza codice
+     * di errore sulla connessione viene loggata e la funzione restituisce false senza toccare $e.
      *
-     * TODO verificare: da PHP 8.1 mysqli solleva per default eccezioni sugli errori ( e il framework non chiama
-     * mysqli_report() ), quindi nel ramo delle query semplici un errore finisce nel catch e $e resta vuoto; chi si basa su
-     * $e per accorgersi del fallimento, come mysqlSelectLabel(), su PHP 8.1+ potrebbe non accorgersene.
+     * NOTA per le query con parametri $e viene passato a mysqlPreparedQuery(), che non lo valorizza ( vedi la sua nota ).
      *
      * @param       object      $c      la connessione mysqli
      * @param       string      $q      la query da eseguire
@@ -520,9 +519,19 @@
                 }
 
             } catch (Exception $ex) {
-                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
-                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql/query', LOG_ERR);
-                return false;
+
+                // NOTA da PHP 8.1 mysqli solleva per default mysqli_sql_exception sugli errori SQL ( il framework non chiama
+                // mysqli_report() ), e uscendo da qui con return false l'errore non arrivava mai in $e: chi lo usa per
+                // accorgersi del fallimento, come mysqlSelectLabel(), non se ne accorgeva; se la connessione ha un codice
+                // di errore si prosegue verso la gestione errore qui sotto, come su PHP 7 ( 2026-09-24 )
+                if (mysqli_errno($c)) {
+                    $r = false;
+                } else {
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql/query', LOG_ERR);
+                    return false;
+                }
+
             }
 
             // cronometro
