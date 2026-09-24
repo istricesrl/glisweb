@@ -1092,7 +1092,7 @@
      * -----------------|-----------------------------------------------------------------------
      * t                | array delle tabelle figlie da duplicare, ciascuna con la stessa struttura
      * f                | valori da impostare nel nuovo record, con in chiave il nome del campo e in valore il valore
-     * r                | condizioni aggiuntive per la ricerca delle righe figlie ( vedi il TODO qui sotto )
+     * r                | array di condizioni SQL aggiuntive per la ricerca delle righe figlie, messe in AND ( es. 'id_genitore IS NULL' )
      *
      * esempio di array per la duplicazione di una pagina con relativi contenuti e immagini, e dei contenuti associati alle
      * immagini ( lo stesso schema è usato dalle funzioni di duplicazione in _src/_lib/_page.utils.php ):
@@ -1119,11 +1119,6 @@
      *
      * La funzione non restituisce niente: l'ID del nuovo oggetto principale lo si trova in $y['id'].
      *
-     * TODO se per una tabella figlia è presente la chiave 'r' la funzione compone la condizione e poi esegue die( $whr ),
-     * cioè interrompe lo script: le condizioni aggiuntive di fatto non sono utilizzabili.
-     *
-     * TODO $y[<tabella figlia>] viene sovrascritto a ogni riga figlia duplicata, quindi alla fine contiene solo l'ultima.
-     *
      * NOTA la ricerca delle righe figlie scrive $o direttamente nella query, fra virgolette, invece di usare un parametro.
      *
      * @param       object      $c      la connessione mysqli
@@ -1133,7 +1128,7 @@
      * @param       array       $x      l'array delle tabelle e delle sostituzioni descritto qui sopra, modificato sul posto
      *                                  ( la funzione vi aggiunge i default e i campi di collegamento delle tabelle figlie )
      * @param       array       $y      l'array in cui viene scritta la riga duplicata, modificato sul posto; le righe
-     *                                  figlie finiscono sotto la chiave col nome della loro tabella
+     *                                  figlie finiscono sotto la chiave col nome della loro tabella, come elenco
      *
      * @return      void
      *
@@ -1214,7 +1209,6 @@
 
             if (isset($x['t'][$t]['t'][$ksr['TABLE_NAME']]['r'])) {
                 $whr = ' AND ' . implode(' AND ', $x['t'][$t]['t'][$ksr['TABLE_NAME']]['r']);
-                die($whr);
             } else {
                 $whr = NULL;
             }
@@ -1245,7 +1239,9 @@
 
                 #     echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
                 // chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-                mysqlDuplicateRowRecursive($c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][$t], $y[$ksr['TABLE_NAME']]);
+                // NOTA ogni riga figlia duplicata si aggiunge in fondo all'elenco della sua tabella; passando
+                // $y[<tabella>] ogni chiamata lo sovrascriveva e restava solo l'ultima ( 2026-09-24 )
+                mysqlDuplicateRowRecursive($c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][$t], $y[$ksr['TABLE_NAME']][]);
             }
         }
     }
