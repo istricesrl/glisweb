@@ -394,9 +394,8 @@ var_dump($status);
      * Questa funzione, commentata, inviava al Measurement Protocol di Universal Analytics un hit di tipo event con categoria
      * $ec, azione $ea e label $el, e lo scriveva nel log ecommerce.
      *
-     * TODO _mod/_0300.contatti/_src/_config/_750.controller.php chiama ancora analyticsEventHit() quando il form ha la chiave
-     * analytics e il profilo Google ha l'ID di Analytics: siccome la funzione non è definita, in quel caso l'invio del form
-     * termina con un errore fatale.
+     * Il suo ultimo chiamante, _mod/_0300.contatti/_src/_config/_750.controller.php, dal 2026-09-24 manda l'evento a GA4 con
+     * ga4event().
      *
 	 * 
     function analyticsEventHit( $ua, $ec, $ea, $el, $cid = 1 ) {

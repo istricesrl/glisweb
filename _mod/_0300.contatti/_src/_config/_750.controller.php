@@ -152,14 +152,31 @@
             // verifico se va registrata una hit di Analytics
             if (isset($cnf['analytics'])) {
 
-                // registrazione della hit
-                if (isset($cf['google']['profile']['analytics']['ua'])) {
-                    analyticsEventHit(
+                // registrazione dell'evento
+                // NB: analyticsEventHit() mandava l'evento a Universal Analytics, dismesso, ed è commentata in
+                // _src/_lib/_analytics.tools.php, per cui chiamarla dava un errore fatale; l'evento va ora a GA4 con
+                // ga4event(), come l'acquisto di ga4purchase(), con l'azione come nome dell'evento e categoria e label nei
+                // parametri event_category ed event_label, che è la forma usata da gtag.js per gli eventi in stile
+                // Universal Analytics ( 2026-09-24 )
+                if (isset($cf['google']['profile']['analytics']['ua']) && isset($cf['google']['profile']['analytics']['mp']['secret'])) {
+                    ga4event(
                         $cf['google']['profile']['analytics']['ua'],
-                        $cnf['analytics']['categoria'],
-                        $cnf['analytics']['azione'],
-                        $cnf['analytics']['label']
+                        $cf['google']['profile']['analytics']['mp']['secret'],
+                        array(
+                            'client_id' => session_id(),
+                            'events' => array(
+                                array(
+                                    'name' => $cnf['analytics']['azione'],
+                                    'params' => array(
+                                        'event_category' => $cnf['analytics']['categoria'],
+                                        'event_label' => $cnf['analytics']['label']
+                                    )
+                                )
+                            )
+                        )
                     );
+                } elseif (isset($cf['google']['profile']['analytics']['ua'])) {
+                    logWrite('evento Analytics non inviato per il blocco ' . $k . ': manca il secret del Measurement Protocol', 'contatti', LOG_ERR);
                 }
             }
 
