@@ -1470,8 +1470,11 @@
      * per le altre chiavi speciali (__info__, __err__, __view__...). Una chiave vuota o di un solo carattere non
      * comincia con __ e quindi restituisce true.
      *
-     * NOTA il ramo strlen( $k ) < 2 non viene mai raggiunto, perché una chiave così corta non comincia con __ ed
-     * è già stata accettata dalla prima condizione
+     * Fino al 2026-09-24 c'era anche un ramo che restituiva false per le chiavi più corte di due caratteri, ma non
+     * poteva mai essere raggiunto, perché una chiave così corta non comincia con __ ed è già accettata dalla prima
+     * condizione; è stato tolto senza cambiare il comportamento. Rifiutare davvero le chiavi corte vorrebbe dire
+     * cambiare quali blocchi arrivano alla controller(), e non è stato fatto: una chiave del genere diventa una
+     * tabella inesistente, che getAclPermission() respinge con 401.
      *
      * @param       string      $k      la chiave di $_REQUEST da verificare
      *
@@ -1482,8 +1485,6 @@
 
         if( substr( $k, 0, 2 ) !== '__' || substr( $k, 0, 8 ) == '__report' ) {
             return true;
-        } elseif( strlen( $k ) < 2 ) {
-            return false;
         } else {
             return false;
         }
@@ -1557,7 +1558,13 @@
      * mediumint, bigint, decimal, float, double o bit. Se la tabella o il campo non esistono restituisce false.
      *
      * NOTA la controller() le passa il nome della tabella $t e non quello della vista su cui cerca, per cui un campo
-     * che esiste solo nella vista risulta non numerico e viene cercato con LIKE; l'array $textTypes non viene usato
+     * che esiste solo nella vista risulta non numerico e viene cercato con LIKE. Non è stato corretto passandole la
+     * vista, il 2026-09-24, perché il termine cercato arriva come stringa anche sui campi numerici: MySQL converte una
+     * parola non numerica in 0, e "rossi" = campo trova tutte le righe in cui quel campo vale 0. Succede già con i
+     * campi numerici della tabella; leggendo i tipi dalla vista si estenderebbe a tutte le colonne numeriche che solo
+     * la vista ha ( conteggi, importi, flag calcolati ), con risultati spuri in ogni elenco che le mostra.
+     *
+     * TODO leggere i tipi dalla vista ( $t$rm ) insieme a una guardia che usi = solo per i termini numerici
      *
      * @param       object      $m      la connessione a memcache
      * @param       mysqli      $c      la connessione al database
@@ -1574,10 +1581,6 @@
         $numericTypes = [
             'int','tinyint','smallint','mediumint','bigint',
             'decimal','float','double','bit'
-        ];
-
-        $textTypes = [
-            'char','varchar','text','tinytext','mediumtext','longtext'
         ];
 
         $type = mysqlSelectCachedValue( $m, $c,
