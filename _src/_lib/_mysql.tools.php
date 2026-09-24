@@ -798,10 +798,9 @@
      * trasforma il risultato di un prepared statement in un array di righe
      *
      * Questa funzione estrae il risultato da uno statement già eseguito e ne legge tutte le righe come array associativi;
-     * se lo statement non ha prodotto righe restituisce un array vuoto.
-     *
-     * TODO se l'esecuzione dello statement è fallita mysqli_stmt_get_result() restituisce false, e su PHP 8
-     * mysqli_fetch_assoc( false ) solleva un TypeError che il catch( Exception ) di mysqlPreparedQuery() non intercetta.
+     * se lo statement non ha prodotto righe restituisce un array vuoto. Se l'esecuzione dello statement è fallita
+     * mysqli_stmt_get_result() restituisce false e anche in questo caso la funzione restituisce un array vuoto, come fa
+     * mysqlFetchResult(); l'errore è già stato loggato da mysqlPreparedQuery().
      *
      * @param       object      $pq     lo statement mysqli eseguito
      *
@@ -816,6 +815,12 @@
 
         // estraggo il resultset dallo statement
         $r = mysqli_stmt_get_result($pq);
+
+        // NOTA su un'esecuzione fallita $r vale false, e da PHP 8 mysqli_fetch_assoc( false ) solleva un TypeError, che è
+        // un Error e non una Exception e quindi passa attraverso il catch() di mysqlPreparedQuery() ( 2026-09-24 )
+        if ($r === false) {
+            return $arRs;
+        }
 
         // fetch del risultato
         while ($row = mysqli_fetch_assoc($r)) {
