@@ -172,10 +172,11 @@
      * informazioni restituite dai sottomoduli, annidate per entità e indice. Se $d è vuoto viene inizializzato a un
      * array vuoto; tutti i suoi valori passano per numeric2null().
      *
-     * NB: nel ramo "diritti INSUFFICIENTI" (riga esistente su cui l'account non ha diritti) la funzione scrive solo
-     * una riga di log e restituisce lo stato presente in $i, o 200 se non ce n'è; il chiamante non riceve un 401.
-     *
-     * TODO nel ramo dei diritti insufficienti sulla riga lo stato restituito non segnala il rifiuto (vedi sopra)
+     * Se i permessi sull'entità ci sono ma la riga esistente è protetta da ACL e l'account non ha diritti su di essa
+     * (ramo "diritti INSUFFICIENTI", si veda checkModalitaModifica()) la funzione non esegue nessuna query e scrive
+     * 401 in $i['__status__'], esattamente come quando mancano i permessi sull'entità; fino al 2026-09-24 scriveva
+     * solo una riga di log e restituiva 200, per cui _src/_api/_rest.php rispondeva con successo a un'operazione
+     * rifiutata.
      *
      * TODO in modalità view, una __search__ senza __fields__ fatta solo di parole più corte di tre caratteri lascia
      * $cond non definito, e la WHERE riceve implode() di un valore non array
@@ -239,8 +240,9 @@
      * @param       array       $timer  l'array del cronometro, per riferimento (tipicamente $cf['speed'])
      *
      * @return      int                 lo stato dell'operazione, lo stesso scritto in $i['__status__']: 200 in
-     *                                  caso di successo, 401 se mancano i permessi sull'entità, 409 per una chiave
-     *                                  duplicata (errore MySQL 1062), 400 per un campo inesistente (errore 1054),
+     *                                  caso di successo, 401 se mancano i permessi sull'entità o i diritti sulla
+     *                                  riga, 409 per una chiave duplicata (errore MySQL 1062), 400 per un campo
+     *                                  inesistente (errore 1054),
      *                                  o il codice di errore impostato da un controller before o append
      *
      */
@@ -1427,8 +1429,11 @@
 
             } else {
 
-                // log dei diritti insufficienti sulla riga ( lo stato non viene impostato, vedi il TODO nel docblock )
+                // log
                 logWrite("diritti INSUFFICIENTI per $t/$a - " . $d['id'], 'controller');
+
+                // restituisco 401 unauthorized, come per i permessi insufficienti sull'entità
+                $i['__status__'] = 401;
 
             }
 
