@@ -564,10 +564,11 @@
     /**
      * aggiunge a una pagina gli audio collegati a un oggetto
      *
-     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella audio.
+     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella audio: gli audio finiscono in
+     * $p['contents']['audio'][ ruolo ][ ordine ], che è dove li cerca _src/_html/_bin/_default.html. Non ha chiamanti.
      *
-     * TODO aggiungiDati() non gestisce ancora il tipo audio ( il suo ramo nello switch è un TODO vuoto ), quindi la query
-     * viene composta con variabili non definite e fallisce: questa funzione al momento non aggiunge niente. Non ha chiamanti.
+     * NOTA lo schema standard in _usr/_database non crea più le tabelle audio e ruoli_audio ( tolte nel riallineamento
+     * d975b4a15 del 2026-03-02 ): la funzione serve sui deploy che le hanno ancora, altrove la query fallisce.
      *
      * @param       array       $p      l'array della pagina, modificato sul posto
      * @param       string      $id     l'ID dell'oggetto a cui sono collegati gli audio
@@ -636,16 +637,14 @@
     /**
      * aggiunge a una pagina i media collegati a un oggetto
      *
-     * Questa funzione legge dalla tabella $t ( immagini, video o file ) le righe collegate all'oggetto tramite la colonna
-     * $f, insieme ai loro contenuti e metadati in tutte le lingue, e le scrive in $p['contents'][ chiave ][ ruolo ][ ordine ],
-     * dove la chiave è images, video o files e ruolo è il nome del ruolo del media. Ogni elemento ha id, nome, path,
-     * mimetype, i testi ( title, h1, h2, h3, testo, cappello ) indicizzati per lingua e i metadati, più taglio,
-     * path_alternativo e orientamento per le immagini e codice_embed e id_embed per i video. Siccome la query restituisce
-     * una riga per ogni combinazione di contenuto e metadato, le righe dello stesso media vengono fuse con
-     * array_replace_recursive(), e lo stesso avviene con un elemento già presente nella pagina nella stessa posizione. Se
-     * $r non è NULL vengono inclusi solo i media con uno dei ruoli indicati.
-     *
-     * TODO il tipo audio non è gestito: il suo ramo nello switch non imposta $tc, $tf e $tk, e la query fallisce.
+     * Questa funzione legge dalla tabella $t ( immagini, video, audio o file ) le righe collegate all'oggetto tramite la
+     * colonna $f, insieme ai loro contenuti e metadati in tutte le lingue, e le scrive in
+     * $p['contents'][ chiave ][ ruolo ][ ordine ], dove la chiave è images, video, audio o files e ruolo è il nome del ruolo
+     * del media. Ogni elemento ha id, nome, path, mimetype, i testi ( title, h1, h2, h3, testo, cappello ) indicizzati per
+     * lingua e i metadati, più taglio, path_alternativo e orientamento per le immagini e codice_embed e id_embed per video
+     * e audio. Siccome la query restituisce una riga per ogni combinazione di contenuto e metadato, le righe dello stesso
+     * media vengono fuse con array_replace_recursive(), e lo stesso avviene con un elemento già presente nella pagina nella
+     * stessa posizione. Se $r non è NULL vengono inclusi solo i media con uno dei ruoli indicati.
      *
      * NOTA la colonna $f e gli ID dei ruoli in $r vengono scritti direttamente nella query, quindi non devono mai arrivare
      * dall'esterno.
@@ -677,7 +676,10 @@
                 $tk = 'video';
                 break;
             case 'audio':
-                // TODO
+                // sul modello del video: la tabella audio ha le stesse colonne di embed ( 2026-09-24 )
+                $tc = 'audio.id_embed, audio.codice_embed FROM audio ';
+                $tf = 'id_audio';
+                $tk = 'audio';
                 break;
             case 'file':
                 $tc = 'file.url FROM file ';
@@ -739,7 +741,6 @@
                     ));
                     break;
                 case 'audio':
-                    break;
                 case 'video':
                     $im = array_replace_recursive($im, array(
                         'codice_embed'            => $cn['codice_embed'],
