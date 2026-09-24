@@ -178,9 +178,6 @@
      * solo una riga di log e restituiva 200, per cui _src/_api/_rest.php rispondeva con successo a un'operazione
      * rifiutata.
      *
-     * TODO in modalità view, una __search__ senza __fields__ fatta solo di parole più corte di tre caratteri lascia
-     * $cond non definito, e la WHERE riceve implode() di un valore non array
-     *
      * il parametro $timer
      * -------------------
      * `$timer` va passato per RIFERIMENTO, altrimenti i cronometri interni non escono.
@@ -655,6 +652,7 @@
                         }
                     }
                 } elseif (isset($i['__search__']) && !empty($i['__search__'])) {
+                    $cond = array();
                     foreach (explode(' ', $i['__search__']) as $tks) {
                         if (!empty($tks) && strlen($tks) >= 3) {
                             $like = "%$tks%";
@@ -662,7 +660,12 @@
                             $cond[] = ' __label__ LIKE ? ';
                         }
                     }
-                    $whr[] = '(' . implode(' AND ', $cond) . ')';
+                    // NOTA se tutte le parole sono più corte di tre caratteri non c'è nessuna condizione, e la ricerca
+                    // viene ignorata come già lo erano le singole parole corte; prima $cond restava non definito e
+                    // implode() andava in TypeError su PHP 8 ( corretto il 2026-09-24 )
+                    if (!empty($cond)) {
+                        $whr[] = '(' . implode(' AND ', $cond) . ')';
+                    }
                 }
 
                 /*
