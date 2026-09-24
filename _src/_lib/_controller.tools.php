@@ -354,6 +354,22 @@
                 // inizializzo l'array per ricerca e filtri
                 $whr = array();
 
+                /**
+                 * Fix 2026-09-23: filtri EQ numerici scritti nella query sulle viste
+                 * -------------------------------------------------------------------
+                 * Sulle viste che raggruppano (i __report_*__, le *_view) il filtro passato come parametro di un
+                 * prepared statement non entra nella vista, e si paga la materializzazione completa per poi
+                 * scartare quasi tutto: la griglia di /anagrafica/iscrizioni filtrata per id_anagrafica impiegava
+                 * 0,465 s col ? contro 0,021 s col valore scritto (produzione, 23/09; 284 s al giorno su 122
+                 * letture). Stessa cura della lettura per id del 17/09: solo valori di sole cifre, scritti fra
+                 * apici — cioè ancora come stringa, identici nel significato al binding 's' — e se la query
+                 * interpolata fallisce (1052 sulle viste scritte male) la tabella viene segnata in no_id_inline e
+                 * si ripiega sul parametro.
+                 */
+                $eqInline = ( $rm === '_view' || $rm === NULL )
+                         && empty( $GLOBALS['cf']['controller']['no_id_inline'][ $t ] );
+                $eqInlineRipiego = array();
+
                 // filtri per i campi
                 foreach ($ks as $fk) {
                     $whr[] = "$fk = ?";
@@ -543,8 +559,13 @@
                                             $whr[] = "$fc IS $not NULL";
                                             break;
                                         case 'EQ':
-                                            $whr[] = "$fc = ?";
-                                            $vs[] = array('s' => $sv);
+                                            if( $eqInline && ctype_digit( (string) $sv ) ) {
+                                                $eqInlineRipiego[] = array( 'w' => count( $whr ), 'v' => count( $vs ), 'fc' => $fc, 'sv' => $sv );
+                                                $whr[] = "$fc = '" . $sv . "'";
+                                            } else {
+                                                $whr[] = "$fc = ?";
+                                                $vs[] = array('s' => $sv);
+                                            }
                                             break;
                                         case 'GT':
                                             $whr[] = "$fc > ?";
@@ -593,6 +614,9 @@
                     }
                 }
 
+                // parte della query che precede le clausole WHERE, per l'eventuale ripiego
+                $qBase = $q;
+
                 // aggiungo le clausole WHERE alla query
                 if (!empty($whr)) {
                     $q .= ' WHERE ' . implode(' AND ', $whr);
@@ -615,7 +639,42 @@
                 }
 
                 // eseguo la query
-                $d = mysqlQuery($c, $q, $vs, $e['__codes__']);
+                if( ! empty( $eqInlineRipiego ) ) {
+
+                    // tentativo coi valori EQ scritti nella query
+                    $eInline = array();
+                    $d = mysqlQuery($c, $q, $vs, $eInline);
+
+                    // senza parametri mysqlQuery() non valorizza $e: l'errore si legge dalla connessione
+                    if( $d === false || mysqli_errno( $c ) ) {
+                        $eInline[] = mysqli_errno( $c );
+                    }
+
+                    // ripiego sul parametro
+                    if( ! empty( $eInline ) ) {
+
+                        $GLOBALS['cf']['controller']['no_id_inline'][ $t ] = true;
+                        logWrite( 'filtro EQ inline non utilizzabile su ' . $t . $rm . ', si ripiega sul parametro per il resto della richiesta', 'controller', LOG_WARNING );
+
+                        // coda della query ( raggruppamenti, ordinamenti, paginazione )
+                        $qCoda = substr( $q, strlen( $qBase . ' WHERE ' . implode(' AND ', $whr) ) );
+
+                        // rimetto i ? e i relativi valori nelle loro posizioni
+                        foreach( $eqInlineRipiego as $k => $r ) {
+                            $whr[ $r['w'] ] = $r['fc'] . ' = ?';
+                            array_splice( $vs, $r['v'] + $k, 0, array( array( 's' => $r['sv'] ) ) );
+                        }
+
+                        // ricompongo la query
+                        $q = $qBase . ' WHERE ' . implode(' AND ', $whr) . $qCoda;
+
+                    }
+
+                }
+
+                if( empty( $eqInlineRipiego ) || ! empty( $eInline ) ) {
+                    $d = mysqlQuery($c, $q, $vs, $e['__codes__']);
+                }
 
                 // registro il numero totale di righe
                 $i['__pager__']['total'] = mysqlSelectValue($c, 'SELECT found_rows() AS t');

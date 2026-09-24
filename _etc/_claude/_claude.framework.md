@@ -149,6 +149,34 @@ C'è anche un terzo motivo, che non è di sicurezza ma costa lo stesso: `_gw.upg
 coi file dello standard e raccoglie ogni notte i disallineamenti. Un file di appoggio lasciato lì dentro ci
 finisce in mezzo tutte le notti, e il suo `rm -rf ./_*` prima o poi se lo porta via senza dirlo a nessuno.
 
+## Il contesto della sessione: quando `/clear` e quando `/compact`
+
+Ogni richiesta rilegge **tutto** il contesto accumulato fino a quel punto, quindi il costo di una
+sessione cresce col quadrato della sua lunghezza. **Dire all'utente quando azzerare è un obbligo,
+non una cortesia** ( chiesto da Fabio il 23/09/2026: *"voglio SEMPRE essere avvisato quando posso
+fare /clear e quando devo fare /compact"* ), e vale su ogni deploy.
+
+- **fronte chiuso** — quando il lavoro appena finito è chiuso e quello che viene dopo non c'entra,
+  **si propone il `/clear` di propria iniziativa**, nella stessa risposta che chiude il lavoro, a
+  qualunque livello di contesto. Non si aspetta che sia l'utente a chiedere "posso fare clear?":
+  il 23/09/2026 è successo esattamente questo, a fine giro della posta, ed è il caso che la regola
+  voleva evitare;
+- **sopra 120k** ( la statusline stampa `ctx <n>k` ) — si **può** chiudere: se il fronte è finito
+  si propone il `/clear`, se è a metà si tira avanti tenendo d'occhio la statusline;
+- **sopra 180k** — si **deve** intervenire, e si dice quale dei due: **`/clear`** se il fronte è
+  chiuso, **`/compact`** se il lavoro è a metà e va portato a termine. Non si arriva a 250k
+  sperando che finisca prima;
+- **dopo screenshot o dump voluminosi**, e prima di cambiare progetto, è il momento buono per un
+  `/clear`: un'immagine resta nel contesto e si ripaga a ogni turno.
+
+⚠ **Prima di proporlo, il punto va scritto dove va** ( `TODO.md`, `CHAT.md`, `DONE.md`, il
+commit ): azzerare senza aver scritto è l'unico modo di perdere qualcosa.
+
+⚠ **Chi decide è l'utente, ma la domanda la si pone con la diagnosi**: non si gira il messaggio
+grezzo dell'hook, si dice *"siamo a 210k, questo fronte è chiuso — `/clear`"* oppure *"siamo a
+210k e siamo a metà di X — `/compact` e proseguiamo"*. Quando l'hook `Stop` segnala la soglia, il
+messaggio va riportato in chiaro, non ignorato perché si sta finendo qualcosa.
+
 ## I cinque file di un progetto: `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`
 
 Nella **root del deploy** (il livello che contiene `dev/`) vivono cinque file, più il `burndown.md`

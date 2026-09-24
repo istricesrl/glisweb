@@ -1737,6 +1737,40 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000018950
+
+-- mail_status
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i verdetti di verifica degli indirizzi mail
+--
+-- questa tabella e' la cache dei verdetti di verifica degli indirizzi mail ( Emailable ), chiavata
+-- sull'indirizzo e non sull'anagrafica: lo stesso indirizzo ha un verdetto solo, chiunque lo usi,
+-- e una verifica si paga una volta per tutta la durata della cache; la scrivono e la leggono le
+-- funzioni di _src/_lib/_emailable.utils.php
+--
+CREATE TABLE IF NOT EXISTS `mail_status` (                    --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo mail verificato, normalizzato in minuscolo (chiave logica)
+  `dominio` char(128) DEFAULT NULL,                           -- dominio dell'indirizzo, per le statistiche per dominio
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- chiave esterna per lo stato dell'indirizzo (tipologie_mail_status)
+  `stato` char(32) DEFAULT NULL,                              -- stato grezzo restituito dal servizio di verifica (state)
+  `motivo` char(64) DEFAULT NULL,                             -- motivo grezzo restituito dal servizio di verifica (reason)
+  `punteggio` int(11) DEFAULT NULL,                           -- punteggio restituito dal servizio di verifica (score, da 0 a 100)
+  `se_accept_all` tinyint(1) DEFAULT NULL,                    -- flag che indica se il server accetta qualunque indirizzo
+  `se_ruolo` tinyint(1) DEFAULT NULL,                         -- flag che indica se e' un indirizzo di ruolo (info@, ufficio@)
+  `se_temporanea` tinyint(1) DEFAULT NULL,                    -- flag che indica se e' una casella usa e getta
+  `se_gratuita` tinyint(1) DEFAULT NULL,                      -- flag che indica se e' una casella su dominio gratuito
+  `note` text DEFAULT NULL,                                   -- note sulla verifica
+  `tentativi` int(11) DEFAULT 0,                              -- numero di verifiche tentate sull'indirizzo
+  `timestamp_verifica` int(11) DEFAULT NULL,                  -- timestamp dell'ultima verifica andata a buon fine, regola la scadenza della cache
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000020200
 
 -- marchi
@@ -3188,6 +3222,32 @@ CREATE TABLE IF NOT EXISTS `tipologie_listini` (
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000053700
+
+-- tipologie_mail_status
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli stati di verifica degli indirizzi mail
+--
+-- questa tabella contiene la scala degli stati di verifica di un indirizzo mail ( Rating A+/A/B/D/F
+-- piu' gli stati dei servizi di mailing ); se_recapitabile codifica la regola del framework per cui
+-- si boccia solo sulla prova esplicita di non recapitabilita'
+--
+CREATE TABLE IF NOT EXISTS `tipologie_mail_status` (          --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `note` text DEFAULT NULL,                                   -- descrizione estesa della tipologia
+  `se_recapitabile` tinyint(1) DEFAULT NULL,                  -- flag che indica se a un indirizzo in questo stato si puo' spedire
+  `se_sistema` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia e' una tipologia di sistema
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000053800
 

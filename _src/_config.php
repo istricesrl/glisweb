@@ -286,6 +286,84 @@
     }
 
     /**
+     * questa funzione limita il numero di richieste che uno stesso IP puo' fare su un canale in una finestra di tempo
+     *
+     * E' il limitatore di frequenza del firewall applicativo (_src/_inc/_macro/_security.php), da chiamare dagli
+     * endpoint che costano qualcosa a ogni richiesta — un servizio esterno a consumo, un'elaborazione pesante — e che
+     * sono raggiungibili senza autenticazione. A differenza delle parole proibite NON mette l'IP fra gli host banditi:
+     * rifiuta le richieste in eccesso finche' la finestra non si libera, perche' dietro lo stesso IP puo' esserci un
+     * intero ufficio e un utente vero non deve restare fuori per sempre.
+     *
+     * Ogni canale ha un registro per IP sotto DIR_VAR_SPOOL_SECURITY, nella cartella limiti/<canale>, con il timestamp
+     * di una richiesta accettata per riga; il file e' tenuto sotto lock, quindi regge le richieste concorrenti. Il
+     * superamento del limite viene annotato nel registro degli attacchi dell'IP, lo stesso in cui scrive il firewall.
+     * Se il registro non e' scrivibile la richiesta passa: il limitatore e' una protezione dei costi, e non deve mai
+     * diventare il motivo per cui un servizio smette di funzionare.
+     *
+     * @param   string  $c          il nome del canale (lettere, cifre, punto, trattino e underscore)
+     * @param   int     $n          il numero massimo di richieste accettate nella finestra
+     * @param   int     $t          la durata della finestra in secondi
+     *
+     * @return  bool                true se la richiesta rientra nel limite, false altrimenti
+     *
+     */
+    function rateLimitCheck( $c, $n, $t ) {
+
+        // sorgente della richiesta
+        $ip = ( isset( $_SERVER['REMOTE_ADDR'] ) ) ? $_SERVER['REMOTE_ADDR'] : 'cli';
+        $f  = preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $ip ) . '.log';
+
+        // registro del canale per l'IP
+        $d = DIR_VAR_SPOOL_SECURITY . 'limiti/' . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '', $c ) . '/';
+        if( ! checkPath( $d ) ) {
+            return true;
+        }
+
+        // apertura e lock del registro
+        $h = @fopen( $d . $f, 'c+' );
+        if( $h === false || ! flock( $h, LOCK_EX ) ) {
+            return true;
+        }
+
+        // richieste ancora dentro la finestra
+        $adesso = time();
+        $richieste = array();
+        while( ( $r = fgets( $h ) ) !== false ) {
+            $r = (int) trim( $r );
+            if( $r > $adesso - $t ) {
+                $richieste[] = $r;
+            }
+        }
+
+        // verifica del limite
+        $ok = ( count( $richieste ) < $n );
+        if( $ok ) {
+            $richieste[] = $adesso;
+        }
+
+        // riscrittura del registro, senza le richieste uscite dalla finestra
+        ftruncate( $h, 0 );
+        rewind( $h );
+        fwrite( $h, implode( PHP_EOL, $richieste ) . PHP_EOL );
+        flock( $h, LOCK_UN );
+        fclose( $h );
+
+        // annotazione del superamento nel registro degli attacchi
+        if( ! $ok ) {
+            @file_put_contents(
+                DIR_VAR_SPOOL_SECURITY . $f,
+                date( 'Y-m-d H:i:s' ) . ' superato il limite di ' . $n . ' richieste in ' . $t . ' secondi sul canale ' . $c . PHP_EOL .
+                'sorgente: ' . $ip . PHP_EOL .
+                'url: ' . ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ) . PHP_EOL . PHP_EOL,
+                FILE_APPEND | LOCK_EX
+            );
+        }
+
+        return $ok;
+
+    }
+
+    /**
      * questa funzione crea un path se non esiste
      * 
      * Utilizzando la funzione mkdir() con il flag ricorsivo, questa funzione si assicura che un dato path

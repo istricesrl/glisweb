@@ -43,9 +43,7 @@
         // TODO ma questo non ci espone a SQL injection?
         // NOTA ma non è che anche nella controller c'è questo problema? $t viene mai filtrato?
         if( ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
-            $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . $rm . ' WHERE id = ? LIMIT 1', array(
-                array( 's' => $_REQUEST['__delete__']['id'] )
-            ) );
+            $ct['__delete__']['__label__'] = mysqlSelectLabel( $cf['mysql']['connection'], $_REQUEST['__delete__']['table'], $rm, $_REQUEST['__delete__']['id'], ' LIMIT 1' );
         }
 
         // timer

@@ -40,7 +40,7 @@
 {% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER EMAILABLE #}
-{% if emailable.profile.apikey %}{% include '_inc/_emailable.close.twig' %}{% endif %}
+{% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.twig' %}{% endif %}
 
 {# GARANZIA DEL TOKEN reCAPTCHA SUI FORM DEL CARRELLO #}
 {% if ecommerce and google.profile.recaptcha.keys.public %}{% include '_inc/_recaptcha.carrello.twig' %}{% endif %}

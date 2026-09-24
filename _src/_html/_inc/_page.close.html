@@ -33,7 +33,7 @@
 
 {% if smartsupp.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
 
-{% if emailable.profile.apikey %}{% include '_inc/_emailable.close.html' %}{% endif %}
+{% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.html' %}{% endif %}
 
 {% if ecommerce and google.profile.recaptcha.keys.public %}{% include '_inc/_recaptcha.carrello.html' %}{% endif %}
 

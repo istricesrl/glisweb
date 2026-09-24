@@ -3,8 +3,6 @@
 <script>
 async function verificaEmailCampo(idCampo) {
 
-    const apiKey = "{{ emailable.profile.apikey }}";
-
     const campo = document.getElementById(idCampo);
 
     if (!campo) {
@@ -21,31 +19,24 @@ async function verificaEmailCampo(idCampo) {
         };
     }
 
-    const url = new URL('https://api.emailable.com/v1/verify');
-    url.searchParams.set('email', email);
-    url.searchParams.set('api_key', apiKey);
-    url.searchParams.set('timeout', '5');
-
+    // la verifica passa dal server ( _src/_api/_emailable.verifica.php ), che risponde dalla
+    // cache dei verdetti se l'indirizzo e' gia' stato verificato e altrimenti interroga
+    // Emailable: il verdetto che finisce in cache lo ottiene il server, e la chiave non sta
+    // nella pagina
     try {
-        const response = await fetch(url.toString());
+        const response = await fetch('/api/emailable.verifica', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
         const data = await response.json();
 
-        // 249 = verifica lenta, la documentazione consiglia di riprovare
-        if (response.status === 249) {
-            return {
-                valida: false,
-                riprovare: true,
-                messaggio: 'Verifica troppo lenta, riprovare tra poco',
-                dati: data
-            };
-        }
-
-        if (!response.ok) {
-            // errori di servizio (quota/rate limit/5xx/etc.): non bloccare il flusso
+        if (!response.ok || data.status !== 'OK') {
+            // errori di servizio (quota/limite di frequenza/5xx/etc.): non bloccare il flusso
             return {
                 valida: false,
                 errore: true,
-                messaggio: data.message || 'Errore durante la verifica',
+                messaggio: data.errore || 'Errore durante la verifica',
                 status: response.status,
                 dati: data
             };

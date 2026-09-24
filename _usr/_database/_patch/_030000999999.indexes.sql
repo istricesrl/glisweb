@@ -1040,6 +1040,24 @@ ALTER TABLE `mail_sent`
 -- mail_sent
 ALTER TABLE `mail_sent` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000018950
+
+-- mail_status
+ALTER TABLE `mail_status`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`indirizzo`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `dominio` (`dominio`),
+	ADD KEY `timestamp_verifica` (`timestamp_verifica`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`indirizzo`,`id_tipologia`,`timestamp_verifica`);
+
+-- | 030000018951
+
+-- mail_status
+ALTER TABLE `mail_status` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000020200
 
 -- marchi
@@ -1885,6 +1903,21 @@ ALTER TABLE `tipologie_indirizzi`
 
 -- tipologie_indirizzi
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000053700
+
+-- tipologie_mail_status
+ALTER TABLE `tipologie_mail_status`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`,`se_recapitabile`);
+
+-- | 030000053701
+
+-- tipologie_mail_status
+ALTER TABLE `tipologie_mail_status` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053800
 

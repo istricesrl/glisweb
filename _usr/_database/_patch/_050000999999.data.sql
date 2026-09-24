@@ -563,6 +563,20 @@ INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`,
 (40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000053700
+
+-- tipologie_mail_status
+INSERT IGNORE INTO `tipologie_mail_status` (`id`, `ordine`, `codice`, `nome`, `note`, `se_recapitabile`, `se_sistema`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	1,	'Rating A+',	'Deliverable +',	'Engagement Activity These emails are deliverable and have a history of clicks or opens. These addresses are always safe to send to!',	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	2,	'Rating A',	'Deliverable',	'These emails are deliverable. These addresses are always safe to send to!',	1,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	3,	'Rating B',	'Accepts All',	'These emails have been deemed as "Accepts All", meaning the server will accept all mail and may bounce it back to sender. We do not recommend sending to the "Accept All" category. All emails with a grade of B should be segmented (until later confirmed valid).',	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	4,	'Rating D',	'Indeterminate',	'In checking for an email, we were not able to do anything. We do not recommend sending to the "Indeterminate" category. All emails with a grade of D should be segmented off your list.',	1,	1,	NULL,	NULL,	NULL,	NULL),
+(5,	5,	'Rating F',	'Undeliverable',	'The emails given a grade of F have been deemed as undeliverable and invalid. Do not send mail to these addresses.',	0,	1,	NULL,	NULL,	NULL,	NULL),
+(8,	6,	'Cleaned',	'Puliti da MailChimp / Hard Bounce',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
+(9,	7,	'Blacklisted',	'Cancellati su MChimp / Blacklisted',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
+(10,	8,	'Non importabile',	'-',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	9,	'OK',	'-',	'-',	1,	1,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000053800
 
 -- tipologie_notizie

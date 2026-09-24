@@ -1297,3 +1297,50 @@
 
     }
 
+    /**
+     * legge la __label__ di una riga per id, scrivendo l'id nella query quando si puo'
+     *
+     * ( fix 2026-09-23 ) Il titolo di ogni scheda e l'etichetta della conferma di cancellazione
+     * leggono `SELECT __label__ FROM <tabella><estensione> WHERE id = ?`. Quando l'estensione e'
+     * `_view`, cioe' la tabella non ha una statica, col segnaposto la condizione non entra nella
+     * vista e la vista si materializza per intero: misurato in produzione su polmasi il
+     * 23/09/2026, `contratti_view` 1,59 s col segnaposto e 0,017 s con l'id scritto, e quella
+     * lettura era la query lenta piu' pesante della giornata ( 206 volte, 441 s ).
+     *
+     * Stesse regole e stessa rete della lettura "integrazione blocco dati" di controller() e di
+     * refreshStaticView(): si scrive nella query solo un id fatto di sole cifre e senza zeri
+     * iniziali, passato per (int); le viste dichiarate in `$cf['controller']['no_id_inline']`
+     * restano sul segnaposto; se la query con l'id scritto fallisce si rifa' col segnaposto e la
+     * tabella si segna per il resto della richiesta.
+     *
+     * @param   mysqli  $c      connessione
+     * @param   string  $t      tabella, senza estensione
+     * @param   string  $rm     estensione ( '', '_view', '_view_static' ), da getStaticViewExtension()
+     * @param   mixed   $i      id della riga
+     * @param   string  $l      coda della query ( es. ' LIMIT 1' )
+     *
+     * @return  mixed           la __label__, o NULL se la riga non c'e'
+     */
+    function mysqlSelectLabel($c, $t, $rm, $i, $l = '')
+    {
+
+        $q = 'SELECT __label__ FROM ' . $t . $rm . ' WHERE id = ';
+
+        if ($rm === '_view'
+            && ctype_digit((string) $i) && (string) $i === (string) (int) $i
+            && empty($GLOBALS['cf']['controller']['no_id_inline'][$t])) {
+
+            $e = array();
+            $v = mysqlSelectValue($c, $q . (int) $i . $l, false, $e);
+
+            if (empty($e)) {
+                return $v;
+            }
+
+            $GLOBALS['cf']['controller']['no_id_inline'][$t] = true;
+            logger('lettura della __label__ di ' . $t . $rm . ' con id nella query non riuscita, si ripiega sul parametro per il resto della richiesta', 'mysql', LOG_WARNING);
+
+        }
+
+        return mysqlSelectValue($c, $q . '?' . $l, array(array('s' => $i)));
+    }

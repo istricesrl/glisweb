@@ -49,6 +49,17 @@
      * 
      * 
      * 
+     * limiti di frequenza
+     * -------------------
+     *
+     * Per gli endpoint pubblici che costano qualcosa a ogni richiesta ( un servizio esterno a consumo, un'elaborazione
+     * pesante ) il firewall mette a disposizione rateLimitCheck(), definita in _src/_config.php: l'endpoint la chiama
+     * con un nome di canale, il numero massimo di richieste e la finestra in secondi, e se torna false rifiuta la
+     * richiesta ( di norma con HTTP 429 ). I registri stanno in var/spool/security/limiti/, una cartella per canale e un
+     * file per IP, e ogni superamento viene annotato nel file di log dell'IP accanto a banned.hosts.conf. Diversamente
+     * dalle parole proibite, superare un limite NON mette l'IP in banned.hosts.conf.
+     * Primo utilizzatore: _src/_api/_emailable.verifica.php.
+     *
      * TODO implementare un sistema di protezione dai DOS
      * TODO documentare
      *
