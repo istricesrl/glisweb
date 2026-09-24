@@ -672,29 +672,32 @@
      * rimuove n linee da un file
      * 
      * Questa funzione legge il file come array di righe con readArrayFromFile(), ne elimina una parte con array_slice() e lo
-     * riscrive con writeArrayToFile(). Con TRIM_LINES_FROM_TOP ( il default ) vengono eliminate le prime $n righe. Con
-     * TRIM_LINES_FROM_BOTTOM invece l'offset diventa negativo e array_slice() conserva le ultime $n righe, eliminando tutte le
-     * altre: il risultato non è quello che il nome della costante fa pensare. Poiché la lettura passa da readFromFile(), le
-     * righe riscritte perdono gli spazi in testa e in coda. Se il file non esiste la lettura restituisce false e array_slice()
-     * solleva un errore. Nel framework la funzione non ha chiamanti.
-     * 
+     * riscrive con writeArrayToFile(). Con TRIM_LINES_FROM_TOP ( il default ) vengono eliminate le prime $n righe, con
+     * TRIM_LINES_FROM_BOTTOM le ultime $n. Poiché la lettura passa da readFromFile(), le righe riscritte perdono gli spazi in
+     * testa e in coda. Se il file non esiste la lettura restituisce false e array_slice() solleva un errore. Nel framework la
+     * funzione non ha chiamanti.
+     *
+     * NB: fino al 2026-09-24 con TRIM_LINES_FROM_BOTTOM l'offset di array_slice() diventava negativo e la funzione
+     * conservava le ultime $n righe, eliminando tutte le altre; ora la lunghezza negativa toglie le ultime $n.
+     *
      * @param       string      $f      il nome del file da cui rimuovere le linee
      * @param       int         $n      il numero di linee da rimuovere
      * @param       int         $l      TRIM_LINES_FROM_TOP ( 1, default ) oppure TRIM_LINES_FROM_BOTTOM ( -1 )
-     * 
+     *
      * @return      boolean             restituisce true se la rimozione è andata a buon fine, false altrimenti
-     * 
-     * TODO implementare due costanti per dire alla funzione se togliere le righe dall'inizio o dalla fine e aggiungere il parametro alla funzione
-     * TODO con TRIM_LINES_FROM_BOTTOM la funzione conserva le ultime $n righe invece di eliminarle
-     * 
+     *
      */
     function fileTrimLines( $f, $n, $l = TRIM_LINES_FROM_TOP ) {
 
         // leggo dal file
         $a = readArrayFromFile( $f );
 
-        // rimuovo le linee
-        $a = array_slice( $a, $n * $l );
+        // rimuovo le linee dall'inizio o dalla fine ( con $n a zero array_slice( $a, 0, -0 ) svuoterebbe l'array )
+        if( $l == TRIM_LINES_FROM_BOTTOM ) {
+            $a = ( $n > 0 ) ? array_slice( $a, 0, - $n ) : $a;
+        } else {
+            $a = array_slice( $a, $n );
+        }
 
         // scrivo sul file e restituisco il risultato
         return writeArrayToFile( $a, $f );
