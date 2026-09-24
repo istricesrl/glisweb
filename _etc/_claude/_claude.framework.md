@@ -245,6 +245,15 @@ generatore**.
 - si genera con `_src/_sh/_docs.build.sh`, che **non fa il bootstrap del framework** e sui deploy cliente
   scrive solo dentro `usr/`, mai sotto `_*`.
 
+## Commenti al codice
+
+I commenti seguono il canone dei file già documentati: in italiano, testata `/** … */` con titolo in
+minuscolo e sezioni sottolineate, docblock di funzione con `@param`/`@return` allineati, etichette `//`
+canoniche nelle macro ( `// tabella gestita`, `// macro di default`… ). Il commento dice **perché**, e
+un commit di documentazione **non cambia il codice**. La guida completa, coi modelli per tipo di file:
+`.claude/skills/glisweb/riferimenti/commenti.md` — **leggerla prima di commentare o di sciogliere un
+`TODO documentare`**.
+
 ## Come trovare le credenziali del database (e degli altri servizi)
 
 Le credenziali non sono in un unico file: il bootstrap le assembla leggendo più file in sequenza e fondendoli con

@@ -114,6 +114,15 @@ se non l'hai già fatto nella sessione.
 `CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
 comunicato, per il cliente, non è finito.
 
+## Commenti al codice
+
+Come si commenta il framework — testata dei file, docblock di funzione con `@param` allineati, sezioni
+sottolineate, etichette canoniche delle macro, testate degli script di shell e delle macro Twig, i
+marcatori `TODO documentare` / `@todo` / `NOTA` / `⚠` — sta in **`riferimenti/commenti.md`**, ricavato
+dai file già documentati. **Leggilo prima di commentare un file o di sciogliere un `TODO documentare`**.
+Le due regole che si sbagliano di più: il commento dice **perché**, non ripete il codice; e un commit di
+documentazione **non tocca una sola istruzione** ( si verifica confrontando i token al netto dei commenti ).
+
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
 Esistono **due ruoli distinti** per i progetti glisweb, e il workflow per modificare il framework è
@@ -689,7 +698,7 @@ progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.frame
   controlla `stat` ( inode e `Links:` ), come per ogni file standard: in alcuni deploy il framework è
   hard-linked con altre istanze (vedi `_claude.framework.md` sezione hard link).
 - **Il `SKILL.md` tiene le regole e i rimandi, le trattazioni stanno in `riferimenti/`** ( cinque file,
-  contesto, documentazione, job, migrazioni ), lette quando servono: il file del framework, che è nel
+  contesto, documentazione, commenti, job, migrazioni ), lette quando servono: il file del framework, che è nel
   preambolo di ogni sessione, ne tiene solo l'essenziale. Una sezione nuova e lunga va lì, non qui.
 - Per testare la skill end-to-end: `mkdir /tmp/test-glisweb && cd /tmp/test-glisweb && git clone <repo> .` poi
   `bash .claude/skills/glisweb/bootstrap.sh` e verifica struttura creata + idempotenza.
