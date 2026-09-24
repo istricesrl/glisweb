@@ -125,9 +125,12 @@
      * l'ordine è dato dalla priorità e a parità di priorità dall'id. Se $tree non è un array la funzione restituisce un
      * array vuoto; tutti i passaggi vengono scritti nel log menu.
      * 
-     * NOTA la pagina attiva deve esistere in $pages e avere il percorso in parents.id: con $active NULL (il default) o con
-     * una pagina sconosciuta in_array() riceve NULL e PHP va in errore alla prima voce inclusa.
-     * 
+     * Se $active è NULL (il default), o è una pagina che non esiste in $pages o non ha il percorso in parents.id, nessuna
+     * voce risulta nel percorso della pagina attiva: vengono incluse solo le voci con etichetta, nessuna è current e i
+     * sottomenu vengono costruiti solo per le voci con subpages uguale a 'ALWAYS_SHOW'.
+     *
+     * NB: fino al 2026-09-24 in quel caso in_array() riceveva NULL e PHP andava in errore alla prima voce inclusa.
+     *
      * @param       string      $menu       il nome del menu da costruire
      * @param       array       $tree       il livello dell'albero delle pagine da elaborare, nella forma id => figli
      * @param       array       $pages      le pagine del sito, di solito $cf['contents']['pages']
@@ -145,6 +148,9 @@
 
     // array del menu
         $nav = array();
+
+    // percorso della pagina attiva ( vuoto se la pagina attiva non è data o non è nota )
+        $path = ( isset( $pages[ $active ]['parents']['id'] ) ) ? (array) $pages[ $active ]['parents']['id'] : array();
 
     // log
         logWrite( 'elaboro il menu ' . $menu, 'menu' );
@@ -171,7 +177,7 @@
 foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
                 // se la pagina ha un'etichetta per il menu... oppure?
-                    if( ! empty( $mv['label'] ) || ( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) ) {
+                    if( ! empty( $mv['label'] ) || ( count( $v ) > 0 && in_array( $k, $path ) ) ) {
 
                     // se l'utente può visualizzare la pagina
                     // TODO trovare un modo per visualizzare nel menu con un'opzione anche le pagine per cui è richiesto poi il login
@@ -210,7 +216,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
                             ,
                             'active' => ( $k == $active ) ? true : false
                             ,
-                            'current' => ( in_array( $k, $pages[ $active ]['parents']['id'] ) ) ? true : false
+                            'current' => ( in_array( $k, $path ) ) ? true : false
                             );
 
                         // log
@@ -224,7 +230,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
                             count( $v ) > 0
                             && (
                                 (
-                                in_array( $k, $pages[ $active ]['parents']['id'] )
+                                in_array( $k, $path )
                                 && (
                                     ! isset( $mv['subpages'] )
                                     ||
