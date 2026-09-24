@@ -1,20 +1,77 @@
 <?php
 
     /**
+     * libreria per la costruzione dei menu e degli elementi di navigazione
+     * 
+     * Questa libreria contiene le funzioni che costruiscono, a partire dall'albero delle pagine, i menu, le briciole di
+     * pane, il selettore della lingua e gli indirizzi di ritorno delle pagine.
+     * 
+     * introduzione
+     * ============
+     * Le pagine del sito sono dichiarate in $cf['contents']['pages'] e organizzate in un albero in $cf['contents']['tree'],
+     * costruiti dai runlevel _src/_config/_300.pages.php e _src/_config/_320.pages.php; ogni pagina può comparire in uno o
+     * più menu tramite la chiave menu, e conosce il proprio percorso dalla radice nella chiave parents. L'API delle
+     * pagine _src/_api/_pages.php, prima di passare la pagina al template, chiama buildMenu() per ogni menu dichiarato dal
+     * template, buildBreadcrumbs() per le briciole di pane e buildFlags() per il selettore della lingua, e mette il
+     * risultato in $ct['page']['template']. backurlRegistra() è invece usata dalle macro di default delle viste e dei form
+     * del back-end (_src/_inc/_macro/_default.view.php e _src/_inc/_macro/_default.form.php) per costruire la freccia di
+     * ritorno.
+     * 
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti; buildMenu() usa SHOW_ALWAYS, definita in _src/_config.php.
+     * 
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     * 
+     * funzioni per i menu
+     * -------------------
+     * Le funzioni in questo gruppo servono per costruire i menu del sito.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * menuLocation()                   | sceglie, per ogni lingua, dove porta una voce di menu
+     * buildMenu()                      | costruisce un menu a partire dall'albero delle pagine
+     * 
+     * funzioni per gli altri elementi di navigazione
+     * ----------------------------------------------
+     * Le funzioni in questo gruppo servono per costruire gli elementi di navigazione diversi dai menu.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * buildBreadcrumbs()               | costruisce le briciole di pane di una pagina
+     * buildFlags()                     | costruisce le voci del selettore della lingua di una pagina
+     * backurlRegistra()                | registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
+     * 
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     * 
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logWrite()                       | _src/_lib/_log.utils.php
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
-     *
-     *
-     *
-     * TODO documentare
-     *
-     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     * 
      */
 
     /**
-     *
-     * TODO documentare
-     *
+     * FUNZIONI PER I MENU
      */
+
     /**
      * sceglie, per ogni lingua, dove porta una voce di menu
      *
@@ -48,6 +105,37 @@
 
     }
 
+    /**
+     * costruisce un menu a partire dall'albero delle pagine
+     * 
+     * Questa funzione percorre un livello dell'albero delle pagine e restituisce le voci del menu $menu per quel livello,
+     * scendendo ricorsivamente nei sottolivelli quando serve. Una pagina può avere più voci nello stesso menu
+     * ($pages[ $k ]['menu'][ $menu ] è un array di voci), e ogni voce viene inclusa se:
+     * 
+     * - ha un'etichetta, oppure la pagina ha figli e fa parte del percorso della pagina attiva (sono le voci vuote che
+     *   _src/_config/_320.pages.php crea nei genitori per annidarvi le sottovoci);
+     * - l'utente può vederla, cioè la pagina non ha gruppi in auth.groups, oppure l'utente appartiene ad almeno uno di
+     *   quei gruppi, oppure la voce ha visualizza uguale a SHOW_ALWAYS.
+     * 
+     * Ogni voce è un array con le chiavi label, ancora, location (per lingua, calcolata con menuLocation()), target,
+     * active (la pagina è quella attiva), current (la pagina fa parte del percorso della pagina attiva) e, se c'è un
+     * sottomenu, content. Il sottomenu viene costruito se la pagina ha figli e, o fa parte del percorso della pagina
+     * attiva e la voce non ha subpages uguale a 'NEVER_SHOW', o la voce ha subpages uguale a 'ALWAYS_SHOW'. Le voci
+     * sono ordinate in modo naturale per chiave, e la chiave è priority|id della pagina|indice della voce, per cui
+     * l'ordine è dato dalla priorità e a parità di priorità dall'id. Se $tree non è un array la funzione restituisce un
+     * array vuoto; tutti i passaggi vengono scritti nel log menu.
+     * 
+     * NOTA la pagina attiva deve esistere in $pages e avere il percorso in parents.id: con $active NULL (il default) o con
+     * una pagina sconosciuta in_array() riceve NULL e PHP va in errore alla prima voce inclusa.
+     * 
+     * @param       string      $menu       il nome del menu da costruire
+     * @param       array       $tree       il livello dell'albero delle pagine da elaborare, nella forma id => figli
+     * @param       array       $pages      le pagine del sito, di solito $cf['contents']['pages']
+     * @param       string      $active     l'id della pagina attiva (default NULL)
+     * 
+     * @return      array                   le voci del menu, ordinate
+     * 
+     */
     function buildMenu( $menu, $tree, $pages, $active = NULL ) {
 
     // debug
@@ -199,9 +287,22 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
     }
 
     /**
-     *
-     * TODO documentare
-     *
+     * FUNZIONI PER GLI ALTRI ELEMENTI DI NAVIGAZIONE
+     */
+
+    /**
+     * costruisce le briciole di pane di una pagina
+     * 
+     * Questa funzione restituisce una voce per ogni pagina del percorso dalla radice alla pagina data, compresa la pagina
+     * stessa, leggendo gli array paralleli id, path e h1 della chiave parents della pagina; la radice (id vuoto) viene
+     * saltata. Ogni voce è un array con le chiavi location (il percorso della pagina, per lingua), label (l'h1 della
+     * pagina) e active (true per la pagina $active). Se la pagina non ha l'array parents restituisce un array vuoto.
+     * 
+     * @param       array       $page       la pagina di cui costruire le briciole di pane
+     * @param       string      $active     l'id della pagina attiva
+     * 
+     * @return      array                   le briciole di pane, dalla radice alla pagina
+     * 
      */
     function buildBreadcrumbs( $page, $active ) {
 
@@ -236,9 +337,21 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
     }
 
     /**
-     *
-     * TODO documentare
-     *
+     * costruisce le voci del selettore della lingua di una pagina
+     * 
+     * Questa funzione restituisce una voce per ogni lingua in cui la pagina ha un percorso (chiave path, indicizzata per
+     * codice IETF come it-IT); ogni voce è un array con le chiavi location (il percorso della pagina in quella lingua),
+     * country (la parte del codice dopo il trattino, in minuscolo, da usare per la bandiera) e active (true per la
+     * lingua $lang). Se la pagina non ha l'array path restituisce un array vuoto e scrive nel log localization.
+     * 
+     * NOTA se il codice della lingua non contiene il trattino strpos() restituisce false e country diventa il codice
+     * senza il primo carattere ("it" diventa "t").
+     * 
+     * @param       array       $page       la pagina di cui costruire il selettore della lingua
+     * @param       string      $lang       il codice IETF della lingua corrente
+     * 
+     * @return      array                   le voci del selettore della lingua
+     * 
      */
     function buildFlags( $page, $lang ) {
 

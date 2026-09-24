@@ -17,6 +17,17 @@
      * vedi anche https://www.webarea.it/howto/nosql/redis-php-installazione-configurazione-esempi-utilizzo_160
      * vedi anche https://redis.io/docs/latest/develop/clients/php/
      *
+     * NOTA la connessione che il framework passa a queste funzioni ($cf['redis']['connection']) è un oggetto
+     * Predis\Client, creato in _src/_config/_045.cache.php, e non un oggetto dell'estensione phpredis; i valori restituiti
+     * dalle funzioni di scrittura e cancellazione sono quindi quelli di Predis (ad esempio un oggetto di stato per set()),
+     * e in caso di errore del server Predis lancia un'eccezione invece di restituire false. I dati scritti devono essere
+     * stringhe: la libreria non li serializza.
+     *
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti; utilizza quelle elencate nella sezione dipendenze, definite dai runlevel
+     * della cache.
+     *
      * funzioni
      * ========
      * Le funzioni di questa libreria sono divise in tre gruppi, le funzioni di utilità generale, quelle per la scrittura e quelle per
@@ -29,9 +40,9 @@
      * 
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
-     * redisUniqueKey()                 | aggiunge un seme univoco alla chiave, per evitare collisioni fra siti diversi
-     * redisAddKeyAgeSuffix()           | aggiunge il suffisso _AGE alla chiave, per memorizzare l'età della chiave
-     * redisGetKeyAge()                 | legge l'età di una chiave in cache
+     * redisUniqueKey()                 | aggiunge il seme univoco del sito all'inizio di una chiave
+     * redisAddKeyAgeSuffix()           | aggiunge il suffisso _AGE a una chiave
+     * redisGetKeyAge()                 | legge il momento di scrittura di una chiave in cache
      * 
      * funzioni per la scrittura dei dati
      * ----------------------------------
@@ -61,6 +72,15 @@
      * REDIS_UNIQUE_SEED        | un seme univoco per la chiave, che permette di evitare collisioni fra siti diversi
      * REDIS_DEFAULT_TTL        | il tempo di vita di default di una chiave in cache, in secondi
      * 
+     * REDIS_UNIQUE_SEED è definita in _src/_config/_040.cache.php a partire dall'FQDN del sito; REDIS_DEFAULT_TTL è definita
+     * in _src/_config/_045.cache.php (default 3600 secondi) ma soltanto se la classe Predis\Client è disponibile.
+     * 
+     * Sono inoltre richieste le seguenti funzioni:
+     * 
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logWrite()                       | _src/_lib/_log.utils.php
+     * 
      * changelog
      * =========
      * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
@@ -68,6 +88,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2025-06-09       | Fabio Mosti          | refactoring completo della libreria
+     * 2026-09-24       | Fabio Mosti          | documentazione
      * 
      * licenza
      * =======
@@ -81,10 +102,16 @@
      */
 
     /**
+     * aggiunge il seme univoco del sito all'inizio di una chiave
      * 
+     * Questa funzione antepone REDIS_UNIQUE_SEED alla chiave, in modo che siti diversi che condividono lo stesso server
+     * Redis non scrivano sulle stesse chiavi; se il seme è già contenuto nella chiave (in qualsiasi posizione, non
+     * necessariamente all'inizio) la chiave non viene modificata, per cui la funzione può essere chiamata più volte
+     * sulla stessa chiave senza effetti.
      * 
+     * @param       string      $k      la chiave, modificata per riferimento
      * 
-     * TODO documentare
+     * @return      string              la chiave con il seme univoco
      * 
      */
     function redisUniqueKey( &$k ) {
@@ -98,10 +125,14 @@
     }
 
     /**
+     * aggiunge il suffisso _AGE a una chiave
      * 
+     * Questa funzione restituisce il nome della chiave che memorizza il momento di scrittura della chiave data, cioè
+     * la chiave stessa con il suffisso _AGE; se il suffisso è già presente la chiave viene restituita invariata.
      * 
+     * @param       string      $k      la chiave
      * 
-     * TODO documentare
+     * @return      string              la chiave con il suffisso _AGE
      * 
      */
     function redisAddKeyAgeSuffix( $k ) {
@@ -115,9 +146,16 @@
     }
 
     /**
+     * legge il momento di scrittura di una chiave in cache
      * 
+     * Questa funzione legge con redisRead() la chiave _AGE che redisWrite() scrive accanto a ogni chiave, e che contiene
+     * la timestamp della scrittura; nonostante il nome non restituisce quindi un'età in secondi ma una timestamp. Se la
+     * chiave non esiste, è scaduta o manca la connessione restituisce un valore vuoto (NULL o false).
      * 
-     * TODO documentare
+     * @param       object      $conn       la connessione a Redis
+     * @param       string      $key        la chiave di cui leggere il momento di scrittura
+     * 
+     * @return      mixed                   la timestamp di scrittura della chiave, oppure un valore vuoto
      * 
      */
     function redisGetKeyAge( $conn, $key ) {
@@ -131,10 +169,21 @@
      */
 
     /**
+     * scrive un dato in cache
      * 
+     * Questa funzione aggiunge il seme univoco alla chiave, scrive il dato e gli assegna la durata $ttl; se la scrittura
+     * riesce scrive anche la chiave _AGE con la timestamp corrente e la stessa durata. Se la connessione è vuota scrive
+     * nel log redis e restituisce false.
      * 
+     * NOTA con Predis set() restituisce un oggetto di stato e non false, per cui il ramo di errore non viene mai
+     * eseguito; in caso di errore del server Predis lancia un'eccezione. Il dato deve essere una stringa.
      * 
-     * TODO documentare
+     * @param       object      $conn       la connessione a Redis
+     * @param       string      $key        la chiave (senza seme univoco)
+     * @param       string      $data       il dato da scrivere
+     * @param       int         $ttl        la durata della chiave in secondi (default REDIS_DEFAULT_TTL)
+     * 
+     * @return      mixed                   il risultato della scrittura della chiave _AGE, false se manca la connessione
      * 
      */
     function redisWrite( $conn, $key, $data, $ttl = REDIS_DEFAULT_TTL ) {
@@ -167,10 +216,15 @@
     }
 
     /**
+     * cancella un dato dalla cache
      * 
+     * Questa funzione aggiunge il seme univoco alla chiave e la cancella; la chiave _AGE corrispondente non viene
+     * cancellata e scade da sola. Se la connessione è vuota restituisce false.
      * 
+     * @param       object      $conn       la connessione a Redis
+     * @param       string      $key        la chiave da cancellare (senza seme univoco)
      * 
-     * TODO documentare
+     * @return      mixed                   il numero di chiavi cancellate, false se manca la connessione
      * 
      */
     function redisDelete( $conn, $key ) {
@@ -186,10 +240,15 @@
     }
 
     /**
+     * cancella tutti i dati dalla cache
      * 
+     * Questa funzione esegue FLUSHALL sul server, cancellando tutte le chiavi di tutti i database: non soltanto quelle
+     * del sito corrente ma anche quelle degli altri siti che condividono lo stesso server. A differenza delle altre
+     * funzioni della libreria non controlla che la connessione esista, e con una connessione vuota PHP va in errore.
      * 
+     * @param       object      $conn       la connessione a Redis
      * 
-     * TODO documentare
+     * @return      mixed                   il risultato del comando FLUSHALL
      * 
      */
     function redisFlush( $conn ) {
@@ -203,10 +262,18 @@
      */
 
     /**
+     * legge un dato dalla cache
      * 
+     * Questa funzione aggiunge il seme univoco alla chiave e ne legge il valore, scrivendo nel log redis l'esito della
+     * lettura. Se la connessione è vuota restituisce false; se la chiave non esiste o è scaduta restituisce quello che
+     * restituisce il client (NULL con Predis). Un valore vuoto o '0' viene letto correttamente ma registrato nel log
+     * come lettura fallita.
      * 
+     * @param       object      $conn       la connessione a Redis
+     * @param       string      $key        la chiave da leggere (senza seme univoco)
      * 
-     * TODO documentare
+     * @return      mixed                   il valore letto, un valore vuoto se la chiave non esiste, false se manca la
+     *                                      connessione
      * 
      */
     function redisRead( $conn, $key ) {

@@ -3,13 +3,25 @@
     /**
      * libreria per la gestione di Google reCaptcha
      * 
+     * Questa libreria contiene le funzioni che verificano presso Google i token reCAPTCHA v3 inviati dai form, per
+     * distinguere le richieste degli utenti veri da quelle dei bot.
      * 
+     * introduzione
+     * ============
+     * Con reCAPTCHA v3 il javascript di Google, caricato nella pagina con la chiave pubblica del sito, genera un token
+     * che il form invia al backend insieme agli altri dati, nel campo __recaptcha_token__ del blocco dati (si veda ad
+     * esempio la macro in _src/_twig/_lib/_default.twig). Il backend passa il token e la chiave privata del sito
+     * ($cf['google']['profile']['recaptcha']['keys']['private']) a reCaptchaVerifyV3(), che interroga il servizio di
+     * verifica di Google e ottiene un punteggio da 0 (bot) a 1 (persona).
      * 
+     * Le funzioni di questa libreria sono usate dalla controller dei moduli di contatto
+     * (_mod/_CT000.contatti/_src/_config/_750.controller.php, tramite reCaptchaVerifyFormV3()), dal login
+     * (_src/_config/_210.auth.php) e dalla verifica antispam del carrello (verificaSpam() in
+     * _mod/_4170.ecommerce/_src/_lib/_mysql.utils.add.php); ognuno di questi chiamanti applica la propria soglia e la
+     * propria politica per i casi in cui il punteggio non è disponibile.
      * 
-     * 
-     * 
-     * 
-     * 
+     * riferimenti
+     * -----------
      * vedi:
      * - https://stackoverflow.com/questions/51507695/google-recaptcha-v3-example-demo
      * - https://stackoverflow.com/questions/48224799/test-invisible-recaptcha
@@ -21,13 +33,53 @@
      * pannello di controllo reCAPTCHA:
      * - https://www.google.com/recaptcha/about/
      * 
-     * 
-     * 
-     * TODO documentare
      * TODO spiegare bene i vari componenti che servono per fare funzionare reCaptcha (javascript, html, profilo, eccetera)
      * TODO scrivere un file di esempio che faccia vedere bene come funziona reCaptcha
      * 
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti.
      * 
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     * 
+     * funzioni di verifica
+     * --------------------
+     * Le funzioni in questo gruppo servono per verificare i token reCAPTCHA.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * reCaptchaVerifyV3()              | funzione per il calcolo dello score di Google reCaptcha
+     * reCaptchaVerifyFormV3()          | verifica il token reCAPTCHA di un blocco dati e ne registra l'esito
+     * 
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     * 
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * restCall()                       | _src/_lib/_rest.tools.php
+     * logger()                         | core
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     * 
+     */
+
+    /**
+     * FUNZIONI DI VERIFICA
      */
 
     /**
@@ -50,11 +102,13 @@
      * riprovata: senza questa informazione lo score 0 restituito in caso di errore di rete è
      * indistinguibile da un bot e blocca utenti legittimi.
      *
-     * @param    string    t       token
-     * @param    string    k       chiave reCaptcha segreta del sito
-     * @param    string    esito   [out] motivo del valore restituito
+     * @param       string      $t          il token reCAPTCHA generato nella pagina
+     * @param       string      $k          la chiave reCaptcha segreta del sito
+     * @param       string      $esito      [out] il motivo del valore restituito, scritto per riferimento
      *
-     * @return                  il valore dell score
+     * @return      float                   il valore dello score (0 in caso di errore o token rifiutato, 1 se il token
+     *                                      è valido ma senza punteggio)
+     *
      */
 
      function reCaptchaVerifyV3( $t, $k, &$esito = NULL ) {
@@ -120,10 +174,27 @@
     }
 
     /**
+     * verifica il token reCAPTCHA di un blocco dati e ne registra l'esito
      * 
+     * Questa funzione riceve per riferimento il blocco dati di un form (ad esempio un modulo di contatto) e vi aggiunge la
+     * chiave __spam__ con lo score e l'esito della verifica, nella sotto chiave check. I casi sono tre:
      * 
+     * - se il token è presente e la chiave è configurata, chiama reCaptchaVerifyV3(), scrive lo score, toglie il token dal
+     *   blocco dati e imposta check a true se lo score è maggiore di 0.1;
+     * - se la chiave è configurata ma il token non è arrivato, scrive score 0, status 'token non ricevuto' e check false;
+     * - se la chiave non è configurata (vuota o false), scrive score 1, status 'reCAPTCHA non configurato' e check true,
+     *   cioè il form passa senza verifica.
      * 
-     * TODO documentare
+     * NOTA nel primo caso la chiave status non viene scritta e l'esito di reCaptchaVerifyV3() non viene richiesto, per
+     * cui un token scaduto o un servizio di Google non raggiungibile producono score 0 e check false esattamente come un
+     * bot, e il contatto viene scartato come spam.
+     * TODO usare il parametro $esito di reCaptchaVerifyV3() per non scartare i token scaduti e i disservizi, come già
+     * fa verificaSpam() in _mod/_4170.ecommerce/_src/_lib/_mysql.utils.add.php
+     * 
+     * @param       array       $v      il blocco dati del form, modificato per riferimento
+     * @param       string      $k      la chiave reCaptcha segreta del sito (default false, cioè non configurata)
+     * 
+     * @return      void
      * 
      */
     function reCaptchaVerifyFormV3( &$v, $k = false ) {
