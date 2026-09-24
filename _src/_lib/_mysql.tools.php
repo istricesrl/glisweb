@@ -997,7 +997,9 @@
     function mysqlInsertRow($c, $r, $t, $d = true, $n = false, $u = array())
     {
 
-        logger($t . PHP_EOL . print_r($r, true), 'mysql/insertrow/' . $t);
+        // nel log i valori sensibili ( password, token, ... ) vanno censurati, sulla copia e non sulla riga da scrivere
+        $l = $r;
+        logger($t . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow/' . $t);
 
         if (! empty($u)) {
 
@@ -1014,17 +1016,20 @@
             // var_dump( $uQuery . implode(' AND ', $uConds) );
             // var_dump( $r['id'] );
 
-            logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+            $l = $r;
+            logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         }
 
         $r = array_map('empty2null', $r);
 
-        logger($t . '( dopo array_map )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . '( dopo array_map )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         $r = array_map('string2num', $r);
 
-        logger($t . '( dopo string2num )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . '( dopo string2num )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         if (! array_key_exists('id', $r) && $n == false) {
             $r['id'] = NULL;
@@ -1038,7 +1043,8 @@
 
         $a = array2mysqlStatementParameters($r);
 
-        logger($t . PHP_EOL . print_r($a, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . PHP_EOL . print_r(array2mysqlStatementParameters(array2censored($l)), true), 'mysql/insertrow.' . $t);
 
         $i = mysqlQuery($c, $q, $a);
 
