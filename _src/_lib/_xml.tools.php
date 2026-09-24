@@ -12,7 +12,8 @@
      * esempio da restCall() in _src/_lib/_rest.tools.php per decodificare le risposte XML; xmlEntities() e xmlFloat() sono
      * usate per la generazione delle fatture elettroniche in _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php.
      * La funzione inversa array2xml() al momento della stesura di questa documentazione non è usata da nessun file (in
-     * _src/_config/_980.sitemap.php ne resta solo una chiamata commentata) e ha diversi limiti, descritti nel suo docblock.
+     * _src/_config/_980.sitemap.php ne resta solo una chiamata commentata); riconverte fedelmente l'array di xml2array(),
+     * namespace compresi.
      * 
      * formato degli array
      * -------------------
@@ -90,105 +91,138 @@
      * dell'elemento radice e il suo valore il contenuto (le eventuali altre chiavi di primo livello finiscono anch'esse
      * dentro la radice). Per ogni chiave dell'array:
      * 
+     * - la chiave '@' contiene gli attributi dell'elemento corrente, che vengono scritti prima dei figli;
      * - un valore scalare diventa un elemento figlio con quel testo, oppure un attributo se la chiave comincia con @;
-     * - un array con chiave '@' diventa l'insieme degli attributi dell'elemento corrente;
-     * - un array la cui prima chiave è '#' diventa un elemento con il testo $value['#'];
-     * - un array con chiavi numeriche diventa una serie di elementi con lo stesso nome;
+     * - un array con la chiave '#' diventa un elemento con il testo $value['#'], più gli attributi e i figli descritti
+     *   dalle altre chiavi;
+     * - un array la cui prima chiave è numerica diventa una serie di elementi con lo stesso nome, ciascuno trattato come
+     *   un elemento singolo ( anche una serie di un solo elemento );
      * - qualsiasi altro array diventa un elemento figlio, riempito ricorsivamente.
-     * 
-     * I due punti dei nomi con namespace vengono sostituiti temporaneamente da | e ripristinati alla fine sul testo XML
-     * completo. Il documento viene riformattato con DOM e, se $file è false, restituito come stringa; se $file è un
-     * percorso relativo a DIR_BASE viene salvato su file e la funzione restituisce il numero di byte scritti (false in
-     * caso di errore), mentre se la cartella non è scrivibile scrive un errore nel log filesystem e restituisce NULL.
-     * Con $file NULL (è il valore usato nelle chiamate ricorsive, con $xml valorizzato) non restituisce niente.
-     * 
-     * NOTA la funzione ha diversi limiti, verificati durante la stesura di questa documentazione:
-     * - la sostituzione finale di | con : vale per tutto il testo, per cui un | contenuto in un valore diventa :;
-     * - un array con chiave '#' perde tutte le altre chiavi, compresi gli attributi '@', per cui l'output di xml2array()
-     *   non si riconverte fedelmente;
-     * - il controllo sulle chiavi numeriche guarda la seconda chiave dell'array e non la prima, per cui una serie di un
-     *   solo elemento genera un elemento chiamato 0, il documento non è valido e il risultato è un documento vuoto;
-     * - dopo la sostituzione dei due punti i controlli strpos( $key, ':' ) non sono mai veri e i rami per i namespace non
-     *   vengono mai eseguiti; gli elementi con prefisso vengono scritti senza dichiarare il namespace;
-     * - la prima chiamata ricorsiva sulla radice riceve $file invece di NULL, per cui il documento viene formattato (ed
-     *   eventualmente salvato) due volte.
-     * TODO correggere il controllo sulle chiavi numeriche e il passaggio di $file nella chiamata ricorsiva sulla radice
-     * 
+     *
+     * I testi vengono passati per htmlspecialchars(), per cui l'array prodotto da xml2array(), che ha i testi già decodificati,
+     * si riconverte fedelmente. I namespace si dichiarano come attributi xmlns o xmlns:prefisso nella chiave '@': quelli
+     * della radice vengono scritti sulla radice, quelli degli altri elementi vengono registrati e SimpleXML li dichiara sugli
+     * elementi che li usano. Un elemento o un attributo con prefisso viene scritto nel suo namespace; se il prefisso non è
+     * stato dichiarato viene scritto senza prefisso e l'anomalia finisce nel log xml. La mappa dei namespace vale per tutto
+     * il documento, non solo per il ramo in cui sono dichiarati.
+     *
+     * Il documento viene riformattato con DOM e, se $file è false, restituito come stringa; se $file è un percorso relativo
+     * a DIR_BASE viene salvato su file e la funzione restituisce il numero di byte scritti (false in caso di errore),
+     * mentre se la cartella non è scrivibile scrive un errore nel log filesystem e restituisce NULL. Con $file NULL (è il
+     * valore usato nelle chiamate ricorsive, con $xml valorizzato) non restituisce niente.
+     *
+     * NB: fino al 2026-09-24 i due punti dei nomi venivano sostituiti con | e ripristinati alla fine su tutto il testo, per
+     * cui un | nei valori diventava :, e i rami per i namespace non venivano mai eseguiti; un array con '#' perdeva gli
+     * attributi '@'; il controllo sulle chiavi numeriche guardava la seconda chiave, per cui una serie di un elemento
+     * produceva un documento vuoto ( e una serie di elementi con '#' pure ); la chiamata ricorsiva sulla radice riceveva
+     * $file e il documento veniva formattato, ed eventualmente salvato, due volte.
+     *
      * @param       array       $data       l'array da convertire
      * @param       mixed       $file       false per ottenere il documento come stringa, un percorso relativo a DIR_BASE per
      *                                      salvarlo su file, NULL per non produrre output (default false)
      * @param       object      $xml        l'elemento SimpleXML a cui aggiungere i figli, usato nelle chiamate ricorsive
      *                                      (default NULL, cioè crea un nuovo documento); passato per riferimento
-     * 
+     * @param       array       $ns         la mappa prefisso => URI dei namespace dichiarati, usata nelle chiamate ricorsive
+     *                                      (default array vuoto); passata per riferimento
+     *
      * @return      mixed                   il documento XML come stringa, il risultato del salvataggio su file, oppure NULL
      * 
      */
-    function array2xml( $data, $file = false, &$xml = NULL ) {
+    function array2xml( $data, $file = false, &$xml = NULL, &$ns = array() ) {
 
     // debug
         // print_r( $data );
 
-    // TODO questa funzione è da rifare con i seguenti obiettivi:
+    // NOTA questa funzione andava rifatta con i seguenti obiettivi:
     // 1) gestire in maniera trasparente l'array generato da xml2array
     // 2) gestire correttamente i namespace senza l'accrocchio del pipe
     // 3) mantenere la compatibilità con gli script che usano attualmente questa funzione
+    // il 2026-09-24 sono stati raggiunti i primi due, e il terzo non pesa perché la funzione non ha chiamanti
 
     if( $xml === NULL ) {
         $dtk = array_keys( $data );
         $root = array_shift( $dtk );
-        $xml = new SimpleXMLElement( '<?xml version="1.0" encoding="utf-8"?><' . $root . '></' . $root . '>' );
-#        $xml->registerXPathNamespace( 'xhtml', 'http://www.w3.org/1999/xhtml' );
-        array2xml( array_shift( $data ), $file, $xml );
+        $rootData = array_shift( $data );
+
+        // il prefisso xml è predefinito e non si dichiara
+        $ns['xml'] = 'http://www.w3.org/XML/1998/namespace';
+
+        // le dichiarazioni dei namespace della radice vanno scritte nel testo con cui si crea il documento, perché
+        // SimpleXML con addAttribute( 'xmlns:x', ... ) scriverebbe un attributo x senza prefisso
+        $dcl = '';
+        if( is_array( $rootData ) && isset( $rootData['@'] ) && is_array( $rootData['@'] ) ) {
+            foreach( $rootData['@'] as $attrName => $attrVal ) {
+                if( $attrName === 'xmlns' || strpos( $attrName, 'xmlns:' ) === 0 ) {
+                    $dcl .= ' ' . $attrName . '="' . htmlspecialchars( $attrVal ) . '"';
+                    $ns[ (string) substr( $attrName, 6 ) ] = $attrVal;
+                    unset( $rootData['@'][ $attrName ] );
+                }
+            }
+        }
+
+        $xml = new SimpleXMLElement( '<?xml version="1.0" encoding="utf-8"?><' . $root . $dcl . '></' . $root . '>' );
+
+        // la chiamata sulla radice non produce output: la formattazione e il salvataggio si fanno una volta sola qui sotto
+        if( is_array( $rootData ) ) {
+            array2xml( $rootData, NULL, $xml, $ns );
+        }
+    }
+
+    // gli attributi si elaborano per primi, così i namespace che dichiarano sono noti quando si scrivono i figli
+    if( isset( $data['@'] ) && is_array( $data['@'] ) ) {
+
+        foreach( $data['@'] as $attrName => $attrVal ) {
+            if( $attrName === 'xmlns' || strpos( $attrName, 'xmlns:' ) === 0 ) {
+                // il namespace si registra, e SimpleXML lo dichiara sugli elementi che lo usano
+                $ns[ (string) substr( $attrName, 6 ) ] = $attrVal;
+            } elseif( strpos( $attrName, ':' ) !== false ) {
+                $xml->addAttribute( $attrName, $attrVal, $ns[ substr( $attrName, 0, strpos( $attrName, ':' ) ) ] ?? NULL );
+            } else {
+                $xml->addAttribute( $attrName, $attrVal );
+            }
+        }
+
+        unset( $data['@'] );
+
     }
 
     foreach( $data as $key => $value ) {
 
-        $key = str_replace( ':', '|', $key );
+        // namespace dell'elemento: quello del prefisso, se il nome ne ha uno, altrimenti quello di default; NB senza
+        // namespace SimpleXML fa ereditare al figlio quello del padre, per cui sotto un padre con prefisso un figlio senza
+        // prefisso ( e senza namespace di default ) va messo esplicitamente fuori da ogni namespace, con ''
+        if( strpos( $key, ':' ) !== false ) {
+            $uri = $ns[ substr( $key, 0, strpos( $key, ':' ) ) ] ?? NULL;
+            if( $uri === NULL ) {
+                logger( 'namespace non dichiarato per l\'elemento ' . $key . ', il prefisso viene perso', 'xml', LOG_WARNING );
+            }
+        } else {
+            $uri = $ns[''] ?? ( ( dom_import_simplexml( $xml )->namespaceURI !== NULL ) ? '' : NULL );
+        }
 
         if( is_array( $value ) ) {
 
         $keys = array_keys( $value );
 
-        if( $key === '@' ) {
+        if( array_key_exists( '#', $value ) ) {
 
-            foreach( $value as $attrName => $attrVal ) {
-#            $xml[ $attrName ] = $attrVal;
-#            if( strpos( $attrName, ':' ) ) {
-#            $xml->addAttribute( $attrName, $attrVal, substr( $attrName, 0, strpos( $attrName, ':' ) ) );
-#            } else {
-            $attrName = str_replace( ':', '|', $attrName );
-            $xml->addAttribute( $attrName, $attrVal );
-#            }
-            }
+            // elemento con testo, più eventuali attributi e figli
+            $node = $xml->addChild( $key, htmlspecialchars( (string) $value['#'] ), $uri );
+            unset( $value['#'] );
+            array2xml( $value, NULL, $node, $ns );
 
-        } elseif( array_shift( $keys ) === '#' ) {
+        } elseif( is_int( reset( $keys ) ) ) {
 
-            $node = $xml->addChild( $key, $value['#'] );
-
-        } elseif( is_numeric( array_shift( $keys ) ) ) {
-
+            // serie di elementi con lo stesso nome: ogni elemento si scrive come se fosse l'unico, così vale per lui
+            // tutto quello che vale per un elemento singolo ( testo in '#', attributi in '@', figli, valore scalare )
             foreach( $value as $item ) {
-
-            if( strpos( $key, ':' ) ) {
-                $node = $xml->addChild( $key, NULL, substr( $key, 0, strpos( $key, ':' ) ) );
-#                $node = $xml->addChild( $key, NULL, 'http://www.w3.org/1999/xhtml' );
-#                $node = $xml->addChild( 'link', NULL, 'xhtml' );
-#                $node = $xml->addChild( 'link', NULL, 'http://www.w3.org/1999/xhtml' );
-            } else {
-                $node = $xml->addChild( $key );
-            }
-            array2xml( $item, NULL, $node );
+                array2xml( array( $key => $item ), NULL, $xml, $ns );
             }
 
         } else {
 
-            if( strpos( $key, ':' ) ) {
-#                $node = $xml->addChild( $key, NULL, 'http://www.w3.org/1999/xhtml' );
-            } else {
-                $node = $xml->addChild( $key );
-            }
-#            $node = $xml->addChild( $key );
-            array2xml( $value, NULL, $node );
+            $node = $xml->addChild( $key, NULL, $uri );
+            array2xml( $value, NULL, $node, $ns );
 
         }
 
@@ -196,10 +230,8 @@
 
         if( substr( $key, 0, 1 ) == '@' ) {
             $xml[ substr( $key, 1 ) ] = $value;
-        } elseif( strpos( $key, ':' ) ) {
-#            $xml->addChild( $key, htmlspecialchars( $value ), substr( $key, strpos( $key, ':' ) + 1 ) );
         } else {
-            $xml->addChild( $key, htmlspecialchars( $value ) );
+            $xml->addChild( $key, htmlspecialchars( (string) $value ), $uri );
         }
 
         }
@@ -208,12 +240,10 @@
 
     if( $file !== NULL ) {
 
-        // echo str_replace('|',':',$xml->asXML());
-
         $domxml = new DOMDocument('1.0');
         $domxml->preserveWhiteSpace = false;
         $domxml->formatOutput = true;
-        $domxml->loadXML( str_replace('|',':',$xml->asXML()) );
+        $domxml->loadXML( $xml->asXML() );
 
         if( $file === false ) {
         return $domxml->saveXML();
