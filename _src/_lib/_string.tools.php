@@ -231,12 +231,12 @@
      * mentre restituisce invariati i valori numerici, compreso lo zero, e tutti gli altri valori; è in pratica empty2null()
      * con il parametro $numeric a true, e serve a non perdere gli zeri quando si prepara un valore per il database.
      *
-     * Prima della conversione la funzione tenta di sostituire la virgola decimale con il punto, ma la condizione richiede
-     * che il valore sia già numerico e che contenga una virgola, e per is_numeric() una stringa con la virgola non è mai
-     * numerica: la sostituzione quindi non avviene mai e una stringa come "1,5" viene restituita così com'è.
+     * Prima della conversione la funzione sostituisce la virgola decimale con il punto, ma solo se il valore è una stringa
+     * che contiene una virgola e che con il punto al posto della virgola diventa numerica: "1,5" diventa "1.5", mentre
+     * "Roma, 5" o "1,2,3" restano come sono. Una stringa con una sola virgola fra due gruppi di cifre viene sempre letta
+     * come decimale, per cui "1,000" diventa "1.000", cioè uno.
      *
      * TODO la sostituzione della virgola così è un po' grezza, migliorare (può esserci anche il punto per le migliaia, eccetera)
-     * TODO la sostituzione della virgola non scatta mai, perché is_numeric() è falso per qualsiasi stringa che contenga una virgola
      *
      * @param       mixed       $s      il valore da convertire
      *
@@ -244,7 +244,9 @@
      *
      */
     function numeric2null( $s ) {
-        if( is_numeric( $s ) && strpos( $s, ',' ) !== false ) {
+        // NB: prima la condizione era is_numeric( $s ), che per una stringa con la virgola è sempre falsa, e la sostituzione
+        // non scattava mai; controller() passa qui tutti i campi, per cui si converte solo ciò che diventa un numero ( 2026-09-24 )
+        if( is_string( $s ) && strpos( $s, ',' ) !== false && is_numeric( str_replace( ',', '.', $s ) ) ) {
             $s = str_replace( ',', '.', $s );
         }
         return empty2null( $s, true );
