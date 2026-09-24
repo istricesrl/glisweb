@@ -689,14 +689,10 @@
      * Questa funzione converte una stringa di indirizzi separati da virgola o punto e virgola, come quelle che si scrivono nei
      * campi dei form, in un array nel formato 'nome' => 'indirizzo' usato da queueMail() e sendMail(). Un elemento che è un
      * indirizzo valido diventa 'indirizzo' => 'indirizzo'; un elemento nella forma Nome Cognome \<indirizzo\> diventa
-     * 'Nome Cognome' => 'indirizzo'. Gli elementi che non corrispondono a nessuna delle due forme vengono scartati; una stringa
-     * vuota o NULL restituisce un array vuoto. È l'inversa di array2mailString().
-     *
-     * TODO gli elementi non vengono ripuliti dagli spazi prima del controllo: in "a@b.it, c@d.it" il secondo elemento è
-     * " c@d.it", che non passa FILTER_VALIDATE_EMAIL e non ha la forma con il nome, quindi viene scartato in silenzio. La
-     * forma prodotta da array2mailString() ( "nome <indirizzo>, nome <indirizzo>" ) invece torna indietro correttamente.
-     *
-     * TODO l'espressione regolare non controlla che la seconda parte sia un indirizzo: "Mario Rossi" diventa 'Mario' => 'Rossi'.
+     * 'Nome Cognome' => 'indirizzo'. Gli elementi vengono ripuliti dagli spazi prima del controllo, per cui "a@b.it, c@d.it"
+     * dà due indirizzi. Gli elementi che non corrispondono a nessuna delle due forme, compresi quelli in cui dopo il nome non
+     * c'è un indirizzo valido ( "Mario Rossi" ), vengono scartati; una stringa vuota o NULL restituisce un array vuoto. È
+     * l'inversa di array2mailString().
      *
      * @param       string      $t      la stringa degli indirizzi
      *
@@ -713,6 +709,8 @@
 
         foreach ($ar1 as $ds) {
 
+            $ds = trim($ds);
+
             if (filter_var($ds, FILTER_VALIDATE_EMAIL)) {
 
                 $ar0[$ds] = $ds;
@@ -722,7 +720,7 @@
 
                 $r = preg_match('/([\S\s]+)\s([<]{0,1}[\S\@\.]+[>]{0,1})/', $ds, $dsa);
 
-                if (! empty($r)) {
+                if (! empty($r) && filter_var(trim($dsa[2], '<>'), FILTER_VALIDATE_EMAIL)) {
                     $ar0[trim($dsa[1])] = trim($dsa[2], '<>');
                 }
             }
