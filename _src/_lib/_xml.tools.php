@@ -468,17 +468,24 @@
     /**
      * prepara un testo per l'inserimento in un documento XML
      * 
-     * Questa funzione translittera il testo in ASCII con iconv() (le lettere accentate perdono l'accento, € diventa EUR
-     * e i caratteri non convertibili vengono eliminati), decodifica le entità HTML e fa l'escape delle &, evitando di
-     * raddoppiare quelle già scritte come &amp;. È definita solo se non esiste già, per cui un progetto può sostituirla
-     * con una propria versione.
-     * 
+     * Questa funzione decodifica le entità HTML, translittera il testo in ASCII con iconv() (le lettere accentate perdono
+     * l'accento, € diventa EUR e i caratteri non convertibili vengono eliminati) e fa l'escape delle &, evitando di
+     * raddoppiare quelle già scritte come &amp;. Poiché la decodifica viene prima, anche un'entità come &egrave; finisce
+     * translitterata ( "e" ). È definita solo se non esiste già, per cui un progetto può sostituirla con una propria
+     * versione.
+     *
+     * NB: fino al 2026-09-24 la decodifica delle entità avveniva dopo la translitterazione, per cui &egrave; tornava a
+     * essere un carattere non ASCII.
+     *
      * NOTA i caratteri < e > non vengono convertiti in entità, anzi &lt; e &gt; vengono decodificati: la funzione va
      * quindi usata su testi che non li contengono, oppure su frammenti di markup (come fa buildHTML() in
-     * _src/_lib/_output.tools.php). Inoltre la decodifica delle entità avviene dopo la translitterazione, per cui
-     * un'entità come &egrave; torna a essere un carattere non ASCII, e la sostituzione di € con EURO non ha effetto perché
-     * iconv() lo ha già trasformato.
-     * 
+     * _src/_lib/_output.tools.php). Non si corregge perché _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php passa il
+     * risultato a XMLWriter::writeElement(), che fa l'escape da sé: un "&lt;" lasciato com'è finirebbe nella fattura come
+     * testo "&amp;lt;". Per la stessa ragione le & escapate qui arrivano nella fattura raddoppiate ( "Rossi & Figli"
+     * diventa "Rossi &amp;amp; Figli" ).
+     * TODO in _fattura.xml.php non passare per xmlEntities() i testi scritti con writeElement(), o scriverli con writeRaw()
+     * TODO la sostituzione di € con EURO non ha effetto perché iconv() lo ha già trasformato in EUR
+     *
      * @param       string      $t      il testo da preparare
      * 
      * @return      string              il testo preparato
@@ -486,8 +493,8 @@
      */
     if( ! function_exists( 'xmlEntities' ) ) {
     function xmlEntities( $t ) {
-        $t = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $t );
         $t = html_entity_decode( $t );
+        $t = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $t );
         $t = str_replace( '€', 'EURO', $t );
 //        $t = str_replace( ',', '.', $t );
         $t = str_replace( '&amp;', '&', $t );
