@@ -322,17 +322,20 @@
     /**
      * esegue una query con cache su disco
      *
-     * Questa funzione cerca il risultato della query nel file var/cache/mysql/<md5 di query e parametri>; se il file non
-     * esiste esegue la query con mysqlQuery() e ne scrive il risultato serializzato nel file, altrimenti restituisce il
-     * contenuto del file. Al momento non viene chiamata da nessuna parte del framework.
+     * Questa funzione cerca il risultato della query nel file var/cache/mysql/<md5 di query e parametri>; se il file esiste
+     * ed è stato scritto da meno di $t secondi ne restituisce il contenuto, altrimenti esegue la query con mysqlQuery() e ne
+     * scrive il risultato serializzato nel file. Come per mysqlCachedQuery() un TTL zero vuol dire MEMCACHE_DEFAULT_TTL,
+     * se è definita, e un TTL che resta zero vuol dire nessuna scadenza; passando $t === false la query viene eseguita
+     * comunque e il file riscritto. Il risultato di una query fallita non viene scritto su disco. Al momento non viene
+     * chiamata da nessuna parte del framework.
      *
-     * TODO i parametri $t e $i sono accettati ma ignorati: il file di cache non scade mai e non viene invalidato dalle
-     * scritture, e anche il false di una query fallita viene scritto su disco e restituito da lì in poi.
+     * NOTA il parametro $i è accettato ma ignorato: il file di cache non viene invalidato dalle scritture sulle tabelle
+     * lette dalla query, perché memcacheCleanFromIndex() cancella chiavi di memcache e non file, e scade solo per TTL.
      *
      * @param       object      $c      la connessione mysqli
      * @param       string      $q      la query da eseguire
      * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
-     * @param       int         $t      il TTL della cache ( non usato )
+     * @param       int         $t      il TTL in secondi della cache ( 0 per il default, false per forzare la lettura dal database )
      * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
      * @param       array       $i      l'indice della cache ( non usato )
      *
@@ -343,23 +346,37 @@
     function mysqlDiskQuery($c, $q, $p = false, $t = 0, &$e = array(), &$i = array())
     {
 
+        // TTL di default, come per mysqlCachedQuery()
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
+
         // calcolo la chiave della query
         $k = md5($q . serialize($p));
 
         // cerco il valore in cache
         #        $r = memcacheRead( $m, $k );
 
-        if (! file_exists(DIR_BASE . 'var/cache/mysql/' . $k)) {
+        // NOTA la scadenza si legge dall'ora di modifica del file ( TTL zero vuol dire nessuna scadenza, come su memcache ),
+        // e un file che contiene false ( una query fallita, scritta prima del 2026-09-24 ) vale come assente
+        $r = false;
+        if ($t !== false && file_exists(DIR_BASE . 'var/cache/mysql/' . $k) && (empty($t) || filemtime(DIR_BASE . 'var/cache/mysql/' . $k) > time() - $t)) {
+            $r = unserialize(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k));
+        }
+
+        if ($r === false) {
 
             $r = mysqlQuery($c, $q, $p, $e);
 
             //    $h = fopen( DIR_BASE . 'var/cache/mysql/' . $k, 'w+' );
             //    fwrite( $h, serialize( $r ) );
 
-            writeToFile(serialize($r), DIR_BASE . 'var/cache/mysql/' . $k);
-        } else {
+            // una query fallita non si scrive su disco, altrimenti il false verrebbe restituito da lì in poi
+            if ($r !== false) {
+                writeToFile(serialize($r), DIR_BASE . 'var/cache/mysql/' . $k);
+            }
 
-            $r = unserialize(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k));
+        } else {
 
             #}
 
