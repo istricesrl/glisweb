@@ -383,7 +383,9 @@
      * NOTA il parametro $id qui fa riferimento all'ID dell'azienda nel database
      * mentre $idAzienda fa riferimento all'ID Archivium dell'azienda
      *
-     * @todo implementare la funzione
+     * @todo implementare la funzione; l'endpoint e i campi dell'aggiornamento non si ricavano dal codice gemello
+     * ( archiviumPostInsertAzienda() usa Enterprises/insert, ma il verbo per l'aggiornamento non compare da nessuna
+     * parte ), quindi va scritta con la documentazione delle API Archivium alla mano ( 2026-09-24 )
      *
      * @param       int         $id         l'ID dell'anagrafica nel database
      * @param       string      $idAzienda  l'ID Archivium dell'azienda
@@ -509,6 +511,10 @@
      * documenti.codice_archivium per il documento $idFattura; in ogni altro caso la risposta viene scritta nel log
      * archivium con livello LOG_ERR e la funzione restituisce false. La forma della risposta di successo è riportata
      * nella NOTA dentro la funzione.
+     *
+     * TODO il parametro $mail è accettato ma non viene inviato: nessun'altra funzione della libreria manda un indirizzo
+     * insieme a un file e il nome del campo che Archivium si aspetterebbe non si ricava dal codice, per cui va
+     * completata con la documentazione delle API alla mano ( 2026-09-24 )
      *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda che emette la fattura
      * @param       int         $idFattura  l'ID del documento nel database, dove salvare il codice Archivium
