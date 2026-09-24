@@ -350,9 +350,11 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
      * country (la parte del codice dopo il trattino, in minuscolo, da usare per la bandiera) e active (true per la
      * lingua $lang). Se la pagina non ha l'array path restituisce un array vuoto e scrive nel log localization.
      * 
-     * NOTA se il codice della lingua non contiene il trattino strpos() restituisce false e country diventa il codice
-     * senza il primo carattere ("it" diventa "t").
-     * 
+     * Se il codice della lingua non contiene il trattino ("it") country è il codice intero, in minuscolo.
+     *
+     * NB: fino al 2026-09-24 in quel caso strpos() restituiva false e country diventava il codice senza il primo
+     * carattere ("it" diventava "t").
+     *
      * @param       array       $page       la pagina di cui costruire il selettore della lingua
      * @param       string      $lang       il codice IETF della lingua corrente
      * 
@@ -373,7 +375,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
             // costruisco la bandiera
                 $nav[] = array(
                 'location' => $page['path'][ $k ],
-                'country' => strtolower( substr( $k, strpos( $k, '-' ) + 1 ) ),
+                'country' => strtolower( ( strpos( $k, '-' ) !== false ) ? substr( $k, strpos( $k, '-' ) + 1 ) : $k ),
                 'active' => ( $k == $lang ) ? true : false
                 );
 
