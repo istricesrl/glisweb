@@ -1,14 +1,69 @@
 <?php
 
     /**
+     * libreria per l'invio dei dati a Google Analytics
      *
+     * Questa libreria contiene le funzioni per inviare eventi a Google Analytics 4 lato server, tramite il Measurement Protocol.
      *
+     * introduzione
+     * ============
+     * Il Measurement Protocol di GA4 permette di registrare eventi senza passare dal JavaScript di Analytics nel browser; il
+     * framework lo usa per le conversioni che avvengono lato server, per ora solo l'acquisto al termine del checkout del modulo
+     * ecommerce ( _mod/_4170.ecommerce/_src/_inc/_controllers/_checkout.finally.success.php ). Per inviare gli eventi servono
+     * l'ID di misurazione dello stream ( G-... ), che il framework legge da $cf['google']['profile']['analytics']['ua'], e
+     * l'API secret del Measurement Protocol, che legge da $cf['google']['profile']['analytics']['mp']['secret'].
      *
+     * NOTA per creare l'API secret di GA4 MP andare in amministrazione -> stream di dati -> cliccare sull stream web
      *
-     * @todo documentare
-	 * 
-	 * 
-	 * NOTA per creare l'API secret di GA4 MP andare in amministrazione -> stream di dati -> cliccare sull stream web
+     * In fondo al file restano, commentate, le funzioni che inviavano i dati a Universal Analytics ( analyticsPageHit(),
+     * analyticsProductHit(), analyticsEventHit() e analyticsPurchase() ); Universal Analytics è stato dismesso da Google e le
+     * costanti ANALYTICS_URL e ANALYTICS_ENDPOINT_COLLECT che quelle funzioni usavano non sono più definite.
+     *
+     * costanti
+     * ========
+     * Le costanti definite e utilizzate dalla libreria sono elencate nella seguente tabella.
+     *
+     * costante                                 | spiegazione
+     * -----------------------------------------|--------------------------------------------------------------
+     * GA4_MEASUREMENT_URL                      | l'indirizzo base del Measurement Protocol
+     * GA4_MEASUREMENT_ENDPOINT_COLLECT         | l'endpoint per l'invio degli eventi
+     * GA4_MEASUREMENT_ENDPOINT_DEBUG_COLLECT   | l'endpoint di validazione degli eventi ( al momento non utilizzato )
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     *
+     * funzioni per GA4
+     * ----------------
+     * Le funzioni in questo gruppo servono per inviare eventi a Google Analytics 4.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * ga4event()                       | invia uno o più eventi a GA4 tramite il Measurement Protocol
+     * ga4purchase()                    | invia a GA4 l'evento di acquisto di un carrello
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * restCall()                       | _src/_lib/_rest.tools.php
+     * logWrite()                       | _src/_lib/_log.utils.php
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
      * @file
      *
@@ -20,8 +75,25 @@
 	define( 'GA4_MEASUREMENT_ENDPOINT_DEBUG_COLLECT', 'debug/mp/collect' );
 
     /**
+     * FUNZIONI PER GA4
+     */
+
+    /**
+     * invia uno o più eventi a GA4 tramite il Measurement Protocol
      *
-     * @todo documentare
+     * Questa funzione invia in POST, codificato in JSON, il payload $e all'endpoint mp/collect del Measurement Protocol, per lo
+     * stream indicato da $ua e con l'API secret $secret, e scrive nel log analytics l'endpoint, il payload e la risposta. Il
+     * payload è quello previsto da Google, con le chiavi client_id ed events ( vedi ga4purchase() per un esempio ).
+     *
+     * NOTA l'endpoint di produzione risponde con successo anche agli eventi malformati, che vengono semplicemente scartati: per
+     * sapere se un evento è valido lo si manda all'endpoint GA4_MEASUREMENT_ENDPOINT_DEBUG_COLLECT, che restituisce gli errori
+     * di validazione. La funzione non restituisce né controlla l'esito della chiamata.
+     *
+     * @param       string      $ua         l'ID di misurazione dello stream GA4 ( G-... )
+     * @param       string      $secret     l'API secret del Measurement Protocol
+     * @param       array       $e          il payload da inviare, con le chiavi client_id ed events
+     *
+     * @return      void
      *
 	 */
 	function ga4event( $ua, $secret, $e ) {
@@ -45,8 +117,25 @@
 	}
 
     /**
+     * invia a GA4 l'evento di acquisto di un carrello
      *
-     * @todo documentare
+     * Questa funzione compone l'evento purchase di GA4 a partire da un carrello concluso e lo invia con ga4event(). La
+     * transazione ha come ID l'ID del carrello e come valore il prezzo lordo finale, la valuta è sempre EUR e spedizione e tasse
+     * valgono zero; ogni articolo diventa un item con ID, descrizione, prezzo lordo unitario e quantità. Coupon e sconti non
+     * vengono inviati, perché valorizzati a NULL mandano in errore la chiamata ( si vedano le NOTA nel corpo ). Il client_id è
+     * l'ID della sessione PHP, quindi l'acquisto non viene collegato alla sessione di Analytics del browser.
+     *
+     * Il commento all'inizio del corpo contiene il formato di esempio di Google e una versione precedente della funzione, che
+     * chiamava l'endpoint con cURL, lasciata come riferimento.
+     *
+     * TODO se il carrello non ha articoli $items non viene mai inizializzata: PHP segnala una variabile non definita e l'evento
+     * parte con items a NULL.
+     *
+     * @param       string      $ua         l'ID di misurazione dello stream GA4 ( G-... )
+     * @param       string      $secret     l'API secret del Measurement Protocol
+     * @param       array       $carrello   il carrello, con le chiavi id, prezzo_lordo_finale e articoli ( id_articolo, descrizione, prezzo_lordo_unitario, quantita )
+     *
+     * @return      void
      *
 	 */
 	function ga4purchase( $ua, $secret, $carrello ) {
@@ -199,8 +288,10 @@ var_dump($status);
 	}
 
     /**
+     * invia a Universal Analytics una visualizzazione di pagina ( disattivata )
      *
-     * @todo documentare
+     * Questa funzione, commentata, inviava al Measurement Protocol di Universal Analytics un hit pageview per la pagina $p,
+     * con il tracking ID $ua e l'ID client anonimo $cid.
      *
     function analyticsPageHit( $p, $ua, $cid ) {
 
@@ -227,8 +318,11 @@ var_dump($status);
      */
 
     /**
+     * invia a Universal Analytics una visualizzazione di pagina con le liste di prodotti ( disattivata )
      *
-     * @todo documentare
+     * Questa funzione, commentata, inviava al Measurement Protocol di Universal Analytics un hit pageview per la pagina $p
+     * arricchito con le impression list dell'ecommerce avanzato: $pr è un array nel formato 'nome lista' => array( 'id prodotto'
+     * => array( 'nome' => ..., 'categoria' => ... ) ).
      *
 	 * 
     function analyticsProductHit( $p, $pr, $ua, $cid ) {
@@ -295,8 +389,14 @@ var_dump($status);
      */
 
     /**
+     * invia a Universal Analytics un evento ( disattivata )
      *
-     * @todo documentare
+     * Questa funzione, commentata, inviava al Measurement Protocol di Universal Analytics un hit di tipo event con categoria
+     * $ec, azione $ea e label $el, e lo scriveva nel log ecommerce.
+     *
+     * TODO _mod/_0300.contatti/_src/_config/_750.controller.php chiama ancora analyticsEventHit() quando il form ha la chiave
+     * analytics e il profilo Google ha l'ID di Analytics: siccome la funzione non è definita, in quel caso l'invio del form
+     * termina con un errore fatale.
      *
 	 * 
     function analyticsEventHit( $ua, $ec, $ea, $el, $cid = 1 ) {
@@ -328,8 +428,11 @@ var_dump($status);
 	*/
 
     /**
+     * invia a Universal Analytics una transazione dell'ecommerce ( disattivata )
      *
-     * @todo documentare
+     * Questa funzione, commentata, inviava al Measurement Protocol di Universal Analytics un hit pageview con l'azione purchase
+     * dell'ecommerce avanzato: ID carrello, totale, tasse, spese di spedizione e l'elenco dei prodotti, con l'anonimizzazione
+     * dell'IP attiva per default. Il suo posto è stato preso da ga4purchase().
      *
 	 * 
     function analyticsPurchase( $p, $pr, $ua, $cid, $tid, $tr, $tt, $ts, $aip = 1 ) {

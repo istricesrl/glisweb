@@ -1,18 +1,114 @@
 <?php
 
     /**
+     * libreria per la gestione e la manipolazione delle immagini
      *
+     * Questa libreria contiene alcune funzioni per leggere le dimensioni delle immagini, ridimensionarle, ritagliarle e
+     * convertirle da un formato all'altro utilizzando l'estensione GD di PHP.
      *
+     * introduzione
+     * ============
+     * Il framework usa questa libreria soprattutto nel task _src/_api/_task/_images.resize.php ( e nel suo gemello del modulo
+     * immagini ), che per ogni immagine caricata genera le versioni scalate e tagliate nei formati dichiarati in
+     * $cf['image']['formats'], più la versione WebP di ciascuna; la usa inoltre la macro _immagini.form.php del modulo archivio
+     * per mostrare le dimensioni dell'immagine.
      *
-     * TODO documentare
+     * I formati supportati sono JPEG, PNG e WebP; il GIF non è supportato. Tutti i percorsi accettati dalle funzioni possono
+     * essere relativi a DIR_BASE o assoluti, perché vengono risolti con fullPath().
      *
-     * 
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti.
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     *
+     * funzioni di lettura
+     * -------------------
+     * Le funzioni in questo gruppo servono per leggere le immagini e le loro caratteristiche.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * imageSize()                      | legge le dimensioni e l'orientamento di un'immagine
+     * imageOpen()                      | apre un'immagine in memoria
+     *
+     * funzioni di elaborazione
+     * ------------------------
+     * Le funzioni in questo gruppo servono per trasformare le immagini e scriverle su file.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * imageCut()                       | ritaglia un'immagine lungo il lato maggiore
+     * imageWrite()                     | scrive un'immagine su file
+     * imageConvert()                   | converte un'immagine in un altro formato
+     * imageResize()                    | ridimensiona un'immagine in proporzione
+     *
+     * funzioni di retrocompatibilità
+     * ------------------------------
+     * Le funzioni in questo gruppo sostituiscono funzioni di PHP che mancano nelle versioni più vecchie.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * imagecrop()                      | ritaglia un'immagine, se GD non la fornisce
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * fullPath()                       | _src/_lib/_filesystem.tools.php
+     * checkFolder()                    | _src/_lib/_filesystem.tools.php
+     * getFileExtension()               | _src/_lib/_filesystem.tools.php
+     * logWrite()                       | _src/_lib/_log.utils.php
+     *
+     * Sono richieste inoltre le estensioni GD ( con il supporto WebP ) ed EXIF di PHP.
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
      */
 
     /**
+     * FUNZIONI DI LETTURA
+     */
+
+    /**
+     * legge le dimensioni e l'orientamento di un'immagine
      *
-     * TODO documentare
+     * Questa funzione legge le dimensioni dell'immagine indicata con getimagesize() e ne ricava orientamento, lato maggiore,
+     * lato minore e rapporto fra i due; il percorso può essere relativo a DIR_BASE o assoluto. Un'immagine quadrata viene
+     * considerata orizzontale. Se il file non esiste o non si può leggere la funzione restituisce false.
+     *
+     * L'array restituito ha le seguenti chiavi:
+     *
+     * chiave   | dettagli
+     * ---------|-----------------------------------------------------------------------
+     * h        | l'altezza dell'immagine in pixel
+     * w        | la larghezza dell'immagine in pixel
+     * r        | il rapporto fra il lato maggiore e il lato minore
+     * o        | l'orientamento dell'immagine, l per orizzontale ( landscape ) e p per verticale ( portrait )
+     * g        | il lato maggiore dell'immagine
+     * l        | il lato minore dell'immagine
+     *
+     * TODO se il file esiste ma non è un'immagine getimagesize() restituisce false e le dimensioni valgono NULL, quindi il
+     * calcolo del rapporto divide per zero: da PHP 8 è un DivisionByZeroError e non un false.
+     *
+     * @param       string      $f      il percorso dell'immagine
+     *
+     * @return      mixed               l'array con dimensioni e orientamento, oppure false se il file non è leggibile
      *
      */
     function imageSize( $f ) {
@@ -63,8 +159,16 @@
     }
 
     /**
+     * apre un'immagine in memoria
      *
-     * TODO documentare
+     * Questa funzione apre l'immagine indicata con la funzione GD adatta al suo tipo, riconosciuto dal contenuto con
+     * exif_imagetype() e non dall'estensione; i tipi supportati sono JPEG, PNG e WebP. Il percorso può essere relativo a
+     * DIR_BASE o assoluto; la cartella che contiene il file viene creata se non esiste, come in imageWrite(). Se il tipo non è
+     * supportato, o se il file non esiste ( nel qual caso PHP segnala anche un warning ), la funzione restituisce false.
+     *
+     * @param       string      $f      il percorso dell'immagine
+     *
+     * @return      mixed               l'immagine GD aperta, oppure false se il tipo non è supportato
      *
      */
     function imageOpen( $f ) {
@@ -90,8 +194,27 @@
     }
 
     /**
+     * FUNZIONI DI ELABORAZIONE
+     */
+
+    /**
+     * ritaglia un'immagine lungo il lato maggiore
      *
-     * TODO documentare
+     * Questa funzione ritaglia l'immagine sorgente lungo il suo lato maggiore, portandolo a $d pixel e lasciando invariato il
+     * lato minore: un'immagine orizzontale ( o quadrata ) viene tagliata in larghezza, una verticale in altezza. Il parametro $b
+     * dice quale parte tenere: START tiene l'inizio ( sinistra o alto ), MIDDLE il centro, qualsiasi altro valore la fine. Il
+     * risultato viene scritto in $fd con imageWrite(), nel formato indicato dall'estensione di $fd; per i PNG viene conservata
+     * la trasparenza. Il task _src/_api/_task/_images.resize.php la usa dopo imageResize() per ottenere i formati tagliati.
+     *
+     * Il caso in cui $d è maggiore del lato da tagliare non è gestito: l'origine del taglio diventa negativa e il risultato
+     * dipende da imagecrop().
+     *
+     * @param       string      $fs     il percorso dell'immagine sorgente
+     * @param       int         $d      la misura in pixel a cui portare il lato maggiore ( default 1024 )
+     * @param       string      $fd     il percorso dell'immagine di destinazione ( di fatto obbligatorio, il default false non funziona )
+     * @param       string      $b      la parte da tenere, START, MIDDLE o END ( default MIDDLE )
+     *
+     * @return      void
      *
      */
     function imageCut( $fs, $d = 1024, $fd = false, $b = 'MIDDLE' ) {
@@ -140,8 +263,18 @@
     }
 
     /**
+     * scrive un'immagine su file
      *
-     * TODO documentare
+     * Questa funzione scrive su file un'immagine GD aperta in memoria, nel formato indicato da $t oppure, se $t non è
+     * specificato, dall'estensione del file di destinazione; $t può essere un'estensione ( jpg, jpeg, png, webp ) o una delle
+     * costanti IMAGETYPE_JPEG, IMAGETYPE_PNG e IMAGETYPE_WEBP. Il percorso può essere relativo a DIR_BASE o assoluto, e la
+     * cartella di destinazione viene creata se non esiste. Per i PNG viene conservata la trasparenza.
+     *
+     * @param       object      $id     l'immagine GD da scrivere
+     * @param       string      $f      il percorso del file di destinazione
+     * @param       mixed       $t      il formato di destinazione ( default NULL, ricavato dall'estensione di $f )
+     *
+     * @return      mixed               false se il formato non è supportato, altrimenti NULL ( l'esito della scrittura non viene restituito )
      *
      */
     function imageWrite( $id, $f, $t = NULL ) {
@@ -177,8 +310,21 @@
     }
 
     /**
+     * converte un'immagine in un altro formato
      *
-     * TODO documentare
+     * Questa funzione apre l'immagine sorgente con imageOpen() e la riscrive con imageWrite() nel formato $td; se non viene
+     * indicato un file di destinazione, questo si ottiene dal nome del sorgente sostituendo l'estensione con $td ( es. da
+     * foto.jpg a foto.webp ). Il formato effettivo della scrittura dipende dall'estensione del file di destinazione, quindi
+     * passando $fd conviene che la sua estensione corrisponda a $td.
+     *
+     * NOTA la sostituzione dell'estensione è una str_replace() su tutto il percorso: se la stessa sequenza compare anche prima
+     * ( es. una cartella di nome foto.jpg ) viene sostituita anche lì.
+     *
+     * @param       string      $fs     il percorso dell'immagine sorgente
+     * @param       string      $td     il formato di destinazione, come estensione ( es. webp )
+     * @param       string      $fd     il percorso del file di destinazione ( default NULL, ricavato dal sorgente )
+     *
+     * @return      string              il percorso del file di destinazione, restituito anche se la scrittura non è riuscita
      *
      */
     function imageConvert( $fs, $td, $fd = NULL ) {
@@ -202,8 +348,25 @@
     }
 
     /**
+     * ridimensiona un'immagine in proporzione
      *
-     * TODO documentare
+     * Questa funzione ridimensiona in proporzione l'immagine sorgente in modo che il suo lato maggiore misuri $d pixel e scrive
+     * il risultato in $fd; se $fd non è specificato l'immagine sorgente viene sovrascritta. Con $o uguale a l è sempre la
+     * larghezza a misurare $d, anche per le immagini verticali. L'immagine viene anche ingrandita, se è più piccola di $d. I
+     * formati supportati sono JPEG, PNG e WebP, riconosciuti dall'estensione del sorgente, e il file di destinazione viene
+     * scritto nello stesso formato del sorgente qualunque sia la sua estensione; per i PNG viene conservata la trasparenza.
+     *
+     * Se $d è vuoto o zero l'immagine viene copiata senza scalarla e la funzione restituisce true, senza controllare l'esito
+     * della copia. Se il sorgente non esiste, se il formato non è supportato, se l'immagine ha dimensioni nulle ( file
+     * danneggiato ) o se la lettura, la scalatura o la scrittura falliscono, la funzione restituisce false; gli errori vengono
+     * loggati nel canale image.
+     *
+     * @param       string      $fs     il percorso dell'immagine sorgente
+     * @param       int         $d      la misura in pixel del lato maggiore ( default 1024; vuoto per copiare senza scalare )
+     * @param       string      $fd     il percorso dell'immagine di destinazione ( default false, sovrascrive il sorgente )
+     * @param       string      $o      l per forzare il ridimensionamento sulla larghezza ( default NULL )
+     *
+     * @return      bool                true se l'immagine è stata scritta, false altrimenti
      *
      */
     function imageResize( $fs, $d = 1024, $fd = false, $o = NULL ) {
@@ -407,6 +570,23 @@
 
     }
 
+    /**
+     * FUNZIONI DI RETROCOMPATIBILITÀ
+     */
+
+    /**
+     * ritaglia un'immagine, se GD non la fornisce
+     *
+     * Questa funzione viene definita solo se GD non fornisce già imagecrop() ( che esiste da PHP 5.5 ) e ne riproduce il
+     * comportamento essenziale: copia in una nuova immagine il rettangolo indicato dalle chiavi x, y, width e height di $rect.
+     * A differenza dell'originale non restituisce mai false.
+     *
+     * @param       object      $src    l'immagine GD da ritagliare
+     * @param       array       $rect   il rettangolo da ritagliare, con le chiavi x, y, width e height
+     *
+     * @return      object              l'immagine ritagliata
+     *
+     */
     if( ! function_exists( 'imagecrop' ) ) {
     function imagecrop( $src, array $rect ) {
         $dest = imagecreatetruecolor( $rect['width'], $rect['height'] );

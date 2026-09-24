@@ -1,16 +1,171 @@
 <?php
 
     /**
-     * 
-     * @todo documentare
-     * 
+     * libreria per la generazione di documenti PDF tramite TCPDF
+     *
+     * Questa libreria contiene una collezione di funzioni che semplificano la composizione di documenti PDF con TCPDF, in particolare
+     * dei moduli cartacei a griglia ( rapporti di assistenza, moduli di consegna e ritiro dell'hardware, etichette ) che il framework
+     * stampa dalle API in _src/_api/_print/ e _mod/<modulo>/_src/_api/_print/.
+     *
+     * introduzione
+     * ============
+     * Le funzioni della libreria lavorano tutte su due oggetti: l'oggetto TCPDF restituito da pdfInit() e l'array $info, che il
+     * chiamante prepara prima di creare il PDF e che contiene la configurazione tipografica del documento; pdfInit() lo completa
+     * con le misure derivate, e le altre funzioni lo leggono per sapere quanto sono larghe le colonne e alte le righe.
+     *
+     * La pagina viene divisa orizzontalmente in $info['form']['columns'] colonne di uguale larghezza, e tutte le larghezze che le
+     * funzioni del gruppo form ricevono ( il parametro $width ) sono espresse in numero di colonne e non in millimetri; allo stesso
+     * modo le altezze sono espresse in numero di barre ( la parte della riga destinata al contenuto, alta il 60% della riga ).
+     *
+     * la struttura dell'array $info
+     * -----------------------------
+     * Le chiavi che il chiamante deve impostare prima di chiamare pdfInit() sono le seguenti.
+     *
+     * chiave                           | dettagli
+     * ---------------------------------|-----------------------------------------------------------------------------------------
+     * doc/title                        | il titolo del documento
+     * style/page/w                     | la larghezza della pagina in millimetri ( 210 per l'A4 verticale )
+     * style/page/ml, mr, mt            | i margini sinistro, destro e superiore in millimetri
+     * style/page/orentation            | l'orientamento della pagina, P o L ( default P; la chiave si scrive proprio così )
+     * style/text/\<stile\>             | gli stili del testo, array con le chiavi font, size e weight ( es. title, label, small )
+     * style/header, style/footer       | se non sono impostate header e footer di TCPDF vengono disattivati
+     * form/columns                     | il numero di colonne in cui è divisa la pagina
+     * form/row/height                  | l'altezza di una riga del modulo in millimetri
+     *
+     * Le chiavi che pdfInit() calcola o sovrascrive sono invece queste.
+     *
+     * chiave                           | dettagli
+     * ---------------------------------|-----------------------------------------------------------------------------------------
+     * style/text/default               | lo stile di default, helvetica 10 ( sovrascritto sempre )
+     * style/page/viewport              | la larghezza utile della pagina, al netto dei margini
+     * style/barcode                    | lo stile dei codici a barre
+     * form/column/width                | la larghezza di una colonna ( solo se form/columns è impostata )
+     * form/label/height                | l'altezza dell'etichetta, il 40% della riga
+     * form/bar/height                  | l'altezza della barra, il 60% della riga
+     * form/row/spacing                 | la spaziatura fra le righe, il 20% della riga
+     * colors, lines, cell              | colori, stili delle linee e bordi delle celle ( sovrascritti sempre )
+     * cache                            | coordinate e interlinee salvate da pdfFormSaveXY() e pdfFormSaveLineHeightRatio()
+     *
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti proprie, ma utilizza le costanti di TCPDF PDF_FONT_MONOSPACED e PDF_IMAGE_SCALE_RATIO.
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     *
+     * funzioni di inizializzazione
+     * ----------------------------
+     * Le funzioni in questo gruppo servono per creare il documento.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pdfInit()                        | crea e inizializza un documento PDF a partire dalla configurazione
+     *
+     * funzioni di stile
+     * -----------------
+     * Le funzioni in questo gruppo servono per impostare gli stili del testo e delle linee.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pdfSetFontStyle()                | imposta il carattere corrente a partire da uno stile
+     * pdfSetLineStyle()                | imposta lo stile delle linee a partire da uno stile
+     *
+     * funzioni per la composizione dei moduli
+     * ---------------------------------------
+     * Le funzioni in questo gruppo servono per disegnare gli elementi dei moduli a griglia.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pdfFormBarcode()                 | disegna un codice a barre in una cella del modulo
+     * pdfFormCellBar()                 | disegna una barra a caselle con un carattere per casella
+     * pdfFormCellRow()                 | disegna una riga del modulo composta da più celle
+     * pdfFormCellLabel()               | scrive un'etichetta alta quanto l'etichetta del modulo
+     * pdfFormInlineCellLabel()         | scrive un'etichetta alta quanto la barra del modulo
+     * pdfFormCellTitle()               | scrive un titolo alto quanto la barra del modulo
+     * pdfFormCellPdfTitle()            | scrive un titolo con un corpo del carattere a scelta
+     * pdfFormLineRow()                 | scrive un testo su un blocco di righe da compilare a mano
+     * pdfFormBox()                     | disegna un riquadro con un'intestazione in una posizione assoluta
+     * pdfHtmlColumns()                 | scrive un testo HTML su più colonne
+     *
+     * funzioni di posizionamento
+     * --------------------------
+     * Le funzioni in questo gruppo servono per spostare il cursore di TCPDF e per salvarne e ripristinarne lo stato.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pdfFormSaveLineHeightRatio()     | salva l'interlinea corrente
+     * pdfFormLoadLineHeightRatio()     | ripristina un'interlinea salvata
+     * pdfFormSaveXY()                  | salva la posizione corrente del cursore
+     * pdfFormLoadXY()                  | ripristina una posizione salvata del cursore
+     * pdfSetRelativeX()                | sposta il cursore in orizzontale
+     * pdfSetRelativeY()                | sposta il cursore in verticale
+     * pdfSetRelativeXY()               | sposta il cursore in orizzontale e in verticale
+     * pdfFormCalcX()                   | calcola l'ascissa di una colonna del modulo
+     *
+     * funzioni di output
+     * ------------------
+     * Le funzioni in questo gruppo servono per inviare il documento al browser o per salvarlo.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pdfOutput()                      | invia il PDF al browser o lo salva su file
+     *
+     * funzioni per le etichette
+     * -------------------------
+     * Le funzioni in questo gruppo servono per la stampa delle etichette dichiarate in $cf['etichette'].
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * scalaEtichetta()                 | risolve le misure di un'etichetta scalandole sul formato in uso
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti classi:
+     *
+     * classe                           | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * TCPDF                            | tecnickcom/tcpdf ( Composer )
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
      */
 
+    /**
+     * FUNZIONI DI INIZIALIZZAZIONE
+     */
 
     /**
-     * 
-     * @todo documentare
-     * 
+     * crea e inizializza un documento PDF a partire dalla configurazione
+     *
+     * Questa funzione crea un oggetto TCPDF in formato A4 con le misure in millimetri, completa l'array $info con le misure
+     * derivate ( si veda la tabella nella testata della libreria ), imposta titolo, margini, header, footer, stile di default e
+     * interruzione automatica di pagina, e aggiunge la prima pagina. Le misure del modulo ( form/column/width eccetera ) vengono
+     * calcolate solo se $info['form']['columns'] è impostata; in quel caso anche $info['form']['row']['height'] è obbligatoria.
+     *
+     * NOTA la funzione sovrascrive sempre style/text/default, colors, lines e cell: uno stile di default diverso va impostato
+     * dopo la chiamata ( come fa _mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php ).
+     *
+     * TODO le chiavi lines e colors vengono sovrascritte anche se il chiamante le ha impostate prima della chiamata, come fanno
+     * _modulo.assistenza.php e _ritiro.hardware.pdf.php ( lines/thick a .3 diventa .2 ): o si rispettano i valori del chiamante
+     * o si tolgono dai chiamanti le impostazioni che non hanno effetto.
+     *
+     * @param       array       $info       la configurazione del documento, completata sul posto con le misure derivate
+     *
+     * @return      object                  l'oggetto TCPDF inizializzato, con la prima pagina già aggiunta
+     *
      */
     function pdfInit( &$info ) {
 
@@ -105,8 +260,20 @@
     }
 
     /**
+     * FUNZIONI DI STILE
+     */
+
+    /**
+     * imposta il carattere corrente a partire da uno stile
      * 
-     * @todo documentare
+     * Questa funzione imposta il carattere corrente del documento a partire da uno degli stili di testo dichiarati in
+     * $info['style']['text'], cioè da un array con le chiavi font, weight e size; le funzioni del gruppo form la usano per
+     * passare allo stile richiesto e per tornare poi allo stile default.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $style      lo stile da applicare ( chiavi font, weight e size )
+     * 
+     * @return      void
      * 
      */
     function pdfSetFontStyle( $pdf, $style ) {
@@ -116,8 +283,15 @@
     }
 
     /**
+     * imposta lo stile delle linee a partire da uno stile
      * 
-     * @todo documentare
+     * Questa funzione imposta lo spessore e il colore delle linee e dei bordi disegnati da qui in avanti a partire da uno degli
+     * stili dichiarati in $info['lines'], cioè da un array con le chiavi thickness ( in millimetri ) e color ( array RGB ).
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $style      lo stile da applicare ( chiavi thickness e color )
+     * 
+     * @return      void
      * 
      */
     function pdfSetLineStyle( $pdf, $style ) {
@@ -127,8 +301,26 @@
     }
 
     /**
+     * FUNZIONI PER LA COMPOSIZIONE DEI MODULI
+     */
+
+    /**
+     * disegna un codice a barre in una cella del modulo
      * 
-     * @todo documentare
+     * Questa funzione disegna un codice a barre monodimensionale a partire dalla posizione corrente del cursore, con lo stile
+     * $info['style']['barcode'] impostato da pdfInit() e un modulo di 0,35 mm; dopodiché riporta il cursore al punto di partenza
+     * ( salvato nella cache di $info con la chiave bc ) e lo sposta a destra di $width colonne, come se il codice avesse occupato
+     * una cella di quella larghezza. La larghezza effettiva del codice non dipende da $width ma dal testo e dal modulo, quindi
+     * un testo lungo in una cella stretta sconfina nelle celle successive.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       array       $info       la configurazione del documento, passata per riferimento ( ne viene scritta la cache )
+     * @param       string      $text       il testo da codificare
+     * @param       int         $width      la larghezza della cella in colonne ( default 0, il cursore non si sposta )
+     * @param       float       $height     l'altezza del codice a barre in millimetri ( default 15 )
+     * @param       string      $code       la simbologia del codice secondo TCPDF ( default C128 )
+     * 
+     * @return      void
      * 
      */
     function pdfFormBarcode( &$pdf, &$info, $text, $width = 0, $height = 15, $code = 'C128' ){
@@ -147,8 +339,20 @@
     }
 
     /**
+     * disegna una barra a caselle con un carattere per casella
      * 
-     * @todo documentare
+     * Questa funzione disegna, a partire dalla posizione corrente, la barra a caselle tipica dei moduli cartacei: una casella
+     * larga una colonna per ogni carattere del testo, con il bordo esterno spesso ( stile lines/thick ) e le separazioni fra le
+     * caselle sottili ( stile lines/thin ). Se il testo è più corto di $width viene completato con spazi fino a $width caselle,
+     * in modo da ottenere una barra vuota da compilare a mano; se è più lungo non viene troncato e la barra supera $width
+     * colonne. Alla fine il cursore resta a destra dell'ultima casella.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo da scrivere nelle caselle, un carattere per casella
+     * @param       int         $width      il numero minimo di caselle ( default 0, tante caselle quanti i caratteri )
+     * 
+     * @return      void
      * 
      */
     function pdfFormCellBar( $pdf, $info, $text, $width = 0 ) {
@@ -186,8 +390,32 @@
     }
 
     /**
+     * disegna una riga del modulo composta da più celle
      * 
-     * @todo documentare
+     * Questa funzione disegna una riga del modulo composta dalle celle descritte in $items, lasciando una colonna vuota fra una
+     * cella e l'altra, e al termine porta il cursore all'inizio della riga successiva ( margine sinistro, un'altezza di riga più
+     * la spaziatura più in basso ). Ogni cella è un array con le seguenti chiavi:
+     * 
+     * chiave           | dettagli
+     * -----------------|-----------------------------------------------------------------------
+     * width            | la larghezza della cella in colonne ( obbligatoria )
+     * label/text       | l'etichetta scritta sopra la cella; se è vuota la cella non ha etichetta
+     * label/style      | lo stile dell'etichetta ( default label ) e del testo inline ( default default )
+     * bar/text         | il testo da scrivere in una barra a caselle, vedi pdfFormCellBar()
+     * inline/text      | il testo da scrivere direttamente nella cella, vedi pdfFormInlineCellLabel()
+     * bar/barcode      | il testo da scrivere come codice a barre, vedi pdfFormBarcode()
+     * 
+     * Le chiavi bar/text, inline e bar/barcode sono valutate in quest'ordine e ne viene usata solo la prima presente; se non ce
+     * n'è nessuna la cella resta vuota.
+     * 
+     * TODO la chiave bar/style viene passata a pdfFormCellBar() come quinto argomento, ma pdfFormCellBar() ne accetta quattro e
+     * lo ignora: lo stile della barra non è di fatto personalizzabile.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       array       $items      l'elenco delle celle della riga
+     * 
+     * @return      void
      * 
      */
     function pdfFormCellRow( $pdf, $info, $items ) {
@@ -235,8 +463,20 @@
     }
 
     /**
+     * scrive un'etichetta alta quanto l'etichetta del modulo
      * 
-     * @todo documentare
+     * Questa funzione scrive un testo senza bordo in una cella larga $width colonne e alta quanto l'etichetta del modulo
+     * ( form/label/height ), con lo stile richiesto, e poi torna allo stile default. Con $width a zero la cella si estende
+     * fino al margine destro; chiamata con testo vuoto serve a lasciare uno spazio ( così la usa pdfFormCellRow() fra le celle ).
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo da scrivere
+     * @param       int         $width      la larghezza della cella in colonne ( default 0, fino al margine destro )
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default default )
+     * @param       int         $newline    dove va il cursore dopo la cella, come il parametro ln di TCPDF::Cell() ( default 0, a destra )
+     * 
+     * @return      void
      * 
      */
     function pdfFormCellLabel( $pdf, $info, $text, $width = 0, $style = 'default', $newline = 0 ) {
@@ -253,8 +493,19 @@
     }
 
     /**
+     * scrive un'etichetta alta quanto la barra del modulo
      * 
-     * @todo documentare
+     * Questa funzione è identica a pdfFormCellLabel() ma la cella è alta quanto la barra del modulo ( form/bar/height ) e non
+     * quanto l'etichetta; serve a scrivere un testo al posto della barra a caselle in una cella di pdfFormCellRow().
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo da scrivere
+     * @param       int         $width      la larghezza della cella in colonne ( default 0, fino al margine destro )
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default default )
+     * @param       int         $newline    dove va il cursore dopo la cella, come il parametro ln di TCPDF::Cell() ( default 0, a destra )
+     * 
+     * @return      void
      * 
      */
     function pdfFormInlineCellLabel( $pdf, $info, $text, $width = 0, $style = 'default', $newline = 0 ) {
@@ -272,8 +523,19 @@
     }
 
     /**
+     * scrive un titolo alto quanto la barra del modulo
      * 
-     * @todo documentare
+     * Questa funzione scrive un testo senza bordo in una cella alta quanto la barra del modulo, per default con lo stile title
+     * e andando a capo dopo la cella, e poi torna allo stile default; si usa per i titoli delle sezioni dei moduli.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo del titolo
+     * @param       int         $width      la larghezza della cella in colonne ( default 0, fino al margine destro )
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default title )
+     * @param       int         $newline    dove va il cursore dopo la cella, come il parametro ln di TCPDF::Cell() ( default 1, a capo )
+     * 
+     * @return      void
      * 
      */
     function pdfFormCellTitle( $pdf, $info, $text, $width = 0, $style = 'title', $newline = 1 ) {
@@ -290,8 +552,21 @@
     }
 
     /**
+     * scrive un titolo con un corpo del carattere a scelta
      * 
-     * @todo documentare
+     * Questa funzione è identica a pdfFormCellTitle() ma permette di indicare il corpo del carattere; si usa per il titolo
+     * principale del documento. Se $size vale zero si usa il corpo dello stile; la modifica del corpo vale solo per questa
+     * chiamata, perché $info è passato per valore e lo stile dichiarato dal chiamante non cambia.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo del titolo
+     * @param       float       $size       il corpo del carattere ( default 0, quello dello stile )
+     * @param       int         $width      la larghezza della cella in colonne ( default 0, fino al margine destro )
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default title )
+     * @param       int         $newline    dove va il cursore dopo la cella, come il parametro ln di TCPDF::Cell() ( default 1, a capo )
+     * 
+     * @return      void
      * 
      */
     function pdfFormCellPdfTitle( $pdf, $info, $text, $size = 0, $width = 0, $style = 'title', $newline = 1 ) {
@@ -310,8 +585,22 @@
     }
 
     /**
+     * scrive un testo su un blocco di righe da compilare a mano
      * 
-     * @todo documentare
+     * Questa funzione disegna, a partire dalla posizione corrente, $height linee orizzontali larghe $width colonne e distanti fra
+     * loro l'altezza di una barra, e ci scrive sopra il testo con un'interlinea di 1,7 in modo che le righe di testo cadano
+     * sulle linee; se il testo è vuoto resta un blocco di righe da compilare a mano. Il testo non viene troncato: se è più lungo
+     * delle righe disponibili prosegue sotto l'ultima linea. Alla fine il cursore va al margine sinistro, sotto l'ultima linea
+     * più la spaziatura fra le righe, e l'interlinea torna quella di prima.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo da scrivere sulle righe
+     * @param       int         $width      la larghezza del blocco in colonne
+     * @param       int         $height     il numero di righe
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default default )
+     * 
+     * @return      void
      * 
      */
     function pdfFormLineRow( $pdf, $info, $text, $width, $height, $style = 'default' ) {
@@ -347,6 +636,27 @@
     }
 
     /**
+     * disegna un riquadro con un'intestazione in una posizione assoluta
+     * 
+     * Questa funzione disegna un riquadro bordato largo $width colonne e alto $height barre ( meno la spaziatura fra le righe ),
+     * con l'angolo superiore sinistro in $x e $y più la spaziatura, e scrive il testo in alto a sinistra con un margine interno
+     * di 3 mm; si usa per gli spazi destinati a firme, timbri, luogo e data, di solito affiancati calcolando $x con pdfFormCalcX().
+     * Alla fine il cursore va al margine sinistro, sotto il riquadro più la spaziatura, e interlinea e margine interno tornano
+     * quelli di default.
+     * 
+     * NOTA la posizione del cursore viene salvata all'inizio ma non viene ripristinata: per affiancare più riquadri alla stessa
+     * altezza il chiamante deve passare a tutti la stessa $y.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       string      $text       il testo dell'intestazione del riquadro
+     * @param       int         $width      la larghezza del riquadro in colonne
+     * @param       int         $height     l'altezza del riquadro in barre
+     * @param       float       $x          l'ascissa dell'angolo superiore sinistro in millimetri
+     * @param       float       $y          l'ordinata dell'angolo superiore sinistro in millimetri
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default label )
+     * 
+     * @return      void
      * 
      */
     function pdfFormBox( $pdf, $info, $text, $width, $height, $x, $y, $style = 'label' ) {
@@ -375,8 +685,28 @@
     }
 
     /**
+     * scrive un testo HTML su più colonne
      * 
-     * @todo documentare
+     * Questa funzione scrive un testo HTML giustificato su $cols colonne affiancate, alla stessa altezza e separate da una colonna
+     * del modulo; la larghezza di ogni colonna è la larghezza utile della pagina, meno le separazioni, divisa per $cols. Il testo
+     * viene diviso in colonne sul carattere §: ogni pezzo va in una colonna. Alla fine il cursore resta dove lo lascia TCPDF,
+     * cioè in alto a destra dell'ultima colonna, e va riposizionato dal chiamante.
+     * 
+     * TODO la divisione automatica del testo non avviene mai: strpos() ha gli argomenti invertiti ( cerca il testo dentro '§' ),
+     * quindi wordwrap() non viene chiamata e un testo senza § finisce tutto nella prima colonna, larga 1/$cols della pagina; è
+     * quello che succede alle condizioni di servizio di _mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php. Correggendo va
+     * tenuto presente che wordwrap() su un testo HTML può spezzare i tag.
+     * 
+     * TODO l'ascissa delle colonne si accumula ( $x = $x + ... * $current ), quindi dalla terza colonna in poi la posizione è
+     * sbagliata; con due colonne il risultato è corretto.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento
+     * @param       int         $cols       il numero di colonne
+     * @param       string      $text       il testo HTML da scrivere, con le colonne separate da §
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default default )
+     * 
+     * @return      void
      * 
      */
     function pdfHtmlColumns( $pdf, $info, $cols, $text, $style = 'default') {
@@ -409,8 +739,20 @@
     }
 
     /**
+     * FUNZIONI DI POSIZIONAMENTO
+     */
+
+    /**
+     * salva l'interlinea corrente
      * 
-     * @todo documentare
+     * Questa funzione salva l'interlinea corrente di TCPDF nella cache di $info, con la chiave indicata, in modo da poterla
+     * ripristinare con pdfFormLoadLineHeightRatio() dopo averla cambiata.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento, passata per riferimento ( ne viene scritta la cache )
+     * @param       string      $key        la chiave con cui salvare l'interlinea ( default 0 )
+     * 
+     * @return      void
      * 
      */
     function pdfFormSaveLineHeightRatio( $pdf, &$info, $key = '0' ) {
@@ -420,8 +762,16 @@
     }
 
     /**
+     * ripristina un'interlinea salvata
      * 
-     * @todo documentare
+     * Questa funzione ripristina l'interlinea salvata con pdfFormSaveLineHeightRatio() con la chiave indicata; se per quella
+     * chiave non è stato salvato niente PHP segnala un indice mancante e a TCPDF arriva NULL.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
+     * @param       array       $info       la configurazione del documento, passata per riferimento
+     * @param       string      $key        la chiave con cui è stata salvata l'interlinea ( default 0 )
+     * 
+     * @return      void
      * 
      */
     function pdfFormLoadLineHeightRatio( $pdf, &$info, $key = '0' ) {
@@ -431,8 +781,16 @@
     }
 
     /**
+     * salva la posizione corrente del cursore
      * 
-     * @todo documentare
+     * Questa funzione salva le coordinate correnti del cursore nella cache di $info, con la chiave indicata, in modo da poterle
+     * ripristinare con pdfFormLoadXY(). Chiavi diverse permettono di salvare più posizioni ( pdfFormBarcode() usa bc ).
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       array       $info       la configurazione del documento, passata per riferimento ( ne viene scritta la cache )
+     * @param       string      $key        la chiave con cui salvare la posizione ( default 0 )
+     * 
+     * @return      void
      * 
      */
     function pdfFormSaveXY( &$pdf, &$info, $key = '0' ) {
@@ -443,8 +801,16 @@
     }
 
     /**
+     * ripristina una posizione salvata del cursore
      * 
-     * @todo documentare
+     * Questa funzione riporta il cursore alle coordinate salvate con pdfFormSaveXY() con la chiave indicata; se per quella chiave
+     * non è stato salvato niente PHP segnala un indice mancante.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       array       $info       la configurazione del documento, passata per riferimento
+     * @param       string      $key        la chiave con cui è stata salvata la posizione ( default 0 )
+     * 
+     * @return      void
      * 
      */
     function pdfFormLoadXY( &$pdf, &$info, $key = '0' ) {
@@ -457,8 +823,15 @@
     }
 
     /**
+     * sposta il cursore in orizzontale
      * 
-     * @todo documentare
+     * Questa funzione sposta il cursore in orizzontale di $offset millimetri rispetto alla posizione corrente; un valore negativo
+     * lo sposta a sinistra.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       float       $offset     lo spostamento in millimetri
+     * 
+     * @return      void
      * 
      */
     function pdfSetRelativeX( &$pdf, $offset ) {
@@ -466,8 +839,19 @@
     }
 
     /**
+     * sposta il cursore in verticale
      * 
-     * @todo documentare
+     * Questa funzione sposta il cursore in verticale di $offset millimetri rispetto alla posizione corrente; un valore negativo
+     * lo sposta in alto.
+     * 
+     * NOTA TCPDF::SetY() riporta anche l'ascissa al margine sinistro: dopo questa funzione il cursore è sempre a inizio riga,
+     * ed è su questo che contano pdfFormCellRow() e pdfFormLineRow() per andare a capo. Per spostarsi in verticale senza perdere
+     * l'ascissa si usa pdfSetRelativeXY() con uno spostamento orizzontale nullo.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       float       $offset     lo spostamento in millimetri
+     * 
+     * @return      void
      * 
      */
     function pdfSetRelativeY( &$pdf, $offset ) {
@@ -475,8 +859,16 @@
     }
 
     /**
+     * sposta il cursore in orizzontale e in verticale
      * 
-     * @todo documentare
+     * Questa funzione sposta il cursore di $offsetx millimetri in orizzontale e di $offsety millimetri in verticale rispetto alla
+     * posizione corrente; i valori negativi spostano a sinistra e in alto.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF su cui lavorare, passato per riferimento
+     * @param       float       $offsetx    lo spostamento orizzontale in millimetri
+     * @param       float       $offsety    lo spostamento verticale in millimetri
+     * 
+     * @return      void
      * 
      */
     function pdfSetRelativeXY( &$pdf, $offsetx, $offsety ) {
@@ -484,8 +876,15 @@
     }
 
     /**
+     * calcola l'ascissa di una colonna del modulo
      * 
-     * @todo documentare
+     * Questa funzione restituisce l'ascissa in millimetri del bordo sinistro della colonna $cols del modulo, contando da zero a
+     * partire dal margine sinistro; si usa per posizionare i riquadri di pdfFormBox().
+     * 
+     * @param       array       $info       la configurazione del documento
+     * @param       int         $cols       il numero della colonna, a partire da zero
+     * 
+     * @return      float                   l'ascissa della colonna in millimetri
      * 
      */
     function pdfFormCalcX( $info, $cols ) {
@@ -493,8 +892,21 @@
     }
 
     /**
+     * FUNZIONI DI OUTPUT
+     */
+
+    /**
+     * invia il PDF al browser o lo salva su file
      * 
-     * @todo documentare
+     * Questa funzione chiude il documento e lo invia in base ai parametri della richiesta: con $_REQUEST['d'] lo invia al browser
+     * come download, con $_REQUEST['f'] lo salva su file senza inviare niente, con $_REQUEST['fi'] lo salva e lo invia al browser,
+     * altrimenti lo invia al browser per la visualizzazione in linea. Il nome del file è $dobj con l'estensione .pdf; salvando,
+     * un percorso relativo viene risolto da TCPDF rispetto alla directory corrente dello script.
+     * 
+     * @param       object      $pdf        l'oggetto TCPDF da inviare
+     * @param       string      $dobj       il nome del file, senza estensione
+     * 
+     * @return      void
      * 
      */
     function pdfOutput( $pdf, $dobj ) {
@@ -511,6 +923,10 @@
         }
 
     }
+
+    /**
+     * FUNZIONI PER LE ETICHETTE
+     */
 
     /**
      * risolve le misure di un'etichetta scalandole sul formato in uso
@@ -540,9 +956,12 @@
      * Una misura dichiarata accanto al formato, nel gruppo in cui compare nel riferimento, viene presa come
      * valore assoluto e non viene scalata: è la via per forzare una singola misura da configurazione.
      *
-     * @param array $etichetta la configurazione dell'etichetta
+     * La chiave riferimento è di fatto obbligatoria: se manca, PHP segnala gli indici mancanti, i fattori di scala valgono 1 e
+     * i gruppi contengono solo le misure forzate da configurazione.
      *
-     * @return array le misure risolte, nella stessa struttura a gruppi ( formato, verticali, orizzontali, caratteri )
+     * @param       array       $etichetta      la configurazione dell'etichetta
+     *
+     * @return      array                       le misure risolte, nella stessa struttura a gruppi ( formato, verticali, orizzontali, caratteri )
      *
      */
     function scalaEtichetta( $etichetta ) {
