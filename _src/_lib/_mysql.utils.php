@@ -1099,11 +1099,8 @@
      *
      * Questa funzione cerca in information_schema la chiave esterna definita sulla colonna $f della tabella $t e
      * restituisce il nome della tabella a cui punta, con la cache su memcache; se non c'è restituisce NULL. L'unico
-     * chiamante nel framework è commentato.
-     *
-     * TODO $t e $f vengono concatenati nella query senza virgolette, quindi MySQL li interpreta come nomi di colonna e la
-     * query fallisce: così com'è la funzione non può funzionare, a meno che il chiamante non passi i valori già racchiusi
-     * fra apici.
+     * chiamante nel framework è commentato. $t e $f sono passati come parametri del prepared statement ( fino al
+     * 2026-09-24 venivano concatenati nella query senza apici, e MySQL li leggeva come nomi di colonna ).
      *
      * @param       string      $t      il nome della tabella
      * @param       string      $f      il nome della colonna
@@ -1121,8 +1118,12 @@
             $cf['mysql']['connection'],
             'SELECT referenced_table_name ' .
                 'FROM information_schema.key_column_usage ' .
-                'WHERE table_name = ' . $t . ' AND table_schema = database() ' .
-                'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+                'WHERE table_name = ? AND table_schema = database() ' .
+                'AND referenced_table_name IS NOT NULL AND column_name = ?',
+            array(
+                array('s' => $t),
+                array('s' => $f)
+            )
         );
     }
 
