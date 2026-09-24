@@ -1353,11 +1353,8 @@
      * NOTA: poiché la funzione legge i vincoli attraverso memcache, se si apportano modifiche alle tipologia dei vincoli di
      * chiave tra le tabelle del database, svuotare sempre memcache
      *
-     * TODO la chiamata ricorsiva passa come ID della riga figlia $r1[ REFERENCED_COLUMN_NAME ], cioè il valore della
-     * colonna che ha lo stesso nome della colonna referenziata nella tabella padre; funziona perché la colonna
-     * referenziata è sempre id, ma non è l'ID della riga figlia in generale. Inoltre la join fra key_column_usage e
-     * referential_constraints è fatta solo sui nomi delle tabelle e non sul nome del vincolo, quindi con più vincoli fra
-     * le stesse due tabelle le righe si moltiplicano.
+     * NOTA la funzione assume che ogni tabella coinvolta abbia la colonna id: la usa per cancellare la riga e per scendere
+     * nelle righe figlie.
      *
      * @param       object      $m      la connessione a memcache
      * @param       object      $c      la connessione mysqli
@@ -1382,7 +1379,9 @@
             'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, ' .
                 'information_schema.referential_constraints.DELETE_RULE ' .
                 'FROM information_schema.key_column_usage ' .
-                'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME ' .
+                'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.CONSTRAINT_SCHEMA = information_schema.key_column_usage.CONSTRAINT_SCHEMA ' .
+                'AND information_schema.referential_constraints.CONSTRAINT_NAME = information_schema.key_column_usage.CONSTRAINT_NAME ' .
+                'AND information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME ' .
                 'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) ' .
                 'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
             array(
@@ -1422,7 +1421,9 @@
             foreach ($r as $r1) {
 
                 // chiamata ricorsiva
-                mysqlDeleteRowRecursive($m, $c, $t1, $r1[$l1]);
+                // NOTA l'ID della riga figlia è la sua colonna id, la stessa che usa la DELETE qui sotto; prima si passava
+                // $r1[ $l1 ], che coincide solo perché tutte le chiavi esterne dello schema puntano a id ( 2026-09-24 )
+                mysqlDeleteRowRecursive($m, $c, $t1, $r1['id']);
             }
         }
 
