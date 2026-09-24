@@ -59,7 +59,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * logWrite()                       | _src/_lib/_log.utils.php
      * fullPath()                       | _src/_lib/_filesystem.tools.php
-     * readFromFile()                   | _src/_lib/_filesystem.tools.php
+     * readStringFromFile()             | _src/_lib/_filesystem.tools.php
      * path2url()                       | _src/_lib/_filesystem.utils.php
      * mysqlQuery()                     | _src/_lib/_mysql.tools.php
      * PHPMailer\PHPMailer\PHPMailer    | phpmailer/phpmailer ( Composer )
@@ -99,15 +99,13 @@
      * viene inviata e la funzione restituisce false.
      *
      * La firma DKIM viene applicata se esiste il file etc/secret/\<dominio del mittente\>/dkim.private.pem, con il selettore
-     * fisso glisweb; la passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è, altrimenti si usa $dkim_pasw.
+     * fisso glisweb; la passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è ( come stringa, senza gli spazi
+     * e l'a capo finali ), altrimenti si usa $dkim_pasw.
      * Il parametro $dkim_domain non viene usato: il dominio è sempre quello del mittente.
      *
      * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_CRIT nel canale mail
      * e la funzione restituisce false, e il task della coda rimanda la mail con un tentativo in più; un destinatario, un allegato
      * o un header che PHPMailer rifiuta viene saltato senza interrompere l'invio.
-     *
-     * TODO readFromFile() senza il secondo parametro legge in modalità FILE_READ_AS_ARRAY, quindi quando esiste il file
-     * dkim.password.key a DKIM_passphrase arriva un array di righe e non una stringa.
      *
      * Nel canale mail la password SMTP compare solo come impostata o non impostata. La trascrizione del dialogo SMTP va nel
      * canale details/phpmailer/send, a LOG_DEBUG e solo se il sito logga a quel livello; le credenziali non vi compaiono.
@@ -287,7 +285,7 @@
             // DKIM
             if (! empty($fromDomain)) {
                 if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
-                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key') : $dkim_pasw;
+                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readStringFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key', true) : $dkim_pasw;
                     $mail->DKIM_domain = $fromDomain;
                     $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
                     $mail->DKIM_selector = 'glisweb';
