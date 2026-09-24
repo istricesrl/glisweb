@@ -980,16 +980,21 @@
      *
      * Questa funzione restituisce la stringa passata privata di ogni carattere che non sia una cifra, una virgola o un punto;
      * serve ad esempio a estrarre un importo da un testo come "€ 1.234,50". Il risultato non viene normalizzato ( per quello
-     * si veda string2num() ) e il segno meno viene eliminato, per cui un numero negativo diventa positivo.
+     * si veda string2num() ). Il segno meno viene conservato solo se precede immediatamente la prima cifra, la prima virgola
+     * o il primo punto ( "€ -1.234,50" diventa "-1.234,50" ); gli altri trattini, ad esempio quelli di "12-14", vengono
+     * eliminati come ogni altro carattere.
      *
      * @param       string      $string     la stringa da cui estrarre il numero
      *
-     * @return      string                  la stringa contenente solo cifre, virgole e punti
+     * @return      string                  la stringa contenente solo cifre, virgole e punti, eventualmente preceduta dal
+     *                                      segno meno
      *
      */
     function extractNumber( $string ) {
 
-        return preg_replace( '/[^0-9\.\,]/', '', $string );
+        // NB: fino al 2026-09-24 il segno meno veniva eliminato e un importo negativo diventava positivo; si tiene solo
+        // quello attaccato all'inizio del numero, così i trattini usati come separatori non producono numeri strani
+        return ( ( preg_match( '/^[^0-9\.\,]*-[0-9\.\,]/', $string ) ) ? '-' : '' ) . preg_replace( '/[^0-9\.\,]/', '', $string );
 
     }
 
