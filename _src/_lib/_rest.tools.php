@@ -135,8 +135,9 @@
      * deve leggere $status (0 se il server non ha risposto) ed $error. In caso di errore di rete la risposta è false,
      * che decodificato come JSON diventa NULL.
      * 
-     * NOTA siccome il controllo sulla presenza dei dati è disattivato (il blocco è sotto if( true )), con $datatype
-     * MIME_APPLICATION_JSON e $data NULL la funzione invia comunque il corpo "null", anche con il metodo GET.
+     * Con il metodo GET e $data NULL i dati non vengono codificati e la richiesta parte senza corpo; con gli altri
+     * metodi, $datatype MIME_APPLICATION_JSON e $data NULL la funzione invia il corpo "null" con l'header Content-Type
+     * ( si veda il commento nel corpo ).
      * Il certificato SSL del server e il suo nome vengono verificati, a meno che il deploy non abbia definito la
      * costante REST_SSL_VERIFY a false ( si veda il commento nel corpo ).
      * NOTA con $datatype 'query' i parametri vengono aggiunti dopo un ? anche se l'URL ne contiene già uno.
@@ -240,7 +241,13 @@
         // verifico che ci siano dati da inviare
         // NOTA perché questa riga è commentata?!
         // if( $data !== NULL && is_array( $data ) && count( $data ) > 0 ) {
-        if( true ) {
+        //
+        // NB: senza dati si salta la codifica solo in GET, dove prima con MIME_APPLICATION_JSON partiva il corpo
+        // "null"; negli altri metodi il corpo "null" resta, perché le capture di PayPal ( _paypal.advanced.capture.php
+        // in _F030.pagamenti e _4170.ecommerce ) fanno una POST senza dati e ricevono da questo blocco l'header
+        // Content-Type: application/json che l'API di PayPal richiede, e togliere il corpo cambierebbe una chiamata che
+        // oggi funziona ( 2026-09-24 )
+        if( $data !== NULL || $method != METHOD_GET ) {
 
             // codifico i dati
             switch( $datatype ) {
@@ -275,10 +282,10 @@
 
             }
 
-            // log
-            logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
-
         }
+
+        // log
+        logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
 
         // impostazione del tipo di dati accettato
         if( ! empty( $answertype ) ) {
