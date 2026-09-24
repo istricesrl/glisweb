@@ -35,11 +35,11 @@
      *
      * dipendenze
      * ==========
-     * Questa libreria non richiede funzioni di altre librerie del framework, ma richiede la classe esterna
+     * Questa libreria richiede la funzione core logger(), per segnalare l'assenza della libreria esterna, e la classe esterna
      * Google\Cloud\Logging\LoggingClient del pacchetto composer google/cloud-logging, che NON è fra le dipendenze
      * dichiarate nel composer.json del framework e va quindi aggiunta dal progetto che vuole usare log2google();
-     * senza di essa l'inclusione della libreria non dà errori (l'istruzione use non carica la classe) ma la
-     * chiamata a log2google() termina con un errore fatale di classe non trovata.
+     * senza di essa l'inclusione della libreria non dà errori (l'istruzione use non carica la classe) e la
+     * chiamata a log2google() scrive l'anomalia nel log google e restituisce false.
      *
      * classe                           | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
@@ -80,8 +80,13 @@
      * nell'ambiente secondo le regole della libreria Google (per i dettagli si veda
      * https://cloud.google.com/logging/docs/setup/php).
      *
-     * La funzione non intercetta le eccezioni del client: un errore di autenticazione o di rete, così come
-     * l'assenza della libreria google/cloud-logging, si propaga al chiamante.
+     * Il pacchetto composer google/cloud-logging non è fra le dipendenze del framework e va aggiunto dal progetto: se la
+     * classe LoggingClient non è disponibile la funzione non fa niente, scrive l'anomalia con logger() nel log google e
+     * restituisce false. La funzione non intercetta invece le eccezioni del client: un errore di autenticazione o di rete
+     * si propaga al chiamante.
+     *
+     * NB: fino al 2026-09-24 l'assenza della libreria terminava lo script con un errore fatale di classe non trovata; il
+     * controllo con class_exists() evita di aggiungere al framework una dipendenza che serve solo a chi usa questa funzione.
      *
      * @param       int         $l      il livello di severità del messaggio, da 0 (emergency) a 7 (debug)
      * @param       string      $f      il nome del log su Google Cloud Logging
@@ -89,10 +94,16 @@
      * @param       string      $m      il messaggio da scrivere
      * @param       array       $r      il contesto PSR-3 del messaggio (array associativo di dati aggiuntivi)
      *
-     * @return      void
+     * @return      bool                false se la libreria google/cloud-logging non è disponibile, true altrimenti
      *
      */
     function log2google( $l, $f, $p, $m, $r ) {
+
+	// la libreria di Google è facoltativa, per cui ne verifico la presenza
+	    if( ! class_exists( 'Google\Cloud\Logging\LoggingClient' ) ) {
+		logger( 'classe Google\Cloud\Logging\LoggingClient non disponibile, installare google/cloud-logging per usare log2google()', 'google', LOG_ERR );
+		return false;
+	    }
 
 	// logger di test
 	    $logging = new LoggingClient([
@@ -129,5 +140,8 @@
 		    $logger->debug( $m, $r );
 		break;
 	    }
+
+	// il messaggio è stato consegnato al client
+	    return true;
 
     }
