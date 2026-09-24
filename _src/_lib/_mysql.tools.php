@@ -361,7 +361,9 @@
         // e un file che contiene false ( una query fallita, scritta prima del 2026-09-24 ) vale come assente
         $r = false;
         if ($t !== false && file_exists(DIR_BASE . 'var/cache/mysql/' . $k) && (empty($t) || filemtime(DIR_BASE . 'var/cache/mysql/' . $k) > time() - $t)) {
-            $r = unserialize(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k));
+            // NOTA writeToFile() aggiunge un a capo in fondo, che da PHP 8.3 fa emettere a unserialize() un avviso di dati in
+            // eccesso; un dato serializzato non finisce mai con uno spazio, quindi toglierlo è sicuro ( 2026-09-24 )
+            $r = unserialize(rtrim(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k)));
         }
 
         if ($r === false) {
