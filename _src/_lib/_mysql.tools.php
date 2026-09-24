@@ -1256,10 +1256,11 @@
      * inserisce niente.
      *
      * Restituisce l'ID generato dall'inserimento; se è vuoto ( riga non inserita, o tabella senza AUTO_INCREMENT )
-     * restituisce $x['id'] se era stato passato, altrimenti NULL, e in quel caso $y è un array vuoto.
+     * restituisce l'ID con cui la riga è stata scritta, cioè $x['id'] se era stato passato, altrimenti $n, oppure NULL se
+     * non c'è né l'uno né l'altro, e in quel caso $y è un array vuoto.
      *
-     * TODO passando $n per una tabella senza AUTO_INCREMENT la riga viene inserita con quell'ID, ma senza $x['id'] la
-     * funzione restituisce NULL invece di $n: è la domanda lasciata aperta dalla NOTA nel corpo.
+     * NOTA essendo una INSERT IGNORE, se l'ID passato esiste già la riga non viene inserita ma la funzione restituisce
+     * comunque quell'ID, e in $y finisce la riga che c'era già.
      *
      * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
      *
@@ -1276,8 +1277,8 @@
     function mysqlDuplicateRow($c, $t, $o, $n = NULL, $x = array(), &$y = array())
     {
 
-        // salvo l'id
-        $id = isset($x['id']) ? $x['id'] : null;
+        // salvo l'id che avrà la nuova riga: $x['id'] se passato, altrimenti $n ( così lo scrive array_merge() qui sotto )
+        $id = isset($x['id']) ? $x['id'] : $n;
 
         // campi da modificare
         $x = array_merge(array('id' => $n), $x);
@@ -1301,7 +1302,10 @@
         // composizione della query
         $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode(',', $fieldsInsert) . ') SELECT ' . str_repeat('?,', count($fieldsChanged)) . implode(',', $fieldsCopied) . ' FROM ' . $t . ' WHERE id = ?';
 
-        // NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
+        // NOTA i ruoli di $id e $n sono stati scambiati avanti e indietro: nel 2023 ( 6843f62bf, duplicazione del catalogo )
+        // il ripiego era $n, poi è tornato $x['id'] e $n è stato perso, per cui duplicaProdotto() e duplicaArticolo(), che
+        // passano $n per tabelle senza AUTO_INCREMENT, ricevevano NULL e collegavano le righe figlie a NULL; ora il ripiego
+        // è l'ID effettivamente scritto nella nuova riga, $x['id'] o $n ( 2026-09-24 )
 
         // esecuzione della query
         // $id = mysqlQuery( $c, $q, $values );
