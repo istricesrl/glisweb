@@ -1465,23 +1465,30 @@
      * segue l'ultimo punto del nome, senza il punto e senza modificare maiuscole e minuscole ( "foto.tar.GZ" restituisce
      * "GZ" ). Il percorso non viene verificato né completato, per cui il file può anche non esistere.
      *
-     * Se il nome del file non contiene punti, strrpos() restituisce false, che sommato a uno vale 1: la funzione restituisce
-     * allora il nome senza il primo carattere ( "Makefile" restituisce "akefile" ) invece di una stringa vuota. Per un file
-     * nascosto come ".htaccess" restituisce "htaccess".
+     * Se il nome del file non contiene punti ( "Makefile" ), o finisce col punto ( "file." ), restituisce una stringa vuota.
+     * Per un file nascosto come ".htaccess" restituisce "htaccess".
      *
      * @param       string      $f      il percorso del file da esaminare
      *
-     * @return      string              l'estensione del file
+     * @return      string              l'estensione del file, o una stringa vuota se il nome non ne ha
      *
      * TODO questa va testata
      * TODO questa funzione non è un doppione?
-     * TODO per un nome senza punti restituisce il nome privo del primo carattere invece di una stringa vuota
      *
      */
     function getFileExtension( $f ) {
 
+        // posizione dell'ultimo punto nel nome
+        $p = strrpos( basename( $f ) , '.' );
+
+        // NB: senza punti strrpos() restituisce false, che sommato a uno faceva perdere il primo carattere del nome
+        // ( "Makefile" diventava "akefile" ); un nome senza punti non ha estensione ( 2026-09-24 )
+        if( $p === false ) {
+            return '';
+        }
+
         // restituisco l'estensione del file
-        return substr( basename( $f ) , strrpos( basename( $f ) , '.' ) + 1 );
+        return substr( basename( $f ) , $p + 1 );
 
     }
 

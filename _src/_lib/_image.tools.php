@@ -314,8 +314,8 @@
      *
      * Questa funzione apre l'immagine sorgente con imageOpen() e la riscrive con imageWrite() nel formato $td; se non viene
      * indicato un file di destinazione, questo si ottiene dal nome del sorgente sostituendo l'estensione con $td ( es. da
-     * foto.jpg a foto.webp ). Il formato effettivo della scrittura dipende dall'estensione del file di destinazione, quindi
-     * passando $fd conviene che la sua estensione corrisponda a $td.
+     * foto.jpg a foto.webp ), oppure aggiungendo $td se il sorgente non ha estensione. Il formato effettivo della scrittura
+     * dipende dall'estensione del file di destinazione, quindi passando $fd conviene che la sua estensione corrisponda a $td.
      *
      * NOTA la sostituzione dell'estensione è una str_replace() su tutto il percorso: se la stessa sequenza compare anche prima
      * ( es. una cartella di nome foto.jpg ) viene sostituita anche lì.
@@ -334,7 +334,13 @@
 
     // file di destinazione
         if( $fd === NULL ) {
-        $fd = str_replace( '.'.getFileExtension($fs), '.'.$td, $fs );
+        // NB: per un sorgente senza estensione getFileExtension() restituisce una stringa vuota, e la str_replace() di
+        // un punto solo toccherebbe tutti i punti del percorso: in quel caso l'estensione si aggiunge ( 2026-09-24 )
+        if( getFileExtension( $fs ) == '' ) {
+            $fd = $fs . '.' . $td;
+        } else {
+            $fd = str_replace( '.'.getFileExtension($fs), '.'.$td, $fs );
+        }
         }
 
     // debug
