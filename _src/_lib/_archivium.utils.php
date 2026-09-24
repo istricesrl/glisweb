@@ -823,7 +823,13 @@
      * TODO la variabile $fornitore contiene in realtà l'anagrafica del cessionario/committente, non del fornitore
      *
      * TODO partita_iva e codice_fiscale delle anagrafiche vengono entrambi valorizzati con IdFiscaleIVA/IdCodice, mentre
-     * l'XML ha un campo CodiceFiscale distinto; per una persona fisica senza partita IVA il codice fiscale resta vuoto
+     * l'XML ha un campo CodiceFiscale distinto; per una persona fisica senza partita IVA il codice fiscale resta vuoto.
+     * La correzione ovvia ( CodiceFiscale se presente, altrimenti IdCodice ) non è stata fatta perché l'anagrafica
+     * esistente viene riconosciuta solo dagli indici univoci unica_aziende, unica_persone e unica_professionisti, che
+     * contengono codice_fiscale: per ogni fornitore con codice fiscale diverso dalla partita IVA ( tutte le ditte
+     * individuali, parte delle società ) la prima fattura dopo la correzione creerebbe un doppione dell'anagrafica
+     * già registrata con codice_fiscale = partita IVA. Va corretta insieme a una patch che sistemi le anagrafiche già
+     * importate, o cercando l'anagrafica per partita IVA prima di inserirla ( 2026-09-24 )
      *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
      * @param       string      $idFattura  l'IDArchivium della fattura passiva
