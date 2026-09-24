@@ -107,9 +107,11 @@
      * content_name, content_type, contents, currency, value ) vengono inviati solo currency e value. Se nel profilo non sono
      * configurati ID e token del pixel la funzione non fa niente; l'esito della chiamata non viene né controllato né loggato.
      * 
-     * TODO event_source_url riceve solo il percorso della richiesta ( REDIRECT_URL o REQUEST_URI ), mentre la Conversions API
-     * vuole l'URL completo con il protocollo e l'host, come quello composto nella riga di debug commentata.
-     * 
+     * L'event_source_url, che la Conversions API vuole completo di protocollo e host, è composto accodando all'URL del sito
+     * $cf['site']['url'] il percorso della pagina: REDIRECT_URL, che _src/_config/_025.site.php ha già privato della cartella
+     * root del sito, oppure, se manca, REQUEST_URI privato allo stesso modo. Fino al 2026-09-24 veniva inviato il solo
+     * percorso.
+     *
      * @param       object      $m          la connessione a Memcached ( non utilizzata )
      * @param       object      $c          la connessione al database ( non utilizzata )
      * @param       array       $fb         il profilo Facebook corrente, $cf['facebook']['profile'], con le chiavi pixel/id e pixel/token
@@ -120,6 +122,9 @@
      * 
      */
     function fbEventAddToCart( $m, $c, $fb, $carrello, $articoli ) {
+
+        // globalizzazione di $cf
+        global $cf;
 
         if( isset( $fb['pixel']['id'] ) && isset( $fb['pixel']['token'] ) ) {
 
@@ -149,7 +154,7 @@
                             'event_name' => 'AddToCart',
                             'event_time' => time(),
                             'action_source' => 'website',
-                            'event_source_url' => ( ( isset( $_SERVER['REDIRECT_URL'] ) ) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'] ),
+                            'event_source_url' => $cf['site']['url'] . ( ( isset( $_SERVER['REDIRECT_URL'] ) ) ? $_SERVER['REDIRECT_URL'] : substr( $_SERVER['REQUEST_URI'], strlen( $cf['site']['root'] ) ) ),
                             'client_ip_address' => getenv("REMOTE_ADDR"),
                             'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
                             'user_data' => array(
