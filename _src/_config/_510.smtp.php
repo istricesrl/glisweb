@@ -49,34 +49,41 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
+    /**
+     * definizione dei server
+     * ======================
+     * 
+     * 
+     */
+
     // server disponibili
-	$cf['smtp']['servers']				= array();
+    $cf['smtp']['servers']                      = array();
+
+    /**
+     * definizione dei profili
+     * =======================
+     * 
+     * 
+     */
 
     // profili di funzionamento
-	$cf['smtp']['profiles'][ DEVELOPEMENT ]		=
-	$cf['smtp']['profiles'][ TESTING ]		=
-	$cf['smtp']['profiles'][ PRODUCTION ]		= array();
+    $cf['smtp']['profiles'][ DEVELOPEMENT ]     =
+    $cf['smtp']['profiles'][ TESTING ]          =
+    $cf['smtp']['profiles'][ PRODUCTION ]       = array();
 
-    // link al server corrente
-	$cf['smtp']['server']				= NULL;
-
-    // configurazione extra
-	if( isset( $cx['smtp'] ) ) {
-	    $cf['smtp'] = array_replace_recursive( $cf['smtp'], $cx['smtp'] );
-	}
-
-    // configurazione extra per sito
-	if( isset( $cf['site']['smtp'] ) ) {
-	    $cf['smtp'] = array_replace_recursive( $cf['smtp'], $cf['site']['smtp'] );
-	}
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
-	// print_r( $cf['contents']['pages']['licenza']['content'] );
-	// print_r( $cf['contents']['page'] );
-	// print_r( $ct['page'] );
+    // print_r( $cf['contents']['pages']['licenza']['content'] );
+    // print_r( $cf['contents']['page'] );
+    // print_r( $ct['page'] );

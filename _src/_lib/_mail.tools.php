@@ -8,9 +8,9 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     * 
      *
      */
 
@@ -18,7 +18,7 @@
      * invia una mail
      *
      * @param	array	$from		array che contiene il mittente in formato 'nome' => 'indirizzo'
-     * @param	array	$to		array che contiene i destinatari in formato 'nome' => 'indirizzo'
+     * @param	array	$to			array che contiene i destinatari in formato 'nome' => 'indirizzo'
      * @param	string	$oggetto	
      * @param	string	$corpo		
      * @param	array	$attach		
@@ -28,113 +28,208 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
-    function sendMail( $host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25 ) {
+    function sendMail($host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL)
+    {
 
-	// log
-	    logWrite(
-		'sending: '	. $oggetto			. ' ' .
-		'to: '		. print_r( $to , true )		. ' ' .
-		'cc: '		. print_r( $cc , true )		. ' ' .
-		'bcc: '		. print_r( $bcc , true )	. ' ' .
-		'attach: '	. print_r( $attach , true )	. ' ',
-		'mail',
-		LOG_DEBUG
-	    );
+        // debug
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 
-	// esito dell'operazione
-	    $status				= true;
+        // log
+        logWrite(
+            'sending: '    . $oggetto            . ' ' .
+                'to: '        . print_r($to, true)        . ' ' .
+                'cc: '        . print_r($cc, true)        . ' ' .
+                'bcc: '        . print_r($bcc, true)    . ' ' .
+                'attach: '    . print_r($attach, true)    . ' ',
+            'mail',
+            LOG_DEBUG
+        );
 
-	// creazione dell'oggetto mail
-	    $mail				= new PHPMailer\PHPMailer\PHPMailer();
+        // esito dell'operazione
+        $status                = true;
 
-	// configurazione dell'oggetto mail
-	    $mail->IsSMTP();
-	    $mail->Host				= $host;
-	    $mail->Port				= $port;
-	    $mail->SMTPDebug			= PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-	    $mail->Debugoutput			= function( $str, $level ) { logWrite( '('.$level.') '.$str, 'phpmailer' ); };
+        // creazione dell'oggetto mail
+        $mail                = new PHPMailer\PHPMailer\PHPMailer(true);
 
-	// log
-	    logWrite(
-		'server: '	. $host		. ' ' .
-		'port: '	. $port		. ' ' .
-		'user: '	. $user		. ' ' .
-		'pass: '	. $pasw		,
-		'mail',
-		LOG_DEBUG
-	    );
+        // configurazione dell'oggetto mail
+        $mail->IsSMTP();
+        $mail->Host                    = $host;
+        $mail->Port                    = $port;
+        $mail->SMTPDebug            = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        $mail->Debugoutput            = function ($str, $level) {
+            logWrite('(' . $level . ') ' . $str, 'details/phpmailer/send', $level);
+        };
 
-	// autenticazione
-	    if( ! empty( $user ) ) {
-		$mail->SMTPAuth			= true;
-		$mail->Username			= $user;
-		$mail->Password			= $pasw;
-	    } else {
-		$mail->SMTPAuth			= false;
-	    }
+        // log
+        logWrite(
+            'server: '    . $host        . ' ' .
+                'port: '    . $port        . ' ' .
+                'user: '    . $user        . ' ' .
+                'pass: '    . $pasw,
+            'mail',
+            LOG_DEBUG
+        );
 
-	// configurazione dell'oggetto mail
-	    $mail->IsHTML			= true;
-	    $mail->CharSet			= 'UTF-8';
+        // autenticazione
+        if (! empty($user)) {
+            $mail->SMTPAuth            = true;
+            $mail->Username            = $user;
+            $mail->Password            = $pasw;
+        } else {
+            $mail->SMTPAuth            = false;
+        }
 
-	// mittente
-	    $mail->SetFrom( current( $from ), current( array_keys( $from ) ) );
-	    $mail->AddReplyTo( current( $from ), current( array_keys( $from ) ) );
+        // TLS
+        if ($port == '587') {
+            $mail->SMTPSecure        = 'tls';
+        }
 
-	// oggetto
-	    $mail->Subject			= $oggetto;
+        // SSL
+        if ($port == '465') {
+            $mail->SMTPSecure        = 'ssl';
+        }
 
-	// creo il testo in plain text
-	    $text = new \Html2Text\Html2Text( $corpo );
+        // configurazione dell'oggetto mail
+        // $mail->IsHTML			= true;
+        $mail->CharSet            = 'UTF-8';
+        $mail->Encoding            = 'base64';
 
-	// corpo alternativo
-	    $mail->AltBody			= wordwrap( $text->getText() );
+        // mittente della mail
+        // NOTA come per i destinatari piu' sotto, $from arriva da unserialize() di una colonna
+        // della coda e puo' non essere un array: senza guardia array_keys()/current() sollevano
+        // un warning. Con la guardia $fromMail resta vuoto e il filter_var() qui sotto scarta la
+        // mail, che e' gia' il comportamento previsto.
+        $fromName               = is_array($from) ? current(array_keys($from)) : '';
+        $fromMail               = is_array($from) ? current($from) : '';
 
-	// corpo del messaggio
-	    $mail->MsgHTML( $corpo );
+        // se la mail mittente è un indirizzo e-mail corretto
+        if (filter_var($fromMail, FILTER_VALIDATE_EMAIL)) {
 
-	// destinatari
-	    foreach( $to as $destName => $destAddress ) {
-		$mail->AddAddress( trim( $destAddress ), trim( $destName ) );
-	    }
+            $expDomain              = explode('@', $fromMail);
+            $fromDomain             = end($expDomain);
 
-	// destinatari CC
-	    foreach( $cc as $destName => $destAddress ) {
-		$mail->AddCC( trim( $destAddress ), trim( $destName ) );
-	    }
+            // mittente
+            $mail->SetFrom($fromMail, $fromName);
+            $mail->AddReplyTo($fromMail, $fromName);
+            $mail->Sender = $fromMail;
 
-	// destinatari BCC
-	    foreach( $bcc as $destName => $destAddress ) {
-		$mail->AddBCC( trim( $destAddress ), trim( $destName ) );
-	    }
+            // oggetto
+            $mail->Subject            = $oggetto;
 
-	// allegati
-		if( is_array( $attach ) ) {
-	    foreach( $attach as $kAtch => $vAtch ) {
-		fullPath( $vAtch );
-		if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
-		    $mail->AddAttachment( $vAtch , basename( $vAtch ) );
-		} else {
-		    logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
-		}
-		}
-		}
+            // creo il testo in plain text
+            $text = new \Html2Text\Html2Text($corpo);
 
-	// invio
-	    $status = $mail->Send();
+            // corpo alternativo
+            $mail->AltBody            = wordwrap($text->getText());
 
-	// log
-	    if( $status == false ) {
-		logWrite( 'errore phpmailer, status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail', LOG_CRIT );
-	    } else {
-		logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' sending: '.$oggetto.' to: '.serialize( $to ), 'mail', LOG_NOTICE );
-	    }
+            // corpo del messaggio
+            $mail->MsgHTML($corpo);
 
-	// restituzione risultato
-	    return $status;
+            // destinatari
+            // NOTA il chiamante (_src/_api/_task/_mail.queue.send.php) passa qui il risultato di
+            // unserialize() su una colonna della coda: quando il valore serializzato non e' un
+            // array il foreach solleva "Invalid argument supplied for foreach()". In coda si
+            // trovano davvero valori 'N;' (NULL serializzato) su destinatari_bcc. Gli allegati e
+            // gli header erano gia' protetti da is_array(): qui si allinea il resto.
+            if (is_array($to)) {
+                foreach ($to as $destName => $destAddress) {
+                    $mail->AddAddress(trim($destAddress), trim($destName));
+                }
+            }
+
+            // destinatari CC
+            if (is_array($cc)) {
+                foreach ($cc as $destName => $destAddress) {
+                    if (! empty($destAddress)) {
+                        $mail->AddCC(trim($destAddress), trim($destName));
+                    }
+                }
+            }
+
+            // destinatari BCC
+            if (is_array($bcc)) {
+                foreach ($bcc as $destName => $destAddress) {
+                    if (! empty($destAddress)) {
+                        $mail->AddBCC(trim($destAddress), trim($destName));
+                    }
+                }
+            }
+
+            // allegati
+            if (is_array($attach)) {
+                foreach ($attach as $vAtch) {
+                    fullPath($vAtch);
+                    if (file_exists($vAtch) && is_readable($vAtch)) {
+                        $mail->AddAttachment($vAtch, basename($vAtch));
+                    } else {
+                        logWrite('impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT);
+                    }
+                }
+            }
+
+            // headers
+            if (is_array($headers)) {
+                foreach ($headers as $hKey => $hVal) {
+                    $mail->addCustomHeader($hKey, $hVal);
+                }
+            }
+
+            // DKIM
+            if (! empty($fromDomain)) {
+                if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
+                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key') : $dkim_pasw;
+                    $mail->DKIM_domain = $fromDomain;
+                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+                    $mail->DKIM_selector = 'glisweb';
+                    $mail->DKIM_passphrase = $dkimPassw;
+                    $mail->DKIM_identity = $mail->From;
+                    logWrite('DKIM: ' . $fromDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: chiave ' . $mail->DKIM_private . ' ' . ( is_readable( $mail->DKIM_private ) ? 'sha256=' . hash_file( 'sha256', $mail->DKIM_private ) : 'NON LEGGIBILE' ), 'dkim', LOG_DEBUG);
+                } else {
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                }
+            } else {
+                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR);
+            }
+
+            // invio
+            $status = $mail->Send();
+
+            // log
+            if ($status == false) {
+                logWrite(
+                    'errore phpmailer, status: ' . $status . ' ' .
+                        $mail->ErrorInfo . ' sending: ' . $oggetto . ' via: ' . $host . ':' . $port .
+                        ' to: ' . serialize($to),
+                    'mail',
+                    LOG_CRIT
+                );
+            } else {
+                logWrite(
+                    'messaggio inviato con successo, phpmailer status: ' . $status . ' ' .
+                        $mail->ErrorInfo . ' sending: ' . $oggetto . ' from: ' . $fromName . ' ' . $fromMail .
+                        ' via: ' . $host . ':' . $port . ' to: ' . serialize($to),
+                    'mail'
+                );
+            }
+
+            // restituzione risultato
+            return $status;
+
+        } else {
+
+            logWrite('indirizzo mail mittente non valido: ' . $fromMail, 'mail', LOG_CRIT);
+            return false;
+
+        }
 
     }
 
@@ -143,99 +238,198 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
-    function queueMailFromTemplate( $c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $headers = array(), $server = NULL ) {
+    function queueMailFromTemplate($c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL)
+    {
 
-// NOTA $d deve contenere 'ct' => $ct e 'dt' => <i dati che volete incorporare nella mail>
+        // NOTA $d deve contenere 'ct' => $ct e 'dt' => <i dati che volete incorporare nella mail>
 
-	// debug
-	    logWrite( 'richiesto accodamento di una mail con template', 'mail' );
+        // debug
+        logWrite('richiesto accodamento di una mail con template', 'mail');
 
-	// valuto il template manager
-	    switch( $t['type'] ) {
+        // valuto il template manager
+        switch ($t['type']) {
 
-		case 'twig':
-//print_r( $t );
-//print_r( $d['ct'] );
+            case 'twig':
+                //print_r( $t );
+                //print_r( $d['ct'] );
 
-/*
-$loader = new \Twig\Loader\ArrayLoader([
-    'index.html' => 'Hello {{ name }}!',
-]);
-$twig = new \Twig\Environment($loader);
+                // TODO verificare che la struttura di $t sia corretta e contenga tutti i campi necessari (ad es. from) per evitare che Twig vada in banana dopo
 
-echo $twig->render('index.html', ['name' => 'Fabien']);
-*/
-		    // avvio di Twig
-			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
-			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
-#			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
+                /*
+    $loader = new \Twig\Loader\ArrayLoader([
+        'index.html' => 'Hello {{ name }}!',
+    ]);
+    $twig = new \Twig\Environment($loader);
 
-		    // variabili da passare a queueMail()
-			$mittente	= array( $from->render( 'nome', $d ) => $from->render( 'mail', $d ) );
-			$oggetto	= $twig->render( 'oggetto', $d );
-			$corpo		= $twig->render( 'testo', $d );
-			$allegati	= ( ( isset($t[ $l ]['attach'] ) ) ? $t[ $l ]['attach'] : array() );
-#print_r($corpo );
-		    // se è definito nel template imposto il destinatario
-			if( array_key_exists('to', $t[ $l ] ) && is_array( $t[ $l ]['to'] ) && ! empty( $t[ $l ]['to'][ array_key_first($t[ $l ]['to'] ) ] ) ) {
-#print_r( $t[$l] );
-			    //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
-#print_r( $to );
-			    $destinatari[ array_key_first($t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
-			}
+    echo $twig->render('index.html', ['name' => 'Fabien']);
+    */
 
-		    // elaboro i placeholder nei destinatari
-			if( isset( $to ) ){
-			    foreach( $to as $k => $v ) {
-				$tm = array( 'nome' => $k, 'mail' => $v );
-				$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
-				$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
-			    }
-			}
+                // die( print_r( $t, true ) );
 
-		    // TODO implementare la stessa cosa per i destinatari CC e BCC
-			$destinatari_cc = $to_cc;
-			$destinatari_bcc = $to_bcc;
+                if (empty($t[$l]['from'])) {
+                    die('mittente non settato, impossibile accodare la mail (template ' . print_r($t, true) . ')');
+                }
 
-		    // TODO anche i nomi degli allegati dovrebbero passare da Twig in modo da poter inserire dati
-		    // variabili (ad es. una ricevuta generata ad hoc che abbia l'ID della transazione nel nome)
-			// TODO
+                try {
 
-		break;
+                    // retrocompatibilità
+                    if (! is_array($t[$l]['from'])) {
+                        $t[$l]['from'] = array($t[$l]['from'] => $t[$l]['from']);
+                    }
 
-		default:
 
-		    // debug
-			logWrite( 'tipo di template non supportato: ' . $t['type'], 'mail', LOG_ERR );
+                    // avvio di Twig
+                    $twig = new \Twig\Environment(new Twig\Loader\ArrayLoader($t[$l]));
+                    $from = new \Twig\Environment(new Twig\Loader\ArrayLoader(array('nome' => array_key_first($t[$l]['from']), 'mail' => reset($t[$l]['from']))));
+                    #			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
 
-		break;
+                    // die( print_r( $t, true ) );
 
-	    }
+                    // variabili da passare a queueMail()
+                    $mittente    = array($from->render('nome', $d) => $from->render('mail', $d));
+                    // die( print_r( $t, true ) );
+                    $oggetto    = $twig->render('oggetto', $d);
+                    $corpo        = $twig->render('testo', $d);
+                    $allegati    = ((isset($t[$l]['attach'])) ? $t[$l]['attach'] : array());
+                    $allegati    = array_merge($allegati, ((isset($attach[$l])) ? $attach[$l] : array()));
 
-	// accodo la mail
-	    $id = queueMail(
-		$c,
-		$timestamp_invio,
-		$mittente,
-		$destinatari,
-		$oggetto,
-		$corpo,
-		$destinatari_cc,
-		$destinatari_bcc,
-		$allegati,
-		$headers,
-		$server
-	    );
+                    // TODO implementare la stessa cosa per i destinatari CC e BCC
+                    $destinatari = $to;
+                    $destinatari_cc = $to_cc;
+                    $destinatari_bcc = $to_bcc;
 
-	// debug
-	    logWrite( 'mail accodata via template con id #' . $id, 'mail' );
+                    #print_r($corpo );
+                    // se è definito nel template imposto il destinatario
+                    if (array_key_exists('to', $t[$l]) && is_array($t[$l]['to']) && ! empty($t[$l]['to'][array_key_first($t[$l]['to'])])) {
+                        #print_r( $t[$l] );
+                        //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
+                        #print_r( $to );
+                        // QUESTA ANDAVA ma non inviava a più destinatari
+                        // $destinatari[ array_key_first( $t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
+                        $to = array_replace_recursive($to, $t[$l]['to']);
+                    }
 
-	// ritorno
-	    return $id;
+                    // die( print_r( $t, true ) );
 
+                    // elaboro i placeholder nei destinatari
+                    if (isset($to)) {
+                        foreach ($to as $k => $v) {
+                            $tm = array('nome' => $k, 'mail' => $v);
+                            $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
+                            $destinatari[$tw->render('nome', $d)] = $tw->render('mail', $d);
+                        }
+                    }
+
+                    // se è definito nel template imposto il destinatario
+                    if (array_key_exists('to_cc', $t[$l]) && is_array($t[$l]['to_cc']) && ! empty($t[$l]['to_cc'][array_key_first($t[$l]['to_cc'])])) {
+                        #print_r( $t[$l] );
+                        //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
+                        #print_r( $to );
+                        // QUESTA ANDAVA ma non inviava a più destinatari
+                        // $destinatari_cc[ array_key_first( $t[ $l ]['to_cc'] ) ] = $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ];
+                        $to_cc = array_replace_recursive($to_cc, $t[$l]['to_cc']);
+                    }
+
+                    // die( print_r( $t, true ) );
+
+                    // elaboro i placeholder nei destinatari
+                    if (isset($to_cc)) {
+                        foreach ($to_cc as $k => $v) {
+                            $tm = array('nome' => $k, 'mail' => $v);
+                            $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
+                            $destinatari_cc[$tw->render('nome', $d)] = $tw->render('mail', $d);
+                        }
+                    }
+
+
+                    // se è definito nel template imposto il destinatario
+                    if (array_key_exists('to_bcc', $t[$l]) && is_array($t[$l]['to_bcc']) && ! empty($t[$l]['to_bcc'][array_key_first($t[$l]['to_bcc'])])) {
+                        #print_r( $t[$l] );
+                        //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
+                        #print_r( $to );
+                        // QUESTA ANDAVA ma non inviava a più destinatari
+                        // $destinatari_bcc[ array_key_first( $t[ $l ]['to_bcc'] ) ] = $t[ $l ]['to_bcc'][ array_key_first( $t[ $l ]['to_bcc'] ) ];
+                        $to_bcc = array_replace_recursive($to_bcc, $t[$l]['to_bcc']);
+                    }
+
+                    // die( print_r( $t, true ) );
+
+                    // elaboro i placeholder nei destinatari
+                    if (isset($to_bcc)) {
+                        foreach ($to_bcc as $k => $v) {
+                            $tm = array('nome' => $k, 'mail' => $v);
+                            $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
+                            $destinatari_bcc[$tw->render('nome', $d)] = $tw->render('mail', $d);
+                        }
+                    }
+
+                    // TODO anche i nomi degli allegati dovrebbero passare da Twig in modo da poter inserire dati
+                    // variabili (ad es. una ricevuta generata ad hoc che abbia l'ID della transazione nel nome)
+                    // TODO
+
+                } catch (\Exception $e) {
+                    echo '<pre>' . print_r($t) . '</pre>';
+                    die($e->getMessage());
+                }
+
+
+                break;
+
+            default:
+
+                // debug
+                logWrite('tipo di template non supportato: ' . $t['type'], 'mail', LOG_ERR);
+
+                break;
+        }
+
+        // die( $corpo );
+
+        // rimuovo destinatari con indirizzo vuoto/non valido
+        $destinatari = array_filter((array)$destinatari, function($email) { return !empty(trim((string)$email)); });
+
+        if (empty($destinatari)) {
+            $bt = array_map(
+                function($f) { return ($f['file'] ?? '?') . ':' . ($f['line'] ?? '?') . ' ' . ($f['function'] ?? '?'); },
+                debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+            );
+            logWrite(
+                'mail scartata: destinatari vuoti dopo elaborazione template.'
+                . ' to_originale=' . json_encode($to)
+                . ' template_type=' . ($t['type'] ?? '?')
+                . ' oggetto=' . ($oggetto ?? '')
+                . ' backtrace=' . implode(' | ', $bt),
+                'mail', LOG_ERR
+            );
+            return null;
+        }
+
+        // ...
+        $corpo = path2url($corpo);
+
+        // accodo la mail
+        $id = queueMail(
+            $c,
+            $timestamp_invio,
+            $mittente,
+            $destinatari,
+            $oggetto,
+            $corpo,
+            $destinatari_cc,
+            $destinatari_bcc,
+            $allegati,
+            $headers,
+            $server
+        );
+
+        // debug
+        logWrite('mail accodata via template con id #' . $id, 'mail');
+
+        // ritorno
+        return $id;
     }
 
     /**
@@ -243,128 +437,132 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
-    function queueMail( $c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL ) {
+    function queueMail($c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL)
+    {
 
-	// lock delle tabelle della coda
-	    $lock = mysqlQuery( $c, 'LOCK TABLES mail_out WRITE' );
+        // guard: blocco accodamento se nessun destinatario valido
+        $destinatari_validi = array_filter((array)$destinatari, function($email) { return !empty(trim((string)$email)); });
+        if (empty($destinatari_validi)) {
+            $bt = array_map(
+                function($f) { return ($f['file'] ?? '?') . ':' . ($f['line'] ?? '?') . ' ' . ($f['function'] ?? '?'); },
+                debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+            );
+            logWrite(
+                'queueMail bloccata: nessun destinatario valido.'
+                . ' destinatari=' . json_encode($destinatari)
+                . ' mittente=' . json_encode($mittente)
+                . ' oggetto=' . $oggetto
+                . ' backtrace=' . implode(' | ', $bt),
+                'mail', LOG_ERR
+            );
+            return null;
+        }
 
-	// se il lock è andato a buon fine
-	    if( $lock === true ) {
+        // inserimento della mail in coda
+        $id = mysqlQuery(
+            $c,
+            "INSERT INTO mail_out (
+                        timestamp_composizione
+                        ,
+                        timestamp_invio
+                        ,
+                        server
+                        ,
+                        mittente
+                        ,
+                        destinatari
+                        ,
+                        destinatari_cc
+                        ,
+                        destinatari_bcc
+                        ,
+                        oggetto
+                        ,
+                        corpo
+                        ,
+                        allegati
+                        ,
+                        headers
+                    ) VALUES (
+                        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    )",
+            array(
+                array('s' => time()),
+                array('s' => $timestamp_invio),
+                array('s' => $server),
+                array('s' => serialize($mittente)),
+                array('s' => serialize($destinatari)),
+                array('s' => serialize($destinatari_cc)),
+                array('s' => serialize($destinatari_bcc)),
+                array('s' => $oggetto),
+                array('s' => $corpo),
+                array('s' => serialize($allegati)),
+                array('s' => serialize($headers))
+            )
+        );
 
-		// inserimento della mail in coda
-		    $id = mysqlQuery(
-			$c,
-			"INSERT INTO mail_out (
-			    timestamp_composizione
-			    ,
-			    timestamp_invio
-			    ,
-			    server
-			    ,
-			    mittente
-			    ,
-			    destinatari
-			    ,
-			    destinatari_cc
-			    ,
-			    destinatari_bcc
-			    ,
-			    oggetto
-			    ,
-			    corpo
-			    ,
-			    allegati
-			    ,
-			    headers
-			) VALUES (
-			    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-			)",
-			array(
-			    array( 's' => time() )
-			    ,
-			    array( 's' => $timestamp_invio )
-			    ,
-			    array( 's' => $server )
-			    ,
-			    array( 's' => serialize( $mittente ) )
-			    ,
-			    array( 's' => serialize( $destinatari ) )
-			    ,
-			    array( 's' => serialize( $destinatari_cc ) )
-			    ,
-			    array( 's' => serialize( $destinatari_bcc ) )
-			    ,
-			    array( 's' => $oggetto )
-			    ,
-			    array( 's' => $corpo )
-			    ,
-			    array( 's' => serialize( $allegati ) )
-			    ,
-			    array( 's' => serialize( $headers ) )
-			)
-		    );
+        // unlock delle tabelle
+        // mysqlQuery( $c, 'UNLOCK TABLES' );
 
-		// unlock delle tabelle
-		    mysqlQuery( $c, 'UNLOCK TABLES' );
-
-		// valore di ritorno
-		    return $id;
-
-	    } else {
-
-		// valore di ritorno
-		    return false;
-
-	    }
-
+        // valore di ritorno
+        return $id;
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
-	function mailString2array( $t ) {
+    function mailString2array($t)
+    {
 
-		$ar0 = array();
+        $ar0 = array();
 
-		$t = str_replace( ',', ';', $t );
-		$ar1 = explode( ';', $t );
+        $t = str_replace(',', ';', $t ?? '');
+        $ar1 = explode(';', $t ?? '');
 
-		foreach( $ar1 as $ds ) {
+        foreach ($ar1 as $ds) {
 
-			$dsa = array();
+            if (filter_var($ds, FILTER_VALIDATE_EMAIL)) {
 
-			$r = preg_match( '/([\S\s]+)(<[\S\@\.]+>)/', $ds, $dsa );
+                $ar0[$ds] = $ds;
+            } else {
 
-			if( ! empty( $r ) ) {
-				$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
-			}
+                $dsa = array();
 
-		}
+                $r = preg_match('/([\S\s]+)\s([<]{0,1}[\S\@\.]+[>]{0,1})/', $ds, $dsa);
 
-		return $ar0;
+                if (! empty($r)) {
+                    $ar0[trim($dsa[1])] = trim($dsa[2], '<>');
+                }
+            }
+        }
 
-	}
+        return $ar0;
+    }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
-     */	
-	function array2mailString( $a ) {
+     */
+    function array2mailString($a)
+    {
 
-		$ar = array();
+        $ar = array();
 
-		foreach( $a as $k => $m ) {
+        if (is_array($a)) {
+            foreach ($a as $k => $m) {
 
-			$ar[] = $k . ' <' . $m . '>';
+                $ar[] = $k . ' <' . $m . '>';
+            }
+        } else {
+            $ar[] = $a;
+        }
 
-		}
+        return implode(', ', $ar);
 
-		return implode( ', ', $ar );
-
-	}
+    }

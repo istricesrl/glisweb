@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `timestamp_calcolo_sostituti` INT NULL DEFAULT NULL AFTER `id_todo_articoli`;

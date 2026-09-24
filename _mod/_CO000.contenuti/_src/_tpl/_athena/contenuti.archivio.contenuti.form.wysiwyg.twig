@@ -1,0 +1,95 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# MODULO PRINCIPALE #}
+            <fieldset class="d-flex flex-column h-100">
+                <legend>testo della pagina 
+                    {% if request.__backurl__ %}
+                    <small>(<a href="{{ session.backurls[ request.__backurl__ ] }}">torna indietro</a>)</small>
+                    {% endif %}
+                </legend>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {{ frm.textarea({ 'field': { 'name': 'testo', 'class': 'form-control form-control-sm form-control-codice Trumbowyg' }, 'request': request, 'form': { 'table': form.table }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    $('#contenuti_testo').trumbowyg({
+        btns: [
+            // ['viewHTML'],
+            ['undo', 'redo'],
+            ['formatting'],
+            ['strong', 'em', 'del'],
+            ['superscript', 'subscript'],
+            ['link'],
+            ['insertImage'],
+            ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+            ['unorderedList', 'orderedList'],
+            ['horizontalRule'],
+            ['table']
+            // ['removeformat'],
+            // ['fullscreen']
+        ],
+        plugins: {
+            table: {
+            }
+        }
+    });
+
+});
+</script>
+<style type="text/css">
+:root {
+    --tbw-cell-vertical-padding: 4px;
+    --tbw-cell-horizontal-padding: 8px;
+    --tbw-cell-line-height: 1.5em;
+}
+
+table {
+    margin-bottom: var(--tbw-cell-line-height);
+}
+
+th,
+td {
+    height: calc(var(--tbw-cell-vertical-padding) * 2 + var(--tbw-cell-line-height));
+    min-width: calc(var(--tbw-cell-horizontal-padding) * 2);
+    padding: var(--tbw-cell-vertical-padding) var(--tbw-cell-horizontal-padding);
+    border: 1px solid #e7eaec;
+}
+</style>
+{% endblock javascript %}

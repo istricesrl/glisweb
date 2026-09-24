@@ -21,7 +21,7 @@
     
      // tabella gestita
     $ct['form']['table'] = 'pagine';
-    
+
     // tendina gruppi 
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

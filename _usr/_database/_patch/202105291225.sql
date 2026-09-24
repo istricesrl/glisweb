@@ -1,1 +1,0 @@
-ALTER TABLE `progetti` ADD `se_cancellare` INT(1) DEFAULT NULL , ADD KEY `se_cancellare` (`se_cancellare`) ;

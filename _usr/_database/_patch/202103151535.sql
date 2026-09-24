@@ -1,1 +1,0 @@
-drop table anagrafica_view_static;

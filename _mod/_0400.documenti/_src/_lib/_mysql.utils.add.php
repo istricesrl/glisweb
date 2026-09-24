@@ -1,0 +1,994 @@
+<?php
+
+    function generaInfoNumeroDocumento( $idTipologia, $sezionale, $idEmittente ) {
+
+        global $cf;
+
+        // seleziono l'ultimo progressivo utilizzato
+        $status['current'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT documenti.id, documenti.sezionale, coalesce( cast( numero as unsigned ), 0 ) AS numero, numerazione FROM documenti '.
+            'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+            'WHERE id_emittente = ? AND sezionale = ? '.
+            'AND tipologie_documenti.numerazione = ( SELECT numerazione FROM tipologie_documenti AS t1 WHERE t1.id = ? ) '.
+            'ORDER BY coalesce( cast( numero as unsigned ), 0 ) DESC LIMIT 1',
+            array(
+                array( 's' => $idEmittente ),
+                array( 's' => $sezionale ),
+                array( 's' => $idTipologia )
+            )
+        );
+
+        if( ! isset( $status['current']['numero'] ) ) {
+            $status['current']['numero'] = 0;
+        }
+    
+        return $status['current'];
+
+    }
+
+    /**
+     * Il prossimo numero libero di un sezionale.
+     *
+     * ⚠ NON E' UN CONTATORE ATOMICO, ed e' per questo che qui c'e' un lock.
+     *
+     * Il numero e' un `MAX( numero ) + 1` e chi lo chiede lo usa **piu' tardi**, quando inserisce
+     * il documento. Fra le due cose c'e' una finestra, e due richieste che ci entrano insieme
+     * calcolano lo **stesso numero**. Non finisce con due ricevute pari numero: `documenti` ha
+     * `UNIQUE KEY unica ( id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
+     * `INSERT ... ON DUPLICATE KEY UPDATE`, quindi il secondo INSERT **aggiorna la ricevuta del
+     * primo** e ne restituisce l'id: righe e pagamenti del secondo finiscono nel documento del
+     * primo, intestato a un'altra persona.
+     *
+     * SUCCESSO DAVVERO, due volte, il 2026-09-14 su Polmasi, in piena finestra di iscrizioni:
+     * due catture PayPal di ordini diversi nello stesso secondo, e la tessera da 20 euro di una
+     * socia e' finita sulla ricevuta di un'altra ( nr. 2633 intestata BARRETTA con dentro la
+     * tessera di POLIDORI; e nr. 2526 intestata SANTUNIONE con dentro quella di MARZADORI ).
+     * L'impronta e' il buco negli id: `documenti.id` 3540 e 3433 non esistono, perche' InnoDB
+     * consuma l'auto_increment anche quando l'INSERT diventa UPDATE.
+     *
+     * PERCHE' IL LOCK STA QUI E NON NEI CHIAMANTI. La cassa si proteggeva gia' da sola
+     * ( `GET_LOCK( concat( database(), ".cassa.documenti" ), 10 )` in
+     * `mod/4170.ecommerce/src/inc/macro/ecommerce.pagamento.alt.php` ), ma i chiamanti sono una
+     * dozzina — i `checkout.finally.success` di quattro moduli, il `pagamento.finally.success`,
+     * i task delle pianificazioni e dei coupon — e proteggerli uno per uno vuol dire dimenticarne
+     * uno. Qui passano tutti.
+     *
+     * PERCHE' NON SI RILASCIA. Il lock deve coprire anche l'INSERT, che avviene nel chiamante:
+     * rilasciarlo all'uscita da questa funzione lascerebbe la finestra aperta esattamente com'era.
+     * La connessione MySQL del framework **non e' persistente** ( `mysqli_real_connect()` senza il
+     * prefisso `p:`, `_src/_config/_125.mysql.php:96` ), quindi il lock cade da solo alla fine
+     * della richiesta, che e' il momento giusto. Un `RELEASE_LOCK` esplicito qui sarebbe un
+     * errore, non una pulizia.
+     *
+     * Il nome porta dentro `database()` perche' DEV e PROD stanno sullo stesso server MySQL e i
+     * lock sono visibili a tutta l'istanza: e' la stessa convenzione della cassa e di
+     * `anagrafica.fusione.codice.fiscale.php`.
+     *
+     * Se il lock non si prende entro dieci secondi si **prosegue lo stesso**, con un log di
+     * errore: meglio una ricevuta col rischio residuo che un socio che paga e non vede niente.
+     * E' la stessa scelta gia' fatta in cassa.
+     *
+     * @param  mixed $idTipologia
+     * @param  string $sezionale
+     * @param  mixed $idEmittente
+     * @return int il prossimo numero libero
+     */
+    function generaProssimoNumeroDocumento( $idTipologia, $sezionale, $idEmittente ) {
+
+        global $cf;
+
+        $lock = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT GET_LOCK( concat( database(), ".documenti.numerazione" ), 10 ) AS l'
+        );
+
+        if( empty( $lock ) ) {
+            logger(
+                'attenzione: lock della numerazione documenti non acquisito entro 10 secondi, procedo comunque'
+                . ' ( sezionale ' . $sezionale . ', tipologia ' . $idTipologia . ' )',
+                'documenti',
+                LOG_ERR
+            );
+        }
+
+        $row = generaInfoNumeroDocumento( $idTipologia, $sezionale, $idEmittente );
+
+        return $row['numero'] + 1;
+
+    }
+
+    function trovaIdRepartoDaIdIva( $idIva ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT reparti.id FROM reparti WHERE id_iva = ? LIMIT 1',
+            array( array( 's' => $idIva ) )
+        );
+
+    }
+
+    function generaInfoProgressivoInvio( $idAzienda ) {
+
+        global $cf;
+
+        // seleziono l'ultimo progressivo utilizzato
+        $status['current'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente = ?',
+#            'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente IN ( SELECT id FROM anagrafica WHERE codice_fiscale = ( SELECT codice_fiscale FROM anagrafica AS a1 WHERE a1.id = ? ) )',
+            array(
+                array( 's' => $idAzienda )
+            )
+        );
+
+        return $status['current'];
+
+    }
+
+    function generaNumeroProgressivoInvio( $idAzienda ) {
+
+        global $cf;
+
+        $status['current'] = generaInfoProgressivoInvio( $idAzienda );
+
+        $status['new'] = base_convert( $status['current'], 36, 10 );
+        $status['new']++;
+        $status['new'] = base_convert( $status['new'], 10, 36 );
+
+        $status['new'] = strtoupper( str_pad( $status['new'], 5, '0', STR_PAD_LEFT ) );
+
+        return $status['new'];
+
+    }
+
+    function generaContenutiDocumento( $idDocumento ) {
+
+        // ...
+        global $cf;
+
+        // dati dell'anno sportivo o scolastico
+        $r['etc']['periodo']['corrente'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM periodi 
+            INNER JOIN tipologie_periodi ON tipologie_periodi.id = periodi.id_tipologia 
+            WHERE tipologie_periodi.se_corsi = 1 
+            AND periodi.data_inizio < now() AND periodi.data_fine > now()
+            AND periodi.id_genitore IS NULL'
+        );
+
+        // recupero i dati del documento
+        $r['doc'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT documenti.*, '.
+            'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, tipologie_documenti.nome AS tipologia, '.
+            'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
+            'tipologie_documenti.codice AS codice_tipologia, '.
+            'condizioni_pagamento.codice AS codice_pagamento '.
+            'FROM documenti '.
+            'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+            'LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
+            'WHERE documenti.id = ?',
+            array( array( 's' => $idDocumento ) )
+        );
+
+        // oggetto del documento
+        $r['doc']['oggetto'] = $r['doc']['tipologia'] . ' n. ' . $r['doc']['numero'] . ' del ' . @strftime( '%d %B %Y', strtotime( $r['doc']['data'] ) );
+
+        // debug
+        // print_r( $r['doc'] );
+
+        // TODO
+        if( empty( $r['doc'] ) ) {
+            die('esigibilità IVA o mdalità pagamento non impostate');
+        }
+
+        // verifico la presenza del progressivo di invio
+        if( ! empty( $r['doc']['se_progressivo_invio_richiesto'] ) && empty( $r['doc']['progressivo_invio'] ) ) { dieText( 'progressivo invio mancante' ); }
+
+        // TODO
+        $r['doc']['divisa'] = 'EUR';
+
+        // TODO
+        if( ! empty( $r['doc']['esigibilita'] ) ) {
+            $r['doc']['codice_esigibilita'] = $r['doc']['esigibilita'];
+        } elseif( in_array( $r['doc']['id_tipologia'], array( 1, 2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ) ) ) {
+            die('codice esigibilità IVA non impostato');
+        }
+        
+        /**
+         * NOTA Esigibilità Dell’IVA: Immediata, Differita, Scissione
+         * Codici IVA fattura elettronica: cosa significa esegibilità dell’IVA? Sono vari i casi in cui è obbligatorio pagare l’IVA per una transazione commerciale,
+         * di qualsiasi genere. Questa imposta può però essere saldata in modi e maniere del tutto differenti tra loro. Il comportamento che si desidera tenere
+         * nei confronti dell’imposta è da indicare all’interno della fattura elettronica. Bisogna segnalare sia l’esigibilità sia la modalità del versamento.
+         * L’IVA infatti può essere esigibile immediatamente nel momento in cui si esegue la transazione. In questi casi si indica il codice “I”, ossia esigibilità immediata.
+         * Volendo è invece possibile effettuare il pagamento dell’IVA solo nel momento in cui si riceve il pagamento per la fattura che si sta emettendo. In questi
+         * casi si utilizza il codice “D”, ossia IVA Differita. Esiste una terza opzione, da indicare con il codice IVA in fattura elettronica “S”, che indica la
+         * scissione dei pagamenti (meglio nota come split payment).
+         */
+
+        // TODO
+        $r['doc']['condizioni_pagamento'] = $r['doc']['codice_pagamento'];
+
+        /**
+
+        * NOTA condizioni di pagamento
+        * TP01 Pagamento a rate: viene impostato un pagamento a rate dove è possibile impostare una sola rata, nel caso infatti in cui il cliente non abbia saldato la fattura al momento dell’emissione o sia necessario indicare dei dati Bancari, attraverso questo tipo di pagamento sarà possibile impostare tali dati.
+        * TP02 Pagamento completo: va impostato nel caso in cui il pagamento sia stato già completato;
+        * TP03 Anticipo: nel caso in cui un cliente depositi un anticipo si potrà utilizzare questa modalità di pagamento indicando i dati specifici.
+        */
+
+        // TODO
+        $r['doc']['causale'] = 'vendita';
+
+        // inizializzo il totale
+        $r['doc']['tot']['importo_netto_totale'] = 0;
+        $r['doc']['tot']['importo_iva_totale'] = 0;
+        $r['doc']['tot']['importo_lordo_totale'] = 0;
+
+        // carico le righe del documento
+        $r['doc']['righe'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_articoli.*,
+            iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
+            udm.sigla AS udm FROM documenti_articoli 
+            INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
+            INNER JOIN iva ON iva.id = reparti.id_iva 
+            INNER JOIN udm ON udm.id = documenti_articoli.id_udm 
+            WHERE documenti_articoli.id_documento = ? 
+            AND documenti_articoli.id_genitore IS NULL ',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // debug
+        // var_dump( $r['doc']['id'] );
+        // print_r( $r['doc']['righe'] );
+
+        // controllo contenuto
+        if( empty( $r['doc']['righe'] ) ) {
+            // dieText('inserire almeno una riga, oppure verificare reparti, aliquote IVA e unità di misura');
+        }
+
+        // elaboro i totali
+        foreach( $r['doc']['righe'] as &$riga ) {
+
+            $riga['qtd'] = ( empty( $riga['quantita'] ) ) ? 1 : $riga['quantita'];
+
+            $riga['importo_netto_unitario']         = str_replace( ',', '.', round( ( $riga['importo_netto_totale'] / $riga['qtd'] ), 2 ) );
+            $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_totale'] , 2 ) );
+            $riga['importo_iva_totale']             = str_replace( ',', '.', round( $riga['importo_netto_totale'] * ( $riga['aliquota'] / 100 ), 2 ) );
+            $riga['importo_lordo_totale']           = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] + $riga['importo_iva_totale'] ) );
+            $riga['aliquota']                       = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['aliquota'], 2 ) ) );
+
+            $r['doc']['tot']['importo_netto_totale']     += $riga['importo_netto_totale'];
+            $r['doc']['tot']['importo_iva_totale']       += $riga['importo_iva_totale'];
+            $r['doc']['tot']['importo_lordo_totale']     += $riga['importo_lordo_totale'];
+
+            if( isset( $r['doc']['iva'][ $riga['id_iva'] ]['tot'] ) ) {
+                $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot'] += $riga['importo_netto_totale'];
+                $r['doc']['iva'][ $riga['id_iva'] ]['tot'] += $riga['importo_iva_totale'];
+            } else {
+                $r['doc']['iva'][ $riga['id_iva'] ] = array(
+                    'tot' => $riga['importo_iva_totale'],
+                    'imponibile_tot' => str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] ) ),
+                    'nome' => $riga['nome_iva'],
+                    'codice' => $riga['codice_iva'],
+                    'aliquota' => str_replace( ',', '.', sprintf( '%0.2f', $riga['aliquota'] ) ),
+                    'riferimento' => ( ( ! empty( $riga['descrizione_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
+                );
+            }
+
+            $riga['importo_netto_unitario']                     = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_unitario'] ) );
+            $riga['importo_netto_totale']                       = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] ) );
+            $riga['importo_iva_totale']                         = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_iva_totale'] ) );
+            $riga['importo_lordo_totale']                       = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_lordo_totale'] ) );
+
+            if( ! empty( $riga['id_rinnovo'] ) ) {
+
+                $riga['dettagli']['rinnovo'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT rinnovi.*, tipologie_rinnovi.nome AS tipologia 
+                    FROM rinnovi 
+                    INNER JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia 
+                    WHERE rinnovi.id = ?',
+                    array( array( 's' => $riga['id_rinnovo'] ) )
+                );
+
+            }
+
+            if( ! empty( $riga['id_articolo'] ) ) {
+
+                $riga['dettagli']['corso'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT __report_corsi__.* FROM __report_corsi__ INNER JOIN progetti ON progetti.id = __report_corsi__.id INNER JOIN prodotti ON prodotti.id = progetti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? ',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
+                if( ! empty( $riga['dettagli']['corso'] ) ) {
+
+                    $riga['dettagli']['corso']['certificato']['richiesto'] = mysqlSelectRow(
+                        $cf['mysql']['connection'],
+                        'SELECT certificazioni.id, certificazioni.nome FROM certificazioni INNER JOIN progetti_certificazioni ON progetti_certificazioni.id_certificazione = certificazioni.id WHERE progetti_certificazioni.id_progetto = ?',
+                        array( array( 's' => $riga['dettagli']['corso']['id'] ) )
+                    );
+
+                    if( ! empty( $riga['dettagli']['corso']['certificato']['richiesto'] ) ) {
+                        $riga['dettagli']['corso']['certificato']['richiesto']['scadenza'] = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT max( data_scadenza ) FROM anagrafica_certificazioni WHERE id_anagrafica = ? AND id_certificazione = ? ',
+                            array(
+                                array( 's' => $r['doc']['id_destinatario'] ),
+                                array( 's' => $riga['dettagli']['corso']['certificato']['richiesto']['id'] ),
+                            )
+                        );
+                    }
+
+                }
+
+                $riga['dettagli']['abbonamento'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_abbonamento IS NOT NULL',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
+                /* TODO trovare un modo sensato di collegare i certificati richiesti agli abbonamenti anche in base ai corsi collegati
+
+                if( ! empty( $riga['dettagli']['abbonamento'] ) ) {
+
+                    $riga['dettagli']['abbonamento']['certificato']['richiesto'] = mysqlSelectRow(
+                        $cf['mysql']['connection'],
+                        'SELECT certificazioni.id, certificazioni.nome FROM certificazioni INNER JOIN progetti_certificazioni ON progetti_certificazioni.id_certificazione = certificazioni.id WHERE progetti_certificazioni.id_progetto = ?',
+                        array( array( 's' => $riga['dettagli']['abbonamento']['id'] ) )
+                    );
+
+                    if( ! empty( $riga['dettagli']['abbonamento']['certificato']['richiesto'] ) ) {
+                        $riga['dettagli']['abbonamento']['certificato']['richiesto']['scadenza'] = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT max( data_scadenza ) FROM anagrafica_certificazioni WHERE id_anagrafica = ? AND id_certificazione = ? ',
+                            array(
+                                array( 's' => $r['doc']['id_destinatario'] ),
+                                array( 's' => $riga['dettagli']['abbonamento']['certificato']['richiesto']['id'] ),
+                            )
+                        );
+                    }
+
+                }
+
+                */
+
+                $riga['dettagli']['tesseramento'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_tesseramento IS NOT NULL',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
+            }
+
+            // NOTA anche per determinare se la ricevuta è un'iscrizione potevo fare riferimento alle tipologie contratti? ma comunque mi servono i dettagli del corso
+            // bisogna mappare le relazioni fra progetti, tipologie_progetti, contratti, tipologie_contratti, rinnovi, tipologie_rinnovi, prodotti e articoli
+
+            $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot']    = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot'], 2 ) ) );
+            $r['doc']['iva'][ $riga['id_iva'] ]['tot']               = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['tot'], 2 ) ) );
+
+        }
+
+        // die( print_r( $r['doc']['tot'], true ) );
+
+        // formattazione totali
+        if( ! empty( $r['doc']['tot'] ) ){
+            foreach( $r['doc']['tot'] as &$tot ) {
+                $tot = str_replace( ',', '.', sprintf( '%0.2f', $tot ) );
+            }
+        }
+
+        // formattazione IVA
+        if( ! empty( $r['doc']['iva'] ) ) {
+            foreach( $r['doc']['iva'] as &$tot ) {
+                $tot['tot'] = str_replace( ',', '.', sprintf( '%0.2f', $tot['tot'] ) );
+            }
+        }
+
+        // seleziono tutte le righe di missione
+        $r['doc']['missione']['righe'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+                concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
+                group_concat( concat_ws( " - ", 
+                concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
+            FROM documenti_articoli 
+            INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+            INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto
+            INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
+            WHERE documenti_articoli.id_missione = ? GROUP BY documenti_articoli.id_articolo',
+            array( 
+                array( 's' => $r['doc']['id'] )
+            )
+        );
+
+        // recupero le collocazioni
+        foreach( $r['doc']['missione']['righe'] as &$row ) {
+
+            // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
+            // + id_missione. La nota distesa e' in src/inc/macro/missione.php.
+            $row['qta_prelevata'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',
+                array( 
+                    array( 's' => $r['doc']['id'] ),
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['qta_da_prelevare'] = $row['quantita'] - $row['qta_prelevata'];
+
+            $row['collocazione'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT concat( codice, " ", nome ) FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['collocazione_breve'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT codice FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['veicolo'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( tipologie_veicoli_path( mastri_tipologie_veicoli.id_tipologia ), "-" ) AS veicolo
+                FROM __report_giacenza_magazzini__ 
+                INNER JOIN mastri_tipologie_veicoli ON mastri_tipologie_veicoli.id_mastro = __report_giacenza_magazzini__.id_mastro
+                WHERE __report_giacenza_magazzini__.id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+        }
+
+        // carico i pagamenti per il documento
+        $r['doc']['pagamenti'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita, '.
+            'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
+            'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
+            'pagamenti.importo_lordo_totale, pagamenti.coupon_valore, pagamenti.id_coupon, '.
+            'pagamenti.importo_lordo_finale, iban.iban AS iban '.
+            'FROM pagamenti '.
+            'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+            'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
+            'WHERE pagamenti.id_documento = ?',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        if( empty( $r['doc']['pagamenti'] ) ) {
+            foreach( $r['doc']['righe'] as &$riga ) {
+                $r['doc']['pagamenti'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita, '.
+                    'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
+                    'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
+                    'pagamenti.importo_lordo_totale, pagamenti.coupon_valore, pagamenti.id_coupon, '.
+                    'pagamenti.importo_lordo_finale, iban.iban AS iban '.
+                    'FROM pagamenti '.
+                    'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+                    'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
+                    'LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli '.
+                    'LEFT JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
+                    'WHERE carrelli_articoli.id_rinnovo = ?',
+                    array( array( 's' => $riga['id_rinnovo'] ) )
+                );
+            }
+        }
+
+        // die( print_r( $r['doc']['pagamenti_carrelli'], true ) );
+
+        foreach( $r['doc']['pagamenti'] as &$pagamento ) {
+
+            $pagamento['dettagli_coupon'] = mysqlSelectrow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM coupon WHERE id = ?',
+                array( array( 's' => $pagamento['id_coupon'] ) )
+            );
+
+            if( isset( $pagamento['dettagli_coupon']['causale_id_contratto'] ) ) {
+                $pagamento['dettagli_contratto'] = mysqlSelectrow(
+                    $cf['mysql']['connection'],
+                    'SELECT contratti.* FROM contratti 
+                    WHERE contratti.id = ?',
+                    array( array( 's' => $pagamento['dettagli_coupon']['causale_id_contratto'] ) )
+                );
+            }
+
+            if( isset( $pagamento['dettagli_contratto']['id_progetto'] ) ) {
+                $pagamento['dettagli_progetto'] = mysqlSelectrow(
+                    $cf['mysql']['connection'],
+                    'SELECT __report_corsi__.* FROM __report_corsi__ 
+                    WHERE __report_corsi__.id = ?',
+                    array( array( 's' => $pagamento['dettagli_contratto']['id_progetto'] ) )
+                );
+            }
+
+        }
+
+        // debug
+        /*
+        $r['doc']['pagamenti'] = array(
+            array(
+                'codice_pagamento' => 'MP01',
+                'data_standard' => '2022-01-31',
+                'importo_lordo_finale' => '122.00'
+            )
+        );
+        */
+
+        // elaboro i pagamenti
+        // TODO
+
+        // inizializzo il progressivo di invio
+        /*
+        if( empty( $r['doc']['progressivo_invio'] ) ) {
+            $r['doc']['progressivo_invio'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( ( max( progressivo_invio ) + 1 ), 1 ) AS t FROM documenti'
+            );
+        }
+        */
+
+        /**
+         * NOTA il progressivo di invio dovrebbe essere assegnato al momento dell'invio? come facciamo per quelli che si
+         * scaricano l'XML e lo inviano a mano? bisogna rileggersi la documentazione della fatturazione elettronica
+         */
+
+        // recupero i dati dell'emittente
+        $r['src'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM anagrafica WHERE id = ?',
+            array( array( 's' => $r['doc']['id_emittente'] ) )
+        );
+
+        // verifico la presenza del progressivo di invio
+        if( empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
+
+        // denominazione fiscale
+        $r['src']['denominazione_fiscale'] = trim( $r['src']['nome'] . ' ' . $r['src']['cognome'] . ' ' . $r['src']['denominazione'] );
+
+        // recupero i dati della sede dell'emittente
+        $r['sri'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
+            'comuni.nome AS comune, provincie.sigla AS provincia, '.
+            'stati.iso31661alpha2 AS sigla_stato '.
+            'FROM anagrafica_indirizzi '.
+            'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+            'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+            'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+            'INNER JOIN stati ON stati.id = regioni.id_stato '.
+            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+            'WHERE anagrafica_indirizzi.id_anagrafica = ? AND anagrafica_indirizzi.id = ?',
+            array(
+                array( 's' => $r['src']['id'] ),
+                array( 's' => $r['doc']['id_sede_emittente'] )
+            )
+        );
+
+        // controllo indirizzo
+        if( empty( $r['sri'] ) ) {
+            dieText('richiesto indirizzo sede emittente');
+        }
+
+        // recupero il logo dell'azienda emittente
+        $r['sri']['logo'] = anagraficaGetLogo( $r['doc']['id_emittente'] );
+
+        // indirizzo fiscale
+        $r['sri']['indirizzo_fiscale'] = $r['sri']['tipologia'] . ' ' . $r['sri']['indirizzo'] . ', ' . $r['sri']['civico'];
+        $r['sri']['comune_indirizzo_fiscale'] = $r['sri']['cap'] . ' ' . $r['sri']['comune'] . ' ' . $r['sri']['provincia'];
+
+        // regime fiscale dell'emittente
+        // TODO questa cosa era commentata, perché?
+        $r['srr'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM regimi WHERE id = ?',
+            array( array( 's' => $r['src']['id_regime'] ) )
+        );
+
+        // recupero i dati del destinatario
+        $r['dst'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
+            array( array( 's' => $r['doc']['id_destinatario'] ) )
+        );
+
+        // debug
+        // die( print_r( $r['dst'], true ) );
+
+        // se il documento ha un destinatario (sono ammessi documenti a uso interno con solo l'emittente)
+        if( ! empty( $r['dst'] ) ) {
+
+            // tesseramento
+            $r['dst']['numero_tessera'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT max( contratti.codice ) AS tessera
+                    FROM contratti 
+                        INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
+                        INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia 
+                        INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+                    WHERE contratti_anagrafica.id_anagrafica = ? 
+                        AND tipologie_contratti.se_tesseramento IS NOT NULL ',
+                array( array( 's' => $r['doc']['id_destinatario'] ) )
+            );
+
+            // se il documento è una fattura, lo SDI è richiesto
+            if( $r['doc']['se_fattura'] ) {
+
+                // codice SDI di default a '0000000' per i privati senza codice SDI
+                if( empty( $r['dst']['codice_sdi'] ) && empty( $r['dst']['partita_iva'] ) ) {
+                    $r['dst']['codice_sdi'] = '0000000';
+                }
+
+                // verifico che il codice SDI risponda al pattern corretto
+                if( ! preg_match( '/[a-zA-Z0-9]+/', $r['dst']['codice_sdi'] ) ) {
+                    dieText('valore non corretto per codice SDI: ' . $r['dst']['codice_sdi'] );
+                }
+
+                // destinatari con PEC
+                if( ! empty( $r['dst']['id_pec_sdi'] ) ) {
+                    $r['dst']['pec_sdi'] =  mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT indirizzo from mail where id = ?',
+                        array( array( 's' => $r['dst']['id_pec_sdi'] ) ) );
+                }
+
+                // controllo CIG
+                if( ! empty( $r['dst']['se_pubblica_amministrazione'] ) ) {
+                    if( empty( $r['doc']['cig'] ) ) {
+                        dieText('richiesto CIG per emettere fattura PA' );
+                    }
+                    # TODO verificare se è sempre obbligatorio
+                    #        if( empty( $r['doc']['cup'] ) ) {
+                    #            dieText('richiesto CUP per emettere fattura PA' );
+                    #        }
+                    if( empty( $r['doc']['riferimento'] ) ) {
+                        dieText('richiesto riferimento per emettere fattura PA' );
+                    }
+                }
+
+            }
+
+            // denominazione fiscale
+            $r['dst']['denominazione_fiscale'] = trim( $r['dst']['nome'] . ' ' . $r['dst']['cognome'] . ' ' . $r['dst']['denominazione'] );
+
+            // recupero i dati della sede destinatario
+            $r['dsi'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
+                'comuni.nome AS comune, provincie.sigla AS provincia, '.
+                'stati.iso31661alpha2 AS sigla_stato '.
+                'FROM anagrafica_indirizzi '.
+                'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+                'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+                'WHERE anagrafica_indirizzi.id_anagrafica = ? AND anagrafica_indirizzi.id = ?',
+                array(
+                    array( 's' => $r['dst']['id'] ),
+                    array( 's' => $r['doc']['id_sede_destinatario'] )
+                )
+            );
+
+            // debug
+            // print_r( $r['dsi'] );
+
+            // controllo indirizzo
+            if( empty( $r['dsi'] ) ) {
+                dieText('richiesto indirizzo sede destinatario');
+            }
+
+            // indirizzo fiscale
+            $r['dsi']['indirizzo_fiscale'] = $r['dsi']['tipologia'] . ' ' . $r['dsi']['indirizzo'] . ', ' . $r['dsi']['civico'];
+            $r['dsi']['comune_indirizzo_fiscale'] = $r['dsi']['cap'] . ' ' . $r['dsi']['comune'] . ' ' . $r['dsi']['provincia'];
+
+        }
+
+        // documenti collegati
+        // TODO selezionare in base al ruolo
+        // TODO selezionare solo le fatture
+        // TODO fare la UNION in $dcl anche delle relazioni fra righe (una riga di nota di credito può far riferimento a una o più righe di fattura specifiche e non all'intera fattura)
+        $dcl = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT documenti_view.* '.
+            'FROM relazioni_documenti '.
+            'INNER JOIN documenti_view ON documenti_view.id = relazioni_documenti.id_documento_collegato '.
+            'WHERE relazioni_documenti.id_documento = ?',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // TODO DDT collegati
+        // cercare i DDT
+        // compilare la sezione <DatiDDT>
+
+        /**
+         * Fattura elettronica a privato senza p iva: obbligo di legge
+         * Emettere Fattura elettronica a privato senza p iva è obbligatorio. È la legge a stabilirlo. Ed è obbligatorio sin dal primo gennaio 2019 per effetto della Legge di Bilancio. Una regola che riguarda tutte le operazioni B2C che hanno per oggetto la cessione di beni mobili e immobili effettuate da un soggetto IVA verso un cliente o un consumatore finale. Nonostante questa specifica esistono come 4 eccezioni alla regola principale. In altre parole alcuni soggetti sono esonerati dall’obbligo di emettere fattura elettronica a privato senza p iva. È questo il caso, ad esempio, dei contribuenti che agiscono nel regime forfettario. È comunque sempre possibile adottarla come scelta libera.
+         * 
+         * Fattura elettronica a privato senza p iva, senza codice destinatario e senza PEC
+         * I privati senza partita Iva non hanno alcun obbligo di dotarsi di PEC, oppure di codice destinatario, anche se devono ricevere una fattura elettronica. Resta il fatto che, in alcuni casi, un’azienda o un professionista debba emettere fattura elettronica a privato senza p iva. In questo caso, in fase di compilazione della e-fattura, deve:
+         * 
+         * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
+         * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+         * Lasciare vuoto il campo “PECDestinatario”.
+         * Inoltre il Provvedimento 89757 del Direttore dell’Agenzia delle entrate ha stabilito che:
+         * 
+         * Il Sistema di Interscambio recapita la fattura elettronica al destinatario direttamente nell’area riservata del sito di AdE
+         * È obbligatorio consegnare al cliente una copia cartacea o digitale ed informarlo che l’originale si trova sul sito dell’Agenzia delle Entrate
+         * Inoltre è importante sapere che alcuni software/piattaforme sono in grado di convertire il formato XML in uno leggibile in altri formati desiderati.
+         * 
+         * Fattura elettronica a privato senza p iva, senza codice univoco, ma con PEC
+         * Può capitare che qualche privato abbia la PEC, ma non per questo il codice univoco. In questi casi allora bisogna:
+         * 
+         * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
+         * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+         * compilare il campo “PECDestinatario”.
+         * Il sistema di Interscambio, questa volta, recapiterà alla PEC del destinatario la fattura elettronica. SDI mette comunque a disposizione del destinatario una copia della fattura all’interno dell’area privata sul sito di agenzia delle Entrate.
+         * 
+         * Fattura elettronica a privato senza p iva
+         * 
+         * Privato senza p iva, con codice univoco
+         * Anche se si tratta di un caso davvero molto raro, è pur sempre probabile. In questo caso, in fase di compilazione della fattura elettronica bisogna:
+         * 
+         * inserire nel campo “CodiceDestinatario” il codice comunicato
+         * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+         * Compilare o meno il campo “PECDestinatario”.
+         * Per quanto riguarda l’invio invece SDI recapita la fattura elettronica all’indirizzo corrispondente al codice destinatario.
+         * 
+         * Privato senza p iva e cliente estero
+         * Si tratta di un caso piuttosto frequente, che deve essere gestito come segue:
+         * 
+         * inserire il codice convenzionale: “XXXXXXX” (7 volte X) nel campo “CodiceDestinatario”
+         * indicare nel campo “CodiceFiscale” il codice fiscale del destinatario
+         * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+         * In questo specifico caso però il Sistema di Interscambio non è in grado di recapitare la fattura elettronica al destinatario. Questo perché non la può recapitare all’estero, visto che il sistema di fatturazione elettronica esiste (al momento) solo in Italia. Questo significa che la fattura deve essere consegnata a mano al cliente. Il formato può essere cartaceo, oppure digitale nella forma che lui desidera.
+         * 
+         */
+
+        // ...
+        return $r;
+
+    }
+
+    function tendinaRigheMissione() {
+
+        global $cf;
+
+        $r = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7'
+        );
+
+        return $r;
+
+    }
+
+    /**
+     * genera il DDT di controllo per gli ordini associati a una missione
+     *
+     * E' la logica dietro al pulsante "abilita controllo" della scheda missione e dietro al task
+     * pianificato ddt.da.missioni.chiuse.php. "Abilitare il controllo" non e' un flag: significa
+     * creare i documenti DDT (id_tipologia 4) con le loro righe, che sono cio' che le maschere a
+     * valle trovano da controllare. Prima del DDT non c'e' nulla da controllare, dopo si'.
+     *
+     * Per ogni riga di lista di prelievo agganciata alla missione si crea (se non c'e' gia') un DDT
+     * per il documento di origine, lo si lega alla missione e alla lista con una relazione di ruolo
+     * 3, e vi si aggiunge la riga.
+     *
+     * La funzione e' idempotente e fail-forward: ogni passo e' una INSERT IGNORE con una chiave
+     * deterministica, quindi rilanciarla non duplica nulla e, se muore a meta', il giro successivo
+     * completa il lavoro. Le chiavi di idempotenza sono:
+     *   - testata : documenti.codice = 'DDT-' . \<codice lista\>            (UNIQUE)
+     *   - riga    : documenti_articoli.codice = 'DDT-R-' . \<codice riga\>  (UNIQUE)
+     *   - legami  : relazioni_documenti UNIQUE( id_documento, id_documento_collegato, id_ruolo )
+     *
+     * NOTA sulla quantita': la riga del DDT riporta la quantita' ORDINATA della riga di lista, non
+     * quella realmente prelevata (che sarebbe la somma delle righe figlie con id_genitore
+     * valorizzato e id_tipologia 4). Su una missione chiusa e completa i due valori coincidono, ma
+     * src/inc/macro/chiusura.missione.php:65-67 si limita ad avvisare quando le quantita' non
+     * tornano e non impedisce la chiusura: su una missione chiusa parziale il DDT sovradichiara la
+     * merce. Scelta deliberata di non cambiarlo qui.
+     *
+     * @param   integer $idMissione     documenti.id della missione (id_tipologia 34)
+     * @param   boolean $forza          genera il DDT anche se la missione non e' chiusa; e' la
+     *                                  valvola del pulsante manuale, il cron non la usa mai
+     *
+     * @return  array                   lo status dell'elaborazione ( info, err, ddt )
+     *
+     */
+    function creaDdtDaMissione( $idMissione, $forza = false ) {
+
+        global $cf;
+
+        // inizializzo l'array del risultato
+        $status = array( 'info' => array(), 'err' => array(), 'ddt' => array() );
+
+        // il documento deve esistere ed essere davvero una missione
+        $missione = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT id, codice, timestamp_chiusura FROM documenti WHERE id = ? AND id_tipologia = 34 LIMIT 1',
+            array(
+                array( 's' => $idMissione )
+            )
+        );
+
+        if( empty( $missione['id'] ) ) {
+            $status['err'][] = 'il documento #' . $idMissione . ' non esiste o non e\' una missione';
+            return $status;
+        }
+
+        // la missione deve essere chiusa: "missione completata" significa timestamp_chiusura
+        // valorizzato, che e' cio' che scrive src/inc/macro/missione.php alla chiusura del
+        // prelievo. Senza questa guardia il cron genererebbe DDT per missioni ancora in corso.
+        if( empty( $missione['timestamp_chiusura'] ) && $forza !== true ) {
+            $status['err'][] = 'la missione ' . $missione['codice'] . ' non e\' chiusa: DDT non generato';
+            return $status;
+        }
+
+        // seleziono le righe di lista agganciate alla missione
+        $righe = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT * FROM documenti_articoli WHERE id_missione = ? AND id_documento IS NOT NULL',
+            array(
+                array( 's' => $idMissione )
+            )
+        );
+
+        if( empty( $righe ) ) {
+            $status['err'][] = 'la missione ' . $missione['codice'] . ' non ha righe: DDT non generato';
+            return $status;
+        }
+
+        // per ogni riga della missione...
+        foreach( $righe as $riga ) {
+
+            // senza codice riga non c'e' chiave di idempotenza: due righe a codice vuoto
+            // collasserebbero entrambe su 'DDT-R-' (UNIQUE) sovrascrivendosi a vicenda
+            if( empty( $riga['codice'] ) ) {
+                $status['err'][] = 'la riga #' . $riga['id'] . ' non ha codice: saltata';
+                continue;
+            }
+
+            // seleziono l'ordine originale della riga
+            $ordine = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, codice, id_emittente FROM documenti WHERE id = ? LIMIT 1',
+                array(
+                    array( 's' => $riga['id_documento'] )
+                )
+            );
+
+            if( empty( $ordine['id'] ) || empty( $ordine['codice'] ) ) {
+                $status['err'][] = 'la riga #' . $riga['id'] . ' punta al documento #' . $riga['id_documento'] . ', che non esiste o non ha codice: saltata';
+                continue;
+            }
+
+            // verifico se c'e' gia' un DDT associato come evasione al documento di questa riga.
+            // NOTA: la relazione di ruolo 3 tiene il DDT in id_documento e la lista (o la missione)
+            // in id_documento_collegato, quindi la si interroga dal lato collegato. Cercare
+            // 'WHERE id_documento = <id lista>' non trova mai nulla.
+            $idDocumento = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT relazioni_documenti.id_documento FROM relazioni_documenti
+                INNER JOIN documenti ON documenti.id = relazioni_documenti.id_documento AND documenti.id_tipologia = 4
+                WHERE relazioni_documenti.id_documento_collegato = ? AND relazioni_documenti.id_ruolo = 3 LIMIT 1',
+                array(
+                    array( 's' => $riga['id_documento'] )
+                )
+            );
+
+            // se non c'e' un DDT associato, lo creo
+            if( empty( $idDocumento ) ) {
+
+                // status
+                $status['info'][] = 'creo il DDT per il documento ' . $ordine['codice'];
+
+                // creo il DDT. INSERT IGNORE e non upsert: sul duplicato il default di
+                // mysqlInsertRow riscriverebbe data, nome ed emittente di un DDT magari gia'
+                // lavorato o chiuso in smistamento.
+                mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'codice' => 'DDT-' . $ordine['codice'],
+                        'id_tipologia' => 4,
+                        'id_emittente' => trovaIdAziendaGestita(),
+                        'id_destinatario' => $ordine['id_emittente'],
+                        'data' => date('Y-m-d'),
+                        'nome' => 'DDT generato automaticamente da missione ' . $missione['codice'] . ' per ordine ' . $ordine['codice'],
+                    ),
+                    'documenti',
+                    false
+                );
+
+                // rileggo per codice: su duplicato la INSERT IGNORE restituisce insert_id = 0
+                $idDocumento = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM documenti WHERE codice = ? AND id_tipologia = 4 LIMIT 1',
+                    array(
+                        array( 's' => 'DDT-' . $ordine['codice'] )
+                    )
+                );
+
+            } else {
+
+                // status
+                $status['info'][] = 'trovato il DDT #' . $idDocumento . ' per il documento ' . $ordine['codice'];
+
+            }
+
+            // senza il DDT la riga sarebbe orfana ( id_documento NULL )
+            if( empty( $idDocumento ) ) {
+                $status['err'][] = 'il DDT ' . 'DDT-' . $ordine['codice'] . ' non e\' stato creato ne\' ritrovato: riga saltata';
+                continue;
+            }
+
+            // lego il DDT alla missione e alla lista di prelievo
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_documento' => $idDocumento,
+                    'id_documento_collegato' => $missione['id'],
+                    'id_ruolo' => 3
+                ),
+                'relazioni_documenti',
+                false
+            );
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_documento' => $idDocumento,
+                    'id_documento_collegato' => $riga['id_documento'],
+                    'id_ruolo' => 3
+                ),
+                'relazioni_documenti',
+                false
+            );
+
+            // il codice riga e' la chiave di idempotenza e documenti_articoli.codice e' char(32):
+            // oltre i 32 caratteri MySQL troncherebbe in silenzio, facendo collidere sull'indice
+            // UNIQUE due righe diverse
+            $codiceRiga = 'DDT-R-' . $riga['codice'];
+
+            if( strlen( $codiceRiga ) > 32 ) {
+                $status['err'][] = 'il codice ' . $codiceRiga . ' supera i 32 caratteri: riga saltata';
+                continue;
+            }
+
+            // aggiungo la riga al DDT. Sta fuori dall'if perche' deve coprire anche le righe
+            // agganciate alla missione dopo la prima generazione del DDT.
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'codice' => $codiceRiga,
+                    'id_documento' => $idDocumento,
+                    'quantita' => $riga['quantita'],
+                    'id_articolo' => $riga['id_articolo'],
+                    'id_tipologia' => 4,
+                    'note' => 'riga generata automaticamente da missione ' . $missione['codice'] . ' per ordine ' . $ordine['codice'],
+                ),
+                'documenti_articoli',
+                false
+            );
+
+            // status
+            $status['ddt'][ $ordine['codice'] ] = $idDocumento;
+
+        }
+
+        return $status;
+
+    }

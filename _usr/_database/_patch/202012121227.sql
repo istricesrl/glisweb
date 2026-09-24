@@ -1,1 +1,0 @@
-ALTER TABLE `immagini` ADD `id_lingua` INT NULL DEFAULT NULL AFTER `id_zona`, ADD INDEX (`id_lingua`) ;

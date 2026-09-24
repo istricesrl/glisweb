@@ -1,1 +1,0 @@
-ALTER TABLE `contenuti` ADD INDEX(`id_categoria_risorse`);

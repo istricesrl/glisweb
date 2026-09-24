@@ -129,10 +129,11 @@
         $frequenza = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT count(*) FROM attivita WHERE id_progetto = ? AND id_anagrafica = ? '
-            .'AND data_programmazione < ?',
+            .'AND (data_programmazione between ? AND ?)',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $id_anagrafica ),
+                array( 's' => date('Y-m-d', strtotime( $data . '-3 months' ) ) ),
                 array( 's' => $data )
             )
         );
@@ -150,8 +151,7 @@
     }
 
     /* funzione che verifica se un operatore da contratto è disponibile in una certa data/fascia oraria e restituisce:
-        - 100 punti se sì
-        - 50 punti se non ci sono disponibilità ma è settato il flag se_disponibile nel contratto
+        - 50 punti se sì
         - 0 punti se no
     */
     function puntiDisponibilitaOperatore( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
@@ -189,20 +189,6 @@
 
         if( $disponibile > 0 ){
             $punti = 100;
-        }
-        else{
-            // verifico se l'operatore è eventualmente disponibile ad essere contattato
-            $disponibile_eventuale = mysqlSelectValue(
-                $cf['mysql']['connection'], 
-                'SELECT se_disponibile FROM contratti WHERE id = ? ',
-                array(
-                    array( 's' => $cId )
-                )
-            );
-
-            if( $disponibile_eventuale == 1 ){
-                $punti = 50;
-            }
         }
 
         //return $result;
@@ -399,13 +385,6 @@
 
         global $cf;
 
-        // reset operatori
-        $reset = mysqlQuery(
-            $cf['mysql']['connection'],
-            'DELETE FROM __report_sostituzioni_attivita__ WHERE id_attivita = ?',
-            array( array( 's' => $id_attivita ) )
-        );
-
         // estraggo i dati che mi occorrono per l'attività
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
@@ -556,7 +535,7 @@
         );
 
         // elenco degli operatori calcolati per le attività scoperte del progetto corrente
-       $operatori = mysqlQuery(
+        $operatori = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT r.id_anagrafica,  count(r.id) as pta, sum(punteggio) as ptt, sum(punti_distanza) AS ptd, '
             .'max(punti_sostituto) AS pts, sum(punti_progetto) AS ptp, '
@@ -576,7 +555,7 @@
                 array( 's' => $id_progetto  )        
             )
         );
-         
+        
         // array di appoggio per il calcolo dei punteggi
         $op = array();
 
@@ -611,18 +590,13 @@
         }
     
         krsort( $candidati );
-      
+       
         return $candidati;
 
     }
 
-	/**
-     * funzione che ritorna un array dei giorni festivi relativi ad un certo anno. riceve in ingresso
-     * - anno: l'anno per il quale si desiderano calcolare i giorni
-     * - formato: il formato con il quale si desiderano le date. se non passato, la funzione restituisce i timestamp
-     * 
-     *  */
-    function getHolidays( $anno, $formato = NULL ){
+	// funzione che ritorna un array dei giorni festivi (timestamp) relativi ad un certo anno
+    function getHolidays( $anno ){
 
         $festivi = array(
 			strtotime( $anno . '-01-01' ), 	    // Capodanno
@@ -638,12 +612,6 @@
 			strtotime( $anno . '-12-25' ),  	// Natale
 			strtotime( $anno . '-12-26' ) 	    // Santo Stefano
 		);
-
-        if( $formato !== NULL ){
-            foreach( $festivi as &$f ){
-                $f = date( $formato, $f );
-            }
-        }
 
         return $festivi;
     }

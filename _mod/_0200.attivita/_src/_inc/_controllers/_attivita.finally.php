@@ -1,0 +1,53 @@
+<?php
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     * @todo come agire nei controller after
+     * @todo documentare
+     *
+     * @file
+     *
+     */
+
+    // log
+	logWrite( "controller finally per $t/$a", 'controller' );
+
+    // elaborazioni di default dei dati
+	switch( strtoupper( $a ) ) {
+
+	    case METHOD_POST:
+        case METHOD_PUT:
+        case METHOD_REPLACE:
+        case METHOD_UPDATE:
+
+            // view statica naturale
+            // mysqlQuery( $c, 'CALL attivita_view_static( ? )', array( array( 's' => $d['id'] ) ) );
+            refreshStaticView( $c, 'attivita', $d['id'] );
+            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
+
+            // aggiornamento report lezioni
+            // TODO fare meglio non è bello avere gli ID fissi
+            if( isset( $d['id_tipologia'] ) && in_array( $d['id_tipologia'], array( 15, 19, 32, 33, 40 ) ) ) {
+                updateReportLezioniCorsi( $d['id'] );
+            }
+
+        break;
+        case METHOD_DELETE:
+
+            mysqlQuery( $c, 'DELETE FROM attivita_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
+
+            // aggiornamento report lezioni
+            // TODO fare meglio non è bello avere gli ID fissi
+            if( isset( $d['id_tipologia'] ) && in_array( $d['id_tipologia'], array( 15, 19, 32, 33, 40 ) ) ) {
+                updateReportLezioniCorsi( $d['id'] );
+            }
+
+        break;
+
+    }

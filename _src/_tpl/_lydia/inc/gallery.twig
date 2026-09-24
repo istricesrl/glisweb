@@ -1,0 +1,9 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+{% import '_lib/_default.twig' as cms %}
+
+<!-- file {{ _self }} -->
+{% if page.contents.images.gallery|length > 0 %}
+{{ cms.gallery2colorbox( page, localization.language.ietf, site, 'galleryId', ['gallery'] ) }}
+{% endif %}
+<!-- fine file {{ _self }} -->

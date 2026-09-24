@@ -1,1 +1,0 @@
-ALTER TABLE `__acl_anagrafica__` ADD `id_account` INT NULL DEFAULT NULL AFTER `id_gruppo`, ADD INDEX (`id_account`) ;

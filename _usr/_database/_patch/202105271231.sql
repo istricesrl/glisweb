@@ -1,1 +1,0 @@
-INSERT INTO `tipologie_documenti` (`id`, `nome`, `codice`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`) VALUES ('9', 'scontrino', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);

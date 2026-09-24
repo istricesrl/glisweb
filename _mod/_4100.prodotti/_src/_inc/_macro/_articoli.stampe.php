@@ -27,7 +27,7 @@
 		'label' => NULL
 	    )
 	);
-
+/*
     if(file_exists(DIR_MOD.'4100.prodotti/src/api/print/manuale.barcode.pdf.php')  ){$file =  $cf['site']['url'].'4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php';}
     else {$file = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';  }
 
@@ -39,4 +39,4 @@
 		'title' => 'etichette prezzo',
 		'text' => 'stampa l\'etichetta prezzo di tutti gli articol in pdf'
 	    );
-
+*/

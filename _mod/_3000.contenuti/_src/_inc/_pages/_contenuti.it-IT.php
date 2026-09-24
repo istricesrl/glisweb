@@ -17,7 +17,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'contenuti' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contenuti' ),
-									'priority'	=> '300' ) ) )	
+									'priority'	=> '800' ) ) )	
 	);
 
     // vista pagine
@@ -29,13 +29,26 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'pagine.view',
+	    'etc'		=> array( 'tabs'	=> array(	'pagine.view', 'pagine.stats',
 									'pagine.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'pagine' ),
 									'priority'	=> '010' ) ) )	
     );
 
-    // tools pagine
+	// statistiche form pagine
+	$p['pagine.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche pagine' ),
+	    'h1'		=> array( $l		=> 'statistiche pagine' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.view']['etc']['tabs'] )
+    );
+
+	// tools pagine
 	$p['pagine.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -68,12 +81,13 @@
 													'pagine.form.macro',
 													'pagine.form.metadati',
 													'pagine.form.gruppi',
+													'pagine.form.stats',
 													'pagine.form.tools'
 												) )
 	);
 
 	// form pagine SEM/SMM
-	$p['pagine.form.sem'] = array(
+/*	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
@@ -82,23 +96,17 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
-	);
+	);*/
 
-	// form pagine testo
-	$p['pagine.form.testo'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'pagine.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
-	);
+	// RELAZIONI CON IL MODULO PROGETTI
+	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'pagine.form.immagini', $p['pagine.form']['etc']['tabs'], 'pagine.form.progetti' );
+	}
 
 	// form pagine menu
 	$p['pagine.form.menu'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'menu' ),
 	    'h1'		=> array( $l		=> 'menu' ),
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
@@ -108,62 +116,9 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// vista redirect
-	$p['redirect.view'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'redirect' ),
-	    'h1'		=> array( $l		=> 'redirect' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.view.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
-									'redirect.stats' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'redirect' ),
-									'priority'	=> '070' ) ) )										
-    );
-
-	// statistiche redirect
-	$p['redirect.stats'] = array(
-	    'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'statistiche' ),
-	    'h1'		=> array( $l		=> 'statistiche' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.stats.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['redirect.view']['etc']['tabs'] )
-    );
-
-    // form redirect
-	$p['redirect.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'redirect.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
-													'redirect.form.stats') )
-	);
-
-	// statistiche form redirect
-	$p['redirect.form.stats'] = array(
-	    'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'statistiche redirect' ),
-	    'h1'		=> array( $l		=> 'statistiche redirect' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
-    );
-
 	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
@@ -172,20 +127,23 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
-
-	$p['pagine.form.contenuti'] = array(
+	
+	// form pagine testo
+	$p['pagine.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.contenuti.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
 	$p['pagine.form.macro'] = array(
 		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-caret-square-o-right" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'macro' ),
 		'h1'		=> array( $l		=> 'macro' ),
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
@@ -271,7 +229,20 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
-	
+
+	// statistiche form pagine
+	$p['pagine.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche pagina' ),
+	    'h1'		=> array( $l		=> 'statistiche pagina' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+    );
+
 	// form azioni pagine
 	$p['pagine.form.tools'] = array(
 	    'sitemap'		=> false,
@@ -283,4 +254,59 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+    // vista pagine
+	$p['template.pagine.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template pagine' ),
+	    'h1'		=> array( $l		=> 'template pagine' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'template.pagine.view',
+									'template.pagine.tools' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'template' ),
+									'priority'	=> '710' ) ) )	
+    );
+
+    // form pagine
+	$p['template.pagine.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.pagine.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'template.pagine.form',
+													'template.pagine.form.editor',
+													'template.pagine.form.tools'
+												) )
+	);
+
+	// form azioni pagine
+	$p['template.pagine.form.editor'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'editor template pagina' ),
+	    'h1'		=> array( $l		=> 'editor' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.pagine.form.editor.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.editor.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.pagine.form']['etc']['tabs'] )
+	);
+
+	// form azioni pagine
+	$p['template.pagine.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template pagina' ),
+	    'h1'		=> array( $l		=> 'azioni template pagina' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.pagine.form']['etc']['tabs'] )
 	);

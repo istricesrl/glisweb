@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_progetti` DROP INDEX `indice`, ADD KEY `indice` (`id`,`nome`,`se_scalare`,`se_commessa`,`se_chiamata`,`se_contratto`,`se_forfait`) ;

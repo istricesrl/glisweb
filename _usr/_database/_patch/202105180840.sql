@@ -1,1 +1,0 @@
-ALTER TABLE `progetti` ADD `id_mastro_attivita_default` INT NULL DEFAULT NULL , ADD KEY `id_mastro_attivita_default` (`id_mastro_attivita_default`) ;

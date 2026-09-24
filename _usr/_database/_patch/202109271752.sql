@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_notizie` ADD `id_sito` INT NULL AFTER `nome`, ADD `template` CHAR(255) NULL AFTER `id_sito`, ADD `schema_html` CHAR(128) NULL AFTER `template`, ADD `tema_css` CHAR(32) NULL AFTER `schema_html`, ADD `se_sitemap` INT(1) NULL AFTER `tema_css`, ADD `se_cacheable` INT(1) NULL AFTER `se_sitemap`, ADD `note` TEXT NULL AFTER `se_cacheable`;

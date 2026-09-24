@@ -1,1 +1,0 @@
-DROP FUNCTION IF EXISTS `ruoli_anagrafica_path_check`;

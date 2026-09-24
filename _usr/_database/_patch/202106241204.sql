@@ -1,1 +1,0 @@
-ALTER TABLE `prodotti` ADD `se_matricola` INT(1) NULL DEFAULT NULL AFTER `se_disponibile`, ADD `se_ore` INT(1) NULL DEFAULT NULL AFTER `se_matricola`;

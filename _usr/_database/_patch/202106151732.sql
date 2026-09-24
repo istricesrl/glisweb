@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD CONSTRAINT `documenti_ibfk_9_nofollow` FOREIGN KEY (`id_contatto`) REFERENCES `contatti`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

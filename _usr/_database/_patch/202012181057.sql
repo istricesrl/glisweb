@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_orari_inps` ADD UNIQUE KEY `nome` (`nome`);

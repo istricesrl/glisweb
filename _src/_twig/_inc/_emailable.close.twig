@@ -1,0 +1,164 @@
+{# FILE PER LA GESTIONE DEL CONTROLLO DELLE E-MAIL CON EMAILABLE #}
+
+<script>
+async function verificaEmailCampo(idCampo) {
+
+    const campo = document.getElementById(idCampo);
+
+    if (!campo) {
+        throw new Error('Campo non trovato: ' + idCampo);
+    }
+
+    const email = campo.value.trim();
+
+    if (!email) {
+        return {
+            valida: false,
+            messaggio: 'Email vuota',
+            dati: null
+        };
+    }
+
+    // la verifica passa dal server ( _src/_api/_emailable.verifica.php ), che risponde dalla
+    // cache dei verdetti se l'indirizzo e' gia' stato verificato e altrimenti interroga
+    // Emailable: il verdetto che finisce in cache lo ottiene il server, e la chiave non sta
+    // nella pagina
+    try {
+        const response = await fetch('/api/emailable.verifica', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const data = await response.json();
+
+        if (!response.ok || data.status !== 'OK') {
+            // errori di servizio (quota/limite di frequenza/5xx/etc.): non bloccare il flusso
+            return {
+                valida: false,
+                errore: true,
+                messaggio: data.errore || 'Errore durante la verifica',
+                status: response.status,
+                dati: data
+            };
+        }
+
+        // fail-open: blocchiamo SOLO la mail esplicitamente non recapitabile.
+        // 'risky'/'unknown' (es. Yahoo/Outlook, che i server classificano spesso
+        // come risky pur essendo caselle valide) passano: preferiamo non bloccare
+        // l'utente piuttosto che rifiutare un indirizzo buono.
+        const valida = data.state !== 'undeliverable';
+
+        return {
+            valida: valida,
+            stato: data.state,
+            score: data.score,
+            acceptAll: data.accept_all,
+            motivo: data.reason,
+            suggerimento: data.did_you_mean,
+            messaggio: valida ? 'Email valida' : 'Email non valida o non sicura',
+            dati: data
+        };
+
+    } catch (error) {
+        return {
+            valida: false,
+            messaggio: 'Errore di rete durante la verifica',
+            errore: error.message,
+            dati: null
+        };
+    }
+}
+
+function setupEmailableValidation(campoId, formId) {
+    const campo = document.getElementById(campoId);
+    const form  = document.getElementById(formId);
+    if (!campo || !form) return;
+    if (campo.dataset.emailableInit) return;
+    campo.dataset.emailableInit = '1';
+
+    let emailValida = null;
+
+    function setStato(stato) {
+        switch (stato) {
+            case 'errore':
+                campo.style.backgroundColor = '#f8d7da';
+                campo.style.borderColor     = '#dc3545';
+                break;
+            case 'ok':
+            default:
+                campo.style.backgroundColor = '';
+                campo.style.borderColor     = '';
+        }
+    }
+
+    async function runValidazione() {
+        const val = campo.value.trim();
+        if (!val) { emailValida = null; setStato(null); return; }
+
+        const ris = await verificaEmailCampo(campoId);
+
+        if (ris.riprovare || ris.errore) {
+            emailValida = true;
+            setStato(null);
+            return;
+        }
+
+        if (ris.valida) {
+            emailValida = true;
+            setStato('ok');
+        } else {
+            emailValida = false;
+            setStato('errore');
+            logEmailableScartata(campo.value.trim(), formId, ris);
+        }
+    }
+
+    campo.addEventListener('blur', runValidazione);
+
+    form.addEventListener('submit', function (e) {
+        if (emailValida === false) {
+            e.preventDefault();
+            setStato('errore');
+            campo.focus();
+        }
+    });
+
+    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
+    form.submit = function () {
+        if (emailValida === false) {
+            setStato('errore');
+            campo.focus();
+            return;
+        }
+        nativeSubmit();
+    };
+}
+
+function logEmailableScartata(email, formId, ris) {
+    try {
+        fetch('/api/emailable.scarti', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email:        email,
+                stato:        ris.stato || null,
+                motivo:       ris.motivo || null,
+                score:        (typeof ris.score !== 'undefined') ? ris.score : null,
+                suggerimento: ris.suggerimento || null,
+                form:         formId || null,
+                pagina:       window.location.href
+            }),
+            keepalive: true
+        }).catch(function () { /* fail-open: il log non deve mai bloccare il flusso */ });
+    } catch (e) { /* no-op */ }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[type="email"]').forEach(function(emailField) {
+        if (!emailField.id) return;
+        var form = emailField.closest('form');
+        if (!form || !form.id) return;
+        setupEmailableValidation(emailField.id, form.id);
+    });
+});
+</script>

@@ -1,0 +1,95 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function pubblica() {
+
+		$('#btnpubblica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
+
+		var progress = '{{ site.url }}var/progress/ftp.{{ request[table].id }}.progress';
+
+		var total = 0;
+		var current = 0;
+
+		$('#progress-row').fadeIn();
+
+		setInterval(() => {
+
+			console.log('controllo avanzamento');
+
+			getws( progress, '', function( data ) {
+                data = JSON.parse(data);
+				console.log( data );
+				$('#ftp-progress').attr('aria-valuemax',data.total);
+				$('#ftp-progress').attr('aria-valuenow',data.current);
+				$('#ftp-progress').css('width',(data.current/data.total*100)+'%');
+                console.log('corrente: ' + $('#ftp-progress').attr('aria-valuenow'));
+                console.log('totale: ' + $('#ftp-progress').attr('aria-valuemax'));
+                console.log('progress: ' + $('#ftp-progress').css('width'));
+				total = data.total;
+				current = data.current;
+			});
+
+        }, 1000);
+
+		getws( call,'', function() {
+			console.log('-- caricamento DATABASE --');
+			$('#btnpubblica').html('<i class="fa fa-check"></i>');
+			location.reload();
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="pubblica">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">pubblica la pagina corrente</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+					<span class="label-top">destinazione</span>
+					{{ frm.selectRequired( '', '', '', '__stage__', '', etc.stages, '', '', '','' ) }}
+				</div>
+			</div>
+			<div class="form-row">
+                <div class="col-12">
+                    <p class="mb-3">questa operazione pubblicherà la pagina corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.) sullo stage indicato</p>
+					<p><b>ATTENZIONE</b> non chiudere la finestra finché il trasferimento è in corso</p>
+					{% for stage in etc.stages %}
+					{% set stage = stage.id|lower %}
+					{% if etc.upload[ stage ]|length > 0 %}
+					<p>in <b>{{ stage|upper }}</b> verranno caricati via FTP <b>{{ etc.upload[ stage ]|length }}</b> files</p>
+					{% endif %}
+					{% else  %}
+					<p>verranno caricati via FTP <b>{{ etc.upload.all|length }}</b> files</p>
+					{% endfor %}
+                </div>
+            </div>
+			<div class="form-row" id="progress-row" style="display: none;">
+                <div class="col-12">
+					<div class="">
+						<div class="progress">
+							<div id="ftp-progress" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%"></div>
+						</div>
+					</div>
+				</div>
+            </div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btnpubblica" class="btn btn-secondary btn-sm" onclick="pubblica();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

@@ -1,1 +1,0 @@
-ALTER TABLE `pianificazioni` ADD `timestamp_estensione` INT NULL DEFAULT NULL AFTER `token`, ADD INDEX (`timestamp_estensione`) ;

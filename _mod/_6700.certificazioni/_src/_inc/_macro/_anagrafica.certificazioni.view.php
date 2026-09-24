@@ -19,8 +19,8 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'anagrafica' => 'anagrafica',
-        'certificazione' => 'certificazione',
-        'emittente' => 'emittente',
+#        'certificazione' => 'certificazione',
+#        'emittente' => 'emittente',
         'data_emissione' => 'data emissione',
         'data_scadenza' => 'data scadenza'
     );

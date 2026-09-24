@@ -11,6 +11,7 @@
 		    height: hg,
 		    allowedContent: true,
 		    entities: false,
+//			fullPage: true,
 		    toolbarGroups: [
 			{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
 			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
@@ -27,25 +28,35 @@
 			{ name: 'about', groups: [ 'about' ] }
 		    ],
 		    removeButtons: 'Save,Undo,Redo,NewPage,Preview,Print,Templates,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,Outdent,Indent,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Flash,Smiley,PageBreak,Iframe,ShowBlocks,About,Styles,Cut,Copy,Paste,PasteText,PasteFromWord',
-		    extraPlugins: 'colorbutton,font,colordialog,ckawesome,autogrow',
+		    extraPlugins: 'colorbutton,font,justify,colordialog,ckawesome,autogrow,htmlwriter',
 		    extraAllowedContent: 'img',
 		    filebrowserBrowseUrl: siteRoot + 'file-browser?type=Files'
 		});
 		ckEditors.push( editor );
 		// CKEDITOR.config.protectedSource.push( /\{\%[\s\S]*?%\}/g );
+/*
+		CKEDITOR.config.protectedSource = [
+			/\{\{[\s\S]*?\}\}/g,
+			/\{\%[\s\S]*?%\}/g,
+			/\{\#[\s\S]*?#\}/g,
+		];
+*/
         CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_DIV;
         CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
         // CKEDITOR.config.autoParagraph = false;
 		CKEDITOR.dtd.$removeEmpty["i"] = false;
 		CKEDITOR.dtd.$removeEmpty["span"] = false;
-		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_external/ckeditor/plugins/';
-/*
-		CKEDITOR.on('instanceLoaded', function(e) {
+		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_ext/ckeditor/plugins/';
+		CKEDITOR.on( 'instanceReady', function( event ) {
+			event.editor.dataProcessor.writer.selfClosingEnd = '>';
+		});
+/*		CKEDITOR.on('instanceLoaded', function(e) {
 			var wt = $(obj).parent().width();
 			var hg = $(obj).parent().height();
 			console.log(wt+' '+hg);
 			e.editor.resize(wt, hg, false);
+		});*/
+
 		});
-	*/
-	    });
+
 	});

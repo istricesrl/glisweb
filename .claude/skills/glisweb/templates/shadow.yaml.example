@@ -1,0 +1,29 @@
+# shadow.yaml — credenziali del progetto {{PROJECT_NAME}}
+#
+# !!! NON COMMITTARE QUESTO FILE !!!
+#
+# Il framework .gitignore esclude /src/shadow.* di default. Verifica comunque
+# che git status non lo riporti come "Untracked" prima di commit.
+#
+# Questo file ha priorità superiore a src/config.yaml: le chiavi qui definite
+# sovrascrivono quelle in config.yaml. Vedi _etc/_claude/_claude.framework.md
+# sezione "Come trovare le credenziali" per l'ordine completo.
+
+mysql:
+  servers:
+    main:
+      username: "CHANGE_ME"
+      password: "CHANGE_ME"
+
+# Esempi di altre chiavi che tipicamente vivono qui:
+#
+# smtp:
+#   default:
+#     host: "smtp.example.com"
+#     port: 587
+#     username: "CHANGE_ME"
+#     password: "CHANGE_ME"
+#
+# api:
+#   stripe:
+#     secret: "CHANGE_ME"

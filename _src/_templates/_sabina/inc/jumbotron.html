@@ -1,10 +1,10 @@
 {% import '_bin/_default.html' as cms %}
 
-{% if page.contents.images.jumbotron|length > 0 %}
-<section class="head">
-    <div class="container-fluid p-0">
-        {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
-    </div>
-    <hr class="jumbotron-hr jumbotron-hr-right d-none d-md-block">
+{% if page.contents.images.jumbotron %}
+<section class="mb-3 intestazione">
+    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotron', '', img ) }}
+    <hr class="jumbotron-hr jumbotron-hr-left d-none d-md-block">
 </section>
+{% else %}
+<!-- inserire almeno un'immagine con ruolo "jumbotron" nella pagina -->
 {% endif %}

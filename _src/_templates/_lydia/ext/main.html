@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ localization.language.ietf }}">
 
+    <!-- Twig file extended: {{ _self }} -->
+
     <head>
 
         {% include '_inc/_page.head.html' %}
@@ -11,7 +13,6 @@
 
         {% include '_inc/_page.open.html' %}
 
-
         <header>
             <div class="container">
                 <div class="row">
@@ -21,13 +22,35 @@
             </div>
         </header>
 
-        <div class="sticky-top categorie">
-            <div class="container">
-                <div class="row">
-                    {% block categorie %}{% include 'inc/categorie.html' %}{% endblock %}
-                    {% block search %}{% include 'inc/search.html' %}{% endblock %}
+        <div class="sticky-top">
+            <div class="categorie container-megamenu">
+                <div class="container">
+                    <div class="row categorie">
+                        {% block categorie %}{% include 'inc/categorie.html' %}{% endblock %}
+                        {% block search %}{% include 'inc/search.html' %}{% endblock %}
+                    </div>
+                </div>
+                {% if page.template.menu.mega %}
+                <div class="container-fluid">
+                    <div class="row megamenu">
+                        {% block megamenu %}{% include 'inc/megamenu.html' %}{% endblock %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if not page.contents.images.carousel and not page.contents.images.jumbotron %}
+            {% if page.id != site.home %}
+            <div class="breadcrumbs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p>{% block breadcrumbs %}{% include 'inc/breadcrumbs.html' %}{% endblock %}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endif %}
+            {% endif %}
         </div>
 
         {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
@@ -37,9 +60,8 @@
             <div class="container">
                 <div class="row mb-3">
                     <div class="col">
-                        <h3>{% block breadcrumbs %}{% include 'inc/breadcrumbs.html' %}{% endblock %}</h3>
-                        <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-                        {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                        <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
+                        {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ]|default('') ) | raw ) }}</h2>{% endif %}
                     </div>
                 </div>
                 <div class="row">

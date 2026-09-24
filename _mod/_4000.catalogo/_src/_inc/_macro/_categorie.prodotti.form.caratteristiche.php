@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM caratteristiche_prodotti_view'
+        'SELECT id, __label__ FROM caratteristiche_view'
     );
  
 	// tendina icona per caratteristica/opzione presente o meno   

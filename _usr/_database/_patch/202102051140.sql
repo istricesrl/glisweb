@@ -1,1 +1,0 @@
-ALTER TABLE `todo` ADD `id_pianificazione` INT NULL DEFAULT NULL AFTER `settimana_prevista`, ADD INDEX (`id_pianificazione`) ;

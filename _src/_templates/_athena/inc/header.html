@@ -3,8 +3,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col d-none d-md-block elliptic">
-            <h1><ol class="breadcrumbs">{{ nav.breadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</ol></h1>
+        <div class="col d-none d-md-flex elliptic justify-content-left align-items-center">
+            <ol class="breadcrumbs">{{ nav.breadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</ol>
         </div>
         <div class="col-12 col-md-auto d-print-none">
             <div class="row">
@@ -17,7 +17,7 @@
 <!--
                 {% if localization.languages|length > 1 %}
                 <form class="col p-0" id="form-language" action="" method="post" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="lingua corrente">
-                    {{ frm.select( '__view__', '', '', '__language__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
+                    {{ frm.select( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
                 </form>
                 {% endif %}
 
@@ -28,9 +28,9 @@
                 {% endif %}
 -->
 
-                {% if pages.terminale %}
-                <div id="widget-slack" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.contatti.url['it-IT'] }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-money" aria-hidden="true"></i></button>
+                {% if debug.alert %}
+                <div id="widget-alert" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-alert" onclick="$('.slide-info').not('#alert').slideUp(400,'swing');$('#alert').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-alert').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-bell" aria-hidden="true"></i><span class="alert-number">{{ debug.alert|length }}</span></button>
                 </div>
                 {% endif %}
 
@@ -39,26 +39,40 @@
                 </div>
 
                 {% if jobs.foreground|length > 0 %}
-                <div id="widget-docs" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-jobs" onclick="$('.slide-info').not('#jobs').slideUp(400,'swing');$('#jobs').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-jobs').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                <div id="widget-jobs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-jobs" onclick="$('.slide-info').not('#jobs').slideUp(400,'swing');$('#jobs').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-jobs').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="lavori attivi"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                <div id="widget-cart" class="widget col-auto p-0" {% if not session.carrello.articoli %}style="display: none;"{% endif %}>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-cart" onclick="$('.slide-info').not('#cart').slideUp(400,'swing');$('#cart').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-cart').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="carrello"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                </div>
+
+                <div id="widget-bookmarks" class="widget col-auto p-0" {% if not session.__work__ %}style="display: none;"{% endif %}>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-bookmarks" onclick="$('.slide-info').not('#bookmarks').slideUp(400,'swing');$('#bookmarks').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-bookmarks').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                </div>
+
+                {% if common.helpdesk.url %}
+                <div id="widget-helpdesk" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.helpdesk.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via ticket"><i class="fa fa-ticket" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {% if common.docs.custom.html.url %}
+                <div id="widget-manuale" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.docs.custom.html.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {% if slack.profile.channel.url %}
+                <div id="widget-slack" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.profile.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
                 <div id="widget-info" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" placeholder="informazioni sulla pagina" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="informazioni sulla pagina" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                 </div>
-
-                {% if common.documentation|length == 1 %}
-                <div id="widget-docs" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.documentation|first.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-                </div>
-                {% endif %}
-
-                {% if slack.channel.url %}
-                <div id="widget-slack" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
-                </div>
-                {% endif %}
 
                 {% if session.account.username %}
                 <form class="col-auto p-0" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">

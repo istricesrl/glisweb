@@ -1,1 +1,0 @@
-ALTER TABLE `immagini` DROP FOREIGN KEY `immagini_ibfk_16`;

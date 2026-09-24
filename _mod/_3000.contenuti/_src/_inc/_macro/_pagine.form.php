@@ -25,12 +25,12 @@
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
 
-    // tendina tipologie pubblicazione
-	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
+    // tendina tipologie pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
     // tendina templates
@@ -63,8 +63,14 @@
 	    // controllo file
 		if( file_exists( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/etc/template.conf' ) ) {
 
+             // ricerca schemi
+             // TODO attenzione agli underscore nel path?
+             $schemi = array_merge(
+                glob( glob2custom( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
+                glob( glob2custom( DIR_MOD_ATTIVI . $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
+             );
+
 		    // tendina schemi
-			$schemi = glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE );
 			foreach( $schemi as $t ) {
 			    $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
 			}

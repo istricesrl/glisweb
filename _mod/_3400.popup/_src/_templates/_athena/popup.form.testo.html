@@ -28,9 +28,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -47,7 +47,7 @@
 
 		<div class="form-group form-row">
 		    <div class="col-12">
-				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', tr.languages, request, localization.language.id ) }}
 		    </div>
 		</div>
 
@@ -58,7 +58,7 @@
 
 		{# CICLO SULLE LINGUE #}
 		{% set i = 0 %}
-		{% for l in localization.languages %}
+		{% for l in tr.languages %}
 
 		{% set r = request[ table ][ subtable ][ i ] %}
 
@@ -66,7 +66,9 @@
 	    {{ frm.input( table, subtable, i, 'id_popup', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
-        {# MODULO PRINCIPALE #}
+	    {% if r.id_lingua == request.__view__.__lang__ %}
+
+		{# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
@@ -87,6 +89,14 @@
             </div>
         
         </fieldset>
+
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','specifiche'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
+        {% endif %}
 
 	    {% set i = i + 1 %}
         {% endfor %}

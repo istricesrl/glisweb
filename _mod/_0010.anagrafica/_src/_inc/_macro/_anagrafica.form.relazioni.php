@@ -1,0 +1,49 @@
+<?php
+
+    /**
+     * macro form anagrafica
+     *
+     *
+     *
+     * -# definizione della tabella del modulo
+     * -# popolazione delle tendine
+     *
+     *
+     *
+     *
+     *
+     *
+     * @todo documentare
+     *
+     * @file
+     *
+     */
+
+    // tabella gestita
+	$ct['form']['table'] = 'anagrafica';
+
+    // tendina  agente
+    // TODO mettere le relazioni per le persone fisiche e i ruoli organizzazione per le persone giuridiche?
+	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_relazioni IS NOT NULL OR se_organizzazioni IS NOT NULL'
+    );
+/*
+    // tendina  anagrafica
+	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+*/
+    // debug
+    // print_r( $ct['etc']['select']['anagrafica'] );
+
+    // macro di default per l'entità anagrafica
+	require DIR_MOD . '_0010.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
+
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';

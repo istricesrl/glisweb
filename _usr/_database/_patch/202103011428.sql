@@ -1,1 +1,0 @@
-ALTER TABLE `righe_documenti_amministrativi` ADD FOREIGN KEY (`id_modalita_pagamento`) REFERENCES `modalita_pagamento`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

@@ -1,0 +1,97 @@
+/*!
+
+    \mainpage introduzione
+
+    Questo è il framework GlisWeb, sviluppato a partire da una base di codice originariamente scritto da Fabio Mosti
+    e Emiliano Volta alla fine degli anni '90, riordinato in un unico framework da Fabio Mosti e Emiliano Volta
+    nei primi anni 2000 e costantemente aggiornato fino alla versione attuale mantenuta da Fabio Mosti
+    in collaborazione con il team di Istrice srl.
+
+    GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
+    nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web. Nasce per dare a tutti
+    la possibilità di realizzare siti e soprattutto web applications a partire da codice gratuito e aperto, semplice
+    e ben documentato, con un'ampia community a supporto.
+
+    che cos'è questa pagina, e che cosa non è
+    =========================================
+
+    Queste pagine sono la **reference delle API**: le genera Doxygen leggendo i commenti nel codice, ed elencano
+    file, funzioni, parametri e valori di ritorno. È il posto dove si va a guardare la firma di una funzione o
+    dove è definita una costante.
+
+    **Non è il manuale.** Il manuale è scritto a mano, in markdown, e sta altrove:
+
+    - il manuale sviluppatore, in `/manual/read/index.html`, generato dai sorgenti di `_usr/_docs/_read/`;
+    - il manuale utente, in `/manual/user/index.html`, generato dai sorgenti di `_usr/_docs/_user/`;
+    - le guide introduttive, in `/quickstart/index.html`, generate dai sorgenti di `_usr/_docs/_quickstart/`.
+
+    È lì che si trovano l'installazione, l'architettura, i runlevel, le cartelle del framework, i file di
+    configurazione, le entità, i moduli, i template e le procedure. Qui dentro quella roba non si ripete: una
+    cosa sta scritta in un posto solo, altrimenti chi legge non sa quale delle due versioni sia quella vera.
+
+    Il collegamento vale anche al contrario: i capitoli del manuale che parlano di una libreria o di una API
+    rimandano a queste pagine per i dettagli delle firme.
+
+    lo stato di questa reference
+    ============================
+
+    La copertura dei commenti nel codice è **lavoro in corso** e non è uniforme: alcune librerie hanno il
+    docblock su ogni funzione, altre non ce l'hanno affatto. La misura per area si ottiene con
+    `_src/_sh/_docs.check.sh --metriche`, e finché quella copertura non è ragionevole l'assenza di una funzione
+    da queste pagine non dice niente sul fatto che la funzione esista o no.
+
+    ringraziamenti
+    ==============
+    Questo framework è stato sviluppato, nel corso del tempo, da tantissime persone. Desidero ringraziare
+    pertanto tutti i miei collaboratori, che negli anni si sono alternati nell'arduo compito di sopportarmi,
+    e il cui lavoro ha reso possibile tutto questo.
+
+    collaboratori
+    -------------
+    Hanno contribuito alla crescita di questo progetto, in ordine rigorosamente sparso:
+
+    - Fabio Mosti
+    - Emiliano Volta
+    - Chiara Giardino Di Lollo
+    - Silvia De Falco
+    - Federico Pierantoni
+    - Valeria Troiano
+    - Sara Tullini
+
+    aziende
+    -------
+    Lo sviluppo del framework è stato possibile grazie anche al supporto delle aziende che nel tempo lo hanno utilizzato
+    e soprattutto hanno contribuito con i loro suggerimenti, le loro richieste e le loro segnalazioni a migliorarlo
+    costantemente, oltre oltre a fornire in alcuni casi risorse, infrastrutture e tempo per lo sviluppo. Vogliamo quindi
+    ringraziare per il loro supporto:
+
+    - Istrice srl
+    - Fondazione GIMBE
+
+    librerie esterne
+    ----------------
+    Il framework GlisWeb si avvale di numerose librerie esterne per offrire funzionalità avanzate a utenti
+    e sviluppatori; di seguito le riportiamo tutte in ordine alfabetico, ringraziando di cuore gli autori
+    di ognuna di esse. Se per errore o dimenticanza abbiamo omesso o mal riportato un riferimento, saremo
+    felici di rettificarlo su segnalazione degli aventi diritto.
+
+    - Bootstrap (http://getbootstrap.com/)
+    - html2text (https://github.com/soundasleep/html2text)
+    - jQuery (https://jquery.com/)
+    - TCPDF (http://www.tcpdf.org)
+    - Twig template engine (http://twig.sensiolabs.org/)
+    - Doxygen (https://www.doxygen.nl/)
+
+    Questo elenco è più corto di quello vero: le dipendenze dichiarate stanno in `composer.json` e si
+    installano in `_src/_lib/_ext/`, e vanno riportate qui tutte.
+
+    Qualora i titolari dei software sopra citati rilevino un'irregolarità, o nel caso le licenze di
+    distribuzione dei loro software entri per qualsiasi ragione in contrasto con quella del framework
+    GlisWeb, l'autore è disponibile a instaurare un dialogo per trovare la migliore soluzione possibile
+    e può essere contattato scrivendo a Fabio Mosti <fabio.mosti@istricesrl.it>.
+
+    Qualora dovessimo aver dimenticato qualcuno o qualcosa negli elenchi qui sopra, ce ne scusiamo e vi
+    assicuriamo che non è stato fatto in malafede. Vi preghiamo di segnalarcelo e provvederemo a rettificare
+    immediatamente l'elenco includendo i dovuti riferimenti.
+
+*/

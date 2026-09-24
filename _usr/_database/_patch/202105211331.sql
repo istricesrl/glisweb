@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD KEY `timestamp_calcolo_sostituti` (`timestamp_calcolo_sostituti`);

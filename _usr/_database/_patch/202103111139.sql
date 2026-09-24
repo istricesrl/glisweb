@@ -1,1 +1,0 @@
-ALTER TABLE immagini DROP INDEX id_documento;

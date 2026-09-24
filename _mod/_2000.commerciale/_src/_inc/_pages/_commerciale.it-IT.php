@@ -5,8 +5,8 @@
 
     // modulo di questo file
     $m = DIR_MOD . '_2000.commerciale/';
-    
-    // dashboard commerciale
+
+	// dashboard commerciale
 	$p['commerciale'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'commerciale' ),
@@ -15,45 +15,45 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_commerciale.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'commerciale' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'commerciale', 'commerciale.gestiti', 'commerciale.stampe', 'commerciale.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'commerciale' ),
-														'priority'	=> '310' ) ) )	
+														'priority'	=> '190' ) ) )	
     );
-    
-   // vista progetti
-	$p['progetti.commerciale.view'] = array(
+
+	// dashboard commerciale
+	$p['commerciale.gestiti'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'progetti' ),
-	    'h1'			=> array( $l		=> 'progetti' ),
-	    'parent'		=> array( 'id'		=> 'commerciale' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'progetti.commerciale.view' ) ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
-														'priority'	=> '080' ) ) )	
+	    'title'		=> array( $l		=> 'gestiti' ),
+	    'h1'		=> array( $l		=> 'gestiti' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'commerciale.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_commerciale.gestiti.php' ),
+	    'parent'	=> array( 'id'		=> 'commerciale' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['commerciale']['etc']['tabs'] )
+    );
+
+    // tools produzione
+	$p['commerciale.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'commerciale' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_commerciale.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['commerciale']['etc']['tabs'] )
 	);
 
-	// gestione progetti
-	$p['progetti.commerciale.form'] = array(
-		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'gestione' ),
-		'h1'			=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
-		'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form', 'progetti.commerciale.form.todo' ) )
-	);
-
-	// gestione todo progetti
-	$p['progetti.commerciale.form.todo'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'todo' ),
-	    'h1'			=> array( $l		=> 'to-do' ),
-	    'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.todo.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.todo.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+    // tools produzione
+	$p['commerciale.stampe'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'commerciale' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_commerciale.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['commerciale']['etc']['tabs'] )
 	);

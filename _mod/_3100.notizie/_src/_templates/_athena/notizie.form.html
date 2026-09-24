@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 {% import 'bin/notizie.form.sub.html' as sub_notizie %}
 
 {% extends "ext/main.html" %}
@@ -50,23 +50,34 @@
 		<div class="form-group form-row">
 			<div class="col-auto col-md-auto">
 				<span class="label-top">tipologia</span>
-			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+				{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
 		    </div>
 		    <div class="col">
-				<span class="label-top">etichetta</span>
-			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				<span class="label-top">nome</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
+<!--
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+                </div>
+            </div>
+            <div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+                </div>
+            </div>
+-->
 		</div>
-
 		<div class="form-group form-row">
 		    <div class="col">
 				<span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
 		    </div>
 		</div>
 
 	    </fieldset>
-
+<!--
 		<fieldset>
 			<legend>aspetto</legend>
 	
@@ -86,13 +97,17 @@
 			</div>  
 	
 		</fieldset>
-
+-->
 		{# SUBFORM CATEGORIE #}
 		{{ sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
 
-		{# SUBFORM PUBBLICAZIONE #}
-        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
+		{# SUBFORM ANAGRAFICA #}
+		{{ sub_notizie.anagrafica( table, 'notizie_anagrafica', 'persone',site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
 
+<!--
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
+-->
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

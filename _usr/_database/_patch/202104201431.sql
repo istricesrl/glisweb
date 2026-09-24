@@ -1,1 +1,0 @@
-ALTER TABLE `documenti_articoli` DROP FOREIGN KEY `documenti_articoli_ibfk_25`;

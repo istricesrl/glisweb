@@ -1,1 +1,0 @@
-ALTER TABLE `todo` CHANGE `anno_pianificazione` `anno_programmazione` YEAR(4) NULL DEFAULT NULL;

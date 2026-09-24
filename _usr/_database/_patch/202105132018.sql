@@ -1,1 +1,0 @@
-ALTER TABLE `__report_progetti_sostituti__` CHANGE `data_prima_scopertura` `data_scopertura` DATE NOT NULL;

@@ -1,0 +1,271 @@
+<?php
+
+    /**
+     * API per la cattura del pagamento in PayPal Advanced
+     * 
+     * 
+     * 
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * 
+     * 
+     * recupero dati e dettagli dell'ordine
+     * ====================================
+     * PayPal passa come $_REQUEST['id'] l'ID dell'ordine che è stato creato precedentemente tramite la chiamata all'API di creazione dell'ordine; questo
+     * dato quindi serve per mantenere la continuità fra ordine e pagamento e viene salvato nella colonna ordine_pagamento della tabella pagamenti alla
+     * fine dell'esecuzione dell'API di creazione dell'ordine (vedi le ultime righe di _mod/_F030.pagamenti/_src/_api/_paypal.advanced.order.php per i dettagli).
+     * 
+     * Alcuni dettagli dell'ordine, fra cui il return_url, vengono salvati in memcache e il token di memcache viene salvato nella colonna token_pagamento
+     * della tabella pagamenti, sempre nell'API di creazione degli ordini.
+     * 
+     * 
+     */
+
+    // inclusione del framework
+	require '../../../../_src/_config.php';
+
+    // debug
+    // print_r( $_SESSION['carrello'] );
+    // print_r( $_REQUEST );
+
+    // inizializzazione status
+    $result = array();
+
+    // ID dell'ordine per la cattura del pagamento
+    if( isset( $_REQUEST['id'] ) ) {
+
+        // log
+        logger( 'dati in ingresso: ' . print_r( $_REQUEST, true ), 'details/paypal-advanced/capture-api' );
+
+        // recupero pagamento
+        $pagamento = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM pagamenti WHERE ordine_pagamento = ?',
+            array( array( 's' => $_REQUEST['id'] ) )
+        );
+
+        /**
+         * Senza il pagamento dell'ordine non si cattura.
+         * =============================================
+         *
+         * Fix 2026-09-18. La SELECT qui sopra puo' non trovare niente: fra la creazione
+         * dell'ordine e il ritorno della cattura passa tutto il tempo che vuole chi paga, e
+         * nel frattempo il pagamento master puo' essere stato cancellato ( resta senza figli
+         * quando si annullano le pendenze accodate, e c'e' anche una pulizia dei residui che
+         * lo toglie ). Fino a oggi lo script proseguiva lo stesso: catturava i soldi e poi,
+         * con `$pagamento['id']` a NULL, chiamava `mysqlInsertRow` — che senza id non
+         * aggiorna niente, INSERISCE. Ne usciva una riga di `pagamenti` con dentro soltanto
+         * codice, stato e importo della cattura: niente debitore, niente riga di carrello,
+         * niente documento. I soldi entrati e non attribuibili a nessuno, e il socio che
+         * continua a vedere il debito.
+         *
+         * Successo il 17/09/2026 su polmasi: 343,00 EUR, ordine 7CB375780G565764X. La socia
+         * e' rientrata nell'app il giorno dopo e stava per pagare una seconda volta.
+         *
+         * La cattura e' il punto in cui i soldi si muovono davvero: se non c'e' niente a cui
+         * agganciarli, non si prendono. L'ordine resta approvato e non catturato, che per
+         * PayPal e' uno stato legittimo e scade da solo.
+         */
+        if( empty( $pagamento['id'] ) ) {
+
+            // log
+            logWrite( 'cattura rifiutata: nessun pagamento per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_ERR );
+
+            // log
+            appendToFile(
+                'cattura rifiutata: nessun pagamento con ordine_pagamento = ' . $_REQUEST['id'],
+                DIR_VAR_SPOOL_PAYMENT . 'details/paypal-advanced/pagamenti.' . sprintf( '%08d', 0 ) . '.log'
+            );
+
+            // esito
+            buildJson( array( 'error' => 'pagamento non trovato per l\'ordine ' . $_REQUEST['id'] ) );
+
+            // fine script
+            exit;
+
+        }
+
+        // recupero i dettagli da memcache
+        $dettagli = memcacheRead( $cf['memcache']['connection'], $pagamento['token_pagamento'] );
+
+        // nome del file di ricevuta
+        $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'details/paypal-advanced/pagamenti.' . sprintf( '%08d', $pagamento['id'] ) . '.log';
+
+        // chiamata
+        $result = restCall(
+            $cf['paypal']['profile']['order_api'].'/'.$_REQUEST['id'].'/capture',
+            METHOD_POST,
+            NULL,
+            MIME_APPLICATION_JSON,
+            MIME_APPLICATION_JSON,
+            $status,
+            array(
+                'PayPal-Request-Id' => $_REQUEST['id']
+            ),
+            NULL,
+            NULL,
+            $error,
+            paypalAdvancedGetAccessToken( $cf['paypal']['profile'] )
+        );
+
+        // debug
+        // print_r( $result );
+        // print_r( $status );
+        // print_r( $error );
+
+        // TODO verificare che il pagamento sia andato a buon fine qui
+        // $result[purchase_units][0][payments][captures][0][status] == COMPLETED
+
+        // log
+        logger( 'dati di cattura: ' . print_r( $result, true ), 'details/paypal-advanced/capture-api' );
+
+        // log
+        appendToFile( 'esito cattura pagamento: ' . print_r( $result, true ), $fileRicevuta );
+
+        // URL di ritorno
+        if( $result['purchase_units'][0]['payments']['captures'][0]['status'] == 'COMPLETED' ) {
+
+            // controller post checkout
+            $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_pagamento.finally.success.php' ), GLOB_BRACE );
+
+            // ordinamento delle controller
+            sort( $cnts );
+
+            // log
+            appendToFile( 'controller post pagamento trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+
+            // controllo se ci sono pagamenti figli
+            $childPayments = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM pagamenti WHERE id_genitore = ?',
+                array( array( 's' => $pagamento['id'] ) )
+            );
+
+            if( empty( $childPayments ) ) {
+
+                // log
+                appendToFile( 'nessun pagamento figlio trovato', $fileRicevuta );
+
+                // dati di pagamento
+                $payment = array(
+                    'id'						=> $pagamento['id'],
+                    'timestamp_pagamento'		=> time(),
+                    'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
+                    'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
+                    'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
+                );
+
+                // registro il pagamento
+                $paymentId = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    $payment,
+                    'pagamenti'
+                );
+
+                // inclusione delle controller post checkout
+                foreach( $cnts as $cnt ) {
+                    require $cnt;
+                }
+
+            } else {
+
+                // log
+                appendToFile( 'pagamenti figli trovati: ' . print_r( $childPayments, true ), $fileRicevuta );
+
+                // registro il pagamento per ogni pagamento figlio
+                foreach( $childPayments as $childPayment ) {
+
+                    // dati di pagamento
+                    $payment = array(
+                        'id'						=> $childPayment['id'],
+                        'id_genitore'				=> NULL,
+                        'timestamp_pagamento'		=> time(),
+                        'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
+                        'importo_pagamento'			=> $childPayment['importo_lordo_finale'],
+                        'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
+                    );
+
+                    // registro il pagamento
+                    $paymentId = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        $payment,
+                        'pagamenti'
+                    );
+
+                    // log
+                    appendToFile( 'registrato pagamento figlio (' . $paymentId . '): ' . print_r( $childPayment, true ), $fileRicevuta );
+
+                    // ...
+                    $dettagli = $childPayment;
+                    $dettagli['tipologia'] = 'pagamento';
+                    $dettagli['id_carrello'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id_carrello FROM carrelli_articoli WHERE id = ?',
+                        array( array( 's' => $childPayment['id_carrelli_articoli'] ) )
+                    );
+
+                    // inclusione delle controller post checkout
+                    foreach( $cnts as $cnt ) {
+                        require $cnt;
+                    }
+
+                }
+
+                // ...
+                $dettagli['success'] = $_SESSION['master_payment']['success'];
+
+            }
+
+            // log
+            logWrite( 'pagamento effettuato con successo: ' . $_REQUEST['id'], 'paypal', LOG_INFO );
+
+            // ...
+            memcacheDelete( $cf['memcache']['connection'], $pagamento['token_pagamento'] );
+
+            // se il pagamento originario era un master, lo elimino
+            if( ! empty( $childPayments ) ) {
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM pagamenti WHERE id = ?',
+                    array( array( 's' => $pagamento['id'] ) )
+                );
+            }
+
+            // URL di redirect in caso di successo
+            // TODO leggere dal pagamento?
+            $result['return'] = $dettagli['success'];
+
+        } else {
+
+            // controller post checkout
+            $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_pagamento.finally.failure.php' ), GLOB_BRACE );
+
+            // ordinamento delle controller
+            sort( $cnts );
+
+            // log
+            appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+
+            // inclusione delle controller post checkout
+            foreach( $cnts as $cnt ) {
+                require $cnt;
+            }
+
+            // TODO in caso di fallimento settare come URL di redirect l'URL della pagina di errore
+            $result['return'] = $dettagli['failure'];
+
+        }
+
+    } else {
+
+        // TODO settare come URL di redirect l'URL della pagina di errore
+        $result['return'] = $dettagli['failure'];
+
+    }
+
+    // TODO restituire l'URL di redirect
+    buildJson( $result );

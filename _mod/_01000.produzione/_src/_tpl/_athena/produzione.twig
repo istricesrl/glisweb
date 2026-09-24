@@ -1,0 +1,12 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+{% include 'inc/metro.twig' %}
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

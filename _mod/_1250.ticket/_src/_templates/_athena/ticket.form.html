@@ -60,12 +60,16 @@
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">responsabile</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica_collaboratori, request, '', '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
+				</div>
 			</div>
 	
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
+				{{ frm.textarea( table, '', '', 'testo', '', 7, request, '', '1' ) }}
 				</div>
 			</div>
 	
@@ -77,32 +81,24 @@
 				<div class="form-group form-row">
 					<div class="col-12">
 						<span class="label-top">progetto</span>
-						{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', 1,1,'','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
+						{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', 1,'','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf, 'progetti' ) }}
 					</div>
 				</div>
 
-				
+				{# if request[table].id #}
 
 				<div class="form-group form-row">
-					{% if request[table].id %}
 					<div class="col col-md-4">
 						<span class="label-top">cliente</span>
 						{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, etc.id_cliente, '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-					{% endif %}
 					<div class="col-12 col-md">
-						<span class="label-top">responsabile</span>
-						{{ frm.selectBox( table, '', '', 'id_responsabile', '', etc.select.anagrafica_collaboratori, request, '', '',1,'','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
-					</div>
-					{% if request[table].id %}
-					<div class="col-12 col-md-4">
 						<span class="label-top">indirizzo</span>
 						{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, etc.id_indirizzo, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo' , page, pages, ietf,'indirizzi' ) }}
 					</div>
-					{% endif %}
 				</div>	
 
-				
+				{# endif #}
 
 				
 			</fieldset>
@@ -118,56 +114,7 @@
 	    </fieldset>
 
 	</form>
-	{% if request[ table ].id %}
-	<div class="row">
-
-		<div class="form-group form-row metro">
-		<div class="col-12 col-md-6">
-			<a href="#" data-toggle="modal" onclick="setTesto('cliente');$('#_destinatario').val('{{ etc.mail_cliente }}'); $('#_oggetto').val('{{ etc.oggetto_cliente }}'); $('#_mittente').val('{{ etc.mittente_cliente}}');$('#_id').val('{{request[ table ].id}}');" data-target="#send">
-			<div class="media valore">
-			<div class="media-left">
-				<h2><i class="fa fa-envelope-o" aria-hidden="true"></i></h2>
-			</div>
-			<div class="media-left">
-				<h2 class="media-title">invia mail al cliente</h2>
-				<p class="media-text">invia una mail per comunicare al cliente la chiusura del ticket</p>
-			</div>
-			</div>
-			</a>
-		</div>
-		<div class="col-12 col-md-6">
-			<a href="#" data-toggle="modal" onclick="setTesto('responsabile'); $('#_mittente').val('{{ etc.mittente_responsabile}}');$('#_destinatario').val('{{ etc.mail_responsabile }}'); $('#_oggetto').val('{{ etc.oggetto_responsabile }}'); $('#_id').val('{{request[ table ].id}}');" data-target="#send">
-			<div class="media valore">
-			<div class="media-left">
-				<h2><i class="fa fa-envelope-o" aria-hidden="true"></i></h2>
-			</div>
-			<div class="media-left">
-				<h2 class="media-title">invia mail al responsabile</h2>
-				<p class="media-text">invia una mail per comunicare al cliente la chiusura del ticket</p>
-			</div>
-			</div>
-			</a>
-		</div>
-		</div>
-		
-	</div>
-	
-	{% endif %}
     </div>
 </section>
 
-{% endblock %}
-
-{% block javascript %}
-<script>
-	function setTesto(r){
-		
-		if(r == 'responsabile'){
-			CKEDITOR.instances['_testo'].setData(decodeURIComponent("{{ etc.testo_responsabile }}"));
-		}
-		if(r == 'cliente'){
-			CKEDITOR.instances['_testo'].setData(decodeURIComponent("{{ etc.testo_cliente }}"));
-		}
-	}
-</script>
 {% endblock %}

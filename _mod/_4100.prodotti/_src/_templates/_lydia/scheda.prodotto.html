@@ -1,0 +1,21 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# CONTENUTO PRINCIPALE DELLA PAGINA #}
+
+{{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}
+
+{# BLOCCO ARTICOLI ACQUISTABILI #}
+
+{% for a in page.contents.articoli %}
+<form action="{{ pages.carrello.url[ localization.language.ietf ] }}" method="POST" id="formAggiungiAlCarrello">
+    <input type="hidden" name="__carrello__[__articolo__][quantita]" value="1" />
+    <input type="hidden" name="__carrello__[__articolo__][id_articolo]" value="{{ a.id }}" />
+    {{ cms.formButton( 'ACQUISTA 1x ' ~ a.id, 'button', '', '', '', '', 'formAggiungiAlCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
+</form>
+{% endfor %}
+
+{% endblock %}

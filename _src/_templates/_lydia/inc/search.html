@@ -1,8 +1,12 @@
+
+<!-- file incluso: {{ _self }} -->
 <div class="col col-md-auto d-flex flex-column">
-    <div class="input-group input-group-sm mt-1 mt-md-auto mb-md-auto">
-        <input type="text" class="form-control" placeholder="">
-        <div class="input-group-append">
-          <button class="btn btn-secondary" type="button" id=""><i class="fa fa-search"></i></button>
-        </div>
+  <form action="{{ pages['ricerche.risultati'].path[ localization.language.ietf ] }}" method="post">
+    <div class="input-group input-group-sm mt-1 mt-md-auto mb-md-auto search-box">
+      <input type="text" name="__ricerche__[base]" class="form-control" placeholder="">
+      <div class="input-group-append">
+        <button class="btn btn-secondary" type="button" id="headerSearchBtn" onclick="submit();"><i class="fa fa-search"></i></button>
       </div>
+    </div>
+  </form>
 </div>

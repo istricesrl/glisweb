@@ -1,42 +1,51 @@
 <?php
 
     /**
-     * verifica delle cartelle
+     * applicazione delle configurazioni relative al debug del sistema
      *
-     * in questo file viene verificata l'esistenza delle cartelle custom necessarie al funzionamento del framework
-     *
-     * cartelle necessarie
-     * ===================
-     * Normalmente le cartelle necessarie al funzionamento del framework vengono controllate al momento del loro
-     * utilizzo, tuttavia alcune potrebbero essere utilizzate prima o senza che questo controllo venga effettuato,
-     * e per questo vengono controllate in questa sede.
-     *
-     * verifica delle cartelle dei log
-     * -------------------------------
-     * @todo documentare questa parte
-     *
-     *
-     * @todo in una futura release questo passaggio dovrebbe diventare superfluo
-     * @todo finire di documentare
-     *
-     * @file
-     *
+     * logica di applicazione delle configurazioni
+     * ===========================================
+     * Questo runlevel segue l'inclusione del runlevel 000, quindi recepisce eventuali modifiche alla
+     * configurazione di quel runlevel eventualmente fatte in custom; inoltre recepisce eventuali direttive
+     * presenti nei file di configurazione JSON/YAML.
+     * 
+     * Per rendere disponibile la configurazione di debug al template manager viene collegato
+     * $ct['debug'] a &$cf['debug'].
+     * 
      */
 
-    // directory da controllare
-	$cf['debug']['fs']['folders'] = array_fill_keys( array( DIR_ETC_SITEMAP, DIR_VAR, DIR_VAR_LOG, DIR_TMP ), false );
-    $cf['debug']['fs']['files'] = array_fill_keys( array( path2custom( FILE_MYSQL_PATCH ) ), false );
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * In questa sezione vengono recepite le eventuali direttive presenti nei file di configurazione
+     * JSON/YAML integrandole con l'array $cf['debug'].
+     * 
+     */
 
-    // verifico le cartelle
-    foreach( $cf['debug']['fs']['folders'] as $folder => $status ) {
-	    $cf['debug']['fs']['folders'][ $folder ] = checkFolder( $folder );
+    // configurazione extra
+    if( isset( $cx['debug'] ) ) {
+        $cf['debug'] = array_replace_recursive( $cf['debug'], $cx['debug'] );
     }
 
-    // verifico i file
-    foreach( $cf['debug']['fs']['files'] as $file => $status ) {
-	    $cf['debug']['fs']['files'][ $file ] = checkFile( $file );
-    }
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * Qquesta scorciatoia rende disponibili le informazioni di debug al template manager.
+     * 
+     */
+
+    // collegamento a $ct
+    $ct['debug'] = &$cf['debug'];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
+     * 
+     */
 
     // debug
-	// error_reporting( E_ALL );
-	// ini_set( 'display_errors', TRUE );
+    // print_r( $cf['debug'] );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
+    // echo 'OUTPUT';

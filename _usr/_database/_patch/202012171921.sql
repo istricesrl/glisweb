@@ -1,1 +1,0 @@
-ALTER TABLE `popup` ADD `schema_html` CHAR(128) NULL DEFAULT NULL AFTER `template`;

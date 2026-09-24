@@ -1,0 +1,164 @@
+<?php
+
+    /**
+     * firewall applicativo del framework
+     * 
+     * introduzione
+     * ============
+     * 
+     * TODO documentare
+     * 
+     * 
+     * il file _etc/_security/_banned.words.conf
+     * -----------------------------------------
+     * 
+     * TODO documentare
+     * 
+     * 
+     * il file var/spool/security/banned.hosts.conf
+     * --------------------------------------------
+     * 
+     * TODO documentare
+     * 
+     * 
+     * 
+     * i file var/spool/security/\<ip\>.log
+     * ----------------------------------
+     * 
+     * TODO documentare
+     * 
+     * 
+     * 
+     * avvertenze importanti
+     * =====================
+     * 
+     * - questo file è standalone
+     * - questo file è richiamato da _src/_config/_config.php quindi se un file del framework non usa _src/_config/_config.php deve includerlo manualmente
+     * 
+     * test e debug
+     * ============
+     * 
+     * TODO controllare che $valore:
+     *
+     *  - non contenga tentativi di SQL injection
+     *  - non contenga codice di alcun tipo
+     * 
+     * 
+     * NOTA
+     * testare chiamando il framework con un URL contenente una qualsiasi delle parole bloccate in _etc/_security/_banned.words.conf
+     * 
+     * 
+     * 
+     * limiti di frequenza
+     * -------------------
+     *
+     * Per gli endpoint pubblici che costano qualcosa a ogni richiesta ( un servizio esterno a consumo, un'elaborazione
+     * pesante ) il firewall mette a disposizione rateLimitCheck(), definita in _src/_config.php: l'endpoint la chiama
+     * con un nome di canale, il numero massimo di richieste e la finestra in secondi, e se torna false rifiuta la
+     * richiesta ( di norma con HTTP 429 ). I registri stanno in var/spool/security/limiti/, una cartella per canale e un
+     * file per IP, e ogni superamento viene annotato nel file di log dell'IP accanto a banned.hosts.conf. Diversamente
+     * dalle parole proibite, superare un limite NON mette l'IP in banned.hosts.conf.
+     * Primo utilizzatore: _src/_api/_emailable.verifica.php.
+     *
+     * TODO implementare un sistema di protezione dai DOS
+     * TODO documentare
+     *
+     *
+     * 
+     */
+
+    /**
+     * dichiarazioni e verifiche preliminari
+     * =====================================
+     * 
+     * 
+     */
+
+    // controllo che esista la cartella per i log di sicurezza
+    if( ! is_dir( DIR_VAR_SPOOL_SECURITY ) ) {
+        mkdir( DIR_VAR_SPOOL_SECURITY, 0775, true );
+    }
+
+    // leggo l'elenco degli attacker
+    if( file_exists( FILE_BANNED_HOSTS ) ) {
+        $attackers = array_map( 'trim', file( FILE_BANNED_HOSTS ) );
+    } else {
+        $attackers = array();
+    }
+
+    // lettura delle parole proibite
+    $words = array_map( 'trim', file( FILE_BANNED_WORDS ) );
+
+    /**
+     * blocco degli IP sorgente compromessi
+     * ====================================
+     * 
+     * 
+     */
+
+    // blocco la richiesta se proviene da un attacker noto
+    if( in_array( $_SERVER['REMOTE_ADDR'], $attackers ) ) {
+
+        // HTTP status di risposta (forbidden)
+        http_response_code( 400 );
+
+        // output
+        header( 'Content-type: text/plain' );
+        die( 'sorgente bloccata' );
+
+    }
+
+    /**
+     * verifica dell'URL e della $_REQUEST per le parole proibite
+     * ==========================================================
+     * 
+     * 
+     * 
+     */
+
+    // controllo che l'URL e la $_REQUEST non contengano parole proibite
+    foreach( $words as $word ) {
+
+        // controllo 
+        // il confronto sulla $_REQUEST e' STRETTO, e non puo' non esserlo: con il confronto
+        // largo PHP converte la parola proibita in numero e '150.php' == 150 e' vero, quindi un
+        // qualsiasi parametro numerico ( p.es. iterazioni=150 ) faceva scattare la regola e finire
+        // l'IP del chiamante in banned.hosts.conf. Serve anche il !== false, perche' array_search
+        // torna la chiave e sulla prima voce dell'array la chiave e' 0, che da sola sarebbe falsa.
+        if( stripos( urldecode( $_SERVER['REQUEST_URI'] ), urldecode( $word ) ) !== false || array_search( $word, $_REQUEST, true ) !== false ) {
+
+            // riepilogo
+            $attackers[] = $_SERVER['REMOTE_ADDR'];
+
+            // apertura file di log
+            $h = fopen( DIR_VAR_SPOOL_SECURITY . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
+
+            // debug
+            // var_dump( $h );
+
+            // scrittura attacco
+            fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $word . PHP_EOL . 
+                    'sorgente: '    . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+                    'url: '         . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+                    'contenuto: '   . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL )
+                or die( 'impossibile scrivere il file di log degli attacchi' );
+
+            // chiusura file di log
+            fclose( $h );
+
+            // salvataggio elenco degli attacker
+            $h = fopen( FILE_BANNED_HOSTS, 'a+' );
+            fwrite( $h, $_SERVER['REMOTE_ADDR'] . PHP_EOL )
+                or die( 'impossibile scrivere il registro degli host banditi' );
+            fclose( $h );
+
+            // HTTP status di risposta (forbidden)
+            http_response_code( 400 );
+
+            // output
+            header( 'Content-type: text/plain' );
+            die( 'richiesta bloccata' );
+
+        }
+
+    }

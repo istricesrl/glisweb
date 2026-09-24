@@ -1,0 +1,516 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<section class="row flex-fill">
+    <div class="col-md-10 d-flex flex-column">
+        {% if session.carrello.id %}
+        <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
+            <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
+            <input type="hidden" id="ck_carrello" name="ck_carrello" value="">
+            <input type="hidden" id="ck_cassa" name="ck_cassa" value="">
+            <input type="hidden" id="ck_documento" name="ck_documento" value="">
+
+            <fieldset>
+                <legend>dati carrello <small>#{{ session.carrello.id }}</small></legend>
+                {# DATI DI INTESTAZIONE DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col-12">
+                        <label class="label-top">sito</label>
+                        <select class="form-control form-control-sm" id="id_sito" name="__carrello__[id_sito]" required>
+                        <option value=""{% if not session.carrello.id_sito %} selected{% endif %}>&mdash; seleziona il sito &mdash;</option>
+                        {% for sito in etc.siti %}
+                        <option value="{{ sito.id }}"{% if sito.id == session.carrello.id_sito %} selected{% endif %}>{{ sito.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="label-top">cliente</label>
+						{{ frm.selectBox( '__carrello__', '', '', 'intestazione_id_anagrafica', '', '', '', session.carrello.intestazione_id_anagrafica, '', 1, '', '', '', '', 'anagrafica', 'intestazione_id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
+                    <div class="col">
+                        <label class="label-top">zona</label>
+                        <select class="form-control form-control-sm" id="id_zona" name="__carrello__[id_zona]" required>
+                        {% for zona in etc.id_zona %}
+                        <option value="{{ zona.id }}"{% if zona.id == session.carrello.id_zona %} selected{% endif %}>{{ zona.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">listino</label>
+                        <select class="form-control form-control-sm" id="id_listino" name="__carrello__[id_listino]" required>
+                        {% for listino in etc.id_listino %}
+                        <option value="{{ listino.id }}"{% if listino.id == session.carrello.id_listino %} selected{% endif %}>{{ listino.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+        
+            </fieldset>
+
+            <fieldset>
+                <legend>contenuto carrello</legend>
+                {# ARTICOLI DEL CARRELLO #}
+
+                <table class="table cassa-table">
+
+                    <thead>
+                        <tr>
+                            <th>codice</th>
+                            <th>descrizione</th>
+                            <th class="text-center">sc.&nbsp;%</th>
+                            <th class="text-center">sc.&nbsp;€</th>
+                            <th class="text-center">coupon</th>
+                            <th class="text-center">sc.&nbsp;€</th>
+                            <th class="text-center">q.tà</th>
+                            <th class="text-center">listino</th>
+                            <th class="text-right">prezzo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for articolo, dati in session.carrello.articoli  %}
+                        <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
+                        <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
+                        <tr class="articolo">
+                            <td><span class="id-articolo">{{ dati.id_articolo }}</span></td>
+                            <td><span class="descrizione nowrap">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></td>
+                            <td><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></td>
+                            <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></td>
+                            <td>
+                                <select class="form-control form-control-sm" id="" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_coupon]">
+                                    <option></option>
+                                    {% for coupon in etc.coupon %}
+                                    {% if coupon.id_anagrafica == dati.destinatario_id_anagrafica or coupon.id_anagrafica == '' %}
+                                    <option value="{{ coupon.id }}"{% if coupon.id == dati.id_coupon %} selected{% endif %}>{{ coupon.id }} {{ '%0.2f'|format(coupon.sconto_fisso) }} €</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][dati.coupon_valore]" value="{{ '%0.2f'|format(dati.coupon_valore) }}"></td>
+                            <td><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></td>
+                            <td>
+                                <select class="form-control form-control-sm" id="" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_listino]" required>
+                                    {% for listino in etc.id_listino %}
+                                    <option value="{{ listino.id }}"{% if listino.id == dati.id_listino %} selected{% endif %}>{{ listino.__label__ }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
+                            <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
+                        </tr>
+                        {% endfor %}
+<!-- TODO questa cosa rifarla meglio perché questo è il punto in cui si aggiungono i coupon al carrello (tabella carrelli_coupon)
+     idealmente uno qui può aggiungere vari coupon al carrello e questi vengono aggiunti alla tabella carrelli_coupon, poi qui vengono mostrati tutti con anche la possibilità di rimuoverli
+     ogni coupon della tabella carrelli_coupon ha la sua riga e il suo valore, che va scalato dal totale analogamente a come viene aggiunto il valore degli acquisti, inoltre vanno incrementati i campi
+     dei totali sul carrello in modo che il conto delle righe più il conto dei coupon torni con quello che c'è scritto sul carrello
+                        <tr>
+                            <td>coupon</td>
+                            <td><input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}"></td>
+                            <td>{% if session.carrello.sconto_percentuale_coupon %}{{ '%0.2f'|format(session.carrello.sconto_percentuale_coupon) }}%{% else %}-{% endif %}</td>
+                            <td>{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</td>
+                        </tr>
+-->
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td class="text-right" colspan="8">totale generale</td>
+                            <td class="nowrap text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
+                            <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+
+<!--
+
+                {# ARTICOLI DEL CARRELLO #}
+                {% for articolo, dati in session.carrello.articoli  %}
+                <div class="form-row articolo">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
+                    <div class="d-none d-md-block col-md-auto col-form-label"><span class="id-articolo">{{ dati.id_articolo }}</span></div>
+                    <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. %</label><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. €</label><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">q.tà</label><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
+                    <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
+                </div>
+                {% endfor %}
+            </fieldset>
+            <fieldset>
+                <legend>dettagli</legend>
+                {# DATI DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col-12 col-md col-form-label">coupon</div>
+                    <div class="col-4 col-md-2"><input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}"></div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{% if session.carrello.sconto_percentuale_coupon %}{{ '%0.2f'|format(session.carrello.sconto_percentuale_coupon) }}%{% else %}-{% endif %}</div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</div>
+                    <div class="col-4 col-md-1 text-center">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>totali</legend>
+                {# TOTALI DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col-4 col-md-10 col-form-label text-right">totale generale</div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
+                    <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
+                </div>
+
+        -->
+
+
+            </fieldset>
+
+            {% if not session.carrello.intestazione_id_anagrafica %}
+            <fieldset>
+                <legend>dati cliente</legend>
+                {# DATI DELL'INTESTATARIO E DEL DESTINATARIO #}
+                <div class="form-row">
+                    <div class="col-auto">
+                        <label class="label-top">persona</label>
+                        <select class="form-control form-control-sm" id="intestazione_id_tipologia_anagrafica" name="__carrello__[intestazione_id_tipologia_anagrafica]" required>
+                        <option></option>
+                        {% for tana in etc.id_tipologia_anagrafica %}
+                        <option value="{{ tana.id }}"{% if tana.id == session.carrello.intestazione_id_tipologia_anagrafica %} selected{% endif %}>{{ tana.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">nome</label>
+                        <input class="form-control form-control-sm" id="intestazione_nome" type="text" name="__carrello__[intestazione_nome]" value="{{ session.carrello.intestazione_nome }}" required>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">cognome</label>
+                        <input class="form-control form-control-sm" id="intestazione_cognome" type="text" name="__carrello__[intestazione_cognome]" value="{{ session.carrello.intestazione_cognome }}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">ragione sociale (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_denominazione" type="text" name="__carrello__[intestazione_denominazione]" value="{{ session.carrello.intestazione_denominazione }}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="label-top">codice SDI (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_sdi" type="text" name="__carrello__[intestazione_sdi]" value="{{ session.carrello.intestazione_sdi }}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="label-top">indirizzo PEC (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_pec" type="text" name="__carrello__[intestazione_pec]" value="{{ session.carrello.intestazione_pec }}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">codice fiscale</label>
+                        <input class="form-control form-control-sm" id="intestazione_codice_fiscale" type="text" name="__carrello__[intestazione_codice_fiscale]" value="{{ session.carrello.intestazione_codice_fiscale }}" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="label-top">partita IVA</label>
+                        <input class="form-control form-control-sm" id="intestazione_partita_iva" type="text" name="__carrello__[intestazione_partita_iva]" value="{{ session.carrello.intestazione_partita_iva }}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-9 col-md-5">
+                        <label class="label-top">indirizzo</label>
+                        <input class="form-control form-control-sm" id="intestazione_indirizzo" type="text" name="__carrello__[intestazione_indirizzo]" value="{{ session.carrello.intestazione_indirizzo }}" required>
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <label class="label-top">CAP</label>
+                        <input class="form-control form-control-sm" id="intestazione_cap" type="text" name="__carrello__[intestazione_cap]" value="{{ session.carrello.intestazione_cap }}" required>
+                    </div>
+                    <div class="col-7 col-md-4">
+                        <label class="label-top">città</label>
+                        <input class="form-control form-control-sm" id="intestazione_citta" type="text" name="__carrello__[intestazione_citta]" value="{{ session.carrello.intestazione_citta }}" required>
+                    </div>
+                    <div class="col-5 col-md-2">
+                        <label class="label-top">provincia</label>
+                        <select class="form-control form-control-sm" id="intestazione_id_provincia" name="__carrello__[intestazione_id_provincia]" required>
+                        <option></option>
+                        {% for prov in etc.id_provincia %}
+                        <option value="{{ prov.id }}"{% if prov.id == session.carrello.intestazione_id_provincia %} selected{% endif %}>{{ prov.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">telefono</label>
+                        <input class="form-control form-control-sm" id="intestazione_telefono" type="tel" name="__carrello__[intestazione_telefono]" value="{{ session.carrello.intestazione_telefono }}" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="label-top">e-mail</label>
+                        <input class="form-control form-control-sm" id="intestazione_mail" type="email" name="__carrello__[intestazione_mail]" value="{{ session.carrello.intestazione_mail }}" required>
+                    </div>
+                </div>
+            </fieldset>
+            {% endif %}
+
+            <fieldset class="mt-auto">
+                <legend>azioni</legend>
+                {# TODO QUI METTERE I TASTI RICALCOLA E PAGA #}
+                {# TODO SE È ATTIVO IL MODULO DOCUMENTI AGGIUNGERE I TASTI PER CREARE RICEVUTA, FATTURA O SCONTRINO #}
+                {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
+                <div class="form-row">
+                    <div class="col">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ pages['ecommerce.pagamento'].url[ localization.language.ietf ] }}?__pagamenti__[id_carrello]={{ session.carrello.id }}');$('#carrello').submit();">
+                    </div>
+                </div>
+
+                {# FINALIZZAZIONE DELL'ORDINE ( rispecchia il checkout del sito: registra il pagamento,
+                   trasmette l'iscrizione al gestionale e invia la mail di conferma, sul sito del carrello ) #}
+                <div class="form-row mt-3">
+                    <div class="col-12">
+                        <p class="mb-1"><strong>finalizza l'ordine</strong> <small class="text-muted">&mdash; registra il pagamento, trasmette l'iscrizione al gestionale e invia la mail di conferma</small></p>
+                    </div>
+                </div>
+                {# selettore del metodo: mostra solo i flussi disponibili sul deploy #}
+                <div class="form-row">
+                    <div class="col-12 col-md-6">
+                        <label class="label-top">metodo di pagamento</label>
+                        <select class="form-control form-control-sm" id="metodo_pagamento" onchange="mostraPannelloPagamento();">
+                            <option value="offline">pagamento offline (contanti / bonifico)</option>
+                            {% if etc.client_token and ecommerce.profile.provider['paypal-advanced'].client_id %}
+                            <option value="paypal">carta di credito / PayPal</option>
+                            {% endif %}
+                            {% if ecommerce.profile.provider['monetaweb'].available and ecommerce.profile.provider['monetaweb'].init_api %}
+                            <option value="monetaweb">carta di credito (Monetaweb / Nexi)</option>
+                            {% endif %}
+                            {% if etc.recupero.url %}
+                            <option value="recupero">link di pagamento per il cliente</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+
+                {# PANNELLO OFFLINE ( contanti / bonifico ) #}
+                <div id="pannello-offline">
+                    <div class="form-row">
+                        <div class="col-12 col-md-5">
+                            <label class="label-top">tipo di pagamento offline</label>
+                            <select class="form-control form-control-sm" id="metodo_offline">
+                                <option value="contanti">contanti</option>
+                                <option value="bonifico">bonifico</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-7 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-finalizza-offline" onclick="finalizzaOffline();">finalizza (pagamento offline)</button>
+                        </div>
+                    </div>
+                </div>
+
+                {# PANNELLO ONLINE PayPal Advanced ( carta / PayPal in-page ) - solo se il provider e' configurato.
+                   Riusa la stessa macchina del front-end: _paypal.js -> paypal.advanced.order/capture -> finally.success. #}
+                {% if etc.client_token and ecommerce.profile.provider['paypal-advanced'].client_id %}
+                <div id="pannello-paypal" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>inserisci la carta o il PayPal del cliente. Al pagamento l'ordine viene registrato, trasmesso al gestionale e inviata la mail di conferma.</small></p>
+                            <script> var return_url = "{{ page.path[ localization.language.ietf ] }}"; </script>
+                            <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&currency=EUR&disable-funding=sofort,mybank&client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+                            <div id="paypal-button-container" class="paypal-button-container"></div>
+                            <script src="/_src/_js/_lib/_paypal.js"></script>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# PANNELLO ONLINE Monetaweb / Nexi ( redirect alla pagina hosted del provider ) - solo se disponibile #}
+                {% if ecommerce.profile.provider['monetaweb'].available and ecommerce.profile.provider['monetaweb'].init_api %}
+                <div id="pannello-monetaweb" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>si viene portati alla pagina sicura del provider per inserire la carta del cliente; al pagamento l'ordine viene registrato, trasmesso al gestionale e inviata la mail di conferma.</small></p>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-monetaweb" onclick="pagaMonetaweb();">paga con carta (Monetaweb / Nexi)</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# PANNELLO LINK DI RECUPERO ( il cliente paga sul sito pubblico ) - solo se risolvibile #}
+                {% if etc.recupero.url %}
+                <div id="pannello-recupero" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>copia il link e invialo al cliente: lo apre sul sito, ritrova il carrello e paga online. Il pagamento chiude l'ordine come un acquisto normale.</small></p>
+                        </div>
+                        <div class="col-12 col-md-9">
+                            <input type="text" class="form-control form-control-sm" id="link-recupero" value="{{ etc.recupero.url }}" readonly onclick="this.select();">
+                        </div>
+                        <div class="col-12 col-md-3 d-flex align-items-end">
+                            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="copiaLinkRecupero();">copia link</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="form-row"><div class="col-12"><div id="esito-finalizza"></div></div></div>
+
+                <script>
+                // mostra il pannello del metodo scelto; passando a PayPal salva prima il carrello
+                // ( il runlevel 750 persiste i dati correnti ) cosi' l'ordine PayPal usa l'importo giusto
+                function mostraPannelloPagamento() {
+                    var m = document.getElementById('metodo_pagamento').value;
+                    var off = document.getElementById('pannello-offline');
+                    var pp = document.getElementById('pannello-paypal');
+                    var rec = document.getElementById('pannello-recupero');
+                    var mw = document.getElementById('pannello-monetaweb');
+                    if( off ) { off.hidden = ( m !== 'offline' ); }
+                    if( pp ) { pp.hidden = ( m !== 'paypal' ); if( m === 'paypal' ) { salvaCarrelloPerPagamento(); } }
+                    if( mw ) { mw.hidden = ( m !== 'monetaweb' ); }
+                    if( rec ) { rec.hidden = ( m !== 'recupero' ); }
+                }
+                function pagaMonetaweb() {
+                    var btn = document.getElementById('btn-monetaweb');
+                    var esito = document.getElementById('esito-finalizza');
+                    var lbl = btn.innerHTML; btn.disabled = true; btn.innerHTML = 'connessione al provider\u2026'; esito.innerHTML = '';
+                    // salvo prima i dati correnti del carrello ( runlevel 750 ), poi avvio il pagamento
+                    var dati = new FormData(document.getElementById('carrello'));
+                    dati.append('return_url', window.location.pathname);
+                    fetch('/api/4170.ecommerce/cassa.monetaweb.init', { method: 'POST', body: dati, credentials: 'same-origin' })
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            if( d && d.redirecturl ) { window.location = d.redirecturl; }
+                            else { esito.innerHTML = '<div class="alert alert-warning p-2 mb-0">avvio pagamento non riuscito: ' + ((d && d.errore) ? d.errore : 'errore sconosciuto') + '</div>'; btn.disabled = false; btn.innerHTML = lbl; }
+                        })
+                        .catch(function(){ esito.innerHTML = '<div class="alert alert-danger p-2 mb-0">errore di rete durante l\'avvio del pagamento</div>'; btn.disabled = false; btn.innerHTML = lbl; });
+                }
+                function copiaLinkRecupero() {
+                    var campo = document.getElementById('link-recupero');
+                    campo.select();
+                    if( navigator.clipboard && navigator.clipboard.writeText ) { navigator.clipboard.writeText(campo.value); }
+                    else { try { document.execCommand('copy'); } catch(e) {} }
+                }
+                function salvaCarrelloPerPagamento() {
+                    var dati = new FormData(document.getElementById('carrello'));
+                    fetch('{{ page.path[ localization.language.ietf ] }}', { method: 'POST', body: dati, credentials: 'same-origin' });
+                }
+                document.addEventListener('DOMContentLoaded', mostraPannelloPagamento);
+
+                function finalizzaOffline() {
+                    var metodo = document.getElementById('metodo_offline').value;
+                    if( ! confirm('Confermi la finalizzazione con pagamento ' + metodo + '?\nVerranno registrati il pagamento e l\'iscrizione sul gestionale e inviata la mail di conferma al cliente.') ) { return; }
+                    var btn = document.getElementById('btn-finalizza-offline');
+                    var esito = document.getElementById('esito-finalizza');
+                    var lbl = btn.innerHTML;
+                    btn.disabled = true; btn.innerHTML = 'finalizzazione in corso\u2026'; esito.innerHTML = '';
+                    // invio i campi correnti del carrello: il runlevel 750 li salva prima che l'endpoint finalizzi
+                    var dati = new FormData(document.getElementById('carrello'));
+                    dati.append('metodo', metodo);
+                    fetch('/api/4170.ecommerce/cassa.finalizza', { method: 'POST', body: dati, credentials: 'same-origin' })
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            if( d && d.esito === 'ok' ) {
+                                esito.innerHTML = '<div class="alert alert-success p-2 mb-0">ordine #' + d.id_carrello + ' finalizzato (' + d.metodo + '). Iscrizione trasmessa e mail di conferma inviata.</div>';
+                                setTimeout(function(){ window.location = '{{ page.path[ localization.language.ietf ] }}'; }, 2500);
+                            } else {
+                                esito.innerHTML = '<div class="alert alert-warning p-2 mb-0">finalizzazione non riuscita: ' + ((d && d.errore) ? d.errore : 'errore sconosciuto') + '</div>';
+                                btn.disabled = false; btn.innerHTML = lbl;
+                            }
+                        })
+                        .catch(function(){
+                            esito.innerHTML = '<div class="alert alert-danger p-2 mb-0">errore di rete durante la finalizzazione</div>';
+                            btn.disabled = false; btn.innerHTML = lbl;
+                        });
+                }
+                </script>
+            </fieldset>
+        </form>
+        {% else %}
+        {# CARRELLO NON ANCORA APERTO: si sceglie prima il sito, poi si aggiungono gli articoli.
+           Selezionando il sito il carrello viene creato ( il controller lo apre gia' con id_sito )
+           e la pagina passa al form completo. #}
+        <form id="nuovo-carrello" action="" method="post">
+        <fieldset>
+            <legend>nuovo carrello</legend>
+            <div class="form-row">
+                <div class="col-12 col-md-4">
+                    <label class="label-top">sito</label>
+                    <select class="form-control form-control-sm" id="id_sito" name="__carrello__[id_sito]" required onchange="this.form.submit()">
+                        <option value="" selected>&mdash; seleziona il sito &mdash;</option>
+                        {% for sito in etc.siti %}
+                        <option value="{{ sito.id }}">{{ sito.__label__ }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <p class="text-muted mt-2"><small>scegli il sito del carrello per iniziare, poi aggiungi gli articoli dalla ricerca</small></p>
+        </fieldset>
+        </form>
+        {% endif %}
+    </div>
+    <div class="col-md-2 d-flex flex-column">
+        {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
+        {% if '0630.iscrizioni' in mods.active.array %}
+	    <fieldset>
+            <legend>gestione iscrizioni</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['iscrizioni.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai alle iscrizioni</button>
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['corsi.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai ai corsi</button>
+                </div>
+            </div>
+        </fieldset>
+        {% endif %}
+        {# ...FINE BLOCCO ISCRIZIONI #}
+        <fieldset>
+            <legend>gestione articoli</legend>
+            {# TODO QUI FARE UN SELETTORE AGGIUNGI/RIMUOVI #}
+            {# TODO QUI AGGIUNGERE CAMPO PER BIPPARE GLI ARTICOLI PER CODICE O MATRICOLA CON AUTOFOCUS (INPUT) #}
+            {# TODO QUI BOX AGGIUNTA ARTICOLO PER CODICE O MATRICOLA (TENDINA INTELLIGENTE) #}
+            <form action="{{ pages['ecommerce.ricerca'].path[ localization.language.ietf ] }}" method="post">
+                <div class="form-group form-row">
+                    <div class="col">
+                        <input type="text" id="ricerca" class="form-control form-control-sm" name="__ricerca__" value="{{ request.__ricerca__ }}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary btn-sm btn-sqr btn-block"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['articoli.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai agli articoli</button>
+                </div>
+            </div>
+        </fieldset>
+        {% if frequenti %}
+        <fieldset>
+            <legend>articoli frequenti</legend>
+            {# TODO QUI BOX ARTICOLI FREQUENTI #}
+        </fieldset>
+        {% endif %}
+<!--
+	    <fieldset>
+            <legend>riga libera</legend>
+            {# TODO QUI METTERE I CAMPI PER L'AGGIUNTA DI UNA RIGA SENZA ARTICOLO (OPPURE UN BOTTONE PER ANDARE AL FORM DI INSERIMENTO RIGHE?) #}
+        </fieldset>
+-->
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script async defer type="text/javascript">
+	window.addEventListener( 'DOMContentLoaded', function() {
+        document.getElementById('ricerca').focus();
+    });	
+</script>
+{% endblock %}

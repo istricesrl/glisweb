@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_durate_inps` ADD PRIMARY KEY(`id`);

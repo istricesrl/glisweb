@@ -1,1 +1,0 @@
-ALTER TABLE `todo` ADD CONSTRAINT `todo_ibfk_9_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

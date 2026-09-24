@@ -1,40 +1,67 @@
 
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
-{# NOTA: IMPORTARE SEMPRE COME CNT #}
+{# NOTA: IMPORTARE SEMPRE COME CMS #}
+{# import '_bin/_default.html' as cms #}
 
 {% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
 {% if img.path %}
+{% if img.path is iterable %}
+{% set path = img.path[ lang ] %}
+{% set mime = img.mimetype[ lang ] %}
+{% else %}
 {% set path = img.path %}
+{% set mime = img.mimetype %}
+{% endif %}
 {% set path_alternativo = img.path_alternativo %}
 {% set orientamento = img.orientamento %}
-{% set mime = img.mimetype %}
 {% else %}
 {% set path = img %}
 {% set mime = 'image/' ~ path|split('.')|last|replace({'jpg':'jpeg'}) %}
 {% set orientamento = 'L' %}
 {% endif %}
+<!-- orientamento: {{ orientamento }} -->
 <picture class="{% if pictureclass %}{{ pictureclass }}{% endif %}">
     {% if not orientamento or path_alternativo or orientamento == 'L' %}
     <source
-	type="image/webp"
-	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="image/webp"
+        {% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+        srcset="{% if set.formats.l is iterable %}
+            {% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     <source
-	type="{{ mime }}"
-	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="{{ mime }}"
+        {% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+        srcset="{% if set.formats.l is iterable %}
+            {% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     {% endif %}
     {% if not orientamento or path_alternativo or orientamento == 'P' %}
     <source
-	type="image/webp"
-	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="image/webp"
+        {% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+        srcset="{% if set.formats.p is iterable %}
+            {% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     <source
-	type="{{ mime }}"
-	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="{{ mime }}"
+        {% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+        srcset="{% if set.formats.p is iterable %}
+            {% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     {% endif %}
-    <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload">
+    <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload" style="width: 100%;">
 </picture>
 {% endmacro %}
 
@@ -43,19 +70,127 @@
 {{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
 {% endmacro %}
 
-{% macro video( page, lang, site, role, num ) %}
-{% if page.contents.video[ role ][ num ].id_tipologia_embed == 3 %}
+{% macro video( page, lang, site, role, num, autoplay, loop, privacy, pages ) %}
+{# nota sull'autoplay vedi https://developer.chrome.com/blog/autoplay?hl=it #}
+{# NOTA privacy e pages servono al consenso e stanno in fondo apposta: le chiamate gia' scritte
+   non cambiano, e chi non li passa ottiene il comportamento di prima ( vedi cms.videoEmbed() ) #}
+{% import _self as cms %}
+{% if page.contents.video[ role ][ num ].id_embed == 3 %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
-    <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+    {{ cms.videoEmbed( page.contents.video[ role ][ num ].codice_embed, privacy, pages, lang, page, '?rel=0' ~ ( autoplay ? '&autoplay=1&mute=1' : '' ) ~ ( loop ? '&loop=1' : '' ), 'embed-responsive-item lazyload', '', '', 'YouTube', true ) }}
 </div>
-{% elseif page.contents.video[ role ][ num ].id_tipologia_embed == 2 %}
-VIMEO
+{% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
+{# Vimeo non e' implementato: prima di questa riga la macro stampava la parola VIMEO nel corpo
+   della pagina, che e' il modo peggiore di dire che manca qualcosa. Quando si implementera',
+   l'incorporamento passa da cms.iframeEmbed() come quello di YouTube, col suo servizio
+   dichiarato in privacy.cookie.terzi.analitici #}
+<!-- video {{ num }} del ruolo {{ role }}: Vimeo non e' ancora implementato in {{ _self }}::video() -->
 {% else %}
-<video controls width="100%">
+<video controls width="100%" {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}  >
     <source src="{{ site.root }}{{ page.contents.video[ role ][ num ].path }}" type="video/mp4">
 </video>
 {% endif %}
+{% endmacro %}
+
+{% macro videoEmbed( codice, privacy, pages, lang, page, parametri, classe, width, height, servizio, lazy ) %}
+{# INCORPORAMENTO DI UN VIDEO YOUTUBE SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' la macro da usare ogni volta che in una pagina compare un video di YouTube, sia dai template
+   sia dal testo dei contenuti ( dove il redattore, altrimenti, incolla l'iframe a mano e quel video
+   si carica anche a consenso rifiutato ). Stessa forma degli snippet di terze parti di _src/_html/_inc/
+   ( _analytics.head.html, _gtm.head.html, ... ): prima si guarda la configurazione del servizio, poi
+   il consenso, e nel ramo che non emette niente ci va un commento HTML che dice perche'.
+
+   codice     il codice di incorporamento del video ( la parte dopo /embed/ )
+   privacy    l'array privacy della pagina: serve per il consenso, nelle macro il contesto non arriva
+   pages      l'array delle pagine: serve al segnaposto per il link alla privacy policy
+   lang       il codice IETF della lingua
+   page       la pagina corrente: il segnaposto ci fa sopra la POST del consenso
+   parametri  la query string del video, compreso il '?' ( p.es. '?rel=0&mute=1' )
+   classe     le classi dell'iframe, che vanno anche al segnaposto perche' ne prende il posto
+   width      l'attributo width dell'iframe, se serve
+   height     l'attributo height dell'iframe, se serve
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici, di default 'YouTube'
+   lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+
+   NOTA servizio sceglie soltanto il consenso da verificare: l'URL e' comunque quello di YouTube,
+   Vimeo non e' implementato ne' qui ne' in cms.video()
+   NOTA senza privacy la macro non puo' verificare niente e il video esce come prima: e' quello che
+   succede alle chiamate di cms.video() gia' scritte, e lo dichiara un commento nella pagina #}
+{% import _self as cms %}
+{% if not servizio %}{% set servizio = 'YouTube' %}{% endif %}
+{% if not codice %}
+<!-- nessun codice video passato a {{ _self }}::videoEmbed() -->
+{% else %}
+{{ cms.iframeEmbed( 'https://www.youtube.com/embed/' ~ codice ~ parametri, servizio, privacy, pages, lang, page, classe, width, height, 'Il video', 'title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen', lazy ) }}
+{% endif %}
+{% endmacro %}
+
+{% macro iframeEmbed( url, servizio, privacy, pages, lang, page, classe, width, height, contenuto, attributi, lazy ) %}
+{# INCORPORAMENTO DI UN IFRAME DI TERZE PARTI SUBORDINATO AL CONSENSO SUI COOKIE
+
+   E' il gate, e sta in un posto solo: cms.videoEmbed() e' il caso YouTube che passa di qui, e una
+   mappa, un calendario o qualunque altro incorporamento di terze parti si scrivono allo stesso
+   modo. La forma e' quella degli snippet di _src/_html/_inc/: prima la configurazione del servizio,
+   poi il consenso, e nel ramo che non emette niente un commento HTML che dice perche'.
+
+   url        l'URL completo dell'iframe, query string compresa
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   attributi  gli attributi propri del servizio, gia' scritti come vanno nel tag
+   lazy       true per emettere data-src invece di src e far caricare l'iframe a lazysizes
+
+   NOTA il gate scatta solo se il servizio e' DICHIARATO e non e' anonimo: dove non e' dichiarato
+   il framework non ha niente da far rispettare, l'iframe esce e un commento lo dice #}
+{% import _self as cms %}
+{% if not lang %}{% set lang = 'it-IT' %}{% endif %}
+{% set dettagli = privacy.cookie.terzi.analitici[ servizio ] %}
+{% if not url %}
+<!-- nessun url passato a {{ _self }}::iframeEmbed() -->
+{% elseif dettagli and not dettagli.anonimo and dettagli.consenso != 'ok' %}
+<!-- {{ contenuto|default( 'Questo contenuto' ) }} non si carica: consenso {{ servizio }} {% if dettagli.consenso %}negato{% else %}non prestato{% endif %} ( {{ url }} ) -->
+{{ cms.consensoMancante( servizio, privacy, pages, lang, page, contenuto, classe ) }}
+{% else %}
+{% if not dettagli %}<!-- {{ servizio }} non e' dichiarato in privacy.cookie.terzi.analitici: l'iframe esce senza verifica del consenso -->{% endif %}
+<iframe{% if classe %} class="{{ classe }}"{% endif %}{% if width %} width="{{ width }}"{% endif %}{% if height %} height="{{ height }}"{% endif %} {% if lazy %}data-src{% else %}src{% endif %}="{{ url }}"{% if attributi %} {{ attributi|raw }}{% endif %}></iframe>
+{% endif %}
+{% endmacro %}
+
+{% macro consensoMancante( servizio, privacy, pages, lang, page, contenuto, classe ) %}
+{# SEGNAPOSTO DI UN CONTENUTO DI TERZE PARTI NON CARICATO PER MANCANZA DI CONSENSO
+
+   Prende il posto del contenuto che non si vede e dice di chi e' il cookie, quanto dura e dove va
+   il trattamento, coi testi presi dalla dichiarazione dei cookie e non riscritti. Il pulsante e' la
+   stessa POST di __cookie__ dell'overlay dei cookie: niente JavaScript, niente meccanismi nuovi.
+
+   servizio   la chiave del servizio in privacy.cookie.terzi.analitici
+   contenuto  come si chiama quello che non si vede ( 'Il video', 'La mappa', ... )
+   classe     le classi del contenuto sostituito, perche' il segnaposto ne occupa il posto #}
+{% set dettagli = privacy.cookie.terzi.analitici[ servizio ] %}
+{% if dettagli %}
+<div class="consenso-mancante{% if classe %} {{ classe }}{% endif %}">
+    <form action="{{ page.path[ lang ] }}" method="post">
+        <input type="hidden" name="__cookie__[{{ servizio }}][owner]" value="terzi">
+        <input type="hidden" name="__cookie__[{{ servizio }}][type]" value="analitici">
+        <input type="hidden" name="__cookie__[{{ servizio }}][value]" value="ok">
+        <p>{% if contenuto %}{{ contenuto }}{% else %}Questo contenuto{% endif %} non si carica perché non hai dato il consenso ai cookie di
+        <strong>{{ dettagli.nome[ lang ] }}</strong>.</p>
+        <p class="dettaglio">Il cookie è conservato {{ dettagli.conservazione[ lang ] }} e il trattamento
+        dei dati ad esso collegati è effettuato {{ dettagli.luogo[ lang ] }}; puoi cambiare idea in
+        qualsiasi momento dalla <a href="{{ pages.privacy.url[ lang ] }}">privacy policy del sito</a>.</p>
+        <input type="submit" class="btn btn-light" value="ACCETTA E MOSTRA">
+    </form>
+</div>
+{% else %}
+<!-- nessun segnaposto per {{ servizio }}: non e' dichiarato in privacy.cookie.terzi.analitici -->
+{% endif %}
+{% endmacro %}
+
+{% macro audio( site, page, ruolo, ordine ) %}
+<audio controls>
+    <source src="{{ site.root }}{{ page.contents.audio[ ruolo ][ ordine ].path }}" type="audio/mpeg">
+</audio>
 {% endmacro %}
 
 {% macro audio( site, page, ruolo, ordine ) %}
@@ -168,24 +303,30 @@ window.addEventListener( 'DOMContentLoaded', function() {
 </div>
 {% endmacro %}
 
-{% macro jumbotron( page, lang, site, name, class, img ) %}
+{% macro jumbotron( page, lang, site, name, class, img, image ) %}
 {% import _self as cms %}
-<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
+<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); 
+
+    background-size: cover; background-position: center;">
     <div class="container">
 		<div class="row">
 			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
-				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% else %}<!-- metadato jt_h3 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% else %}<!-- metadato jt_h1 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_h1_href %}</a>{% endif %}
-				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% else %}<!-- metadato jt_h2 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_content[ lang ] %}
 				<div class="contents">
 					{{ page.metadati.jt_content[ lang ]|raw }}
 					{% if page.metadati.jt_action[ lang ] %}
 					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% else %}
+					<!-- metadato jt_action non inserito per la lingua {{ lang }} -->
 					{% endif %}
 				</div>
+				{% else %}
+				<!-- metadato jt_content non inserito per la lingua {{ lang }} -->
 				{% endif %}
 			</div>
 		</div>
@@ -248,7 +389,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	<div class="carousel-item{% if i == 0 %} active{% endif %}">
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
 	    {{ cms.picture( img, lang, site, set ) }}
-	    {% if img.h1 or img.h2 or img.cappello %}
+	    {% if img.h1[ lang ] or img.h2[ lang ] or img.cappello[ lang ] %}
 	    <div class="{% if img.metadati.captionClasses[ lang ] %}{{ img.metadati.captionClasses[ lang ] }}{% else %}carousel-caption{% endif %}">
 		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}
 		{% if img.h2 %}<h2>{{ img.h2[ lang ]|raw }}</h2>{% endif %}
@@ -319,7 +460,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <div id="{{ name }}" class="row g2cb {{ class }}" style="display: none;">
     {% for k in set %}
     {% for img in page.contents.images[ k ] %}
-    <div class="col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+    <div class="col col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
 		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
     </a></div>
     {% else %}
@@ -364,4 +505,52 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% set a = 'http://www.tumblr.com/share?v=3&u=' ~ url ~ '&t=' ~ txt %}
 {% endif %}
 <a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
+{% endmacro %}
+
+{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo, extra, dup ) %}
+<!-- macro {{ _self }}::formButton() -->
+{% if recaptcha.keys.public %}
+<!-- type settato automaticamente a button -->
+{% set type = 'button' %}
+<!-- onclick settato automaticamente vuoto -->
+{% if not dup %}
+<!-- script per reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- campo hidden generato automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
+<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
+{% endif %}
+<!-- funzione generata automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
+<script>
+	function onSubmit{{ form }}{{ extra }}( token ) {
+		console.log( token );
+        var forceValid = 0;
+        {{ onclick|raw }}
+        console.log( 'forzatura validità: ' + forceValid );
+        document.getElementById("{{ form }}RecaptchaToken").value = token;
+		var contactForm = document.getElementById("{{ form }}");
+        console.log( 'onSubmit da reCAPTCHA per {{ form }}' );
+		if(contactForm.checkValidity()||forceValid==1) {
+            console.log( 'form valido' );
+			contactForm.submit();
+		} else {
+            console.log( 'form non valido' );
+            // il token è monouso e vale 2 minuti: se non si fa il submit bisogna azzerare il
+            // widget, altrimenti al clic successivo riparte lo stesso token e Google risponde
+            // timeout-or-duplicate. reset() senza argomento azzera solo il primo widget, quindi
+            // con più bottoni protetti sulla stessa pagina vanno scorsi tutti
+            try { var widget = document.querySelectorAll('.g-recaptcha'); for( var i = 0; i < widget.length; i++ ) { try { grecaptcha.reset( i ); } catch( e ) {} } } catch( e ) {}
+            contactForm.reportValidity();
+        }
+		console.log('invocata protezione reCAPTCHA');
+	}
+</script>
+{% set onclick = '' %}
+{% elseif onclick %}
+<!-- type settato automaticamente a button -->
+{% set type = 'button' %}
+{% else %}
+<!-- submit button standard -->
+{% set type = 'submit' %}
+{% endif %}
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if recaptcha.keys.public %}data-sitekey="{{ recaptcha.keys.public }}" data-callback="onSubmit{{ form }}{{ extra }}" data-action="submit"{% endif %} {% if id %}id="{{id}}"{% endif %} class="btn {% if class %}{{ class }}{% else %}btn-sm btn-secondary{% endif %} {% if recaptcha.keys.public %}g-recaptcha{% endif %}" {% if onclick %}onclick="{{ onclick }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}>{{ text|raw }}</button>
 {% endmacro %}

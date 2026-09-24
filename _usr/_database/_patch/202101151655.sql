@@ -1,1 +1,0 @@
-ALTER TABLE `macro` ADD CONSTRAINT `macro_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

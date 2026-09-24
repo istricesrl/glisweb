@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'ticket_archivio';
+    $ct['view']['table'] = 'ticket_archiviati';
     
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'ticket.form';
@@ -32,8 +32,13 @@
 		'tipologia' => 'tipologia',
 	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
-	    'responsabile' => 'assegnato a',
-	    'completato' => 'stato'
+		'ranking_cliente' => 'priorità',
+		'tipologia_progetto' => 'progetto',
+		'progetto' => 'riferimento',
+		'data_chiusura' => 'chiuso',
+		'data_archiviazione' => 'archiviato',
+#	    'responsabile' => 'assegnato a',
+#	    'completato' => 'stato'
 	);
 
     // stili della vista
@@ -42,8 +47,9 @@
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 		'tipologia' => 'text-left',
-	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
-	    'completato' => 'text-left'
+		'tipologia_progetto' => 'd-none',
+#	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
+#	    'completato' => 'text-left'
 	);
 
     // tendina clienti
@@ -65,13 +71,11 @@
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
 	}
-
+/*
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
 			if( $row['completato'] == 2 ){ $row['completato']='chiuso';  }
 			else { $row['completato']='';  }
 		}
 	}
-    
-
-   
+*/

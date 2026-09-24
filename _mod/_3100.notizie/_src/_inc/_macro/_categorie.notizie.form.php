@@ -22,15 +22,15 @@
     // tabella gestita
 	$ct['form']['table'] =  'categorie_notizie';
 
-    // tendina tipologie pubblicazione
-	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
+    // tendina tipologie pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
-    // tendina tipologie pubblicazione
+    // tendina tipologie notizie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -43,7 +43,8 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_notizie_view'
+	    'SELECT id, __label__ FROM categorie_notizie_view WHERE categorie_notizie_path_check( categorie_notizie_view.id, ? ) = 0',
+        array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 	);
 
 	// tendina siti
@@ -79,11 +80,16 @@
 	    // controllo file
 		if( file_exists( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/etc/template.conf' ) ) {
 
-		    // tendina schemi
-			$schemi = glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE );
-			foreach( $schemi as $t ) {
-			    $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
-			}
+            // ricerca schemi
+            $schemi = array_merge(
+                glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
+                glob( DIR_MOD_ATTIVI . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
+            );
+
+            // tendina schemi
+            foreach( $schemi as $t ) {
+                $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
+            }
 
 		    // tendina temi
 			$temi = glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/css/{,themes/}*.css', GLOB_BRACE );

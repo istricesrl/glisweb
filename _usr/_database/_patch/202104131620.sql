@@ -1,1 +1,0 @@
-ALTER TABLE `mastri` ADD CONSTRAINT `mastri_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

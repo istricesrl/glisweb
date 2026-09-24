@@ -8,15 +8,15 @@
      * Il framework supporta un potente e flessibile sistema di autenticazione
      * e autorizzazione basato su account e gruppi di account. Account e gruppi
      * sono impostati nel file _200.auth.php e personalizzati nel file 200.auth.php.
-     * Le password sono archiviate in forma crittografata tramite md5() per
-     * ragioni di sicurezza.
+     * Le password sono archiviate come hash calcolato con password_hash() di PHP
+     * ( vedi passwordHash() in _src/_lib/_cryptography.tools.php ); gli hash MD5
+     * salvati prima del 24/09/2026 continuano a funzionare, e quelli del database
+     * vengono ricalcolati al primo login riuscito.
      *
-     * Se avete a disposizione una shell Bash, generare una password e cifrarla in MD5 è
-     * molto semplice:
+     * Per generare l'hash di una password da scrivere nei file di configurazione:
      *
      * \code{.bash}
-     * pwgen -nyc 16 1
-     * echo -n "<password>" | md5sum
+     * _src/_sh/_password.hash.sh "<password>"
      * \endcode
      *
      *
@@ -56,100 +56,230 @@
      * permessi
      * --------
      *
+     * [...] sostanzialmente quali azioni un utente o un gruppo possono compiere su un'entità in generale [...]
      *
      *
      * diritti
      * -------
      *
-     *
+     * [...] sostanzialmente quali azioni un utente o un gruppo possono compiere su una istanza (o riga) specifica di un'entità [...]
      *
      * privilegi
      * ---------
      *
+     * [...] azioni speciali e particolari, come ad esempio [...]
      *
      *
      *
-     *
-     * @todo documentare
-     *
-     * @file
+     * TODO documentare
      *
      */
 
-    // costanti che descrivono lo stato del login
-    // TODO hanno senso tutte queste costanti?
-	define( 'LOGIN_ERR_NO_DATA'		, 'NODATA' );
-	define( 'LOGIN_ERR_NO_CONNECTION'	, 'NOCONNECTION' );
-	define( 'LOGIN_ERR_NO_USER'		, 'NOUSER' );
-	define( 'LOGIN_ERR_WRONG_PW'		, 'WRONGPW' );
-	define( 'LOGIN_ERR_INACTIVE'		, 'USERDOWN' );
-	define( 'LOGIN_SUCCESS'			, 'SUCCESS' );
-	define( 'LOGIN_LOGGED'			, 'LOGGED' );
-	define( 'LOGIN_LOGOUT'			, 'LOGOUT' );
+    // ini_set( 'display_errors', '1' );
+    // ini_set( 'display_startup_errors', '1' );
+    // error_reporting( E_ALL );
 
-    // chiave segreta per JWT
-    // TODO abbiamo abbandonato per ora il progetto di implementare JWT
-	// $cf['auth']['jwt']['secret']		= false;
+    /**
+     * definizione dei gruppi
+     * ======================
+     * 
+     * 
+     */
 
-    // gruppi di default della piattaforma
-	$cf['auth']['groups'] = array(
-	    'roots' => array(
-		'id' => NULL,
-		'nome' => 'roots',
-		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE'
-		)
-	    ),
-	    'staff' => array(
-		'id' => NULL,
-		'nome' => 'staff'
-	    ),
-	    'users' => array(
-		'id' => NULL,
-		'nome' => 'users'
-	    )
-	);
+    // gruppi
+    $cf['auth']['groups'] = array(
+        'roots' => array(
+            'id' => NULL,
+            'nome' => 'roots',
+            'privilegi' => array(
+                'EDIT_CONFIGURAZIONE',
+                'GESTIONE_ACCOUNT',
+                'INVIO_DIRETTO_MAIL',
+                'INVIO_ANAGRAFICA_ARCHIVIUM',
+                'CANCELLAZIONE_RICORSIVA',
+                'GESTIONE_SISTEMA',
+                'GESTIONE_MYSQL',
+                'GESTIONE_CACHE',
+                'GESTIONE_IMPORT',
+                'GESTIONE_ANAGRAFICA',
+                'GESTIONE_DOCUMENTI',
+                'GESTIONE_CONTRATTI',
+                'GESTIONE_CORSI',
+                'GESTIONE_COMUNICAZIONI',
+                'GESTIONE_CATALOGO',
+                'GESTIONE_ECOMMERCE'
+            )
+        ),
+        'staff' => array(
+            'id' => NULL,
+            'nome' => 'staff',
+            'privilegi' => array(
+                'GESTIONE_CACHE',
+                'GESTIONE_ANAGRAFICA',
+                'GESTIONE_DOCUMENTI',
+                'GESTIONE_CONTRATTI',
+                'GESTIONE_CORSI',
+                'GESTIONE_COMUNICAZIONI',
+                'GESTIONE_CATALOGO',
+                'GESTIONE_ECOMMERCE'
+            )
+        ),
+        'users' => array(
+            'id' => NULL,
+            'nome' => 'users'
+        )
+    );
 
-    // TODO gli ID dei privilegi dovrebbero essere delle costanti
+    // recupero dei gruppi dal database
+    $gruppi = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT * FROM gruppi_view'
+    );
 
-    // privilegi della piattaforma
-	$cf['auth']['privileges'] = array(
-	    'EDIT_CONFIGURAZIONE' => array(
-		'id' => NULL,
-		'nome' => 'editare la configurazione del framework'
-	    )
-	);
+    // integro i gruppi trovati nel database
+    if( is_array( $gruppi ) ) {
+        foreach( $gruppi as $gruppo ) {
+            $cf['auth']['groups'][ $gruppo['nome'] ] = array_replace_recursive(
+                $cf['auth']['groups'][ $gruppo['nome'] ] ?? array(),
+                array(
+                    'id' => $gruppo['id'],
+                    'nome' => $gruppo['nome']
+                )
+            );
+        }
+    }
 
-    // account di default della piattaforma
-    // TODO è corretto che nome cognome e denominazione stiano allo stesso livello di id ecc? non crea confusione?
-    // TODO gli oggetti mappati da database dovrebbero somigliare il più possibile alla corrispettiva riga di database!
-	$cf['auth']['accounts'] = array(
-	    'root' => array(
-		'id' => NULL,
-#		'nome' => NULL,
-#		'cognome' => NULL,
-#		'denominazione' => NULL,
-		'username' => 'root',
-		'password' => NULL,
-		'gruppi' => array(
-		    'roots'
-		),
-		'permissions' => array(),
-		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE'
-		)
-	    )
-	);
-/*
-    // password di root da variabile d'ambiente
-	if( ! empty( $_ENV['ROOT_PW'] ) ) {
-	    $cf['auth']['accounts']['root']['password'] = md5( getenv('ROOT_PW') );
-	}
-*/
-    // configurazione extra
-	if( isset( $cx['auth'] ) ) {
-	    $cf['auth'] = array_replace_recursive( $cf['auth'], $cx['auth'] );
-	}
+    /**
+     * definizione dei privilegi
+     * =========================
+     * 
+     * 
+     */
+
+    // privilegi
+    $cf['auth']['privileges'] = array(
+        'EDIT_CONFIGURAZIONE' => array(
+            'id' => NULL,
+            'nome' => 'editare la configurazione del framework'
+        ),
+        'INVIO_ANAGRAFICA_ARCHIVIUM' => array(
+            'id' => NULL,
+            'nome' => 'inviare una anagrafica ad Archivium'
+        ),
+        'CANCELLAZIONE_RICORSIVA' => array(
+            'id' => NULL,
+            'nome' => 'cancellare ricorsivamente oggetti dal database'
+        ),
+        'INVIO_DIRETTO_MAIL' => array(
+            'id' => NULL,
+            'nome' => 'inviare mail da API REST'
+        ),
+        'GESTIONE_SISTEMA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di sistema e di manutenzione del framework'
+        ),
+        'GESTIONE_MYSQL' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task che ricostruiscono viste statiche e strutture della banca dati'
+        ),
+        'GESTIONE_CACHE' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task che svuotano le cache'
+        ),
+        'GESTIONE_IMPORT' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di importazione dati'
+        ),
+        'GESTIONE_ANAGRAFICA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task di manutenzione delle anagrafiche e degli indirizzi'
+        ),
+        'GESTIONE_DOCUMENTI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sui documenti contabili'
+        ),
+        'GESTIONE_CONTRATTI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su contratti, rinnovi, tesseramenti, iscrizioni e abbonamenti'
+        ),
+        'GESTIONE_CORSI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su corsi, lezioni, pianificazioni e todo'
+        ),
+        'GESTIONE_COMUNICAZIONI' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sulle code di mail e sms e sul mailing'
+        ),
+        'GESTIONE_CATALOGO' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su catalogo, prodotti e articoli'
+        ),
+        'GESTIONE_ECOMMERCE' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task su carrelli e coupon'
+        )
+    );
+
+    /**
+     * definizione degli utenti
+     * ========================
+     * 
+     * 
+     */
+
+    // account
+    $cf['auth']['accounts'] = array(
+        'root' => array(
+            'id' => NULL,
+            'username' => 'root',
+            'password' => NULL,
+            'gruppi' => array(
+                'roots'
+            ),
+            'permissions' => array(),
+            'privilegi' => array(
+                'EDIT_CONFIGURAZIONE',
+                'INVIO_ANAGRAFICA_ARCHIVIUM'
+            )
+        )
+    );
+
+    /**
+     * definizione dei profili di creazione nuovi account
+     * ==================================================
+     * 
+     * 
+     */
+
+    // profili di creazione nuovi account
+    $cf['auth']['profili'] = array(
+        'admin' => array(
+            'nome' => 'utente',
+            'cognome' => 'amministratore',
+            'gruppi' => array( 'roots', 'staff', 'users' ),
+            'categorie' => array( 'collaboratori' ),
+            'username' => true,
+            'sms' => false,
+            'mail' => 'DEFAULT_NUOVO_ACCOUNT_ATTIVO',
+            'landing' => 'dashboard',
+            'attivo' => true
+        )
+    );
+
+    /**
+     * configurazioni per JWT
+     * ======================
+     * 
+     * 
+     */
+
+    // salt e scadenza della chiave JWT
+    // NOTA calcolato in questo modo il salt cambia ogni giorno quindi non è possibile riusarlo troppo a lungo
+    // TODO non c'è un modo più fine per farlo?
+    $cf['auth']['jwt']['salt'] = date( 'Y-m-d' );
+
+    // inizializzazione della password per JWT
+    $cf['auth']['jwt']['pass'] = NULL;
 
     // debug
-	// print_r( $cf['auth'] );
+    // die( print_r( $cf['auth'], true ) );

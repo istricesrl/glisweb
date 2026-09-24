@@ -32,27 +32,30 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'data_programmazione' => 'pianificato',
+#	    'data_programmazione' => 'pianificato',
 #	    'priorita' => 'priorità',
+		'tipologia' => 'tipologia',
 	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
-	    'responsabile' => 'assegnato a',
+	    'anagrafica' => 'assegnato a',
+		'settimana_programmazione' => 'settimana',
+		'anno_programmazione' => 'anno'
 #	    'progresso' => 'ore',
-	    'completato' => 'stato',
-	    'id_priorita' => 'id_priorita'
+#	    'completato' => 'stato',
+#	    'id_priorita' => 'id_priorita'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
-		'completato' => 'd-none',
+#		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',
-	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
+	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
-	    'completato' => 'text-left'
+#	    'completato' => 'text-left'
 	);
 
     // inclusione filtri speciali
@@ -72,15 +75,16 @@
 		
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.view.php';
-    
-    // preset filtro custom todo completati
+/*
+	// preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 0;
     }
-    
-    // preset ordinamento
+*/
+	// preset ordinamento
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['pianificazione'] = 'ASC';
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['anno_programmazione'] = 'ASC';
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['settimana_programmazione'] = 'ASC';
     }
     
 /*    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) || $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] == '__me__' ) {
@@ -98,7 +102,7 @@
   if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){ 
 	$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
 }
-
+/*
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
 			if( $row['completato'] == 2 ){ $row['completato']='completato';  }
@@ -108,6 +112,4 @@
 			}
 		}
 	}
-    
-
-   
+*/

@@ -1,10 +1,52 @@
+.github/
 _*/
-etc/sitemap/
+etc/deploy/
+etc/secret/
 etc/latest.conf
+etc/latest.release.conf
+etc/latest.version.conf
+/src/ext/shadow.*
+/src/shadow.*
+src/py/*/*/.buildozer/
+src/py/*/*/bin/
+src/py/*/*/include/
+src/py/*/*/lib/
+src/py/*/*/lib64/
+src/py/*/*/share/
+src/py/*/*/lib64
 tmp/
 var/
-.htaccess
-composer.*
+# artefatti standard della root del deploy: ancorati con lo slash
+# iniziale, altrimenti il pattern matcha a qualsiasi profondita e si
+# porta via anche file custom del progetto (un README di un
+# sottoprogetto, un .htaccess di cartella, il .gitignore di un tool).
+/.gitignore
+/.htaccess
+/composer.*
+# robots.* e sitemap.* restano NON ancorati di proposito: oltre ai file
+# di root coprono etc/robots/ e etc/sitemap/, che sono generati da
+# _src/_config/_980.sitemap.php e non vanno versionati.
 robots.*
 sitemap.*
-*.md
+/*.md
+
+# documentazione: il SORGENTE sta in usr/docs/ ed e' scritto a mano, quindi va versionato;
+# l'output di _src/_sh/_docs.build.sh no, altrimenti ogni rigenerazione produce un diff di
+# migliaia di righe. I marcatori di attivazione stanno in var/, che e' gia' ignorato qui
+# sopra ed e' gia' escluso dal deploy: sono per installazione e non vanno propagati.
+usr/pages/manual/
+usr/pages/quickstart/
+
+# hook spediti dal framework nello zip: si elencano per nome e non come
+# cartella, perche .githooks/ puo contenere anche hook propri del progetto
+# cliente, che vanno versionati. Qui stanno solo i nomi che lo zip sovrascrive.
+.githooks/commit-msg
+.githooks/post-commit
+.githooks/pre-commit
+
+# skill Claude Code spedite dal framework nello zip: l'upgrade notturno le
+# riscrive, quindi versionarle vorrebbe dire un diff spurio a ogni giro. Vale
+# lo stesso criterio di .githooks/ qui sopra: si ignora solo il ramo che lo zip
+# sovrascrive, non tutta .claude/, perche il progetto cliente puo averci dentro
+# skill proprie o un settings.json suoi, che vanno versionati.
+.claude/skills/glisweb/

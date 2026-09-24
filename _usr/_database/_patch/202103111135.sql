@@ -1,1 +1,0 @@
-ALTER TABLE `metadati` DROP FOREIGN KEY `metadati_ibfk_13`;

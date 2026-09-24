@@ -1,0 +1,48 @@
+{# CODICE DELLA PAGINA #}
+<!-- file esteso: {{ _self }} -->
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    {# HEADER #}
+    <head>
+
+        {# HEADER STANDARD #}
+        {% include '_inc/_page.head.twig' %}
+
+        {# STILI DI PAGINA #}
+        <style>
+            .form-login {
+                background-color: rgba( 255, 255, 255, .9 );
+                border: 1px solid #aaaaaa;
+                border-radius: 10px;
+                padding: 20px 40px;
+            }
+            .form-login legend {
+                font-size: 1.5em;
+                font-weight: bold;
+                text-align: center;
+            }
+        </style>
+
+    </head>
+
+    {# BODY #}
+    <body>
+
+        {# CODICE DI APERTURA STANDARD DELLA PAGINA#}
+        {% include '_inc/_page.open.twig' %}
+
+        {# BLOCCO MAIN #}
+        <main class="container-fluid d-flex flex-fill flex-column p-0">
+            {% block main %}{% endblock main %}
+        </main>
+
+        {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
+        {% include '_inc/_page.close.twig' %}
+
+        {# SCRIPT JAVASCRIPT DELLA PAGINA #}
+        {% block javascript %}{% endblock javascript %}
+
+    </body>
+</html>
+<!-- fine file esteso: {{ _self }} -->

@@ -120,6 +120,7 @@
      * css.*           | i CSS da includere                                         |
      * h1.*            | il valore del tag H1, in chiave la lingua in formato IETF  | come title
      * headers         | gli headers HTTP da lanciare                               |
+     * id_sito         | l'id del sito al quale la pagina appartiene                | tutti i siti
      * js.*            | gli script Javascript da includere                         |
      * macro           | le macro da attivare                                       |
      * menu.*          | la posizione della pagina nei menu del sito                |
@@ -183,6 +184,11 @@
      * /_src/_inc/_pages/ e ne esiste una corrispettiva anche nei moduli; entrambe sono
      * sovrascritte da eventuali configurazioni custom.
      *
+     * pagine statiche e contenuti statici
+     * -----------------------------------
+     * [...] si veda _src/_api/_pages.php per ulteriori dettagli sulla gestione delle pagine
+     * statiche e dei contenuti statici.
+     * 
      * pagine di default e pagine riservate
      * ====================================
      *
@@ -191,127 +197,188 @@
      *
      *
      *
+     * TODO verificare che questi commenti siano aggiornati
+     * TODO verificare le tabelle di questo commento, se sono aggiornate oppure no
+     * TODO documentare
      *
-     * @todo verificare le tabelle di questo commento, se sono aggiornate oppure no
-     * @todo finire di documentare
-     *
-     * @file
      *
      */
 
-    // cache
-	if( $cf['contents']['cached'] === false ) {
+    // debug
+    // die( 'inizio ' . __FILE__ );
 
-	    // log
-		logWrite( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+    /**
+     * verifica della cache dei contenuti
+     * ==================================
+     * 
+     * 
+     */
 
-	    // debug
-		// print_r( $cf['localization']['language'] );
+    // verifica della cache
+    if( $cf['contents']['cached'] === false ) {
 
-	    // array delle pagine
-		$cf['contents']['pages']		= array();
+        // debug
+        // print_r( $cf['localization']['language'] );
+        // die( 'contenuti non cacheati' );
 
-	    // ultimo aggiornamento delle pagine, per la generazione della sitemap
-		$cf['contents']['updated']		= NULL;
+        // log
+        if( ! empty( $cf['memcache']['connection'] ) ) {
+            logger( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+        }
 
-	    // configurazione extra
-		if( isset( $cx['contents'] ) ) {
-		    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
-		}
+        // array delle pagine
+        $cf['contents']['pages'] = array();
 
-	    // variabili di lavoro
-		$lingue					= '{' . LINGUE_ATTIVE . '}';
-		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
-		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
+        // timestamp dell'ultimo aggiornamento delle pagine
+        $cf['contents']['updated'] = NULL;
 
-	    // ricerca dei files delle pagine
-		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+        // criteri di ricerca per i file di definizione delle pagine
+        $lingue                 = '{' . LINGUE_ATTIVE . '}';
+        $folder                 = '{,_}src/{,_}inc/{,_}pages/{,_}*';
+        $mods                   = '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
 
-	    // debug
-		// echo DIRECTORY_BASE . $folder . '.' . $lingue . '.php' . PHP_EOL;
-		// echo DIRECTORY_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
-		// print_r( $arrayPagineBase );
-		// print_r( $arrayPagineModuli );
+        // ricerca dei files delle pagine
+        $arrayPagineBase        = glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+        $arrayPagineModuli      = glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
 
-	    // ordinamento
-		asort( $arrayPagineBase );
-		asort( $arrayPagineModuli );
+        // debug
+        // echo DIRECTORY_BASE . $folder . '.' . $lingue . '.php' . PHP_EOL;
+        // echo DIR_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
+        // print_r( $arrayPagineBase );
+        // print_r( $arrayPagineModuli );
+        // die( print_r( $arrayPagineBase, true ) . PHP_EOL . print_r( $arrayPagineModuli, true ) );
 
-	    // semplificazione
-		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
+        // ordinamento
+        asort( $arrayPagineBase );
+        asort( $arrayPagineModuli );
 
-	    // inclusione dei files delle pagine
-		foreach( $arrayPagine as $pagina ) {
-		    $ts = filemtime( $pagina );
-		    if( $ts > $cf['contents']['updated'] ) {
-			$cf['contents']['updated'] = $ts;
-		    }
-		    require $pagina;
-		    $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );
-		}
+        // semplificazione
+        $arrayPagine            = array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
 
-	    // debug
-		// echo $cf['contents']['updated'];
+        // debug
+        // die( print_r( $arrayPagine, true ) );
 
-	    // le pagine possono essere scritte in cache
-# NOTA questa cosa è obsoleta?
-#		$cf['contents']['cacheable']['pages'] = true;
-		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = true;
+        // file delle pagine gia' inclusi in questa passata
+        //
+        // SERVE, e non e' prudenza generica: lo stesso file puo' finire nell'elenco per piu' strade
+        // e verrebbe incluso piu' volte. Un file di pagine di MODULO CUSTOM, per esempio
+        // mod/0400.documenti/src/inc/pages/offerte.it-IT.php, entra TRE volte:
+        //
+        // -# la glob dei moduli lo trova da sola, perche' il criterio {,_} accetta sia i percorsi
+        //    con underscore sia quelli senza;
+        // -# viene incluso come controparte custom del file standard omonimo;
+        // -# quando tocca a lui, path2custom() di un percorso che gli underscore non ce li ha gia'
+        //    restituisce IL PERCORSO STESSO, file_exists() dice di si', e il file include se stesso
+        //    una seconda volta nella stessa iterazione.
+        //
+        // Finche' un file di pagine si limita ad ASSEGNARE $p[...] non se ne accorge nessuno, perche'
+        // riassegnare lo stesso valore tre volte non cambia niente. Ma appena un file custom
+        // AGGIUNGE qualcosa a una struttura gia' esistente - una linguetta nell'elenco dei tab con
+        // arrayInsertSeq(), che e' il modo documentato per farlo - quella cosa viene aggiunta tre
+        // volte. Trovato il 04/09/2026 su Lughese: la scheda di invio delle offerte compariva
+        // TRE VOLTE nella barra delle linguette.
+        $inclusi = array();
 
-	    // configurazione extra per sito
-		if( isset( $cf['site']['contents'] ) ) {
-		    $cf['contents'] = array_replace_recursive(
+        // inclusione dei files delle pagine
+        foreach( $arrayPagine as $pagina ) {
+
+            // timestamp di modifica del file
+            $ts = filemtime( $pagina );
+
+            // se la timestamp di modifica del file è la più recente, aggiorno
+            if( $ts > $cf['contents']['updated'] ) {
+                $cf['contents']['updated'] = $ts;
+            }
+
+            // includo il file delle pagine, una volta sola
+            if( ! isset( $inclusi[ $pagina ] ) ) {
+
+                $inclusi[ $pagina ] = true;
+
+                require $pagina;
+
+                // log
+                loggerLatest( 'incluso file delle pagine ' . $pagina );
+
+            }
+
+            // se esiste la versione custom del file...
+            if( file_exists( path2custom( $pagina ) ) ) {
+
+                // timestamp di modifica del file custom
+                $ts = filemtime( path2custom( $pagina ) );
+
+                // se la timestamp di modifica del file custom è la più recente, aggiorno
+                if( $ts > $cf['contents']['updated'] ) {
+                    $cf['contents']['updated'] = $ts;
+                }
+
+                // includo il file delle pagine custom, una volta sola
+                if( ! isset( $inclusi[ path2custom( $pagina ) ] ) ) {
+
+                    $inclusi[ path2custom( $pagina ) ] = true;
+
+                    require path2custom( $pagina );
+
+                    // log
+                    loggerLatest( 'incluso file delle pagine custom ' . path2custom( $pagina ) );
+
+                }
+
+            }
+
+            // la variabile $p è quella che per convenzione viene utilizzata nei file delle pagine
+            // $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );
+            foreach( $p as $k => $v ) {
+
+                // aggiungo l'id sito
+                if( ! isset( $v['id_sito'] ) ) { $v['id_sito'] = SITE_CURRENT; }
+
+                // aggiungo la pagina
+                if( $v['id_sito'] == SITE_CURRENT ) {
+                    $cf['contents']['pages'][ $k ] = ( isset( $cf['contents']['pages'][ $k ] ) )
+                        ? array_replace_recursive( $cf['contents']['pages'][ $k ], $v )
+                        : $v;
+                }
+
+            }
+
+            // debug
+            // var_dump( SITE_CURRENT );
+
+        }
+
+        // debug
+        // echo $cf['contents']['updated'];
+        // die( 'fine inclusione pagine' );
+
+        // configurazione extra
+        if( isset( $cx['contents'] ) ) {
+            $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
+        }
+
+        // configurazione extra per sito
+        // TODO spiegare meglio cosa fa questa cosa
+        if( isset( $cf['site']['contents'] ) ) {
+            $cf['contents'] = array_replace_recursive(
                 $cf['contents'],
                 $cf['site']['contents'] );
-		}
-
-#11	} else {
-
-	    // non è necessario scrivere le pagine in cache
-#11		$cf['contents']['cacheable']['pages'] = false;
-		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = false;
-
-	}
-
-/*
-    // TODO questo file non innesca il meccanismo di refresh della cache dei contenuti,
-    // vedi _mod/_3000.contenuti/_src/_config/_310.pages.php
-
-    DOVREBBE ESSERE TIPO COSÌ:
-
-    } else {
-
-	    // variabili di lavoro
-		$lingue					= '{' . LINGUE_ATTIVE . '}';
-		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
-		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
-
-	    // ricerca dei files delle pagine
-		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-
-	    // semplificazione
-		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
-
-	    // inclusione dei files delle pagine
-		foreach( $arrayPagine as $pagina ) {
-		    $ts = filemtime( $pagina );
-		    if( $ts > $cf['contents']['updated'] ) {
-			$cf['contents']['updated'] = $ts;
-		    }
-		}
+        }
 
     }
 
-*/
-
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
-	// echo '300 STANDARD' . PHP_EOL;
-	// print_r( $cf['contents']['pages'][ NULL ] );
-
-    // debug
-	// print_r( $cf['localization']['language'] );
-	// print_r( $cf['contents']['pages']['licenza']['content'] );
-	// print_r( $arrayPagine );
+    // echo __FILE__ . PHP_EOL;
+    // print_r( $cf['contents']['pages'][ NULL ] );
+    // print_r( $cf['localization']['language'] );
+    // print_r( $cf['contents']['pages']['licenza']['content'] );
+    // print_r( $arrayPagine );
+    // die( 'fine ' . __FILE__ );
+    // die( print_r( $cf['contents']['pages'], true ) );

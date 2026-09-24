@@ -1,0 +1,193 @@
+<?php
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     * -# dichiarazione tabella della vista
+     * -# dichiarazione della pagina di apertura
+     * -# dichiarazione delle colonne della vista
+     * -# dichiarazione delle classi delle colonne
+     * -# aggiunta delle colonne variabili
+     * -# inclusione dei filtri speciali
+     * -# popolazione tendine
+     * -# trasformazioni
+     * -# macro di default
+     *
+     *
+     *
+     *
+     *
+     * @todo finire di documentare
+     *
+     * @file
+     *
+     */
+
+    // debug
+	// print_r( $_SESSION );
+
+    // tabella della vista
+	$ct['view']['table'] = 'anagrafica';
+
+    // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['page'] = 'anagrafica.form';
+	$ct['view']['open']['table'] = 'anagrafica';
+
+    // campi della vista
+	$ct['view']['cols'] = array(
+	    'id' => '#',
+	    'codice' => 'codice',
+	    '__label__' => 'contatto',
+	    'nome' => 'nome',
+	    'cognome' => 'cognome',
+	    'denominazione' => 'denominazione',
+	    'telefoni' => 'telefoni',
+	    'mail' => 'mail',
+	    'categorie' => 'categorie',
+        'id_stato' => 'ID stato',
+        'id_provincia' => 'ID provincia',
+        NULL => 'azioni'
+	);
+
+    // stili della vista
+	$ct['view']['class'] = array(
+	    'id' => 'd-none',
+        // 'codice' => 'd-none',
+        'nome' => 'd-none',
+        'cognome' => 'd-none',
+	    // '__label__' => 'text-left no-wrap',
+	    '__label__' => 'd-none',
+	    'denominazione' => 'text-left no-wrap',
+	    'telefoni' => 'text-left d-none d-md-table-cell',
+	    'mail' => 'text-left d-none d-md-table-cell',
+        'id_stato' => 'd-none',
+        'id_provincia' => 'd-none',
+	    'categorie' => 'text-left',
+	    NULL => 'no-wrap'
+	);
+
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
+    // colonne variabili
+    /*
+	if( isset( $_SESSION['account']['se_commerciale'] ) && ! empty( $_SESSION['account']['se_commerciale'] ) ) {
+	    arrayInsertAssoc( '__label__', $ct['view']['cols'], array( 'provincia' => 'provincia' ) );
+	    arrayInsertAssoc( '__label__', $ct['view']['class'], array( 'provincia' => 'text-left' ) );
+	    $ct['view']['cols']['agente'] = 'agente';
+	    $ct['view']['class']['agente'] = 'text-left';
+	}
+    */
+
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
+
+    // ...
+    $ct['view']['__restrict__']['data_archiviazione']['NL'] = true;
+
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/anagrafica.view.modal.attivita.html'
+    );
+
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/anagrafica.view.modal.promemoria.html'
+    );
+
+    // tendina categoria
+	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_anagrafica_view'
+	);
+
+    // tendina tipologie
+    $ct['etc']['select']['tipologie_attivita'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL'
+    );
+
+    // tendina stati
+    $ct['etc']['select']['stati'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM stati_view ORDER BY __label__'
+    );
+
+    // tendina collaboratori
+    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+
+    // tendina anni
+    foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
+        $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
+    }
+
+    // tendina settimane
+    foreach( range( 1, 52 ) as $w ) {
+        $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
+    }
+
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    /*
+	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ) ){
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] = 1;
+	}
+    */
+
+    // tendina provincie
+	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ) ){
+        $ct['etc']['select']['provincie'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM provincie_view WHERE id_stato = ? ORDER BY __label__',
+            array(
+                array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] )
+            )
+        );
+    }
+
+    // bottoni
+	foreach( $ct['view']['data'] as &$row ) {
+		if( is_array( $row ) ) {
+
+            $row['denominazione'] = implode( ' ', array(  $row['denominazione'], $row['nome'], $row['cognome'] ) );
+
+            $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
+                "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].
+                "&__work__[anagrafica][items][".$row['id']."][label]=".$row['__label__']."', aggiornaBookmarks );";
+
+            $buttons = '<a href="#" onclick="'.$onclickBookmark.'"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
+
+            if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+            }
+
+            if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_cliente_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
+            }
+
+            if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['__label__'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
+            }
+
+            $row[ NULL ] = $buttons;
+
+        }
+
+    }

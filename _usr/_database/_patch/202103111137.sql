@@ -1,1 +1,0 @@
-ALTER TABLE audio DROP INDEX id_documento;

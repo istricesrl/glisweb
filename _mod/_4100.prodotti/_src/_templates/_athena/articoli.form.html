@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -50,7 +50,7 @@
                 <div class="col-12 col-md-4">
                     <span class="label-top">prodotto</span>
                     {# frm.selectRequired( table, '', '', 'id_prodotto', '', etc.select.prodotti, request ) #}
-                    {{ frm.selectBox( table, '', '', 'id_prodotto', '', etc.select.prodotti, request, '', '', 1, '', '', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto', page, pages, ietf, 'prodotti' ) }}
+                    {{ frm.selectBox( table, '', '', 'id_prodotto', '', '', request, '', '', 1, '', '', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto', page, pages, ietf, 'prodotti' ) }}
 		
                 </div>  
                 <div class="col-12 col-md">
@@ -65,23 +65,87 @@
         </fieldset>
 
         <fieldset>
-            <legend>dati tecnici</legend>
+		    <legend>produttore</legend>
             <div class="form-group form-row">
-                <div class="col-12 col-md-4">
-                    <span class="label-top">codice ean produttore</span>
-                    {{ frm.input( table, '', '', 'codice_produttore', '', '', request ) }}
+                <div class="col-12 col-md">
+                    <span class="label-top">codice EAN</span>
+                    {{ frm.input( table, '', '', 'ean', '', '', request ) }}
                 </div>
-                <div class="col-6 col-md-4">
-                    <span class="label-top">udm</span>
-                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request, etc.value.udm ) }}
-                </div>
-                <div class="col-6 col-md-4">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>specifiche</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
                     <span class="label-top">reparto di default</span>
                     {{ frm.select( table, '', '', 'id_reparto', '', etc.select.reparti, request ) }}
                 </div>
-            </div>    
+                {% if etc.flags.se_periodicita %}
+                <div class="col-12 col-md">
+                    <span class="label-top">periodicità</span>
+                    {{ frm.select( table, '', '', 'id_periodicita', '', etc.select.periodicita, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_tipologia_rinnovo %}
+                <div class="col-12 col-md">
+                    <span class="label-top">tipologia di rinnovo</span>
+                    {{ frm.select( table, '', '', 'id_tipologia_rinnovo', '', etc.select.tipologie_rinnovi, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_peso or etc.flags.se_massa %}
+                <div class="col-8 col-md">
+                    <span class="label-top">quantità per pezzo</span>
+                    {{ frm.input( table, '', '', 'peso', '', '', request ) }}
+                </div>
+                <div class="col-4 col-md-auto">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm_peso', '', etc.select.udm_massa, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_capacita %}
+                <div class="col-8 col-md">
+                    <span class="label-top">quantità per pezzo</span>
+                    {{ frm.input( table, '', '', 'capacita', '', '', request ) }}
+                </div>
+                <div class="col-4 col-md-auto">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm_capacita', '', etc.select.udm_volume, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_dimensioni %}
+                <div class="col-8 col-md">
+                    <span class="label-top">lunghezza</span>
+                    {{ frm.input( table, '', '', 'lunghezza', '', '', request ) }}
+                </div>
+                <div class="col-8 col-md">
+                    <span class="label-top">larghezza</span>
+                    {{ frm.input( table, '', '', 'larghezza', '', '', request ) }}
+                </div>
+                <div class="col-8 col-md">
+                    <span class="label-top">altezza</span>
+                    {{ frm.input( table, '', '', 'altezza', '', '', request ) }}
+                </div>
+                <div class="col-4 col-md-auto">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm_dimensioni', '', etc.select.udm_dimensioni, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_taglie %}
+                <div class="col-12 col-md">
+                    <span class="label-top">taglia</span>
+                    {{ frm.select( table, '', '', 'id_taglia', '', etc.select.taglie, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_colori %}
+                <div class="col-12 col-md">
+                    <span class="label-top">colore</span>
+                    {{ frm.select( table, '', '', 'id_colore', '', etc.select.colori, request ) }}
+                </div>
+                {% endif %}
+            </div>
         </fieldset>
-
+<!--
         {% if etc.value.tipologia.se_colori or etc.value.tipologia.se_taglie or etc.value.tipologia.se_dimensioni or etc.value.tipologia.se_imballo or etc.value.tipologia.se_stagioni or se_stagioni %}
         <fieldset>
             <legend>dettagli</legend>
@@ -105,12 +169,32 @@
                 {% if etc.value.tipologia.se_imballo %}
                 {% endif %}
             </div>
-
 		</fieldset>
         {% endif %}
+-->
 
-        {# SUBFORM PUBBLICAZIONE #}
-        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_articolo' ) }}
+        <fieldset>
+            <legend>descrizione e codifica</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 5, request ) }}
+                </div>  
+                <div class="col-12">
+                    <span class="label-top">note codifica</span>
+                    {{ frm.textarea( table, '', '', 'note_codifica', '', 5, request ) }}
+                </div>
+            </div>  
+
+        </fieldset>
+
+		{% if '3000.contenuti' in mods.active.array %}
+
+        {# SUBFORM PUBBLICAZIONI #}
+        {# sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_articolo' ) #}
+
+        {% endif %}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

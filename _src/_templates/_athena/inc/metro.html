@@ -1,4 +1,23 @@
+{% import '_bin/_form.html' as frm %}
+
+{% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ localization.language.ietf ] %}{% endif %}
+
 {% set cnt = 0 %}
+
+{% if etc.errors %}
+<div class="form-row metro">
+    <div class="col-12"><h3>errori</h3></div>
+    <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+            <ul>
+            {% for e in etc.errors %}
+                <li>{{ e }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% for k,m in page.contents.metros %}
 {% if page.contents.metro[ k ] %}
@@ -8,17 +27,30 @@
     {% include obj.include %}
     {% else %}
     {% if cnt == 0 %}<div class="form-row metro">{% endif %}
-    <div class="col-12 col-md-4">
+	{% if obj.colspan %}{% set colspan = obj.colspan %}{% else %}{% set colspan = 4 %}{% endif %}
+    <div class="col-12 col-md-{{ colspan }}">
 	{% if obj.url %}
 	<a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
 	{% elseif obj.modal %}
 	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
 	{% elseif obj.ws %}
-	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+	{% if obj.confirm %}
+	<a href="#" onclick="if( confirm('sei sicuro?') ){ $(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});}">
+	{% else %}
+	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %}{% if obj.wsmethod %}, '{{ obj.wsmethod }}' {% endif %}{% if obj.wsdata %}, '{{ obj.wsdata }}' {% endif %});">
+	{% endif %}
+	{% elseif obj.lws %}
+	<a href="#" onclick="$(this).metroLoopWs('{{ obj.host }}{{ obj.lws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">
+			{% if obj.fa %}
 		    <i class="fa {{ obj.fa }}"></i>
+			{% elseif obj.h4 %}
+			<h4>{{ obj.h4 }}</h4>
+			{% else %}
+			{{ obj.icon }}
+			{% endif %}
 		</div>
 		<div class="media-body">
 		    <h5 class="media-title">{{ obj.title }}</h5>
@@ -27,12 +59,22 @@
 	    </div>
 	</a>
     </div>
-    {% if cnt == 2 or loop.last %}</div>
+    {% if cnt == 12 or loop.last %}</div>
 	{% set cnt = 0 %}
 	{% else %}
-	{% set cnt = cnt + 1 %}
+	{% set cnt = cnt + colspan %}
     {% endif %}
     {% endif %}
 {% endfor %}
 {% endif %}
 {% endfor %}
+
+{% if not metro.options.nocontrols %}
+<div class="row view-controls mt-auto no-gutters d-print-none">
+
+	<div class="col-auto mr-1">
+		{{ frm.button( '<i class="fa fa-undo"></i>', 'button', 'btn-secondary', 'window.open("' ~ back ~ '","_self")','torna indietro senza salvare le modifiche' ) }}
+	</div>
+	
+</div>
+{% endif %}

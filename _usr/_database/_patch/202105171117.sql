@@ -1,1 +1,0 @@
-ALTER TABLE `documenti_articoli` ADD FOREIGN KEY (`id_reparto`) REFERENCES `reparti`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

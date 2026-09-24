@@ -1,1 +1,0 @@
-ALTER TABLE documenti RENAME TO risorse;

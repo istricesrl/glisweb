@@ -1,14 +1,43 @@
+{# ORDINE DEGLI ELEMENTI DELLA BARRA
+    Bootstrap 5 ha le utility da order-0 a order-5 ( piu' order-first e order-last ):
+    gli order-10 e order-12 che stavano qui erano rimasti dalla 4.x, dove la scala
+    arrivava a 12, e in 5.x non corrispondono a nessuna regola, quindi valevano 0 e i
+    pulsanti account/carrello/logout finivano su una terza riga sotto il menu.
+    Sotto i 768px: icone (1), toggler (2), menu (3, che ha flex-basis 100% e prende da
+    solo la riga successiva). Da 768px in su il toggler sparisce e restano menu (2) e
+    icone (3), spinte a destra da ms-md-auto. Stessa correzione fatta il 2026-09-15 su
+    _src/_tpl/_minerva/inc/navbar.twig, che e' la versione di questo file per il
+    sistema di templating nuovo: i due file NON sono hard-linkati. #}
+
 {% import '_bin/_navigation.html' as nav %}
 
 <div class="col d-flex flex-column p-0">
     <nav class="navbar navbar-expand-md navbar-light mt-auto mb-auto">
-        <button class="navbar-toggler ml-auto m-3" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <button class="navbar-toggler ms-auto mx-3 my-1 order-2 order-md-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto text-right">
+        <div class="collapse navbar-collapse order-3 order-md-2" id="navbarNav">
+            <ul class="navbar-nav me-auto text-end">
                 {{ nav.menu( page.template.menu.app, localization.language.ietf ) }}
             </ul>
         </div>
+        {% if session.account.username %}
+        <div class="col-auto d-flex flex-row p-0 me-auto ms-md-auto me-md-0 order-1 order-md-3">
+            <ul class="navbar-nav ms-auto text-end icons">
+                {{ nav.menu( page.template.menu['appicons'], localization.language.ietf ) }}
+            </ul>
+            {% if session.carrello.articoli %}
+            <div class="">
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay="1000" title="carrello" onclick="window.open('{{ pages['app.carrello'].url['it-IT']}}','_self');"><i class="fa fa-shopping-cart"></i></button>
+            </div>
+            {% endif %}
+            <div class="">
+                    <form class="" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+                    <input type="hidden" name="__logout__" value="1">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
+                </form>    
+            </div>
+        </div>
+        {% endif %}
     </nav>
 </div>

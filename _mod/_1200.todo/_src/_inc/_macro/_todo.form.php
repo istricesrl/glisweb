@@ -21,25 +21,25 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'todo';
-
+/*
     // tendina priorita
 	$ct['etc']['select']['id_priorita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM priorita_view' );
-
+*/
     // tendina tipologie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
-    
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
+
     // tendina collaboratori
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 	
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
@@ -55,6 +55,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM progetti_view' );
 
+    // tendina immobili
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM immobili_view' );
+/*
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -62,16 +69,16 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_attivita_view'
 	);
-
+*/
     // tendina mastri attivita
 	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3'
+	    'SELECT id, __label__ FROM mastri_view WHERE se_conto = 1'
     );
 
-     // tendina anni
+    // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
 	    $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
 	}

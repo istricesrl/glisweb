@@ -1,0 +1,41 @@
+{# CODICE DELLA PAGINA #}
+<!-- file esteso: {{ _self }} -->
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    {# HEADER #}
+    <head>
+
+        {# HEADER STANDARD #}
+        {% include '_inc/_page.head.twig' %}
+
+        {# CSS DI PAGINA #}
+        <style>
+            body {
+                background: url('{{ site.root }}_src/_img/_bkg/_{{ random(['01','02']) }}/_{{ "now"|date("s") }}.jpg');
+                background-position: center;
+                background-size: cover;
+            }
+        </style>
+
+    </head>
+
+    {# BODY #}
+    <body class="d-flex login">
+
+        {# CODICE DI APERTURA STANDARD DELLA PAGINA#}
+        {% include '_inc/_page.open.twig' %}
+
+        {# BLOCCO MAIN #}
+        <main class="container-fluid d-flex flex-fill flex-column p-0">
+            {% block main %}{% endblock main %}
+        </main>
+
+        {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
+        {% include '_inc/_page.close.twig' %}
+
+        {# SCRIPT JAVASCRIPT DELLA PAGINA #}
+        {% block javascript %}{% endblock javascript %}
+
+    </body>
+</html>

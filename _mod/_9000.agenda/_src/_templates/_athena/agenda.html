@@ -1,0 +1,210 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+
+{% extends "ext/main.html" %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{% block main %}
+
+{% set
+    trans_day_hash = {
+        "Monday": "lunedì", 
+        "Tuesday": "martedì", 
+        "Wednesday": "mercoledì", 
+        "Thursday": "giovedì", 
+        "Friday": "venerdì", 
+        "Saturday": "sabato", 
+        "Sunday": "domenica" 
+    }
+%}
+
+{% set
+    trans_month_hash = {
+        "01": "gennaio",
+        "02": "febbraio",
+        "03": "marzo",
+        "04": "aprile",
+        "05": "maggio",
+        "06": "giugno",
+        "07": "luglio",
+        "08": "agosto",
+        "09": "settembre",
+        "10": "ottobre",
+        "11": "novembre",
+        "12": "dicembre"
+    }
+%}
+
+<fieldset>
+    <div class="form-row">
+        {% if '1200.todo' in mods.active.array and etc.id_tipologia_todo %}
+        <div class="col">
+            <legend>nuova todo</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_todo %}
+            <div class="col-4 text-right">
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% if '0200.attivita' in mods.active.array and etc.id_tipologia_attivita %}
+        <div class="col">
+            <legend>nuovo promemoria</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita %}
+            <div class="col-4 text-right">
+                {% if b.procedure.attivita.corrente.tipo == 'attivita' %}{% set seg = '&__preset__[attivita][data_attivita]=' ~ now|date('Y-m-d') %}{% else %}{% set seg = '' %}{% endif %}
+                {% if b.procedure.attivita.corrente.label %}{% set lbl = '&__preset__[attivita][nome]=' ~ b.procedure.attivita.corrente.label %}{% else %}{% set lbl = '' %}{% endif %}
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}{{ seg }}{{ lbl }}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col">
+            <legend>nuovo evento</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita %}
+            <div class="col-4 text-right">
+                {% if b.procedure.attivita.corrente.tipo == 'attivita' %}{% set seg = '&__preset__[attivita][data_attivita]=' ~ now|date('Y-m-d') %}{% else %}{% set seg = '' %}{% endif %}
+                {% if b.procedure.attivita.corrente.label %}{% set lbl = '&__preset__[attivita][nome]=' ~ b.procedure.attivita.corrente.label %}{% else %}{% set lbl = '' %}{% endif %}
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}{{ seg }}{{ lbl }}&__preset__[attivita][data_attivita]={{ now|date('Y-m-d') }}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</fieldset>
+
+{% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
+<fieldset class="mb-3">
+    <legend>da fissare / gestire <small>cose da fare non programmate</small></legend>
+    {% for e in etc.agenda_da_fissare.attivita %}
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+	    <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
+                    <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>{{ e.note_programmazione }}
+                </div>
+            </div>
+	    </div>
+	</div>
+    {% endfor %}
+
+    {% for e in etc.agenda_da_fissare.todo %}
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <br>{{ e.testo }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endif %}
+
+{% for a,anno in etc.agenda %}
+
+{% for settimana, attivita in anno %}
+<fieldset>
+    <legend>settimana {{ settimana }}/{{ a }} <small>dal {{ etc.intervalli[ a ][ settimana ].inizio }} al {{ etc.intervalli[ a ][ settimana ].fine }}</small></legend>
+    {% if etc.todo_da_monitorare[a][settimana] %}
+    {% for e in etc.todo_da_monitorare[a][settimana] %}
+    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <br>{{ e.testo }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</fieldset>
+
+{% for data,eventi_per_data in attivita %}
+{% if data and eventi_per_data %}
+<fieldset class="mb-3">
+    <legend style="font-size: 100%; color:#383838;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
+    {% for ora,eventi_per_ora in eventi_per_data %}
+    {% for e in eventi_per_ora %}
+    {% if e.entita == 'a' %}
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    {% if e.nome %}<b>{{ e.nome }}</b>{% endif %}{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>{{ e.note_programmazione }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% set ora_old = ora %}
+    
+    {% endif %}
+    {% if e.entita == 't' %}
+    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+        
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <br>{{ e.testo }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    
+    {% endfor %}
+</fieldset>
+{% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endfor %}
+
+{% endblock %}

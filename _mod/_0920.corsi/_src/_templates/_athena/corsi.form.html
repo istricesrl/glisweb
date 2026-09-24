@@ -1,0 +1,234 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/corsi.form.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as pub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# CAMPI HIDDEN SPECIALI #}
+	    <input type="hidden" id="reset" name="{{ table }}[data_accettazione]" value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
+		
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+			<legend>dati generali <small>{{ legend }}</small></legend>
+		   
+            <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '1', '', '' ) }}
+  				</div>
+				<div class="col-12 col-md-2">
+                    <span class="label-top">codice</span>
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request,  'now'|date('YmdHi') ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">disciplina</span>
+					<input type="hidden" name="{{ table }}[progetti_categorie][0][id]" value="{{ request[ table ].progetti_categorie.0.id }}">
+					<input type="hidden" name="{{ table }}[progetti_categorie][0][id_progetto]" value="__parent_id__" >
+                    {{ frm.selectRequired( table, 'progetti_categorie', '0', 'id_categoria', '', etc.select.materie, request, '', '1', '', '' ) }}
+  				</div>
+				<div class="col-12 col-md">
+                    <span class="label-top">livello</span>
+					<input type="hidden" name="{{ table }}[progetti_categorie][1][id]" value="{{ request[ table ].progetti_categorie.1.id }}">
+					<input type="hidden" name="{{ table }}[progetti_categorie][1][id_progetto]" value="__parent_id__" >
+                    {{ frm.selectRequired( table, 'progetti_categorie', '1', 'id_categoria', '', etc.select.classi, request, '', '1', '', '' ) }}
+  				</div>
+				  <div class="col-12 col-md">
+                    <span class="label-top">fascia di età</span>
+					<input type="hidden" name="{{ table }}[progetti_categorie][2][id]" value="{{ request[ table ].progetti_categorie.2.id }}">
+					<input type="hidden" name="{{ table }}[progetti_categorie][2][id_progetto]" value="__parent_id__" >
+                    {{ frm.selectRequired( table, 'progetti_categorie', '2', 'id_categoria', '', etc.select.fasce, request, '', '1', '', '' ) }}
+  				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">inizio</span>
+					{{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">fine</span>
+					{{ frm.date( table, '', '', 'data_chiusura', '', '', request ) }}
+				</div>
+				<!--div class="col-12 col-md-auto">
+					<span class="label-top">archiviazione</span>
+					{{ frm.date( table, '', '', 'data_archiviazione', '', '', request ) }}
+				</div-->
+            </div>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+                    <span class="label-top">periodo</span>
+					{{ frm.select( table, '', '', 'id_periodo', '', etc.select.periodi, request ) }}
+  				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
+				</div>
+<!--
+				<input type="hidden" id="metadati_id" name="{{ table }}[metadati][0][id]" value="{{ request[ table ].metadati[0].id }}">
+				<input type="hidden" id="metadati_genitore" name="{{ table }}[metadati][0][id_progetto]" value="__parent_id__">
+				<input type="hidden" id="metadati_nome" name="{{ table }}[metadati][0][nome]" value="iscritti_max">
+				<div class="col-12 col-md-2">
+					<span class="label-top">massimo iscritti</span>
+					{{ frm.input( table, 'metadati', '0', 'testo', '', '', request ) }}
+				</div>  
+-->
+
+				<div class="col-12 col-md-1">
+					<span class="label-top">minimo iscritti</span>
+					{% set subtable = 'metadati' %}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'id', '', '', '', etc.sub.iscritti_min.id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'nome', '', '', '', etc.sub.iscritti_min.nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'testo', '', '', '', etc.sub.iscritti_min.testo ) }}
+				</div>  
+
+				<div class="col-12 col-md-1">
+					<span class="label-top">massimo iscritti</span>
+					{% set subtable = 'metadati' %}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id', '', '', '', etc.sub.iscritti_max.id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'nome', '', '', '', etc.sub.iscritti_max.nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'testo', '', '', '', etc.sub.iscritti_max.testo ) }}
+				</div>  
+<!-- NOTA questo campo va bene nella Masi ma NON in GM Servizi, decommentare nella Masi
+				<div class="col-4 col-md-1">
+					<span class="label-top">massimo recuperi</span>
+					{% set subtable = 'metadati' %}
+					{% set metadato = 'recuperi_max' %}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+				</div>
+-->
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">descrizione</span>
+				{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
+				</div>
+			</div>
+				
+		</fieldset>
+
+		<fieldset>
+			<legend>dettagli corso</legend>
+
+			<div class="form-group form-row">
+<!-- NOTA questi due flag vanno bene per la Masi ma NON per GM Servizi, decommentarli nella Masi
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id', '', '', '', etc.sub.non_applicare_sconti.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'nome', '', '', '', etc.sub.non_applicare_sconti.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non applicare sconti', '', '', etc.sub.non_applicare_sconti.testo ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'id', '', '', '', etc.sub.non_disponibile_per_recuperi.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'nome', '', '', '', etc.sub.non_disponibile_per_recuperi.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'testo', 'non disponibile per recuperi', '', '', etc.sub.non_disponibile_per_recuperi.testo ) }}
+					</div>
+				</div>
+-->
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'id', '', '', '', etc.sub.prenotabile_online.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'nome', '', '', '', etc.sub.prenotabile_online.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.prenotabile_online.idx, 'testo', 'prenotabile online', '', '', etc.sub.prenotabile_online.testo ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id', '', '', '', etc.sub.non_applicare_sconti.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'nome', '', '', '', etc.sub.non_applicare_sconti.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non scontabile', '', '', etc.sub.non_applicare_sconti.testo ) }}
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+
+        {# SUBFORM RUOLI #}
+        {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
+
+		{% if '6700.certificazioni' in mods.active.array %}
+
+		{# SUBFORM CERTIFICAZIONI #}
+        {{ sub.certificazioni( table, 'progetti_certificazioni', 'certificazioni', site, page, pages, ietf, etc, request, session ) }}
+		
+		{% endif %}
+
+		{# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="jquery-3.5.1.min.js"></script>
+
+<script>
+function nomeProgetto(){
+	var tipologia = $('#progetti_id_tipologia option:selected').text();
+
+	var cliente = $('#progetti_id_cliente_inputbox').val();
+
+	var testo = ""+tipologia+" per "+cliente;
+	$('#progetti_nome').val(testo);
+}
+</script>
+
+
+{% endblock %}

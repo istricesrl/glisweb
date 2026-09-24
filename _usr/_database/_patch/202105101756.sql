@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_view_static` ADD `id_responsabile_operativo` INT NULL DEFAULT NULL AFTER `id_agente`, ADD `responsabile_operativo` char(255) DEFAULT NULL AFTER `agente`;

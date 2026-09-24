@@ -1,1 +1,0 @@
-ALTER TABLE `ruoli_immagini` ADD `se_articoli` INT NULL ;

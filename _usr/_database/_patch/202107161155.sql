@@ -1,1 +1,0 @@
-ALTER TABLE `articoli_caratteristiche` ADD `id_lingua` INT NULL DEFAULT NULL AFTER `id_caratteristica`, ADD INDEX (`id_lingua`);

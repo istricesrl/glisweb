@@ -1,0 +1,95 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.notizie.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                {# PRIMA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_contatti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data</span>
+                        {{ frm.input({ 'field': { 'name': 'timestamp_contatto', 'type': 'datetime-local' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SEZIONE UTM #}
+            <fieldset>
+                <legend>dati di marketing</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">UTM ID</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_id', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">UTM source</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_source', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">UTM medium</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_medium', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">UTM campaign</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_campaign', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">UTM term</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_term', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-6 form-col">
+                        <span class="label-top">UTM content</span>
+                        {{ frm.input({ 'field': { 'name': 'utm_content', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

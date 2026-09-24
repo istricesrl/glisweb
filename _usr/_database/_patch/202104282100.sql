@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_todo` CHANGE `se_ordinaria` `se_contratto` INT(1) NULL DEFAULT NULL;

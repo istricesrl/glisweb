@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * dichiarazioni generali di varia utilità
+     * variabili di utilità generale
      *
      * In questo file vanno dichiarate le variabili di varia utilità.
      *
@@ -14,13 +14,13 @@
      *
      * lorem ipsum
      * -----------
-     *
-     *
+     * 
+     * TODO documentare il file _etc/_common/_lorem.conf
      *
      * codici di stato HTTP
      * --------------------
      *
-     *
+     * TODO documentare
      *
      *
      *
@@ -36,106 +36,255 @@
      *
      * versione del framework e controllo aggiornamenti
      * ------------------------------------------------
+     * Il framework segue due distinte linee di versionamento: la versione e la release. La release è un indicatore a tre cifre
+     * (es. 1.1.1) che indica il livello di sviluppo raggiunto dal ramo master del framework e viene incrementato manualmente ogni
+     * volta che viene fatto il merge di una release branch su master; in effetti una delle attività da fare nella release
+     * branch è quella di incrementare la release nel file /_etc/_current.release.
+     * 
+     * La release indica anche il livello di compatibilità con le release precedenti; si osservi la seguente tabella:
+     * 
+     * cifra        | ruolo                   | retrocompatibilità
+     * -------------|-------------------------|-----------------------------------------------------------
+     * I            | major release           | non retrocompatibile
+     * II           | minor release           | retrocompatibile con la stessa major release
+     * III          | patch release           | retrocompatibile con la stessa major e minor release
+     * 
+     * La versione invece viene incrementata automaticamente ad ogni commit su una qualunque branch del repository di sviluppo
+     * del framework, e indica pertanto in linea di massima quando il codice è stato aggiornato l'ultima volta; la versione può
+     * essere vista come un indicatore del livello di patch dell'installazione corrente. La versione è un numero intero formato
+     * dalla data corrente in formato YYYYMMDDHHIISS (anno, mese, giorno, ora, minuti, secondi), viene scritta nel file
+     * _etc/_current.version dal git hook .githooks/pre-commit ed è quindi presente solo dove quell'hook è stato installato
+     * con _src/_sh/_githooks.install.sh (chi sviluppa il framework, non i progetti che lo usano).
      *
      *
      *
      * link alla documentazione
      * ------------------------
      *
+     * TODO documentare come viene gestita e compilata la documentazione del framework, spiegare Doxygen e il file _etc/_doxygen/_doxygen.conf
      *
      *
      *
      *
+     * TODO documentare
      *
-     * @todo documentare
      *
-     * @file
      *
      */
 
-    // lorem ipsum
-	$cf['common']['lorem']['std']			= readStringFromFile( FILE_LOREM );
+    // ...
+    // ini_set( 'display_errors', '1' );
+    // ini_set( 'display_startup_errors', '1' );
+    // error_reporting( E_ALL );
+
+    /**
+     * utilità varie
+     * =============
+     * 
+     * 
+     */
+
+    // variabile che contiene un paragrafo di testo finto (lorem ipsum)
+    $cf['common']['lorem']['std'] = readStringFromFile( FILE_LOREM );
 
     // codici di stato HTTP
-	$cf['common']['http']['codes']		= array(
-	    100 => 'Continue',				101 => 'Switching Protocols',			102 => 'Processing',
-	    200 => 'OK',				201 => 'Created',				202 => 'Accepted',
-	    203 => 'Non-Authoritative Information',	204 => 'No Content',				205 => 'Reset Content',
-	    206 => 'Partial Content',			207 => 'Multi-Status',				300 => 'Multiple Choices',
-	    301 => 'Moved Permanently',			302 => 'Found',					303 => 'See Other',
-	    304 => 'Not Modified',			305 => 'Use Proxy',				306 => '(Unused)',
-	    307 => 'Temporary Redirect',		308 => 'Permanent Redirect',			400 => 'Bad Request',
-	    401 => 'Unauthorized',			402 => 'Payment Required',			403 => 'Forbidden',
-	    404 => 'Not Found',				405 => 'Method Not Allowed',			406 => 'Not Acceptable',
-	    407 => 'Proxy Authentication Required',	408 => 'Request Timeout',			409 => 'Conflict',
-	    410 => 'Gone',				411 => 'Length Required',			412 => 'Precondition Failed',
-	    413 => 'Request Entity Too Large',		414 => 'Request-URI Too Long',			415 => 'Unsupported Media Type',
-	    416 => 'Requested Range Not Satisfiable',	417 => 'Expectation Failed',			418 => 'I\'m a teapot',
-	    419 => 'Authentication Timeout',		420 => 'Enhance Your Calm',			422 => 'Unprocessable Entity',
-	    423 => 'Locked',				424 => 'Failed Dependency',			424 => 'Method Failure',
-	    425 => 'Unordered Collection',		426 => 'Upgrade Required',			428 => 'Precondition Required',
-	    429 => 'Too Many Requests',			431 => 'Request Header Fields Too Large',	444 => 'No Response',
-	    449 => 'Retry With',			450 => 'Blocked by Windows Parental Controls',	451 => 'Unavailable For Legal Reasons',
-	    494 => 'Request Header Too Large',		495 => 'Cert Error',				496 => 'No Cert',
-	    497 => 'HTTP to HTTPS',			499 => 'Client Closed Request',			500 => 'Internal Server Error',
-	    501 => 'Not Implemented',			502 => 'Bad Gateway',				503 => 'Service Unavailable',
-	    504 => 'Gateway Timeout',			505 => 'HTTP Version Not Supported',		506 => 'Variant Also Negotiates',
-	    507 => 'Insufficient Storage',		508 => 'Loop Detected',				509 => 'Bandwidth Limit Exceeded',
-	    510 => 'Not Extended',			511 => 'Network Authentication Required',	598 => 'Network read timeout error',
-	    599 => 'Network connect timeout error'
-	);
+    $cf['common']['http']['codes'] = array(
+        100 => 'Continue',                          101 => 'Switching Protocols',                   102 => 'Processing',
+        200 => 'OK',                                201 => 'Created',                               202 => 'Accepted',
+        203 => 'Non-Authoritative Information',     204 => 'No Content',                            205 => 'Reset Content',
+        206 => 'Partial Content',                   207 => 'Multi-Status',                          300 => 'Multiple Choices',
+        301 => 'Moved Permanently',                 302 => 'Found',                                 303 => 'See Other',
+        304 => 'Not Modified',                      305 => 'Use Proxy',                             306 => '(Unused)',
+        307 => 'Temporary Redirect',                308 => 'Permanent Redirect',                    400 => 'Bad Request',
+        401 => 'Unauthorized',                      402 => 'Payment Required',                      403 => 'Forbidden',
+        404 => 'Not Found',                         405 => 'Method Not Allowed',                    406 => 'Not Acceptable',
+        407 => 'Proxy Authentication Required',     408 => 'Request Timeout',                       409 => 'Conflict',
+        410 => 'Gone',                              411 => 'Length Required',                       412 => 'Precondition Failed',
+        413 => 'Request Entity Too Large',          414 => 'Request-URI Too Long',                  415 => 'Unsupported Media Type',
+        416 => 'Requested Range Not Satisfiable',   417 => 'Expectation Failed',                    418 => 'I\'m a teapot',
+        419 => 'Authentication Timeout',            420 => 'Enhance Your Calm',                     422 => 'Unprocessable Entity',
+        423 => 'Locked',                            424 => 'Failed Dependency',                     424 => 'Method Failure',
+        425 => 'Unordered Collection',              426 => 'Upgrade Required',                      428 => 'Precondition Required',
+        429 => 'Too Many Requests',                 431 => 'Request Header Fields Too Large',       444 => 'No Response',
+        449 => 'Retry With',                        450 => 'Blocked by Windows Parental Controls',  451 => 'Unavailable For Legal Reasons',
+        494 => 'Request Header Too Large',          495 => 'Cert Error',                            496 => 'No Cert',
+        497 => 'HTTP to HTTPS',                     499 => 'Client Closed Request',                 500 => 'Internal Server Error',
+        501 => 'Not Implemented',                   502 => 'Bad Gateway',                           503 => 'Service Unavailable',
+        504 => 'Gateway Timeout',                   505 => 'HTTP Version Not Supported',            506 => 'Variant Also Negotiates',
+        507 => 'Insufficient Storage',              508 => 'Loop Detected',                         509 => 'Bandwidth Limit Exceeded',
+        510 => 'Not Extended',                      511 => 'Network Authentication Required',       598 => 'Network read timeout error',
+        599 => 'Network connect timeout error'
+    );
 
-    // licenza commerciale
-	if( file_exists( FILE_LICENSE ) ) {
-	    $cf['common']['license']['id']		= trim( readStringFromFile( FILE_LICENSE ) );
-	} else {
-	    $cf['common']['license']['id']		= NULL;
-	}
+    /**
+     * link alla documentazione
+     * ========================
+     * Il framework espone riferimenti distinti perche' hanno pubblici diversi:
+     *
+     *  docs.custom.html        manuale utente DI QUESTO progetto
+     *  docs.custom.dev         manuale sviluppatore DI QUESTO progetto
+     *  docs.custom.quickstart  guide introduttive DI QUESTO progetto
+     *  docs.tech.html / .pdf   reference API generata dai commenti nel codice
+     *  docs.user.html          manuale utente DELLO STANDARD
+     *  docs.user.dev           manuale sviluppatore DELLO STANDARD
+     *  docs.user.quickstart    guide introduttive DELLO STANDARD
+     *
+     * I documenti di progetto descrivono le personalizzazioni del cliente e stanno dietro Basic
+     * auth; quelli dello standard descrivono il framework e sono PUBBLICI. E' una distinzione che
+     * conta proprio qui: il punto interrogativo dell'applicazione lo premono gli utenti, che la
+     * password dell'utente `docs` non ce l'hanno.
+     *
+     * Sono tutti DERIVATI e non vanno messi in config.json: si compongono da
+     * $cf['site']['url'], che i profili di _025.site.php calcolano gia' per ambiente, quindi
+     * ogni installazione punta alla propria copia senza dichiarare niente.
+     *
+     * Ogni URL locale e' condizionato all'esistenza del file: cio' che non e' stato generato
+     * su questa installazione vale NULL, e i template non ne mostrano il link. E' il motivo
+     * per cui non serve configurare niente per spegnere una voce, basta non generarla.
+     *
+     * La reference API ha una condizione in piu', ed e' la stessa che usa il .htaccess:
+     * esistere e essere raggiungibile sono due cose diverse. _usr/_docs/.htaccess apre /docs/
+     * e /docs/pdf solo dove esiste var/docs.public.conf, quindi guardare il solo file
+     * generato offrirebbe un link che risponde 403 - che e' esattamente quello che faceva
+     * fino al 16/09/2026 su ogni deploy che avesse generato la reference senza pubblicarla.
+     */
 
-    // controllo aggiornamento
-	if( ! file_exists( FILE_LATEST_UPDATE ) || filemtime( FILE_LATEST_UPDATE ) < strtotime( '-1 week' ) ) {
-	    $latest = restCall(
-		'https://glisweb.videoarts.it/current.release',
-		METHOD_GET,
-		array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
-		MIME_APPLICATION_JSON,
-		MIME_TEXT_PLAIN
-	    );
-	    writeToFile( $latest, FILE_LATEST_UPDATE );
-	}
+    // manuale utente del progetto, prodotto da _src/_sh/_docs.build.sh --user
+    $cf['common']['docs']['custom']['html'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_USER ) ) ? $cf['site']['url'] . 'manual/user/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale utente' )
+    );
+
+    // manuale sviluppatore del progetto, prodotto da _src/_sh/_docs.build.sh --dev
+    $cf['common']['docs']['custom']['dev'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_DEV ) ) ? $cf['site']['url'] . 'manual/read/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale sviluppatore' )
+    );
+
+    // guide introduttive del progetto, prodotte da _src/_sh/_docs.build.sh --quickstart
+    $cf['common']['docs']['custom']['quickstart'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_QUICKSTART ) ) ? $cf['site']['url'] . 'quickstart/index.html' : NULL,
+        'name' => array( 'it-IT' => 'guide introduttive' )
+    );
+
+    // reference API in formato HTML, prodotta da _src/_sh/_doxygen.build.sh
+    $cf['common']['docs']['tech']['html'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_HTML ) && file_exists( FILE_MANUAL_PUBLIC ) ) ? $cf['site']['url'] . 'docs/' : NULL,
+        'name' => array( 'it-IT' => 'HTML' )
+    );
+
+    // reference API in formato PDF
+    $cf['common']['docs']['tech']['pdf'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_PDF ) && file_exists( FILE_MANUAL_PUBLIC ) ) ? $cf['site']['url'] . 'docs/pdf' : NULL,
+        'name' => array( 'it-IT' => 'PDF' )
+    );
+
+    // documentazione dello standard, prodotta da _src/_sh/_docs.build.sh --standard
+    //
+    // Fino al 20/09/2026 questa voce portava alla wiki di istricesrl/glisdev, chiusa quel giorno
+    // perche' non si tengono due posti da aggiornare: quel contenuto e' nei capitoli di
+    // _usr/_docs/_user/. I tre documenti stanno sotto _usr/_pages/, che non e' protetta.
+    $cf['common']['docs']['user']['html'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_USER_STANDARD ) ) ? $cf['site']['url'] . '_manual/user/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale utente' )
+    );
+
+    // manuale sviluppatore dello standard
+    $cf['common']['docs']['user']['dev'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_DEV_STANDARD ) ) ? $cf['site']['url'] . '_manual/read/index.html' : NULL,
+        'name' => array( 'it-IT' => 'manuale sviluppatore' )
+    );
+
+    // guide introduttive dello standard
+    $cf['common']['docs']['user']['quickstart'] = array(
+        'url'  => ( file_exists( FILE_MANUAL_QUICKSTART_STANDARD ) ) ? $cf['site']['url'] . '_quickstart/index.html' : NULL,
+        'name' => array( 'it-IT' => 'guide introduttive' )
+    );
+
+    // segnalazione dei difetti
+    $cf['common']['bugs']['report'] = array(
+        'url'  => 'https://github.com/istricesrl/glisdev/issues',
+        'name' => array( 'it-IT' => 'su GitHub' )
+    );
+    /* TODO a che epoca risale questa cosa? non sembra essere usata da nessuna parte
+
+    // ...
+    $cf['anagrafica'] = array();
+
+    // ...
+    if( isset( $cx['anagrafica'] ) ) {
+        $cf['anagrafica'] = array_replace_recursive( $cf['anagrafica'], $cx['anagrafica'] );
+    }
+
+    // ...
+    $ct['anagrafica']                    = &$cf['anagrafica'];
+
+    */
+
+    /**
+     * verifica versione e release
+     * ===========================
+     * 
+     * 
+     */
+
+    // controllo aggiornamento release
+    if( ! checkFileConsistency( FILE_LATEST_RELEASE, '-1 week' ) ) {
+
+        // recupero l'ultima release da glisweb.istricesrl.it
+        $latestRelease = restGetString( 'https://glisweb.istricesrl.it/current.release' );
+
+        // scrivo l'ultima release su file
+        if( preg_match( '/^\d+\.\d+\.\d+$/', $latestRelease ) ) {
+            writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+        }
+
+    }
+
+    // controllo aggiornamento versione
+    if( ! checkFileConsistency( FILE_LATEST_VERSION ) ) {
+
+        // recupero l'ultima versione da glisweb.istricesrl.it
+        $latestVersion = restGetString( 'https://glisweb.istricesrl.it/current.version' );
+
+        // scrivo l'ultima versione su file
+        if( preg_match( '/^\d{14}$/', $latestVersion ) ) {
+            writeToFile( $latestVersion, FILE_LATEST_VERSION );
+        }
+
+    }
 
     // versione corrente del framework
     $cf['common']['version']['current'] = trim( readStringFromFile( FILE_CURRENT_VERSION ) );
 
+    // release corrente del framework
+    $cf['common']['release']['current'] = trim( readStringFromFile( FILE_CURRENT_RELEASE ) );
+
     // costante per la versione corrente del framework
-    define( 'VERSION_CURRENT'		, $cf['common']['version']['current'] );
+    define( 'VERSION_CURRENT', $cf['common']['version']['current'] );
+
+    // costante per la versione corrente del framework
+    define( 'RELEASE_CURRENT', $cf['common']['release']['current'] );
 
     // versione aggiornata del framework
-	$cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_UPDATE ) );
+    $cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_VERSION ) );
+
+    // release aggiornata del framework
+    $cf['common']['release']['latest'] = trim( readStringFromFile( FILE_LATEST_RELEASE ) );
 
     // costante per la versione aggiornata del framework
-    define( 'VERSION_LATEST'		, $cf['common']['version']['latest'] );
+    define( 'VERSION_LATEST', $cf['common']['version']['latest'] );
 
-    // link al manuale utente
-	$cf['common']['docs']['user']['html'] = array(
-	    'url' => 'https://s-url.it/gliswebdocs',
-	    'name' => array( 'it-IT' => 'su Google Docs' )
-	);
+    // costante per la release aggiornata del framework
+    define( 'RELEASE_LATEST', $cf['common']['release']['latest'] );
 
-    // link alla documentazione tecnica in formato HTML
-	$cf['common']['docs']['tech']['html'] = array(
-	    'url' => $cf['site']['url'] . FILE_MANUAL_HTML
-	);
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
-    // link alla documentazione tecnica in formato PDF
-	$cf['common']['docs']['tech']['pdf'] = array(
-	    'url' => $cf['site']['url'] . FILE_MANUAL_PDF
-	);
-
-    // configurazione extra
-	if( isset( $cx['common'] ) ) {
-	    $cf['common'] = array_replace_recursive( $cf['common'], $cx['common'] );
-	}
-
-    // collegamento all'array $ct
-    $ct['common']					= &$cf['common'];
+    // debug
+    // dieText( print_r( $cf['common'], true ) );
+    // echo 'OUTPUT';

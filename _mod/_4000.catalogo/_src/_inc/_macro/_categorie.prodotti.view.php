@@ -26,15 +26,21 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'categoria',
-        'id_tipologia_pubblicazione' => 'pubblicazione',
-        'numero_prodotti' => 'prodotti'
+        'codice' => 'codice',
+	    '__label__' => 'categoria'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
+        'id' => 'd-none',
+        'codice' => 'text-left',
 	    '__label__' => 'text-left'
 	);
+
+	// preset ordinamento
+    $ct['view']['__sort__'] = array(
+        'codice' => 'ASC'
+    );
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

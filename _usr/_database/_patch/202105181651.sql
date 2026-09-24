@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD `timestamp_chiusura` INT NULL DEFAULT NULL ;

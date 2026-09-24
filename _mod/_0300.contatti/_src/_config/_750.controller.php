@@ -20,135 +20,277 @@
      */
 
     // debug
-	// die( print_r( $v, true ) );
-	// print_r( $_REQUEST );
+    // die( print_r( $v, true ) );
+    // print_r( $_REQUEST );
 
     // se esistono moduli __contatti__
-	if( isset( $_REQUEST['__contatti__'] ) && is_array( $_REQUEST['__contatti__'] ) ) {
+    if (isset($_REQUEST['__contatti__']) && is_array($_REQUEST['__contatti__'])) {
 
         // ciclo sui moduli __contatti__
-        foreach( $_REQUEST['__contatti__'] as $k => &$v ) {
+        foreach ($_REQUEST['__contatti__'] as $k => &$v) {
+            if(isset($cf['contatti'][$k])) {
 
             // log
-                logWrite( 'blocco contatti ricevuto per ' . $k, 'contatti' );
+            logWrite('blocco contatti ricevuto per ' . $k, 'contatti');
 
             // debug
-                // print_r( $v );
+            // print_r( $v );
 
             // integrazione dati
-                $v['modulo'] = $k;
+            $v['modulo'] = $k;
+            $v['sito'] = $cf['site']['url'];
 
             // se esiste una configurazione specifica
-                $cnf = ( isset( $cf['contatti'][ $k ] ) ) ? $cf['contatti'][ $k ] : $cf['contatti']['default'];
+            $cnf = (isset($cf['contatti'][$k])) ? $cf['contatti'][$k] : $cf['contatti']['default'];
 
-            // verifico se la configurazione prevede l'inclusione di una o più macro
-                if( isset( $cnf['controller'] ) ) {
+            // verifico la challenge reCAPTCHA
+            if (isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
+
+                // registro il valore di bot
+                $bot = reCaptchaVerifyV3($v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private']);
+
+                // integrazione dei dati
+                $v['spam']['score'] = $bot;
+
+                // pulisco il modulo
+                unset($v['__recaptcha_token__']);
+
+                // punteggio di spam
+                $v['spam']['check'] = ($bot > 0.1) ? true : false;
+            } elseif (! isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
+
+                // integrazione dei dati
+                $v['spam']['score'] = 0;
+                $v['spam']['status'] = 'token non ricevuto';
+
+                // punteggio di spam
+                $v['spam']['check'] = false;
+            } else {
+
+                // integrazione dei dati
+                $v['spam']['score'] = 1;
+                $v['spam']['status'] = 'reCAPTCHA non configurato';
+
+                // punteggio di spam
+                $v['spam']['check'] = true;
+            }
+
+            // verifico se è stato superato il check antispam
+            if ($v['spam']['check'] == true) {
+
+                // verifico se la configurazione prevede l'inclusione di una o più macro
+                if (isset($cnf['controller'])) {
 
                     // log
-                        logWrite( 'controller trovate per il blocco ' . $k . ': ' . implode(', ', $cnf['controller'] ), 'contatti' );
+                    logWrite('controller trovate per il blocco ' . $k . ': ' . implode(', ', $cnf['controller']), 'contatti');
 
                     // includo le controller
-                        foreach( $cnf['controller'] as $macro ) {
-                            require DIR_BASE . $macro;
+                    foreach ($cnf['controller'] as $macro) {
+                        $macro = DIR_BASE . '_mod/_0300.contatti/_src/_inc/_macro/' . $macro;
+                        $macroLocal = path2custom($macro);
+                        if (file_exists($macroLocal)) {
+                            logWrite('controller locale trovata per il blocco ' . $k . ': ' . $macroLocal, 'contatti');
+                            require $macroLocal;
+                        } elseif (file_exists($macro)) {
+                            logWrite('controller standard trovata per il blocco ' . $k . ': ' . $macro, 'contatti');
+                            require $macro;
+                        } else {
+                            logWrite('file della controller non trovato per il blocco ' . $k . ': ' . $macro, 'contatti');
                         }
-
+                    }
+                } else {
+                    logWrite('nessun controller trovato per il blocco ' . $k, 'contatti');
                 }
 
-            // debug
+                // debug
                 // print_r( $cnf );
 
-            // verifico se la configurazione prevede il salvataggio nel database
-                if( isset( $cnf['backend'] ) ) {
+                // verifico se la configurazione prevede il salvataggio nel database
+                if (isset($cnf['backend'])) {
+
+                    // TODO
+                    // if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
 
                     // salvataggio del blocco dati nel database
-                        $idCnt = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO contatti ( nome, json, timestamp_inserimento ) VALUES ( ?, ?, ? )',
-                        array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )
-                        );
+                    $idCnt = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'INSERT INTO contatti ( nome, json, timestamp_inserimento ) VALUES ( ?, ?, ? )',
+                        array(array('s' => $k), array('s' => json_encode($v)), array('s' => time()))
+                    );
 
                     // TODO prevedere la possibilità di mappare campi del modulo su colonne del database anziché salvare tutto il mappazzone nel campo json
 
                 }
 
-            // verifico se va registrata una hit di Analytics
-                if( isset( $cnf['analytics'] ) ) {
+                // registro i consensi
+            if (isset($_REQUEST['__consensi__']['__contatti__'][$k])) {
 
-                // registrazione della hit
-                    if( isset( $cf['google']['analytics']['profile']['ua'] ) ) {
-                        analyticsEventHit(
-                            $cf['google']['analytics']['profile']['ua'],
-                            $cnf['analytics']['categoria'],
-                            $cnf['analytics']['azione'],
-                            $cnf['analytics']['label']
-                        );
+                // per ogni consenso...
+                foreach ($_REQUEST['__consensi__']['__contatti__'][$k] as $ck => $cv) {
+
+                    // timestamp del consenso
+                    $timestamp = time();
+
+                    // contenuto del consenso
+                    $contenuto = 'il ' . date('d/m/Y', $timestamp) . ' alle ' . date('H:i:s', $timestamp) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __contatti__.' . $k;
+
+                    // se è stato salvato un contatto nel database
+                    if (isset($idCnt) && ! empty($idCnt)) {
+                        $contenuto .= ' per il contatto #' . $idCnt;
                     }
 
+                    // log
+                    logWrite($contenuto, 'privacy', LOG_CRIT);
+
+                    // TODO salvare i log della privacy in spool in modo che non vengano svuotati con gli altri log
+
+                    // TODO salvare il consenso nella tabella contatti_consensi
+
                 }
+            }
+
+            // verifico se va registrata una hit di Analytics
+            if (isset($cnf['analytics'])) {
+
+                // registrazione della hit
+                if (isset($cf['google']['profile']['analytics']['ua'])) {
+                    analyticsEventHit(
+                        $cf['google']['profile']['analytics']['ua'],
+                        $cnf['analytics']['categoria'],
+                        $cnf['analytics']['azione'],
+                        $cnf['analytics']['label']
+                    );
+                }
+            }
+
+            // verifico se la configurazione prevede l'invio di un messaggio su Slack
+            if (isset($cnf['slack']['webhook'])) {
+
+                // TODO templatizzare i messaggi Slack come le mail
+
+                // composizione del messaggio
+                $m = 'nuovo modulo ricevuto: ' . $k . PHP_EOL;
+                foreach (array_diff_key($_REQUEST['__contatti__'][$k], array('modulo' => NULL)) as $ks => $vs) {
+                    $m .= $ks . ': ' . $vs . PHP_EOL;
+                }
+
+                // invio del messaggio
+                slackTxtMsg(
+                    $cf['slack']['profile']['webhooks'][$cnf['slack']['webhook']],
+                    $m
+                );
+            }
 
             // verifico se la configurazione prevede l'invio di una mail
-                if( isset( $cnf['mail'] ) ) {
+            if (isset($cnf['mail'])) {
 
-                    // ciclo per ogni email da mandare
-                        foreach( $cnf['mail'] as $conf ) {
+                // debug
+                // print_r( $cf['mail']['tpl'] );
 
-                            // debug
-                                // print_r( $conf );
+                // log
+                logWrite('invio ' . count($cnf['mail']) . ' mail per il blocco ' . $k, ' contatti');
 
-                            // log
-                                logWrite( 'template mail trovato per il blocco ' . $k, 'contatti' );
+                // ciclo per ogni email da mandare
+                foreach ($cnf['mail'] as $conf) {
 
-                            // inizializzazioni
-                                $key = $dst = NULL;
+                    // debug
+                    // print_r( $conf );
 
-                            // lingua della mail
-                                if( ! isset( $conf['language'] ) ) {
-                                    if( isset( $v['ietf'] ) ) {
-                                        $conf['language'] = $v['ietf'];
-                                    } else {
-                                        $conf['language'] = $cf['localization']['language']['ietf'];
-                                    }
-                                }
+                    // log
+                    logWrite('template mail ' . $conf['template'] . ' trovato per il blocco ' . $k, ' contatti');
 
-                            // retrocompatibilità per le configurazioni con template incorporato
-                                if( is_array( $conf['template'] ) ) {
-                                    $template = $conf['template'];
-                                } else {
-                                    $template = $cf['mail']['tpl'][ $conf['template'] ];
-                                }
+                    // inizializzazioni
+                    $key = $dst = NULL;
 
-                            // filtro i dati che non devono essere passati al template
-                                if( isset( $conf['exclude'] ) ) {
-                                    $dati = array_diff_key( $v, array_combine( $conf['exclude'], $conf['exclude'] ) );
-                                } else {
-                                    $dati = $v;
-                                }
-
-                            // debug
-                                // print_r( $template );
-
-                            // accodamento
-                                queueMailFromTemplate(
-                                    $cf['mysql']['connection'],
-                                    $template,
-                                    array( 'dati' => $dati, 'ct' => $ct ),
-                                    strtotime( '+1 minutes' ),
-                                    $conf['destinatari'],
-                                    $conf['language']
-                                );
-
+                    // lingua della mail
+                    if (! isset($conf['language'])) {
+                        if (isset($v['ietf'])) {
+                            $conf['language'] = $v['ietf'];
+                        } else {
+                            $conf['language'] = $cf['localization']['language']['ietf'];
                         }
+                    }
 
+                    // retrocompatibilità per le configurazioni con template incorporato
+                    if (is_array($conf['template'])) {
+                        $template = $conf['template'];
+                    } else {
+                        $template = $cf['mail']['tpl'][$conf['template']];
+                    }
+
+                    // filtro i dati che non devono essere passati al template
+                    if (isset($conf['exclude'])) {
+                        $dati = array_diff_key($v, array_combine($conf['exclude'], $conf['exclude']));
+                    } else {
+                        $dati = $v;
+                    }
+
+                    // debug
+                    // print_r( $template );
+
+                    // TODO
+                    // verificare che il template sia ben formato, tipicamente verificare
+                    // che abbia il from settato (vedi dev/_mod/_0300.contatti/_src/_config/_500.mail.php)
+                    // altrimenti la queueMailFromTemplate() potrebbe comportarsi in modo erratico
+                    // nota questo controllo andrebbe comunque implementato anche nella queueMailFromTemplate()
+
+                    // defaults
+                    $conf['destinatari_cc'] = (! empty($conf['destinatari_cc'])) ? $conf['destinatari_cc'] : array();
+                    $conf['destinatari_bcc'] = (! empty($conf['destinatari_bcc'])) ? $conf['destinatari_bcc'] : array();
+
+                    // accodamento
+                    queueMailFromTemplate(
+                        $cf['mysql']['connection'],
+                        $template,
+                        array('dt' => $dati, 'ct' => $ct),
+                        strtotime('+1 minutes'),
+                        $conf['destinatari'],
+                        $conf['language'],
+                        $conf['destinatari_cc'],
+                        $conf['destinatari_bcc']
+                    );
                 }
+            }
+
+        }
+        } else {
+
+            /**
+             * blocco scartato dal controllo antispam
+             *
+             * Finora questo ramo non faceva niente — nemmeno una riga di log, solo un
+             * ie() commentato — e subito sotto lo stato veniva messo a 'OK' comunque.
+             * Il risultato: chi veniva classificato come bot leggeva "controlla la tua
+             * casella di posta" davanti a un modulo che non era stato elaborato, e da
+             * nessuna parte restava traccia di quante richieste legittime venissero
+             * buttate via. Si logga a LOG_ERR e si dice all'utente che qualcosa non ha
+             * funzionato, che delle due e' l'unica cosa vera.
+             */
+            logWrite(
+                'blocco ' . $k . ' scartato dal controllo antispam ( score '
+                . ( isset($v['spam']['score']) ? $v['spam']['score'] : '?' )
+                . ( isset($v['spam']['status']) ? ', ' . $v['spam']['status'] : '' ) . ' )'
+                . ( isset($v['email']) ? ' per ' . $v['email'] : '' ),
+                'contatti',
+                LOG_ERR
+            );
 
             // esito dell’operazione
-                $v['__status__'] = 'OK';
+            $v['__status__'] = 'NO';
 
-	    }
+        }
 
+        // esito dell’operazione
+        if (! isset($v['__status__'])) {
+            $v['__status__'] = 'OK';
+        }
     }
+}
 
     // scollego $v
-	unset( $v );
+    unset($v);
 
     // debug
 	// die();
 	// print_r( $_REQUEST );
+    // die( print_r( $_REQUEST['__contatti__'], true ) );

@@ -1,17 +1,231 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_bin/_privacy.html' as prv %}
 
 {% extends "ext/main.html" %}
 
+{% block jumbotron %}
+{% include 'inc/jumbotron.html' %}
+{% endblock %}
+
+{% block vantaggi %}
+<!-- blocco vantaggi -->
+{% if page.metadati.vantaggi %}
+<section class="vantaggi">
+    <div class="container">
+        <div class="row">
+            {% for k,v in page.metadati.vantaggi %}
+            <div class="col">
+                <h2>{{ v.h2[ localization.language.ietf ] }}</h2>
+                <p>{{ v.p[ localization.language.ietf ] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- metadati di tipo vantaggi|*|h2 non presenti -->
+{% endif %}
+{% endblock %}
+
+{% block abstract %}
+<!-- blocco abstract -->
+{% if page.abstract[ localization.language.ietf ] %}
+<section class="abstract">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ include( template_from_string( page.abstract[ localization.language.ietf ]|default('') ) | raw ) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- abstract non presente per la lingua {{ localization.language.ietf }} -->
+{% endif %}
+{% endblock %}
+
 {% block main %}
+<!-- blocco testo principale -->
 <section class="testo">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
-                {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+                {% if page.content[ localization.language.ietf ] %}
+                {{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}
+                {% else %}
+                <!-- testo principale non presente per la lingua {{ localization.language.ietf }} -->
+                {% endif %}
             </div>
             <div class="col-12 col-md">
-                {{ include( template_from_string( page.abstract[ localization.language.ietf ] ) | raw ) }}
+                {% if page.specifiche[ localization.language.ietf ] %}
+                {{ include( template_from_string( page.specifiche[ localization.language.ietf ]|default('') ) | raw ) }}
+                {% else %}
+                <!-- testo specifiche non presente per la lingua {{ localization.language.ietf }} -->
+                {% endif %}
             </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block offerta %}
+<!-- blocco offerta -->
+{% if page.metadati.id_prodotto %}
+{% if page.metadati.lp_offerta %}
+<section class="offerta">
+    <div class="container">
+        <div class="row d-flex flex-row justify-content-around">
+            {% for v in page.metadati.lp_offerta %}
+            {% for art in page.contents.articoli if art.id == v.articolo %}
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h2>{{ art.h1 }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ include( template_from_string( art.specifiche|default('') ) | raw ) }}</p>
+                    </div>
+                    <div class="card-footer">
+                        {% if art.prezzi.BARRATO.prezzo %}<h3 class="prezzo-barrato">{{ art.prezzi.BARRATO.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.BARRATO.utf8 }}</h3>{% endif %}
+                        <h3>{{ art.prezzi.DEFAULT.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.DEFAULT.utf8 }}</h3>
+                    </div>                
+                </div>
+            </div>
+            {% else %}
+            <!-- articlo non trovato {{ v.articolo }} nel prodotto {{ page.metadati.id_prodotto }} -->
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- metadati di tipo offerta|*|articolo non presenti -->
+{% endif %}
+{% else %}
+<!-- metadato id_prodotto non presente -->
+{% endif %}
+{% endblock %}
+
+{% block contatti %}
+<!-- blocco contatti -->
+{% if page.metadati.ct_form %}
+{% if page.metadati.ct_action %}
+<section class="contatti">
+    <div class="container">
+        {% if page.metadati.ct_h1[ localization.language.ietf ] %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <h1>{{ page.metadati.ct_h1[ localization.language.ietf ] }}</h1>
+                {% if page.metadati.ct_p[ localization.language.ietf ] %}
+                <p>{{ page.metadati.ct_p[ localization.language.ietf ] }}</p>
+                {% else %}
+                <!-- metadato ct_p non specificato per la lingua {{ localization.language.ietf }} -->
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <!-- metadato ct_h1 non specificato per la lingua {{ localization.language.ietf }} -->
+        {% endif %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <!-- formLanding è l'ID del form, landing è la chiave del modulo -->
+                <form action="{{ pages[ page.metadati.ct_action ].url[ localization.language.ietf ] }}" class="w-100 mt-3" id="formLanding" method="post">
+                    <div class="row">
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[landing][email]" placeholder="E-MAIL" required="1" type="email"></div>
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[landing][telefono]" placeholder="TELEFONO" type="phone"></div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-12"><textarea class="form-control" id="testo" name="__contatti__[landing][messaggio]" placeholder="MESSAGGIO" rows="3"></textarea></div>
+                    </div>
+                    {{ prv.checkConsensi( '__contatti__', 'landing', privacy.moduli.landing, localization.language.ietf, tr, pages, session ) }}
+                    {% if google.profile.recaptcha %}
+                    <!-- formLanding è l'ID del form, landing è la chiave del modulo -->
+                    {{ cms.formButton( 'RICHIEDI INFO', 'button', 'btn-secondary btn-lg w-100 h-100 bottone-registrazione', '', '', '', 'formLanding', google.profile.recaptcha, '__contatti__', 'landing' ) }}
+                    {% else %}
+                    {# TODO METTERE IL BOTTONE SENZA RECAPTCHA QUI #}
+                    {% endif %}
+                </form>
+                {% if not privacy.moduli.landing %}
+                <!--
+                    chiave privacy.moduli.landing non settata! aggiungere ad esempio:
+
+                    "privacy": {
+
+                      [...]
+
+                      "moduli": {
+                        "landing": {
+                          "titolo": {
+                            "it-IT": "modulo di richiesta informazioni"
+                          },
+                          "descrizione": {
+                            "it-IT": "Questo modulo può essere utilizzato dagli utenti per richiedere informazioni."
+                          },
+                          "consensi": {
+                            "PRIVACY_POLICY": {
+                              "informativa": {
+                                "it-IT": "risposta all'utente"
+                              },
+                              "label": {
+                                "it-IT": "la privacy e cookie policy del sito"
+                              },
+                              "action": "letto_e_accetto",
+                              "page": "privacy",
+                              "required": true
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                -->
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- metadato ct_action non specificato (deve corrispondere a un ID di pagina valido, tipicamente quello della thank-you page -->
+{% endif %}
+{% else %}
+<!-- metadato ct_form non specificato (deve corrispondere a una chiave valida per il modulo contatti)-->
+{% endif %}
+{% endblock %}
+
+{% block recensioni %}
+<!-- blocco recensioni -->
+<section class="recensioni">
+    <div class="container">
+        {% if page.metadati.rc_h1[ localization.language.ietf ] %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <h1>{{ page.metadati.rc_h1[ localization.language.ietf ] }}</h1>
+                {% if page.metadati.rc_p[ localization.language.ietf ] %}
+                <p>{{ page.metadati.rc_p[ localization.language.ietf ] }}</p>
+                {% else %}
+                <!-- metadato rc_p non specificato per la lingua {{ localization.language.ietf }} -->
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <!-- metadato rc_h1 non specificato per la lingua {{ localization.language.ietf }} -->
+        {% endif %}
+        <div class="row d-flex flex-row justify-content-around">
+            {% for rc in page.contents.recensioni %}
+            <div class="recensione col-12 col-md-{% if page.metadati.rc_col %}{{ page.metadati.rc_col }}{% else %}3{% endif %}">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5>{{ rc.data }}</h5>
+                        <h4>{{ rc.autore }}</h4>
+                        <h3 class="stars">{% for st in 1..5 %}<i class="fa fa-star{% if st > rc.valutazione %}-o{% endif %}"></i>{% endfor %}</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if rc.titolo %}<h4>{{ rc.titolo }}</h4>{% endif %}
+                        <p>{{ rc.testo }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

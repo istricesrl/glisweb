@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS anagrafica_condizioni_pagamento_delete_static;

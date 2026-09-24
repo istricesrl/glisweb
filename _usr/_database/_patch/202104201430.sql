@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD `nome` CHAR(255) NULL DEFAULT NULL AFTER `data`;

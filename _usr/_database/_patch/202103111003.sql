@@ -1,1 +1,0 @@
-ALTER TABLE `risorse_anagrafica` ADD INDEX(`id_risorsa`);

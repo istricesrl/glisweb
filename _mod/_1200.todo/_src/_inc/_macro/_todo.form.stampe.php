@@ -27,6 +27,8 @@
 		'label' => NULL
 	    )
 	);
+/**
+ * NOTA valutare se fare una versione standard del modulo
 
     // modal per la conferma di invio richiesta sostituzione
     $ct['page']['contents']['metro']['general'][] = array(
@@ -36,6 +38,8 @@
 	    'title' => 'stampa modulo assistenza',
 	    'text' => 'stampa tutto o parte del modulo assistenza'
     );
+
+ */
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

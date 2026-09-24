@@ -1,0 +1,101 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG HEAD STANDARD
+    Il contenuto del tag <head> è sostanzialmente tecnico, quindi avendo poco a che fare con l'aspetto finale del template
+    può essere standardizzato. Le operazioni da svolgere qui sono quindi comuni a tutti i template. #}
+
+    <!-- file: {{ _self }} -->
+
+    {# CODICE PER GOOGLE TAG MANAGER #}
+    {% include '_inc/_gtm.head.twig' %}
+
+    {# CODICE PER GOOGLE ANALYTICS #}
+    {% include '_inc/_analytics.head.twig' %}
+
+    {# CODICE PER GOOGLE ADS #}
+    {% include '_inc/_ads.head.twig' %}
+
+    {# META TAG #}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
+    <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
+    {% if page.robots %}<meta name="robots" content="{{ page.robots[ localization.language.ietf ] }}">
+    {% elseif site.status == 'DEV' or site.status == 'TEST' %}<meta name="robots" content="noindex, nofollow">{% endif %}
+
+    {# FAVICONS #}
+    {% for icon in page.template.favicons %}<link
+        {% if icon.rel %} rel="{{ icon.rel }}"{% endif %}
+        {% if icon.type %} type="{{ icon.type }}"{% endif %}
+        {% if icon.sizes %} sizes="{{ icon.sizes }}"{% endif %}
+        href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">
+    {% else %}
+    <!-- nessuna favicon trovata in page.template.favicons -->
+    {% endfor %}
+
+    {# LINK CANONICO DELLA PAGINA
+        vedi https://developers.google.com/search/docs/crawling-indexing/canonicalization?hl=it #}
+    {% if page.canonical %}
+    <link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">
+    {% else %}
+    <!-- nessun link canonico trovato in page.canonical -->
+    {% endif %}
+
+    {# TAG TITLE #}
+    <title>{{ page.title[ localization.language.ietf ] }}</title>
+
+    {# TAG OPENGRAPH #}
+    {% include '_inc/_opengraph.head.twig' %}
+
+    {# CSS ESTERNI #}
+    {% for m,s in page.css.external %}
+    {% for c in s %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css esterno trovato in page.css.external -->
+    {% endfor %}
+
+    {# CSS PRELOAD #}
+    {% for m,s in page.css.preload %}
+    {% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+    {% else %}
+    <!-- nessun css preload trovato in page.css.preload -->
+    {% endfor %}
+
+    {# CSS IN CACHE #}
+    {% for m,s in page.css.cached %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css in cache trovato in page.css.cached -->
+    {% endfor %}
+
+    {# CSS INTERNI #}
+    {% for m,s in page.css.internal %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css interno trovato in page.css.internal -->
+    {% endfor %}
+
+    {# CSS DEL TEMPLATE #}
+    {% for m,s in page.css.template %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css del template trovato in page.css.template -->
+    {% endfor %}
+
+    {# CSS CUSTOM #}
+    {% for m,s in page.css.custom %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css custom trovato in page.css.custom -->
+    {% endfor %}
+
+    {# CODICE PER FACEBOOK #}
+    {% include '_inc/_facebook.head.twig' %}
+
+    {# CODICE PER HOTJAR #}
+    {% include '_inc/_hotjar.head.twig' %}
+
+    {# CODICE PER MICROSOFT CLARITY #}
+    {% include '_inc/_clarity.head.twig' %}
+
+    <!-- fine file: {{ _self }} -->

@@ -1,1 +1,0 @@
-ALTER TABLE `pianificazioni` ADD FOREIGN KEY (`id_progetto`) REFERENCES `progetti`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

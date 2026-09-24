@@ -50,7 +50,7 @@
 
 		<div class="form-group form-row">
 		    <div class="col-12">
-				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', tr.languages, request, localization.language.id ) }}
 		    </div>
 		</div>
 
@@ -61,12 +61,12 @@
 
 		{# CICLO SULLE LINGUE #}
 		{% set i = 0 %}
-		{% for l in localization.languages %}
+		{% for l in tr.languages %}
 
 		{% set r = request[ table ][ subtable ][ i ] %}
 
 		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_template_mail', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_template', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
 	    {% if r.id_lingua == session.__view__.__lang__ %}
@@ -133,7 +133,13 @@
             </div>
 
         </fieldset>
-      
+
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','mittente_nome','mittente_mail','destinatario_nome','destinatario_mail','destinatario_cc_nome','destinatario_cc_mail','destinatario_ccn_nome','destinatario_ccn_mail'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
         {% endif %}
 
 	    {% set i = i + 1 %}

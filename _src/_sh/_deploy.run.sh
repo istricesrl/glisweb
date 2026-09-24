@@ -1,0 +1,541 @@
+#!/bin/bash
+
+## pulizia schermo
+clear
+
+## livelli per la root del sito
+RL="../../"
+
+## directory corrente
+cd $(dirname "$0")
+
+## funzioni
+. ./_lib/_functions.sh
+
+## verifica utente root
+check-root
+
+## argomenti
+check-args $@
+
+# TODO implementare --hard per fare il deploy senza backup remoto nei casi lftp scp e gcloud, senza --hard non fare nulla
+
+## se lo script è stato chiamato senza argomenti
+if [ -n "$PNOARGS" ]; then
+
+    echo "utilizzo: $0 target [opzioni]"
+    echo "opzioni:"
+    echo "  --increment   il tipo di incremento di versione (major, minor, patch)"
+    echo "esempi:"
+    echo "  $0 test"
+    echo "  $0 test --increment patch"
+    echo "  $0 prod --increment minor"
+    exit 1
+
+else
+
+    ## passo alla cartella del deploy
+    cd $RL
+
+    ## informazioni
+    echo "lavoro su: $(pwd)"
+
+    ## leggo dal file properties
+    . ./etc/deploy/$1.properties
+
+    ## informazioni
+    echo "progetto: ${PRJ_NAME}"
+    echo "deploy su: $1"
+
+    ## cartella sorgente
+    if [ -n "$SRC_FOLDER" -a -n "$SRC_STAGE" ]; then
+
+        # percorso sorgente
+        SRC_PATH="$SRC_FOLDER/$SRC_STAGE"
+
+        # informazioni
+        echo "cartella sorgente: $SRC_PATH"
+
+        # se la cartella sorgente non esiste
+        if [ ! -d "$SRC_PATH" ]; then
+
+            # informazioni
+            echo "cartella sorgente ($SRC_PATH) non esistente, impossibile effettuare il deploy"
+
+            # uscita
+            exit 1
+
+        fi
+
+    else
+
+        # informazioni
+        echo "informazioni sulla sorgente mancanti, impossibile effettuare il deploy"
+
+        # uscita
+        exit 1
+
+    fi
+
+    ## cartella destinazione
+    if [ -n "$DST_FOLDER" -a -n "$DST_STAGE" ]; then
+
+        # percorso destinazione
+        DST_PATH="$DST_FOLDER/$DST_STAGE"
+
+        # informazioni
+        echo "cartella destinazione: $DST_PATH"
+
+    else
+
+        # informazioni
+        echo "informazioni sulla destinazione mancanti, impossibile effettuare il deploy"
+
+        # uscita
+        exit 1
+
+    fi
+
+    ## registro il deploy
+    if [ -z "$PARGNOLOG" ]; then
+
+        ## aggiungo una newline al file se non c'è già
+        sed -i -e '$a\' ../DEPLOY.md
+
+        ## registro dei deploy
+        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT" >> ../DEPLOY.md
+        echo "======================================" >> ../DEPLOY.md
+        echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../DEPLOY.md
+        echo >> ../DEPLOY.md
+
+    fi
+
+    ## leggo la versione corrente
+    if [ -f ./etc/version.conf ]; then
+
+        # leggo la versione
+        VERSION=$(cat ./etc/version.conf | tr -d '\n')
+
+    else
+
+        VERSION="0.0.0"
+
+    fi
+
+    # informazioni
+    echo "versione corrente: $VERSION"
+
+    ## incremento versione
+    case "$PVALINCREMENT" in
+
+        "major")
+            PVALINCREMENTNUM=0
+            ;;
+        "minor")
+            PVALINCREMENTNUM=1
+            ;;
+        "patch")
+            PVALINCREMENTNUM=2
+            ;;
+
+    esac
+
+    # incremento
+    if [ -n "$PVALINCREMENTNUM" ]; then
+
+        # incremento
+        VERSION=$(increment-version $VERSION $PVALINCREMENTNUM)
+
+        # informazioni
+        echo "nuova versione: $VERSION"
+
+        # imposto la versione
+        echo $VERSION > ./etc/version.conf
+
+    else
+
+        # informazioni
+        echo "deploy senza incremento di versione"
+
+    fi
+
+    ## checkout sulla branch di cui fare il deploy
+    if [ -n "$GIT_BRANCH" ]; then
+
+        # informazioni
+        echo "checkout su: $GIT_BRANCH"
+
+        # checkout
+        cd $SRC_PATH
+        git checkout $GIT_BRANCH
+
+        # commit
+        git add .
+        git commit -m "distribuzione della versione $VERSION"
+        git tag -a "v$VERSION" -m "versione $VERSION"
+        git push --follow-tags
+
+    fi
+
+    ## host di destinazione
+    if [ -n "$DST_HOST" ]; then
+
+        # informazioni
+        echo "deploy remoto su: $DST_HOST"
+
+    else
+
+        # comando di copia
+        DST_CMD="rsync"
+
+        # informazioni
+        echo "deploy locale"
+
+    fi
+
+    ## deploy
+    case "$DST_CMD" in
+
+        "lftp")
+
+            # se sono settati i parametri per l'accesso
+            if [ -n "$FTP_USER" -a -n "$FTP_PASSWORD" ]; then
+
+                ## file e cartelle da escludere dal deploy
+                for i in $SET_EXCLUDE; do
+                    EXCLUDE="$EXCLUDE --exclude $i"
+                done
+
+                # informazioni
+                echo "accesso FTP: $FTP_USER"
+                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
+
+                # comando
+                CMD="lftp -e \"mirror $EXCLUDE -R $SRC_PATH $DST_PATH; quit\" -u $FTP_USER,$FTP_PASSWORD $DST_HOST"
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # deploy
+                # $CMD
+
+            else
+
+                # informazioni
+                echo "parametri di accesso FTP mancanti, impossibile effettuare il deploy"
+
+                # uscita
+                exit 1
+
+            fi
+
+            ;;
+
+        "scp")
+
+            # se sono settati i parametri per l'accesso
+            if [ -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
+
+                # informazioni
+                echo "accesso SSH: $SSH_USER"
+                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
+                echo "ATTENZIONE! questo tipo di deploy non supporta l'esclusione dei file e delle cartelle dal deploy"
+
+                # comando
+                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # backup
+                # $CMD
+
+                # comando
+                CMD="scp -r $SRC_PATH $SSH_USER@$DST_HOST:$DST_PATH"
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # deploy
+                # $CMD
+
+            else
+
+                # informazioni
+                echo "parametri di accesso SSH mancanti, impossibile effettuare il deploy"
+
+                # uscita
+                exit 1
+
+            fi
+
+            ;;
+
+        "rsync")
+
+            ## file e cartelle da escludere dal deploy
+            for i in $SET_EXCLUDE; do
+                EXCLUDE="$EXCLUDE --exclude $i"
+            done
+
+            ## host di destinazione
+            if [ -n "$DST_HOST" -a -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
+
+                # porta di destinazione
+                if [ -n "$DST_PORT" ]; then
+                    RPORT="--port=$DST_PORT"
+                    SPORT="-p $DST_PORT"
+                else
+                    RPORT=""
+                    SPORT=""
+                fi
+
+                # utente per gli script che sul target richiedono i privilegi di root
+                # (apertura e chiusura dei permessi): se non è indicato nel file properties
+                # si usa l'utente del deploy
+                if [ -z "$SSH_ADMIN" ]; then
+                    SSH_ADMIN="$SSH_USER"
+                fi
+
+                # comando
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # backup
+                # $CMD
+
+                # comando
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.open.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # aggiornamento dei permessi
+                $CMD
+
+                # se i permessi non si aprono l'rsync scrive su cartelle in sola lettura e non copia
+                # nulla: non è fatale di per sé (potrebbero essere già aperti) ma va detto
+                if [ $? -ne 0 ]; then
+                    echo "ATTENZIONE: apertura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): se il deploy non copia i file è questo il motivo"
+                fi
+
+                # comando
+                CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # deploy
+                rsync $EXCLUDE -avuz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
+
+                # esito del deploy
+                RSYNC_STATUS=$?
+
+                # comando per composer update
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
+
+                # registro dei deploy
+                echo >> ../DEPLOY.md
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # aggiornamento di composer
+                # $CMD
+
+                # comando
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # aggiornamento dei permessi
+                $CMD
+
+                # i permessi vanno richiusi sempre, anche se il deploy è fallito: se non ci si
+                # riesce il target resta scrivibile dal gruppo e la cosa va urlata
+                if [ $? -ne 0 ]; then
+                    echo "ERRORE: chiusura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): il target è rimasto con i permessi aperti, intervenire a mano con _lamp.permissions.secure.sh"
+                    exit 1
+                fi
+
+                # se il deploy è fallito lo dico e esco con errore: prima si finiva sempre con
+                # esito positivo anche quando rsync non aveva copiato nulla
+                if [ $RSYNC_STATUS -ne 0 ]; then
+                    echo "ERRORE: deploy su $DST_HOST fallito (rsync esito $RSYNC_STATUS), i file NON sono stati copiati o lo sono stati solo in parte"
+                    exit 1
+                fi
+
+                # invalidazione delle cache della destinazione
+                deploy-invalidate-caches "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
+
+                # informazioni
+                echo "deploy completato su $DST_HOST"
+
+            else
+
+                # Fix 2026-09-02: il deploy LOCALE ora esegue davvero, come quello remoto.
+                #
+                # Fin qui questo ramo — quello che si prende quando sorgente e destinazione sono
+                # sulla stessa macchina, cioe' senza DST_HOST — stampava i comandi e li lasciava
+                # commentati. Lo script terminava con "exit 0" senza aver copiato niente, quindi
+                # sembrava funzionare: chi lo lanciava restava convinto di aver fatto il deploy.
+                # Il ramo remoto (ssh) qui sopra era invece completo da tempo, e da li' e' preso
+                # lo schema: backup, permessi aperti, rsync, permessi richiusi, controllo esito.
+                #
+                # I permessi vanno aperti prima e richiusi dopo per lo stesso motivo del ramo
+                # remoto: con i permessi sicuri le cartelle di destinazione sono in sola lettura
+                # e rsync non copia nulla, fallendo in modo poco evidente.
+
+                # backup della destinazione prima di sovrascriverla
+                CMD="$DST_PATH/_src/_sh/_backup.run.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # backup
+                if [ -x "$DST_PATH/_src/_sh/_backup.run.sh" ]; then
+                    $CMD
+                else
+                    echo "ATTENZIONE: $DST_PATH/_src/_sh/_backup.run.sh non disponibile, deploy senza backup della destinazione"
+                fi
+
+                # comando
+                CMD="$DST_PATH/_src/_sh/_lamp.permissions.open.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # apertura dei permessi
+                $CMD
+
+                # se i permessi non si aprono l'rsync scrive su cartelle in sola lettura e non
+                # copia nulla: non e' fatale di per se' (potrebbero essere gia' aperti) ma va detto
+                if [ $? -ne 0 ]; then
+                    echo "ATTENZIONE: apertura dei permessi su $DST_PATH fallita: se il deploy non copia i file e' questo il motivo"
+                fi
+
+                # comando
+                CMD="rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # deploy
+                rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
+
+                # esito del deploy
+                RSYNC_STATUS=$?
+
+                # comando
+                CMD="$DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # chiusura dei permessi
+                $CMD
+
+                # i permessi vanno richiusi sempre, anche se il deploy e' fallito: se non ci si
+                # riesce la destinazione resta scrivibile dal gruppo e la cosa va urlata
+                if [ $? -ne 0 ]; then
+                    echo "ERRORE: chiusura dei permessi su $DST_PATH fallita: la destinazione e' rimasta con i permessi aperti, intervenire a mano con _lamp.permissions.secure.sh"
+                    exit 1
+                fi
+
+                # se il deploy e' fallito lo dico e esco con errore
+                if [ $RSYNC_STATUS -ne 0 ]; then
+                    echo "ERRORE: deploy su $DST_PATH fallito (rsync esito $RSYNC_STATUS), i file NON sono stati copiati o lo sono stati solo in parte"
+                    exit 1
+                fi
+
+                # invalidazione delle cache della destinazione
+                deploy-invalidate-caches "$DST_PATH"
+
+                # informazioni
+                echo "deploy completato su $DST_PATH"
+
+            fi
+
+            ;;
+
+        "gcloud")
+
+            # se sono settati i parametri per l'accesso
+            if [ -n "$GCP_INSTANCE" -a -n "$GCP_PROJECT" -a -n "$GCP_ZONE" ]; then
+
+                # informazioni
+                echo "deploy GCP su: $GCP_ZONE/$GCP_PROJECT"
+                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
+                echo "ATTENZIONE! questo tipo di deploy non supporta l'esclusione dei file e delle cartelle dal deploy"
+
+                # comando
+                CMD="gcloud compute scp --recurse $SRC_PATH $GCP_INSTANCE:$DST_PATH --project $GCP_PROJECT --zone $GCP_ZONE"
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # deploy
+                # $CMD
+
+            else
+
+                # informazioni
+                echo "parametri di accesso Google Cloud mancanti, impossibile effettuare il deploy"
+
+                # uscita
+                exit 1
+
+            fi
+
+            ;;
+
+        *)
+
+            # informazioni
+            echo "comando di deploy non riconosciuto"
+
+            ;;
+
+    esac
+
+fi
+
+## uscita
+exit 0

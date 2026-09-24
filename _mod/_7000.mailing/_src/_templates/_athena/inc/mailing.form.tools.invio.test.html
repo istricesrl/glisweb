@@ -1,0 +1,49 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function invia( ) {
+		$('#btninvia').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}task/7000.mailing/genera.mail?mid={{ request[table].id }}&mt=' + $('#_mt').val();
+
+		getws( call,'', function() {
+			$('#btninvia').html('<i class="fa fa-check"></i>');
+		});
+
+		location.reload();
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="invia">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">invia una mail di test</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    {{ frm.input( '', '', '', 'mt', '', '', '', '', '' ) }}
+				</div>
+			</div>
+		    <div class="form-row">
+                <div class="col-12">
+                    questa operazione invierà una mail di test; per verificare il livello di spam utilizzare <a href="https://www.mail-tester.com/" target="_blank">Mail Tester</a>.
+                </div>
+            </div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btninvia" class="btn btn-secondary btn-sm" onclick="invia();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

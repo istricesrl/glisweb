@@ -1,0 +1,92 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "%etichetta del sito%",
+      "name": {
+        "it-IT": "%nome it-IT del sito%"
+      },
+      "protocols": {
+        "DEV": "%protocollo in DEV del sito%",
+        "TEST": "%protocollo in TEST del sito%"
+      },
+      "hosts": {
+        "DEV": "%nome host in DEV del sito%",
+        "TEST": "%nome host in TEST del sito%"
+      },
+      "domains": {
+        "DEV": "%dominio in DEV del sito%",
+        "TEST": "%dominio in TEST del sito%"
+      }
+    }
+  },
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "debug": {
+    "DEV": {
+      "*" : {
+        "log": { "lvl": 7 },
+        "report": { "lvl": 32767 }
+      }
+    },
+    "TEST": {
+      "*" : {
+        "log": { "lvl": 3 },
+        "report": { "lvl": 2 }
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "develop": {
+        "address": "%indirizzo IP del server MySQL per DEV%",
+        "port": "%porta del server MySQL per DEV%",
+        "username": "%nome utente del server MySQL per DEV%",
+        "password": "%password del server MySQL per DEV%",
+        "db": "%nome del database MySQL per DEV%"
+      },
+      "testing": {
+        "address": "%indirizzo IP del server MySQL per TEST%",
+        "port": "%porta del server MySQL per TEST%",
+        "username": "%nome utente del server MySQL per TEST%",
+        "password": "%password del server MySQL per TEST%",
+        "db": "%nome del database MySQL per TEST%"
+      }
+    },
+    "profiles": {
+      "DEV": {
+        "servers": [
+          "develop"
+        ]
+      },
+      "TEST": {
+        "servers": [
+          "testing"
+        ]
+      }
+    }
+  },
+  "twig": {
+    "profiles": {
+      "DEV": {
+        "debug": true
+      },
+      "TEST": {
+        "debug": false,
+        "cache": "var/cache/twig/"
+      }
+    }
+  },%opzioni%
+  "mods": {
+    "active": {
+      "array": [
+        %moduli%
+      ]
+    }
+  }
+}

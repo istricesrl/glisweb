@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_prodotti` ADD `id_sito` INT NULL DEFAULT NULL AFTER `id_pagina`, ADD INDEX (`id_sito`) ;

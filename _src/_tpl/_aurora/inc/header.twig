@@ -1,0 +1,8 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+
+<!-- file {{ _self }} -->
+{% if page.template.breadcrumbs %}
+    <div>{{ nav.lineBreadcrumbs( page.template.breadcrumbs, localization.language.ietf, '', '', '>' ) }}</div>
+{% endif %}
+<!-- fine file {{ _self }} -->

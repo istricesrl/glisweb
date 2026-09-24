@@ -1,0 +1,9 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+{% import '_lib/_default.twig' as cms %}
+
+<!-- file {{ _self }} -->
+{% if page.contents.images.carousel|length > 0 %}
+{{ cms.carousel( page, localization.language.ietf, site, 'carousel-main', 3500, image, 'carousel' ) }}
+{% endif %}
+<!-- fine file {{ _self }} -->

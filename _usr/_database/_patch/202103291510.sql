@@ -1,1 +1,0 @@
-ALTER TABLE `pubblicazione` ADD `id_articolo` CHAR(32)  NULL DEFAULT NULL AFTER `id_prodotto`, ADD INDEX (`id_articolo`) ;

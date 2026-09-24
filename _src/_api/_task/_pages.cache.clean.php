@@ -4,23 +4,27 @@
      *
      *
      *
-     *
-     * @todo commentare
-     *
-     * @file
+     * TODO documentare
      *
      */
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+    }
+
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CACHE' );
 
     // inizializzo l'array del risultato
 	$status = array();
 
     // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, false, $status['files'] );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, true );
 
     // headers
 	// header( 'Access-Control-Allow-Origin: *' );

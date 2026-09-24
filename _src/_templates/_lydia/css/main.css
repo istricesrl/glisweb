@@ -5,20 +5,25 @@ body {
 
 main {
     padding: 0.5em;
+    padding-bottom: 1.5em;
 }
 
 div.categorie {
     background-color: #cccccc;
-    padding: 0.5em;
+    padding: 0em;
 }
 
 div.categorie nav {
     padding: 0em;
 }
 
+.form-control {
+    margin-bottom: .75em;
+}
+
 .form-control:focus {
     border-color: #aaaaaa;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);*/
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
 }
 
 footer {
@@ -45,7 +50,8 @@ footer p {
 }
 
 h1, h2, h3, h4, h5 {
-    margin: 0.5em 0em;
+    margin: 0em;
+    font-weight: bold;
 }
 
 h1 {
@@ -100,12 +106,22 @@ a:active, a:hover {
 }
 
 footer a, a:visited {
-    color: #111111;
+    color: #666666;
 }
 
 footer a:active, a:hover {
     color: #111111;
     text-decoration: underline !important;
+}
+
+div.breadcrumbs {
+    background-color: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    font-size: .9em;
+}
+
+div.breadcrumbs p {
+    margin: 5px 0px;
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
@@ -117,9 +133,20 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+div.search-box {
+    padding: 0.5em;
+}
+
+.nav-icons a.nav-link {
+    font-size: 1.25em;
+}
+
+a.nav-link {
+    padding: 0.5em 0em;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #aaaaaa;
-    padding-right: 0em !important;
 }
 
 a.nav-link:active, a.nav-link:hover {
@@ -127,8 +154,65 @@ a.nav-link:active, a.nav-link:hover {
     text-decoration: underline;
 }
 
-ul.navbar-nav {
+nav ul {
     list-style-type: none;
+}
+
+div.megamenu {
+    background-color: #eeeeee;
+}
+
+div.megamenu nav {
+    padding: 0px;
+}
+
+div.megamenu ul.navbar-nav ul {
+    list-style-type: none;
+}
+
+@media( min-width: 576px ) {
+    div.megamenu {
+        position: absolute;
+        width: 100%;
+    }
+    div.megamenu ul ul li.nav-item {
+        display: none;
+    }
+}
+
+.label-top {
+    font-size: .75em;
+    margin: 0em;
+}
+
+form.carrello div.form-row {
+    margin: .5em 0em;
+}
+
+div.row-privacy {
+    font-size: .75em;
+}
+
+div.row-privacy a {
+    font-weight: bold;
+}
+
+div.row-privacy .form-check-input {
+    padding-bottom: .5em;
+}
+
+legend {
+    font-size: 1.2em;
+}
+
+table {
+    font-size: .85em;
+}
+
+@media (max-width: 576px) {
+    .nav-icons a.nav-link {
+        margin-left: .75em;
+    }
 }
 
 @media (min-width: 576px) {

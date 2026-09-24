@@ -11,13 +11,17 @@
 
         {% include '_inc/_page.open.html' %}
 
-        {% block header %}
-        {% include 'inc/header.html' %}
-        {% endblock %}
+        <header>
 
-        {% block nav %}
-        {% include 'inc/navbar.html' %}
-        {% endblock %}
+            {% block header %}
+            {% include 'inc/header.html' %}
+            {% endblock %}
+
+            {% block nav %}
+            {% include 'inc/navbar.html' %}
+            {% endblock %}
+
+        </header>
 
         <main>{% block main %}{% endblock %}</main>
 

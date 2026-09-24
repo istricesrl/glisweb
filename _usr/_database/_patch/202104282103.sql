@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_todo` ADD KEY `se_scalare` (`se_scalare`), ADD KEY `se_commessa` (`se_commessa`), ADD KEY `se_forfait` (`se_forfait`) ;

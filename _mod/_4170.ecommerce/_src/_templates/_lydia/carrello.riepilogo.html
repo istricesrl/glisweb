@@ -1,0 +1,174 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_lib/_translation.twig' as trn %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+<!-- PAGAMENTO TRAMITE PAYPAL STANDARD O ADVANCED CHECKOUT -->
+{% if etc.client_token %}
+
+<!-- variabile per l'URL di ritorno -->
+{% if ecommerce.profile.provider['paypal-advanced'].return_url %}
+<script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>
+{% endif %}
+
+<!-- titolo -->
+<h1>{{ trn.tr({ 'w': 'paga_paypal', 'l': ietf, 'v': tr.generic }) }}</h1>
+
+<!-- inclusione dello script di PayPal -->
+<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+
+<!-- div per la creazione del bottone PayPal Standard Checkout e Advanced Checkout --> 
+<div id="paypal-button-container" class="paypal-button-container"></div>
+
+<!-- titolo -->
+<h2>{{ trn.tr({ 'w': 'paga_carta', 'l': ietf, 'v': tr.generic }) }}</h2>
+
+<!-- form per il pagamento tramite PayPal Advanced Checkout -->
+{% if ecommerce.profile.provider['paypal-advanced'].advanced %}
+<style>
+  div.card_field {
+    height: 1em;
+    margin-bottom: .5em;
+  }
+</style>
+<!--
+<div class="card_container">
+    <form id="card-form">
+        <label for="card-number">Card Number</label>
+        <div id="card-number" class="card_field"></div>
+    <div>
+        <label for="expiration-date">Expiration Date</label>
+        <div id="expiration-date" class="card_field"></div>
+    </div>
+    <div>
+        <label for="cvv">CVV</label>
+        <div id="cvv" class="card_field"></div>
+    </div>
+    <div>
+        <label for="card-holder-name">Name on Card</label>
+        <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>
+    </div>
+    <div>
+        <label for="card-billing-address-street">Billing Address</label>
+        <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>
+    </div>
+    <div>
+        <label for="card-billing-address-unit">&nbsp;</label>
+        <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>
+    </div>
+    <div>
+        <label for="card-billing-address-city">&nbsp;</label>
+        <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>
+    </div>
+    <div>
+        <label for="card-billing-address-state">&nbsp;</label>
+        <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>
+    </div>
+    <div>
+        <label for="card-billing-address-zip">&nbsp;</label>
+        <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>
+    </div>
+    <div>
+        <label for="card-billing-address-country">&nbsp;</label>
+        <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />
+    </div>
+    <button value="submit" id="submit" class="btn">Pay</button>
+    </form>
+</div>
+-->
+
+<div class="card_container">
+    <form id="card-form">
+        <table style="width:100%" class="paypal">
+
+            <tr>
+                <td><label for="card-number">{{ trn.tr({ 'w': 'numero_carta', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><div id="card-number" class="card_field"></div></td>
+                <td><label for="expiration-date">{{ trn.tr({ 'w': 'data_scadenza', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><div id="expiration-date" class="card_field"></div></td>
+                <td><label for="cvv">{{ trn.tr({ 'w': 'cvv', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><div id="cvv" class="card_field"></div></td>
+            </tr>
+            <tr>
+                <td><label for="card-holder-name">{{ trn.tr({ 'w': 'titolare_carta', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off"></td>
+                <td><label for="card-billing-address-street">{{ trn.tr({ 'w': 'indirizzo', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off"></td>
+                <td> <label for="card-billing-address-unit">{{ trn.tr({ 'w': 'numero_civico', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td> <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off"></td>
+            </tr>
+            <tr>
+                <td> <label for="card-billing-address-city">{{ trn.tr({ 'w': 'citta', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td> <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off"></td>
+                <td><label for="card-billing-address-state">{{ trn.tr({ 'w': 'nazione', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td> <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off"></td>
+                <td><label for="card-billing-address-zip">{{ trn.tr({ 'w': 'cap', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td><input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off">
+            </tr>
+
+            <tr>
+                <td> <label for="card-billing-address-country">{{ trn.tr({ 'w': 'prefisso_internazionale', 'l': ietf, 'v': tr.generic }) }}</label></td>
+                <td> <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        </table>
+
+        <button value="submit" id="submit" class="btn" style="width:100%; background-color:#fcbe00; color:#ffffff;margin:10px;">{{ trn.tr({ 'w': 'paga_ora', 'l': ietf, 'v': tr.generic }) }}</button>
+
+    </form>
+</div>
+
+<script src="/_src/_js/_lib/_paypal.js"></script>
+{% endif %}
+
+<!-- PAGAMENTO TRAMITE PAYPAL PAYMENTS STANDARD, NEXI, E SIMILI -->
+{% elseif etc.meta.action and etc.meta.method %}
+
+<!-- form per il pagamento -->
+<form id="carrelloForm" action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
+  {% for field, value in etc.fields %}
+  <input type="hidden" name="{{ field }}" value="{{ value }}" />
+  {% endfor %}
+  <button type="submit">PAGA</button>
+</form>
+
+{% else %}
+<!-- qualcosa manca qui... per funzionare questa pagina ha bisogno di: -->
+<!-- action: {{ etc.meta.action }} -->
+<!-- method: {{ etc.meta.method }} -->
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<!--
+<script>
+  function setProviderCheckAndSubmit( provider ) {
+    var carrelloForm = document.getElementById('carrelloForm');
+    document.getElementById('carrelloProviderPagamento').value = provider;
+    if( carrelloForm.checkValidity() ) {
+        carrelloForm.submit();
+    } else {
+        carrelloForm.reportValidity();
+    } 
+  }
+</script>
+-->
+
+{% if etc.meta.autosubmit %}
+<script>
+    window.addEventListener( 'DOMContentLoaded', function() {
+        document.getElementById('carrelloForm').submit();
+    });	
+</script>
+{% else %}
+<!-- etc.meta.autosubmit non settato -->
+{% endif %}
+
+{% endblock %}

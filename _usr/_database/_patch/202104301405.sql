@@ -1,1 +1,0 @@
-ALTER TABLE `variazioni_attivita` ADD `data_rifiuto` DATE NULL DEFAULT NULL AFTER `data_approvazione`, ADD KEY `data_rifiuto` (`data_rifiuto`), ADD KEY `data_approvazione` (`data_approvazione`) ;

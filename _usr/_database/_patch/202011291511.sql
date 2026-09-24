@@ -1,1 +1,0 @@
-ALTER TABLE `sms_sent` ADD `token` CHAR(254) NULL DEFAULT NULL AFTER `id_telefono`, ADD INDEX (`token`) ;

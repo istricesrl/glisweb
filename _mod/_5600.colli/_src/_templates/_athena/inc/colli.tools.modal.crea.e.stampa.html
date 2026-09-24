@@ -1,0 +1,51 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function duplica( ) {
+
+        $('#btncrea').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_5600.colli/_src/_api/_task/_colli.crea.php?stampa=1&tipo=' + $('#_new').val() + '&qta=' + $('#_qta').val();
+
+		getws( call,'', function(data) {
+			$('#btncrea').html('<i class="fa fa-check"></i>');
+            window.open(data.print, '_blank');
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="crea_colli_stampa_etichette">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">crea nuovi colli e stampa etichette</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">tipologia</span>
+						{{ frm.selectRequired( '', '', '', 'new', '', etc.select.tipologie, request, '', '','' ) }}
+					</div>
+				</div>
+                <div id="periodo" class="form-row">
+                    <div class="col">
+                        <span class="label-top">numero di colli da generare</span>
+                        {{ frm.input( '', '', '', 'qta', '', '', request ) }}
+                    </div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" id="btncrea" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

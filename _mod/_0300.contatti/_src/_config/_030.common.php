@@ -14,14 +14,14 @@
     // comportamento di default
 	$cf['contatti']['default'] = array(
 	    'mail' => array(
-            array(
+            "interna" => array(
                 'destinatari' => array( 'webmaster' => 'info@' . $cf['site']['domain'] ),
                 'language' => 'it-IT',
                 'exclude' => array( '__status__' ),
                 'template' => 'DEFAULT_CONTATTI'
             ),
-            array(
-                'destinatari' => array( '{{ dati.nome }}' => '{{ dati.mail }}' ),
+            "esterna" => array(
+                'destinatari' => array( '{{ dt.nome }}' => '{{ dt.mail }}' ),
                 'exclude' => array( '__status__' ),
                 'template' => 'DEFAULT_RINGRAZIAMENTO_CONTATTI'
             )
@@ -31,6 +31,7 @@
                 'type' =>  DB_MYSQL,
                 'table' => 'contatti'
             )
+/*
         ),
         'privacy' => array(
             'titolo' => array(
@@ -59,6 +60,7 @@
                     'required' => false
                 )
             )
+*/
         )
 	);
 

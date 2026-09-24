@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+GIT_DIR="$(git rev-parse --git-dir)"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+CHANGELOG_FILE="$REPO_ROOT/_etc/_changelog.json"
+PENDING_FILE="$GIT_DIR/changelog_pending.json"
+LOCK_FILE="$GIT_DIR/changelog_amend.lock"
+
+if [ "$BRANCH" != "master" ]; then
+    exit 0
+fi
+
+# evita loop ricorsivi
+if [ -f "$LOCK_FILE" ]; then
+    rm -f "$LOCK_FILE"
+    exit 0
+fi
+
+if [ ! -f "$PENDING_FILE" ]; then
+    exit 0
+fi
+
+mkdir -p "$(dirname "$CHANGELOG_FILE")"
+
+if [ ! -f "$CHANGELOG_FILE" ]; then
+    echo "[]" > "$CHANGELOG_FILE"
+fi
+
+TITOLO="$(jq -r '.titolo' "$PENDING_FILE")"
+TESTO="$(jq -r '.testo' "$PENDING_FILE")"
+TIMESTAMP="$(date -Iseconds)"
+
+REMOTE_URL="$(git config --get remote.origin.url || true)"
+REPO_URL=""
+
+if [ -n "$REMOTE_URL" ]; then
+    case "$REMOTE_URL" in
+        git@github.com:*)
+            REPO_URL="https://github.com/${REMOTE_URL#git@github.com:}"
+            REPO_URL="${REPO_URL%.git}"
+            ;;
+        https://github.com/*|http://github.com/*)
+            REPO_URL="${REMOTE_URL%.git}"
+            ;;
+        *)
+            REPO_URL="$REMOTE_URL"
+            ;;
+    esac
+fi
+
+if [ -z "$REPO_URL" ]; then
+    REPO_URL="https://github.com/"
+fi
+
+TMP_FILE="$(mktemp)"
+
+jq \
+  --arg titolo "$TITOLO" \
+  --arg testo "$TESTO" \
+  --arg timestamp "$TIMESTAMP" \
+  --arg url "$REPO_URL" \
+  '
+  [
+    {
+      "titolo": $titolo,
+      "testo": $testo,
+      "timestamp": $timestamp,
+      "url": $url
+    }
+  ] + .
+  ' "$CHANGELOG_FILE" > "$TMP_FILE"
+
+mv "$TMP_FILE" "$CHANGELOG_FILE"
+
+git add -f "$CHANGELOG_FILE"
+
+touch "$LOCK_FILE"
+git commit --amend --no-edit >/dev/null 2>&1 || true
+rm -f "$LOCK_FILE"
+rm -f "$PENDING_FILE"
+
+exit 0

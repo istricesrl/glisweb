@@ -1,0 +1,127 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SELETTORE LINGUA #}
+            <fieldset>
+                <legend>lingua</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        {{ frm.select({ 'field': { 'name': '__lang__', 'autosubmit': true, 'default': localization.language.id }, 'source': { 'values': tr.languages }, 'request': request, 'form': { 'table': '__view__', 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# DEFINIZIONI SPECIALI #}
+            {% set subtable = form.subtable %}
+
+            {# CICLO SULLE LINGUE #}
+            {% set i = 0 %}
+            {% for l in tr.languages %}
+
+            {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_template', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_lingua', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+
+            {% if request[ form.table ][ subtable ][ i ].id_lingua == session.__view__.__lang__ %}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>mittente</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">mittente</span>
+                        {{ frm.input({ 'field': { 'name': 'mittente_mail', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>destinatari</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari CC</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari_cc_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari BCC</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari_bcc_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="d-flex flex-column h-100">
+                <legend>
+                    contenuto della mail
+                    {% if request[ form.table ][ subtable ][ i ].id %}
+                    <small>(<a href="{{ pages['contenuti.archivio.contenuti.form.wysiwyg'].url[ ietf ] }}?contenuti[id]={{ request[ form.table ][ subtable ][ i ].id }}&__backurl__={{ page.backurl[ ietf ] }}">vai all'editor visuale</a>)</small>
+                    {% endif %}
+                </legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">oggetto</span>
+                        {{ frm.input({ 'field': { 'name': 'cappello', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {{ frm.textarea({ 'field': { 'name': 'testo', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% else %}
+
+            {% for field in ['mittente_mail','destinatari_mail','destinatari_cc_mail','destinatari_bcc_mail','cappello'] %}
+            {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {% endfor %}
+
+            <textarea name="testo" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][testo]">{{ request[ form.table ][ subtable ][ i ].testo }}</textarea>
+
+            {% endif %}
+
+            {% set i = i + 1 %}
+
+            {% endfor %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+	    </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock javascript %}

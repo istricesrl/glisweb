@@ -144,3 +144,12 @@ main > .container > .row {
 @media (min-width: 1200px) {
     
 }
+
+.label-top {
+    font-size: .8em;
+    font-weight: bold;
+}
+
+.form-control-sm {
+    margin-bottom: 1em;
+}

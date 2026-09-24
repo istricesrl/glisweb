@@ -68,7 +68,16 @@
 
     foreach(  $documento['documenti_articoli'] as $riga ){
 
-        $write_string = '"'.$riga['articolo'].'"'.str_replace('.00', '', $riga['quantita']).'*'.str_replace('.', '', $riga['importo']).'H'.$riga['id_reparto'].'R'.(  $riga['matricola'] ? '"'.$riga['label_matricola'].'"@' : '').(  $riga['ore'] ? '"+'.$riga['ore'].'h su '.$riga['id_progetto'].'"@' : '');
+        $write_string = '"'.$riga['articolo'].'"'.
+            str_replace('.00', '', $riga['quantita']).
+            '*'.
+            str_replace('.', '', $riga['importo']).
+            'H'.
+            $riga['id_reparto'].
+            'R'.
+            (  $riga['matricola'] ? '"'.$riga['label_matricola'].'"@' : '').
+            (  $riga['ore'] ? '"+'.$riga['ore'].'h su '.$riga['id_progetto'].'"@' : '');
+
         escpos_write( $h, $write_string);
 
     }

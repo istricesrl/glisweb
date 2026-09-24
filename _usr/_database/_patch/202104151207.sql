@@ -1,1 +1,0 @@
-ALTER TABLE `strategie` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `nome` (`nome`), ADD KEY `id_tipologia` (`id_tipologia`);

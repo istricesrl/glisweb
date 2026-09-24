@@ -1,1 +1,0 @@
-ALTER TABLE `video` ADD `id_lingua` INT NULL DEFAULT NULL AFTER `id_categoria_notizie`, ADD INDEX (`id_lingua`) ;

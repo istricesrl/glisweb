@@ -3,34 +3,70 @@
     /**
      * libreria di funzioni per le operazioni sulle stringhe
      *
+     * Questa libreria contiene funzioni per la manipolazione delle stringhe.
      *
+     * introduzione
+     * ============
+     * 
+     * constanti
+     * =========
+     * La libreria definisce le seguenti costanti 
      *
+     * costante             | spiegazione
+     * ---------------------|--------------------------------------------------------------
+     * CUT_CENTER           | 
+     * CUT_RIGHT            | 
+     * CUT_LEFT             | 
      *
-     * @todo documentare
+     * funzioni
+     * ========
+     * 
+     * dipendenze
+     * ==========
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
-     * @file
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2024-08-13       | Sara Tullini         | documentazione
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
+     * 
+     * TODO documentare
      *
      */
 
     // costanti
-	define( 'CUT_CENTER'			, 'CUT_C' );
-	define( 'CUT_RIGHT'			, 'CUT_R' );
-	define( 'CUT_LEFT'			, 'CUT_L' );
+    define( 'CUT_CENTER'            , 'CUT_C' );
+    define( 'CUT_RIGHT'            , 'CUT_R' );
+    define( 'CUT_LEFT'            , 'CUT_L' );
 
     /**
-     *
-     * @todo documentare
-     *
+     * converte un intero in un numero di byte
+     * 
+     * Questa funzione prende in input un numero e attraverso divisioni successive per 1024 lo trasforma in
+     * una stringa che indica la dimensione con relativa unità di misura.
+     * 
+     * @param   int         $filesize       dimensione in byte
+     * 
+     * @return  string                      dimensione in byte, Kb, Mb, Gb, Tb
+     * 
      */
     function writeByte( $filesize ) {
 
-	$type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
+        $type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
 
-	for( $i = 0 ; $filesize > 1024 ; $i++ ) {
-	    $filesize /= 1024;
-	}
+        for( $i = 0 ; $filesize > 1024 ; $i++ ) {
+            $filesize /= 1024;
+        }
 
-	return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
+        return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
 
     }
 
@@ -38,127 +74,170 @@
      * questa funzione riduce i caratteri ripetuti in una stringa
      * tramite l'impiego di una espressione regolare
      *
-     * @param string $t         la stringa da modificare
-     * @param string $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
-     * @return string           la stringa modificata
-     *
-     * @author                  Fabio Mosti <fabio@videoarts.eu>
-     * @version                 2012-05-10 14:39        funzione creata
-     * @version                 2012-05-12 11:09        test unit e debug
-     *
+     * @param   string      $t         la stringa da modificare
+     * @param   string      $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
+     * 
+     * @return  string                 la stringa modificata
+     * 
      */
-    function riduciCaratteriDoppi( $t , $c = " " ) {
+    function riduciCaratteriDoppi( $t, $c = " " ) {
 
-	// compongo l'espressione regolare
-	    switch( $c ) {
+        // compongo l'espressione regolare
+        switch( $c ) {
 
-		case " ":
+            case " ":
 
-		    $expr = '/\s+/';
-		    $sost = ' ';
+                $expr = '/\s+/';
+                $sost = ' ';
 
-		break;
+            break;
 
-		case "\\":
-		case "^":
-		case "{":
-		case "}":
-		case "[":
-		case "]":
-		case "(":
-		case ")":
-		case "?":
-		case "*":
-		case "$":
-		case "+":
-		case ".":
+            case "\\":
+            case "^":
+            case "{":
+            case "}":
+            case "[":
+            case "]":
+            case "(":
+            case ")":
+            case "?":
+            case "*":
+            case "$":
+            case "+":
+            case ".":
 
-		    $expr = "/[\\$c]+/";
-		    $sost = $c;
+                $expr = "/[\\$c]+/";
+                $sost = $c;
 
-		break;
+            break;
 
-		default:
+            default:
 
-		    $expr = "/[$c]+/";
-		    $sost = $c;
+                $expr = "/[$c]+/";
+                $sost = $c;
 
-		break;
+            break;
 
-	    }
+        }
  
-	// eseguo l'espressione regolare
-	    $t = preg_replace( $expr , $sost , $t );
+        // eseguo l'espressione regolare
+        $t = preg_replace( $expr, $sost, $t );
 
-	// restituzione risultato
-	    return $t;
+        // restituzione risultato
+        return $t;
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO la sostituzione della virgola così è un po' grezza, migliorare (può esserci anche il punto per le migliaia, eccetera)
+     * TODO documentare
      *
      */
     function numeric2null( $s ) {
+        if( is_numeric( $s ) && strpos( $s, ',' ) !== false ) {
+            $s = str_replace( ',', '.', $s );
+        }
         return empty2null( $s, true );
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
+     *
+     */
+    function string2num( $s, $force = false ) {
+        if( ! empty( $s ) && ! is_array( $s ) && ! is_object( $s ) ) {
+            if( is_numeric( str_replace( array( ',', '.' ), '', $s ) ) ) {
+                if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
+                    // es. 1000,50 -> 1000.50
+                    $s = str_replace( ',', '.', $s );
+                } elseif( strpos( $s, ',' ) !== false && strpos( $s, '.' ) !== false ) {
+                    if( strpos( $s, ',' ) < strpos( $s, '.' ) ) {
+                        // es. 1,000.50 -> 1000.50
+                        $s = str_replace( ',', '', $s );
+                    } else {
+                        // es. 1.000,50 -> 1000.50
+                        $s = str_replace( ',', '.', str_replace( '.', '', $s ) );
+                    }
+                }
+            }
+        } elseif( $force === true ) {
+            $s = 0;
+        }
+        return $s;
+    }
+
+    /**
+     * 
+     * TODO documentare
      *
      */
     function empty2null( $s, $numeric = false ) {
 
-	if( $numeric === true && is_numeric( $s ) ) {
-	    return $s;
-	} elseif( empty( $s ) ) {
-	    return NULL;
-	} else {
-	    return $s;
-	}
+    if( $numeric === true && is_numeric( $s ) ) {
+        return $s;
+    } elseif( empty( $s ) ) {
+        return NULL;
+    } else {
+        return $s;
+    }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function string2boolean( $s ) {
 
-	switch( strtolower( $s ) ) {
-	    case 'true':
-	    case 1:
-		return true;
-	    default:
-		return false;
-	}
+        if( empty( $s ) ) {
+            return false;
+        } else {
+            switch( strtolower( $s ) ) {
+                case 'true':
+                case 1:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
+     *
+     */
+    function boolean2string( $s ) {
+
+        return ( $s === true ) ? 'true' : 'false';
+
+    }
+        
+    /**
+     *
+     * TODO documentare
      *
      */
     function riduciStringa( $s, $l, $c = '~', $t = CUT_CENTER ) {
 
-	$lm = $l - strlen( $c );
-	$lx = floor( $lm / 2 );
+        $lm = $l - strlen( $c );
+        $lx = floor( $lm / 2 );
 
-	switch( $t ) {
-	    case CUT_CENTER:
-		return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
-	    break;
-	}
+        switch( $t ) {
+            case CUT_CENTER:
+                return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
+                break;
+        }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function int2month( $m, $l = 'it-IT' ) {
@@ -209,7 +288,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function int2day( $d, $l = 'it-IT' ) {
@@ -248,68 +327,138 @@
      *
      *
      *
-     * @todo commentare
+     * TODO documentare
      *
      */
     function logLvl2string( $l ) {
 
-	switch( $l ) {
-	    case 0:
-		return 'LOG_EMERG';
-	    break;
-	    case 1:
-		return 'LOG_ALERT';
-	    break;
-	    case 2:
-		return 'LOG_CRIT';
-	    break;
-	    case 3:
-		return 'LOG_ERR';
-	    break;
-	    case 4:
-		return 'LOG_WARNING';
-	    break;
-	    case 5:
-		return 'LOG_NOTICE';
-	    break;
-	    case 6:
-		return 'LOG_INFO';
-	    break;
-	    case 7:
-		return 'LOG_DEBUG';
-	    break;
-	    default:
-		return NULL;
-	    break;
-	}
+        switch( $l ) {
+            case 0:
+                return 'LOG_EMERG';
+            break;
+            case 1:
+                return 'LOG_ALERT';
+            break;
+            case 2:
+                return 'LOG_CRIT';
+            break;
+            case 3:
+                return 'LOG_ERR';
+            break;
+            case 4:
+                return 'LOG_WARNING';
+            break;
+            case 5:
+                return 'LOG_NOTICE';
+            break;
+            case 6:
+                return 'LOG_INFO';
+            break;
+            case 7:
+                return 'LOG_DEBUG';
+            break;
+            default:
+                return NULL;
+            break;
+        }
 
     }
 
     /**
+     * converte in stringa il livello di report
      *
-     * @todo documentare
+     *
+     * E_ERROR               |   1      | errore fatale, l'esecuzione viene terminata
+     * E_WARNING             |   2      | errore non fatale, l'esecuzione prosegue ma può dare risultati imprevisti
+     * E_PARSE               |   4      | errore di parsing durante la compilazione; questo livello è riservato al parser
+     * E_NOTICE              |   8      | evento notevole, ma non necessariamente un errore
+     * E_CORE_ERROR          |   16     | errore fatale PHP; riservato al core PHP
+     * E_CORE_WARNING        |   32     | errore non fatale PHP; riservato al core PHP
+     * E_COMPILE_ERROR       |   64     | errore fatale di compilazione; riservato allo Zend Scripting Engine
+     * E_COMPILE_WARNING     |   128    | errore non fatale di compilazione; riservato allo Zend Scripting Engine
+     * E_USER_ERROR          |   256    | errore generato tramite la funzione trigger_error()
+     * E_USER_WARNING        |   512    | avviso generato tramite la funzione trigger_error()
+     * E_USER_NOTICE         |   1024   | evento notevole segnalato tramite la funzione trigger_error()
+     * E_STRICT              |   2048   | violazione formale
+     * E_RECOVERABLE_ERROR   |   4096   | errore fatale ma gestibile, non pregiudica il funzionamento del core PHP
+     * E_DEPRECATED          |   8192   | errore di obsolescenza
+     * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
+     * E_ALL                 |   32767  | tutti i messaggi di errore
+     *
+     * TODO documentare
+     *
+     */
+    function reportLvl2string( $l ) {
+
+        switch( $l ) {
+            case 1:
+                return 'E_ERROR';
+            break;
+            case 2:
+                return 'E_WARNING';
+            break;
+            case 4:
+                return 'E_PARSE';
+            break;
+            case 8:
+                return 'E_NOTICE';
+            break;
+            case 16:
+                return 'E_CORE_ERROR';
+            break;
+            case 32:
+                return 'E_CORE_WARNING';
+            break;
+            case 64:
+                return 'E_COMPILE_ERROR';
+            break;
+            case 128:
+                return 'E_COMPILE_WARNING';
+            break;
+            case 256:
+                return 'E_USER_ERROR';
+            break;
+            case 512:
+                return 'E_USER_WARNING';
+            break;
+            case 1024:
+                return 'E_USER_NOTICE';
+            break;
+            case 2048:
+                return 'E_STRICT';
+            break;
+            default:
+                return NULL;
+            break;
+        }
+    
+    }
+    
+        /**
+     *
+     * TODO documentare
      *
      */
     function ts2string( $d ) {
 
-	return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
+        return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function date2string( $d ) {
 
-	return ts2string( strtotime( $d ) );
+        return ts2string( strtotime( $d ) );
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     if( ! function_exists( 'str_starts_with' ) ) {
@@ -318,9 +467,9 @@
 
             if( strpos( $haystack, $needle ) === 0) {
                 return true;
-             } else {
-                 return false;
-             }
+            } else {
+                return false;
+            }
 
         }
 
@@ -328,7 +477,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function str_starts_with_array( $haystack, $needles ) {
@@ -345,7 +494,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function m2km( $m ) {
@@ -353,3 +502,312 @@
         return $m / 1000;
 
     }
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function km2m( $km ) {
+
+        return $km * 1000;
+
+    }
+
+    /**
+     *
+     * TODO documentare
+     * TODO questa funzione va aggiunta a readFromFile() per evitare che dia fuori il testo con il BOM
+     *
+     */
+    function removeBom( $t ) {
+        $bom = pack('H*','EFBBBF');
+        $t = preg_replace("/^$bom/", '', $t);
+        return $t;
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function domainFromURL( $url ) {
+
+        $array = parse_url( $url );
+        return $array['host'];
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function inRegexpArray( $t, $a ) {
+
+        $match = false;
+      
+        foreach( $a as $r ) {
+            if( ! preg_match( '/^\/.*\/[a-z]*$/', $r ) ) {
+                $r = '/' . $r . '/';
+            }
+            if( preg_match( $r, $t ) ) {
+                $match = true;
+            }
+        }
+
+        return $match;
+
+    }
+
+    function clean_string($string) {
+
+        /**
+         * OGNI CONTROLLO SI CONFRONTA CON IL PASSO PRECEDENTE, NON CON L'ORIGINALE
+         * ( fix 2026-09-12 ).
+         *
+         * Fino a qui tutti e tre i controlli confrontavano $s con $string, cioe' con la stringa
+         * di partenza NON ripulita dal trim(). Effetto: bastava uno spazio in testa o in coda -
+         * il caso piu' comune che esista in un CSV - perche' tutte e tre le condizioni restassero
+         * vere fino in fondo, e la funzione scrivesse TRE righe di log, a LOG_ERR, per una
+         * stringa a cui non era stato fatto niente di anomalo.
+         *
+         * Il 12/09/2026 questo ha prodotto 1,37 GB in var/log/details/csv/cleanstring.err.202609.log
+         * durante una sola importazione: il dataset veniva riparsato a ogni iterazione e ogni
+         * campo con uno spazio di troppo passava di qui. Essendo a LOG_ERR, abbassare il livello
+         * di log del deploy non lo spegne: la correzione doveva stare qui.
+         *
+         * Adesso ogni passo dichiara soltanto cio' che ha cambiato davvero. Il trim non e' un
+         * errore e non si logga; la normalizzazione degli spazi doppi e' normalizzazione e non
+         * un'anomalia di codifica, quindi scende a LOG_INFO.
+         */
+        $s = trim( $string );
+
+        $p = $s;
+        $s = iconv( "UTF-8", "UTF-8//IGNORE", $s );
+
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+
+        $p = $s;
+        $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2[\x80-\x8F]{2}|\xE2\x80[\xA4-\xA8]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
+
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+
+        /*
+        $s = preg_replace( '/[\x00-\x1F\x80-\xFF]/', '', $s );
+
+        if( $s != $string ) {
+            logWrite( $string . ' pulito (rimozione caratteri speciali step 2) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+        */
+
+        $p = $s;
+        $s = preg_replace('/\s+/', ' ', $s );
+
+        if( $s !== $p ) {
+            logWrite( $p . ' pulito (rimozione spazi doppi) a ' . $s, 'details/csv/cleanstring', LOG_INFO );
+        }
+
+        return $s;
+
+    }
+
+    if( ! function_exists( 'mb_detect_encoding' ) ) {
+
+        function mb_detect_encoding( $string ) {
+
+            return ( utf8_encode( utf8_decode( $string ) ) == $string ) ? 'UTF-8' : 'ASCII';
+
+        }
+
+    }
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function isBinaryString( $data ) {        
+        return ! mb_check_encoding( $data, 'UTF-8' );
+    }
+
+    /**
+     * questa funzione rimuove da una stringa tutti i caratteri diversi da numeri, vigola e punto
+     * 
+     * TODO documentare
+     * 
+     */
+    function extractNumber( $string ) {
+
+        return preg_replace( '/[^0-9\.\,]/', '', $string );
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     */
+    function writeCurrency( $v, $c = '€' ) {
+
+        return $c . ' ' . number_format( $v, 2, ',', '.' );
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function string2url( string $url ): ?string {
+
+        // Trim iniziale
+        $url = trim($url);
+
+        if ($url === '') {
+            return null;
+        }
+
+        // Se è già una URL valida, la restituisco così com'è
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        // Provo a parsare la URL
+        $parts = parse_url($url);
+        if ($parts === false) {
+            return null;
+        }
+
+        // Per avere una URL completa, almeno scheme + host devono esistere
+        if (!isset($parts['scheme'], $parts['host'])) {
+            return null;
+        }
+
+        // Normalizzo il path (encodo ogni segmento)
+        if (isset($parts['path'])) {
+            // evito doppie slash
+            $parts['path'] = preg_replace('#/{2,}#', '/', $parts['path']);
+
+            $segments = explode('/', $parts['path']);
+            $segments = array_map(function($seg) {
+                // lascio vuoto il segmento vuoto (prima dello slash iniziale)
+                return $seg === '' ? '' : rawurlencode($seg);
+            }, $segments);
+
+            $parts['path'] = implode('/', $segments);
+        } else {
+            $parts['path'] = '/';
+        }
+
+        // Normalizzo la query (se esiste) ricostruendola con http_build_query
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $q);
+            $parts['query'] = http_build_query($q);
+        }
+
+        // Ricostruisco la URL
+        $newUrl  = $parts['scheme'] . '://';
+
+        if (isset($parts['user'])) {
+            $newUrl .= $parts['user'];
+            if (isset($parts['pass'])) {
+                $newUrl .= ':' . $parts['pass'];
+            }
+            $newUrl .= '@';
+        }
+
+        $newUrl .= $parts['host'];
+
+        if (isset($parts['port'])) {
+            $newUrl .= ':' . $parts['port'];
+        }
+
+        $newUrl .= $parts['path'];
+
+        if (!empty($parts['query'])) {
+            $newUrl .= '?' . $parts['query'];
+        }
+
+        if (!empty($parts['fragment'])) {
+            $newUrl .= '#' . $parts['fragment'];
+        }
+
+        // Controllo finale di validità
+        if (filter_var($newUrl, FILTER_VALIDATE_URL)) {
+            return $newUrl;
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * TODO documentare
+     *
+     */
+    function convertISO8601Duration($duration) {
+        if(!$duration) return null;
+
+        $interval = new DateInterval($duration);
+
+        $hours = $interval->h;
+        $minutes = $interval->i;
+        $seconds = $interval->s;
+
+        if($hours > 0) {
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        } else {
+            return sprintf('%02d:%02d', $minutes, $seconds);
+        }
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     * 
+     * 
+     * 
+     */
+    function safe_unserialize($value) {
+
+    // Se non è una stringa non può essere serializzata
+    if (!is_string($value)) {
+        return $value;
+    }
+
+    $value = trim($value);
+
+    // Caso speciale: false serializzato
+    if ($value === 'b:0;') {
+        return false;
+    }
+
+    // Lunghezza minima plausibile
+    if (strlen($value) < 4) {
+        return $value;
+    }
+
+    // Deve iniziare con un tipo valido di serialize
+    if (!preg_match('/^[aOsbid]:/', $value)) {
+        return $value;
+    }
+
+    // Tentativo di unserialize sicuro (no oggetti)
+    $result = @unserialize($value, ['allowed_classes' => false]);
+
+    // Se fallisce, restituisco il valore originale
+    if ($result === false && $value !== 'b:0;') {
+        return $value;
+    }
+
+    return $result;
+}

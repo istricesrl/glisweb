@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `timestamp_feedback` INT NULL DEFAULT NULL AFTER `id_tipologia_soddisfazione`;

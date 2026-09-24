@@ -1,1 +1,0 @@
-ALTER TABLE `__report_ore_operatori_per_progetto__` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

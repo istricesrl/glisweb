@@ -1,5 +1,18 @@
 <?php
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO non dovrebbe essere _cron.tools.php?
+     * 
+     * 
+     */
+
+
     /* funzione che ritrona il numero della settimana del mese di una data  */ 
     function numOfDayInWeek($todt, $wd){
         $monthName = date("F", mktime(0, 0, 0, date('m', strtotime($todt))));
@@ -9,6 +22,34 @@
             if(date('l',strtotime($fromdt) + ($i * 86400)) == $wd){ $num++;}    
         }
         return $num;
+    }
+
+    function numOfWeeksInYear( $y ) {
+
+        $week_count = date('W', strtotime($y . '-12-31'));
+
+        if ($week_count == '01')
+        {   
+            $week_count = date('W', strtotime($y . '-12-24'));
+        }
+        
+        // echo ($week_count - date('W'));
+        // echo ' weeks left in ' . date('Y') . '!';
+
+        return $week_count;
+
+    }
+
+    function numOfWorkingDaysInMonth($year, $month, $ignore = array( 0, 6 ) ) {
+        $count = 0;
+        $counter = mktime(0, 0, 0, $month, 1, $year);
+        while (date("n", $counter) == $month) {
+            if (in_array(date("w", $counter), $ignore) == false) {
+                $count++;
+            }
+            $counter = strtotime("+1 day", $counter);
+        }
+        return $count;
     }
 
     /**
@@ -54,12 +95,14 @@
             // l'attività non si ripete
             case 0:
                 $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES ( ?, ?, ?, ?, ?, ? )',
+                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
-                            array( 's' => strtotime($data.' '.$ora)), 
-                            array( 's' => $ore), 
+                            array( 's' => $id_progetto), 
+                            array( 's' => $ora), 
+                            array( 's' => $ora + $ore), 
+                            array( 's' => $data ),
                             array( 's' => $descrizione) )
                 );
 
@@ -71,14 +114,16 @@
                 if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' days')); }
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
-                            array( 's' => strtotime($data.' '.$ora)), 
-                            array( 's' => $ore), 
+                            array( 's' => $id_progetto), 
+                            array( 's' => $ora), 
+                            array( 's' => $ora + $ore), 
+                            array( 's' => $data ),
                             array( 's' => $descrizione) )
-                    );
+                        );
                     // aggiorno la data con la successiva
                     $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' days'));
 
@@ -101,14 +146,16 @@
                     do {
                     if($d >= $data){
                         $attivita = mysqlQuery( $c,
-                        'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                        'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                         array(  array( 's' => $id_anagrafica), 
                                 array( 's' => $id_cliente), 
                                 array( 's' => $id_luogo), 
-                                array( 's' => strtotime($d.' '.$ora)), 
-                                array( 's' => $ore), 
+                                array( 's' => $id_progetto), 
+                                array( 's' => $ora), 
+                                array( 's' => $ora + $ore), 
+                                array( 's' => $d ),
                                 array( 's' => $descrizione) )
-                        );
+                    );
                     }
                     // aggiorno la data con la successiva
                     $d = date('Y-m-d', strtotime($d. ' + '.$cadenza.' weeks'));
@@ -135,12 +182,14 @@
                         $data_temp = date("Y-m-d", strtotime("last ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp)));   
                     }
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
-                            array( 's' => strtotime($data.' '.$ora)), 
-                            array( 's' => $ore), 
+                            array( 's' => $id_progetto), 
+                            array( 's' => $ora), 
+                            array( 's' => $ora + $ore), 
+                            array( 's' => $data ),
                             array( 's' => $descrizione) )
                     );
                     $data = $data_temp;
@@ -149,12 +198,14 @@
             } else {
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
-                            array( 's' => strtotime($data.' '.$ora)), 
-                            array( 's' => $ore), 
+                            array( 's' => $id_progetto), 
+                            array( 's' => $ora), 
+                            array( 's' => $ora + $ore), 
+                            array( 's' => $data ),
                             array( 's' => $descrizione) )
                     );
                     // aggiorno la data con la successiva
@@ -170,12 +221,14 @@
                 if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
-                            array( 's' => strtotime($data.' '.$ora)), 
-                            array( 's' => $ore), 
+                            array( 's' => $id_progetto), 
+                            array( 's' => $ora), 
+                            array( 's' => $ora + $ore), 
+                            array( 's' => $data ),
                             array( 's' => $descrizione) )
                     );
                     // aggiorno la data con la successiva
@@ -193,7 +246,10 @@
     }
 
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
-    function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    function creazionePianificazione( $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1, $solo_future=false ){ 
+
+        logWrite( 'richiesta generazione '.$data, 'todo' );
 
         // TODO controlli
                // la data inizio è successiva alla data fine
@@ -202,7 +258,10 @@
         $days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday' ];
         $months = ['January','February','March','April','May','June','July','August','September','October','November','December' ];
         //$attivita[] = array();
-            // in base al tipo di periodicità della pianificazione vengono generate le attività
+
+        if( empty( $cadenza ) ) { $cadenza = 1; }
+
+        // in base al tipo di periodicità della pianificazione vengono generate le attività
         switch($id_periodicita){
     
             // l'attività non si ripete
@@ -226,11 +285,13 @@
     
                 // attività con ripetizione settimanale
                 case 2:
+                    logWrite( 'richiesta generazione settimanale data '.$data, 'todo' );
                     // lunedì della settimana di inizio
                     $d_inizio = date('Y-m-d',strtotime('monday this week ', strtotime($data) ));
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($d_inizio. ' + '.($cadenza * $numero_ripetizioni ).' weeks -1 day')); }
                     $giorni = explode(",",$giorni_settimana);
                     foreach($giorni as $g){
+                        logWrite( 'lavoro giorno '.$g.' '.$days[$g], 'todo', LOG_ERR );
                         if( date('N', strtotime($data)) - 1 == $g ){
                             $d = $data;
                         } else {
@@ -278,10 +339,26 @@
                     } while ( $data < $data_fine );
                 }   
                 break;
+
+                // attività con ripetizione bimestrale
+                case 4:
+                break;
+
+                // attività con ripetizione trimestrale
+                case 5:
+                break;
+    
+                // attività con ripetizione quadrimestrale
+                case 6:
+                break;
+    
+                // attività con ripetizione semestrale
+                case 7:
+                break;
     
                 // attività con ripetizione annuale
                 // TODO gestione seconda tipologia di duplicazione data
-                case 4:
+                case 8:
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
                     if( $ripetizione_anno == 1 ){
                       do {
@@ -299,6 +376,79 @@
     
             }
     
+            // debug
+            // print_r( $attivita );
+    
+            if( $solo_future == true ) {
+                array_shift( $attivita );
+            };
+
             return $attivita;
+    
+        }
+
+        function createDateRangeArray($strDateFrom,$strDateTo)
+        {
+            // prende in input due date nel formato YYYY-MM-DD e crea un array con le date 
+        
+            $aryRange = [];
+        
+            $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
+            $iDateTo = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
+
+            if ($iDateTo >= $iDateFrom) {
+                array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
+                // echo $iDateFrom.' '.$iDateTo.'<br>';
+                while ($iDateFrom<$iDateTo) {
+                    $iDateFrom += 86400; // add 24 hours
+                    array_push($aryRange, date('Y-m-d', $iDateFrom));
+                }
+            }
+
+            return $aryRange;
+            
+        }
+
+        function daysBetweenDates( $a, $b ) {
+
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y') * 12;
+            $months = $interval->format('%r%m');
+    
+            return $interval->format( '%r%a' );
+    
+        }
+    
+        function monthsBetweenDates( $a, $b = NULL ) {
+
+            if( empty( $a ) ) return 0;
+            if( empty( $b ) ) $b = date( 'Y-m-d' );
+    
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y') * 12;
+            $months = $interval->format('%r%m');
+    
+            return $years + $months;
+    
+        }
+
+        function yearsBetweenDates( $a, $b = NULL ) {
+
+            if( empty( $a ) ) return 0;
+            if( empty( $b ) ) $b = date( 'Y-m-d' );
+    
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y');
+    
+            return $years;
     
         }

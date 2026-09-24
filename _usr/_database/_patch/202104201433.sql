@@ -1,1 +1,0 @@
-ALTER TABLE `documenti_articoli` ADD `specifiche` CHAR(255) NULL AFTER `nome`;

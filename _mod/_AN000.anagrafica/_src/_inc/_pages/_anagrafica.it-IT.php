@@ -1,0 +1,687 @@
+<?php
+
+    /**
+     * definizione delle pagine per la gestione dell'anagrafica
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
+     * TODO finire di mettere tutte le schede dell'anagrafica
+     * 
+     */
+
+    // lingua di questo file
+    $l = 'it-IT';
+
+    // modulo di questo file
+    $m = DIR_MOD . '_AN000.anagrafica/';
+
+    // vista anagrafica
+    $p['anagrafica.view']    = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica' ),
+        'h1'                => array( $l        => 'anagrafica' ),
+        'parent'            => array( 'id'        => NULL ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.view',
+                                                            'categorie.anagrafica.view',
+                                                            'ranking.view',
+                                                            'anagrafica.view.archiviate',
+                                                            // 'anagrafica.stats',
+                                                            'anagrafica.stampe',
+                                                            'anagrafica.tools' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'anagrafica' ),
+                                                                            'priority'    => '050' ) ) )
+    );
+
+    // anagrafica archiviate
+    $p['anagrafica.view.archiviate'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'anagrafiche archiviate' ),
+        'h1'                => array( $l        => 'archiviate' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.view.archiviate.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // anagrafica stampe
+    $p['anagrafica.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'anagrafica stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // tools anagrafica
+    $p['anagrafica.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // gestione anagrafica
+    $p['anagrafica.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.form',
+                                                            // 'anagrafica.form.informazioni',
+                                                            // 'anagrafica.form.amministrazione',
+                                                            'anagrafica.form.cliente',
+                                                            'anagrafica.form.fornitore',
+                                                            'anagrafica.form.collaboratore',
+                                                            'anagrafica.form.produttore',
+                                                            // 'anagrafica.form.attivita',
+                                                            // 'anagrafica.form.immagini',
+                                                            // 'anagrafica.form.video',
+                                                            // 'anagrafica.form.audio',
+                                                            // 'anagrafica.form.file',
+                                                            // 'anagrafica.form.metadati',
+                                                            'anagrafica.form.relazioni',
+                                                            'anagrafica.form.privacy',
+                                                            'anagrafica.form.archiviazione',
+                                                            // 'anagrafica.form.stats',
+                                                            'anagrafica.form.stampe',
+                                                            'anagrafica.form.tools' ) )
+    );
+
+    // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.immagini' );
+    }
+
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.metadati' );
+    }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.file' );
+    }
+      
+    // anagrafica form cliente
+    $p['anagrafica.form.cliente'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form cliente' ),
+        'h1'                => array( $l        => 'cliente' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.cliente.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica form fornitore
+    $p['anagrafica.form.fornitore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form fornitore' ),
+        'h1'                => array( $l        => 'fornitore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.fornitore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.fornitore.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica form collaboratore
+    $p['anagrafica.form.collaboratore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form collaboratore' ),
+        'h1'                => array( $l        => 'collaboratore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.collaboratore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.collaboratore.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica form produttore
+    $p['anagrafica.form.produttore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form produttore' ),
+        'h1'                => array( $l        => 'produttore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.produttore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.produttore.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['anagrafica.form.relazioni'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-diagram-project" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione fatture attive form relazioni' ),
+        'h1'                => array( $l        => 'relazioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.relazioni.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.relazioni.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['anagrafica.form.privacy'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-user-shield" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione fatture attive form privacy' ),
+        'h1'                => array( $l        => 'privacy' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.privacy.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.privacy.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // gestione anagrafica form archiviazione
+    $p['anagrafica.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione form anagrafica' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica form stampe
+    $p['anagrafica.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'anagrafica form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni form anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // anagrafica archivio
+    $p['anagrafica.archivio'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio anagrafica' ),
+        'h1'                => array( $l        => 'archivio' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.php' ),
+        'auth'                => array( 'groups'    => array(    'roots' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio',
+                                                            'anagrafica.archivio.telefoni.view',
+                                                            'anagrafica.archivio.mail.view',
+                                                            'anagrafica.archivio.url.view',
+                                                            'anagrafica.archivio.iban.view',
+                                                            'anagrafica.archivio.anagrafica.indirizzi.view',
+                                                            'anagrafica.archivio.tipologie.anagrafica.view',
+                                                            'anagrafica.archivio.ruoli.anagrafica.view',
+                                                            'anagrafica.archivio.tools' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'archivio' ),
+                                                                            'priority'    => '900' ) ) )
+    );
+
+    // anagrafica archivio telefoni
+    $p['anagrafica.archivio.telefoni.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio telefoni' ),
+        'h1'                => array( $l        => 'telefoni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio telefoni form
+    $p['anagrafica.archivio.telefoni.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio telefoni' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.telefoni.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.telefoni.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.telefoni.form',
+                                                            'anagrafica.archivio.telefoni.form.tools' ) ),
+    );
+
+    //  anagrafica archivio telefoni tools
+    $p['anagrafica.archivio.telefoni.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica telefoni' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.telefoni.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.telefoni.form' )
+    );
+
+    // anagrafica archivio email
+    $p['anagrafica.archivio.mail.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio e-mail' ),
+        'h1'                => array( $l        => 'e-mail' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio mail form
+    $p['anagrafica.archivio.mail.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-mail' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.mail.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.mail.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.mail.form',
+                                                            'anagrafica.archivio.mail.form.tools' ) ),
+    );
+
+    // anagrafica archivio mail form tools
+    $p['anagrafica.archivio.mail.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-mail' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.mail.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.mail.form' )
+    );
+
+    // anagrafica archivio indirizzi
+    $p['anagrafica.archivio.anagrafica.indirizzi.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio anagrafica indirizzi' ),
+        'h1'                => array( $l        => 'indirizzi' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio anagrafica.indirizzi
+    $p['anagrafica.archivio.anagrafica.indirizzi.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-anagrafica.indirizzi' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.anagrafica.indirizzi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.anagrafica.indirizzi.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.anagrafica.indirizzi.form',
+                                                            'anagrafica.archivio.anagrafica.indirizzi.form.tools' ) ),
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.archivio.anagrafica.indirizzi.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-anagrafica.indirizzi' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.anagrafica.indirizzi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.anagrafica.indirizzi.form' )
+    );
+
+    // anagrafica archivio url
+    $p['anagrafica.archivio.url.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio url' ),
+        'h1'                => array( $l        => 'url' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio url
+    $p['anagrafica.archivio.url.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-url' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.url.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.url.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.url.form',
+                                                            'anagrafica.archivio.url.form.tools' ) ),
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.archivio.url.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-url' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.url.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.url.form' )
+    );
+
+    // anagrafica archivio iban
+    $p['anagrafica.archivio.iban.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio iban' ),
+        'h1'                => array( $l        => 'iban' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio iban
+    $p['anagrafica.archivio.iban.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-iban' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.iban.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.iban.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.iban.form',
+                                                            'anagrafica.archivio.iban.form.tools' ) ),
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.archivio.iban.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-iban' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.iban.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.iban.form' )
+    );
+
+    // anagrafica archivio tipologie
+    $p['anagrafica.archivio.tipologie.anagrafica.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio tipologie anagrafica' ),
+        'h1'                => array( $l        => 'tipologie anagrafica' ),
+        'tab'                => array( $l        => 'tipologie' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio tipologie.anagrafica
+    $p['anagrafica.archivio.tipologie.anagrafica.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-tipologie.anagrafica' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.tipologie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.tipologie.anagrafica.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.tipologie.anagrafica.form',
+                                                            'anagrafica.archivio.tipologie.anagrafica.form.anagrafiche',
+                                                            'anagrafica.archivio.tipologie.anagrafica.form.tools' ) ),
+    );
+
+    //  anagrafica archivio tipologie.anagrafica form anagrafiche
+    $p['anagrafica.archivio.tipologie.anagrafica.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio e-tipologie.anagrafica form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.tipologie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.tipologie.anagrafica.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.tipologie.anagrafica.form' )
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.archivio.tipologie.anagrafica.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-tipologie.anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.tipologie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.tipologie.anagrafica.form' )
+    );
+
+    // anagrafica archivio ruoli.anagrafica
+    $p['anagrafica.archivio.ruoli.anagrafica.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio ruoli anagrafica' ),
+        'h1'                => array( $l        => 'ruoli anagrafica' ),
+        'tab'                => array( $l        => 'ruoli' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio ruoli.anagrafica
+    $p['anagrafica.archivio.ruoli.anagrafica.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio ruoli.anagrafica' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.ruoli.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.ruoli.anagrafica.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.ruoli.anagrafica.form',
+                                                            'anagrafica.archivio.ruoli.anagrafica.form.tools' ) ),
+    );
+
+    // anagrafica archivio ruoli.anagrafica form tools
+    $p['anagrafica.archivio.ruoli.anagrafica.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica ruoli.anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.ruoli.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.ruoli.anagrafica.form' )
+    );
+
+    // tools anagrafica
+    $p['anagrafica.archivio.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // vista categorie anagrafica
+    $p['categorie.anagrafica.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'categorie anagrafica' ),
+        'h1'                => array( $l        => 'categorie' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // gestione categorie anagrafica
+    $p['categorie.anagrafica.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'categorie anagrafica gestione' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'categorie.anagrafica.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'categorie.anagrafica.form',
+                                                            'categorie.anagrafica.form.anagrafiche',
+                                                            'categorie.anagrafica.form.stampe',
+                                                            'categorie.anagrafica.form.tools' ) )
+    );
+
+    // categorie anagrafica form anagrafiche
+    $p['categorie.anagrafica.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'categorie anagrafica form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'categorie.anagrafica.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'categorie.anagrafica.form' )
+    );
+
+    // categorie anagrafica form stampe
+    $p['categorie.anagrafica.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'categorie anagrafica form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'categorie.anagrafica.form' )
+    );
+
+    // tools account
+    $p['categorie.anagrafica.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni categoria anagrafica' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'categorie.anagrafica.form' )
+    );
+
+    // vista categorie anagrafica
+    $p['ranking.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'ranking' ),
+        'h1'                => array( $l        => 'ranking' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.view' )
+    );
+
+    // gestione categorie anagrafica
+    $p['ranking.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'ranking gestione' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'ranking.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'ranking.form',
+                                                            'ranking.form.anagrafiche',
+                                                            'ranking.form.stampe',
+                                                            'ranking.form.tools' ) )
+    );
+
+    // ranking form anagrafiche
+    $p['ranking.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'ranking form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'ranking.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
+    );
+
+    // ranking form stampe
+    $p['ranking.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'ranking form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
+    );
+
+    // tools account
+    $p['ranking.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni ranking' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'ranking.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'ranking.form' )
+    );

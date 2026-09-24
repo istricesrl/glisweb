@@ -16,6 +16,9 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_SISTEMA' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -23,7 +26,9 @@
 	$status['info'][] = 'inizio operazioni di scalatura';
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+	if( ! isset( $status['token'] ) ) {
+	    $status['token'] = getToken( __FILE__ );
+	}
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -31,7 +36,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE immagini SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE immagini SET token = ? WHERE id = ?',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -43,16 +48,16 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE immagini '.
-#            'INNER JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo '.
-            'SET immagini.token = ? WHERE ( '.
-            'immagini.timestamp_scalamento IS NULL '.
-            'OR immagini.timestamp_scalamento < immagini.timestamp_aggiornamento '.
-            'OR immagini.timestamp_aggiornamento IS NULL ) '.
-            'AND token IS NULL '.
-#           'ORDER BY immagini.timestamp_scalamento ASC, ruoli_immagini.ordine_scalamento ASC, immagini.ordine ASC '.
-            'ORDER BY immagini.timestamp_scalamento ASC, immagini.ordine ASC '.
-            'LIMIT 1',
+            'UPDATE immagini 
+            -- INNER JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo 
+            SET immagini.token = ? WHERE ( 
+            immagini.timestamp_scalamento IS NULL 
+            OR immagini.timestamp_scalamento < immagini.timestamp_aggiornamento 
+            OR immagini.timestamp_aggiornamento IS NULL ) 
+            AND token IS NULL 
+            -- ORDER BY immagini.timestamp_scalamento ASC, ruoli_immagini.ordine_scalamento ASC, immagini.ordine ASC 
+            ORDER BY immagini.timestamp_scalamento ASC, immagini.ordine ASC 
+            LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -63,13 +68,13 @@
     // prelevo un'immagine dalla coda
     $im = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT immagini.* '.
-        'FROM immagini '.
-        'WHERE token = ? ',
+        'SELECT immagini.* 
+        FROM immagini 
+        WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
 
-    // se c'è almeno una geocode da inviare
+    // se c'è almeno un'immagine da scalare'
     if( ! empty( $im ) ) {
 
         // imposto i path
@@ -92,9 +97,11 @@
 		    // determino le dimensioni dell'immagine
 			$dm = imageSize( $im1 );
 
-		    // adatto lo scalamento all'orientamento dell'immagine
+		    // prelevo l'orientamento dell'immagine
 			$j = $dm['o'];
-			$k = ( $j == 'l' ) ? 'p' : 'l';
+
+            // ...
+            $k = ( $j == 'l' ) ? 'l' : ( ( ( $j == 'p' ) ) ? 'p' : 's' );
 
 		    // array dei formati
 			$ks = array_flip( $cf['image']['formats'][ $j ] );
@@ -107,12 +114,14 @@
 
 			    $dst = DIR_VAR_IMMAGINI . $d1 . $j . '/' . basename( $im1 );
 			    imageResize( $im1, $d1, $dst );
-			    $webp = imageConvert( $dst, 'webp' );
+
+                $webp = imageConvert( $dst, 'webp' );
 			    copyFile( $webp, DIR_VAR_IMMAGINI . basename( $webp ) );
 
             }
 
 		    // scalo e taglio l'immagine per formati alternativi
+            // TODO non va bene ! empty() usare file_exists o qualcosa del genere perché $im2 contiene il path base se è vuota
 			if( ! empty( $im2 ) ) {
 
 			    foreach( $cf['image']['formats'][ $k ] as $d1 => $d1a ) {
@@ -181,6 +190,9 @@
         );
 
     } else {
+
+        // chiudo il ciclo
+        $iter = $task['iterazioni'];
 
         // status
         $status['info'][] = 'nessuna immagine da scalare';

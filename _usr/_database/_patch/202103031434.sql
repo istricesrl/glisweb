@@ -1,1 +1,0 @@
-ALTER TABLE `todo` CHANGE `settimana_pianificazione` `settimana_programmazione` INT(11) NULL DEFAULT NULL;

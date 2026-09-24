@@ -1,1 +1,0 @@
-DROP VIEW IF EXISTS documenti_anagrafica_view;

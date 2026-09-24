@@ -1,1 +1,0 @@
-TRUNCATE todo_view_static;

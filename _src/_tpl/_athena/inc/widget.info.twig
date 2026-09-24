@@ -1,0 +1,76 @@
+<!-- file {{ _self }} -->
+<div id="info" class="slide-info">
+    <h2>GlisWeb framework</h2>
+    {% if site.license %}<p><strong>{{ site.license }}</strong></p>{% endif %}
+    <p>versione corrente
+        <strong>{{ common.version.current }}</strong>
+        {% if common.version.latest|trim > common.version.current|trim %}<i class="fa fa-exclamation-triangle"></i>{% endif %}</p>
+    <p>utente connesso
+        <strong>{{ session.account.username }}</strong>
+        {% if session.account.gruppi %} ({{ session.account.gruppi|join(', ') }}){% endif %}</p>
+    <p>ultima attività
+        <strong>{{ session.used|date('Y-m-d H:i:s') }}</strong></p>
+    <p>stage corrente
+        <strong>{{ site.status }}</strong></p>
+    <p>breakpoint corrente
+        <strong class="d-inline-block d-sm-none">XS</strong>
+        <strong class="d-none d-sm-inline-block d-md-none">SM</strong>
+        <strong class="d-none d-md-inline-block d-lg-none">MD</strong>
+        <strong class="d-none d-lg-inline-block d-xl-none">LG</strong>
+        <strong class="d-none d-xl-inline-block">XL</strong></p>
+    <p>memoria utilizzata
+        <strong>{{ debug.mem.now.php }}</strong></p>
+    <p>MySQL
+        <strong>{% if mysql.connection %}connesso{% else %}non connesso{% endif %}</strong></p>
+    <p>memcache
+        <strong>{% if memcache.stat %}utilizzati {{ memcache.stat.usage }} ({{ memcache.stat.percent }}){% else %}inattivo{% endif %}</strong></p>
+    <p>leggi la
+        <strong><a href="{# pages.licenza.path[ localization.language.ietf] #}https://github.com/istricesrl/glisweb/blob/master/LICENSE.md" target="_blank">licenza d'uso</a></strong></p>
+    <p>pagina del progetto
+        <strong><a href="https://github.com/istricesrl/glisweb">GitHub</a></strong></p>
+    {# documentazione di QUESTA installazione: ogni voce compare solo se il documento
+       e' stato davvero generato qui, perche' _030.common.php porta l'url a NULL quando
+       il file non esiste. Cosi' non serve configurare niente per spegnere una voce. #}
+    {% if common.docs.custom.html.url or common.docs.custom.dev.url or common.docs.custom.quickstart.url %}
+    <p>documentazione di questa installazione
+        {% if common.docs.custom.quickstart.url %}
+        <strong><a href="{{ common.docs.custom.quickstart.url }}" target="_blank">{{ common.docs.custom.quickstart.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.custom.html.url or common.docs.custom.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.custom.html.url %}
+        <strong><a href="{{ common.docs.custom.html.url }}" target="_blank">{{ common.docs.custom.html.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.custom.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.custom.dev.url %}
+        <strong><a href="{{ common.docs.custom.dev.url }}" target="_blank">{{ common.docs.custom.dev.name[ localization.language.ietf ] }}</a></strong>
+        {% endif %}
+    </p>
+    {% endif %}
+    {% if common.docs.tech.html.url or common.docs.tech.pdf.url %}
+    <p>reference del codice
+        {% if common.docs.tech.html.url %}
+        <strong><a href="{{ common.docs.tech.html.url }}" target="_blank">{{ common.docs.tech.html.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.tech.pdf.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.tech.pdf.url %}
+        <strong><a href="{{ common.docs.tech.pdf.url }}" target="_blank">{{ common.docs.tech.pdf.name[ localization.language.ietf ] }}</a></strong>
+        {% endif %}
+    </p>
+    {% endif %}
+    {# documentazione dello STANDARD: descrive il framework e non questa installazione, e per
+       questo e' pubblica. E' il link che si puo' mostrare a un utente dell'applicazione, che la
+       password del manuale di progetto qui sopra non ce l'ha. #}
+    {% if common.docs.user.quickstart.url or common.docs.user.html.url or common.docs.user.dev.url %}
+    <p>documentazione di GlisWeb
+        {% if common.docs.user.quickstart.url %}
+        <strong><a href="{{ common.docs.user.quickstart.url }}" target="_blank">{{ common.docs.user.quickstart.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.user.html.url or common.docs.user.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.user.html.url %}
+        <strong><a href="{{ common.docs.user.html.url }}" target="_blank">{{ common.docs.user.html.name[ localization.language.ietf ] }}</a></strong>{% if common.docs.user.dev.url %} |{% endif %}
+        {% endif %}
+        {% if common.docs.user.dev.url %}
+        <strong><a href="{{ common.docs.user.dev.url }}" target="_blank">{{ common.docs.user.dev.name[ localization.language.ietf ] }}</a></strong>
+        {% endif %}
+    </p>
+    {% endif %}
+    <p>segnalazione di bug e richieste di funzionalità
+        <strong><a href="{{ common.bugs.report.url }}" target="_blank">{{ common.bugs.report.name[ localization.language.ietf ] }}</a></strong></p> 
+</div>
+<!-- fine file {{ _self }} -->

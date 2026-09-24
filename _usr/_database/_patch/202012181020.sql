@@ -1,1 +1,0 @@
-ALTER TABLE `contratti` ADD FOREIGN KEY (`id_tipologia_qualifica`) REFERENCES `tipologie_qualifiche_inps`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION; 

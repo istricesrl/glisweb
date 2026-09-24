@@ -30,15 +30,15 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view WHERE se_contenuti = 1'
+        'SELECT id, __label__ FROM ruoli_video_view WHERE se_pagine = 1'
     );
     
     // tendina tipologia embed
-	$ct['etc']['select']['tipologie_embed'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['embed'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_video = 1'
+	    'SELECT id, __label__ FROM embed_view  WHERE se_video = 1'
 	);
 
     // macro di default

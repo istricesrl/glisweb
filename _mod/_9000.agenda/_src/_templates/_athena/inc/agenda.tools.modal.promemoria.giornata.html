@@ -1,0 +1,55 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function invia_promemoria() {
+		$('#btnmodal').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var data = $('#__invio_promemoria_giornata___data').val();
+        var anagrafica = $('#__invio_promemoria_giornata___id_anagrafica').val();
+        console.log( 'data: ' + data + ' anagrafica: ' + anagrafica );
+        getws('/task/9000.agenda/riepilogo.attivita.giornata?data='+data+'&anagrafica='+anagrafica);
+	    // $('#invia_promemoria_per_mail').modal('toggle');
+	    location.reload();
+
+        /*
+		$('#btnduplica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.duplicate.php?id={{ request[table].id }}';
+		getws( call,'', function() {
+			$('#btnduplica').html('<i class="fa fa-check"></i>');
+		});
+        */
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="invia_promemoria_per_mail">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title">invio riepilogo attività per giornata</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="form-row">
+                            <div class="col">
+                                <span class="label-top">operatore</span>
+                                {{ frm.selectRequired( '__invio_promemoria_giornata__', '', '', 'id_anagrafica', '', etc.select.anagrafica, '', '', '','' ) }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <span class="label-top">data</span>
+                                {{ frm.dateRequired( '__invio_promemoria_giornata__', '', '', 'data', '', '', '', now|date("Y-m-d") ) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnmodal" onclick="checkAndDo( this.form, invia_promemoria );">invia</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

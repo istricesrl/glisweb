@@ -20,17 +20,17 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
+        'id_prodotto' => '# prodotto',
 	    'prodotto' => 'prodotto',
-        'id_categoria' => 'id_categoria',
-        'id_prodotto' => 'id_prodotto'
+#        'id_categoria' => 'id_categoria',
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+        'id_prodotto' => 'no-wrap',
 	    'prodotto' => 'text-left',
-	    'id_categoria' => 'd-none',
-        'id_prodotto' => 'd-none'
+#	    'id_categoria' => 'd-none',
 	);
 
     // pagina per la gestione degli oggetti esistenti

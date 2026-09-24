@@ -1,1 +1,0 @@
-ALTER TABLE `task` ADD CONSTRAINT `task_ibfk_8_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

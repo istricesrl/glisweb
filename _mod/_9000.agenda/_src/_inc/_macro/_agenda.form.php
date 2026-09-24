@@ -1,0 +1,279 @@
+<?php
+
+    /**
+     * macro form anagrafica
+     *
+     *
+     *
+     * -# definizione della tabella del modulo
+     * -# popolazione delle tendine
+     *
+     *
+     *
+     *
+     *
+     *
+     * @todo documentare
+     *
+     * @file
+     *
+     */
+
+    // tabella gestita
+	$ct['form']['table'] = 'attivita';
+
+    // ...
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+        $ct['etc']['preset']['fields'] = array(
+            'id_genitore' => $_REQUEST[ $ct['form']['table'] ]['id']
+        );
+    }
+
+    // tendina anagrafica
+    // TODO serve?
+	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+
+    // TODO serve?
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+
+    // tendina tipologia
+	$ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__'
+    );
+
+    // tendina clienti
+    // TODO serve?
+	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+
+/*
+    // tendina categorie attivita
+	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_attivita_view'
+	);
+*/
+
+    // tendina step
+	$ct['etc']['select']['id_step'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM step_view'
+    );
+
+    // tendina progetti
+    // TODO serve?
+	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ '.
+            'FROM progetti_view WHERE data_chiusura IS NULL ORDER BY __label__'
+        );
+	
+
+    // tendina todo
+    // TODO serve?
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
+	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( data_chiusura IS NULL OR id = ? )', 
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
+            );
+	} else {
+	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM todo_view'
+        );
+	}
+
+    // tendina indirizzi
+    // TODO serve?
+    $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM indirizzi_view'
+    );
+
+    // tendina mastri
+	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM mastri_view WHERE se_conto = 1'
+    );
+
+    // tendina matricole
+    // TODO serve?
+	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM matricole_view'
+    );
+
+    // tendina matricole
+    // TODO serve?
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM immobili_view'
+    );
+
+	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
+        array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
+        
+        if( ! empty($todo['id_cliente']) ){
+            $_REQUEST['__preset__']['attivita']['id_cliente'] = $todo['id_cliente'];
+        }
+        
+        if( ! empty($todo['id_progetto']) ){
+	        $_REQUEST['__preset__']['attivita']['id_progetto'] = $todo['id_progetto'];
+        }
+
+        if( ! empty($todo['id_indirizzo']) ){
+	        $_REQUEST['__preset__']['attivita']['id_indirizzo'] = $todo['id_indirizzo'];
+        }
+
+        if( ! empty($todo['id_mastro_attivita_default']) ){
+	        $_REQUEST['__preset__']['attivita']['id_mastro_provenienza'] = $todo['id_mastro_attivita_default'];
+        }
+
+        if( !empty($todo['data_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['data_programmazione'] = $todo['data_programmazione'];
+        }
+
+        if( !empty($todo['ora_inizio_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['ora_inizio_programmazione'] = $todo['ora_inizio_programmazione'];
+        }
+        
+        if( !empty($todo['ora_fine_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['ora_fine_programmazione'] = $todo['ora_fine_programmazione'];
+        }
+	}
+
+    // tendina tipologia attivita
+	$ct['etc']['id_tipologia_attivita_new'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
+
+	// tipologie di attività a seguire nelle procedure
+	$attivitaSeguenti = mysqlQuery(
+		$cf['mysql']['connection'],
+		'SELECT * FROM metadati WHERE id_tipologia_attivita = ? AND nome LIKE ?',
+		array(
+			array( 's' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] : ( ( isset( $_REQUEST['__preset__']['attivita']['id_tipologia'] ) ) ? $_REQUEST['__preset__']['attivita']['id_tipologia'] : ( ( isset( $_REQUEST['__continue__'] ) ) ? $_REQUEST['__continue__'] : NULL ) ) ) ),
+            array( 's' => '%procedure|attivita|seguenti|%' )
+		)
+	);
+
+    // debug
+    // print_r( $attivitaSeguenti );
+    // print_r( metadati2associativeArray( $attivitaSeguenti ) );
+
+/* TODO a cosa serviva questo?
+    // attività seguenti
+    $seguenti = metadati2associativeArray( $attivitaSeguenti );
+    if( isset( $seguenti['procedure']['attivita']['seguenti'] ) ) {
+        foreach( $seguenti['procedure']['attivita']['seguenti'] as $seg ) {
+            $ct['etc']['procedure'][ $seg['id'] ] = array_merge(
+                $seg,
+                mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM tipologie_attivita_view WHERE id = ?',
+                    array(
+                        array( 's' => $seg['id'] )
+                    )
+                )
+            );
+        }
+    }
+*/
+    // debug
+    // print_r( $ct['etc']['procedure'] );
+
+/*
+    // creo l'array delle attività seguenti
+    foreach( $attivitaSeguenti as $att ) {
+        $dettagli = explode( '|', $att );
+        $ct['etc']['procedura']['attivita']['seguenti'][ $dettagli[3] ][ $dettagli[3] ]
+#            'id' = 
+#        );
+    }
+*/
+/*
+    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] )  ){
+        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    } elseif( isset( $_REQUEST['attivita']['id_progetto'] ) && ! empty( $_REQUEST['attivita']['id_progetto'] )  ){
+        $ct['etc']['progetto'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM progetti_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+        // print_r( $ct['etc']['attivita_completate'] );
+    }
+*/
+
+if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] ) ){
+    // echo 'ID todo: ' . $_REQUEST['attivita']['id_todo'];
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+} elseif( isset( $_REQUEST['__continue__'] ) && ! empty( $_REQUEST['__continue__'] ) && isset( $_SESSION['__latest__']['attivita']['id_todo'] ) && ! empty( $_SESSION['__latest__']['attivita']['id_todo'] ) ){
+    // echo 'ID todo (latest): ' . $_SESSION['__latest__']['attivita']['id_todo'];
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo WHERE id = ?', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
+} elseif( isset( $_REQUEST['__preset__']['attivita']['id_todo'] ) && ! empty( $_REQUEST['__preset__']['attivita']['id_todo'] ) ){
+    // echo 'ID todo (preset): ' . $_REQUEST['__preset__']['attivita']['id_todo'];
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo WHERE id = ?', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo']) ));
+} elseif( isset( $_REQUEST['attivita']['id_progetto'] ) && ! empty( $_REQUEST['attivita']['id_progetto'] )  ){
+    // echo 'ID progetto: ' . $_REQUEST['attivita']['id_progetto'];
+    $ct['etc']['progetto'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
+} elseif( isset( $_REQUEST['__continue__'] ) && ! empty( $_REQUEST['__continue__'] ) && isset( $_SESSION['__latest__']['attivita']['id_progetto'] ) && ! empty( $_SESSION['__latest__']['attivita']['id_progetto'] ) ){
+    // echo 'ID progetto (latest): ' . $_SESSION['__latest__']['attivita']['id_progetto'];
+    $ct['etc']['progetto'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita LIMIT 5', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita LIMIT 5', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
+} elseif( isset( $_REQUEST['__preset__']['attivita']['id_progetto'] ) && ! empty( $_REQUEST['__preset__']['attivita']['id_progetto'] ) ){
+    // echo 'ID progetto (preset): ' . $_REQUEST['__preset__']['attivita']['id_progetto'];
+    $ct['etc']['progetto'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_progetto']) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['__preset__']['attivita']['id_progetto']) ));
+}
+
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+ 

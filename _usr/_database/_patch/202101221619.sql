@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `__report_volontari_pratiche__`;

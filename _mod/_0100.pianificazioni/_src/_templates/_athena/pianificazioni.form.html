@@ -1,0 +1,116 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{# import 'bin/default.form.pubblicazioni.sub.html' as sub #}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# CAMPI HIDDEN SPECIALI #}
+	    <input type="hidden" id="id_contratto" name="{{ table }}[id_contratto]" value="{% if request.__preset__[ table ].id_contratto %}{{ request.__preset__[ table ].id_contratto }}{% else %}{{ request[ table ].id_contratto }}{% endif %}">
+	    <input type="hidden" id="id_progetto" name="{{ table }}[id_progetto]" value="{% if request.__preset__[ table ].id_progetto %}{{ request.__preset__[ table ].id_progetto }}{% else %}{{ request[ table ].id_progetto }}{% endif %}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">periodicità</span>
+					{{ frm.select( table, '', '', 'id_periodicita', '', etc.select.periodicita, request, '', '', '', '', '' ) }}
+				</div>
+				{% if request[ table ].entita %}
+				<div class="col-auto col-md-auto">
+					<span class="label-top">attiva dal</span>
+					{{ frm.date( table, '', '', 'data_avvio', '', '', request, '+1 day'|date('Y-m-d'), '', '1' ) }}
+				</div>
+				{% endif %}
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note', '', 1, request ) }}
+				</div>
+			</div>
+	
+        </fieldset>
+
+		{% if request[ table ].id_periodicita == 3 %}
+		<fieldset>
+			<legend>periodicità mensile <small>l'oggetto verrà creato con cadenza mensile</small></legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-1">
+					<span class="label-top">ogni (mesi)</span>
+					{{ frm.input( table, '', '', 'cadenza', '', '', request, 1 ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">a partire dal</span>
+					{{ frm.date( table, '', '', 'data_inizio', '', '', request ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">fino al</span>
+					{{ frm.date( table, '', '', 'data_fine', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-1">
+					<span class="label-top">entro (giorni)</span>
+					{{ frm.input( table, '', '', 'giorni_elaborazione', '', '', request, 15 ) }}
+				</div>
+			</div>
+
+        </fieldset>
+		{% endif %}
+
+		{# include 'inc/metro.html' #}
+        
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

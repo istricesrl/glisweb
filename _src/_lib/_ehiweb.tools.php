@@ -38,7 +38,8 @@
 
 		// se il mittente è un array
 		    if( is_array( $from ) ) {
-			$sender = array_shift( array_keys( $from ) );
+			$keys = array_keys( $from );
+			$sender = array_shift( $keys );
 			$from = array_shift( $from );
 		    }
 
@@ -82,11 +83,11 @@
 
 		// risultato
 		    if( substr( $result, 0, 1 ) == '+' ) {
-			logWrite( 'SMS inviato: ' . $result, 'ehiweb', LOG_NOTICE );
-			return true;
+				logWrite( 'SMS inviato: ' . $result, 'ehiweb', LOG_NOTICE );
+				return true;
 		    } else {
-			logWrite( 'fallito invio: ' . $result, 'ehiweb', LOG_CRIT );
-			return false;
+				logWrite( 'fallito invio a ' . $to . ': ' . $result, 'ehiweb', LOG_CRIT );
+				return false;
 		    }
 
 	    }

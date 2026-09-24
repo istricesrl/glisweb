@@ -1,2 +1,0 @@
-ALTER TABLE `todo`
-ADD CONSTRAINT `todo_ibfk_3` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

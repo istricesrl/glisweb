@@ -1,0 +1,253 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{# PAGINA DI RIEPILOGO PRIMA DEL PAGAMENTO
+Questa pagina crea le condizioni (qualunque cosa questo significhi per i vari provider di pagamento) per il pagamento e
+dipende direttamente dalla macro
+_mod/_F030.pagamenti/_src/_inc/_macro/_pagamento.riepilogo.php #}
+
+{% block main %}
+
+{# pagamento tramite PayPal Advanced Checkout #}
+{% if etc.pagamento.provider == 'paypal-advanced' %}
+
+{% if etc.pagamento.client_token %}
+
+{# definizione del return URL #}
+{% if etc.return_url %}
+<script>
+    var return_url = "{{ etc.return_url }}";
+</script>';
+{% endif %}
+
+{# contenitore per l'interfaccia di PayPal #}
+<div id="smart-button-container">
+    <div style="text-align: center;">
+        <div id="paypal-button-container"></div>
+    </div>
+</div>
+
+{% if paypal.profile.advanced %}
+<style>
+    div.card_field {
+      height: 1em;
+      margin-bottom: .5em;
+    }
+  </style>
+  <div class="card_container">
+      <form id="card-form">
+          <label for="card-number">Card Number</label>
+          <div id="card-number" class="card_field"></div>
+      <div>
+          <label for="expiration-date">Expiration Date</label>
+          <div id="expiration-date" class="card_field"></div>
+      </div>
+      <div>
+          <label for="cvv">CVV</label>
+          <div id="cvv" class="card_field"></div>
+      </div>
+      <div>
+          <label for="card-holder-name">Name on Card</label>
+          <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>
+      </div>
+      <div>
+          <label for="card-billing-address-street">Billing Address</label>
+          <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>
+      </div>
+      <div>
+          <label for="card-billing-address-unit">&nbsp;</label>
+          <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>
+      </div>
+      <div>
+          <label for="card-billing-address-city">&nbsp;</label>
+          <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>
+      </div>
+      <div>
+          <label for="card-billing-address-state">&nbsp;</label>
+          <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>
+      </div>
+      <div>
+          <label for="card-billing-address-zip">&nbsp;</label>
+          <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>
+      </div>
+      <div>
+          <label for="card-billing-address-country">&nbsp;</label>
+          <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />
+      </div>
+      <button value="submit" id="submit" class="btn">Pay</button>
+      </form>
+  </div>
+  {% endif %}
+
+{# inclusione dello SDK di PayPal #}
+<script
+    src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ paypal.profile.client_id }}"
+    data-client-token="{{ etc.pagamento.client_token }}"></script>
+
+{% else %}
+<!-- etc.pagamento.client_token non settato -->
+{% endif %}
+
+{% endif %}
+
+{# PAGAMENTO TRAMITE NEXI #}
+{% if etc.pagamento.provider == 'nexi' %}
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+    // per PayPal Advanced si veda
+    // https://developer.paypal.com/docs/checkout/advanced/integrate/
+    // https://github.com/paypal-examples/docs-examples/tree/main/advanced-integration
+    // https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/sdk/
+
+    paypal
+        .Buttons({
+            createOrder: function (data, actions) {
+                console.log('createOrder', data, actions);
+                return fetch("/api/F030.pagamenti/paypal.advanced.order", {
+                    method: "post",
+                    body: JSON.stringify({
+                        id: "{{ etc.pagamento.id }}",
+                        id_carrelli_articoli: "{{ etc.pagamento.id_carrelli_articoli }}",
+                        token_pagamento: "{{ etc.pagamento.token_pagamento }}"
+                    })
+                })
+                    .then((response) => response.json())
+                    .then((order) => order.id);
+            },
+            onApprove: function (data, actions) {
+                return fetch(`/api/F030.pagamenti/paypal.advanced.capture?id=${data.orderID}`, {
+                    method: "post",
+                })
+                    .then((response) => response.json())
+                    .then((orderData) => {
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                        const transaction = orderData.purchase_units[0].payments.captures[0];
+                        // TODO leggere l'URL di redirect dai dati e fare il redirect
+                        if (typeof return_url !== 'undefined' && return_url != '') {
+                            actions.redirect(return_url + `?idOrdine=${data.orderID}`);
+                        } else {
+                            actions.redirect(orderData.return + `?idOrdine=${data.orderID}`);
+                        }
+                    });
+            }
+        })
+        .render("#paypal-button-container");
+
+    if (paypal.HostedFields.isEligible()) {
+
+        let orderId;
+
+        paypal.HostedFields.render({
+
+            createOrder: () => {
+                return fetch("/api/4170.ecommerce/paypal.advanced.order", {
+                    method: 'post'
+                })
+                    .then((res) => res.json())
+                    .then((orderData) => {
+                        orderId = orderData.id;
+                        console.log('orderData --> ', orderData);
+                        return orderData.id
+                    })
+            },
+            styles: {
+                '.valid': {
+                    color: 'green'
+                },
+                '.invalid': {
+                    color: 'red'
+                }
+            },
+            fields: {
+                number: {
+                    selector: "#card-number",
+                    placeholder: "4111 1111 1111 1111"
+                },
+                cvv: {
+                    selector: "#cvv",
+                    placeholder: "123"
+                },
+                expirationDate: {
+                    selector: "#expiration-date",
+                    placeholder: "MM/YY"
+                }
+            }
+        }).then((cardFields) => {
+
+            document.querySelector("#card-form").addEventListener("submit", (event) => {
+                event.preventDefault();
+                cardFields
+                    .submit({
+
+                        contingencies: ['SCA_ALWAYS'],
+                    })
+                    .then(function (payload) {
+
+                        console.log('payload --> ', payload);
+
+                        switch (payload.liabilityShift) {
+
+                            case "POSSIBLE":
+                                return fetch("/api/F030.pagamenti/paypal.advanced.capture?id=" + payload.orderId).then(function (res) {
+                                    return res.json();
+                                }).then(function (data) {
+                                    console.log("data->", data);
+                                    if (typeof return_url !== 'undefined' && return_url != '') {
+                                        window.location.href = return_url + `?idOrdine=${payload.orderId}`;
+                                    } else {
+                                        window.location.href = data.return + `?idOrdine=${payload.orderId}`;
+                                    }
+                                    return data.id;
+                                });
+
+                                break;
+
+                            case "NO":
+                                hostedFields.clear('number', function (clearErr) {
+                                    if (clearErr) {
+                                        console.error(clearErr);
+                                    }
+                                });
+
+                                hostedFields.clear('cvv', function (clearErr) {
+                                    if (clearErr) {
+                                        console.error(clearErr);
+                                    }
+                                });
+
+                                hostedFields.clear('expirationDate', function (clearErr) {
+                                    if (clearErr) {
+                                        console.error(clearErr);
+                                    }
+                                });
+
+                                break;
+
+                            default:
+
+
+                                break;
+
+                        }
+
+                    })
+                    .catch((err) => {
+                        alert("Payment could not be captured! " + JSON.stringify(err));
+                    });
+            });
+
+        });
+
+    } else {
+        // Hides card fields if the merchant isn't eligible
+        // document.querySelector("#card-form").style = 'display: none';
+    }
+
+</script>
+{% endblock %}

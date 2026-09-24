@@ -1,1 +1,0 @@
-ALTER TABLE `pagine_macro` ADD CONSTRAINT `pagine_macro_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -21,21 +21,62 @@
      *
      * la costante LOG_CURRENT_LEVEL
      * -----------------------------
-     * @todo documentare questo paragrafo e rimandare al capitolo sulle costanti della documentazione tecnica
-     *
-     *
-     *
-     * @todo finire di documentare
-     *
-     * @file
+     * Questa costante viene utilizzata per rappresentare il livello di log corrente, che influenza il comportamento
+     * della funzione logger() definita in _src/_config.php.
      *
      */
 
-    // imposto la visualizzazione degli errori
-	ini_set( 'display_errors', $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
+    /**
+     * applicazione delle configurazioni generali per il debug
+     * =======================================================
+     * In questa sezione vengono applicate le configurazioni generali per il debug relative ai timeout
+     * di esecuzione e di connessione ai socket.
+     * 
+     * 
+     */
 
-    // imposto il livello di debug
-	error_reporting( $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
+    // tempo massimo di esecuzione
+    ini_set( 'max_execution_time', $cf['debug']['run']['timeout'] );
 
-    // costante che descrive il livello corrente di log
-	define( 'LOG_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['log']['lvl'] );
+    // timeout dei socket
+    ini_set( 'default_socket_timeout', $cf['debug']['socket']['timeout'] );
+
+    /**
+     * configurazione del report degli errori a video
+     * ==============================================
+     * In questa sezione viene definito il comportamento del framework rispetto alla visualizzazione
+     * degli errori tramite una chiamata a ini_set() sulla variabile display_errors e tramite
+     * la funzione error_reporting() che imposta il livello di report degli errori. Vedi anche
+     * https://www.php.net/manual/en/function.error-reporting.php.
+     * 
+     */
+
+    // costante che descrive il livello corrente di report
+    define( 'REPORT_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['report']['lvl'] );
+
+    // determina se gli errori vengono mostrati o meno
+    ini_set( 'display_errors', $cf['debug'][ SITE_STATUS ]['display'] );
+
+    // determina quali errori vengono mostrati
+    error_reporting( REPORT_CURRENT_LEVEL );
+
+    /**
+     * configurazione del log su file
+     * ==============================
+     * La costante LOG_CURRENT_LEVEL viene utilizzata per rappresentare il livello di log corrente,
+     * che influenzando il comportamento della funzione logger() impatta sulla verbosità del log.
+     * 
+     */
+
+    // costante per     logger() che descrive il livello corrente di log
+    define( 'LOG_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['log']['lvl'] );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.
+     * 
+     */
+
+    // debug
+    // echo 'OUTPUT';

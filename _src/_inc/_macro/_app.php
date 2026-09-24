@@ -1,15 +1,12 @@
 <?php
 
     /**
-     * macro dashboard
+     * macro app
      *
      *
      *
      *
-     * @todo implementare
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
-    

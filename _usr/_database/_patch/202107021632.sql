@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `id_matricola` INT NULL DEFAULT NULL AFTER `id_mastro_destinazione`, ADD INDEX `id_matricola` (`id_matricola`) ;

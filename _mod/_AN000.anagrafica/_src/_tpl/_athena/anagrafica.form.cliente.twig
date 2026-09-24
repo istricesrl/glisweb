@@ -1,0 +1,124 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati cliente</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">ranking</span>
+                        {{ frm.select({ 'field': { 'name': 'id_ranking' }, 'source': { 'values': etc.select.ranking }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">agente</span>
+                        {{ frm.select({ 'field': { 'name': 'id_agente' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note commerciali</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_commerciali', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>dati operativi</legend>
+
+                <div class="form-group row">
+                     <div class="col col-md form-col">
+                        <span class="label-top">responsabile operativo</span>
+                        {{ frm.select({ 'field': { 'name': 'id_responsabile_operativo' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">condizioni di vendita</span>
+                        {{ frm.textarea({ 'field': { 'name': 'condizioni_vendita', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note amministrative</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_amministrative', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>dati fiscali</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">codice fiscale</span>
+                        {{ frm.input({ 'field': { 'name': 'codice_fiscale', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">partita IVA</span>
+                        {{ frm.input({ 'field': { 'name': 'partita_iva', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">regime fiscale</span>
+                        {{ frm.select({ 'field': { 'name': 'id_regime' }, 'source': { 'values': etc.select.regimi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>fatturazione elettronica</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top-disabled">codice Archivium</span>
+                        {{ frm.input({ 'field': { 'name': 'codice_archivium', 'type': 'text', 'disabled': true }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">cod. destinatario SDI</span>
+                        {{ frm.input({ 'field': { 'name': 'codice_sdi', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">PEC per la fatturazione</span>
+                        {{ frm.select({ 'field': { 'name': 'id_pec_sdi' }, 'source': { 'values': etc.select.pec }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SUBFORM IBAN #}
+            {{ sub.iban( form.table, 'iban', 'IBAN', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
+
+            {# SUBFORM SETTORI DI ATTIVITÀ #}
+            {{ sub.ateco( form.table, 'anagrafica_settori', 'settori di attività', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

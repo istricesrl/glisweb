@@ -7,15 +7,15 @@
     <div class="container">
         <div class="row">
             <div class="col mb-3">
-                {% if leads.h3[ localization.language.ietf ] %}<h3>{{ include( template_from_string( leads.h3[ localization.language.ietf ] ) | raw ) }}</h3>{% endif %}
-                <h1>{{ include( template_from_string( leads.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-                {% if leads.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( leads.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                {% if leads.h3[ localization.language.ietf ] %}<h3>{{ include( template_from_string( leads.h3[ localization.language.ietf ]|default('') ) | raw ) }}</h3>{% endif %}
+                <h1>{{ include( template_from_string( leads.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
+                {% if leads.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( leads.h2[ localization.language.ietf ]|default('') ) | raw ) }}</h2>{% endif %}
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <div class="col-12 col-md">
-                    {{ include( template_from_string( leads.abstract[ localization.language.ietf ] ) | raw ) }}
+                    {{ include( template_from_string( leads.abstract[ localization.language.ietf ]|default('') ) | raw ) }}
                 </div>
             </div>
         </div>

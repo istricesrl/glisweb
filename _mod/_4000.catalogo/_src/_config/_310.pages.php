@@ -22,7 +22,7 @@
 if ($cf['contents']['cached'] === false) {
 
     // log
-    if (!empty($cf['memcache']['connection'])) {
+    if( ! empty( $cf['memcache']['connection'] ) ) {
         logWrite('struttura delle categorie catalogo NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
     }
 
@@ -30,11 +30,14 @@ if ($cf['contents']['cached'] === false) {
     $pgs = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT categorie_prodotti.* FROM categorie_prodotti ' .
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id ' .
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id ' .
+            'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
+            'LEFT JOIN contenuti ON contenuti.id_categoria_prodotti = categorie_prodotti.id '.
             'WHERE categorie_prodotti.id_sito = ? ' .
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) ' .
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ' .
-            'GROUP BY categorie_prodotti.id ',
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' .
+            'AND tipologie_pubblicazioni.se_pubblicato = 1 '.
+            'GROUP BY categorie_prodotti.id ORDER BY contenuti.h1 ',
         array(
             array('s' => SITE_CURRENT),
             array('s' => time()),
@@ -47,6 +50,9 @@ if ($cf['contents']['cached'] === false) {
 
     // se ci sono pagine trovate le inserisco nell'array principale
     if (is_array($pgs)) {
+
+        // canonical
+        $canon = NULL;
 
         // ciclo principale
         foreach ($pgs as $pg) {
@@ -68,20 +74,30 @@ if ($cf['contents']['cached'] === false) {
             $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
             $pgc = memcacheRead($cf['memcache']['connection'], $pid);
 
+            // default
+            $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['template'] : $pg['template'];
+            $pg['schema_html'] = ( empty( $pg['schema_html'] ) ) ? $cf['catalogo']['pages']['scheda']['schema'] : $pg['schema_html'];
+            $pg['tema_css'] = ( empty( $pg['tema_css'] ) ) ? $cf['catalogo']['pages']['scheda']['css'] : $pg['tema_css'];
+
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
+
+                // ...
+                $cf['contents']['reverse']['categorie_prodotti'][ $pg['id'] ] = $pid;
 
                 // blocco dati principale
                 $cf['contents']['pages'][$pid] = array(
                     'sitemap'        => (($pg['se_sitemap'] == 1) ? true : false),
                     'cacheable'        => (($pg['se_cacheable'] == 1) ? true : false),
+                    // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $pip),
+                    'canonical'        => $canon,
                     'template'        => array(
                         'path'      =>  $pg['template'],
                         'schema'    =>  $pg['schema_html'],
                         'theme'     =>  $pg['tema_css']
                     ),
-                    'metadata'      => array('id_categoria_prodotti' => $pg['id']),
+                    'metadati'      => array('id_categoria_prodotti' => $pg['id']),
                     'macro'            => $cf['catalogo']['pages']['elenco']['macro']
                 );
 
@@ -109,17 +125,17 @@ if ($cf['contents']['cached'] === false) {
                     'id_categoria_prodotti'
                 );
 
-                aggiungiContenuti(
+             /*   aggiungiContenuti(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_categoria_prodotti'
-                );
+                );*/
 
                 aggiungiImmagini(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_categoria_prodotti',
-                    array(4, 16, 29, 14)
+                    array(1, 3, 4, 5, 7, 8)
                 );
 
                 aggiungiMetadati(
@@ -145,20 +161,24 @@ if ($cf['contents']['cached'] === false) {
 
     // timer
     timerCheck($cf['speed'], ' -> fine elaborazione categorie catalogo prelevate dal database');
+
 } else {
 
     // recupero la timestamp di aggiornamento più recente
-    $cf['contents']['updated'] = mysqlSelectValue(
-        $cf['mysql']['connection'],
-        'SELECT max( categorie_prodotti.timestamp_aggiornamento ) AS updated FROM categorie_prodotti ' .
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id ' .
-            'WHERE categorie_prodotti.id_sito = ? ' .
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) ' .
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
-        array(
-            array('s' => SITE_CURRENT),
-            array('s' => time()),
-            array('s' => time())
+    $cf['contents']['updated'] = max(
+        $cf['contents']['updated'],
+        mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( categorie_prodotti.timestamp_aggiornamento ) AS updated FROM categorie_prodotti ' .
+                'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id ' .
+                'WHERE categorie_prodotti.id_sito = ? ' .
+                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
+                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+            array(
+                array('s' => SITE_CURRENT),
+                array('s' => time()),
+                array('s' => time())
+            )
         )
     );
 

@@ -13,22 +13,22 @@
 
     // tabella gestita
     $ct['form']['table'] = 'prodotti';
-    
+
     // tabella della vista
 	$ct['view']['table'] = 'articoli';
 
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'nome_articolo' => 'articolo',
+	    'nome' => 'articolo',
         'id_prodotto' => 'id_prodotto',
-        'codice_produttore' => 'ean'
+        'ean' => 'ean'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'text-left',
-	    'nome_articolo' => 'text-left',
+	    'nome' => 'text-left',
         'id_prodotto' => 'd-none'
 	);
 
@@ -40,7 +40,7 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'articoli.form';
 
-        // campo per il preset di apertura
+    // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_prodotto';
 
     // preset filtro custom progetti aperti

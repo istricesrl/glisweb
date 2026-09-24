@@ -1,19 +1,22 @@
 
 {# MACRO PER GLI ELEMENTI DI NAVIGAZIONE #}
 {# NOTA: IMPORTARE SEMPRE COME NAV #}
+{# import '_bin/_navigation.html' as nav #}
 
-{% macro menu( links, lang, site, query ) %}
+{% macro menu( links, lang, site, query, parent ) %}
+<!-- macro menu() -->
 {% import _self as nav %}
-{% for link in links %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %}">
-    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
-    {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query ) }}</ul>{% endif %}
+{% for id,link in links %}{% set id = id|replace({'|': "-", "." : "-"}) %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %} {% if parent %}child-of-{{ parent }}{% endif %}" data-page-id="{{ id }}">
+    {% if not link.location[ lang ] %}<!-- link.location non presente per la lingua {{ lang }}, l'attributo href, l'ancora e la query non vengono mostrate -->{% endif %}
+    {% if link.label[ lang ] %}<a {% if link.location[ lang ] %}href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}"{% endif %} class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ include( template_from_string ( link.label[ lang ]|default('') ) ) | raw }}</a>{% else %}<!-- link.label non presente per la lingua {{ lang }} -->{% endif %}
+    {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query, id ) }}</ul>{% endif %}
 </li>{% endfor %}
 {% endmacro %}
 
 {% macro selectMenu( links, lang, site, query, offset ) %}
 {% import _self as nav %}
 {% for link in links %}
-    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ link.label[ lang ] }}</option>
+    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ include( template_from_string ( link.label[ lang ]|default('') ) ) | raw }}</option>
     {% if link.content %}
     {{ nav.selectMenu( link.content, lang, site, query, offset ~ '— ' ) }}
     {% endif %}
@@ -24,7 +27,7 @@
 {% import _self as nav %}
 <div>
 {% for link in links %}
-    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}
+    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ include( template_from_string ( link.label[ lang ]|default('') ) ) | raw }}</a>{% if not loop.last %} | {% endif %}
     {% if link.content %}
     {% set submenu = link.content %}
     {% endif %}
@@ -47,13 +50,28 @@
 	<ul class="nav nav-tabs">
         {% for t in pages[ page.id ].etc.tabs %}
         {% if not pages[ t ].icon %}
-        <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
+        <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% elseif pages[ t ].tab[ lang ] %}{{ include( template_from_string( pages[ t ].tab[ lang ]|default('') ) | raw ) }}{% else %}{{ include( template_from_string( pages[ t ].h1[ lang ]|default('') ) | raw ) }}{% endif %}</a></li>
         {% endif %}
 	    {% endfor %}
-        <span style="margin-left: auto;">        </span>
+        <li style="margin-left: auto;"></li>
         {% for t in pages[ page.id ].etc.tabs %}
         {% if pages[ t ].icon %}
-        <li class="nav-item nav-icon"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{{ pages[ t ].icon|raw }}</a></li>
+        {# IL TOOLTIP DELLA TAB CON LA SOLA ICONA ( segnalato da Montanari il 22/09/2026 )
+
+           Una tab che mostra un'icona al posto della scritta non dice cosa fa: il nome della pagina
+           c'e' - e' lo stesso che il ramo di sopra stampa per le tab testuali - ma qui non veniva
+           emesso da nessuna parte. Si mette come title, con la stessa forma che usa la macro
+           sheets() qui sotto, che il tooltip ce l'ha da sempre.
+
+           ⚠ Perche' compaia serve anche l'inizializzazione, che su Bootstrap 4 e' un bind jQuery:
+           fino al 22/09/2026 _src/_js/_main.js accendeva i soli tooltip in sintassi Bootstrap 5, e
+           su questi template non se ne accendeva nessuno. #}
+        {% set tip = pages[ t ].tab[ lang ]|default( pages[ t ].h1[ lang ] )|default( pages[ t ].title[ lang ] )|default('') %}
+        {% if pages[ t ].onclick %}
+        <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[  pages[ t ].onclick[ lang ] ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}" target="{{  pages[ t ].target  }}"{% if tip %} data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ tip|striptags }}"{% endif %}>{{ pages[ t ].icon|raw }}</a></li>
+        {% else %}
+        <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}"{% if tip %} data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ tip|striptags }}"{% endif %}>{{ pages[ t ].icon|raw }}</a></li>
+        {% endif %}
         {% endif %}
 	    {% endfor %}
     </ul>
@@ -66,8 +84,8 @@
 {% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
 {% endmacro %}
 
-{% macro lineBreadcrumbs( links, lang, site, query ) %}
-{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}{% endfor %}
+{% macro lineBreadcrumbs( links, lang, site, query, separator ) %}
+{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} {% if separator %} {{ separator }} {% else %} | {% endif %}{% endif %}{% endfor %}
 {% endmacro %}
 
 {% macro flags( links, lang, site, query ) %}

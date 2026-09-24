@@ -1,1 +1,0 @@
-ALTER TABLE `todo` ADD INDEX `id_anagrafica_feedback` (`id_anagrafica_feedback`);

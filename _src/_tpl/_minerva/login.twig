@@ -1,0 +1,27 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# SCHEMA ESTESO #}
+{% extends 'ext/login.twig' %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+<form action="" class="form-login" id="formLogin" method="post">
+    <fieldset>
+        <legend>login</legend>
+        <div class="form-group form-row row">
+            <label class="d-none d-md-block col-md col-form-label">username</label>
+            <div class="col-12 col-md"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+        </div>
+        <div class="form-group form-row row">
+            <label class="d-none d-md-block col-md col-form-label">password</label>
+            <div class="col-12 col-md"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+        </div>
+        <div class="form-group form-row row">
+            <div class="d-grid gap-2 col-12">{{ cms.formButton( { 'field': { 'text': 'login' }, 'form': { 'id': 'formLogin', 'table': '__login__' }, 'recaptcha': google.profile.recaptcha } ) }}</div>
+        </div>
+    </fieldset>
+</form>
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

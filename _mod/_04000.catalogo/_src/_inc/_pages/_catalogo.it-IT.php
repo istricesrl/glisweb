@@ -1,0 +1,139 @@
+<?php
+
+    /**
+     * pagine del modulo 04000.catalogo
+     * 
+     * Questo file contiene la definizione delle pagine del modulo "catalogo".
+     * 
+     * introduzione
+     * ============
+     * Il modulo catalogo è un modulo contenitore, che fornisce una dashboard e un archivio con le 
+     * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
+     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * catalogo                         | NULL                      | dashboard catalogo
+     * catalogo.tools                   | catalogo                  | tools catalogo
+     * catalogo.archivio                | catalogo                  | archivio catalogo
+     * catalogo.archivio.tools          | catalogo.archivio         | tools archivio catalogo
+     * catalogo.archivio.stampe         | catalogo.archivio         | stampe archivio catalogo
+     * catalogo.archivio.prezzi.view    | catalogo.archivio         | scheda prezzi 
+     */
+
+    // lingua di questo file
+    $l = 'it-IT';
+
+    // modulo di questo file
+    $m = DIR_MOD . '_04000.catalogo/';
+
+    // dashboard catalogo
+    $p['catalogo'] = array(
+        'sitemap'        => false,
+        'title'            => array( $l        => 'catalogo' ),
+        'h1'            => array( $l        => 'catalogo' ),
+        'parent'        => array( 'id'        => NULL ),
+        'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.twig' ),
+        'macro'            => array( $m . '_src/_inc/_macro/_catalogo.php' ),
+        'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'            => array( 'tabs'    => array(    'catalogo',
+                                                        'catalogo.stampe',
+                                                        'catalogo.tools'
+                                                         ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'catalogo' ),
+                                                                        'priority'    => '4000' ) ) )                                                        
+    );
+
+    // catalogo stampe
+    $p['catalogo.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo' )
+    );
+
+    // tools della dashboard catalogo
+    $p['catalogo.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo' )
+    );
+
+    // archivio catalogo
+    $p['catalogo.archivio'] = array(
+        'sitemap'        => false,
+        'title'            => array( $l        => 'archivio catalogo' ),
+        'h1'            => array( $l        => 'archivio' ),
+        'parent'        => array( 'id'        => 'catalogo' ),
+        'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.archivio.twig' ),
+        'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.php' ),
+        'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'            => array( 'tabs'    => array(    'catalogo.archivio',
+                                                        'catalogo.archivio.prezzi.view',
+                                                        'catalogo.archivio.tools'
+                                                         ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'archivio' ),
+                                                                        'priority'    => '4900' ) ) )                                                        
+    );
+
+    // tools dell'archivio catalogo
+    $p['catalogo.archivio.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.archivio.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.archivio' )
+    );
+
+    // archivio catalogo prezzi
+    $p['catalogo.archivio.prezzi.view'] = array(
+        'sitemap'        => false,
+        'title'            => array( $l        => 'catalogo archivio prezzi' ),
+        'h1'            => array( $l        => 'prezzi' ),
+        'parent'        => array( 'id'        => 'catalogo.archivio' ),
+        'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.view.php' ),
+        'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'            => array( 'tabs'    =>  'catalogo.archivio' )                                                      
+    );
+
+    //  gestione archivio catalogo prezzi
+    $p['catalogo.archivio.prezzi.form'] = array(
+        'sitemap'        => false,
+        'title'            => array( $l        => 'catalogo archivio prezzi form' ),
+        'h1'            => array( $l        => 'gestione' ),
+        'parent'        => array( 'id'        => 'catalogo.archivio.prezzi.view' ),
+        'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.archivio.prezzi.form.twig' ),
+        'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.form.php' ),
+        'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'            => array( 'tabs'    =>  array('catalogo.archivio.prezzi.form',
+                                                        'catalogo.archivio.prezzi.form.tools'
+                                                        ) )                                                      
+    );
+
+    // gestione archivio catalogo prezzi form tools
+    $p['catalogo.archivio.prezzi.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni form catalogo archivio prezzi' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'catalogo.archivio.prezzi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.archivio.prezzi.form' )
+    );

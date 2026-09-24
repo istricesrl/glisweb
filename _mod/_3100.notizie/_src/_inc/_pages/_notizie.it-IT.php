@@ -31,6 +31,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'notizie.form',
+													'notizie.form.web',
 													'notizie.form.sem',
 													'notizie.form.testo',
 													'notizie.form.immagini',
@@ -42,9 +43,23 @@
 												) )
 	);
 
+	// gestione notizie SEM/SMM
+	$p['notizie.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
+	);
+
 	// form notizie SEM/SMM
 	$p['notizie.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
@@ -57,6 +72,7 @@
 	// form notizie testo
 	$p['notizie.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
@@ -68,6 +84,7 @@
 
 	$p['notizie.form.contenuti'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
@@ -154,7 +171,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
-	 // vista categorie prodotti
+	 // vista categorie notizie
 	 $p['categorie.notizie.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'categorie' ),
@@ -178,6 +195,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.notizie.form',
+													'categorie.notizie.form.web',
 													'categorie.notizie.form.sem',
 													'categorie.notizie.form.testo',
 													'categorie.notizie.form.menu',
@@ -189,10 +207,23 @@
 												) )
 	);
 
+	// gestione categorie SEM/SMM
+	$p['categorie.notizie.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
 
 	// form notizie SEM/SMM
 	$p['categorie.notizie.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
@@ -205,6 +236,7 @@
 	// form notizie testo
 	$p['categorie.notizie.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
@@ -217,6 +249,7 @@
 	// form categorie notizie menu
 	$p['categorie.notizie.form.menu'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'menu' ),
 	    'h1'		=> array( $l		=> 'menu' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),

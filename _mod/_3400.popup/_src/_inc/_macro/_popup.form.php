@@ -14,12 +14,12 @@
     // tabella gestita
     $ct['form']['table'] = 'popup';
 
-    // tendina tipologie pubblicazione
-	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
+    // tendina tipologie pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
     // tendina tipologie popup
@@ -29,6 +29,9 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_popup_view'
     );
+
+    // tendina siti
+    $ct['etc']['select']['siti'] = $cf['sites'];
     
      // tendina templates
 	$tpl = glob( DIR_BASE . '{_,}src/{_,}templates/*', GLOB_BRACE );
@@ -42,11 +45,16 @@
 	    // controllo file
 		if( file_exists( DIR_BASE . $_REQUEST['popup']['template'] . '/etc/template.conf' ) ) {
 
-		    // tendina schemi
-			$schemi = glob( DIR_BASE . $_REQUEST['popup']['template'] . '/*.html', GLOB_BRACE );
-			foreach( $schemi as $t ) {
-			    $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
-			}
+            // ricerca schemi
+            $schemi = array_merge(
+                glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
+                glob( DIR_MOD_ATTIVI . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
+            );
+
+            // tendina schemi
+            foreach( $schemi as $t ) {
+                $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
+            }
 
 		}
 

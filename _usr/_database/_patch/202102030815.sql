@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_indirizzi` CHANGE `id_indirizzo` `id_indirizzo` INT(11) NOT NULL;

@@ -1,0 +1,223 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<section class="row flex-fill">
+    <div class="col-md-10 d-flex flex-column">
+        {% if etc.righe %}
+        <form id="pagamento" class="carrello d-flex flex-column flex-fill" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+            <input type="hidden" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello }}">
+            <input type="hidden" name="__pagamenti__[id_cliente]" value="{{ request.__pagamenti__.id_cliente }}">
+            <fieldset>
+                <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_cliente %}il cliente #{{ request.__pagamenti__.id_cliente }}{% endif %}</legend>
+
+                <table class="table form-table">
+
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="form-check p-0">
+                                    <input type="checkbox" class="" onclick="$('.form-check-input').trigger('click');$('.form-check-input').prop('checked', $(this).prop('checked'));">
+                                </div>
+                            </th>
+                            <th>cliente</th>
+                            <th>descrizione</th>
+                            <th>quantità</th>
+                            <th>importo</th>
+                            <th>pagato</th>
+                            <th>rateizzato</th>
+                            <th>coupon</th>
+                            <!-- <th>sc.</th> -->
+                            <th class="text-right">da pagare</th>
+                            <th>documenti</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for k,r in etc.righe %}
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_mastro_provenienza]" value="{{ r.id_mastro_provenienza }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_rinnovo]" value="{{ r.id_rinnovo }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][quantita]" value="{{ r.quantita }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="form-check-field" value="">
+                                    <input type="checkbox" class="form-check-input" id="checkbox-riga-{{ loop.index0 }}">
+                                </div>
+                            </td>
+                            <td>{{ r.destinatario }}</td>
+                            <td>{{ r.descrizione }}</td>
+                            <td>{{ '%0.2f'|format( r.quantita ) }}</td>
+                            <td>{{ '%0.2f'|format( r.prezzo_lordo_finale ) }}</td>
+                            <td>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</td>
+                            <td>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</td>
+                            <td>
+                                <select class="form-control form-control-sm" id="" onchange="ricalcolaTotaleDaPagare('totaleDaPagareRiga{{ loop.index0 }}', $(this).find(':selected').attr('amount'))" name="__pagamenti__[righe][{{ loop.index0 }}][id_coupon]">
+                                    <option></option>
+                                    {% for coupon in etc.coupon[k] %}
+                                    {# if coupon.id_anagrafica == r.destinatario_id_anagrafica or coupon.id_anagrafica == '' #}
+                                    <option amount="{{ coupon.sconto_fisso }}" value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ '%0.2f'|format(coupon.sconto_fisso) }} € {{ coupon.id }}</option>
+                                    {# endif #}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
+                            <td class="text-right">
+                                {% if not r.id_pagamento %}
+                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ max(0, r.totale_lordo_da_pagare) }}" data-original-amount="{{ max(0, r.totale_lordo_da_pagare) }}" required>
+                                {% else %}
+                                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ max(0, r.totale_lordo_da_pagare) }}">
+                                <p>{{ max(0, r.totale_lordo_da_pagare) }} €</p>
+                                {% endif %}
+                            </td>
+                            <td class="no-wrap">
+                                {% for doc in r.documenti_da_stampare %}
+                                <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}                
+                    </tbody>
+
+                    <tfoot>
+
+                    </tfoot>
+
+                </table>
+
+            </fieldset>
+            <fieldset class="mt-auto">
+                <legend>generazione rate</legend>
+                <div class="form-row">
+                    <div class="col-4 col-md-auto">
+                        <input class="form-control form-control-sm" type="date" name="__pagamenti__[data_rate]" value="">
+                    </div>
+                    <div class="col">
+                        <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera rate</button>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>generazione documenti</legend>
+                <div class="form-row">
+                    <div class="col-4 col-md">
+                        <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__pagamenti__[fatturazione_id_tipologia_documento]">
+                            {% for tdoc in etc.id_tipologia_documenti %}
+                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == etc.default.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md">
+                        <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__pagamenti__[fatturazione_strategia]">
+                            {% for strf in etc.strategie_fatturazione %}
+                            <option value="{{ strf.id }}" {% if strf.id == etc.default.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!--
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="modalita-pagamento" hint-toggle="modalita_pagamento" name="__pagamenti__[fatturazione_id_modalita_pagamento]" required>
+                            <option value=""></option>
+                            {% for mp in etc.id_modalita_pagamento %}
+                            <option value="{{ mp.id }}" require="{{ mp.require }}" {% if mp.id == etc.default.fatturazione_id_modalita_pagamento %}selected{% endif %}>{{ mp.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    -->
+                </div>
+                <div class="form-row">
+                    <input type="hidden" id="pagamenti_fatturazione_id_modalita_pagamento" name="__pagamenti__[fatturazione_id_modalita_pagamento]" value="{{ request.__pagamenti__.fatturazione_id_modalita_pagamento }}">
+                    {% for mp in etc.id_modalita_pagamento %}
+                    <div class="col-4 col-md">
+                        <button onclick="$('#pagamenti_fatturazione_id_modalita_pagamento').val({{ mp.id }});$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">registra pagamento {{ mp.__label__ }}</button>
+                    </div>
+                    {% endfor %}
+                    <!--
+                    <div class="col">
+                        <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera documenti</button>
+                    </div>
+                    -->
+                </div>
+            </fieldset>
+        </form>
+        {% elseif session.carrello.id %}
+        <fieldset>
+            <legend>acquisti in corso</legend>
+            <p>chiudere il carrello #{{ session.carrello.id }} prima di procedere a registrare il pagamento</p>
+        </fieldset>
+        {% else %}
+        <fieldset>
+            <legend>nessun documento da generare</legend>
+            <p>effettuare una ricerca per generare una lista di documenti da generare</p>
+        </fieldset>
+        {% endif %}
+    </div>
+    <div class="col-md-2 d-flex flex-column">
+        <form id="pagamento_carrello" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+            <fieldset>
+                <legend>pagamenti per carrello</legend>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="label-top">ID carrello</label>
+                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello}}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="submit" class="btn btn-secondary btn-sm btn-block" value="cerca">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <form id="pagamento_cliente" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+            <fieldset>
+                <legend>pagamenti per cliente</legend>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">anagrafica</span>
+                        {{ frm.selectBox( '__pagamenti__', '', '', 'id_cliente', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <select class="form-control form-control-sm hint-toggle" id="" hint-toggle="" name="__pagamenti__[se_famiglia]">
+                            <option value="0">persona</option>
+                            <option value="1">famiglia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="submit" class="btn btn-secondary btn-sm btn-block" value="cerca">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+function ricalcolaTotaleDaPagare(idCampoImporto, sconto) {
+    let campo = $('#' + idCampoImporto);
+    // parto sempre dal valore originale per evitare accumulo se l'operatore cambia coupon più volte
+    let originale = parseFloat(campo.attr('data-original-amount'));
+    if (isNaN(originale)) originale = parseFloat(campo.val());
+    let scontoFisso = parseFloat(sconto);
+    let totale = originale - (isNaN(scontoFisso) ? 0 : scontoFisso);
+    // clamp a zero: il coupon non può portare il "da pagare" sotto zero
+    if (totale < 0) totale = 0;
+    campo.val(totale.toFixed(2));
+}
+</script>
+{% endblock %}

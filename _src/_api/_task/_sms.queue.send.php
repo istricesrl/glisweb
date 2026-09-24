@@ -16,6 +16,9 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_COMUNICAZIONI' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -23,7 +26,9 @@
 	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms', LOG_DEBUG );
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
 	// modalità di evasione (specifica sms, evasione forzata, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
@@ -169,7 +174,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
+				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),
@@ -181,8 +186,11 @@
 
 	} else {
 
+        // chiudo il ciclo
+        $iter = $task['iterazioni'];
+
 	    // log
-		logWrite( 'nessun SMS in coda da processare', 'sms', LOG_INFO );
+		logWrite( 'nessun SMS in coda da processare', 'sms' );
 
 	    // status
 		$status['info'][] = 'nessun SMS in coda da processare';

@@ -90,7 +90,8 @@
         // OOK? preg_match_all( '/([0-9.,]+)°[\s]*([0-9.,]+)\'/', '23.1°11.2\'', $a );
         // preg_match_all( '/([0-9.,]+)°[\s]*([0-9.,]+)[\'′]+[\s]*([0-9.,]+)[\'"″]+([NSWE]{1})/', '23.1°11.2\' 15,7"', $a );
 
-        preg_match( '/([0-9.,]+)°[\s]*([0-9.,]+)[\'′]+[\s]*([0-9.,]+)[\'"″]+([NSWE]{1})/', $s, $a );
+        // preg_match( '/([0-9.,]+)°[\s]*([0-9.,]+)[\'′]+[\s]*([0-9.,]+)[\'"″]+([NSWE]{1})/', $s, $a );
+        preg_match( '/([0-9.,]+)°[\s]*([0-9.,]+)[\'′’]+[\s]*([0-9.,]+)[\'"″”]+([NSWE]{1})/', $s, $a );
 
         // print_r( array_slice( $a, 1 ) );
 
@@ -110,5 +111,27 @@
         $a = string2degrees( $s );
 
         return degrees2coords( $a[0], $a[1], $a[2], $a[3] );
+
+    }
+
+    /**
+     *
+     *
+     *
+     * @todo documentare
+     *
+     */
+    function splitAddress( $a ) {
+
+        // $a = strtolower( $a );
+
+        // trovo il civico
+        preg_match( '/([0-9]+[\/0-9a-zA-Z]+)$/', $a, $pCivici );
+        $pCivico = ( is_array( $pCivici ) && ! empty( $pCivici ) ) ? $pCivici[0] : NULL;
+
+        // pulisco l'indirizzo
+        $pIndirizzo = trim( str_replace( $pCivico, NULL, $a ), ' ,' );        
+
+        return array( 'indirizzo' => $pIndirizzo, 'civico' => $pCivico );
 
     }

@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_view_static` CHANGE `se_agenzia` `se_agenzia_interinale` INT(11) NULL DEFAULT NULL;

@@ -1,0 +1,72 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# MODULO PRINCIPALE #}
+            <fieldset class="d-flex flex-column h-100">
+                <legend>contenuto del contatto</legend>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {{ frm.textarea({ 'field': { 'name': 'yaml', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': { 'table': form.table }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
+
+        CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: 'yaml',
+            theme: 'default',
+            tabSize: 4,
+            indentUnit: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete'
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock javascript %}

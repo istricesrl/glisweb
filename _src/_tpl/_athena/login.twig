@@ -1,0 +1,63 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# SCHEMA ESTESO #}
+{% extends 'ext/login.twig' %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+<div class="row p-0 m-0 flex-fill align-items-center justify-content-center">
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-2 px-5 form-login" id="formLogin" method="post">
+
+        {# CAMPI MANTENUTI AL LOGIN #}
+        {% for e,d in request %}{% if d.id %}
+        <input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
+        <input type="hidden" name="{{ e }}[__method__]" value="get">
+        {% endif %}{% endfor %}
+
+        {# MODULO DI LOGIN #}
+        <fieldset>
+            <legend>login</legend>
+
+            {# MODULO PRINCIPALE #}
+            <div class="form-group row">
+                <label class="d-none d-md-block col-md-4 col-form-label">username</label>
+                <div class="col-12 col-md-8">
+                    <input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="d-none d-md-block col-md-4 col-form-label">password</label>
+                <div class="col-12 col-md-8">
+                    <input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="d-grid gap-2 col-12">
+                    {{ cms.formButton( { 'field': { 'text': 'login' }, 'form': { 'id': 'formLogin', 'table': '__login__' }, 'recaptcha': google.profile.recaptcha } ) }}
+                </div>
+            </div>
+
+            {# RECUPERO PASSWORD #}
+            <div class="form-group row">
+                <div class="col-12">
+                    <a href="{{ pages['password.reset'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a>
+                </div>
+            </div>
+
+            {# REGISTRAZIONE NUOVO UTENTE #}
+            {% if '0350.registrazione' in mods.active.array %}
+            <div class="form-group row">
+                <div class="col-12">
+                    <a href="{{ pages['registrazione'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">registrati</a>
+                </div>
+            </div>
+            {% endif %}
+
+        </fieldset>
+
+    </form>
+</div>
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

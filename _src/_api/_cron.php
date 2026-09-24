@@ -1,158 +1,466 @@
 <?php
 
     /**
+     * gestione delle operazioni pianificate
+     * 
+     * questa API si occupa di gestire le operazioni pianificate del framework
+     * 
+     * introduzione
+     * ============
+     * Il framework dispone di un potente e flessibile sistema di esecuzione delle operazioni pianificate,
+     * che appoggiandosi al cron di sistema garantisce un'elevatissima affidabilità e buone prestazioni.
+     * Dal lato del sistema, uno script in /etc/cron.d/ che può essere installato anche tramite il comando
+     * _src/_sh/_crontab.install.sh deve richiamare l'API /api/cron del framework ogni minuto. L'API si 
+     * occuperà di controllare sulle tabelle *task* e *job* quali compiti vanno eseguiti e provvederà a 
+     * sbrigarli di conseguenza.
+     * 
+     * task e job
+     * ----------
+     * Come accennato, il meccanismo di esecuzione pianificata si articola su due diverse strategie, 
+     * rappresentate rispettivamente dai task e dai job. Da un lato i primi rappresentano un lavoro
+     * puntuale, eseguito ad ogni chiamata senza cognizione del contesto complessivo delle cose da fare;
+     * e di conseguenza la natura stessa del task è quella di coincidere con la singola chiamata.
+     * Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
+     * predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
+     * 
+     * Un esempio di task è la gestione delle code della posta; ad ogni chiamata, il task controlla se c'è
+     * almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
+     * inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
+     * di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
+     * scarica l'intero elenco dei comuni, poi pianifica il numero di esecuzioni necessarie per importarlo,
+     * dopodiché ad ogni chiamata successiva esegue una parte del lavoro sapendo quanto ha già fatto e
+     * quanto manca al completamento del compito, infine quando ha terminato l'importazione finisce e
+     * registra la chiusura del procedimento.
+     * 
+     * lo script di appoggio in /etc/cron.d/
+     * -------------------------------------
+     * Ad ogni chiamata, l'API _src/_api/_cron.php ricava dalle tabelle *task* e *job* l'elenco delle cose
+     * da fare, utilizzando un meccanismo di lock software basato su token per evitare la concorrenza. Prima
+     * vengono eseguiti i task, e successivamente vengono fatti avanzare i job.
+     * 
+     * Le informazioni rilevanti sul lavoro dell'API vengono salvate rispettivamente sotto le chiavi
+     * $cf['cron']['task'] e $cf['cron']['job'], inoltre un log specifico per la tracciatura degli esiti di
+     * tali lavorazioni è tenuto in var/log/cron/ e specificamente il dettaglio dell'ultima esecuzione è contenuto
+     * in var/log/latest/cron.latest.log.
+     * 
+     * logging dell'attività di cron
+     * -----------------------------
+     * Tutte le attività principali dell'API cron vengono registrate su /var/log/cron/YYYYMMDDHH.log; in pratica,
+     * qui viene registrata tutta l'attività di cron (ovvero il contenuto di $cf['cron']). Il dettaglio dell'ultima
+     * esecuzione di cron si trova invece in var/log/latest/cron.latest.log.
+     * 
+     * esecuzione dei task
+     * ===================
+     * Un task può essere chiamato manualmente in maniera diretta, oppure tramite cron. Nel primo caso è necessario
+     * far puntare il browser (o fare una chiamata Ajax) all'URL del task; ad esempio per chiamare il task
+     * /_src/_api/_task/_memcache.clean.php si accederà all'endpoint /task/memcache.clean (si veda la documentazione
+     * del file .htaccess per ulteriori dettagli sui percorsi e sulla riscrittura degli URL).
+     * 
+     * Per eseguire un task in maniera ricorrente e pianificata, è necessario invece che esso sia presente nella
+     * tabella task, la cui struttura è simile a quella del file /etc/crontab di Linux. Ogni volta che viene chiamata
+     * l'API cron (/api/cron) il framework controlla se ci sono task da eseguire in quel momento, e nel caso
+     * provvede ad eseguirli.
+     * 
+     * test dei task
+     * -------------
+     * Il test dei task è facilitato dal fatto che possono essere chiamati manualmente quante volge si vuole per
+     * testarli a fondo prima di iniziare a utilizzarli. Una volta che si è sicuri del buon funzionamento del task
+     * chiamato manualmente, è possibile aggiungerlo alla tabella task con la sua pianificazione. Un esempio di
+     * codice SQL per questo inserimento sarebbe:
+     * 
+     * ```
+     * INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, 
+     *     `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`)
+     * VALUES
+     *     (1, NULL, NULL, NULL, NULL, NULL, NULL, '_src/_api/_task/_test.cron.php', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+     * ```
+     * 
+     * Questo task (nell'esempio _src/_api/_task/_test.cron.php) verrà eseguito ogni minuto. Si può verificarlo facilmente
+     * chiamando a mano l'API cron oppure, se è attiva l'esecuzione automatica, basterà tenere sott'occhio i log (vedi sotto).
+     * 
+     * log delle operazioni dei task
+     * -----------------------------
+     * I log dei task sono raggruppati per ID del task (con riferimento all'ID che il task ha sulla tabella dei task).
+     * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
+     * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
+     * log dei task pianificati sono /var/log/task/TASKID.log (che contiene informazioni generali sull'esecuzione del task)
+     * e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica esecuzione
+     * del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e suddiviso
+     * in piccole parti ognuna relativa a una data esecuzione.
+     * 
+     * esecuzione dei job
+     * ==================
+     * Mentre la chiamata di un task è un evento puntuale, che si esaurisce in sé stesso e non ha memoria delle esecuzioni
+     * precedenti o successive, la chiamata di un job è qualcosa che fa avanzare il job stesso lungo un percorso di
+     * lavoro predeterminato, la cui lunghezza è nota al tempo dell'avvio, e all'interno del quale tutte le esecuzioni
+     * hanno una memoria comune (il workspace del job).
+     * 
+     * L'esecuzione manuale di un job richiede l'utilizzo dell'API job (esiste anche la possibilità di creare dei job
+     * standalone, ma è deprecata); di conseguenza, anche il debug di un nuovo job andrà fatto in questo modo. Per eseguire
+     * manualmente un job è necessario prima di tutto inserire una riga nella tabella job specificando il flag se_foreground;
+     * questo farà sì che il cron ignori il job, consentendone l'esecuzione manuale.
+     * 
+     * Per eseguire un job in maniera automatica è necessario che il flag se_foreground sia settato a NULL, in modo che
+     * sia il cron ad occuparsi dell'esecuzione.
+     * 
+     * test dei job
+     * ------------
+     * Anche se apparentemente è più complicato, il test dei job funziona in maniera molto simile a quello dei task. Dopo
+     * aver inserito la riga relativa nella tabella dei job, si disporrà dell'ID necessario a chiamare l'API job per
+     * l'esecuzione manuale:
+     * 
+     * ```
+     * /api/job/<jobId>
+     * ```
+     * 
+     * Per il debug si può fare riferimento sia al JSON di risposta sia alle informazioni che il job scriverà sui file
+     * di log.
+     * 
+     * log delle operazioni dei job
+     * ----------------------------
+     * Come per i task, anche i log dei job sono raggruppati per ID del job, e in particolare il file /var/log/job/JOBID.log
+     * rappresenta il log per le informazioni generali, meno dettagliato ma cumulativo di tutte le esecuzioni del job, mentre
+     * il file /var/log/job/JOBID/AVANZAMENTO.MICROTIME.log contiene le informazioni specifiche relative a uno step dato.
+     * Si noti che oltre al tempo in questo caso rileva anche il punto di avanzamento del job (cosa che non aveva invece senso
+     * nell'ambito dei task).
+     * 
+     */
+
+    // debug
+    // ini_set( 'display_errors', 1 );
+    // ini_set( 'display_startup_errors', 1 );
+    // error_reporting( E_ALL );
+
+    /**
+     * configurazioni generali
+     * =======================
+     * 
+     * 
+     */
+
+    // costanti che descrivono lo stato di funzionamento del framework
+    define( 'CRON_RUNNING', true );
+
+    // inclusione del framework
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+        require '../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
+    }
+
+    // log
+    logger( 'chiamata cron API', 'cron' );
+    loggerLatest( 'avvio API cron', FILE_LATEST_CRON );
+
+    // output
+    $cf['cron']['status'] = array( 'avviato' => date( 'Y-m-d H:i:s' ) );
+
+    // tempo
+    $cf['cron']['time'] = time();
+
+    // chiave di lock
+    $cf['cron']['token'] = getToken( __FILE__ );
+
+    /**
+     * Fix 2026-07-24: durata massima di un run, in secondi.
      *
+     * Il cron di sistema chiama questa API ogni minuto: il tetto sta sotto al minuto così ogni run
+     * fa in tempo a chiudersi e a liberare il lock prima che parta il successivo. Sovrascrivibile
+     * da `src/config.json` (chiave `cron.durata_massima`).
+     */
+    if( empty( $cf['cron']['durata_massima'] ) ) {
+        $cf['cron']['durata_massima'] = 45;
+    }
+
+    /**
+     * Fix 2026-09-07: quante passate di cron un job puo' restare fermo prima di essere chiuso
+     * d'ufficio.
      *
+     * Serve a garantire che un job non possa restare aperto per sempre. Un job che a ogni passata
+     * viene preso in carico e non fa avanzare `corrente` non sta lavorando: o e' in attesa di
+     * qualcosa che non arrivera' mai, o muore sempre nello stesso punto. Senza questa guardia il
+     * cron continuerebbe a riprenderlo a ogni giro, in silenzio, finche' qualcuno non se ne
+     * accorge guardando la tabella.
      *
-     * @todo commentare
+     * Trenta passate sono mezz'ora di cron al minuto: larghe per qualunque attesa legittima
+     * ( il polling di un servizio esterno fa avanzare `corrente` a ogni interrogazione, quindi
+     * non e' uno stallo ) e brevi abbastanza perche' un job piantato non resti in giro per
+     * giorni. Sovrascrivibile da `src/config.json` ( chiave `cron.stalli_massimi` ).
+     */
+    if( empty( $cf['cron']['stalli_massimi'] ) ) {
+        $cf['cron']['stalli_massimi'] = 30;
+    }
+
+    /**
+     * Fix 2026-07-24: guardia anti-sovrapposizione dei run di cron.
      *
-     * @file
+     * Il lock applicato su `task.token` non basta a impedire run concorrenti: `timestamp_esecuzione`
+     * viene scritto solo ALLA FINE del task (vedi UPDATE più sotto), quindi durante l'esecuzione resta
+     * fermo al run precedente. Dopo 10 minuti la query di "recupero dei task fermi" azzera il token
+     * anche se il run è ancora vivo, e il run successivo riparte in parallelo. Con task che durano più
+     * di 10 minuti se ne accumula uno nuovo ogni 10 minuti, ciascuno con la propria connessione MySQL e
+     * ~190 tabelle aperte: su un server condiviso questo satura `table_open_cache` e `max_connections`,
+     * bloccando tutti i siti ospitati (incidente del 2026-07-24).
+     *
+     * GET_LOCK è per-connessione e le connessioni qui NON sono persistenti (`mysqli_real_connect` senza
+     * prefisso `p:` in `_src/_config/_125.mysql.php`): se il processo muore il lock si libera da solo,
+     * quindi non può restare appeso. Il nome è costruito con `database()` perché GET_LOCK ha visibilità
+     * di ISTANZA: su mysql03 convivono più siti e un nome fisso li bloccherebbe a vicenda.
+     */
+    $cf['cron']['lock'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT GET_LOCK( concat( database(), ".cron" ), 0 )'
+    );
+
+    // se un altro run è ancora in corso esco senza eseguire nulla: il prossimo minuto ritenta
+    if( empty( $cf['cron']['lock'] ) ) {
+
+        // log
+        logger( 'run di cron già in corso: esco senza eseguire task e job', 'cron', LOG_WARNING );
+        loggerLatest( 'run di cron già in corso: esecuzione saltata', FILE_LATEST_CRON );
+
+        // status
+        $cf['cron']['status']['saltato'] = date( 'Y-m-d H:i:s' );
+        $cf['cron']['info'][] = 'run precedente ancora in esecuzione, esecuzione saltata';
+
+        // output
+        buildJson(
+            $cf['cron'],
+            ENCODING_UTF8,
+            array(
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Cache-Lifetime' => '0',
+                'X-Proxy-Cache' => 'BYPASS',
+            )
+        );
+
+        // chiusura esplicita: `build()` termina già lo script, questo è solo un presidio
+        exit;
+
+    }
+
+    /**
+     * esecuzione task
+     * ===============
+     *
      *
      */
 
-    // inclusione del framework
-	require '../_config.php';
-
-    // costanti che descrivono lo stato di funzionamento del framework
-	define( 'CRON_RUNNING'			, 'CRONRUN' );
-
-    // apro il report
-	writeToFile( date( 'Y/m/d H:i:s' ), FILE_LATEST_CRON );
-
-    // log
-	logWrite( 'chiamata cron API', 'cron' );
-
-    // tempo
-	$time = time();
-
-    // output
-	$cf['cron']['results'] = array();
-
-    // chiave di lock
-	$cf['cron']['results']['token'] = getToken( __FILE__ );
-		
-	// inizializzo
-#	$cf['cron']['cache']['view']['static']['refresh'] = array();
+    // provo a recuperare i task fermi
+    mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE task SET token = NULL WHERE token IS NOT NULL AND timestamp_esecuzione < ?',
+        array(
+            array( 's' => strtotime( '-10 minutes' ) )
+        )
+    );
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
-	$tasks = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'UPDATE cron SET token = ?, timestamp_esecuzione = ? WHERE '.
-	    '( minuto = ?												OR minuto IS NULL ) AND '.
-	    '( ora = ?													OR ora IS NULL ) AND '.
-	    '( giorno_del_mese = ?										OR giorno_del_mese IS NULL ) AND '.
-	    '( mese = ?													OR mese IS NULL ) AND '.
-	    '( giorno_della_settimana = ?								OR giorno_della_settimana IS NULL ) AND '.
-	    '( settimana = ?											OR settimana IS NULL ) AND '.
-		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND '.
-		'( token IS NULL OR ( timestamp_esecuzione < ? ) )',
-	    array(
-			array( 's' => $cf['cron']['results']['token'] ),		//
-			array( 's' => $time ),								//
-			array( 's' => intval( date( 'i', $time ) ) ),			// 
-			array( 's' => date( 'G', $time ) ),						// 
-			array( 's' => date( 'j', $time ) ),						// 
-			array( 's' => date( 'n', $time ) ),						// 
-			array( 's' => date( 'w', $time ) ),						// 0 - 6, 0 -> domenica
-			array( 's' => date( 'W', $time ) ),						// 1 - 52/53
-			array( 's' => date( 'YmdHi', $time ) ),					//
-			array( 's' => strtotime( '-10 minutes' ) )				//
-	    )
-	);
+    $tasks = mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE task SET token = ? WHERE
+            ( minuto = ?                                                OR minuto IS NULL ) AND 
+            ( ora = ?                                                   OR ora IS NULL ) AND 
+            ( giorno_del_mese = ?                                       OR giorno_del_mese IS NULL ) AND 
+            ( mese = ?                                                  OR mese IS NULL ) AND 
+            ( giorno_della_settimana = ?                                OR giorno_della_settimana IS NULL ) AND 
+            ( settimana = ?                                             OR settimana IS NULL ) AND 
+            ( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?    OR timestamp_esecuzione IS NULL ) AND 
+            ( token IS NULL OR ( timestamp_esecuzione < ? ) )',
+        array(
+            array( 's' => $cf['cron']['token'] ),                               //
+            array( 's' => intval( date( 'i', $cf['cron']['time'] ) ) ),         // 
+            array( 's' => date( 'G', $cf['cron']['time'] ) ),                   // 
+            array( 's' => date( 'j', $cf['cron']['time'] ) ),                   // 
+            array( 's' => date( 'n', $cf['cron']['time'] ) ),                   // 
+            array( 's' => date( 'N', $cf['cron']['time'] ) ),                   // 1 - 7, 1 -> lunedì
+            array( 's' => date( 'W', $cf['cron']['time'] ) ),                   // 1 - 52/53
+            array( 's' => date( 'YmdHi', $cf['cron']['time'] ) ),               //
+            array( 's' => strtotime( '-10 minutes' ) )                          //
+        )
+    );
 
     // seleziono i task a cui ho applicato il lock
-	$cf['cron']['tasks'] = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT * FROM cron WHERE token = ? ',
-		array(
-			array( 's' => $cf['cron']['results']['token'] )
-		)
-	);
-	
+    $cf['cron']['task'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT * FROM task WHERE token = ? ',
+        array(
+            array( 's' => $cf['cron']['token'] )
+        )
+    );
 
     // log
-	logWrite( 'criteri di ricerca -> '
-	    . date( 'i', $time ) . ' '
-	    . date( 'G', $time ) . ' '
-	    . date( 'j', $time ) . ' '
-	    . date( 'n', $time ) . ' '
-	    . date( 'w', $time ) . ' '
-	    . date( 'W', $time ),
-	    'cron'
-	);
+    logger( 'criteri di ricerca -> '
+        . date( 'i', $cf['cron']['time'] ) . ' '
+        . date( 'G', $cf['cron']['time'] ) . ' '
+        . date( 'j', $cf['cron']['time'] ) . ' '
+        . date( 'n', $cf['cron']['time'] ) . ' '
+        . date( 'N', $cf['cron']['time'] ) . ' '
+        . date( 'W', $cf['cron']['time'] ),
+        'task'
+    );
 
-	// log
-	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
+    // verifico se ci sono dei job aperti
+    if( is_array( $cf['cron']['task'] ) ) {
 
-    // ciclo sui task
-	foreach( $cf['cron']['tasks'] as $task ) {
-	    if( file_exists( DIR_BASE . $task['task'] ) ) {
+        // log
+        logger( 'task trovati: ' . print_r( $cf['cron']['task'], true), 'cron' );
 
-			// timestamp di esecuzione iniziale
-			mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE cron SET timestamp_esecuzione = ? WHERE id = ?',
-				array(
-				array( 's' => $time ),
-				array( 's' => $task['id'] )
-				)
-			);
+        // ciclo sui task
+        foreach( $cf['cron']['task'] as $task ) {
 
-			// resetto lo status
-				$status = array();
+            // controllo che il file del task esista
+            if( file_exists( DIR_BASE . $task['task'] ) ) {
 
-			// log
-				logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+                // log
+                logger( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
-			// eseguo il task
-				if( ! empty( $task['iterazioni'] ) ) {
-					for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
-						logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
-						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-						require DIR_BASE . $task['task'];
-						$cf['cron']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
-						sleep( $task['delay'] );
-					}
-				} else {
-					$cf['cron']['results']['errors'][] = 'il task ' . $job['task'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
-					logWrite( 'il task ' . $task['task'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
-				}
-	
-		} else {
-			$cf['cron']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
-			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
-		}
+                // log
+                loggerLatest( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], FILE_LATEST_RUN );
 
-		// aggiorno la tabella di pianificazione
-		mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE cron SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
-			array(
-				array( 's' => $time ),
-				array( 's' => $task['id'] )
-			)
-		);
-	}
-		
-/*	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
-	
-	if( !empty($cf['cron']['cache']['view']['static']['refresh']  ) ){
-		foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
-			// riattivo i trigger per l'entità
-			triggerOn( $s );
+                // eseguo il task
+                if( ! empty( $task['iterazioni'] ) ) {
 
-			// chiamo le statiche per ripopolare
-			$exec = mysqlQuery(
-				$cf['mysql']['connection'],
-				'CALL ' . $s . '_view_static(NULL)'
-			);
-		}
-	}
-*/
+                    // iterazioni del task
+                    for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
+
+                        /**
+                         * Fix 2026-07-24: tetto di durata del run.
+                         *
+                         * `max_execution_time` è 0 (illimitato), quindi un task lento può tenere occupato
+                         * il run — e con esso il lock di cui sopra — per ore, di fatto fermando tutti gli
+                         * altri task (mail e SMS in coda compresi). Osservato il 2026-07-24: un singolo run
+                         * ancora vivo dopo 46 minuti, perché il task 6 esegue una SELECT da 7-15s per
+                         * ciascuna delle sue 12 iterazioni.
+                         *
+                         * Superata la soglia si interrompono le iterazioni residue e si passa al task
+                         * successivo: i task sono incrementali (lavorano su una riga per iterazione), quindi
+                         * il run del minuto dopo riprende da dove si era arrivati senza perdere lavoro.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il task ' . $task['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['task'][ $task['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $task['iterazioni'];
+
+                            break;
+
+                        }
+
+                        // ...
+                        logger( 'iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+
+                        // ...
+                        $status = array();
+
+                        // ...
+                        require DIR_BASE . $task['task'];
+
+                        // ...
+                        $cf['cron']['task'][ $task['id'] ]['status'] = $status;
+
+                        // ...
+                        logger( 'fine iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+
+                        // ...
+                        loggerLatest( print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
+
+                    }
+
+                    // aggiorno la tabella di pianificazione
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $cf['cron']['time'] ),
+                            array( 's' => $task['id'] )
+                        )
+                    );
+
+                } else {
+
+                    // status
+                    $cf['cron']['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+
+                    // log
+                    logger( 'il task ' . $task['id'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
+
+                }
+        
+                // log
+                loggerLatest( 'eseguito il task ' . $task['id'] . ' -> ' . $task['task'], FILE_LATEST_RUN );
+
+            } else {
+
+                // status
+                $cf['cron']['task'][ $task['id'] ]['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
+
+                // log
+                logger( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
+
+            }
+
+            // log
+            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
+
+        }
+
+    } else {
+
+        // status
+        $cf['cron']['info'][] = 'nessun task trovato';
+
+        // log
+        logger( 'nessun task trovato', 'cron' );
+
+    }
+
+    /**
+     * esecuzione job
+     * ==============
+     * 
+     * 
+     */
+
+    // do un riferimento temporale ai job che non ne hanno ancora uno
+    //
+    // i due recuperi qui sotto filtrano su "timestamp_esecuzione < ?" e in SQL il
+    // confronto con NULL non e' mai vero, quindi un job appena inserito - che ha
+    // timestamp_esecuzione NULL, perche' la colonna e' DEFAULT NULL e le INSERT
+    // non la valorizzano - e' invisibile a entrambi. Le conseguenze:
+    //
+    // - un job creato con se_foreground non verrebbe MAI riportato in background,
+    //   quindi se nessuno apre l'interfaccia per farlo avanzare resta fermo per
+    //   sempre invece di essere completato dal cron;
+    // - un job a cui _job.php ha messo il token (senza scrivere
+    //   timestamp_esecuzione) e che si interrompe prima della prima iterazione
+    //   resta lockato per sempre, perche' lo sblocco non lo vede.
+    //
+    // stampando qui il riferimento, il conto dei 10 minuti parte dal primo giro di
+    // cron successivo alla creazione e i due recuperi tornano a funzionare.
+    mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE job SET timestamp_esecuzione = ? WHERE timestamp_esecuzione IS NULL AND timestamp_completamento IS NULL',
+        array(
+            array( 's' => $cf['cron']['time'] )
+        )
+    );
+
+    // provo a recuperare i job fermi
+    mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE job SET token = NULL WHERE token IS NOT NULL AND timestamp_completamento IS NULL AND timestamp_esecuzione < ?',
+        array(
+            array( 's' => strtotime( '-10 minutes' ) )
+        )
+    );
 
     // porto in background i job fermi in foreground
-    $status['job']['foreground'] = mysqlSelectRow(
+    mysqlQuery(
         $cf['mysql']['connection'],
         'UPDATE job SET se_foreground = NULL WHERE timestamp_completamento IS NULL AND timestamp_esecuzione < ?',
         array(
@@ -160,97 +468,213 @@
         )
     );
 
-	// metto il lock sui job aperti
-		$jobs = mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE job SET token = ?, timestamp_esecuzione = ? WHERE '.
-			'( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
-			'AND timestamp_completamento IS NULL '.
-			'AND ( token IS NULL OR timestamp_esecuzione < ? ) '.
-			'AND se_foreground IS NULL ',
-			array(
-				array( 's' => $cf['cron']['results']['token'] ),
-				array( 's' => $time ),
-				array( 's' => $time ),
-				array( 's' => strtotime( '-10 minutes' ) )
-			)
-		);
-	
+    // metto il lock sui job aperti
+    $jobs = mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE job SET token = ?, timestamp_esecuzione = ? WHERE 
+        ( timestamp_apertura <= ? OR timestamp_apertura IS NULL )
+        AND timestamp_completamento IS NULL 
+        AND ( token IS NULL ) 
+        AND ( se_foreground IS NULL OR se_foreground = 0 )',
+        array(
+            array( 's' => $cf['cron']['token'] ),
+            array( 's' => $cf['cron']['time'] ),
+            array( 's' => $cf['cron']['time'] )
+        )
+    );
+    
     // seleziono i job a cui ho applicato il lock
-	$cf['cron']['jobs'] = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT * FROM job WHERE token = ? ',
-		array(
-			array( 's' => $cf['cron']['results']['token'] )
-		)
-	);
+    $cf['cron']['job'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT * FROM job WHERE token = ? ',
+        array(
+            array( 's' => $cf['cron']['token'] )
+        )
+    );
 
-	// log
-	logWrite( 'job trovati: ' . print_r( $cf['cron']['jobs'], true), 'cron' );
+    // verifico se ci sono dei job aperti
+    if( is_array( $cf['cron']['job'] ) ) {
 
-	// ciclo sui job
-	foreach( $cf['cron']['jobs'] as $job ) {
-	    if( file_exists( DIR_BASE . $job['job'] ) ) {
+        // log
+        logger( 'job trovati: ' . print_r( $cf['cron']['job'], true), 'cron' );
 
-		// log
-		    logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
+        // ciclo sui job
+        foreach( $cf['cron']['job'] as $job ) {
 
-		// resetto lo status
-			$status = array();
+            // controllo che il file del job esista
+            if( file_exists( DIR_BASE . $job['job'] ) ) {
 
-		// decodifica del workspace
-			$job['workspace'] = json_decode( $job['workspace'], true );
+                // log
+                logger( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
 
-		// eseguo il job
-			if( ! empty( $job['iterazioni'] ) ) {
-				for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
-					logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
-					// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-					require DIR_BASE . $job['job'];
-					$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-					if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
-					sleep( $job['delay'] );
-				}
-			} else {
-				$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
-				logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
-			}
+                // decodifica del workspace
+                $job['workspace'] = json_decode( $job['workspace'], true );
 
-		// aggiorno la tabella di avanzamento lavori
-		    mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-				array(
-					array( 's' => $time ),
-					array( 's' => json_encode( $job['workspace'] ) ),
-					array( 's' => $job['id'] )
-				)
-			);
+                // eseguo il job
+                if( ! empty( $job['iterazioni'] ) ) {
 
-		} else {
+                    /**
+                     * Fix 2026-09-07: guardia contro il job che non finisce mai.
+                     *
+                     * Il contatore si incrementa PRIMA di lavorare e si scrive subito a database,
+                     * con una query sua. E' l'unico modo perche' regga anche quando il job muore
+                     * dentro il require: l'UPDATE del workspace in fondo a questo blocco, in quel
+                     * caso, non viene mai raggiunta, e un contatore incrementato solo alla fine
+                     * non conterebbe proprio le passate che interessano.
+                     *
+                     * Si azzera appena `corrente` avanza, quindi un job che lavora non lo vede
+                     * mai. Un job che invece viene ripreso passata dopo passata senza avanzare
+                     * viene chiuso d'ufficio con un log di errore: meglio un lavoro dichiarato
+                     * fallito che uno che resta aperto in eterno senza che nessuno lo sappia.
+                     */
+                    $avanzamentoIniziale = ( isset( $job['corrente'] ) ) ? $job['corrente'] : 0;
 
-			$cf['cron']['results']['errors'][] = 'il file di job ' . $job['job'] . ' non esiste';
-			logWrite( 'il file di job ' . $job['job'] . ' non esiste', 'cron', LOG_ERR );
+                    $job['workspace']['__stalli__'] = ( isset( $job['workspace']['__stalli__'] ) ) ? $job['workspace']['__stalli__'] + 1 : 1;
 
-			// aggiorno la tabella di avanzamento lavori
-			mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE job SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
-				array(
-					array( 's' => $time ),
-					array( 's' => $job['id'] )
-				)
-			);
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET workspace = ? WHERE id = ?',
+                        array(
+                            array( 's' => json_encode( $job['workspace'] ) ),
+                            array( 's' => $job['id'] )
+                        )
+                    );
 
-		}
+                    if( $job['workspace']['__stalli__'] > $cf['cron']['stalli_massimi'] ) {
 
-	}
+                        // log
+                        logger( 'il job ' . $job['id'] . ' -> ' . $job['job'] . ' non avanza da ' . $cf['cron']['stalli_massimi'] . ' passate ( fermo a ' . $avanzamentoIniziale . ' di ' . $job['totale'] . ' ): lo chiudo d ufficio', 'cron', LOG_ERR );
+
+                        // status
+                        $cf['cron']['job'][ $job['id'] ]['errors'][] = 'chiuso d ufficio dopo ' . $cf['cron']['stalli_massimi'] . ' passate senza avanzamento';
+
+                        // chiusura d'ufficio: si libera anche il lock, altrimenti la riga resta
+                        // appesa a un token che nessuno azzerera' piu'
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE job SET timestamp_completamento = ?, token = NULL WHERE id = ?',
+                            array(
+                                array( 's' => time() ),
+                                array( 's' => $job['id'] )
+                            )
+                        );
+
+                        continue;
+
+                    }
+
+                    for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+
+                        /**
+                         * Fix 2026-07-24: stesso tetto di durata applicato ai task (vedi sopra).
+                         *
+                         * Qui è anche più necessario: i job hanno `iterazioni` molto alte (2000 per i
+                         * `report.lezioni.corsi.popolazione`) e restano aperti finché non arrivano a
+                         * completamento, quindi un singolo run può occupare il server per ore. Il job non
+                         * viene chiuso: mantiene il suo token, e il run successivo riprende da dove era
+                         * arrivato.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il job ' . $job['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['job'][ $job['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $job['iterazioni'];
+
+                            break;
+
+                        }
+
+                        // ...
+                        logger( 'iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+
+                        // ...
+                        $status = array();
+
+                        // ...
+                        require DIR_BASE . $job['job'];
+
+                        // ...
+                        $cf['cron']['job'][ $job['id'] ]['status'] = $status;
+
+                        // ...
+                        logger( 'fine iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+
+                        // ...
+                        loggerLatest( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
+
+                    }
+
+                    // il job ha avanzato: non e' in stallo, azzero il contatore
+                    if( isset( $job['corrente'] ) && $job['corrente'] > $avanzamentoIniziale ) {
+                        unset( $job['workspace']['__stalli__'] );
+                    }
+
+                    // aggiorno la tabella di avanzamento lavori
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $cf['cron']['time'] ),
+                            array( 's' => json_encode( $job['workspace'] ) ),
+                            array( 's' => $job['id'] )
+                        )
+                    );
+
+                } else {
+
+                    // status
+                    $cf['cron']['job'][ $job['id'] ]['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+
+                    // log
+                    logger( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
+
+                }
+
+            } else {
+
+                // status
+                $cf['cron']['job'][ $job['id'] ]['errors'][] = 'il file di job ' . $job['job'] . ' non esiste';
+
+                // log
+                logger( 'il file di job ' . $job['job'] . ' non esiste', 'cron', LOG_ERR );
+
+            }
+
+            // log
+            loggerLatest( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+
+        }
+
+    } else {
+
+        // status
+        $cf['cron']['info'][] = 'nessun job trovato';
+
+        // log
+        logger( 'nessun job trovato', 'cron' );
+
+    }
+
+    // status
+    $cf['cron']['status']['concluso'] = date( 'Y-m-d H:i:s' );
 
     // log
-	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'YmdH' ) . '.log' );
+    loggerLatest( print_r( $cf['cron'], true ), DIR_VAR_LOG_CRON . date( 'YmdH' ) . '.log' );
 
-	// log
-	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), FILE_LATEST_CRON );
+    // log
+    loggerLatest( print_r( $cf['cron'], true ), FILE_LATEST_CRON );
 
     // output
-	buildJson( $cf['cron']['results'] );
+    buildJson(
+        $cf['cron'], 
+        ENCODING_UTF8,
+        array(
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'X-Cache-Lifetime' => '0',
+            'X-Proxy-Cache' => 'BYPASS',
+        )
+    );

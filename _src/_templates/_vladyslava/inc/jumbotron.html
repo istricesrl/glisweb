@@ -1,0 +1,9 @@
+{% import '_bin/_default.html' as cms %}
+
+{% if page.contents.images.jumbotron|length > 0 %}
+<div class="row">
+    <div class="col">
+        {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+    </div>
+</div>
+{% endif %}

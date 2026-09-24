@@ -1,1 +1,0 @@
-ALTER TABLE `pubblicazione` DROP FOREIGN KEY `pubblicazione_ibfk_10`;

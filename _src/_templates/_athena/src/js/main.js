@@ -3,6 +3,52 @@
 	var formChanged = false;
 	var submitFormOkay = false;
 
+    // dice se un modulo e' stato modificato DAVVERO
+    //
+    // formChanged da solo non basta: e' acceso da un binding su 'keyup change' del form, e keyup
+    // scatta anche su Tab, frecce ed Esc, cioe' semplicemente spostandosi fra i campi senza
+    // toccare niente. Da li' il popup "esci da questa pagina" su schede mai modificate.
+    //
+    // Qui si confronta lo stato attuale del modulo con quello fotografato al caricamento. CKEditor
+    // va chiesto a parte, perche' riversa il suo contenuto nella textarea solo al submit e quindi
+    // una sua modifica in serialize() non si vedrebbe.
+    function glisModuloModificato() {
+
+        if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
+            for( var i in CKEDITOR.instances ) {
+                if( CKEDITOR.instances[i].checkDirty() ) { return true; }
+            }
+        }
+
+        var modificato = false;
+
+        $('.warning-if-changed').each( function() {
+            if( $(this).serialize() !== $(this).data('glis-stato-iniziale') ) { modificato = true; }
+        });
+
+        return modificato;
+
+    }
+
+    // il salvataggio si vede ( segnalazione di Stefano Zoli del 22/09/2026 )
+    //
+    // "quando si salva non si ha la percezione che il sistema stia salvando": una scheda con molte
+    // righe ci mette qualche secondo, la pagina resta identica e l'operatore clicca una seconda
+    // volta. Qui si stende un velo sopra la pagina, che dice cosa sta succedendo e intanto
+    // impedisce di toccare altro.
+    //
+    // Non si toglie mai a mano, e non serve: la richiesta che lo ha acceso ricarica la pagina, e
+    // il velo se ne va con lei. E' anche il motivo per cui chi invia un modulo verso un'altra
+    // finestra ( target ) non lo accende: li' la pagina resta dov'e' e il velo resterebbe appeso.
+    function glisAttendi( messaggio ) {
+
+        if( $( '#glis-attendi' ).length ) { return; }
+
+        $( '<div id="glis-attendi"><div class="glis-attendi-box"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i> ' + messaggio + '</div></div>' ).appendTo( 'body' );
+
+    }
+
+
     // duplica un subform
 	function duplicate( f ) {
 
@@ -107,6 +153,12 @@
 			$(this).selectBox();
 		});
 
+        // se nella pagina c'è bisogno di scatenare eventi custom al duplicate(), definire la funzione onDuplicate()
+        if( typeof onDuplicate === "function") { 
+            onDuplicate( base );
+        } else {
+            console.log('onDuplicate() not defined');
+        }
 
 // SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
 // creando una nuova riga di orario al check non applica correttamente i value...
@@ -136,18 +188,171 @@
 
 	}
 
+	function aggiornaCarrello( d ) {
+
+		// alert('aggiorno il carrello');
+
+		// console.log( d );
+
+		$('#widget-cart').fadeIn();
+		$('#cart-articoli').empty();
+
+		for( codice in d.articoli ) {
+
+			var articolo = d.articoli[ codice ];
+
+			var p1 = $( '<div>', { "class" : "cart-row-container row" } );
+
+			var p11 = $( '<div>', { "class" : "col-1" } );
+			var p12 = $( '<div>', { "class" : "col-2" } );
+			var p13 = $( '<div>', { "class" : "col" } );
+			var p14 = $( '<div>', { "class" : "col-2 text-right" } );
+
+			var p111 = $( '<p>' ).text( articolo.quantita + 'x' );
+			var p121 = $( '<p>' ).text( articolo.id_articolo );
+			var p131 = $( '<p>' ).text( articolo.descrizione );
+			var p141 = $( '<p>' ).text( articolo.prezzo_lordo_finale.toFixed(2) + ' ' + d.valuta_utf8 );
+
+			p111.appendTo( p11 );
+			p121.appendTo( p12 );
+			p131.appendTo( p13 );
+			p141.appendTo( p14 );
+
+			p11.appendTo( p1 );
+			p12.appendTo( p1 );
+			p13.appendTo( p1 );
+			p14.appendTo( p1 );
+
+			p1.appendTo('#cart-articoli');
+
+			// console.log( articolo );
+			// console.log( articolo.id_articolo );
+			// console.log( articolo.quantita );
+			// console.log( articolo.prezzo_lordo_finale );
+
+		}
+
+	}
+
+	function aggiornaBookmarks( d ) {
+
+		// alert('aggiorno i bookmarks');
+
+		// console.log( d );
+
+		$('#widget-bookmarks').fadeIn();
+		$('#list-bookmarks').empty();
+
+		for( section in d ) {
+
+			// console.log( section );
+			// console.log( d[ section ] );
+			// console.log( d[ section ].label );
+			// console.log( d[ section ].items );
+
+			var sezione = d[ section ];
+
+			// console.log( sezione );
+			// console.log( sezione.label );
+
+			var t1 = $( '<div>', { "class" : "row" } );
+			var t11 = $( '<div>', { "class" : "col" } );
+			var t111 = $( '<h2>' ).text( sezione.label );
+
+			// console.log( t1 );
+
+			t111.appendTo( t11 );
+			t11.appendTo( t1 );
+
+			t1.appendTo('#list-bookmarks');
+
+			var s1 = $( '<span>', { "class" : "pb-3" } );
+
+			for( item in sezione.items ) {
+
+				// console.log( d[ section ].items[ item ] );
+
+				var oggetto = sezione.items[ item ];
+
+				var o1 = $( '<div>', { "class" : "bookmarks-row-container row" } );
+				var o11 = $( '<div>', { "class" : "col" } );
+				var o111 = $( '<p>' ).text( oggetto.label );
+
+				o111.appendTo( o11 );
+				o11.appendTo( o1 );
+				o1.appendTo( s1 );
+	
+			}
+
+			s1.appendTo('#list-bookmarks');
+
+			var b1 = $( '<span>', { "class" : "pb-3" } );
+
+			for( azione in sezione.actions ) {
+
+				// console.log( d[ section ].actions[ azione ] );
+
+				var oggetto = sezione.actions[ azione ];
+
+				var o1 = $( '<div>', { "class" : "row" } );
+				var o11 = $( '<div>', { "class" : "col" } );
+				var o111 = $( '<p>' );
+
+				if( typeof oggetto.url !== 'undefined' ) {
+
+					var o1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + oggetto.url + "','_self');" } ).text( oggetto.label );
+					o1111.appendTo( o111 );
+
+				}
+
+				o111.appendTo( o11 );
+				o11.appendTo( o1 );
+				o1.appendTo( b1 );
+
+			}
+
+			b1.appendTo('#list-bookmarks');
+
+			// console.log( d[ section ].action );
+
+		}
+
+	}
+
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 
 	    // attivo le verifiche per le modifiche ai form
 		window.addEventListener("beforeunload", function(e) {
-		    if( formChanged == true && ! submitFormOkay ) {
+		    if( formChanged == true && ! submitFormOkay && glisModuloModificato() ) {
 			var confirmationMessage = 'sei sicuro di voler abbandonare la pagina?';
 			( e || window.event ).returnValue = confirmationMessage;
 		    }
 		});
 
-		$('.warning-if-changed').on( 'keyup change', function() { formChanged = true; } );
+		// fotografia dello stato del modulo appena caricato, per glisModuloModificato()
+        $('.warning-if-changed').each( function() { $(this).data( 'glis-stato-iniziale', $(this).serialize() ); } );
+
+        // i comandi di una vista ( ricerca, filtri, ordinamento, paginazione ) sono navigazione,
+        // non modifiche ai dati: non devono marcare il modulo come sporco
+        $('.warning-if-changed').on( 'keyup change', function( e ) {
+            if( $( e.target ).closest( '.view-filters, .view-controls, .view-table' ).length ) { return; }
+            formChanged = true;
+        } );
+
+		// hardening campi data: normalizzo i timestamp_* (eventuale formato italiano d/m/Y) a ISO
+		// prima che arrivino al server. Copre i browser dove datetime-local degrada a input testo.
+		$( document ).on( 'change blur', 'input[name*="timestamp_"]', function() {
+		    var iso = glisTimestampToIso( this.value );
+		    if( iso !== this.value ) this.value = iso;
+		});
+		$( document ).on( 'submit', 'form.form-main', function() {
+		    glisNormalizeTimestampFields( this );
+		    var finestra = $( this ).attr( 'target' );
+		    if( ! finestra || finestra === '_self' ) {
+		        glisAttendi( submitFormOkay ? 'salvataggio in corso' : 'attendere' );
+		    }
+		});
 
 		if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
 		    for( var i in CKEDITOR.instances) {
@@ -157,7 +362,7 @@
 
 		// controllo in background dello status della sessione
 		setInterval( function() {
-			getws( '/report/session.status', null, function( obj ){
+			getws( '/status/session.status', null, function( obj ){
 //				var obj = JSON.parse( d );
 				if( obj.time > ( obj.expires - ( obj.lifetime / 100 ) ) ) {
 					$('#widget-session').fadeIn();
@@ -189,6 +394,7 @@
 		});
 
 		var fgSliders = [];
+		var fgAttese = [];
 
 		// attivazione dei job in foreground
 		$('.foreground-job-slider').each( function() {
@@ -216,13 +422,31 @@
 					pgBar.attr( 'aria-valuemax', d.totale );
 
 					var percentuale = Math.round( percentuale = d.corrente / d.totale * 100 );
+					if( ! isFinite( percentuale ) ) { percentuale = 0; }
+					if( percentuale > 100 ) { percentuale = 100; }
 
 					pgBar.width( percentuale + '%' );
 
 					var container = pgBar.closest('.foreground-job-container');
 					var parent = pgBar.closest('.progress');
 
+					// Fix 2026-08-03 (rimessa il 2026-08-05, vedi TODO.md): NON ci si ferma appena
+					// lavorata l'ultima riga ( d.corrente >= d.totale ). A quel punto il job non e'
+					// ancora chiuso: ogni file di job scrive timestamp_completamento nell'iterazione
+					// SUCCESSIVA, quella con corrente > totale, ed e' la stessa iterazione che
+					// valorizza result.label ( il riepilogo di fine barra ). Fermandosi prima, il job
+					// restava aperto finche' _cron.php non lo portava in background ( soglia 10
+					// minuti ) e il riepilogo non compariva quasi mai.
+					var chiuso = ( ! d.id ) || ( !! d.timestamp_completamento ) || ( d.corrente > d.totale );
+
+					// uscita di sicurezza: si aspetta l'iterazione di chiusura al massimo per un
+					// minuto ( 20 giri da 3 secondi ), e solo a righe finite, cosi' un job lento non
+					// viene mai interrotto mentre sta ancora lavorando
 					if( d.corrente >= d.totale ) {
+						fgAttese[ jobId ] = ( fgAttese[ jobId ] || 0 ) + 1;
+					}
+
+					if( chiuso || fgAttese[ jobId ] > 20 ) {
 
 						clearInterval( fgSliders[ jobId ] );
 

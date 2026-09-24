@@ -1,0 +1,49 @@
+{% import '_bin/_form.html' as frm %}
+
+{% set table = 'todo' %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% set account = session.account.id %}
+<div class="modal" tabindex="-1" role="dialog" id="scorciatoia_todo_backlog">
+    <div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form action="" method="post">
+				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+				<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+				<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+				<input type="hidden" id="{{ table }}_id" name="{{ table }}[id]" value="">
+
+				<div class="modal-header">
+					<h5 class="modal-title">pianificazione rapida todo</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="form-row">
+							<div class="col">
+								<span class="label-top">anno</span>
+								{# frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, '', '+1 week'|date('Y') ) #}
+								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, '', 'now'|date('Y') ) }}
+							</div>
+							<div class="col">
+								<span class="label-top">settimana</span>
+								{# frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, '', '+1 week'|date('W') ) #}
+								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, '', 'now'|date('W') ) }}
+							</div>
+							<div class="col">
+								<span class="label-top">ore programmate</span>
+								<!-- NOTA ho dovuto assegnare una classe perché l'ID dell'elemento collide con un campo omonimo nell'inserimento rapido -->
+								{{ frm.input( table, '', '', 'ore_programmazione', '', '', '', '', 'number', '1', 'oreprogrammazione', '', '1' ) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="checkAndSubmit( $( this ).closest('form') );">aggiungi</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+				</div>
+			</form>
+		</div>
+    </div>
+</div>

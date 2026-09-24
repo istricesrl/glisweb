@@ -1,1 +1,0 @@
-ALTER TABLE `refresh_view_statiche` ADD `token` CHAR(128) NULL DEFAULT NULL , ADD KEY `token` (`token`) ;

@@ -1,1 +1,0 @@
-ALTER TABLE contenuti DROP INDEX id_categoria_documenti;

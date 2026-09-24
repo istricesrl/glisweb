@@ -1,0 +1,46 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function archivia_attivita() {
+        var inizio = $('#__archivia_____inizio__').val();
+        var fine = $('#__archivia_____fine__').val();
+        getws('/task/AT000.attivita/attivita.archiviazione?inizio='+inizio+'&fine='+fine, [], function(data) {
+            console.log(data);
+            const modalEl = document.getElementById('archivia_attivita');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="archivia_attivita">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">archivia attività</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="__archivia_____inizio__">data inizio</label>
+                            <input type="date" class="form-control form-control-sm" id="__archivia_____inizio__" placeholder="data inizio">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="__archivia_____fine__">data fine</label>
+                            <input type="date" class="form-control form-control-sm" id="__archivia_____fine__" placeholder="data fine">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="archivia_attivita();">archivia</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

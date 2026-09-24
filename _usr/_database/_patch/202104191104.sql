@@ -1,1 +1,0 @@
-ALTER TABLE `progetti_anagrafica` ADD CONSTRAINT `progetti_anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

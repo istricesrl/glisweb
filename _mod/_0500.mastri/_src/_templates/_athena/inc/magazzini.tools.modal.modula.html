@@ -1,0 +1,161 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function test_modula() {
+
+        var prefisso = $('#__modula___prefisso').val();
+        var comando = $('#__modula___comando').val();
+
+        console.log('comando rilevato: ' + comando);
+        console.log('timestamp: ' + (Math.floor(Date.now() / 1000)).toString());
+
+        // getws('/_src/_api/_task/_anagrafica.importazione.start.php?file='+data);
+        // getws('/task/anagrafica.importazione.start?file='+data);
+        // $('#importa_contatti').modal('toggle');
+        // location.reload();
+
+        // test 1 - status macchina
+        // comando = '11|' + (Math.floor(Date.now() / 1000)) + '|STATUS';
+
+        // test 2 - chiamata                     numero cassetto 1001 -> 2050
+        // comando = '11|' + (Math.floor(Date.now() / 1000)) + '|CALL|1001|1';
+
+        // test 3 - ritorno cassetto
+        // comando = '11|' + ( Math.floor(Date.now() / 1000) ) + '|RETURN|1';
+
+        // test 4 - ???
+        // comando = '11|' + ( Math.floor(Date.now() / 1000) ) + '|EXCHANGE';
+
+        // test 5 - ???
+        comando = prefisso + '|' + (Math.floor(Date.now() / 1000)).toString() + '|' + comando;
+
+        // log
+        console.log('comando completo: ' + comando);
+
+        /*
+                // chiamata
+                $.ajax({
+                    url: 'http://192.168.1.85:11000',
+                    type: 'POST',
+                    dataType: 'text',
+                    data: comando,
+                    crossDomain: true,
+                    async: true,
+                    done: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    },
+                    fail: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    },
+                    always: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    }
+                });
+        */
+        /*
+        //var client = new WebSocket();
+        //client.connect("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
+        //or depending on the implementation you're using (this applies to Nodejs and web browser implementation:
+        var client = new WebSocket("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
+        
+                // client = new WebSocket("wss://192.168.1.85:11001");
+                client.onopen = (event) => {
+                    client.send(comando);
+                };
+        
+                client.onmessage = (event) => {
+                    console.log(event.data);
+                };
+        */
+        /*
+        var socket = new WebSocket("https://192.168.1.85:11000");
+        socket.onopen = function () {
+            console.log("WebSocket connection established");
+        }
+        */
+        /*
+                var xtel = new XMLHttpRequest();
+                xtel.open("POST", "http://192.168.1.91:11001", true);
+                xtel.onreadystatechange = function () {return true;} 
+                xtel.send(comando + "\n");
+        */
+
+        // chiamata
+        $.ajax({
+            url: 'http://127.0.0.1:5000/modula',
+            type: 'POST',
+            data: JSON.stringify({ 'comando': comando }),
+            contentType: 'application/json',
+            crossDomain: true,
+            async: true,
+            beforeSend: function (xhr) {
+                $('#command_output_row').removeClass('d-none');
+                $('#command_output').append( $('<p>').text('comando: ' + comando ) );
+                console.log('aggiungo il comando: ' + comando);
+            },
+            success: function (data) {
+                console.log(data);
+                if( data.status == 'OK' ) {
+                    if( typeof data.risposta == 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('risposta: ' + data) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                    }
+                } else {
+                    if( typeof data.errori == 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('errori: ' + data) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $('#command_output').append( $('<p>').text(data) );
+            },
+            complete: function (data) {
+                console.log(data);
+                // $('#command_output').append( $('<p>').text(data) );
+                // $('#test_modula').modal('toggle');
+            }
+        });
+
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="test_modula">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">invia comandi di test a Modula</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col-auto">
+                            {{ frm.select( '__modula__', '', '', 'prefisso', '', etc.select.prefissi, '', '', '' ) }}
+                        </div>
+                        <div class="col">
+                            {{ frm.input( '__modula__', '', '', 'comando', '', '', '', '', '' ) }}
+                        </div>
+                    </div>
+                    <div class="form-row d-none" id="command_output_row">
+                        <div class="col" id="command_output">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" id="duplica-btn"
+                    onclick="test_modula();">invia</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function stampa( ) {
+
+        // estremi dell'intervallo: si passano solo quelli compilati, e dal da solo l'API lo intende come codice
+        var criteri = [];
+        if( $('#_dal').val() ) { criteri.push( '__etichette__[dal]=' + encodeURIComponent( $('#_dal').val() ) ); }
+        if( $('#_al').val() )  { criteri.push( '__etichette__[al]='  + encodeURIComponent( $('#_al').val() ) ); }
+
+        // senza estremi si stamperebbero le etichette di tutti i colli
+        if( criteri.length == 0 ) {
+            alert( 'indicare almeno un codice, nel campo "dal codice" o in quello "al codice"' );
+            return;
+        }
+
+        $('#btnstampa').html('<i class="fa fa-check"></i>');
+        window.open( '{{ site.url }}print/5600.colli/etichette.colli?' + criteri.join('&'), '_blank' );
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="stampa_etichette">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">stampa etichette dei colli</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+                <div id="periodo" class="form-row">
+                    <div class="col">
+                        <span class="label-top">dal codice</span>
+                        {{ frm.input( '', '', '', 'dal', 'da solo vale come codice dei colli da stampare', '', request ) }}
+                    </div>
+                    <div class="col">
+                        <span class="label-top">al codice</span>
+                        {{ frm.input( '', '', '', 'al', 'compilarlo solo per stampare un intervallo', '', request ) }}
+                    </div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" id="btnstampa" class="btn btn-secondary btn-sm" onclick="stampa();">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

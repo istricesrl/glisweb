@@ -16,11 +16,16 @@
 	    require '../../_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_MYSQL' );
+
     // inizializzo l'array del risultato
 	$status = array();
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
     // blocco una riga
     $status['lock'] = mysqlSelectRow(

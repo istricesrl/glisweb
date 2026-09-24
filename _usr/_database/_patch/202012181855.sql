@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_anagrafica` CHANGE `se_agenzia` `se_agenzia_interinale` INT(11) NULL DEFAULT NULL;

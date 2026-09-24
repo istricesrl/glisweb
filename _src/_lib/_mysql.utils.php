@@ -1,172 +1,433 @@
 <?php
 
-    function trovaIdComune( $c, $p = NULL ) {
+    function trovaidComune($comune)
+    {
+
+        // TODO migliorare prevedendo l'ID provincia come elemento di ricerca vedi sotto inserisciIndirizzo()
 
         global $cf;
 
-        $comuni = mysqlQuery(
+        return mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT * FROM comuni WHERE nome = ?',
-            array( array( 's' => $c ) )
+            'SELECT id FROM comuni WHERE nome = ?',
+            array(array('s' => $comune))
         );
+    }
 
-        if( ! empty( $comuni[0]['id'] ) ) {
-            return $comuni[0]['id'];
-        } else {
-            return NULL;
+    function trovaIdTipologiaAttivita($attivita)
+    {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM tipologie_attivita WHERE nome = ?',
+            array(array('s' => $attivita))
+        );
+    }
+
+    function trovaIdAnagraficaPerDenominazione($denominazione)
+    {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM anagrafica WHERE denominazione = ?',
+            array(array('s' => $denominazione))
+        );
+    }
+
+    function trovaIdMatricola($matricola)
+    {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM matricole WHERE matricola = ?',
+            array(array('s' => $matricola))
+        );
+    }
+
+    function trovaIdAziendaGestita()
+    {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_anagrafica FROM anagrafica_categorie WHERE id_categoria = ? LIMIT 1',
+            array(array('s' => 5))
+        );
+    }
+
+    function tendinaAziendeGestite()
+    {
+
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ 
+            FROM anagrafica_view_static 
+            INNER JOIN anagrafica_categorie ON anagrafica_view_static.id = anagrafica_categorie.id_anagrafica 
+            WHERE anagrafica_categorie.id_categoria = ?',
+            array(array('s' => 5))
+        );
+    }
+
+    function trovaIdSedeLegale($idAnagrafica)
+    {
+
+        global $cf;
+
+        // Fix 2026-07-10: ritorna `anagrafica_indirizzi.id`, non `id_indirizzo`.
+        // Il valore alimenta solo `documenti.id_sede_emittente` / `id_sede_destinatario`,
+        // che dalla migrazione del 2026-07-10 hanno FK su `anagrafica_indirizzi` (prima
+        // su `indirizzi`). Le query di lettura del modulo documenti, dall'upgrade
+        // framework del 27/06, filtrano su `anagrafica_indirizzi.id` e leggono
+        // l'indirizzo inline da quella tabella.
+
+        // Fix 2026-07-31 (Polisportiva Masi): questa funzione è l'unico punto in cui i vari flussi
+        // di emissione (checkout app, cassa, coupon, controller finally dei moduli) risolvono le
+        // sedi del documento, quindi è qui che va tolta la causa a monte di "richiesto indirizzo
+        // sede destinatario". Il difetto della query storica sotto: guarda SOLO `id_ruolo IN (1,4)`
+        // e non verifica che l'indirizzo sia completo di comune, mentre la query di stampa
+        // (_mod/_0400.documenti/_src/_lib/_mysql.utils.add.php) pretende la catena comune →
+        // provincia → regione → stato. Risultato: o NULL (indirizzo con ruolo diverso) o un
+        // puntatore a una riga che la stampa non sa rendere — in entrambi i casi ricevuta bloccata.
+        //
+        // `documentoIdSedeStampabile()` (mod/0400.documenti/src/lib/pdf.tools.add.php) applica gli
+        // stessi INNER JOIN della stampa, preferendo comunque i ruoli 1/4. È in un modulo di
+        // progetto, quindi il function_exists() non è cosmetico: se il modulo documenti non è
+        // attivo — o se un upgrade del framework fa sparire il placeholder che ne carica la
+        // libreria — si torna semplicemente al comportamento storico, senza errori fatali.
+        //
+        // NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`. Perderla
+        // rimette i NULL in emissione ma non rompe le stampe: la riparazione al volo vive in
+        // `src/config/605.common.php` + `mod/0400.documenti/src/lib/pdf.tools.add.php`, che
+        // l'upgrade non tocca.
+        if( function_exists( 'documentoIdSedeStampabile' ) ) {
+
+            $idSedeStampabile = documentoIdSedeStampabile( $idAnagrafica );
+
+            if( ! empty( $idSedeStampabile ) ) {
+                return $idSedeStampabile;
+            }
+
         }
 
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id
+                FROM anagrafica_indirizzi
+                WHERE id_anagrafica = ?
+                AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 )
+                LIMIT 1',
+            array(array('s' => $idAnagrafica))
+        );
     }
 
-    function aggiungiImmagini( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'immagini', $r );
-
-    }
-
-    function aggiungiVideo( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'video', $r );
-
-    }
-
-    function aggiungiAudio( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'audio', $r );
-
-    }
-
-    function aggiungiFile( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'file', $r );
-
-    }
-
-    function aggiungiRecensioni( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'recensioni', $r );
-
-    }
-
-    function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
+    /**
+     * verifica se `anagrafica_indirizzi` porta la copia inline dell'indirizzo
+     *
+     * Dalla migrazione del 2026-07-10 `anagrafica_indirizzi` contiene l'indirizzo per esteso
+     * ( id_tipologia, indirizzo, civico, id_comune, localita, cap, coordinate ) e diventa la
+     * fonte canonica: le query di lettura del modulo documenti filtrano su
+     * `anagrafica_indirizzi.id` e leggono l'indirizzo da lì, e `documenti.id_sede_emittente` /
+     * `id_sede_destinatario` hanno la chiave esterna su `anagrafica_indirizzi` invece che su
+     * `indirizzi`. Le due cose sono lo stesso passaggio e si applicano insieme.
+     *
+     * `indirizzi` non viene abbandonata: resta la tabella degli indirizzi deduplicati,
+     * referenziata da una quindicina di altre tabelle ( luoghi, progetti, edifici, todo,
+     * zone_indirizzi, ... ), e `anagrafica_indirizzi.id_indirizzo` continua a collegarla.
+     *
+     * Non tutti i deploy hanno fatto il passaggio: su quelli fermi allo schema precedente le
+     * colonne inline non esistono e qualunque query che le nomini muore con un 1054. Questa
+     * funzione dice quale dei due schemi si ha davanti — una volta sola per richiesta — così
+     * chi la interroga può ripiegare sulla forma storica invece di rompersi.
+     *
+     * @return      boolean     vero se lo schema è quello canonico
+     */
+    function anagraficaIndirizziInline()
+    {
 
         global $cf;
-    
-        switch( $t ) {
+
+        static $inline = null;
+
+        if ($inline === null) {
+
+            $colonne = mysqlQuery(
+                $cf['mysql']['connection'],
+                "SHOW COLUMNS FROM anagrafica_indirizzi LIKE 'id_comune'"
+            );
+
+            $inline = ! empty($colonne);
+        }
+
+        return $inline;
+    }
+
+    /**
+     * allinea la copia inline dell'indirizzo sulle righe di `anagrafica_indirizzi` che lo collegano
+     *
+     * Il form dell'anagrafica scrive il sotto-modulo degli indirizzi su `indirizzi`, con
+     * `anagrafica_indirizzi.id_indirizzo` come collegamento, mentre le query di lettura e di
+     * stampa leggono la copia inline: senza questa propagazione la copia resterebbe ferma
+     * all'ultimo allineamento e un documento emesso dopo una correzione mostrerebbe il dato
+     * vecchio. Un indirizzo può essere collegato da più righe ( conviventi, sedi condivise ),
+     * quindi si aggiornano tutte quelle che lo citano.
+     *
+     * È la funzione che i punti di chiamata del framework cercano da tempo con
+     * `function_exists()`: il job di importazione delle anagrafiche, il finally del checkout e
+     * il task di normalizzazione degli indirizzi. Fino al suo ingresso nello standard esisteva
+     * come personalizzazione di un solo deploy, e altrove quelle chiamate non facevano niente.
+     *
+     * Attenzione: `anagrafica_indirizzi` ha la chiave unica ( id_anagrafica, indirizzo ), quindi
+     * riempire la copia inline può far collidere due righe della stessa anagrafica che puntano a
+     * indirizzi diversi ma con la stessa via. È un problema di qualità del dato e va riconciliato
+     * a mano: qui l'UPDATE fallisce e la copia resta indietro, senza toccare nient'altro.
+     *
+     * @param       integer     $idIndirizzo    chiave di `indirizzi` da propagare
+     */
+    function sincronizzaIndirizzoInline($idIndirizzo)
+    {
+
+        global $cf;
+
+        if (empty($idIndirizzo) || ! anagraficaIndirizziInline()) {
+            return;
+        }
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE anagrafica_indirizzi ai
+                INNER JOIN indirizzi i ON i.id = ai.id_indirizzo
+                SET ai.id_tipologia                = i.id_tipologia,
+                    ai.indirizzo                   = i.indirizzo,
+                    ai.civico                      = i.civico,
+                    ai.id_comune                   = i.id_comune,
+                    ai.localita                    = i.localita,
+                    ai.cap                         = i.cap,
+                    ai.latitudine                  = i.latitudine,
+                    ai.longitudine                 = i.longitudine,
+                    ai.token                       = i.token,
+                    ai.timestamp_geolocalizzazione = i.timestamp_geolocalizzazione
+                WHERE ai.id_indirizzo = ?',
+            array(array('s' => $idIndirizzo))
+        );
+    }
+
+    /**
+     * tendina delle sedi di un'anagrafica, nella forma che la colonna di destinazione si aspetta
+     *
+     * Le tendine `id_sedi_emittente` e `id_sedi_destinatario` delle schede documento alimentano
+     * `documenti.id_sede_emittente` e `documenti.id_sede_destinatario`: l'identificativo da
+     * proporre è quindi quello che quelle colonne referenziano, e dalla migrazione del 2026-07-10
+     * è `anagrafica_indirizzi.id`, non più `indirizzi.id`. Proporre l'altro vuol dire scrivere una
+     * sede che la query di stampa non risolve — il documento esce con "richiesto indirizzo sede
+     * destinatario" — o violare la chiave esterna.
+     *
+     * Sui deploy fermi allo schema precedente si ripiega sull'elenco storico, che restituisce
+     * `indirizzi.id`, cioè quello che lì la colonna referenzia davvero.
+     *
+     * @param       integer     $idAnagrafica   anagrafica di cui elencare le sedi
+     * @return      array                       righe id / __label__ per la tendina
+     */
+    function tendinaSediAnagrafica($idAnagrafica)
+    {
+
+        global $cf;
+
+        if (empty($idAnagrafica)) {
+            return array();
+        }
+
+        if (anagraficaIndirizziInline()) {
+
+            return mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT id, __label__ FROM anagrafica_indirizzi_view WHERE id_anagrafica = ?',
+                array(array('s' => $idAnagrafica))
+            );
+        }
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT indirizzi_view.id, __label__ FROM indirizzi_view '.
+            'LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+            'WHERE anagrafica_indirizzi.id_anagrafica = ?',
+            array(array('s' => $idAnagrafica))
+        );
+    }
+
+    function aggiungiImmagini(&$p, $id, $f, $r = null)
+    {
+
+        aggiungiDati($p, $id, $f, 'immagini', $r);
+    }
+
+    function aggiungiVideo(&$p, $id, $f, $r = null)
+    {
+
+        aggiungiDati($p, $id, $f, 'video', $r);
+    }
+
+    function aggiungiAudio(&$p, $id, $f, $r = null)
+    {
+
+        aggiungiDati($p, $id, $f, 'audio', $r);
+    }
+
+    function aggiungiFile(&$p, $id, $f, $r = null)
+    {
+
+        aggiungiDati($p, $id, $f, 'file', $r);
+    }
+
+    function aggiungiRecensioni(&$p, $id, $f, $l = 1)
+    {
+
+        global $cf;
+
+        $p['contents']['recensioni'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT recensioni.* FROM recensioni WHERE ' . $f . ' = ? AND id_lingua = ? AND se_approvata IS NOT NULL',
+            array(
+                array('s' => $id),
+                array('s' => $l)
+            )
+        );
+    }
+
+    function aggiungiDati(&$p, $id, $f, $t, $r = null)
+    {
+
+        global $cf;
+
+        switch ($t) {
             case 'immagini':
-                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+                #                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+                $tc = 'immagini.orientamento, immagini.taglio, immagini.path_alternativo FROM immagini ';
                 $tf = 'id_immagine';
                 $tk = 'images';
-            break;
+                break;
             case 'video':
-                $tc = 'video.id_tipologia_embed, video.codice_embed FROM video ';
+                $tc = 'video.id_embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
-            break;
+                break;
             case 'audio':
                 // TODO
-            break;
-            case 'recensioni':
-                // TODO
-            break;
+                break;
             case 'file':
                 $tc = 'file.url FROM file ';
                 $tf = 'id_file';
                 $tk = 'files';
-            break;
+                break;
         }
-    
+
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
-            'contenuti.testo, contenuti.cappello, lingue.ietf, main_lingue.ietf AS main_ietf, '.
-            'metadati.nome AS meta_nome, metadati.testo AS meta_testo, meta_lingue.ietf AS meta_ietf, '.
-            'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.$t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
-            'LEFT JOIN ruoli_'.$t.' ON ruoli_'.$t.'.id = '.$t.'.id_ruolo '.
-            'LEFT JOIN contenuti ON contenuti.'.$tf.' = '.$t.'.id '.
-            'LEFT JOIN lingue ON lingue.id = contenuti.id_lingua '.
-            'LEFT JOIN lingue AS main_lingue ON main_lingue.id = '.$t.'.id_lingua '.
-            'LEFT JOIN metadati ON metadati.'.$tf.' = '.$t.'.id '.
-            'LEFT JOIN lingue AS meta_lingue ON meta_lingue.id = metadati.id_lingua '.
-            'WHERE '.$t.'.' . $f . ' = ? '.
-            ( ( $r !== null ) ? 'AND ruoli_'.$t.'.id IN (' . implode( ',', $r ) . ')' : null ),
+            'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, ' .
+                'contenuti.testo, contenuti.cappello, lingue.ietf, main_lingue.ietf AS main_ietf, ' .
+                'metadati.nome AS meta_nome, metadati.testo AS meta_testo, meta_lingue.ietf AS meta_ietf, ' .
+                'ruoli_' . $t . '.nome AS ruolo, ' . $t . '.id, ' .
+                $t . '.ordine, ' . $t . '.nome, ' . $t . '.path, ' . $tc .
+                'LEFT JOIN ruoli_' . $t . ' ON ruoli_' . $t . '.id = ' . $t . '.id_ruolo ' .
+                'LEFT JOIN contenuti ON contenuti.' . $tf . ' = ' . $t . '.id ' .
+                'LEFT JOIN lingue ON lingue.id = contenuti.id_lingua ' .
+                'LEFT JOIN lingue AS main_lingue ON main_lingue.id = ' . $t . '.id_lingua ' .
+                'LEFT JOIN metadati ON metadati.' . $tf . ' = ' . $t . '.id ' .
+                'LEFT JOIN lingue AS meta_lingue ON meta_lingue.id = metadati.id_lingua ' .
+                'WHERE ' . $t . '.' . $f . ' = ? ' .
+                (($r !== null) ? 'AND ruoli_' . $t . '.id IN (' . implode(',', $r) . ')' : null),
             array(
-                array( 's' => $id )
+                array('s' => $id)
             )
         );
-    
-        foreach( $cnt as $cn ) {
-    
+
+        foreach ($cnt as $cn) {
+
             $im = array(
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
-                'path'              => ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ),
-            #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),     // commentata questa riga, sostituita con la seguente
-                'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path'] ) : array( $cn['main_ietf'] => findFileType( $cn['path'] ) ),      // vedere issue #419
-                'title'		        => array( $cn['ietf']	=> $cn['title'] ),
-                'h1'		        => array( $cn['ietf']	=> $cn['h1'] ),
-                'h2'		        => array( $cn['ietf']	=> $cn['h2'] ),
-                'h3'		        => array( $cn['ietf']	=> $cn['h3'] ),
-                'testo'		        => array( $cn['ietf']	=> $cn['testo'] ),
-                'cappello'		    => array( $cn['ietf']	=> $cn['cappello'] ),
+                'path'              => (empty($cn['main_ietf'])) ? $cn['path'] : array($cn['main_ietf'] => $cn['path']),
+                #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),     // commentata questa riga, sostituita con la seguente
+                'mimetype'          => (empty($cn['main_ietf'])) ? findFileType($cn['path']) : array($cn['main_ietf'] => findFileType($cn['path'])),      // vedere issue #419
+                'title'                => array($cn['ietf']    => $cn['title']),
+                'h1'                => array($cn['ietf']    => $cn['h1']),
+                'h2'                => array($cn['ietf']    => $cn['h2']),
+                'h3'                => array($cn['ietf']    => $cn['h3']),
+                'testo'                => array($cn['ietf']    => $cn['testo']),
+                'cappello'            => array($cn['ietf']    => $cn['cappello']),
                 'metadati'          => (
-                    ( empty( $cn['meta_ietf'] ) ) ?
-                    array( $cn['meta_nome'] => $cn['meta_testo'] ) :
-                    array( $cn['meta_nome'] => array( $cn['meta_ietf'] => $cn['meta_testo'] ) )
+                    (empty($cn['meta_ietf'])) ?
+                    array($cn['meta_nome'] => $cn['meta_testo']) :
+                    array($cn['meta_nome'] => array($cn['meta_ietf'] => $cn['meta_testo']))
                 )
             );
-    
-            switch( $t ) {
+
+            switch ($t) {
                 case 'immagini':
-                    $im = array_replace_recursive( $im, array(
+                    $im = array_replace_recursive($im, array(
                         'taglio'            => $cn['taglio'],
-                        'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
-                    #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
-                        'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
-                        'orientamento'      => $cn['orientamento'],
-                        'anno'              => $cn['anno']
-                    ) );
-                break;
+                        'path_alternativo'  => (empty($cn['main_ietf'])) ? $cn['path_alternativo'] : array($cn['main_ietf'] => $cn['path_alternativo']),
+                        #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
+                        // 'mimetype'          => (empty($cn['main_ietf'])) ? findFileType($cn['path_alternativo']) : array($cn['main_ietf'] => findFileType($cn['path_alternativo'])),      // vedere issue #419
+                        'orientamento'      => $cn['orientamento']
+                        #   'anno'              => $cn['anno']
+                    ));
+                    break;
+                case 'audio':
+                    break;
                 case 'video':
-                    $im = array_replace_recursive( $im, array(
-                    'codice_embed'            => $cn['codice_embed'],
-                    'id_tipologia_embed'      => $cn['id_tipologia_embed']
-                    ) );
-                break;
+                    $im = array_replace_recursive($im, array(
+                        'codice_embed'            => $cn['codice_embed'],
+                        'id_embed'              => $cn['id_embed']
+                    ));
+                    break;
             }
-            
-            if( isset( $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] ) ) {
-                $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = array_replace_recursive(
-                    $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ], $im
-                );    
+
+            if (isset($p['contents'][$tk][$cn['ruolo']][$cn['ordine']])) {
+                $p['contents'][$tk][$cn['ruolo']][$cn['ordine']] = array_replace_recursive(
+                    $p['contents'][$tk][$cn['ruolo']][$cn['ordine']],
+                    $im
+                );
             } else {
-                $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = $im;
+                $p['contents'][$tk][$cn['ruolo']][$cn['ordine']] = $im;
             }
         }
-    
     }
-    
 
-    function aggiungiMacro( &$p, $id, $f ) {
+
+    function aggiungiMacro(&$p, $id, $f)
+    {
 
         global $cf;
-        
+
         $p['macro'] = array_merge(
             mysqlSelectColumn(
                 'macro',
                 $cf['mysql']['connection'],
-                'SELECT macro FROM macro '.
-                'WHERE ' . $f . ' = ?',
+                'SELECT macro FROM macro ' .
+                    'WHERE ' . $f . ' = ?',
                 array(
-                    array( 's' => $id )
+                    array('s' => $id)
                 )
             ),
-            ( ( isset( $p['macro'] ) ) ?  $p['macro'] : array() )
+            ((isset($p['macro'])) ?  $p['macro'] : array())
         );
-
     }
 
-    function aggiungiMenu(&$p, $id, $f){
+    function aggiungiMenu(&$p, $id, $f)
+    {
 
         global $cf;
 
@@ -200,31 +461,84 @@
         }
     }
 
-    function aggiungiMetadati( &$p, $id, $f ) {
+    function aggiungiCaratteristiche(&$p, $id, $t, $f, $l = 1)
+    {
 
         global $cf;
-        
-        $meta = mysqlQuery(
+
+        $caratteristiche = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT metadati.*, lingue.ietf FROM metadati '.
-            'LEFT JOIN lingue ON lingue.id = metadati.id_lingua '.
-            'WHERE ' . $f . ' = ?',
+            'SELECT ' . $t . '.ordine, coalesce( contenuti.testo, caratteristiche.nome ) AS caratteristica, ' . $t . '.valore FROM ' . $t . ' ' .
+                'LEFT JOIN caratteristiche ON caratteristiche.id = ' . $t . '.id_caratteristica ' .
+                'LEFT JOIN contenuti ON contenuti.id_caratteristica = caratteristiche.id AND contenuti.id_lingua = ? ' .
+                'WHERE ' . $t . '.' . $f . ' = ? AND ' . $t . '.id_lingua = ? ',
             array(
-                array( 's' => $id )
+                array('s' => $l),
+                array('s' => $id),
+                array('s' => $l)
             )
         );
 
-        foreach( $meta as $mta ) {
-            if( empty( $mta['ietf'] ) ) {
-                $p['metadati'][ $mta['nome'] ] = $mta['testo'];
-            } else {
-                $p['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
-            }
+        // print_r( $caratteristiche );
+
+        foreach ($caratteristiche as $caratteristica) {
+
+            $p['contents']['caratteristiche'][$caratteristica['ordine']] = array(
+                $caratteristica['caratteristica'] => $caratteristica['valore']
+            );
         }
+    }
+
+    function aggiungiMetadati(&$p, $id, $f)
+    {
+
+        global $cf;
+
+        $meta = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT metadati.*, lingue.ietf FROM metadati ' .
+                'LEFT JOIN lingue ON lingue.id = metadati.id_lingua ' .
+                'WHERE ' . $f . ' = ?',
+            array(
+                array('s' => $id)
+            )
+        );
+
+        // print_r( $meta );
+
+        #        foreach( $meta as $mta ) {
+        /*
+                if( empty( $mta['ietf'] ) ) {
+                    $p['metadati'][ $mta['nome'] ] = $mta['testo'];
+                } else {
+                    $p['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
+                }
+    */
+        #                $p['metadati'] = array_replace_recursive(
+        #                    $p['metadati'],
+        #                    metadati2associativeArray( $mta )
+        #                );
+
+        if (isset(($p['metadati'])) && is_array($p['metadati'])) {
+
+            $p['metadati'] = array_replace_recursive(
+                $p['metadati'],
+                metadati2associativeArray($meta)
+            );
+        } else {
+
+            $p['metadati'] = metadati2associativeArray($meta);
+        }
+
+        #        }
 
     }
 
-    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
+    /**
+     * 
+     */
+    function aggiungiGruppi(&$p, $id, $f = 'id_pagina', $t = '__acl_pagine__')
+    {
 
         // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
 
@@ -233,94 +547,800 @@
         $groups = mysqlSelectColumn(
             'nome',
             $cf['mysql']['connection'],
-            'SELECT gruppi.nome FROM gruppi '.
-            'INNER JOIN pagine_gruppi ON gruppi.id = pagine_gruppi.id_gruppo '.
-            'WHERE pagine_gruppi.id_pagina = ?',
+            'SELECT gruppi.nome FROM gruppi ' .
+                'INNER JOIN __acl_pagine__ ON gruppi.id = __acl_pagine__.id_gruppo ' .
+                'WHERE __acl_pagine__.id_entita = ?',
             array(
-                array( 's' => $id )
+                array('s' => $id)
             )
-        );				
+        );
 
-        if( ! empty( $groups ) ) {
-            $p['auth']['groups']	= $groups;
+        if (! empty($groups)) {
+            $p['auth']['groups']    = $groups;
         }
-
     }
 
-    function aggiungiContenuti( &$p, $id, $f ) {
+    function aggiungiContenuti(&$p, $id, $f)
+    {
 
         global $cf;
 
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT contenuti.*, lingue.ietf FROM contenuti '.
-            'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
-            'WHERE ' . $f . ' = ?',
+            'SELECT contenuti.*, lingue.ietf FROM contenuti ' .
+                'INNER JOIN lingue ON lingue.id = contenuti.id_lingua ' .
+                'WHERE ' . $f . ' = ?',
             array(
-                array( 's' => $id )
+                array('s' => $id)
             )
         );
 
-        foreach( $cnt as $cn ) {
-            $p = array_replace_recursive( $p,
+        foreach ($cnt as $cn) {
+            $p = array_replace_recursive(
+                $p,
                 array(
-                    'short'             => array( $cn['ietf']	=> $cn['path_custom'] ),
-                    'forced'	        => array( $cn['ietf']	=> $cn['url_custom'] ),
-                    'custom'	        => array( $cn['ietf']	=> $cn['rewrite_custom'] ),
-                    'title'	            => array( $cn['ietf']	=> $cn['title'] ),
-                    'h1'	            => array( $cn['ietf']	=> $cn['h1'] ),
-                    'h2'	            => array( $cn['ietf']	=> $cn['h2'] ),
-                    'h3'	            => array( $cn['ietf']	=> $cn['h3'] ),
-                    'og_type'	        => array( $cn['ietf']	=> $cn['og_type'] ),
-                    'og_title'	        => array( $cn['ietf']	=> $cn['og_title'] ),
-                    'og_image'	        => array( $cn['ietf']	=> $cn['og_image'] ),
-                    'og_audio'	        => array( $cn['ietf']	=> $cn['og_audio'] ),
-                    'og_video'	        => array( $cn['ietf']	=> $cn['og_video'] ),
-                    'og_description'	=> array( $cn['ietf']	=> $cn['og_description'] ),
-                    'og_determiner'     => array( $cn['ietf']	=> $cn['og_determiner'] )
+                    'short'             => array($cn['ietf']    => $cn['path_custom']),
+                    'forced'            => array($cn['ietf']    => $cn['url_custom']),
+                    'custom'            => array($cn['ietf']    => $cn['rewrite_custom']),
+                    'title'                => array($cn['ietf']    => $cn['title']),
+                    'cappello'            => array($cn['ietf']    => $cn['cappello']),
+                    'h1'                => array($cn['ietf']    => $cn['h1']),
+                    'h2'                => array($cn['ietf']    => $cn['h2']),
+                    'h3'                => array($cn['ietf']    => $cn['h3']),
+                    'og_type'            => array($cn['ietf']    => $cn['og_type']),
+                    'og_title'            => array($cn['ietf']    => $cn['og_title']),
+                    'og_image'            => array($cn['ietf']    => $cn['og_image']),
+                    'og_audio'            => array($cn['ietf']    => $cn['og_audio']),
+                    'og_video'            => array($cn['ietf']    => $cn['og_video']),
+                    'og_description'    => array($cn['ietf']    => $cn['og_description']),
+                    'og_determiner'     => array($cn['ietf']    => $cn['og_determiner'])
                 )
             );
         }
-
     }
 
-    function triggerOff( $entita, $task = NULL ){
+    function triggerOff($entita, $task = NULL)
+    {
 
         global $cf;
 
-        logWrite( 'richiesto spegnimento trigger per ' . $entita . ' da task ' . $task , 'cron' );
+        logWrite('richiesto spegnimento trigger per ' . $entita . ' da task ' . $task, 'cron');
 
-    #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
+        #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
 
         $troff = mysqlQuery(
-			$cf['mysql']['connection'],
-            'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = 1'
-		);
+            $cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY_' . strtoupper($entita) . ' = 1'
+        );
     }
 
-    function triggerOn( $entita ){
-        
+    function triggerOn($entita)
+    {
+
         global $cf;
 
-        logWrite( 'accendo i trigger per ' . $entita, 'cron' );
+        logWrite('accendo i trigger per ' . $entita, 'cron');
 
         $tron = mysqlQuery(
-			$cf['mysql']['connection'],
-			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
-		);
+            $cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY_' . strtoupper($entita) . ' = NULL'
+        );
     }
 
-    function trovaTabellaDestinazioneConstraint( $t, $f ) {
+    function trovaTabellaDestinazioneConstraint($t, $f)
+    {
 
         global $cf;
 
         return mysqlSelectCachedValue(
-			$cf['memcache']['connection'],
-			$cf['mysql']['connection'],
-            'SELECT referenced_table_name '.
-            'FROM information_schema.key_column_usage '.
-            'WHERE table_name = ' . $t . ' AND table_schema = database() '.
-            'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT referenced_table_name ' .
+                'FROM information_schema.key_column_usage ' .
+                'WHERE table_name = ' . $t . ' AND table_schema = database() ' .
+                'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+        );
+    }
+
+    function trovaRigaDaElaborare($c, $t, $q, $f1 = 'timestamp_sincronizzazione', $f2 = 'timestamp_aggiornamento', &$o = NULL, $e = array())
+    {
+
+        // default
+        $r = NULL;
+
+        // condizioni extra
+        if (! empty($e)) {
+            $ew = ' AND ' . implode(' AND ', $e);
+        } else {
+            $ew = NULL;
+        }
+
+        // ricerca di un elemento con timestamp_aggiornamento > timestamp_sincronizzazione in ordine di timestamp_aggiornamento
+        if (isset($q['id'])) {
+
+            // recupero dati
+            $r    = mysqlSelectRow(
+                $c,
+                'SELECT ' . $t . '.* FROM ' . $t . '
+                    WHERE ' . $t . '.id = ?',
+                array(
+                    array('s' => $q['id'])
+                )
+            );
+
+            // output
+            $o .= '<p>elemento da importare specificato</p>';
+        } elseif (isset($q['f'])) {
+
+            // recupero dati
+            $r    = mysqlSelectRow(
+                $c,
+                'SELECT ' . $t . '.* FROM ' . $t . '
+                    ORDER BY ' . $t . '.' . $f1 . ' ASC, ' . $t . '.id ASC LIMIT 1'
+            );
+
+            // output
+            $o .= '<p>ricerca forzata di un elemento da importare</p>';
+        } else {
+
+            // recupero dati
+            $r    = mysqlSelectRow(
+                $c,
+                'SELECT ' . $t . '.* FROM ' . $t . '
+                    WHERE ( ' . $t . '.' . $f1 . ' < ' . $t . '.' . $f2 . '
+                    OR ' . $t . '.' . $f1 . ' < ?
+                    OR ' . $t . '.' . $f1 . ' IS NULL ) ' . $ew . '
+                    ORDER BY ' . $t . '.' . $f1 . ' ASC, ' . $t . '.id ASC LIMIT 1',
+                array(array('s' => strtotime('-2 days')))
+            );
+
+            // output
+            $o .= '<p>ricerca di un corso da importare</p>';
+        }
+
+        // aggiornamento timestamp di importazione
+        if (! empty($r['id'])) {
+            mysqlQuery(
+                $c,
+                'UPDATE ' . $t . ' SET ' . $f1 . ' = ? WHERE id = ?',
+                array(
+                    array('s' => time()),
+                    array('s' => $r['id'])
+                )
+            );
+        }
+
+        return $r;
+    }
+
+    function inserisciIndirizzo($indirizzo, $cap, $comune, $provincia, $localita = NULL, $stato = NULL, $idComune = NULL, $idProvincia = NULL, $idStato = NULL)
+    {
+        // Fix 2026-05-29: evita strtolower(null)/trim(null) (PHP 8) e righe indirizzi vuote quando manca la residenza
+        $indirizzo = (string) $indirizzo;
+        $cap       = (string) $cap;
+        $comune    = (string) $comune;
+        $provincia = (string) $provincia;
+        $localita  = (string) $localita;
+        $stato     = (string) $stato;
+        if( '' === $indirizzo . $cap . $comune . $provincia . $localita . $stato ) return null;
+
+
+        // dati globali
+        global $cf;
+
+        // pulisco gli spazi ai lati
+        $indirizzo = trim(strtolower($indirizzo));
+
+        // elenco tipologie
+        $regexp = '/^\b(' . implode('|', mysqlSelectColumn('nome', $cf['mysql']['connection'], 'SELECT nome FROM tipologie_indirizzi')) . ')\b/';
+
+        // trovo la tipologia
+        preg_match($regexp, $indirizzo, $matches);
+        $tipologia = (count($matches) > 0) ? $matches[0] : NULL;
+
+        // debug
+        // echo 'tipologia: ' . $tipologia . PHP_EOL;
+
+        // trovo l'ID della tipologia
+        $idTipologia = mysqlSelectValue($cf['mysql']['connection'], 'SELECT id FROM tipologie_indirizzi WHERE nome = ?', array(array('s' => $tipologia)));
+
+        // debug
+        // echo 'ID tipologia: ' . $idTipologia . PHP_EOL;
+
+        // individuazione civico
+        $regexp = '/[0-9]+[0-9a-zA-Z\/]*$/';
+
+        // trovo il civico
+        preg_match($regexp, $indirizzo, $matches);
+        $civico = $matches[0];
+
+        // debug
+        // echo 'civico: ' . $civico . PHP_EOL;
+
+        // trovo la parte nominale
+        $nominale = ucwords(trim(str_replace(array($tipologia, $civico), '', $indirizzo)));
+
+        // individuazione numeri romani
+        $regexp = '/\b([IVLXCDM]{1,3}[LVCD]{0,1}[IXMC]{0,3})\b/';
+
+        // trovo eventuali numeri romani nella parte nominale
+        preg_match_all($regexp, strtoupper($nominale), $matches);
+
+        // rimetto in maiuscolo i numeri romani
+        $nominale = str_replace(array_map('ucwords', array_map('strtolower', $matches[0])), array_map('strtoupper', $matches[0]), $nominale);
+
+        // debug
+        // echo 'parte nominale: ' . $nominale . PHP_EOL;
+
+        // trovo l'ID del comune e della provincia per CAP
+        if (empty($idComune)) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT indirizzi.id_comune, comuni.id_provincia FROM indirizzi INNER JOIN comuni ON comuni.id = indirizzi.id_comune WHERE indirizzi.cap = ?',
+                array(array('s' => $cap))
+            );
+            if (! empty($row)) {
+                $idComune = $row['id_comune'];
+                if (empty($idProvincia)) {
+                    $idProvincia = $row['id_provincia'];
+                }
+            }
+        }
+
+        // trovo l'ID della provincia
+        if (empty($idProvincia)) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT provincie.id AS id_provincia, provincie.id_regione, regioni.id_stato AS id_stato FROM provincie INNER JOIN regioni ON regioni.id = provincie.id_regione WHERE provincie.sigla = ? OR provincie.nome = ?',
+                array(
+                    array('s' => $provincia),
+                    array('s' => $provincia)
+                )
+            );
+            if (! empty($row)) {
+                $idProvincia = $row['id_provincia'];
+            }
+        }
+
+        // trovo l'ID del comune
+        if (empty($idComune)) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT comuni.id FROM comuni WHERE nome = ? AND id_provincia = ?',
+                array(
+                    array('s' => $comune),
+                    array('s' => $idProvincia)
+                )
+            );
+            if (! empty($row)) {
+                $idComune = $row['id'];
+            }
+        }
+
+        // località
+        $localita = ucfirst(strtolower($localita));
+
+        // debug
+        // echo 'località: ' . $localita . PHP_EOL;
+        // echo 'CAP: ' . $cap . PHP_EOL;
+        // echo 'ID comune: ' . $idComune . PHP_EOL;
+        // echo 'ID provincia: ' . $idProvincia . PHP_EOL;
+
+        // inserisco l'indirizzo
+        $idIndirizzo = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id_tipologia' => $idTipologia,
+                'id_comune' => $idComune,
+                'cap' => $cap,
+                'localita' => $localita,
+                'indirizzo' => $nominale,
+                'civico' => $civico
+            ),
+            'indirizzi'
         );
 
+        // debug
+        // echo 'ID indirizzo: ' . $idIndirizzo . PHP_EOL;
+
+        // return
+        return $idIndirizzo;
+    }
+
+    function unisciAnagrafiche($sorgente, $destinazione)
+    {
+
+        // dati globali
+        global $cf;
+
+        // variabili di lavoro
+        $tabella = 'anagrafica';
+        $colonna = 'id';
+
+        // chiamata a funzione
+        unisciOggetti($sorgente, $destinazione, $tabella, $colonna);
+
+        // aggiorno le viste statiche
+        updateAnagraficaViewStatic($destinazione);
+        cleanAnagraficaViewStatic();
+
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+    }
+
+    function unisciOggetti($sorgente, $destinazione, $tabella, $colonna = 'id')
+    {
+
+        // dati globali
+        global $cf;
+
+        // trovo tutte le referenze a tabella.id
+        $chiavi = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME ' .
+                'FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE ' .
+                'WHERE ' .
+                'REFERENCED_TABLE_SCHEMA = DATABASE() AND ' .
+                'REFERENCED_TABLE_NAME = ? AND ' .
+                'REFERENCED_COLUMN_NAME = ? ',
+            array(
+                array('s' => $tabella),
+                array('s' => $colonna)
+            )
+        );
+
+        // debug
+        // print_r( $chiavi );
+
+        // per ogni chiave...
+        foreach ($chiavi as $chiave) {
+
+            // debug
+            // echo 'modifico tutte le referenze di ' . $chiave['TABLE_NAME'] . '.' . $chiave['COLUMN_NAME'] . ' da ' , $sorgente . ' a ' . $destinazione . PHP_EOL;
+            logger('modifico tutte le referenze di ' . $chiave['TABLE_NAME'] . '.' . $chiave['COLUMN_NAME'] . ' da ' . $sorgente . ' a ' . $destinazione, 'deduplica');
+
+            // eseguo la migrazione
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE ' . $chiave['TABLE_NAME'] . ' SET ' . $chiave['COLUMN_NAME'] . ' = ? WHERE ' . $chiave['COLUMN_NAME'] . ' = ?',
+                array(
+                    array('s' => $destinazione),
+                    array('s' => $sorgente)
+                )
+            );
+
+            // se ci sono degli errori...
+            if (mysqli_errno($cf['mysql']['connection'])) {
+
+                // debug
+                // echo mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] ) . PHP_EOL;
+
+            }
+
+            // elimino le referenze eventualmente rimaste indietro
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM ' . $chiave['TABLE_NAME'] . ' WHERE ' . $chiave['COLUMN_NAME'] . ' = ?',
+                array(
+                    array('s' => $sorgente)
+                )
+            );
+        }
+
+        // recupero i campi della tabella principale
+        $fields = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SHOW COLUMNS FROM ' . $tabella
+        );
+
+        // debug
+        // print_r( $fields );
+
+        // prelevo la riga sorgente
+        $rigaSorgente = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM ' . $tabella . ' WHERE ' . $colonna . ' = ?',
+            array(
+                array('s' => $sorgente)
+            )
+        );
+
+        // elimino la riga sorgente
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM ' . $tabella . ' WHERE ' . $colonna . ' = ?',
+            array(
+                array('s' => $sorgente)
+            )
+        );
+
+        // unisco i dati della tabella principale
+        foreach ($fields as $field) {
+            if ($field['Field'] != $colonna) {
+                if (! empty($rigaSorgente[$field['Field']])) {
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE ' . $tabella . ' SET ' . $field['Field'] . ' = ? WHERE ' . $colonna . ' = ? ',
+                        array(
+                            array('s' => $rigaSorgente[$field['Field']]),
+                            array('s' => $destinazione)
+                        )
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaStati() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM stati_view ORDER BY __label__'
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaAnni( $start = 2014 ) {
+
+        $r = array();
+
+        foreach( range( date( 'Y' ) + 1, $start ) as $y ) {
+            $r[] = array( 'id' => $y, '__label__' => $y );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaMesi() {
+
+        $r = array();
+
+        foreach( range( 1, 12 ) as $m ) {
+            $r[] = array( 'id' => $m, '__label__' => str_pad( $m, 2, '0', STR_PAD_LEFT ) . ' - ' . ucfirst( strftime( '%B', mktime( 0, 0, 0, $m, 1 ) ) ) );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSettimane() {
+
+        $r = array();
+
+        foreach( range( 1, 53 ) as $s ) {
+            $r[] = array( 'id' => $s, '__label__' => str_pad( $s, 2, '0', STR_PAD_LEFT ) );
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaProvincie( $idStato = 1 ) {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM provincie_view WHERE id_stato = ? ORDER BY __label__',
+            array(
+                array( 's' => $idStato )
+            )
+        );
+
+    }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaSiNo() {
+
+        return array(
+            array( 'id' => 0, '__label__' => 'no' ),
+            array( 'id' => 1, '__label__' => 'si' )
+        );
+
+    }
+
+    /**
+     * ACCESSORI GENERICI DELL'ANAGRAFICA
+     * ==================================
+     *
+     * Logo, PEC e sede legale di un'anagrafica. Stavano in
+     * `_mod/_0010.anagrafica/_src/_lib/_anagrafica.utils.php`, cioe' dentro un MODULO, e sono
+     * arrivati qui nel core il 15/09/2026 perche' li chiama codice che con quel modulo non
+     * c'entra niente: `generaContenutiDocumento()` e undici file di stampa di `_0400.documenti`,
+     * e `anagraficaGetIdSedeLegale()` il checkout dell'ecommerce.
+     *
+     * Su un deploy che monta un'anagrafica diversa - bernispa ha `AN000.anagrafica` e non
+     * `0010.anagrafica` - quelle chiamate morivano tutte con "Call to undefined function", dal CMS
+     * come da `/print/`, e nessuno se n'era accorto perche' li' i documenti si stampano dal
+     * gestionale. Un modulo che dipende dalle funzioni di un altro modulo e' il difetto; la cura
+     * e' che quello che leggono tabelle del CORE - `anagrafica`, `immagini`, `ruoli_immagini`,
+     * `mail`, `anagrafica_indirizzi`, `ruoli_indirizzi` - stia nel core.
+     *
+     * Le sei funzioni `*AnagraficaViewStatic*` NON sono venute qui: quelle mantengono la vista
+     * materializzata dell'anagrafica, che e' roba del modulo, e su bernispa le definisce
+     * `AN000.anagrafica`. Portarle qui le farebbe collidere.
+     */
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetLogo( $id ) {
+
+	// config globale
+	    global $cf;
+
+	// debug
+	    // die( 'id -> ' . $id );
+
+	// prelevo la riga
+	$r = mysqlSelectValue(
+		$cf['mysql']['connection'],
+		'SELECT path FROM immagini '.
+		'INNER JOIN anagrafica ON immagini.id_anagrafica = anagrafica.id '.
+		'LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo '.
+		'WHERE ruoli_immagini.nome = "logo" '.
+		'AND anagrafica.id = ? '.
+		'LIMIT 1',
+		array(
+		    array( 's' => $id )
+		)
+	    );
+
+	// full path
+	if( ! empty( $r ) ) {
+
+	    fullPath( $r );
+
+		}
+
+
+	// debug
+	    // die( 'risultato -> ' . $r );
+
+	// valore di ritorno
+	    return $r;
+
+    }
+
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetSedeLegale( $id ) {
+
+		// config globale
+			global $cf;
+
+		// debug
+			// die( 'id -> ' . $id );
+/*
+		// prelevo la riga
+			$r = mysqlSelectRow(
+				$cf['mysql']['connection'],
+				'SELECT * FROM indirizzi_view '.
+				'INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+				'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+				'WHERE ruoli_indirizzi.se_sede_legale = 1 '.
+				'AND anagrafica_indirizzi.id_anagrafica = ? '.
+				'LIMIT 1',
+				array(
+					array( 's' => $id )
+				)
+			);
+*/
+
+		// prelevo la riga
+		// Fix 2026-07-10: alias esplicito su `anagrafica_indirizzi.id`. Con `SELECT *`
+		// su un JOIN, la colonna `id` di ruoli_indirizzi sovrascrive quella di
+		// anagrafica_indirizzi nell'array associativo: $r['id'] valeva l'id del RUOLO.
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT anagrafica_indirizzi.*, '.
+			'anagrafica_indirizzi.id AS id_anagrafica_indirizzi, '.
+			'ruoli_indirizzi.se_sede_legale '.
+			'FROM anagrafica_indirizzi '.
+			'LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC '.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+
+		// Fix 2026-07-10: l'id della sede è quello di `anagrafica_indirizzi`, ed è ciò
+		// che anagraficaGetIdSedeLegale() scrive in `documenti.id_sede_*` (FK migrata
+		// su anagrafica_indirizzi il 2026-07-10). Va conservato prima che il blocco
+		// sottostante rimpiazzi $r con la riga di `indirizzi_view`, che ha un altro id.
+		$idSedeAnagraficaIndirizzi = isset( $r['id_anagrafica_indirizzi'] ) ? $r['id_anagrafica_indirizzi'] : null;
+/*
+		die(print_r($r,true));
+
+		// prelevo la riga
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view '.
+			'INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+			'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC'.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+*/
+
+		// ...
+		if( isset( $r['id_indirizzo'] ) && ! empty( $r['id_indirizzo'] ) ) {
+
+		// ...
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view WHERE id = ?',
+			array( array( 's' => $r['id_indirizzo'] ) )
+		);
+
+		// Fix 2026-07-10: `indirizzi_view.id` è l'id di `indirizzi`; ripristino l'id
+		// della sede (anagrafica_indirizzi) che i chiamanti scrivono in documenti.id_sede_*.
+		// I campi indirizzo/civico/cap/comune/sigla restano quelli arricchiti dalla view.
+		$r['id'] = $idSedeAnagraficaIndirizzi;
+
+		// riassemblaggio dell'indirizzo per linee (ad es. per le buste)
+			if( empty($r['indirizzo']) || empty($r['civico']) || empty($r['cap']) || empty($r['comune']) || empty($r['sigla']) ){
+				$r['linee'][0]='              ';
+				$r['linee'][1]='              ';
+			} else {
+				$r['linee'][0] = $r['indirizzo'] . ' ' . $r['civico'];
+				$r['linee'][1] = $r['cap'] . ' ' . $r['comune'] . ' ' . $r['sigla'];
+			}
+
+		// debug
+		 	// die( 'risultato -> ' . print_r( $r, true ) );
+
+		} else {
+
+			$r = array();
+
+		}
+
+		// valore di ritorno
+			return $r;
+
+	}
+
+    function anagraficaGetIdSedeLegale( $id ) {
+
+		$r = anagraficaGetSedeLegale( $id );
+
+		return isset( $r['id'] ) ? $r['id'] : null;
+
+	}
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function anagraficaGetPEC( $id ) {
+
+	// config globale
+	    global $cf;
+
+	// debug
+	    // die( 'id -> ' . $id );
+
+	// prelevo la riga
+	    $r = mysqlSelectValue(
+		$cf['mysql']['connection'],
+		'SELECT indirizzo FROM mail '.
+		'INNER JOIN anagrafica ON mail.id_anagrafica = anagrafica.id '.
+		'WHERE mail.se_pec = 1 '.
+		'AND anagrafica.id = ? '.
+		'LIMIT 1',
+		array(
+		    array( 's' => $id )
+		)
+	    );
+
+	// debug
+	    // die( 'risultato -> ' . $r );
+
+	// valore di ritorno
+	    return $r;
+
+    }
+
+    /**
+     * legge la __label__ di una riga per id, scrivendo l'id nella query quando si puo'
+     *
+     * ( fix 2026-09-23 ) Il titolo di ogni scheda e l'etichetta della conferma di cancellazione
+     * leggono `SELECT __label__ FROM <tabella><estensione> WHERE id = ?`. Quando l'estensione e'
+     * `_view`, cioe' la tabella non ha una statica, col segnaposto la condizione non entra nella
+     * vista e la vista si materializza per intero: misurato in produzione su polmasi il
+     * 23/09/2026, `contratti_view` 1,59 s col segnaposto e 0,017 s con l'id scritto, e quella
+     * lettura era la query lenta piu' pesante della giornata ( 206 volte, 441 s ).
+     *
+     * Stesse regole e stessa rete della lettura "integrazione blocco dati" di controller() e di
+     * refreshStaticView(): si scrive nella query solo un id fatto di sole cifre e senza zeri
+     * iniziali, passato per (int); le viste dichiarate in `$cf['controller']['no_id_inline']`
+     * restano sul segnaposto; se la query con l'id scritto fallisce si rifa' col segnaposto e la
+     * tabella si segna per il resto della richiesta.
+     *
+     * @param   mysqli  $c      connessione
+     * @param   string  $t      tabella, senza estensione
+     * @param   string  $rm     estensione ( '', '_view', '_view_static' ), da getStaticViewExtension()
+     * @param   mixed   $i      id della riga
+     * @param   string  $l      coda della query ( es. ' LIMIT 1' )
+     *
+     * @return  mixed           la __label__, o NULL se la riga non c'e'
+     */
+    function mysqlSelectLabel($c, $t, $rm, $i, $l = '')
+    {
+
+        $q = 'SELECT __label__ FROM ' . $t . $rm . ' WHERE id = ';
+
+        if ($rm === '_view'
+            && ctype_digit((string) $i) && (string) $i === (string) (int) $i
+            && empty($GLOBALS['cf']['controller']['no_id_inline'][$t])) {
+
+            $e = array();
+            $v = mysqlSelectValue($c, $q . (int) $i . $l, false, $e);
+
+            if (empty($e)) {
+                return $v;
+            }
+
+            $GLOBALS['cf']['controller']['no_id_inline'][$t] = true;
+            logger('lettura della __label__ di ' . $t . $rm . ' con id nella query non riuscita, si ripiega sul parametro per il resto della richiesta', 'mysql', LOG_WARNING);
+
+        }
+
+        return mysqlSelectValue($c, $q . '?' . $l, array(array('s' => $i)));
     }

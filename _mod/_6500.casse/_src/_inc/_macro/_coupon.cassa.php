@@ -23,7 +23,7 @@
         $ct['etc']['id_tipologia'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE nome = "documento di reso"');
     
     if(!isset( $_REQUEST['documenti'] )){
-        $ct['etc']['id_emittente'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM anagrafica_view WHERE se_azienda_gestita = 1 LIMIT 1');
+        $ct['etc']['id_emittente'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM anagrafica_view WHERE se_gestita = 1 LIMIT 1');
     
         if( $ct['etc']['id_tipologia'] && $ct['etc']['id_emittente'] ){
             $ct['etc']['numero'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT MAX(numero) FROM documenti WHERE id_tipologia = ? ', 

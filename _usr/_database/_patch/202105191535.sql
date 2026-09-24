@@ -1,1 +1,0 @@
-ALTER TABLE `periodi_variazioni_attivita` CHANGE `timestamp_elaborazione` `timestamp_creazione_cartellino` INT(11) NULL DEFAULT NULL;

@@ -1,0 +1,180 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set subtable = form.subtable %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+{% set account = session.account.id %}
+{% else %}
+{% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+        <form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group form-row">
+                    <div class="col-12 col-md">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
+                    </div>
+<!--
+                    <div class="col-12 col-md">
+                        <span class="label-top">badge</span>
+                        {{ frm.selectBox( table, '', '', 'id_badge', '', etc.select.badge, request, '', '', 1, '', '', 'badge.form', 'badge.form', 'badge', 'id', page, pages, ietf, 'badge' ) }}
+                    </div>
+-->
+<!--
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">badge</span>
+                        {% set subtable = 'badge' %}
+                        {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                        {{ frm.selectBox( table, subtable, 0, 'id', '', etc.select.badge, request, '', '', 1, '', '', 'badge.form', 'badge.form', 'badge', 'id', page, pages, ietf, 'badge' ) }}
+                    </div>
+-->
+                    {% set subtable = 'contratti_anagrafica' %}
+                    {{ frm.input( table, subtable, 0, 'id', '', '', request, '', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '34', 'hidden' ) }}
+                    <div class="col-12 col-md">
+                        <span class="label-top">abbonato</span>
+                        {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', '', request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
+                    {% set subtable = 'contratti_anagrafica' %}
+                    {{ frm.input( table, subtable, 1, 'id', '', '', request, '', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_ruolo', '', '', '', '30', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_anagrafica', '', '', request, etc.gestita, 'hidden' ) }}
+<!--
+                    <div class="col-12 col-md">
+                        <span class="label-top">nome</span>
+                        {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                    </div>
+
+                    {% set subtable = 'rinnovi' %}
+                    {{ frm.input( table, subtable, etc.sub.primo_rinnovo.idx, 'id', '', '', '', etc.sub.primo_rinnovo.id, 'hidden' ) }}
+                    {{ frm.input( table, subtable, etc.sub.primo_rinnovo.idx, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                    <div class="col-12 col-md">
+                        <span class="label-top">dal</span>
+                        {{ frm.date( table, subtable, etc.sub.primo_rinnovo.idx, 'data_inizio', '', '', '', etc.sub.primo_rinnovo.data_inizio, '', 1 ) }}
+                    </div>
+                    <div class="col-12 col-md">
+                        <span class="label-top">dal</span>
+                        {{ frm.date( table, subtable, etc.sub.primo_rinnovo.idx, 'data_fine', '', '', '', etc.sub.primo_rinnovo.data_fine, '', 1 ) }}
+                    </div>
+-->
+
+                </div>
+
+            </fieldset>
+<!--
+            <fieldset>
+                <legend>riferimenti</legend>
+
+                <div class="form-group form-row">
+                    <div class="col-12 col-md">
+                        <span class="label-top">disciplina</span>
+                        {{ frm.selectBox( table, '', '', 'id_categoria_progetti', '', etc.select.materie, request, '', '', '', '', '', 'categorie.progetti.form', 'categorie.progetti.form', 'progetti', 'id_progetto', page, pages, ietf, 'categorie_progetti' ) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    <div class="col-12 col-md">
+                        <span class="label-top">corso</span>
+                        {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+                    </div>
+                </div>
+
+            </fieldset>
+-->
+
+        {% if request[ table ].id %}
+        <fieldset>
+            <legend>acquisto dell'abbonamento</legend>
+            <div class="form-row metro">
+                {% if etc.carrello %}
+                <div class="col-md"><p>questa iscrizione è già nel carrello #{{ etc.carrello }}</p></div>
+                {% elseif not etc.rinnovi_da_pagare %}
+                <div class="col-md"><p>questa iscrizione non ha rinnovi da pagare</p></div>
+                {% else %}
+                {% set colspan = 4 %}
+                {% for a in etc.articoli %}
+                    {# TODO rendere asincrono questo bottone #}
+                    <div class="col-12 col-md-{{ colspan }}">
+                        <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
+                            <div class="media">
+                                <div class="media-left">	
+                                    <i class="fa fa-cart-plus"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-title">iscrizione {{ a.testo }}</h5>
+                                    <p class="media-text">€ {{ a.prezzi|first.prezzo|number_format(2, ',', '.') }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </fieldset>
+        {% endif %}
+
+<!--
+        {% if request[ table ].id %}
+        <fieldset class="d-flex flex-column flex-fill">
+            <legend>periodi di validità</legend>
+            {# VIEW PRINCIPALE #}
+            {# include 'inc/view.html' #}
+        </fieldset>
+        {% else %}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
+        {% endif %}
+-->
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

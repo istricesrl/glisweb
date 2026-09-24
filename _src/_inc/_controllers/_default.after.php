@@ -7,15 +7,15 @@
      *
      *
      *
-     * @todo come agire nei controller after
-     * @todo documentare
+     * TODO come agire nei controller after
+     * TODO documentare
      *
-     * @file
+     * 
      *
      */
 
     // log
-	logWrite( "controller default/after per ${t}/${a}", 'controller' );
+	logWrite( "controller default/after per $t/$a", 'controller' );
 
     // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {
@@ -25,7 +25,7 @@
 		// se sono presenti dati
 		    if( isset( $d ) && is_array( $d ) ) {
 
-			// se i dati riguardano un singolo oggetto
+				// se i dati riguardano un singolo oggetto
 			    if( in_array( 'id', $ks ) ) {
 
 				// elaboro i campi

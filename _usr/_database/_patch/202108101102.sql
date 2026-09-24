@@ -1,1 +1,0 @@
-ALTER TABLE `documenti_articoli` CHANGE `importo_netto_totale` `importo_netto_totale` DECIMAL(9,2) NOT NULL DEFAULT 0;

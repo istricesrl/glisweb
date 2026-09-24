@@ -1,1 +1,0 @@
-ALTER TABLE `todo_view_static` ADD `testo_completamento` TEXT NULL DEFAULT NULL AFTER `timestamp_completamento`;

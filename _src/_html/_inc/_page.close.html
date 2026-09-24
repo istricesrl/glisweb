@@ -2,26 +2,44 @@
 {# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE PRIMA DELLA CHIUSURA DEL TAG <body> #}
 {# NOTA: AL NETTO DELL'EVENTUALE JAVASCRIPT DELLE SPECIFICHE PAGINE, INCLUSO NEL BLOCCO %javascript% #}
 
-{% include '_inc/_cookie.overlay.html' %}
+<!-- Twig file included: {{ _self }} -->
+
+{% include [ 'inc/cookie.overlay.html', '_inc/_cookie.overlay.html' ] %}
 
 <script>
     var siteRoot = '{{ site.root }}';
 </script>
 
-{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j ) | raw ) }}"></script>{% endfor %}
+{# Fix 2026-05-18: aggiunto loop page.js.cached (allineato a _page.close.twig).
+   Pre-fix le pagine athena (che usano _page.close.html) perdevano gli script
+   esterni appena entravano in cache: il loop external era vuoto perché il caching
+   loop in _pages.php sposta gli item da external a cached. Le tendine
+   intelligenti sparivano perché jQuery non veniva più caricato. #}
+{% for j in page.js.cached %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+
+{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
 {% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
 
 {% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
 
-{% if facebook.messenger.page.id %}{% include '_inc/_messenger.html' %}{% endif %}
+{% include '_inc/_recaptcha.close.html' %}
+
+{% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.html' %}{% endif %}
 
 {% if criteo.account %}{% include '_inc/_criteo.html' %}{% endif %}
 
-{% if contents.chartjs %}{% include '_inc/_chartJs.html' %}{% endif %}
+{% if page.contents.chartjs %}{% include '_inc/_chartjs.script.html' %}{% endif %}
 
 {% if smartsupp.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
 
-{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}{% include modal.schema %}{% endfor %}{% endfor %}
+{% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.html' %}{% endif %}
 
-{# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
+{% if ecommerce and google.profile.recaptcha.keys.public %}{% include '_inc/_recaptcha.carrello.html' %}{% endif %}
+
+<!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
+{% for c in page.css.template %}
+<!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->
+{% endfor %}
+<!-- Google Mobile Friendly check: https://search.google.com/test/mobile-friendly?url={{ page.url[ localization.language.ietf ] }} -->
+<!-- Google Speed Test: https://developers.google.com/speed/pagespeed/insights/?url={{ page.url[ localization.language.ietf ] }} -->

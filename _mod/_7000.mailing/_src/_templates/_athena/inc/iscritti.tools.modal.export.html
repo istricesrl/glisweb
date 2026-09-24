@@ -1,0 +1,33 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function esporta() {
+	var data = $('#_id_lista').val();
+	window.open( '/print/7000.mailing/lista.csv?__lista__='+data, '_self');
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="esporta_per_lista">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">esporta CSV iscritti alla lista</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				<span class="label-top">lista</span>
+			    {{ frm.selectRequired( table, '', '', 'id_lista', 'tutte', etc.select.liste, request, '', '','selectpicker' ) }}
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="esporta();">esporta</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

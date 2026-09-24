@@ -8,7 +8,7 @@
     print_r( 
 		reCaptchaVerifyV3(
 			$_REQUEST['g-recaptcha-response'],
-			$cf['google']['recaptcha']['profile']['secret']
+			$cf['google']['profile']['recaptcha']['keys']['private']
 		)
 	);
 

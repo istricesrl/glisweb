@@ -1,1 +1,0 @@
-ALTER TABLE `metadati` ADD `id_video` INT NULL DEFAULT NULL AFTER `id_immagine`, ADD INDEX (`id_video`) ;

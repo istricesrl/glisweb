@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD `id_contatto` INT NULL DEFAULT NULL AFTER `id_tipologia`, ADD INDEX (`id_contatto`) ;

@@ -1,0 +1,40 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function popola() {
+	var data = $('#_id_categoria').val();
+	var call = '{{ site.url }}task/7000.mailing/lista.popola.categoria?__categoria__='+data+'&__lista__={{ request[ form.table ].id }}';
+	$('#applica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+	getws( call,'', function() {
+		$('#applica').html('<i class="fa fa-check"></i>');
+	});
+
+	location.reload();
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="popola_lista">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">popola lista da categoria anagrafica</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">categoria</span>
+						{{ frm.selectRequired( table, '', '', 'id_categoria', 'tutte', etc.select.categorie_anagrafica, request, '', '','selectpicker' ) }}
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" id="applica" onclick="popola();">popola</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

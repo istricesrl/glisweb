@@ -1,12 +1,55 @@
 <?php
 
-    if( isset( $ct['page']['parser'] ) ){
+    /**
+     * inclusione dei parser di pagina
+     * 
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * 
+     * esempi di utilizzo
+     * ------------------
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
 
-        foreach( $ct['page']['parser'] as $parser ){
+    /**
+     * inclusione dei parser di pagina
+     * ===============================
+     * 
+     * 
+     * 
+     */
 
+    // ...
+    if( isset( $ct['page']['parser'] ) ) {
+
+        // ...
+        foreach( $ct['page']['parser'] as $parser ) {
+
+            // TODO includere la versione custom se esiste
             require $parser;
 
         }
+
     }
 
-  //  print_r( $ct['page']);
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
+    // print_r( $ct['page']);

@@ -1,0 +1,36 @@
+template:
+  type: twig
+  default: default.twig
+  login: login.twig
+  menu:
+    categorie: NULL
+    sottomenu: NULL
+    mega: NULL
+    icons: NULL
+    main: NULL
+
+css:
+  preload:
+    all:
+      - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css
+      - https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.4.33/example1/colorbox.min.css
+      - https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+  internal:
+    all:
+      - _src/_css/_main.css
+  template:
+    all:
+      - css/main.css
+
+js:
+  external:
+    - https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js
+    - https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js
+    - https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.4.33/jquery.colorbox-min.js
+    - https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js
+    - https://www.google.com/recaptcha/api.js
+  internal:
+    - _src/_js/_main.js
+    - _src/_js/_lib/_form.js
+  template:
+    - js/main.js

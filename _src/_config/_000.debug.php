@@ -8,9 +8,8 @@
      * Il framework GlisWeb mette a disposizione degli sviluppatori e degli utenti un completo e potente ventaglio di
      * strumenti per il debug, il monitoraggio del funzionamento, la risoluzione dei problemi. Fra tutti, il sistema di
      * log è sicuramente il più importante, ed è fondamentale comprenderne il funzionamento per poter utilizzare
-     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione logWrite()
-     * della libreria _log.utils.php, e il suo funzionamento si basa sui dati impostati un questo file e nella sua
-     * controparte custom.
+     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione core logger()
+     * e il suo funzionamento si basa sui dati impostati in questo file e nella sua controparte custom.
      *
      * livelli di log
      * --------------
@@ -54,61 +53,94 @@
      * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
      * E_ALL                 |   32767  | tutti i messaggi di errore
      *
+     * TODO scrivere un paragrafo per tutti gli stati di funzionamento del framework
+     * TODO scrivere un paragrafo per spiegare il senso delle chiavi di $cf['debug']['lvl']
+     * TODO suddividere le configurazioni di log e debug fra test e produzione
+     * TODO finire di implementare le varie destinazioni di log
+     *
+     * TODO documentare
      *
      *
-     * @todo scrivere un paragrafo per tutti gli stati di funzionamento del framework
-     * @todo scrivere un paragrafo per spiegare il senso delle chiavi di $cf['debug']['lvl']
-     * @todo suddividere le configurazioni di log e debug fra test e produzione
+     */
+
+    /**
+     * dichiarazione delle costanti
+     * ============================
+     * Le costanti DEVELOPEMENT, TESTING e PRODUCTION sono utilizzate per tenere traccia dello status del
+     * deploy corrente; è possibile configurare facilmente altri status dichiarando in custom le relative
+     * costanti (ad esempio DBTESTING, UNSTABLE o PREPRODUCTION eccetera). Agli stati del deploy si collegano
+     * le dichiarazioni di molte variabili (vedi oltre) consentendo di fatto di modificare il comportamento
+     * del deploy semplicemente modificandone lo status.
      *
-     * @file
-     *
+     * Le costanti che definiscono le destinazioni dei log sono dichiarate per implementazioni future,
+     * e non sono attualmente utilizzate.
+     * 
      */
 
     // costanti che descrivono lo stato di funzionamento del framework
-	define( 'DEVELOPEMENT'					, 'DEV' );
-	define( 'TESTING'				    	, 'TEST' );
-	define( 'PRODUCTION'					, 'PROD' );
+    define( 'DEVELOPEMENT'                                      , 'DEV' );
+    define( 'TESTING'                                           , 'TEST' );
+    define( 'PRODUCTION'                                        , 'PROD' );
 
     // costanti che definiscono le destinazioni possibili di log
-	define( 'LOG_TO_FILE'					, 'LOG2FILE' );
-	define( 'LOG_TO_SYSLOG'					, 'LOG2SYS' );
-	define( 'LOG_TO_GOOGLE'					, 'LOG2GCE' );
-	define( 'LOG_TO_MAIL'					, 'LOG2MAIL' );
-	define( 'LOG_TO_SMS'					, 'LOG2SMS' );
-	define( 'LOG_TO_MYSQL'					, 'LOG2MYSQL' );
+    define( 'LOG_TO_FILE'                                       , 'LOG2FILE' );
+    define( 'LOG_TO_SYSLOG'                                     , 'LOG2SYS' );
+    define( 'LOG_TO_GOOGLE'                                     , 'LOG2GCE' );
+    define( 'LOG_TO_MAIL'                                       , 'LOG2MAIL' );
+    define( 'LOG_TO_SMS'                                        , 'LOG2SMS' );
+    define( 'LOG_TO_MYSQL'                                      , 'LOG2MYSQL' );
 
-    /*
-     * @todo alcuni di questi metodi di log sono ancora da implementare e credo sia importante farlo
-     * per migliorare la reattività nella risposta a determinati eventi problematici o addirittura critici
+    /**
+     * dichiarazione variabili generali di debug
+     * =========================================
+     * 
+     * 
+     */
+
+    // debug utilizzo memoria
+    $cf['debug']['mem']                                         = array();
+
+    // tempo massimo di esecuzione
+    $cf['debug']['run']['timeout']                              = 900;
+
+    // tempo massimo di connessione ai socket
+    $cf['debug']['socket']['timeout']                           = 900;
+
+    /**
+     * configurazione dei livelli di debug
+     * ===================================
+     * Queste variabili definiscono il comportamento del framework relativamente al debug (livello di
+     * log, display degli errori, e così via). Si noti che un insieme di variabili è dichiarato per
+     * ogni status possibile del deploy, in modo da adattare il comportamento del debug allo status
+     * stesso.
+     * 
      */
 
     // livello di errori dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['log']['lvl']		        = LOG_DEBUG;
-
-    // frequenza di rotazione dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['log']['rotation']		= 'Ym';
-
-    // livello di PHP error_reporting()
-	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		    = E_ALL;
-
-    // destinazione dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		    = array( LOG_TO_FILE => true );
+    $cf['debug'][ DEVELOPEMENT ]['log']['lvl']                  = LOG_DEBUG;
+    $cf['debug'][ DEVELOPEMENT ]['log']['rotation']             = 'Ym';
+    $cf['debug'][ DEVELOPEMENT ]['report']['lvl']               = E_USER_WARNING;
+    $cf['debug'][ DEVELOPEMENT ]['display']                     = true;
 
     // impostazioni aggiuntive per TESTING
-	$cf['debug'][ TESTING ]				                        = $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ TESTING ]['*']['log']['lvl']		            = LOG_NOTICE;
+    $cf['debug'][ TESTING ]                                     = $cf['debug'][ DEVELOPEMENT ];
+    $cf['debug'][ TESTING ]['log']['lvl']                       = LOG_NOTICE;
 
     // impostazioni aggiuntive per PRODUCTION
-	$cf['debug'][ PRODUCTION ]				                    = $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		        = LOG_ERR;
+    $cf['debug'][ PRODUCTION ]                                  = $cf['debug'][ DEVELOPEMENT ];
+    $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_ERR;
+    $cf['debug'][ PRODUCTION ]['display']                       = false;
 
-    // debug utilizzo memoria
-	$cf['debug']['mem']					                        = array();
+    /**
+     * debug del runlevel
+     * ==================
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
+     * 
+     */
 
-    // configurazione extra
-	if( isset( $cx['debug'] ) ) {
-	    $cf['debug'] = array_replace_recursive( $cf['debug'], $cx['debug'] );
-	}
-
-    // collegamento a $ct
-	$ct['debug']						                        = &$cf['debug'];
+    // debug
+    // die( print_r( $_REQUEST, true ) );
+    // ini_set('display_errors', '1');
+    // ini_set('display_startup_errors', '1');
+    // error_reporting(E_ALL);
+    // die( __FILE__ );

@@ -5,11 +5,33 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
+     *
      *
      */
+
+    // azioni
+    if( ! defined( 'METHOD_DELETE' ) )          { define( 'METHOD_DELETE',          'DELETE' ); }
+    if( ! defined( 'METHOD_GET' ) )             { define( 'METHOD_GET',             'GET' ); }
+    if( ! defined( 'METHOD_PATCH' ) ) {     define( 'METHOD_PATCH'            , 'PATCH' ); }
+    if( ! defined( 'METHOD_POST' ) ) {         define( 'METHOD_POST'            , 'POST' ); }
+    if( ! defined( 'METHOD_PUT' ) ) {         define( 'METHOD_PUT'            , 'PUT' );  }
+    if( ! defined( 'METHOD_REPLACE' ) ) {     define( 'METHOD_REPLACE'        , 'REPLACE' ); }
+    if( ! defined( 'METHOD_UPDATE' ) ) {     define( 'METHOD_UPDATE'            , 'UPDATE' ); }
+
+    // costanti per il contenuto
+    if( ! defined( 'MIME_APPLICATION_JSON' ) ) {         define( 'MIME_APPLICATION_JSON'            , 'application/json' ); }
+    if( ! defined( 'MIME_APPLICATION_XML' ) ) {         define( 'MIME_APPLICATION_XML'            , 'application/xml' ); }
+    if( ! defined( 'MIME_MULTIPART_FORM_DATA' ) ) {     define( 'MIME_MULTIPART_FORM_DATA'        , 'multipart/form-data' ); }
+    if( ! defined( 'MIME_TEXT_PLAIN' ) ) {                 define( 'MIME_TEXT_PLAIN'                , 'text/plain' ); }
+    if( ! defined( 'MIME_TEXT_HTML' ) ) {                 define( 'MIME_TEXT_HTML'                , 'text/html' ); }
+    if( ! defined( 'MIME_X_WWW_FORM_URLENCODED' ) ) {     define( 'MIME_X_WWW_FORM_URLENCODED'    , 'application/x-www-form-urlencoded' ); }
+
+    // funzioni richieste
+    if( ! function_exists( 'logger' ) ) {
+        die( 'la funzione core logger() non è definita, definirla per utilizzare la libreria' );
+    }
 
     /**
      * esegue una chiamata REST
@@ -17,151 +39,218 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL, &$resHeaders = array(), $timeout = NULL ) {
 
-	// inizializzo l'oggetto CURL
-	    $curl = curl_init();
+        // inizializzo l'oggetto CURL
+        $curl = curl_init();
 
-	// registro la risposta
-	    curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+        // registro la risposta
+        curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
-	// evito l'inclusione degli header nell'output
-	    curl_setopt( $curl, CURLOPT_HEADER, false );
+        // evito l'inclusione degli header nell'output
+        curl_setopt( $curl, CURLOPT_HEADER, false );
 
-	// salto la verifica ssl
-	    curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
+        // gestisco gli header di risposta
+        curl_setopt( $curl, CURLOPT_HEADERFUNCTION,
+            function( $curl, $header ) use ( &$resHeaders ) {
+                $len = strlen( $header );
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) {
+                    return $len;
+                }
+                $resHeaders[ strtolower( trim( $header[0] ) ) ][] = trim( $header[1] );
+                return $len;
+            }
+        );
 
-	// salto la verifica dell'host
-	    curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
+        // salto la verifica ssl
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
 
-	// imposto un timeout per la connessione
-	    curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, 30 );
+        // salto la verifica dell'host
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
 
-	// autenticazione
-	    if( $user !== NULL && $pasw !== NULL ) {
+        // imposto un timeout per la connessione
+        //
+        // Il valore storico — 3 secondi per la connessione, 5 per la risposta — resta il default,
+        // quindi nessun deploy cambia comportamento senza dire niente. Si scavalca in due modi:
+        // per singola chiamata con $timeout, oppure per tutto il deploy definendo le costanti
+        // REST_CONNECTTIMEOUT e REST_TIMEOUT in un runlevel. Le costanti si leggono qui, a ogni
+        // chiamata e non al caricamento della libreria, perché le librerie vengono incluse PRIMA
+        // dei runlevel: un define fatto in un runlevel fa comunque in tempo.
+        //
+        // Perché serve: cinque secondi bastano per una lettura, non sempre per una scrittura su
+        // un gestionale remoto. E una scrittura che va in timeout è il caso peggiore, perché la
+        // risposta non arriva ma la INSERT dall'altra parte può essere passata lo stesso: chi
+        // chiama non sa se ripetere o no. Sul deploy GIMBE questo ha prodotto, fra il marzo 2024
+        // e il maggio 2026, 22 donazioni che il sito dava per non registrate — di cui 8 erano
+        // invece sul gestionale, e una registrata due volte.
+        $connectTimeout = defined( 'REST_CONNECTTIMEOUT' ) ? REST_CONNECTTIMEOUT : 3;
+        $responseTimeout = ( $timeout !== NULL ) ? $timeout : ( defined( 'REST_TIMEOUT' ) ? REST_TIMEOUT : 5 );
 
-		curl_setopt( $curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
+        curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $connectTimeout );
+        curl_setopt( $curl, CURLOPT_TIMEOUT, $responseTimeout );
 
-		curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
+        // autenticazione
+        if( $user !== NULL && $pasw !== NULL ) {
 
-	    }
+            curl_setopt( $curl, CURLOPT_HTTPAUTH, $auth );
 
-	// verifico che ci siano dati da inviare
-# NOTA perché questa riga è commentata?!
-#	    if( $data !== NULL && is_array( $data ) && count( $data ) > 0 ) {
-	    if( true ) {
+            curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
 
-		// codifico i dati
-		    switch( $datatype ) {
+        } elseif( $token !== NULL ) {
 
-			case 'headers':
-			    $headers = array_merge( $headers, $data );
-			break;
+            $headers['Authorization'] = 'Bearer ' . $token;
 
-			case MIME_APPLICATION_JSON:
-			    $data = json_encode( $data, JSON_UNESCAPED_SLASHES );
-			    $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
-			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
+        }
 
-			case MIME_MULTIPART_FORM_DATA:
-			    $data = http_build_query( $data );
-			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
+        // NOTA usare CURLAUTH_BASIC o CURLAUTH_DIGEST secondo bisogna
 
-			case NULL:
-			case 'query':
-				if( ! empty( $data ) ) {
-					$data = http_build_query( $data );
-					$url = sprintf( "%s?%s", $url, $data );
-				}
-			break;
+        // verifico che ci siano dati da inviare
+        // NOTA perché questa riga è commentata?!
+        // if( $data !== NULL && is_array( $data ) && count( $data ) > 0 ) {
+        if( true ) {
 
-		    }
+            // codifico i dati
+            switch( $datatype ) {
 
-		// log
-		    logWrite( 'invio a ' . $url . ' (' . $method . ') dati: ' . serialize( $data ), 'rest' );
+                case 'headers':
+                    $headers = array_merge( $headers, $data );
+                break;
 
-	    }
+                case MIME_APPLICATION_JSON:
+                    $data = json_encode( $data, JSON_UNESCAPED_SLASHES );
+                    $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
+                    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+                break;
 
-	// impostazione del tipo di dati accettato
-		if( ! empty( $answertype ) ) {
-			$headers = array_merge( $headers, array( 'Accept' => $answertype ) );
-		}
+                case MIME_X_WWW_FORM_URLENCODED:
+                    $data = http_build_query( $data );
+                    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+                break;
 
-	// impostazione degli headers
-	    if( ! empty( $headers ) ) {
-		foreach( $headers as $k => $d ) { $hdrs[] = $k . ': ' . $d; }
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, $hdrs );
-	    }
+                case MIME_MULTIPART_FORM_DATA:
+                    // $data = http_build_query( $data ); // NOTA riga commentata perché in conflitto con l'uso di CURLFile(), fare dei test per verificare se funziona tutto lo stesso
+                    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+                break;
 
-	// imposto il metodo
-	    curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
+                case NULL:
+                case 'query':
+                    if( ! empty( $data ) ) {
+                        $data = http_build_query( $data );
+                        $url = sprintf( "%s?%s", $url, $data );
+                    }
+                break;
 
-	// imposto l'url
-	    curl_setopt( $curl, CURLOPT_URL, $url );
+            }
 
-	// debug
-	    // curl_setopt( $curl, CURLOPT_VERBOSE, true);
-	    // curl_setopt( $curl, CURLOPT_STDERR, fopen( DIRECTORY_BASE . DIRECTORY_LOG . 'curl.' . date('YmdHis') . '.log', 'w'));
+            // log
+            logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
 
-	// esecuzione della chiamata
-	    $result = curl_exec( $curl );
-	    $status = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
-	    $error = curl_error( $curl );
+        }
 
-	// debug
-	    // var_dump( $url );
-	    // var_dump( $curl );
-	    // var_dump( $result );
-	    // var_dump( $status );
-	    // var_dump( $error );
-	    // var_dump( $headers );
-	    // var_dump( $data );
+        // impostazione del tipo di dati accettato
+        if( ! empty( $answertype ) ) {
+            $headers = array_merge( $headers, array( 'Accept' => $answertype ) );
+        }
 
-	// log
-	    if( ! empty( $error ) || substr( $status, 0, 1 ) != 2 ) {
-		logWrite( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' , LOG_ERR );
-	    } else {
-		logWrite( 'risposta ' . $status . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' );
-	    }
+        // impostazione degli headers
+        if( ! empty( $headers ) ) {
+            foreach( $headers as $k => $d ) { $hdrs[] = $k . ': ' . $d; }
+            curl_setopt( $curl, CURLOPT_HTTPHEADER, $hdrs );
+        }
 
-	// chiusura della richiesta
-	    curl_close( $curl );
+        // imposto il metodo
+        curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
 
-	// decodifica della risposta
-	    switch( $answertype ) {
+        // imposto l'url
+        curl_setopt( $curl, CURLOPT_URL, $url );
 
-		case MIME_APPLICATION_JSON:
-		    $result = json_decode( $result , true );
-		break;
+        // debug
+        // curl_setopt( $curl, CURLOPT_VERBOSE, true);
+        // curl_setopt( $curl, CURLOPT_STDERR, fopen( DIRECTORY_BASE . DIRECTORY_LOG . 'curl.' . date('YmdHis') . '.log', 'w'));
 
-	    }
+        // esecuzione della chiamata
+        $result = curl_exec( $curl );
+        $status = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+        $error = curl_error( $curl );
 
-	// restituzione della risposta
-	    return $result;
+        // debug
+        // var_dump( $url );
+        // var_dump( $curl );
+        // var_dump( $result );
+        // var_dump( $status );
+        // var_dump( $error );
+        // var_dump( $headers );
+        // var_dump( $data );
+
+        // log
+        if( ! empty( $error ) || substr( $status, 0, 1 ) != 2 ) {
+            logger( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' , LOG_ERR );
+        } else {
+            logger( 'risposta ' . $status . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' );
+        }
+
+        // chiusura della richiesta
+        curl_close( $curl );
+
+        // salvataggio del risultato grezzo
+        $raw = $result;
+
+        // decodifica della risposta
+        switch( $answertype ) {
+
+            case MIME_APPLICATION_JSON:
+                $result = json_decode( $result , true );
+            break;
+
+            case MIME_APPLICATION_XML:
+                $result = xml2array( $result );
+            break;
+
+        }
+
+        // restituzione della risposta
+        return $result;
 
     }
 
     /**
+     * preleva un valore da una chiamata REST
+     *
+     * Questa funzione preleva un JSON da una chiamata REST e ne restituisce il valore di una chiave specificata.
      *
      *
-     *
-     *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function restGetValue( $k, $url, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
 
-	$r = restCall( $url, METHOD_GET, $data, $datatype, $answertype, $status, $headers, $user, $pasw, $error );
+        $r = restCall( $url, METHOD_GET, $data, $datatype, $answertype, $status, $headers, $user, $pasw, $error );
 
-	if( isset( $r[ $k ] ) ) {
-	    return $r[ $k ];
-	} else {
-	    return false;
-	}
+        if( isset( $r[ $k ] ) ) {
+            return $r[ $k ];
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * preleva un valore singolo da una chiamata REST
+     *
+     * Questa funzione preleva un valore stringa da una chiamata REST.
+     *
+     *
+     * TODO documentare
+     *
+     */
+    function restGetString( $url ) {
+
+        $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN );
+
+        return $r;
 
     }

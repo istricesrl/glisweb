@@ -1,8 +1,10 @@
 
 {# MACRO PER GLI ELEMENTI DEI FORM #}
 {# NOTA: IMPORTARE SEMPRE COME FRM #}
+{# import '_bin/_form.html' as frm #}
 
 {% macro stars( voto ) %}
+<!-- macro stars() -->
 <ul class="stars">
 {% for i in 0..4 %}
 <li class="star {% if i < voto %}on{% endif %}"><i class="fa fa-star fa-fw"></i></li>
@@ -14,28 +16,26 @@
 <label class="col-form-label{{ class }}">{{ text }}</label>
 {% endmacro %}
 
-{% macro selectAuto( table, subtable, counter, field, placeholder, etc, request, default, required, noempty, class, disabled ) %}
+{% macro selectAuto( table, subtable, counter, field, placeholder, etc, request, defval, required, noempty, class, disabled ) %}
 {% import _self as frm %}
-{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, 1, required, noempty, class, disabled ) }}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, defval, 1, required, noempty, class, disabled ) }}
 {% endmacro %}
 
-{% macro selectDisabled( table, subtable, counter, field, placeholder, etc, request, default, noempty, class ) %}
+{% macro selectDisabled( table, subtable, counter, field, placeholder, etc, request, defval, noempty, class ) %}
 {% import _self as frm %}
-{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', '', noempty, class, 1 ) }}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, defval, '', '', noempty, class, 1 ) }}
 {% endmacro %}
 
-{# macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, noempty, class, disabled, onchange ) #}
-{% macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, noempty, class, disabled, onchange ) %}
-{% import _self as frm %}
-{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', 1, noempty, class, disabled, onchange ) }}
+{% macro selectRequired( table, subtable, counter, field, placeholder, etc, request, defval, noempty, class, disabled, onchange ) %}
+{{ _self.select( table, subtable, counter, field, placeholder, etc, request, defval, '', 1, noempty, class, disabled, onchange ) }}
 {% endmacro %}
 
-{% macro selectAutoRequired( table, subtable, counter, field, placeholder, etc, request, default, noempty, class, disabled ) %}
+{% macro selectAutoRequired( table, subtable, counter, field, placeholder, etc, request, defval, noempty, class, disabled ) %}
 {% import _self as frm %}
-{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, 1, 1, noempty, class, disabled ) }}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, defval, 1, 1, noempty, class, disabled ) }}
 {% endmacro %}
 
-{% macro select( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled, onchange ) %}
+{% macro select( table, subtable, counter, field, placeholder, etc, request, defval, autosubmit, required, noempty, class, disabled, onchange, edit, add ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -49,7 +49,7 @@
 {% if autosubmit %}
     {% if autosubmit == 1 %}{% set change = 'submitFormOkay=true;submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl %}{% set vl = defval %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
 {% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
 {% if readonly %}
@@ -58,16 +58,31 @@
 <div class="form-control-plaintext {{ class }}">{{ option.__label__ }}</div>
 {% endif %}{% endfor %}
 {% else %}
-<select name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if required %} required{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" {% if onchange %}onchange="{{ onchange }}"{% endif %}>
+<select vl="{{ vl }}" name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if required %} required{% endif %}{% if defval %} defval="{{ defval }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} defval="{{ defval }}" data-live-search="true" {% if onchange %}onchange="{{ onchange }}"{% endif %}>
     {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
     {% for option in etc %}
-    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
+    {# NOTA questa if deve funzionare con vl = 0, vl = '' e vl = qualsiasi cosa (vedi task.form) #}
+    <option value="{{ option.id }}"{# if option.id is same as( vl ) #}{# if option.id == vl #}{% if vl != '' and option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
     {% endfor %}
 </select>
+{# TODO FINIRE DI IMPLEMENTARE MANCANO GLI ARGOMENTI KEY, PAGE, PAGES, ECC.
+
+   ⚠ Finche' quegli argomenti non ci sono, `editor` e `adder` qui dentro NON SONO MAI VALORIZZATI:
+   i due pulsanti uscivano con window.open('','_self'), cioe' ricaricavano la pagina corrente
+   buttando via i suoi parametri. Su una scheda e' il modo piu' veloce per perdere quello che si
+   stava scrivendo, ed e' meta' del "cliccando le icone vengo buttato fuori" segnalato da Montanari
+   il 22/09/2026. Si emettono solo se un url c'e' davvero: oggi vuol dire mai, e finche' la macro
+   resta cosi' e' giusto che sia mai. #}
+{% if edit and vl and editor %}<div class="col-auto p-0 pl-1">
+<button type="button" class="btn btn-sm btn-secondary btn-sqr" placeholder="modifica l'elemento scelto" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="modifica l'elemento scelto" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+</div>{% endif %}
+{% if add and adder %}<div class="col-auto p-0 pl-1">
+<button type="button" class="btn btn-sm btn-secondary btn-sqr" placeholder="aggiungi un nuovo elemento" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="aggiungi un nuovo elemento" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+</div>{% endif %}
 {% endif %}
 {% endmacro %}
 
-{% macro selectPicker( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled ) %}
+{% macro selectPicker( table, subtable, counter, field, placeholder, etc, request, defval, autosubmit, required, noempty, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -78,12 +93,12 @@
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
-{% if vl is empty %}{% set vl = default %}{% endif %}
+{% if vl is empty %}{% set vl = defval %}{% endif %}
 <input type="hidden" {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if required %}required{% endif %}>
 <input type="text" class="{% if disabled %}disabled{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled ) %}
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, defval, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled, change, modal, restrict, sort ) %}
 {% if subtable %}
     {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
@@ -97,9 +112,25 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
+{% if not vl %}{% set vl = defval %}{% endif %}
+{% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
+{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
+{% if not bl and vl %}{% set bl = vl %}{% endif %}
+{# ⚠ UN PULSANTE CHE PORTA DA NESSUNA PARTE NON SI DISEGNA ( 22/09/2026 )
+
+   Se la pagina di destinazione non esiste su questo deploy - il modulo non e' attivo, la scheda
+   non e' definita, l'utente non e' nel gruppo che la vede - `pages[ edit ].path[ ietf ]` e' vuoto,
+   e l'URL che ne usciva era il solo `?__backurl__=...`: cioe' LA PAGINA CORRENTE RICARICATA SENZA
+   I SUOI PARAMETRI. Su una scheda di riga d'offerta questo vuol dire riaprirla senza sapere di che
+   documento si tratta, ed e' la catena che il 22/09 ha prodotto due righe orfane e due fatal error
+   di memoria ( la tendina della riga genitore, senza documento, si riempie con tutto l'archivio ).
+
+   Chi ci clicca vede una pagina che non c'entra niente o un errore, e l'unico modo di tornare
+   indietro e' il tasto del browser: e' il "cliccando le icone vengo buttato fuori" di Montanari.
+   Con il path vuoto l'url resta vuoto, e i due pulsanti qui sotto non vengono emessi affatto. #}
 {% if key %}
-    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
-    {% set adder = pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] %}
+    {% set editor = pages[ edit ].path[ ietf ] ? ( pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] ) : '' %}
+    {% set adder = pages[ add ].path[ ietf ] ? ( pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] ) : '' %}
 {% else %}
     {% set editor = edit %}
     {% set adder = add %}
@@ -107,67 +138,104 @@
 {% if autosubmit %}
     {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
-{% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
-{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
-{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% endif %}
+{#
+   pl e' cio' che il campo mostra PRIMA che il JavaScript risolva l'etichetta.
+
+   Se la label non sta in etc si ripiega sul VALORE, non piu' sui tre trattini ( 22/09/2026 ).
+   Con una tendina intelligente etc e' quasi sempre vuoto - e lo e' diventato su molte maschere
+   in piu' dall'11/09/2026, da quando le liste sull'anagrafica intera non si caricano piu' -
+   quindi i trattini erano la condizione NORMALE di partenza, e restavano li' per sempre ogni
+   volta che la chiamata REST di _src/_js/_lib/_selectbox.js non andava a buon fine ( il caso
+   piu' comune: l'entita' non e' fra i permessi e l'API risponde 401 ).
+
+   Il guaio dei trattini e' che dicono "vuoto" a un campo che vuoto non e': l'operatore crede di
+   dover riscegliere il valore. L'id non e' bello da leggere ma e' vero, e sparisce comunque
+   appena arriva l'etichetta. E' anche cio' che fa gia' la macro gemella _src/_twig/_lib/_form.twig,
+   che di segnaposto non ne ha mai avuto uno.
+
+   NOTA se pl resta il valore anche a pagina caricata, di solito e' perche' la label non viene
+   generata dalla view, oppure va ripopolata la view static o svuotata la cache.
+#}
+{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% if not pl %}{% set pl = vl %}{% endif %}{% endif %}
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">
-	<input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+	    {#
+	       restrict-<campo>="<operatore>:<valore>" restringe la ricerca REST.
+
+	       Non e' un'invenzione: _src/_js/_lib/_selectbox.js ( righe 174-183 ) legge qualunque
+	       attributo che comincia per "restrict-" e lo gira alla chiamata come
+	       __info__[<api>][__restrict__][<campo>][<operatore>]. La macro Twig gemella,
+	       _src/_twig/_lib/_form.twig riga 448, li emetteva gia' allo stesso modo; qui mancavano,
+	       ed e' per questo che nessun campo di questi template poteva essere ristretto.
+
+	       Si passa come array: { 'id_prodotto': { 'IN': 'GS3300|OPZIONI' } }
+
+	       sort-<campo>="ASC|DESC" ordina la ricerca REST, e funziona allo stesso modo: lo stesso
+	       giro di _selectbox.js lo gira come __info__[<api>][__sort__][<campo>], che
+	       _src/_lib/_controller.tools.php mette nella ORDER BY. Senza, i risultati arrivano
+	       nell'ordine naturale della vista - che e' il motivo per cui il 22/09/2026 su Lughese la
+	       tendina degli articoli proponeva GS3300.10 subito dopo GS3300.1.
+
+	       Si passa come array: { 'id': 'ASC' }
+	    #}
+	    <input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if defval %} defval="{{ defval }}"{% endif %} {% if not noempty %}empty{% endif %} defval="{{ defval }}" data-live-search="true" populate-api="{{ api }}"{% for res,val in restrict %} restrict-{{ res }}="{{ val|keys|first }}:{{ val|first }}"{% endfor %}{% for cam,dir in sort %} sort-{{ cam }}="{{ dir }}"{% endfor %}>
     </div>
     {% else %}
     <div class="col combobox-container p-0">
-	<select name="{{ nm }}" {% if disabled %}disabled{% endif %} id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
-	    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
-	    {% for option in etc %}
-	    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
-	    {% endfor %}
-	</select>
+        <select name="{{ nm }}" {% if disabled %}disabled{% endif %} id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if defval %} defval="{{ defval }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} defval="{{ defval }}" data-live-search="true" populate-api="{{ api }}">
+            {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
+            {% for option in etc %}
+            <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" placeholder="mostra tutto l'elenco" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="mostra tutto l'elenco" {% if disabled %}disabled{% endif %} selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
     </div>
     {% endif %}
-    {% if edit and vl %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+    {% if edit and vl and editor %}<div class="col-auto p-0 pl-1">
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" placeholder="modifica l'elemento scelto" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="modifica l'elemento scelto" {% if disabled %}disabled{% endif %} onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>{% endif %}
-    {% if add %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+    {% if add and adder %}<div class="col-auto p-0 pl-1">
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" placeholder="aggiungi un nuovo elemento" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="aggiungi un nuovo elemento" {% if disabled %}disabled{% endif %} onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+    </div>{% endif %}
+    {% if modal %}<div class="col-auto p-0 pl-1">
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" title="aggiungi un nuovo elemento" {% if disabled %}disabled{% endif %} onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
     </div>{% endif %}
 </div>
 {% endmacro %}
 
-{% macro input( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled, step ) %}
+{% macro input( table, subtable, counter, field, placeholder, etc, request, defval, type, required, class, disabled, step, pattern, extras ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
     {% set ks = request[ table ][ subtable ]|keys %}
     {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
-    {% if not vl  %}{% set vl = default %}{% endif %}
+    {% if not vl  %}{% set vl = defval %}{% endif %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
     {% if not request[ table ][ field ] %}
-        {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% else %}{% set vl = default %}{% endif %}
+        {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% else %}{% set vl = defval %}{% endif %}
     {% endif %}
 {% endif %}
-
-<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if default %} default="{{ default }}"{% endif %} {% if step %}step={{ step }} {% endif %} {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
+{% if disabled == 1 %}{% if request[ '__disabled_' ~ id ~ '__' ] %}{% set vl = request[ '__disabled_' ~ id ~ '__' ] %}{% endif %}<input type="hidden" name="__disabled_{{ id }}__" value="{{ vl }}">{% endif %}
+<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if defval %} defval="{{ defval }}"{% endif %} {% if step %}step={{ step }} {% endif %} {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if pattern %}pattern="{{ pattern }}"{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %} {{ extras|raw }}>
 {% endmacro %}
 
-{% macro inputRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled, step ) %}
+{% macro inputRequired( table, subtable, counter, field, placeholder, etc, request, defval, type, class, disabled, step ) %}
 {% import _self as frm %}
-{{ frm.input( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class, disabled, step ) }}
+{{ frm.input( table, subtable, counter, field, placeholder, etc, request, defval, type, 'true', class, disabled, step ) }}
 {% endmacro %}
 
-{% macro inputDisabled( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% macro inputDisabled( table, subtable, counter, field, placeholder, etc, request, defval, type, class ) %}
 {% import _self as frm %}
-{{ frm.input( table, subtable, counter, field, placeholder, etc, request, default, type, '', class, 1 ) }}
+{{ frm.input( table, subtable, counter, field, placeholder, etc, request, defval, type, '', class, 1 ) }}
 {% endmacro %}
 
-{% macro checkbox( table, subtable, counter, field, placeholder, etc, request, default, class, disabled ) %}
+{% macro checkbox( table, subtable, counter, field, placeholder, etc, request, defval, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -180,14 +248,14 @@
     {% set vl = request[ table ][ field ] %}
     {% set df = request[ table ].id %}
 {% endif %}
-<input type="hidden" {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="" {% if default %} default="{{ default }}" {% endif %} value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
-<input type="checkbox" {% if disabled %}disabled{% endif %} class="form-check-input {{ class }}" {% if vl or ( default and not df ) %}checked{% endif %}>
+<input type="hidden" {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="" {% if defval %} defval="{{ defval }}" {% endif %} value="{% if vl or ( defval and not df ) %}1{% else %}0{% endif %}">
+<input type="checkbox" {% if disabled %}disabled{% endif %} class="form-check-input {{ class }}" {% if vl or ( defval and not df ) %}checked{% endif %}>
 {% if placeholder %}
 <label class="form-check-label text-left" for="{{ id }}">{{ placeholder }}</label>
 {% endif %}
 {% endmacro %}
 
-{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, disabled ) %}
+{% macro textarea( table, subtable, counter, field, placeholder, rows, request, defval, required, class, height, console, static, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -198,21 +266,21 @@
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
-{% if disabled %}
+{% if not vl %}{% set vl = defval %}{% endif %}
+{% if static %}
 <input  type="hidden" name="{{ nm }}" value="{{ vl }}">
-<div class="form-control-plaintext {{ class }}">{{ vl | raw }}</div>
+<div class="form-control-plaintext {{ class }}">{{ vl }}</div>
 {% else %}
-<textarea   placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
+<textarea {% if disabled %}disabled{% endif %} placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if static %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
 {% endif %}
 {% endmacro %}
 
-{% macro textareaRequired( table, subtable, counter, field, placeholder, rows, request, default, class, height, console ) %}
+{% macro textareaRequired( table, subtable, counter, field, placeholder, rows, request, defval, class, height, console, static, disabled ) %}
 {% import _self as frm %}
-{{ frm.textarea( table, subtable, counter, field, placeholder, rows, request, default, true, class, height, console ) }}
+{{ frm.textarea( table, subtable, counter, field, placeholder, rows, request, defval, true, class, height, console, static, disabled ) }}
 {% endmacro %}
 
-{% macro date( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled ) %}
+{% macro date( table, subtable, counter, field, placeholder, etc, request, defval, type, required, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -223,12 +291,13 @@
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl %}{% set vl = defval %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% endif %}
-<input type="date" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}" {% if required %}required{% endif %}>
+{% if disabled == 1 %}{% if request[ '__disabled_' ~ id ~ '__' ] %}{% set vl = request[ '__disabled_' ~ id ~ '__' ] %}{% endif %}<input type="hidden" name="__disabled_{{ id }}__" value="{{ vl }}">{% endif %}
+<input type="date" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}"{% if defval %} defval="{{ defval}}"{% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro datetime( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled ) %}
+{% macro datetime( table, subtable, counter, field, placeholder, etc, request, defval, type, required, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -239,11 +308,11 @@
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl %}{% set vl = defval %}{% endif %}
 <input type="datetime-local" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro time( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled ) %}
+{% macro time( table, subtable, counter, field, placeholder, etc, request, defval, type, required, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -254,18 +323,23 @@
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
-{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl %}{% set vl = defval %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% endif %}
 <input type="time" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %}  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% macro dateRequired( table, subtable, counter, field, placeholder, etc, request, defval, type, class, disabled ) %}
 {% import _self as frm %}
-{{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
+{{ frm.date( table, subtable, counter, field, placeholder, etc, request, defval, type, 'true', class, disabled ) }}
 {% endmacro %}
 
-{% macro button( text, type, class, onclick, placeholder ) %}
-<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
+{% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, defval, type, class, disabled ) %}
+{% import _self as frm %}
+{{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, defval, type, 'true', class, disabled ) }}
+{% endmacro %}
+
+{% macro button( text, type, class, onclick, placeholder, id, disabled ) %}
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if id %}id="{{id}}"{% endif %} class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if disabled %}disabled{% endif %}>{{ text|raw }}</button>
 {% endmacro %}
 
 {% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
@@ -285,7 +359,8 @@
 {% endif %}
 {% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
 {% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
-{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|url_encode ~ '&__delete__[rollback]=' ~ rollback|url_encode ~ '","_self")','elimina' ) }}
+{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|url_encode ~ '&__delete__[rollback]=' ~ rollback|url_encode ~ '","_self")','elimina' ) #}
+{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|replace({'[': "(", ']': ")"}) ~ '&__delete__[rollback]=' ~ rollback|replace({'[': "(", ']': ")"}) ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
 {% macro editButton( table, subtable, edit, page, pages, r, lang, request, back, rollback ) %}
@@ -306,7 +381,7 @@
 {% endmacro %}
 
 {% macro subformLegend( subtable, legend, class, disabled ) %}
-<legend>{% if not disabled %}<button class="btn btn-sm btn-secondary d-print-none" type="button" onclick="duplicate('{{ subtable }}');"><i class="fa fa-plus"></i></button> {% endif %}{{ legend }}</legend>
+<legend>{% if not disabled %}<button class="btn btn-sm btn-secondary d-print-none" placeholder="aggiungi una riga" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="aggiungi una riga" type="button" onclick="duplicate('{{ subtable }}');"><i class="fa fa-plus"></i></button> {% endif %}{{ legend }}</legend>
 {% endmacro %}
 
 {% macro uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, short, hidden, disabled ) %}
@@ -333,9 +408,12 @@
     <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if disabled and not pk %}disabled{% endif %}/>
     <div class="col-auto text-left {{ class }}">
 	{% if vl %}
-	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl }}','_blank');"><i class="fa fa-external-link"></i></button>
+	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl|replace({ ( constant("DIR_BASE") ) : ( site.url[ lang ] ) }) }}','_blank');"><i class="fa fa-external-link"></i></button>
 	{% if edit %}
-	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
+    {% if request[ table ][ subtable ][ ks[ counter ] ].id %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" placeholder="apri la scheda" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="apri la scheda" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
+    {% endif %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" placeholder="metti fra i segnalibri" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="metti fra i segnalibri" type="button" onclick="$(this).metroWs('/task/bookmark.add?__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
 	{% endif %}
     {% endif %}
 	{% if not hidden %}

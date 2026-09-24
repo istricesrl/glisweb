@@ -1,2 +1,0 @@
-ALTER TABLE `tipologie_attivita_inps`
-ADD CONSTRAINT `tipologie_attivita_inps_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

@@ -66,16 +66,53 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     font-size: 1em;
 }
 
-.view-table th, td {
+.view-table th, .view-table td {
     min-height: 31px;
-    padding: 5px;
     text-align: center;
     vertical-align: top;
 }
 
+.view-table th.table-header-static {
+    padding: 0px 15px;
+}
+
+.view-table.view-table-static th, .view-table td {
+    padding: 5px 15px;
+}
+
+.view-table.small-padding th.table-header-static,
+.view-table.small-padding td {
+    padding: 5px;
+}
+
+.view-table td i.fa {
+    font-size: 1.5em;
+    padding: 0px 5px;
+}
+
+.view-table td a,
+.view-table td a:visited {
+    color: #212529;
+}
+
+.fieldset-table .form-row a i.fa,
+.view-table td a i.fa,
+.view-table td a:visited i.fa {
+    color: #555555;
+}
+
+.view-table td a:active,
+.view-table td a:hover {
+    color: #000000;
+}
+
 .view-table th {
     border-bottom: 1px solid #cccccc;
-    padding: 0px;
+    padding: 0px 5px;
+}
+
+.view-table th select {
+    text-align: center;
 }
 
 .view-table.clickable tbody tr:hover {
@@ -99,13 +136,32 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     border: 0px;
     display: block;
     font-weight: bold;
-    padding: 2px 6px;
+    padding: 0px 5px;
+    padding-left: 15px;
+}
+
+.view-table thead tr th select.text-left {
+    padding-left: 5px;
 }
 
 .view-table thead tr th select:hover {
     background-color: #eeeeee;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+}
+
+.view-table tfoot tr {
+    background-color: #eeeeee;
+    border-bottom: 1px solid #cccccc;
+    font-weight: bold;
+}
+
+.view-insert {
+    background-color: #eeeeee;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding: 0px 10px;
+    padding-top: 10px;
 }
 
 .view-controls {
@@ -140,6 +196,16 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     height: 31px;
 }
 
+/* stili delle dashboard */
+
+.dashboard-table-clickable td.clickable {
+    cursor: pointer;
+}
+
+.dashboard-table-clickable td.clickable:hover {
+    background-color: #eeeeee;
+}
+
 /* stili dei form */
 
 .col.col-form-label,
@@ -171,11 +237,35 @@ label.form-check-label {
     border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
     border-image-slice: 1;
 
+    height: auto;
 
 /*
     border-left: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
 */
+}
+
+.label-top-disabled {
+    font-size: .8em;
+    /* height: 1.75em; */
+    color: #666666;
+    position: absolute;
+    top: -0.75em;
+    left: 1.25em;
+    background-color: #e9ecef;
+    padding: 0em 0.5em;
+    z-index: 3000;
+    border-radius: 3px;
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(
+180deg
+, rgba(206,212,218,1) 75%, rgba(255,255,255,0) 75%);
+    border-image-slice: 1; /*
+    background-origin: border-box;
+    background-clip: padding-box, border-box; */
+    -webkit-mask: /*4*/
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
 }
 
 legend {
@@ -221,6 +311,15 @@ legend small {
 .form-control-sm {
     font-size: .9em;
     height: 31px;
+}
+
+.form-control-codice {
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
+textarea.form-control-sm {
+    padding: 0.5em 1em;    
 }
 
 label {
@@ -327,6 +426,14 @@ fieldset.static-history > .form-row > div:first-child {
     max-width: 100%;
 }
 
+.form-row p {
+    margin-bottom: .5em;
+}
+
+.form-row p:last-child {
+    margin-bottom: 0em;
+}
+
 select {
     cursor: pointer;
 }
@@ -339,6 +446,25 @@ select.font-awesome {
     margin-top: .25em;
 }
 
+.ql-container {
+    min-height: 10rem;
+    height: 400px !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ql-editor {
+    height: 100%;
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .cke_notifications_area {
+    display: none !important;
+  }
+
 /* stili dei bottoni */
 
 .btn:focus {
@@ -348,6 +474,7 @@ select.font-awesome {
 
 .btn-sm {
     font-size: 1em;
+    height: 31px;
 }
 
 .btn-lg {
@@ -356,7 +483,8 @@ select.font-awesome {
 
 .btn-xsm {
     font-size: .8em;
-    padding: 1px 4px;
+    padding: 2px 8px;
+    margin: 0px 3px;
 }
 
 .btn-sm-1x1 {
@@ -399,6 +527,7 @@ select.font-awesome {
 header {
     background-color: #aaaaaa;
     height: 45px;
+    z-index: 2530 !important;
 }
 
 header a,
@@ -421,7 +550,15 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info, #jobs {
+header ol.breadcrumbs {
+    display: block;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    font-size: 1.5em;
+}
+
+#info, #jobs, #cart, #alert, #bookmarks {
     background-color: #555555;
     color: #ffffff;
     display: none;
@@ -429,17 +566,29 @@ header.subform-intestazione {
     position: absolute;
     right: 0;
     top: 45px;
-    z-index: 999;
+    z-index: 9000;
 }
 
-#info h2, #jobs h2 {
+#cart, #bookmarks {
+    white-space: nowrap;
+    width: 45%;
+}
+
+/*
+.cart-row-container {
+    border-bottom: 1px solid #747474;
+}
+*/
+
+#info h2, #jobs h2, #cart h2, #alert h2, #bookmarks h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p, #jobs p {
+#info p, #jobs p, #cart p, #alert p, #bookmarks p {
     margin: 0px;
-    margin-top: 5px;
+    margin-top: 3px;
+    margin-bottom: 3px
 }
 
 #info a,
@@ -449,8 +598,45 @@ header.subform-intestazione {
 #jobs a,
 #jobs a:visited,
 #jobs a:hover,
-#jobs a:active {
+#jobs a:active,
+#cart a,
+#cart a:visited,
+#cart a:hover,
+#cart a:active,
+#alert a,
+#alert a:visited,
+#alert a:hover,
+#alert a:active,
+#bookmarks a,
+#bookmarks a:visited,
+#bookmarks a:hover,
+#bookmarks a:active {
     color: #ffffff;
+}
+
+#widget-alert .alert-number {
+    font-size:.5em;
+    font-weight: bold;
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    color: #333333;
+    border-radius: 5px;
+    padding: 0px 3px;
+    position: absolute;
+    top: 2em;
+    left: 2.5em;
+}
+
+@media (max-width: 991.98px) {
+
+    #cart {
+        width: 100%;
+    }
+    
+}
+
+.form-login {
+    min-width: 280px;
 }
 
 #form-logout .btn {
@@ -534,7 +720,7 @@ nav ul ul ul {
 
 .nav-tabs .nav-item.nav-icon a.nav-link {
     font-size: 1.55em;
-    padding: .15em .5em;
+    padding: .0em .5em;
 }
 
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
@@ -600,9 +786,10 @@ select.select-tabs {
 /* stili del main */
 
 main {
-    padding-top: 60px;
+    margin-top: 60px;
+/*    padding-top: 60px; */
     padding-bottom: 15px;
-    z-index: 150;
+    z-index: 2500;
 }
 
 /* stili del footer */
@@ -727,7 +914,7 @@ main.container-fluid.browser {
     padding-right: 5px;
 }
 
-.metro .media-left h1 {
+.metro .media-left h4 {
     font-size: 2.25em;
     margin: 0px;
     padding-right: 5px;
@@ -853,13 +1040,17 @@ ul.browsing-tree {
     border-radius: 0px;
 }
 
+.cassa-table thead tr th {
+    border: 0px;
+}
+
 /* stili per i cartellini */
 .cartellini {
     width: auto !important;
 }
 
 
-.cartellini td, th {
+.cartellini td, .cartellini th {
     vertical-align: middle !important;
     max-width: 150px;
 }
@@ -886,4 +1077,80 @@ div.combobox-container > .spinner-border {
     width: 1.5em;
     top: 0.5em;
     display: none;
+}
+
+/* stile dei modal */
+
+.modal {
+    z-index: 5100 !important;
+}
+
+.modal p {
+    margin: 0px;
+}
+
+.modal-backdrop {
+    z-index: 5050 !important;
+}
+
+.modal-content {
+    margin: 2px auto;
+}
+
+.modal-dialog {
+    margin: 5em auto;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* stili per CodeMirror */
+.CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+  }
+
+  .CodeMirror-lines {
+    font-size: 1.2em;
+}
+
+.cm-meta {
+    color: #7a3;
+    font-weight: bold;
+}
+
+.cm-keyword {
+    color: #a52a2a;
+    font-weight: bold;
+}
+
+.cm-comment {
+    color: #888;
+    font-style: italic;
+}
+
+/* il velo del salvataggio ( segnalazione di Stefano Zoli del 22/09/2026 )                        */
+/* lo accende glisAttendi() in src/js/main.js quando parte un modulo, e se ne va con la pagina;    */
+/* sta sopra i modali di bootstrap, che arrivano a 1060.                                          */
+#glis-attendi {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2000;
+	background: rgba( 0, 0, 0, .35 );
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: progress;
+}
+#glis-attendi .glis-attendi-box {
+	background: #fff;
+	color: #212529;
+	padding: 1rem 1.5rem;
+	border-radius: .25rem;
+	box-shadow: 0 .5rem 1rem rgba( 0, 0, 0, .3 );
 }

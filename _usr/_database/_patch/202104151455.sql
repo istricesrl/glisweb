@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_progetti` ADD `se_chiamata` INT(1) NULL DEFAULT NULL , ADD INDEX (`se_chiamata`) ;

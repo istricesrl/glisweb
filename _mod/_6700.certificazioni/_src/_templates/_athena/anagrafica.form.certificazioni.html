@@ -55,3 +55,32 @@
 </section>
 
 {% endblock %}
+
+{% block javascript %}
+<script>
+
+    function onDuplicate( row ) {
+        
+        console.log( 'onDuplicate', row );
+
+        var emissione = $( row ).find( '.emissione' )[ 0 ];
+        var scadenza = $( row ).find( '.scadenza' )[ 0 ];
+
+        console.log( 'emissione', emissione );
+
+        $( emissione ).change( function() {
+            console.log( 'emissione', $( this ).val() );
+            var date = new Date( $( this ).val() );
+            date.setFullYear( date.getFullYear() + 1 );
+            date.setDate( date.getDate() - 1 );
+            $( scadenza ).val( date.toISOString().split( 'T' )[ 0 ] );
+        });
+
+    }
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+
+    });
+
+</script>
+{% endblock %}

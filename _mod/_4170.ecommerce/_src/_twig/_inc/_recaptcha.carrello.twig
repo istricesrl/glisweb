@@ -1,0 +1,225 @@
+
+{# GARANZIA DEL TOKEN reCAPTCHA SU OGNI POST VERSO __carrello__ #}
+
+{#
+    Il controller del carrello ( _mod/_4170.ecommerce/_src/_config/_750.controller.php ) valuta
+    ogni richiesta con verificaSpam(), che può verificare solo le richieste che portano un token
+    in __carrello__[__recaptcha_token__]. I form del carrello nascono in template diversi e non
+    tutti allegano il token: le richieste senza token non sono verificabili e devono quindi
+    passare, il che lascia aperta la strada a un bot che semplicemente omette il token.
+
+    Questo snippet chiude quella strada dal lato client: intercetta l'invio di *qualunque* form
+    che spedisca campi __carrello__ e, se il token manca, lo genera prima di lasciar partire la
+    richiesta. Vale anche per i form aggiunti in futuro, senza doverli modificare uno per uno.
+
+    Sono coperte entrambe le vie di invio, che sono diverse e vanno gestite separatamente:
+    -# il submit "naturale" da bottone o tasto invio, che emette l'evento submit;
+    -# la chiamata programmatica form.submit(), che l'evento NON lo emette ed è proprio quella
+       usata dai callback reCAPTCHA dei template del carrello.
+
+    NIENTE RIDONDANZE con la macro formButton() di _bin/_default: quella, dove viene usata, emette
+    già il tag <script> di reCAPTCHA, il campo nascosto del token e il callback di submit. Quindi
+    qui:
+    - il campo del token non viene duplicato, si riusa quello che esiste già;
+    - se il token è già valorizzato da un callback della pagina non si fa nulla;
+    - la libreria Google NON viene caricata a priori: si usa quella già presente e la si carica
+      solo se manca del tutto e solo nel momento in cui serve davvero un token.
+
+    Principi ( gli stessi di _emailable.close ):
+    - se reCAPTCHA non è configurato lo snippet non viene nemmeno incluso e le richieste partono
+      senza token, perché non c'è nulla da verificare;
+    - se il servizio Google non è raggiungibile l'invio parte comunque: non si blocca un acquisto
+      vero per un disservizio di terzi.
+
+    NOTA la chiave in uso è di tipo v3 ( il verify restituisce uno score ): grecaptcha.execute()
+    può essere invocata quante volte si vuole e restituisce sempre un token nuovo, quindi qui non
+    esiste il problema del token già consumato tipico dei widget v2.
+#}
+
+{% if google.profile.recaptcha.keys.public %}
+<script>
+(function () {
+
+    var SITEKEY = '{{ google.profile.recaptcha.keys.public }}';
+    var CAMPO   = '__carrello__[__recaptcha_token__]';
+    var ATTESA  = 5000;     // oltre questa soglia si procede comunque, senza token
+
+    // riferimento al submit nativo, da usare sempre per l'invio effettivo
+    var submitNativo = HTMLFormElement.prototype.submit;
+
+    // un form è "del carrello" se spedisce almeno un campo __carrello__
+    function eDelCarrello( form ) {
+        try { return form.querySelector( '[name^="__carrello__"]' ) !== null; }
+        catch ( e ) { return false; }
+    }
+
+    // riusa il campo del token se c'è ( tipicamente quello di formButton ), altrimenti lo crea
+    function campoToken( form ) {
+        var campo = form.querySelector( '[name="' + CAMPO + '"]' );
+        if( ! campo ) {
+            campo = document.createElement( 'input' );
+            campo.type = 'hidden';
+            campo.name = CAMPO;
+            campo.value = '';
+            form.appendChild( campo );
+        }
+        return campo;
+    }
+
+    function libreriaPronta() {
+        return typeof grecaptcha !== 'undefined' && grecaptcha.execute && grecaptcha.ready;
+    }
+
+    // la libreria è già nella pagina? formButton() la carica da sé dove viene usata
+    function libreriaPresente() {
+        return document.querySelector( 'script[src*="recaptcha/api.js"]' ) !== null;
+    }
+
+    // la modalità render viene caricata al massimo una volta per pagina, e solo se serve
+    var renderChiesto = false;
+
+    /**
+     * carica reCAPTCHA in modalità render ( quella che pre-registra la sitekey e abilita
+     * grecaptcha.execute( SITEKEY, ... ) ), poi esegue proseguo()
+     */
+    function caricaRender( proseguo, scadenza ) {
+
+        var attendi = function () {
+            if( libreriaPronta() || Date.now() > scadenza ) { proseguo(); }
+            else { setTimeout( attendi, 100 ); }
+        };
+
+        if( renderChiesto ) { attendi(); return; }
+        renderChiesto = true;
+
+        var tag = document.createElement( 'script' );
+        tag.src = 'https://www.google.com/recaptcha/api.js?render=' + SITEKEY;
+        tag.onload  = attendi;
+        tag.onerror = proseguo;     // fail-open
+        document.head.appendChild( tag );
+
+    }
+
+    /**
+     * garantisce la disponibilità della libreria e poi esegue proseguo()
+     *
+     * Se la libreria è già nella pagina ( formButton() la carica da sé dove viene usata, e la
+     * pipeline di caching JS del framework la serve da var/cache/js/ ) si usa quella e non se ne
+     * carica una seconda. Solo se non c'è nulla si carica la modalità render.
+     */
+    function conLibreria( proseguo, scadenza ) {
+
+        if( libreriaPronta() ) { proseguo(); return; }
+        if( Date.now() > scadenza ) { proseguo(); return; }
+
+        var attendi = function () {
+            if( libreriaPronta() || Date.now() > scadenza ) { proseguo(); }
+            else { setTimeout( attendi, 100 ); }
+        };
+
+        // già presente ( o già in corso di inserimento ): aspetto solo che sia inizializzata
+        if( libreriaPresente() ) { attendi(); return; }
+
+        caricaRender( proseguo, scadenza );
+
+    }
+
+    /**
+     * ottiene un token e poi esegue proseguo(); su qualunque intoppo esegue proseguo() lo stesso
+     */
+    function conToken( form, proseguo ) {
+
+        var campo = campoToken( form );
+
+        // token già messo da un callback della pagina: non c'è nulla da fare
+        if( campo.value ) { proseguo(); return; }
+
+        var fatto = false;
+        var unaVoltaSola = function () { if( ! fatto ) { fatto = true; proseguo(); } };
+
+        // rete lenta o libreria che non risponde: oltre la soglia si procede comunque
+        var scadenza = Date.now() + ATTESA;
+        var salvagente = setTimeout( unaVoltaSola, ATTESA );
+
+        var chiudi = function () { clearTimeout( salvagente ); unaVoltaSola(); };
+
+        /**
+         * chiede il token alla libreria disponibile
+         * @param  riprova  se true, al primo fallimento ricarica in modalità render e ritenta
+         */
+        var chiediToken = function ( riprova ) {
+
+            if( ! libreriaPronta() ) { chiudi(); return; }
+
+            // se la libreria presente è il bootstrap semplice ( senza ?render= ) la sitekey non è
+            // pre-registrata e execute() può fallire: in quel caso si ripiega sulla modalità
+            // render, una volta sola, invece di caricarla sempre a priori
+            var fallita = function () {
+                if( riprova && ! renderChiesto ) {
+                    caricaRender( function () { chiediToken( false ); }, scadenza );
+                } else {
+                    chiudi();
+                }
+            };
+
+            try {
+                grecaptcha.ready( function () {
+                    try {
+                        grecaptcha.execute( SITEKEY, { action: 'carrello' } ).then(
+                            function ( token ) { campo.value = token; chiudi(); },
+                            fallita
+                        );
+                    } catch ( e ) {
+                        fallita();
+                    }
+                } );
+            } catch ( e ) {
+                fallita();
+            }
+
+        };
+
+        conLibreria( function () { chiediToken( true ); }, scadenza );
+
+    }
+
+    // --- via 1: invio programmatico, form.submit() ---------------------------------------
+    // non emette l'evento submit, quindi va intercettato sul prototipo
+    HTMLFormElement.prototype.submit = function () {
+
+        var form = this;
+
+        if( ! eDelCarrello( form ) || form.__tokenPronto ) {
+            return submitNativo.call( form );
+        }
+
+        conToken( form, function () {
+            form.__tokenPronto = true;      // evita di rientrare qui al rilancio
+            submitNativo.call( form );
+        } );
+
+    };
+
+    // --- via 2: invio naturale da bottone o tasto invio ------------------------------------
+    document.addEventListener( 'submit', function ( evento ) {
+
+        var form = evento.target;
+
+        if( ! form || form.nodeName !== 'FORM' || ! eDelCarrello( form ) ) { return; }
+
+        var campo = campoToken( form );
+        if( campo.value ) { return; }
+
+        evento.preventDefault();
+        evento.stopPropagation();
+
+        conToken( form, function () {
+            form.__tokenPronto = true;
+            submitNativo.call( form );
+        } );
+
+    }, true );
+
+})();
+</script>
+{% endif %}

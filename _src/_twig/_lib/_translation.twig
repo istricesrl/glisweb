@@ -1,0 +1,25 @@
+{# MACRO PER IL SISTEMA DI TRADUZIONE DEI MICROCONTENUTI
+    Questa libreria contiene le macro necessarie per il funzionamento del sistema di traduzione dei microcontenuti del framework #}
+
+{# tr() - traduce un microcontenuto
+    Questa macro si appoggia all'array $cf['tr'] per tradurre i microcontenuti da rappresentare sulle pagine #}
+{% macro tr( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'l': 'it-IT'
+    }|merge( options ) %}
+
+    {% if options.v[ options.w ][ options.l ] %}
+    {{ options.v[ options.w ][ options.l ] }}
+    {% elseif options.l %}
+    TOKEN MANCANTE {{ options.w }} PER {{ options.l }}
+    {% else %}
+    LINGUA MANCANTE PER {{ options.w }}
+    {% endif %}
+
+{% endmacro tr %}
+
+{# trw() - traduce un microcontenuto e restituisce l'output trimmato
+    Questa macro è un wrapper per tr() che restituisce l'output trimmato #}
+{% macro trw( options ) %}{{ _self.tr( options )|trim }}{% endmacro trw %}

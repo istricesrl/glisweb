@@ -1,1 +1,0 @@
-ALTER TABLE `reparti` ADD PRIMARY KEY (`id`), ADD KEY `id_iva` (`id_iva`), ADD KEY `id_settore` (`id_settore`), ADD KEY `nome` (`nome`);

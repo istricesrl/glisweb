@@ -1,1 +1,0 @@
-ALTER TABLE `sms_sent` ADD `ordine` INT NULL DEFAULT NULL AFTER `token`;

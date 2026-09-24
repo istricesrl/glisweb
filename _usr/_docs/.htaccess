@@ -1,0 +1,21 @@
+# la reference del codice non e' pubblica per default
+#
+# _usr/_docs/_html arriva a 190 MB e 14.000 pagine: e' la struttura interna del framework,
+# generata dai commenti del codice. Non contiene nulla del singolo progetto ( il Doxyfile
+# esclude src/, mod/, usr/ ed etc/ ), ma non c'e' ragione di servirla dal sito di un cliente
+# a chiunque ne indovini l'URL.
+#
+# Si abilita per installazione creando var/docs.public.conf, con lo stesso meccanismo del
+# marcatore di build. La regola copre sia l'accesso diretto a /_usr/_docs/... sia le
+# scorciatoie /docs/ e /docs/pdf del .htaccess di root, perche' la riscrittura interna fa
+# ripartire la scansione delle directory e questo file viene comunque consultato.
+#
+# NOTA _usr/_pages/ NON e' gated di proposito: li' stanno il manuale e le quickstart dello
+# standard, che sono documentazione generica del framework e devono poter essere raggiunte
+# dai link del template senza chiedere niente a nessuno.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{DOCUMENT_ROOT}/var/docs.public.conf !-f
+    RewriteRule ^ - [F]
+</IfModule>

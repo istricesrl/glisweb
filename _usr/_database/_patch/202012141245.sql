@@ -1,1 +1,0 @@
-ALTER TABLE `audio` ADD FOREIGN KEY (`id_notizia`) REFERENCES `notizie`(`id`) ON DELETE SET NULL ON UPDATE SET NULL; 

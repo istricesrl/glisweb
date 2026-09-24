@@ -1,1 +1,0 @@
-ALTER TABLE pianificazioni ADD UNIQUE id_turno (id_turno);

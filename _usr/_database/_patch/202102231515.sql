@@ -1,1 +1,0 @@
-ALTER TABLE `todo` CHANGE `ora_pianificazione` `ora_inizio_pianificazione` TIME NULL DEFAULT NULL;

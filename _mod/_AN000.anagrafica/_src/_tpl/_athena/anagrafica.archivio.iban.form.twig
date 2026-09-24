@@ -1,0 +1,57 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">anagrafica</span>
+                        {{ frm.select({ 'field': { 'name': 'id_anagrafica', 'disabled': disabled }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div> 
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">intestazione</span>
+                        {{ frm.input({ 'field': { 'name': 'intestazione', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">iban</span>
+                        {{ frm.input({ 'field': { 'name': 'iban', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>                    
+                </div>
+                
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>                    
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+{% endblock main %}

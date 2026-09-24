@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+MSG_FILE="$1"
+GIT_DIR="$(git rev-parse --git-dir)"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$BRANCH" != "master" ]; then
+    exit 0
+fi
+
+RAW_MSG="$(sed '/^#/d' "$MSG_FILE" | sed '/^[[:space:]]*$/d' | head -n 1 || true)"
+
+if [ -z "$RAW_MSG" ]; then
+    RAW_MSG="Aggiornamento"
+fi
+
+if [[ "$RAW_MSG" == *"§"* ]]; then
+    TITOLO="${RAW_MSG%%§*}"
+    TESTO="${RAW_MSG#*§}"
+else
+    TITOLO="$RAW_MSG"
+    TESTO=""
+fi
+
+TITOLO="$(printf '%s' "$TITOLO" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+TESTO="$(printf '%s' "$TESTO" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+jq -n \
+  --arg titolo "$TITOLO" \
+  --arg testo "$TESTO" \
+  '{
+    titolo: $titolo,
+    testo: $testo
+  }' > "$GIT_DIR/changelog_pending.json"
+
+exit 0

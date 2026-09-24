@@ -1,0 +1,54 @@
+# Configurazione del progetto {{PROJECT_NAME}}
+#
+# Questo file è committato. Per le credenziali (password DB, API key, ecc.)
+# usare src/shadow.yaml (git-ignored).
+#
+# La struttura è descritta in _etc/_claude/_claude.framework.md.
+
+sites:
+  1:
+    __label__: "{{PROJECT_NAME}}"
+    name:
+      it-IT: "{{PROJECT_NAME}}"
+    protocols:
+      DEV:  "http"
+      TEST: "https"
+      PROD: "https"
+    hosts:
+      DEV:  "{{PROJECT_NAME}}"
+      TEST: "test"
+      PROD: "www"
+    domains:
+      DEV:  "local"
+      TEST: "{{PROJECT_NAME}}.example"
+      PROD: "{{PROJECT_NAME}}.example"
+    homes:
+      DEV:  "home"
+      TEST: "home"
+      PROD: "home"
+
+mysql:
+  servers:
+    main:
+      address: "127.0.0.1"
+      port: "3306"
+      db: "{{PROJECT_NAME}}"
+      # username e password in src/shadow.yaml
+  profiles:
+    DEV:
+      servers: ["main"]
+    TEST:
+      servers: ["main"]
+    PROD:
+      servers: ["main"]
+
+debug:
+  DEV:
+    log:
+      lvl: 7    # LOG_DEBUG — tutto
+  TEST:
+    log:
+      lvl: 6    # LOG_INFO
+  PROD:
+    log:
+      lvl: 3    # LOG_ERR — solo errori

@@ -5,22 +5,29 @@
      *
      *
      *
-     * @todo commentare
+     * TODO commentare
      *
-     * @file
+     * 
      *
      */
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+    }
+
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_CACHE' );
 
     // inizializzo l'array del risultato
 	$status = array();
 
     // elimino i log
-	$maps = glob( DIR_ETC_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE );
+	$maps = glob( DIR_VAR_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE );
 	foreach( $maps as $map ) {
         $status['files'][] = $map;
 	    deleteFile( $map );

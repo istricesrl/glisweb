@@ -1,0 +1,16 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<!-- Twig file included: {{ _self }} -->
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+    <div class="form-row d-print-none">
+        <div class="col-12 col-md">
+            <span class="label-top">progetto</span>
+            {{ frm.selectBox( '__link_progetto__', '', '', 'id_progetto', '', etc.select.progetti, '', '', '','','','','','','', '' , page, pages, ietf,'progetti', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-link" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

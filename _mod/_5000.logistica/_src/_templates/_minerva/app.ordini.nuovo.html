@@ -1,0 +1,128 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{% block main %}
+<form  id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+    {# CAMPI HIDDEN DI BASE #}
+    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+    <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.emittente }}">
+    <input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ etc.azienda }}">
+    <input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
+    <input type="hidden" id="nome" name="{{ table }}[nome]" value="ordine da webapp">
+    <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
+    <input type="hidden" id="sezionale" name="{{ table }}[sezionale]" value="{{ 'now'|date('Y') }}">
+    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+    {% if not request[table].id %}
+    <input type="hidden" id="tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.default_tipologia }}">
+    {% endif %}
+
+    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+    {% if  request.documenti.id  %}
+
+    <div class="container-fluid pannello-cassa form-row" style="overflow: hidden;">
+
+        <div class="col-6 align-items-center mt-3"  >
+            <legend><b>prodotti disponibili</b></legend>
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control form-control-lg" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-lg"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <div class="box mt-2" style="height: 70vh;" >
+                {% for row in view.data %}
+                <div class="media" style="background-color: rgb(192, 192, 192); color: black;">
+                   
+                    <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
+                      <h3 class="mt-0">{{ row.prodotto }}</h3>
+                      <h5>{{ row.categorie }}</h5>
+                    </div>
+                    <div class="col-2 justify-content-center align-self-center">
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val("{{ row.id_prodotto }}"); $("#_prodotto_add").val("{{ row.prodotto }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+                  {% endfor %}
+            </div>
+        </div>
+        <div class="col-6 align-items-center mt-3"  >
+            <legend><b>il tuo ordine</b></legend>
+            <div class="form-group form-row">
+                <div class="col col-md-12">
+                    <span class="label-top">emittente</span>
+					{{ frm.selectAuto( table, '', '', 'id_emittente', '', etc.select.emittenti, request,'','','1','form-control-lg' ) }}
+                </div>
+                <div class="col col-md-12 mt-3">
+                    <span class="label-top">nome</span>
+					{{ frm.input( table, '', '', 'nome', '', '', request,'','','','form-control-lg' ) }}
+                </div>
+            </div>
+            <div class="box" style="height: 70vh;" >
+                {% for p in request.documenti.documenti_articoli %}
+                <div class="media" style="background-color: gray;">
+                    <div class="media-body p-3 col-10">
+                      <h3 class="mt-0">{{ p.quantita }} {{ p.sigla_udm}} {{ p.prodotto }}</h3>
+                    </div>
+                    <div class="col-2 justify-content-center align-self-center" >
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_edit").val("{{ p.id_prodotto }}"); $("#_prodotto_edit").val("{{ p.prodotto }}"); $("#_quantita_edit" ).val({{ p.quantita }}); $("#_id_udm_edit" ).val({{ p.id_udm }});' data-toggle="modal" data-target="#modifica_prodotto" style="color: white;  background-color: gray;"><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-2 justify-content-center align-self-center" >
+                        <button type="button" class="btn" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{p.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti_articoli][id]={{ p.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"  style="color: white; background-color: gray;"><i class="fa fa-trash fa-3x" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row fixed-bottom " style="margin-bottom: 2%; margin-left: 2%; margin-right: 2%;">
+            <div class="col-6 col-md-6">
+                <button type="button" class="btn-lg btn btn-secondary btn-sqr btn-block" data-toggle="modal" data-target="#chiudi_ordine" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-check" aria-hidden="true"></i> conferma ordine</button>
+            </div>
+            <div class="col-6 col-md-6">
+                <button type="button" class="btn-lg btn  btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash " aria-hidden="true"></i> elimina</button>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="col-12 mt-3 cassa" >
+        <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri nuovo ordine</button>
+    </div>
+
+    {% endif %}
+
+</form>
+{% endblock %}
+

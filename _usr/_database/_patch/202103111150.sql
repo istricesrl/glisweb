@@ -1,1 +1,0 @@
-ALTER TABLE `video` CHANGE `id_documento` `id_risorsa` INT(11) NULL DEFAULT NULL;
