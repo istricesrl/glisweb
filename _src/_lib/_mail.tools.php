@@ -109,7 +109,8 @@
      * TODO readFromFile() senza il secondo parametro legge in modalità FILE_READ_AS_ARRAY, quindi quando esiste il file
      * dkim.password.key a DKIM_passphrase arriva un array di righe e non una stringa.
      *
-     * TODO il log del server a LOG_DEBUG scrive la password SMTP in chiaro nel canale mail.
+     * Nel canale mail la password SMTP compare solo come impostata o non impostata. La trascrizione del dialogo SMTP va nel
+     * canale details/phpmailer/send, a LOG_DEBUG e solo se il sito logga a quel livello; le credenziali non vi compaiono.
      *
      * @param       string      $host           l'indirizzo del server SMTP
      * @param       array       $from           il mittente, nel formato 'nome' => 'indirizzo' ( si usa il primo elemento )
@@ -158,9 +159,13 @@
         $mail->IsSMTP();
         $mail->Host                    = $host;
         $mail->Port                    = $port;
-        $mail->SMTPDebug            = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        // NOTA il livello di debug di PHPMailer ( 1 client, 2 server ) veniva passato a logWrite() come livello di log, per cui la
+        // trascrizione SMTP finiva a LOG_ALERT e LOG_CRIT e si scriveva anche in produzione; ora la trascrizione si attiva solo
+        // quando il sito logga a LOG_DEBUG e si scrive a LOG_DEBUG. Sotto DEBUG_LOWLEVEL PHPMailer non trascrive le credenziali
+        // inviate con AUTH ( [credentials hidden] ), che quindi non vanno mai nel log ( 2026-09-24 ).
+        $mail->SMTPDebug            = ( defined('LOG_CURRENT_LEVEL') && LOG_CURRENT_LEVEL >= LOG_DEBUG ) ? PHPMailer\PHPMailer\SMTP::DEBUG_SERVER : PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
         $mail->Debugoutput            = function ($str, $level) {
-            logWrite('(' . $level . ') ' . $str, 'details/phpmailer/send', $level);
+            logWrite('(' . $level . ') ' . $str, 'details/phpmailer/send', LOG_DEBUG);
         };
 
         // log
@@ -168,7 +173,7 @@
             'server: '    . $host        . ' ' .
                 'port: '    . $port        . ' ' .
                 'user: '    . $user        . ' ' .
-                'pass: '    . $pasw,
+                'pass: '    . ( empty( $pasw ) ? 'non impostata' : 'impostata' ),
             'mail',
             LOG_DEBUG
         );
