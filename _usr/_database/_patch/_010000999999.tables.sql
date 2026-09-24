@@ -129,7 +129,8 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 
 -- NOTA la timestamp di cambio password non viene attualmente utilizzata ma è stata mantenuta per eventuali sviluppi futuri
 --
--- TODO l'hash md5 non è il massimo, in futuro migrare a un algoritmo più robusto
+-- NOTA la password si salva con password_hash() ( passwordHash() in _src/_lib/_cryptography.tools.php ); i vecchi hash MD5
+-- restano validi e vengono ricalcolati al primo login riuscito
 
 -- | 010000000120
 
