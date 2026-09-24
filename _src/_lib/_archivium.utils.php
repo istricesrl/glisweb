@@ -39,7 +39,7 @@
      * Gli endpoint list di Archivium accettano quattro parametri di ricerca posizionali, accodati al percorso
      * separati da slash nell'ordine limit/orderby/wildcard/params; il loro significato è descritto nella NOTA che
      * segue archiviumGetListaAziende(). Le funzioni di lista li ricevono come argomenti $limit, $order, $wildcard e
-     * $params, ma non tutte li usano: si vedano i singoli docblock.
+     * $params e li accodano all'endpoint nello stesso modo.
      *
      * costanti
      * ========
@@ -137,17 +137,16 @@
     /**
      * restituisce l'elenco delle aziende registrate su Archivium
      *
-     * Questa funzione chiama l'endpoint Admin/.../Enterprises/list e restituisce la risposta decodificata, cioè
-     * l'elenco delle aziende registrate sull'account Archivium del profilo corrente. In caso di errore della chiamata
+     * Questa funzione chiama l'endpoint Admin/.../Enterprises/list, accodando i parametri di ricerca non vuoti uniti
+     * da slash come fa archiviumGetListaFePassive() ( si veda il suo docblock per i casi limite ), e restituisce la
+     * risposta decodificata, cioè l'elenco delle aziende registrate sull'account Archivium del profilo corrente. Se
+     * tutti i parametri sono vuoti l'endpoint viene chiamato senza filtri. In caso di errore della chiamata
      * restituisce quello che restCall() ottiene decodificando la risposta, tipicamente NULL.
      *
-     * TODO i parametri di ricerca $limit, $order, $wildcard e $params sono accettati ma non vengono usati: l'endpoint
-     * viene sempre chiamato senza filtri (archiviumGetListaFePassive() mostra come accodarli)
-     *
-     * @param       int         $limit      il numero massimo di record (attualmente ignorato)
-     * @param       string      $order      il criterio di ordinamento, ad es. Data=DESC (attualmente ignorato)
-     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE (attualmente ignorato)
-     * @param       string      $params     il criterio di ricerca colonna=valore (attualmente ignorato)
+     * @param       int         $limit      il numero massimo di record
+     * @param       string      $order      il criterio di ordinamento, ad es. Data=DESC
+     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE
+     * @param       string      $params     il criterio di ricerca colonna=valore
      *
      * @return      mixed                   l'array delle aziende restituito da Archivium, o NULL in caso di errore
      *
@@ -163,8 +162,11 @@
         // autenticazione per la chiamata
         $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
 
+        // parametri di ricerca
+        $p      = trim( implode( '/', array( $limit, $order, $wildcard, $params ) ), '/' );
+
         // endpoint per la chiamata
-        $e      = 'Admin/' . $a . '/Enterprises/list';
+        $e      = 'Admin/' . $a . '/Enterprises/list' . ( ( ! empty( $p ) ) ? '/' . $p : NULL );
 
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
@@ -399,20 +401,18 @@
     /**
      * restituisce l'elenco delle fatture attive di un'azienda
      *
-     * Questa funzione chiama l'endpoint ISC/.../FEAttive/<idAzienda>/list e restituisce l'elenco delle fatture
-     * attive dell'azienda, aggiungendo a ciascun elemento la chiave IDArchiviumAzienda con l'ID Archivium
-     * dell'azienda, così che l'elemento resti identificabile anche fuori dal contesto della chiamata. Se la chiamata
+     * Questa funzione chiama l'endpoint ISC/.../FEAttive/<idAzienda>/list, accodando i parametri di ricerca non vuoti
+     * uniti da slash come fa archiviumGetListaFePassive(), e restituisce l'elenco delle fatture attive dell'azienda,
+     * aggiungendo a ciascun elemento la chiave IDArchiviumAzienda con l'ID Archivium dell'azienda, così che
+     * l'elemento resti identificabile anche fuori dal contesto della chiamata. Se la chiamata
      * fallisce e la risposta non è un array il ciclo di arricchimento genera un warning e la funzione restituisce
      * il valore ricevuto, tipicamente NULL.
      *
-     * TODO i parametri di ricerca $limit, $order, $wildcard e $params sono accettati ma non vengono usati, a
-     * differenza di archiviumGetListaFePassive() che li accoda all'endpoint
-     *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda
-     * @param       int         $limit      il numero massimo di record (attualmente ignorato)
-     * @param       string      $order      il criterio di ordinamento (attualmente ignorato)
-     * @param       string      $wildcard   il tipo di ricerca (attualmente ignorato)
-     * @param       string      $params     il criterio di ricerca colonna=valore (attualmente ignorato)
+     * @param       int         $limit      il numero massimo di record
+     * @param       string      $order      il criterio di ordinamento, ad es. ID=ASC
+     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE
+     * @param       string      $params     il criterio di ricerca colonna=valore
      *
      * @return      mixed                   l'array delle fatture attive, o NULL in caso di errore
      *
@@ -428,8 +428,11 @@
         // autenticazione per la chiamata
         $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
 
+        // parametri di ricerca
+        $p      = trim( implode( '/', array( $limit, $order, $wildcard, $params ) ), '/' );
+
         // endpoint per la chiamata
-        $e      = 'ISC/' . $a . '/FEAttive/' . $idAzienda . '/list';
+        $e      = 'ISC/' . $a . '/FEAttive/' . $idAzienda . '/list' . ( ( ! empty( $p ) ) ? '/' . $p : NULL );
 
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
