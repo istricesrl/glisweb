@@ -298,10 +298,9 @@
      * comincia con un trattino è considerato un elemento di elenco e non viene giustificato. Il risultato non termina con
      * un fine riga.
      * 
-     * NOTA justify() viene chiamata senza passare $w, per cui le righe vengono giustificate sempre a REPORT_WIDTH
-     * caratteri anche quando $w è diverso.
-     * TODO passare $w a justify()
-     * 
+     * NB: fino al 2026-09-24 justify() veniva chiamata senza passare $w, per cui le righe venivano giustificate sempre a
+     * REPORT_WIDTH caratteri anche quando $w era diverso.
+     *
      * @param       string      $t      il testo da impaginare
      * @param       bool        $j      true per giustificare il testo (default true)
      * @param       int         $w      la larghezza del testo (default REPORT_WIDTH)
@@ -321,7 +320,7 @@
 	    $lines = explode( "\n", $t );
 	    foreach( $lines as $key => &$line ) {
 		if( substr( $line, -1 ) != '.' && $key !== array_key_last( $lines ) ) {
-		    $line = justify( $line );
+		    $line = justify( $line, $w );
 		}
 	    }
 	    return implode( "\n", $lines );
