@@ -51,7 +51,9 @@
 					    array( array( 's' => $_REQUEST['__signup__']['email'] ) ) );
 
 		// creo il token
-		$_REQUEST['__signup__']['tk'] = md5( $_REQUEST['__signup__']['username'] . $_REQUEST['__signup__']['password'] );
+		// NOTA fino al 24/09/2026 era md5( username . password ): viaggiando nel link di attivazione esponeva un hash
+		// della password; ora è casuale, con la stessa forma di 32 cifre esadecimali
+		$_REQUEST['__signup__']['tk'] = bin2hex( random_bytes( 16 ) );
 
 	    // se l'utente non esiste già...
 		if( ! $utente && ! $mail ) {
@@ -120,9 +122,14 @@
 		}
 
 		// scrivo i dati di registrazione su un file temporaneo
-		writeToFile( serialize( $_REQUEST['__signup__'] ), 'var/spool/signup/' . $_REQUEST['__signup__']['tk'] . '.txt' );
+		// NOTA nel file va l'hash della password, non la password in chiaro: il file resta su disco fino alla
+		// conferma, e dopo in archive/; la copia serve a non mettere l'hash nel modulo che viene rimostrato
+		$datiSpool = $_REQUEST['__signup__'];
+		$datiSpool['password'] = passwordHash( $datiSpool['password'] );
+		writeToFile( serialize( $datiSpool ), 'var/spool/signup/' . $_REQUEST['__signup__']['tk'] . '.txt' );
+		unset( $datiSpool );
 
-	} elseif( isset( $_REQUEST['tk'] ) ) {
+	} elseif( isset( $_REQUEST['tk'] ) && preg_match( '/^[a-f0-9]{32}$/i', $_REQUEST['tk'] ) === 1 ) {
 
 		// debug
 		// echo 'entro in validazione' . PHP_EOL;
@@ -138,6 +145,11 @@
 
 			// recupero i dati
 			$dati = unserialize( readFromFile( 'var/spool/signup/' . $_REQUEST['tk'] . '.txt', FILE_READ_AS_STRING ) );
+
+			// le richieste scritte prima del 24/09/2026 hanno ancora la password in chiaro
+			if( password_get_info( (string) $dati['password'] )['algoName'] == 'unknown' ) {
+				$dati['password'] = passwordHash( $dati['password'] );
+			}
 
 			// debug
 			// echo $_REQUEST['ts'].' / '.$dati['ts'].' / '.$ct['etc']['profilo']['sms'].PHP_EOL;
@@ -183,7 +195,7 @@
 					}
 
 				// creo l'account
-				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => passwordHash( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] == true ) ? 1 : NULL ) ) ) );
+				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => $dati['password'] ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] == true ) ? 1 : NULL ) ) ) );
 
 				// associo ai gruppi
 				foreach( $ct['etc']['profilo']['gruppi'] as $gruppo ) {
@@ -207,11 +219,12 @@
 				);
 
 				// autologin dell'account appena creato
-				// TODO farlo solo se è attivo
+				// NOTA la password in chiaro non c'è più, si entra con l'hash appena salvato, come per il login via
+				// token JWT; se l'account non è attivo è _210.auth.php a respingerlo
 				if( true ) {
 
 					$_REQUEST['__login__']['user'] = $dati['username'];
-					$_REQUEST['__login__']['pasw'] = $dati['password'];
+					$cf['auth']['jwt']['pass'] = $dati['password'];
 
 					require DIR_SRC_CONFIG . '_210.auth.php';
 					require DIR_SRC_CONFIG . '_220.auth.php';

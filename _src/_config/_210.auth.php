@@ -308,6 +308,18 @@
             // punteggio di spam
             $cf['session']['spam']['check'] = true;
 
+        } elseif( ! empty( $cf['auth']['jwt']['pass'] ) ) {
+
+            // Qui si arriva con l'hash dell'account già letto dal framework, e non da un form: da un token JWT
+            // con la firma verificata, oppure dall'autologin dopo la conferma della registrazione. Senza
+            // questo ramo, con reCAPTCHA configurato, il login finiva nel "token non ricevuto" qui sotto.
+
+            // log
+            logger( 'check anti spam al login saltato per login con hash già verificato', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = true;
+
         } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
             // log
