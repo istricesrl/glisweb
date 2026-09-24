@@ -947,21 +947,23 @@
     /**
      * aggiunge a una pagina i gruppi autorizzati a vederla
      *
-     * Questa funzione legge da __acl_pagine__ i nomi dei gruppi associati alla pagina e, se ce ne sono, li scrive in
-     * $p['auth']['groups'] sostituendo quelli presenti; se non ce ne sono la pagina resta com'è.
+     * Questa funzione legge dalla tabella delle ACL $t ( di default __acl_pagine__ ) i nomi dei gruppi associati
+     * all'oggetto tramite la colonna $f e, se ce ne sono, li scrive in $p['auth']['groups'] sostituendo quelli presenti;
+     * se non ce ne sono la pagina resta com'è.
      *
-     * TODO i parametri $f e $t sono accettati ma ignorati: la query usa sempre la tabella __acl_pagine__ e la colonna
-     * id_entita, quindi la funzione vale solo per le pagine.
+     * NOTA il default di $f era id_pagina, colonna che le tabelle __acl_*__ non hanno: finché $f e $t erano ignorati non
+     * contava, ora il default è id_entita, la colonna che la query ha sempre usato ( 2026-09-24 ). La tabella e la colonna
+     * vengono scritte direttamente nella query, quindi non devono mai arrivare dall'esterno.
      *
      * @param       array       $p      l'array della pagina, modificato sul posto
-     * @param       string      $id     l'ID della pagina
-     * @param       string      $f      la colonna che punta all'oggetto ( default id_pagina, non usato )
-     * @param       string      $t      la tabella delle ACL ( default __acl_pagine__, non usato )
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di $t che punta all'oggetto ( default id_entita )
+     * @param       string      $t      la tabella delle ACL ( default __acl_pagine__ )
      *
      * @return      void
      *
      */
-    function aggiungiGruppi(&$p, $id, $f = 'id_pagina', $t = '__acl_pagine__')
+    function aggiungiGruppi(&$p, $id, $f = 'id_entita', $t = '__acl_pagine__')
     {
 
         // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
@@ -972,8 +974,8 @@
             'nome',
             $cf['mysql']['connection'],
             'SELECT gruppi.nome FROM gruppi ' .
-                'INNER JOIN __acl_pagine__ ON gruppi.id = __acl_pagine__.id_gruppo ' .
-                'WHERE __acl_pagine__.id_entita = ?',
+                'INNER JOIN ' . $t . ' ON gruppi.id = ' . $t . '.id_gruppo ' .
+                'WHERE ' . $t . '.' . $f . ' = ?',
             array(
                 array('s' => $id)
             )
