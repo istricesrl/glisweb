@@ -74,7 +74,12 @@
      * ("5 €" diventa "5-EURO"): verificare se è voluto
      * TODO commentare il codice
      * TODO eliminare le sostituzioni rese inutili dall'introduzione di iconv
-     * 
+     *
+     * ⚠ le due anomalie qui sopra NON vanno corrette senza un piano per le URL esistenti ( verificato il 2026-09-24 ):
+     * _src/_config/_320.pages.php ricalcola l'URL di ogni pagina con questa funzione a ogni costruzione dell'albero,
+     * partendo dal titolo o da rewrite_custom letto dal database ( _mysql.utils.php ), e il risultato non viene salvato
+     * da nessuna parte; cambiare l'uscita cambierebbe subito le URL delle pagine già pubblicate e indicizzate.
+     *
      * @param       string      $t      la stringa da modificare
      * 
      * @return      string              la stringa modificata
