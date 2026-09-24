@@ -1,5 +1,182 @@
 <?php
 
+    /**
+     * libreria di funzioni applicative per MySQL
+     *
+     * Questa libreria contiene funzioni che leggono e scrivono le tabelle standard del framework ( anagrafica, indirizzi,
+     * pagine e contenuti, tendine comuni ) appoggiandosi alle funzioni di base di _src/_lib/_mysql.tools.php.
+     *
+     * introduzione
+     * ============
+     * A differenza di _mysql.tools.php, che riceve sempre la connessione come parametro, quasi tutte le funzioni di questa
+     * libreria prendono la connessione dalla configurazione globale ( $cf['mysql']['connection'] e, per quelle che usano
+     * la cache, $cf['memcache']['connection'] e $cf['memcache']['index'] ), secondo la convenzione per cui le librerie
+     * utils possono dipendere da $cf e le tools no. Fanno eccezione trovaRigaDaElaborare() e mysqlSelectLabel(), che
+     * ricevono la connessione come parametro. Le funzioni conoscono i nomi delle tabelle e delle colonne dello schema
+     * standard, quindi vanno toccate insieme alle patch che lo modificano.
+     *
+     * Come di consueto le funzioni della libreria sono raggruppate per area tematica.
+     *
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti.
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le
+     * analizzeremo nel dettaglio.
+     *
+     * funzioni di ricerca degli ID
+     * ----------------------------
+     * Le funzioni in questo gruppo cercano l'ID di un oggetto a partire da un suo attributo.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * trovaidComune()                          | restituisce l'ID di un comune dato il nome
+     * trovaIdTipologiaAttivita()               | restituisce l'ID di una tipologia di attività dato il nome
+     * trovaIdAnagraficaPerDenominazione()      | restituisce l'ID di un'anagrafica data la denominazione
+     * trovaIdMatricola()                       | restituisce l'ID di una matricola dato il suo valore
+     * trovaIdAziendaGestita()                  | restituisce l'ID della prima azienda gestita
+     * tendinaAziendeGestite()                  | restituisce la tendina delle aziende gestite
+     * trovaIdSedeLegale()                      | restituisce l'ID della sede di un'anagrafica da usare nei documenti
+     *
+     * funzioni per gli indirizzi delle anagrafiche
+     * --------------------------------------------
+     * Le funzioni in questo gruppo gestiscono il passaggio di anagrafica_indirizzi alla copia inline dell'indirizzo.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * anagraficaIndirizziInline()              | verifica se `anagrafica_indirizzi` porta la copia inline dell'indirizzo
+     * sincronizzaIndirizzoInline()             | allinea la copia inline dell'indirizzo sulle righe di `anagrafica_indirizzi` che lo collegano
+     * tendinaSediAnagrafica()                  | tendina delle sedi di un'anagrafica, nella forma che la colonna di destinazione si aspetta
+     *
+     * funzioni per il popolamento delle pagine
+     * ----------------------------------------
+     * Le funzioni in questo gruppo aggiungono all'array di una pagina ( di solito $cf['contents']['pages'][ $pid ] ) i
+     * dati collegati letti dal database; le usano i runlevel dei moduli che generano pagine dal database.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * aggiungiImmagini()                       | aggiunge a una pagina le immagini collegate a un oggetto
+     * aggiungiVideo()                          | aggiunge a una pagina i video collegati a un oggetto
+     * aggiungiAudio()                          | aggiunge a una pagina gli audio collegati a un oggetto
+     * aggiungiFile()                           | aggiunge a una pagina i file collegati a un oggetto
+     * aggiungiRecensioni()                     | aggiunge a una pagina le recensioni approvate di un oggetto
+     * aggiungiDati()                           | aggiunge a una pagina i media collegati a un oggetto
+     * aggiungiMacro()                          | aggiunge a una pagina le macro collegate a un oggetto
+     * aggiungiMenu()                           | aggiunge a una pagina le voci di menu collegate a un oggetto
+     * aggiungiCaratteristiche()                | aggiunge a una pagina le caratteristiche di un oggetto
+     * aggiungiMetadati()                       | aggiunge a una pagina i metadati collegati a un oggetto
+     * aggiungiGruppi()                         | aggiunge a una pagina i gruppi autorizzati a vederla
+     * aggiungiContenuti()                      | aggiunge a una pagina i contenuti testuali collegati a un oggetto
+     *
+     * funzioni di servizio per i task
+     * -------------------------------
+     * Le funzioni in questo gruppo servono ai task e alle elaborazioni in background.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * triggerOff()                             | sospende i trigger lazy di un'entità per la connessione corrente
+     * triggerOn()                              | riattiva i trigger lazy di un'entità per la connessione corrente
+     * trovaTabellaDestinazioneConstraint()     | restituisce la tabella referenziata da una colonna con chiave esterna
+     * trovaRigaDaElaborare()                   | trova la prossima riga di una tabella da elaborare e la marca come elaborata
+     *
+     * funzioni di inserimento e unione
+     * --------------------------------
+     * Le funzioni in questo gruppo inseriscono oggetti a partire da dati grezzi o uniscono oggetti duplicati.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * inserisciIndirizzo()                     | scompone un indirizzo in forma libera e lo inserisce nella tabella indirizzi
+     * unisciAnagrafiche()                      | unisce due anagrafiche duplicate
+     * unisciOggetti()                          | unisce due righe duplicate di una tabella spostando su una tutte le referenze dell'altra
+     *
+     * funzioni per le tendine
+     * -----------------------
+     * Le funzioni in questo gruppo restituiscono tendine di uso comune, cioè array di righe con le chiavi id e __label__.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * tendinaStati()                           | restituisce la tendina degli stati
+     * tendinaAnni()                            | restituisce la tendina degli anni
+     * tendinaMesi()                            | restituisce la tendina dei mesi
+     * tendinaSettimane()                       | restituisce la tendina delle settimane dell'anno
+     * tendinaProvincie()                       | restituisce la tendina delle province di uno stato
+     * tendinaSiNo()                            | restituisce la tendina sì / no
+     *
+     * accessori generici dell'anagrafica
+     * ----------------------------------
+     * Le funzioni in questo gruppo leggono logo, PEC e sede legale di un'anagrafica; la loro storia è spiegata nel commento
+     * che apre il gruppo nel corpo della libreria.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * anagraficaGetLogo()                      | restituisce il percorso completo del logo di un'anagrafica
+     * anagraficaGetSedeLegale()                | restituisce la sede legale di un'anagrafica
+     * anagraficaGetIdSedeLegale()              | restituisce l'ID della sede legale di un'anagrafica
+     * anagraficaGetPEC()                       | restituisce l'indirizzo PEC di un'anagrafica
+     *
+     * funzioni di lettura
+     * -------------------
+     * Le funzioni in questo gruppo leggono singoli valori con accorgimenti per le prestazioni.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlSelectLabel()                       | legge la __label__ di una riga per id, scrivendo l'id nella query quando si puo'
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logger()                         | core
+     * logWrite()                       | _src/_lib/_log.utils.php
+     * mysqlQuery()                     | _src/_lib/_mysql.tools.php
+     * mysqlSelectValue()               | _src/_lib/_mysql.tools.php
+     * mysqlSelectRow()                 | _src/_lib/_mysql.tools.php
+     * mysqlSelectColumn()              | _src/_lib/_mysql.tools.php
+     * mysqlSelectCachedValue()         | _src/_lib/_mysql.tools.php
+     * mysqlCachedIndexedQuery()        | _src/_lib/_mysql.tools.php
+     * mysqlInsertRow()                 | _src/_lib/_mysql.tools.php
+     * metadati2associativeArray()      | _src/_lib/_array.tools.php
+     * fullPath()                       | _src/_lib/_filesystem.tools.php
+     * findFileType()                   | _src/_lib/_filesystem.tools.php
+     * documentoIdSedeStampabile()      | modulo documenti, facoltativa ( se manca trovaIdSedeLegale() usa la query storica )
+     * updateAnagraficaViewStatic()     | modulo anagrafica, richiesta da unisciAnagrafiche()
+     * cleanAnagraficaViewStatic()      | modulo anagrafica, richiesta da unisciAnagrafiche()
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
+     */
+
+    /**
+     * FUNZIONI DI RICERCA DEGLI ID
+     */
+
+    /**
+     * restituisce l'ID di un comune dato il nome
+     *
+     * Questa funzione cerca nella tabella comuni il comune con il nome indicato e ne restituisce l'ID; se non lo trova
+     * restituisce NULL. Il nome non è univoco fra province diverse, e in quel caso viene restituito il primo trovato.
+     *
+     * @param       string      $comune     il nome del comune
+     *
+     * @return      mixed                   l'ID del comune, o NULL se non esiste
+     *
+     */
     function trovaidComune($comune)
     {
 
@@ -14,6 +191,17 @@
         );
     }
 
+    /**
+     * restituisce l'ID di una tipologia di attività dato il nome
+     *
+     * Questa funzione cerca nella tabella tipologie_attivita la tipologia con il nome indicato e ne restituisce l'ID; se
+     * non la trova restituisce NULL.
+     *
+     * @param       string      $attivita   il nome della tipologia di attività
+     *
+     * @return      mixed                   l'ID della tipologia, o NULL se non esiste
+     *
+     */
     function trovaIdTipologiaAttivita($attivita)
     {
 
@@ -26,6 +214,17 @@
         );
     }
 
+    /**
+     * restituisce l'ID di un'anagrafica data la denominazione
+     *
+     * Questa funzione cerca nella tabella anagrafica la riga con la denominazione indicata ( confronto esatto ) e ne
+     * restituisce l'ID; se non la trova restituisce NULL, se ce n'è più di una restituisce la prima.
+     *
+     * @param       string      $denominazione  la denominazione dell'anagrafica
+     *
+     * @return      mixed                       l'ID dell'anagrafica, o NULL se non esiste
+     *
+     */
     function trovaIdAnagraficaPerDenominazione($denominazione)
     {
 
@@ -38,6 +237,17 @@
         );
     }
 
+    /**
+     * restituisce l'ID di una matricola dato il suo valore
+     *
+     * Questa funzione cerca nella tabella matricole la riga con il valore di matricola indicato e ne restituisce l'ID; se
+     * non la trova restituisce NULL.
+     *
+     * @param       string      $matricola  il valore della matricola
+     *
+     * @return      mixed                   l'ID della matricola, o NULL se non esiste
+     *
+     */
     function trovaIdMatricola($matricola)
     {
 
@@ -50,6 +260,17 @@
         );
     }
 
+    /**
+     * restituisce l'ID della prima azienda gestita
+     *
+     * Questa funzione restituisce l'ID della prima anagrafica associata alla categoria 5, che nello schema standard è
+     * quella delle aziende gestite, cioè le aziende per conto delle quali il deploy emette documenti; se non ce n'è
+     * nessuna restituisce NULL. Su un deploy con più aziende gestite la scelta fra queste non è definita ( LIMIT 1 senza
+     * ORDER BY ).
+     *
+     * @return      mixed       l'ID dell'azienda gestita, o NULL se non esiste
+     *
+     */
     function trovaIdAziendaGestita()
     {
 
@@ -62,6 +283,17 @@
         );
     }
 
+    /**
+     * restituisce la tendina delle aziende gestite
+     *
+     * Questa funzione restituisce id e __label__ di tutte le anagrafiche della categoria 5 ( aziende gestite ), leggendole
+     * da anagrafica_view_static; se non ce ne sono restituisce un array vuoto, se la query fallisce false.
+     *
+     * NOTA la query legge direttamente la vista statica, quindi su un deploy che non ha anagrafica_view_static fallisce.
+     *
+     * @return      mixed       l'array delle righe id / __label__, o false in caso di errore
+     *
+     */
     function tendinaAziendeGestite()
     {
 
@@ -77,6 +309,20 @@
         );
     }
 
+    /**
+     * restituisce l'ID della sede di un'anagrafica da usare nei documenti
+     *
+     * Questa funzione restituisce l'ID di anagrafica_indirizzi ( non di indirizzi ) da scrivere in
+     * documenti.id_sede_emittente o documenti.id_sede_destinatario. Se è disponibile documentoIdSedeStampabile() del
+     * modulo documenti usa quella, che garantisce un indirizzo completo e stampabile; altrimenti, o se quella non trova
+     * niente, restituisce la prima riga di anagrafica_indirizzi con ruolo 1 o 4, o NULL se non ce ne sono. I dettagli sono
+     * nei commenti nel corpo.
+     *
+     * @param       int         $idAnagrafica   l'ID dell'anagrafica
+     *
+     * @return      mixed                       l'ID della sede, o NULL se non esiste
+     *
+     */
     function trovaIdSedeLegale($idAnagrafica)
     {
 
@@ -128,6 +374,10 @@
             array(array('s' => $idAnagrafica))
         );
     }
+
+    /**
+     * FUNZIONI PER GLI INDIRIZZI DELLE ANAGRAFICHE
+     */
 
     /**
      * verifica se `anagrafica_indirizzi` porta la copia inline dell'indirizzo
@@ -267,30 +517,107 @@
         );
     }
 
+    /**
+     * FUNZIONI PER IL POPOLAMENTO DELLE PAGINE
+     */
+
+    /**
+     * aggiunge a una pagina le immagini collegate a un oggetto
+     *
+     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella immagini: le immagini finiscono in
+     * $p['contents']['images'][ ruolo ][ ordine ].
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto a cui sono collegate le immagini
+     * @param       string      $f      la colonna di immagini che punta all'oggetto ( es. id_pagina )
+     * @param       array       $r      gli ID dei ruoli da includere, o NULL per tutti
+     *
+     * @return      void
+     *
+     */
     function aggiungiImmagini(&$p, $id, $f, $r = null)
     {
 
         aggiungiDati($p, $id, $f, 'immagini', $r);
     }
 
+    /**
+     * aggiunge a una pagina i video collegati a un oggetto
+     *
+     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella video: i video finiscono in
+     * $p['contents']['video'][ ruolo ][ ordine ].
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto a cui sono collegati i video
+     * @param       string      $f      la colonna di video che punta all'oggetto ( es. id_pagina )
+     * @param       array       $r      gli ID dei ruoli da includere, o NULL per tutti
+     *
+     * @return      void
+     *
+     */
     function aggiungiVideo(&$p, $id, $f, $r = null)
     {
 
         aggiungiDati($p, $id, $f, 'video', $r);
     }
 
+    /**
+     * aggiunge a una pagina gli audio collegati a un oggetto
+     *
+     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella audio.
+     *
+     * TODO aggiungiDati() non gestisce ancora il tipo audio ( il suo ramo nello switch è un TODO vuoto ), quindi la query
+     * viene composta con variabili non definite e fallisce: questa funzione al momento non aggiunge niente. Non ha chiamanti.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto a cui sono collegati gli audio
+     * @param       string      $f      la colonna di audio che punta all'oggetto ( es. id_pagina )
+     * @param       array       $r      gli ID dei ruoli da includere, o NULL per tutti
+     *
+     * @return      void
+     *
+     */
     function aggiungiAudio(&$p, $id, $f, $r = null)
     {
 
         aggiungiDati($p, $id, $f, 'audio', $r);
     }
 
+    /**
+     * aggiunge a una pagina i file collegati a un oggetto
+     *
+     * Questa funzione è una scorciatoia per aggiungiDati() con la tabella file: i file finiscono in
+     * $p['contents']['files'][ ruolo ][ ordine ].
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto a cui sono collegati i file
+     * @param       string      $f      la colonna di file che punta all'oggetto ( es. id_pagina )
+     * @param       array       $r      gli ID dei ruoli da includere, o NULL per tutti
+     *
+     * @return      void
+     *
+     */
     function aggiungiFile(&$p, $id, $f, $r = null)
     {
 
         aggiungiDati($p, $id, $f, 'file', $r);
     }
 
+    /**
+     * aggiunge a una pagina le recensioni approvate di un oggetto
+     *
+     * Questa funzione legge dalla tabella recensioni quelle collegate all'oggetto nella lingua indicata e approvate
+     * ( se_approvata non NULL ) e le scrive in $p['contents']['recensioni'], sostituendo quello che c'era. Se non ce ne
+     * sono la chiave vale un array vuoto, se la query fallisce false.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto recensito
+     * @param       string      $f      la colonna di recensioni che punta all'oggetto ( es. id_pagina )
+     * @param       int         $l      l'ID della lingua delle recensioni ( default 1 )
+     *
+     * @return      void
+     *
+     */
     function aggiungiRecensioni(&$p, $id, $f, $l = 1)
     {
 
@@ -306,6 +633,32 @@
         );
     }
 
+    /**
+     * aggiunge a una pagina i media collegati a un oggetto
+     *
+     * Questa funzione legge dalla tabella $t ( immagini, video o file ) le righe collegate all'oggetto tramite la colonna
+     * $f, insieme ai loro contenuti e metadati in tutte le lingue, e le scrive in $p['contents'][ chiave ][ ruolo ][ ordine ],
+     * dove la chiave è images, video o files e ruolo è il nome del ruolo del media. Ogni elemento ha id, nome, path,
+     * mimetype, i testi ( title, h1, h2, h3, testo, cappello ) indicizzati per lingua e i metadati, più taglio,
+     * path_alternativo e orientamento per le immagini e codice_embed e id_embed per i video. Siccome la query restituisce
+     * una riga per ogni combinazione di contenuto e metadato, le righe dello stesso media vengono fuse con
+     * array_replace_recursive(), e lo stesso avviene con un elemento già presente nella pagina nella stessa posizione. Se
+     * $r non è NULL vengono inclusi solo i media con uno dei ruoli indicati.
+     *
+     * TODO il tipo audio non è gestito: il suo ramo nello switch non imposta $tc, $tf e $tk, e la query fallisce.
+     *
+     * NOTA la colonna $f e gli ID dei ruoli in $r vengono scritti direttamente nella query, quindi non devono mai arrivare
+     * dall'esterno.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto a cui sono collegati i media
+     * @param       string      $f      la colonna della tabella dei media che punta all'oggetto ( es. id_pagina )
+     * @param       string      $t      la tabella dei media: immagini, video, audio o file
+     * @param       array       $r      gli ID dei ruoli da includere, o NULL per tutti
+     *
+     * @return      void
+     *
+     */
     function aggiungiDati(&$p, $id, $f, $t, $r = null)
     {
 
@@ -407,6 +760,19 @@
     }
 
 
+    /**
+     * aggiunge a una pagina le macro collegate a un oggetto
+     *
+     * Questa funzione legge dalla tabella macro quelle collegate all'oggetto e le mette in $p['macro'], davanti a quelle
+     * eventualmente già presenti.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di macro che punta all'oggetto ( es. id_pagina )
+     *
+     * @return      void
+     *
+     */
     function aggiungiMacro(&$p, $id, $f)
     {
 
@@ -426,6 +792,20 @@
         );
     }
 
+    /**
+     * aggiunge a una pagina le voci di menu collegate a un oggetto
+     *
+     * Questa funzione legge dalla tabella menu le voci collegate all'oggetto e le fonde in $p['menu'][ menu ][ ancora ],
+     * con l'etichetta indicizzata per lingua, le sottopagine, l'ancora, il target e l'ordine come priority. Righe della
+     * stessa voce in lingue diverse vengono fuse.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di menu che punta all'oggetto ( es. id_pagina )
+     *
+     * @return      void
+     *
+     */
     function aggiungiMenu(&$p, $id, $f)
     {
 
@@ -461,6 +841,22 @@
         }
     }
 
+    /**
+     * aggiunge a una pagina le caratteristiche di un oggetto
+     *
+     * Questa funzione legge dalla tabella di relazione $t le caratteristiche dell'oggetto nella lingua indicata e le scrive
+     * in $p['contents']['caratteristiche'][ ordine ] come coppia nome => valore; il nome è il testo tradotto della
+     * caratteristica nella lingua, o in mancanza il suo nome. Due caratteristiche con lo stesso ordine si sovrascrivono.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $t      la tabella di relazione ( es. prodotti_caratteristiche )
+     * @param       string      $f      la colonna di $t che punta all'oggetto ( es. id_prodotto )
+     * @param       int         $l      l'ID della lingua ( default 1 )
+     *
+     * @return      void
+     *
+     */
     function aggiungiCaratteristiche(&$p, $id, $t, $f, $l = 1)
     {
 
@@ -489,6 +885,19 @@
         }
     }
 
+    /**
+     * aggiunge a una pagina i metadati collegati a un oggetto
+     *
+     * Questa funzione legge dalla tabella metadati quelli collegati all'oggetto, li trasforma con
+     * metadati2associativeArray() e li fonde in $p['metadati'], creandolo se non c'è.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di metadati che punta all'oggetto ( es. id_pagina )
+     *
+     * @return      void
+     *
+     */
     function aggiungiMetadati(&$p, $id, $f)
     {
 
@@ -535,7 +944,21 @@
     }
 
     /**
-     * 
+     * aggiunge a una pagina i gruppi autorizzati a vederla
+     *
+     * Questa funzione legge da __acl_pagine__ i nomi dei gruppi associati alla pagina e, se ce ne sono, li scrive in
+     * $p['auth']['groups'] sostituendo quelli presenti; se non ce ne sono la pagina resta com'è.
+     *
+     * TODO i parametri $f e $t sono accettati ma ignorati: la query usa sempre la tabella __acl_pagine__ e la colonna
+     * id_entita, quindi la funzione vale solo per le pagine.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID della pagina
+     * @param       string      $f      la colonna che punta all'oggetto ( default id_pagina, non usato )
+     * @param       string      $t      la tabella delle ACL ( default __acl_pagine__, non usato )
+     *
+     * @return      void
+     *
      */
     function aggiungiGruppi(&$p, $id, $f = 'id_pagina', $t = '__acl_pagine__')
     {
@@ -560,6 +983,20 @@
         }
     }
 
+    /**
+     * aggiunge a una pagina i contenuti testuali collegati a un oggetto
+     *
+     * Questa funzione legge dalla tabella contenuti le righe collegate all'oggetto e fonde nella pagina, indicizzati per
+     * lingua, i percorsi personalizzati ( short, forced, custom ), i testi ( title, cappello, h1, h2, h3 ) e i dati Open
+     * Graph ( og_* ). I valori già presenti nella pagina per la stessa lingua vengono sovrascritti.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di contenuti che punta all'oggetto ( es. id_pagina )
+     *
+     * @return      void
+     *
+     */
     function aggiungiContenuti(&$p, $id, $f)
     {
 
@@ -599,6 +1036,26 @@
         }
     }
 
+    /**
+     * FUNZIONI DI SERVIZIO PER I TASK
+     */
+
+    /**
+     * sospende i trigger lazy di un'entità per la connessione corrente
+     *
+     * Questa funzione imposta a 1 la variabile di sessione MySQL @TRIGGER_LAZY_<ENTITA>, pensata per essere controllata dai
+     * trigger del database così che saltino le elaborazioni pesanti durante le operazioni massive; la variabile vale solo
+     * per la connessione corrente. Il task viene usato solo per il log.
+     *
+     * NOTA al momento la funzione non ha chiamanti nel framework e nessun trigger dello schema standard
+     * ( _usr/_database/_patch/ ) legge queste variabili.
+     *
+     * @param       string      $entita     il nome dell'entità ( viene convertito in maiuscolo )
+     * @param       string      $task       il nome del task che chiede lo spegnimento, per il log
+     *
+     * @return      void
+     *
+     */
     function triggerOff($entita, $task = NULL)
     {
 
@@ -614,6 +1071,16 @@
         );
     }
 
+    /**
+     * riattiva i trigger lazy di un'entità per la connessione corrente
+     *
+     * Questa funzione riporta a NULL la variabile di sessione MySQL @TRIGGER_LAZY_<ENTITA> impostata da triggerOff().
+     *
+     * @param       string      $entita     il nome dell'entità ( viene convertito in maiuscolo )
+     *
+     * @return      void
+     *
+     */
     function triggerOn($entita)
     {
 
@@ -627,6 +1094,23 @@
         );
     }
 
+    /**
+     * restituisce la tabella referenziata da una colonna con chiave esterna
+     *
+     * Questa funzione cerca in information_schema la chiave esterna definita sulla colonna $f della tabella $t e
+     * restituisce il nome della tabella a cui punta, con la cache su memcache; se non c'è restituisce NULL. L'unico
+     * chiamante nel framework è commentato.
+     *
+     * TODO $t e $f vengono concatenati nella query senza virgolette, quindi MySQL li interpreta come nomi di colonna e la
+     * query fallisce: così com'è la funzione non può funzionare, a meno che il chiamante non passi i valori già racchiusi
+     * fra apici.
+     *
+     * @param       string      $t      il nome della tabella
+     * @param       string      $f      il nome della colonna
+     *
+     * @return      mixed               il nome della tabella referenziata, o NULL
+     *
+     */
     function trovaTabellaDestinazioneConstraint($t, $f)
     {
 
@@ -642,6 +1126,34 @@
         );
     }
 
+    /**
+     * trova la prossima riga di una tabella da elaborare e la marca come elaborata
+     *
+     * Questa funzione è pensata per i task che elaborano una riga per chiamata ( sincronizzazioni, importazioni ). La riga
+     * viene scelta così:
+     *
+     * -# se $q['id'] è impostato, la riga con quell'ID;
+     * -# se $q['f'] è impostato, la riga con il timestamp $f1 più vecchio, qualunque sia;
+     * -# altrimenti la riga con il timestamp $f1 più vecchio fra quelle con $f1 NULL, precedente a $f2 ( modificate dopo
+     *    l'ultima elaborazione ) o più vecchio di due giorni, applicando anche le condizioni extra $e.
+     *
+     * Se trova una riga ne imposta $f1 all'ora corrente e la restituisce; in $o accoda un paragrafo HTML che dice quale
+     * dei tre casi è stato usato. Se non trova niente restituisce un array vuoto.
+     *
+     * NOTA il messaggio del terzo caso parla di "un corso da importare", residuo del task da cui la funzione è nata. Non ha
+     * chiamanti nel framework.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella
+     * @param       array       $q      i parametri della richiesta ( di solito $_REQUEST ), di cui si guardano id e f
+     * @param       string      $f1     la colonna col timestamp dell'ultima elaborazione ( default timestamp_sincronizzazione )
+     * @param       string      $f2     la colonna col timestamp dell'ultima modifica ( default timestamp_aggiornamento )
+     * @param       string      $o      la stringa di output a cui accodare il messaggio, modificata sul posto
+     * @param       array       $e      le condizioni SQL extra, unite in AND, per il terzo caso
+     *
+     * @return      array               la riga da elaborare, o un array vuoto se non ce ne sono
+     *
+     */
     function trovaRigaDaElaborare($c, $t, $q, $f1 = 'timestamp_sincronizzazione', $f2 = 'timestamp_aggiornamento', &$o = NULL, $e = array())
     {
 
@@ -713,6 +1225,39 @@
         return $r;
     }
 
+    /**
+     * FUNZIONI DI INSERIMENTO E UNIONE
+     */
+
+    /**
+     * scompone un indirizzo in forma libera e lo inserisce nella tabella indirizzi
+     *
+     * Questa funzione prende un indirizzo scritto per esteso ( es. "via Roma 12/b" ) e ne ricava la tipologia ( cercando
+     * all'inizio uno dei nomi di tipologie_indirizzi ), il civico ( la parte finale che comincia con una cifra ) e la
+     * parte nominale, che viene capitalizzata rimettendo in maiuscolo gli eventuali numeri romani. Se l'ID del comune non
+     * è passato lo cerca prima dal CAP, fra gli indirizzi già presenti, e poi per nome e provincia; l'ID della provincia,
+     * se non passato, viene preso dal comune trovato per CAP o cercato per sigla o nome. Infine inserisce la riga con
+     * mysqlInsertRow(), che in caso di duplicato su una chiave unica aggiorna la riga esistente, e ne restituisce l'ID. Se
+     * tutti i dati testuali sono vuoti restituisce NULL senza toccare il database.
+     *
+     * NOTA $stato e $idStato sono accettati ma non usati. Se l'indirizzo non contiene un civico $matches[0] non esiste e
+     * il civico vale NULL con un warning. La ricerca per CAP prende il comune del primo indirizzo trovato, quindi con un CAP
+     * condiviso da più comuni può scegliere quello sbagliato; i nomi delle tipologie entrano nell'espressione regolare
+     * senza preg_quote().
+     *
+     * @param       string      $indirizzo      l'indirizzo per esteso, con tipologia e civico
+     * @param       string      $cap            il CAP
+     * @param       string      $comune         il nome del comune
+     * @param       string      $provincia      la sigla o il nome della provincia
+     * @param       string      $localita       la località ( facoltativa )
+     * @param       string      $stato          lo stato ( non usato )
+     * @param       int         $idComune       l'ID del comune, se già noto
+     * @param       int         $idProvincia    l'ID della provincia, se già noto
+     * @param       int         $idStato        l'ID dello stato ( non usato )
+     *
+     * @return      mixed                       l'ID dell'indirizzo inserito, NULL se i dati sono vuoti, false in caso di errore
+     *
+     */
     function inserisciIndirizzo($indirizzo, $cap, $comune, $provincia, $localita = NULL, $stato = NULL, $idComune = NULL, $idProvincia = NULL, $idStato = NULL)
     {
         // Fix 2026-05-29: evita strtolower(null)/trim(null) (PHP 8) e righe indirizzi vuote quando manca la residenza
@@ -847,6 +1392,22 @@
         return $idIndirizzo;
     }
 
+    /**
+     * unisce due anagrafiche duplicate
+     *
+     * Questa funzione chiama unisciOggetti() sulla tabella anagrafica per spostare sull'anagrafica di destinazione tutto
+     * quello che punta alla sorgente e cancellare la sorgente, dopodiché aggiorna la vista statica dell'anagrafica di
+     * destinazione e ripulisce quella dalle righe che non esistono più. È usata dal task _src/_api/_task/_anagrafica.deduplica.php.
+     *
+     * NOTA la funzione non restituisce niente, ma il task di deduplica ne assegna il risultato a $status, che quindi vale
+     * NULL.
+     *
+     * @param       int         $sorgente       l'ID dell'anagrafica da eliminare
+     * @param       int         $destinazione   l'ID dell'anagrafica da conservare
+     *
+     * @return      void
+     *
+     */
     function unisciAnagrafiche($sorgente, $destinazione)
     {
 
@@ -875,6 +1436,27 @@
 
     }
 
+    /**
+     * unisce due righe duplicate di una tabella spostando su una tutte le referenze dell'altra
+     *
+     * Questa funzione cerca in information_schema tutte le chiavi esterne che puntano a $tabella.$colonna e per ciascuna
+     * sposta le referenze dalla riga sorgente alla riga di destinazione; le referenze che non si possono spostare ( di
+     * solito perché violerebbero una chiave unica, cioè la destinazione ha già la stessa relazione ) vengono CANCELLATE.
+     * Poi legge la riga sorgente, la cancella e copia sulla destinazione, uno per uno, i campi della sorgente che non sono
+     * vuoti: dove entrambe le righe hanno un valore, quindi, vince quello della sorgente. La cancellazione avviene prima
+     * della copia perché i campi unici ( es. il codice fiscale ) non collidano.
+     *
+     * NOTA gli errori degli UPDATE vengono controllati ma il ramo che dovrebbe gestirli è vuoto; la funzione non
+     * restituisce niente e non segnala in alcun modo un fallimento.
+     *
+     * @param       mixed       $sorgente       l'ID ( o il valore di $colonna ) della riga da eliminare
+     * @param       mixed       $destinazione   l'ID ( o il valore di $colonna ) della riga da conservare
+     * @param       string      $tabella        il nome della tabella
+     * @param       string      $colonna        la colonna referenziata dalle chiavi esterne ( default id )
+     *
+     * @return      void
+     *
+     */
     function unisciOggetti($sorgente, $destinazione, $tabella, $colonna = 'id')
     {
 
@@ -979,9 +1561,17 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * FUNZIONI PER LE TENDINE
+     */
+
+    /**
+     * restituisce la tendina degli stati
+     *
+     * Questa funzione restituisce id e __label__ di tutti gli stati, lette da stati_view in ordine di etichetta con la
+     * cache su memcache indicizzata.
+     *
+     * @return      mixed       l'array delle righe id / __label__, o false in caso di errore
+     *
      */
     function tendinaStati() {
 
@@ -997,9 +1587,15 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * restituisce la tendina degli anni
+     *
+     * Questa funzione restituisce gli anni dal prossimo ( l'anno corrente più uno ) fino a $start, in ordine decrescente,
+     * ciascuno con id e __label__ uguali all'anno. Se $start è maggiore del prossimo anno l'ordine diventa crescente.
+     *
+     * @param       int         $start      il primo anno della tendina ( default 2014 )
+     *
+     * @return      array                   l'array delle righe id / __label__
+     *
      */
     function tendinaAnni( $start = 2014 ) {
 
@@ -1014,9 +1610,15 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * restituisce la tendina dei mesi
+     *
+     * Questa funzione restituisce i dodici mesi con id da 1 a 12 e __label__ nella forma "01 - Gennaio", con il nome del
+     * mese nella lingua della locale corrente.
+     *
+     * NOTA strftime() è deprecata da PHP 8.1 e produce un avviso di deprecazione a ogni chiamata.
+     *
+     * @return      array       l'array delle righe id / __label__
+     *
      */
     function tendinaMesi() {
 
@@ -1031,9 +1633,12 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * restituisce la tendina delle settimane dell'anno
+     *
+     * Questa funzione restituisce le settimane da 1 a 53 con __label__ a due cifre ( "01", "02", ... ).
+     *
+     * @return      array       l'array delle righe id / __label__
+     *
      */
     function tendinaSettimane() {
 
@@ -1048,9 +1653,15 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * restituisce la tendina delle province di uno stato
+     *
+     * Questa funzione restituisce id e __label__ delle province dello stato indicato, lette da provincie_view in ordine di
+     * etichetta con la cache su memcache indicizzata; se lo stato non ha province restituisce un array vuoto.
+     *
+     * @param       int         $idStato    l'ID dello stato ( default 1 )
+     *
+     * @return      mixed                   l'array delle righe id / __label__, o false in caso di errore
+     *
      */
     function tendinaProvincie( $idStato = 1 ) {
 
@@ -1069,9 +1680,12 @@
     }
 
     /**
-     * 
-     * TODO documentare
-     * 
+     * restituisce la tendina sì / no
+     *
+     * Questa funzione restituisce le due righe id 0 / __label__ "no" e id 1 / __label__ "si", per i campi booleani.
+     *
+     * @return      array       l'array delle righe id / __label__
+     *
      */
     function tendinaSiNo() {
 
@@ -1104,8 +1718,14 @@
      * `AN000.anagrafica`. Portarle qui le farebbe collidere.
      */
     /**
+     * restituisce il percorso completo del logo di un'anagrafica
      *
-     * @todo documentare
+     * Questa funzione cerca fra le immagini dell'anagrafica la prima con ruolo "logo" e ne restituisce il percorso reso
+     * completo da fullPath(); se non c'è restituisce NULL. La usano le stampe per il logo dell'emittente.
+     *
+     * @param       int         $id     l'ID dell'anagrafica
+     *
+     * @return      mixed               il percorso completo del logo, o NULL se non c'è
      *
      */
     function anagraficaGetLogo( $id ) {
@@ -1148,8 +1768,22 @@
 
 
     /**
+     * restituisce la sede legale di un'anagrafica
      *
-     * @todo documentare
+     * Questa funzione prende la riga di anagrafica_indirizzi dell'anagrafica con ruolo di sede legale o, se non c'è, una
+     * qualsiasi delle sue righe, e restituisce la riga di indirizzi_view dell'indirizzo collegato, con due aggiunte:
+     *
+     * chiave           | dettagli
+     * -----------------|-----------------------------------------------------------------------
+     * id               | l'ID della riga di anagrafica_indirizzi, non di indirizzi ( vedi i commenti nel corpo )
+     * linee            | l'indirizzo su due righe per le buste, indirizzo e civico poi CAP, comune e sigla
+     *
+     * Se manca uno fra indirizzo, civico, CAP, comune e sigla le due linee sono fatte di spazi. Se l'anagrafica non ha
+     * indirizzi, o la riga trovata non è collegata a un indirizzo ( id_indirizzo vuoto ), restituisce un array vuoto.
+     *
+     * @param       int         $id     l'ID dell'anagrafica
+     *
+     * @return      array               la sede legale, o un array vuoto se non c'è
      *
      */
     function anagraficaGetSedeLegale( $id ) {
@@ -1255,6 +1889,17 @@
 
 	}
 
+    /**
+     * restituisce l'ID della sede legale di un'anagrafica
+     *
+     * Questa funzione restituisce la chiave id della sede trovata da anagraficaGetSedeLegale(), cioè l'ID di
+     * anagrafica_indirizzi da scrivere in documenti.id_sede_*; se la sede non c'è restituisce NULL.
+     *
+     * @param       int         $id     l'ID dell'anagrafica
+     *
+     * @return      mixed               l'ID della sede legale, o NULL se non c'è
+     *
+     */
     function anagraficaGetIdSedeLegale( $id ) {
 
 		$r = anagraficaGetSedeLegale( $id );
@@ -1264,8 +1909,14 @@
 	}
 
     /**
+     * restituisce l'indirizzo PEC di un'anagrafica
      *
-     * @todo documentare
+     * Questa funzione restituisce il primo indirizzo della tabella mail dell'anagrafica marcato come PEC ( se_pec = 1 );
+     * se non ce ne sono restituisce NULL.
+     *
+     * @param       int         $id     l'ID dell'anagrafica
+     *
+     * @return      mixed               l'indirizzo PEC, o NULL se non c'è
      *
      */
     function anagraficaGetPEC( $id ) {
@@ -1296,6 +1947,10 @@
 	    return $r;
 
     }
+
+    /**
+     * FUNZIONI DI LETTURA
+     */
 
     /**
      * legge la __label__ di una riga per id, scrivendo l'id nella query quando si puo'
