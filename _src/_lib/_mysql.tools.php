@@ -1624,11 +1624,14 @@
      *
      * Questa funzione trasforma ogni valore dell'array nel formato array( 's' => valore ) atteso da mysqlQuery(),
      * conservando le chiavi: il risultato è quindi indicizzato per nome di colonna, e mysqlPreparedQuery() usa la chiave
-     * 'id' per restituire l'ID di una INSERT che non ne genera uno. Tutti i valori sono legati come stringhe.
+     * 'id' per restituire l'ID di una INSERT che non ne genera uno. Tutti i valori sono legati come stringhe. Le stringhe
+     * che sono un numero con la virgola decimale ( es. '10,5' o '-0,25', con una sola virgola e nient'altro che cifre )
+     * vengono convertite con il punto; tutte le altre, compresi elenchi come '1,2,3' e testi con delle virgole, restano
+     * invariate.
      *
-     * TODO la sostituzione della virgola decimale con il punto è condizionata a is_numeric(), che su una stringa con la
-     * virgola ( es. '10,5' ) restituisce false: la sostituzione quindi non avviene mai. In mysqlInsertRow() il lavoro lo fa
-     * già string2num().
+     * NOTA una stringa come '1,5' viene convertita anche se nelle intenzioni era un elenco di due valori. L'unico chiamante,
+     * mysqlInsertRow(), passa i valori già normalizzati da string2num(), che converte le stesse stringhe ( e altre ), per cui
+     * lì la conversione non cambia niente.
      *
      * @param       array       $a      l'array associativo dei valori
      *
@@ -1643,7 +1646,11 @@
         // OK foreach( $a as $v ) {
         foreach ($a as $k => $v) {
 
-            if (is_numeric($v)) {
+            // NOTA is_numeric() su una stringa con la virgola ( es. '10,5' ) restituisce false, quindi la sostituzione non
+            // avveniva mai; si convertono solo le stringhe fatte di cifre con una sola virgola decimale, così un elenco
+            // come '1,2,3' o un testo con delle virgole restano come sono; is_numeric() resta perché trasforma in stringa
+            // i numeri passati come int o float, come ha sempre fatto ( 2026-09-24 )
+            if (is_numeric($v) || (is_string($v) && preg_match('/^-?[0-9]+,[0-9]+$/', trim($v)))) {
                 $v = str_replace(',', '.', $v);
             }
 
