@@ -224,16 +224,16 @@
     /**
      * separa il numero civico dal resto dell'indirizzo
      * 
-     * Questa funzione cerca il civico in fondo all'indirizzo (cifre seguite da cifre, lettere o barre, come 20 o 20/A)
-     * e restituisce separatamente l'indirizzo, ripulito da spazi e virgole ai bordi, e il civico; se il civico non
-     * viene trovato la chiave civico è NULL e l'indirizzo è quello passato.
-     * 
-     * NOTA l'espressione regolare richiede almeno due caratteri, per cui un civico di una sola cifra (Via Roma 5) non
-     * viene riconosciuto; inoltre il civico trovato viene tolto con str_replace() da tutto l'indirizzo, per cui
-     * "Via 20 Settembre 20" diventa "Via  Settembre". Su PHP 8.1 e successivi il passaggio di NULL a str_replace()
-     * genera anche un avviso di deprecazione.
-     * TODO correggere l'espressione regolare per i civici di una cifra e togliere il civico solo dalla fine della stringa
-     * 
+     * Questa funzione cerca il civico in fondo all'indirizzo (una o più cifre seguite eventualmente da cifre, lettere
+     * o barre, come 5, 20 o 20/A, separate dal resto con uno spazio o una virgola) e restituisce separatamente
+     * l'indirizzo, ripulito da spazi e virgole ai bordi, e il civico; il civico viene tolto solo dalla fine della
+     * stringa, per cui "Via 20 Settembre 20" diventa "Via 20 Settembre" e "20". Se il civico non viene trovato la
+     * chiave civico è NULL e l'indirizzo è quello passato, ripulito allo stesso modo.
+     *
+     * NB: fino al 2026-09-24 l'espressione regolare richiedeva almeno due caratteri ( "Via Roma 5" restava senza
+     * civico ) e il civico veniva tolto con str_replace() da tutto l'indirizzo ( "Via 20 Settembre 20" diventava
+     * "Via  Settembre" ).
+     *
      * @param       string      $a      l'indirizzo completo di civico
      * 
      * @return      array               un array con le chiavi indirizzo e civico
@@ -244,11 +244,11 @@
         // $a = strtolower( $a );
 
         // trovo il civico
-        preg_match( '/([0-9]+[\/0-9a-zA-Z]+)$/', $a, $pCivici );
-        $pCivico = ( is_array( $pCivici ) && ! empty( $pCivici ) ) ? $pCivici[0] : NULL;
+        preg_match( '/(^|[\s,])([0-9]+[\/0-9a-zA-Z]*)\s*$/', $a, $pCivici );
+        $pCivico = ( is_array( $pCivici ) && ! empty( $pCivici ) ) ? $pCivici[2] : NULL;
 
-        // pulisco l'indirizzo
-        $pIndirizzo = trim( str_replace( $pCivico, NULL, $a ), ' ,' );        
+        // pulisco l'indirizzo, togliendo il civico solo dalla fine
+        $pIndirizzo = trim( ( ( $pCivico === NULL ) ? $a : substr( rtrim( $a ), 0, - strlen( $pCivico ) ) ), ' ,' );
 
         return array( 'indirizzo' => $pIndirizzo, 'civico' => $pCivico );
 
