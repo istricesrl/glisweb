@@ -525,9 +525,9 @@
      * converte in stringa il livello di errore
      *
      * Questa funzione restituisce il nome della costante di log di PHP corrispondente al livello passato, da 0 ( LOG_EMERG )
-     * a 7 ( LOG_DEBUG ), come usati da logger(); per un valore fuori intervallo restituisce NULL. È usata dall'API di stato
-     * del framework per mostrare il livello di log corrente. Il confronto dello switch non è stretto, per cui NULL e false
-     * vengono interpretati come 0 e restituiscono 'LOG_EMERG'.
+     * a 7 ( LOG_DEBUG ), come usati da logger(); per un valore fuori intervallo o non numerico, compresi NULL e false,
+     * restituisce NULL. È usata dall'API di stato del framework per mostrare il livello di log corrente. Le stringhe
+     * numeriche come "3" vanno bene.
      *
      * @param       int         $l      il livello di log, da 0 a 7
      *
@@ -535,6 +535,11 @@
      *
      */
     function logLvl2string( $l ) {
+
+        // NB: il confronto dello switch non è stretto e NULL o false valevano come 0, cioè 'LOG_EMERG' ( 2026-09-24 )
+        if( ! is_numeric( $l ) ) {
+            return NULL;
+        }
 
         switch( $l ) {
             case 0:
