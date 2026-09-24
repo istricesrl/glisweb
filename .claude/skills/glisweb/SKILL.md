@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown". Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown". Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare anche quando Claude Code avvisa che i file di istruzioni superano il limite ("instruction files add up to … over the 150.0k-char total limit"), quando un CLAUDE.md di progetto cresce o gli si vuole aggiungere una sezione lunga, e quando il contesto della sessione supera i 120k: la sezione "Il contesto costa" e riferimenti/contesto.md dicono come si lavora parsimoniosi e dove vanno le trattazioni. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -85,115 +85,34 @@ suoi pattern, che è comunque la regola d'oro.
 
 Il `CLAUDE.md` di quei progetti lo dichiara in testa. Se ci lavori e non lo dice, aggiungilo.
 
+## ⚠ Il contesto costa: parsimonia di token e file di istruzioni snelli
+
+Vale per **ogni** Claude che lavora su un deploy glisweb, e viene subito dopo la regola d'oro. Il
+regolamento completo, con le misure che lo motivano, sta in **`riferimenti/contesto.md`** accanto a
+questo file: **leggilo** la prima volta che lavori su un deploy, quando Claude Code avvisa che i file di
+istruzioni superano il limite ( *"instruction files add up to … over the 150.0k-char total limit"* ) e
+quando la statusline supera i 120k. L'essenziale sta anche nel file del framework, sezione *"Il contesto
+costa"*.
+
+In tre righe: **i file di istruzioni restano snelli** ( il `CLAUDE.md` di progetto tiene regole e
+trappole, le trattazioni vanno in `var/personalizzazioni/<area>.md` rimandate dal `READ.md` ); **un
+turno vale il contesto intero** ( comandi raggruppati, script che stampano il risultato, letture
+strette ); **il punto fermo lo dichiara Claude** ( ramo annotato nel TODO e non seguito, `/clear` e
+`/compact` proposti alle soglie ).
+
 ## I cinque file di un progetto
 
-⚠ **La root del deploy non è versionata, ed è voluto.** Il repository è la document root, `dev/`: il
-livello che la contiene ne sta **fuori di proposito**, perché ci vivono le password in chiaro e le
-informazioni del progetto — il `READ.md` degli accessi ( CMS, SSH, database ), i file di stato, gli
-script operativi del deploy. Metterli sotto git significherebbe pubblicare le credenziali a chiunque
-abbia accesso al repository, e in un progetto cliente anche ai suoi fork.
+`CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md` nella root del deploy, che **non è versionata di
+proposito** ( ci stanno le credenziali ). La sintesi sta nel file del framework, sezione *"I cinque file
+di un progetto"*; il regolamento completo — marcatori, tre flag, TODO per aree, lock e sezioni per
+destinatario del `CHAT.md`, concorrenza fra sessioni, chiusura di una voce in tre gesti — sta in
+**`riferimenti/cinque-file.md`** accanto a questo file: **leggilo prima di scrivere in uno dei cinque**,
+se non l'hai già fatto nella sessione.
 
-Quindi: **non proporre di versionarli, non crearci dentro un repository, non "metterli al sicuro" su
-git.** Sono già al sicuro — la macchina ha uno snapshot notturno, e quei file ci sono dentro come tutto
-il resto. Un `git status` pulito su `dev/` non dice niente su di loro, e non deve: sono due piani con
-due meccanismi di protezione diversi, entrambi funzionanti.
-
-Nella root del deploy vivono **cinque file** con cinque tempi di vita diversi, più il `burndown.md` che è
-generato e non si tocca a mano:
-
-- **`CLAUDE.md`** — **come ci si deve comportare qui**: le regole, cosa non fare, le convenzioni. Stabile,
-  cambia di rado. Se una riga comincia con "non fare mai", il suo posto è questo;
-- **`READ.md`** — **cosa serve sapere per metterci le mani**: i fatti. Sette voci e solo quelle —
-  descrizione generale, credenziali ( o dove trovarle ), architettura e risorse, **mappa delle
-  personalizzazioni**, FAQ, problemi frequenti, procedure del progetto. Se una riga comincia con "il
-  database sta su", il suo posto è questo. ⚠ **Non ci va la documentazione del framework**: uno snippet
-  che vale su qualunque deploy non è informazione di questo progetto. E vale il limite di lunghezza del
-  TODO — il fatto e il riferimento, non la trattazione: una procedura lunga sta in un file suo sotto
-  `var/`;
-- **`TODO.md`** — solo lavoro **aperto** ( `- [ ]` da fare, `- [=]` in attesa di qualcun altro,
-  `- [?]` sospesa; le ultime due **non contano nel carico** ). Quando una voce
-  chiude non resta qui: si sposta;
-- **`DONE.md`** — l'archivio del **fatto** ( `- [v]` fatta, `- [x]` scartata ) e delle cronache di come è
-  andata. Si consulta con `grep`, non si rilegge;
-- **`CHAT.md`** — lo **stato attuale** della conversazione col cliente: cosa aspetta lui, cosa aspettiamo
-  noi, cosa c'è da dirgli, con data e canale di ogni contatto. **Si riscrive**, non si accumula.
-
-Due regole che valgono più di tutte le altre:
-
-1. **una cosa sta in un file solo.** Se la stessa riga è in due file, il prossimo che legge non sa quale
-   delle due è vera;
-2. **prima di scrivere al cliente si legge `CHAT.md`**, e prima di scrivere "da chiedere a X" si cerca in
-   `CHAT.md` e `DONE.md` se la risposta esiste già. Chiedere a un cliente una cosa a cui ha già risposto
-   gli dice che quello che ha detto non è stato registrato;
-3. **non sei l'unico che scrive questi file.** Stanno fuori dal repository, quindi niente merge e niente
-   storia: due sessioni aperte sullo stesso deploy si sovrascrivono a vicenda in silenzio. Si **rilegge
-   il file subito prima di scriverlo** ( non ci si fida della lettura di mezz'ora fa ), si modifica il
-   meno possibile alla volta, e riscrivere una sezione intera è proprio l'operazione che cancella il
-   lavoro degli altri — il `CHAT.md` è il più esposto, perché è quello che per sua natura si riscrive.
-   Se due sessioni sono aperte, i file di stato li tiene una sola.
-
-#### ⚠ Quando una voce chiude, il giro non finisce nel `DONE.md`
-
-Regola data da Fabio il **22/09/2026**, ribadita il **23/09/2026**: *"quando fanno le cose e chiudono i
-task devono sempre aggiornare di conseguenza il `CHAT.md`"*.
-
-Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
-
-1. il marcatore diventa `[v]` ( o `[x]` se si è deciso di non farla );
-2. la voce **trasloca** nel `DONE.md`, nel capitolo di oggi, con **com'è andata e perché si è deciso
-   così** — è l'unica cosa che risponderà a *"perché l'avevamo fatto così?"* fra sei mesi;
-3. ⚠ se è una cosa che **il cliente vede o che stava aspettando**, la stessa riga va **anche nel
-   `CHAT.md`**, nella sezione `### Da dirgli alla prossima occasione` della persona giusta, **il giorno
-   stesso**.
-
-**Il test, in una riga**: *se ne accorgerebbe, o l'aveva chiesta lui?* Se sì, il terzo gesto non è
-facoltativo. **Uno sviluppo finito e non comunicato, per il cliente, non è finito** — e nessuno se ne
-accorge, perché da noi risulta fatto.
-
-**Non è una deroga a "una cosa sta in un file solo"**: nel `DONE.md` sta il **lavoro fatto**, nel
-`CHAT.md` sta la **comunicazione da fare**. Sono due informazioni diverse e hanno due vite diverse —
-la riga del `CHAT.md` sparisce appena gliel'hai detto, quella del `DONE.md` resta per sempre.
-
-**Vale in tutt'e due i versi.** Una voce `[=]` è ferma su qualcuno, e quando la risposta arriva — e
-arriva quasi sempre dal `CHAT.md`, che è il canale con l'assistente generale di Fabio — la voce torna
-`[ ]` e la riga del `CHAT.md` si aggiorna. Una `[=]` la cui risposta è già arrivata è peggio di una
-voce mancante: tiene fermo un lavoro senza motivo, e non lo dice a nessuno.
-
-⚠ **Il `CHAT.md` si scrive col lock**, sempre: si legge la sezione `## lock` in fondo, se dice `libero`
-ci si mette la propria riga, **si rilegge per verificare di avercela ancora**, si scrive **solo** nella
-sezione di quella persona, si rimette `libero`. Un lock più vecchio di dieci minuti è stantio: si prende
-e si annota che è stato forzato. Il protocollo per esteso sta nella sezione `CHAT.md` di
-`_etc/_claude/_claude.framework.md`.
-
-## Come si scrive il `TODO.md` ( deciso il 15/09/2026 )
-
-⚠ **Per aree del progetto, non in ordine cronologico.** La data in cui una cosa è stata scritta è l'unico
-ordine che non aiuta mai a decidere cosa fare: le aree reggono per anni, i capitoli datati crescono
-all'infinito. La cronologia ha un posto suo, ed è il `DONE.md`, dove si tiene **un capitolo per giornata**.
-
-⚠ **Una riga per compito**, con **tre flag** fra parentesi subito dopo il marcatore — urgenza, rilevanza,
-impatto, `!` se sì e `-` se no:
-
-    - [ ] (!!!)   urgente, rilevante, impattante
-    - [ ] (-!!)   non urgente, ma qualcuno l'aspetta e se non si fa si blocca qualcosa
-    - [ ] (!--)   urgente ma non rilevante e senza impatto — si fa e si dimentica
-    - [ ] (---)   nessuna delle tre: candidata naturale a cadere
-
-**urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
-l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
-tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
-
-⚠ **`[?]` non conta nel residuo**: è il posto dove mettere una cosa senza doverla né fare né buttare.
-
-⚠ **Nel TODO ci sta quello che serve per decidere e per cominciare, niente di più.** L'analisi lunga va in
-un file sotto `var/`, e la voce ci rimanda con un sunto di una o due righe: *"per lavorare una specifica
-linea di todo si legge solo la sua analisi e non tutto il file todo con l'analisi anche di roba che non
-c'entra niente"*.
-
-I conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di indentazione non sono
-dettagli stilistici: le aperte si contano in `TODO.md`, le chiuse in `TODO.md` **e** `DONE.md`. La regola
-completa sta nella sezione **"I cinque file di un progetto"** di `_etc/_claude/_claude.framework.md`, che è
-la fonte autorevole: leggila prima di modificare uno di questi file.
+⚠ **Chiudere una voce sono tre gesti nello stesso turno**: marcatore `[v]` o `[x]`, trasloco nel
+`DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
+`CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
+comunicato, per il cliente, non è finito.
 
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
@@ -742,7 +661,10 @@ configurazione — è spool.
   altrimenti stai ignorando `SITE_STATUS` e leggendo l'ambiente sbagliato.
 - **Non rinominare/spostare i file `_*` del framework.** Servono al kernel per l'auto-discovery dei custom.
 - **Non duplicare le regole del framework** in `CLAUDE.md` del progetto: limitati a override e contesto
-  progetto-specifico, lascia il manuale operativo a `_claude.framework.md`.
+  progetto-specifico, lascia il manuale operativo a `_claude.framework.md` e a questa skill.
+- **Non far crescere il `CLAUDE.md` di progetto a manuale.** Le trattazioni di dominio vanno in
+  `var/personalizzazioni/<area>.md`, rimandate dal `READ.md`; nel `CLAUDE.md` restano regole e trappole
+  ( vedi `riferimenti/contesto.md` ).
 
 ## 7. Coesistenza con `CLAUDE.md` del progetto
 
@@ -762,8 +684,12 @@ progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.frame
 - Questa skill è distribuita **dentro al repository del framework** (cartella `.claude/skills/glisweb/`). È
   l'unica cartella senza prefisso underscore che è versionata di proposito — deroga consapevole alla regola
   "no underscore = custom = gitignored".
-- Modifiche alla skill vanno fatte solo nel repo del framework, mai dal progetto cliente: in alcuni deploy il
-  framework è hard-linked con altre istanze e una Edit dal cliente potrebbe rompere gli inode (vedi
-  `_claude.framework.md` sezione hard link).
+- La skill si può migliorare anche da un deploy cliente: `_gw.upgrade.sh` raccoglie `./.claude` fra i
+  disallineamenti, e la modifica risale allo standard col giro di riallineamento. Prima e dopo l'Edit si
+  controlla `stat` ( inode e `Links:` ), come per ogni file standard: in alcuni deploy il framework è
+  hard-linked con altre istanze (vedi `_claude.framework.md` sezione hard link).
+- **Il `SKILL.md` tiene le regole e i rimandi, le trattazioni stanno in `riferimenti/`** ( cinque file,
+  contesto, documentazione, job, migrazioni ), lette quando servono: il file del framework, che è nel
+  preambolo di ogni sessione, ne tiene solo l'essenziale. Una sezione nuova e lunga va lì, non qui.
 - Per testare la skill end-to-end: `mkdir /tmp/test-glisweb && cd /tmp/test-glisweb && git clone <repo> .` poi
   `bash .claude/skills/glisweb/bootstrap.sh` e verifica struttura creata + idempotenza.
