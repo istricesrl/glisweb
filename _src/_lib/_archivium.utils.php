@@ -68,7 +68,7 @@
      * funzione                             | descrizione
      * -------------------------------------|---------------------------------------------------------------
      * archiviumGetListaFeAttive()          | restituisce l'elenco delle fatture attive di un'azienda
-     * archiviumGetInfoFeAttiva()           | recupera le informazioni su una fattura attiva (non implementata)
+     * archiviumGetInfoFeAttiva()           | restituisce le informazioni su una fattura attiva
      * archiviumPostInvioFeAttiva()         | invia una fattura elettronica attiva ad Archivium
      *
      * funzioni per le fatture elettroniche passive
@@ -456,17 +456,18 @@
     }
 
     /**
-     * recupera le informazioni su una fattura attiva (non implementata)
+     * restituisce le informazioni su una fattura attiva
      *
-     * Questa funzione è predisposta per chiamare l'endpoint ISC/.../FEAttive/<idAzienda>/info/<idFattura>/<index>,
-     * ma si ferma alla composizione dell'URL: la chiamata non viene fatta e la funzione restituisce sempre NULL (si
-     * vedano i TODO nel corpo). Per la versione funzionante sulle fatture passive si veda archiviumGetInfoFePassiva().
+     * Questa funzione chiama l'endpoint ISC/.../FEAttive/<idAzienda>/info/<idFattura>/<index> e restituisce la
+     * risposta decodificata con i metadati della fattura. In caso di errore restituisce quello che restCall() ottiene
+     * decodificando la risposta, tipicamente NULL. È scritta come la gemella archiviumGetInfoFePassiva(), di cui fino
+     * al 2026-09-24 era la copia incompleta ( componeva l'URL ma non faceva la chiamata ).
      *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda
      * @param       string      $idFattura  l'identificativo della fattura, del tipo indicato da $index
      * @param       string      $index      il tipo di identificativo passato in $idFattura (default IDArchivium)
      *
-     * @return      void
+     * @return      mixed                   l'array con le informazioni sulla fattura, o NULL in caso di errore
      *
      */
     function archiviumGetInfoFeAttiva( $idAzienda, $idFattura, $index = 'IDArchivium'  ) {
@@ -486,9 +487,16 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $r );
+
+        // restituisco il risultato
+        return $r;
 
     }
 
