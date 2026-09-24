@@ -216,14 +216,14 @@
      * database e averlo scritto in cache registra la chiave nell'indice $i sotto ogni tabella letta dalla query, così che
      * mysqlInsertRow() possa invalidarla quando la tabella viene scritta. È la forma da usare per le tendine e per tutte le
      * letture che devono vedere subito le modifiche. Se il TTL è zero e MEMCACHE_DEFAULT_TTL è definita viene usato il
-     * TTL di default.
+     * TTL di default; se è false viene forzata la lettura dal database come descritto per mysqlCachedQuery().
      *
      * @param       array       $i      l'indice della cache ( di solito $cf['memcache']['index'] ), modificato sul posto
      * @param       object      $m      la connessione a memcache
      * @param       object      $c      la connessione mysqli
      * @param       string      $q      la query da eseguire
      * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
-     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default )
+     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default, false per forzare la lettura dal database )
      * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
      *
      * @return      mixed               il risultato della query come per mysqlQuery()
@@ -231,7 +231,8 @@
      */
     function mysqlCachedIndexedQuery(&$i, $m, $c, $q, $p = false, $t = 0, &$e = array()) {
 
-        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
+        // false va passato così com'è a mysqlCachedQuery(), per cui vuol dire forzare la lettura dal database
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
@@ -248,11 +249,8 @@
      * semplicemente eseguita ogni volta. Anche un risultato false ( query fallita ) viene scritto in cache, ma alla lettura
      * successiva è indistinguibile da una chiave assente e la query viene rieseguita.
      *
-     * Passando $t === false si dovrebbe forzare la lettura dal database; vedi però la nota qui sotto.
-     *
-     * TODO con MEMCACHE_DEFAULT_TTL definita ( cioè sempre, dal runlevel _045.cache.php ) il confronto $t == 0 è vero anche
-     * per $t === false, che viene quindi sostituito dal TTL di default prima di arrivare al controllo $t === false: il
-     * bypass della cache previsto qui sotto non scatta mai.
+     * Passando $t === false la cache non viene letta: la query viene eseguita sul database e il risultato viene riscritto
+     * in cache con il TTL di default, così che anche le letture successive vedano il valore aggiornato.
      *
      * NOTA chiamata direttamente ( e non tramite mysqlCachedIndexedQuery() ) questa funzione scrive l'indice in un array
      * locale che va perso, quindi la query non viene invalidata dalle scritture sulle sue tabelle e scade solo per TTL.
@@ -261,7 +259,7 @@
      * @param       object      $c      la connessione mysqli
      * @param       string      $q      la query da eseguire
      * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
-     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default )
+     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default, false per forzare la lettura dal database )
      * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
      * @param       array       $i      l'indice della cache, modificato sul posto
      *
@@ -274,7 +272,9 @@
         // var_dump( $q );
         // die();
 
-        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
+        // NOTA il confronto $t == 0 da solo è vero anche per $t === false, che veniva così sostituito dal TTL di default
+        // prima di arrivare al controllo qui sotto, e la lettura forzata dal database non scattava mai ( 2026-09-24 )
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
@@ -297,7 +297,9 @@
 
             if (! empty($m)) {
 
-                memcacheWrite($m, $k, $d, $t);
+                // con $t === false il risultato letto dal database aggiorna la cache con il TTL di default, perché
+                // memcacheWrite() con false scriverebbe una chiave senza scadenza
+                memcacheWrite($m, $k, $d, (($t === false) ? ((defined('MEMCACHE_DEFAULT_TTL')) ? MEMCACHE_DEFAULT_TTL : 0) : $t));
 
                 logger('query ' . $k . ' non presente in cache', 'speed');
 
