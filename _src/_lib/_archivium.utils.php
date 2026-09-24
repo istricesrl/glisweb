@@ -682,12 +682,9 @@
      * Questa funzione chiama l'endpoint ISC/.../FEPassive/<idAzienda>/Download/<idFattura>/<index>/<type>, che
      * restituisce l'XML della fattura; la risposta viene convertita in array da restCall() tramite xml2array() e
      * conservata anche grezza. Il ciclo di pulizia serve a ricondurre la radice del documento, che nell'XML può avere
-     * un prefisso di namespace (ad es. p:FatturaElettronica), alla chiave FatturaElettronica.
-     *
-     * TODO la condizione strpos( $k, 'FatturaElettronica' ) >= 0 è sempre vera (anche false >= 0 lo è), per cui $fe
-     * prende il valore dell'ultima chiave della risposta qualunque sia il suo nome; funziona finché la radice è
-     * l'unica chiave. Se la risposta è vuota o non è un array, $fe non viene definita e la funzione restituisce
-     * FatturaElettronica a NULL con un warning
+     * un prefisso di namespace (ad es. p:FatturaElettronica), alla chiave FatturaElettronica: viene presa la chiave il
+     * cui nome contiene FatturaElettronica. Se la risposta è vuota, non è un array o non ha una chiave del genere, la
+     * chiave FatturaElettronica del risultato vale NULL.
      *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
      * @param       string      $idFattura  l'identificativo della fattura, del tipo indicato da $index
@@ -724,11 +721,16 @@
         // var_dump( $s );
         // var_dump( $r );
 
+        // inizializzazione variabili
+        $fe     = NULL;
+
         // pulizia chiave FatturaElettronica
-        foreach( $r as $k => $v ) {
-            
-            if( strpos( $k, 'FatturaElettronica' ) >= 0 ) {
-                $fe = $v;
+        if( is_array( $r ) ) {
+            foreach( $r as $k => $v ) {
+
+                if( strpos( $k, 'FatturaElettronica' ) !== false ) {
+                    $fe = $v;
+                }
             }
         }
 
