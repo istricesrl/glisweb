@@ -1,12 +1,141 @@
 <?php
 
     /**
+     * libreria del controller dei dati
      *
+     * Questa libreria contiene la funzione controller(), che è il punto unico attraverso cui il framework legge e
+     * scrive le entità del database, e le funzioni di supporto con cui essa decide cosa fare dei dati ricevuti.
      *
+     * introduzione
+     * ============
+     * La controller() riceve un blocco dati, cioè un array associativo che rappresenta una riga (o un insieme di
+     * righe) di un'entità, il nome dell'entità e il metodo HTTP da applicare, e lo traduce nella query MySQL
+     * corrispondente dopo averne verificato i permessi. Viene chiamata principalmente da
+     * _src/_config/_750.controller.php, che le passa ogni blocco dati trovato in $_REQUEST (da form HTTP, da chiamata
+     * REST tramite _src/_api/_rest.php o da file CSV tramite _src/_config/_740.controller.php), e dalle macro di vista
+     * (_src/_inc/_macro/_default.view.php, _src/_inc/_macro/_default/_default.view.php) e dalle stampe CSV per
+     * estrarre i dati degli elenchi. Per il formato dei blocchi dati e i canali di ingresso si vedano i commenti al
+     * file _src/_config/_750.controller.php.
      *
+     * Il lavoro della controller() si divide in due modalità, scelte in base al metodo e alla presenza dell'id:
      *
+     * modalità view
+     * -------------
+     * Una GET senza id (o con la richiesta esplicita __view_mode__) è una richiesta di elenco: la controller()
+     * compone una SELECT sulla vista dell'entità (<tabella>_view_static se esiste, altrimenti <tabella>_view, o la
+     * tabella stessa in modalità report/filesystem) applicando ricerca, filtri, restrizioni, raggruppamenti,
+     * ordinamenti e paginazione indicati nell'array delle informazioni $i, e restituisce le righe trovate nel blocco
+     * dati $d; il numero totale di righe e di pagine viene scritto in $i['__pager__']. Le chiavi di $i riconosciute
+     * sono descritte nei commenti dentro la funzione, alla sezione "features della modalità di visualizzazione".
      *
-     * TODO documentare
+     * modalità modifica
+     * -----------------
+     * Ogni altro caso (POST, PUT, REPLACE, UPDATE, DELETE, e GET con id per la lettura di un singolo record) è una
+     * richiesta sulla singola riga: la controller() compone la query INSERT, UPDATE, REPLACE, INSERT ... ON DUPLICATE
+     * KEY UPDATE, DELETE o SELECT corrispondente, la esegue, confronta la riga prima e dopo l'operazione, propaga
+     * l'operazione ai sottomoduli (le entità collegate da chiave esterna) chiamando sé stessa e infine integra il
+     * blocco dati con la riga letta dalla vista, così che chi lo riceve abbia anche i campi calcolati.
+     *
+     * punti di inclusione delle controller
+     * ------------------------------------
+     * In modalità modifica la controller() include, in quattro punti del suo lavoro, dei file PHP che permettono di
+     * personalizzare il comportamento per entità senza toccare la funzione. I file vengono cercati in
+     * _src/_inc/_controllers/ e nella stessa cartella dei moduli attivi, con i nomi _default.<punto>.php (valido per
+     * tutte le entità) e _<tabella>.<punto>.php (con gli underscore del nome della tabella sostituiti da punti, ad es.
+     * _anagrafica.categorie.before.php), più le rispettive versioni custom trovate da path2custom():
+     *
+     * punto            | quando viene incluso
+     * -----------------|-----------------------------------------------------------------------
+     * before           | prima della composizione della query; può modificare i dati o bloccare l'operazione
+     * append           | dopo la composizione della query e prima della sua esecuzione; può modificare la query
+     * after            | dopo l'esecuzione della query e il confronto prima/dopo
+     * finally          | dopo l'elaborazione dei sottomoduli, prima dell'integrazione finale del blocco dati
+     *
+     * I file vengono inclusi con require dentro la funzione, quindi vedono tutte le sue variabili locali ($c, $mc,
+     * $d, $t, $a, $ks, $vs, $q, $e, $i, $comparison...) e possono modificarle. Un controller before o append blocca
+     * l'operazione impostando in $i['__status__'] un codice di errore (400 o superiore) e svuotando $a, come fa ad
+     * esempio _src/_inc/_controllers/_file.before.php.
+     *
+     * costanti
+     * ========
+     * Le costanti definite e utilizzate dalla libreria sono elencate nella seguente tabella; descrivono l'esito del
+     * confronto prima/dopo della modalità modifica, che la controller() scrive nella variabile $comparison a
+     * disposizione dei controller after e finally.
+     *
+     * costante                     | spiegazione
+     * -----------------------------|--------------------------------------------------------------
+     * ROW_CREATED                  | la riga non esisteva prima dell'operazione ed è stata creata
+     * ROW_MODIFIED                 | la riga esisteva ed è cambiata (vale anche per la cancellazione)
+     * ROW_UNMODIFIED               | la riga non è cambiata
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le
+     * analizzeremo nel dettaglio.
+     *
+     * funzioni di gestione dei dati
+     * -----------------------------
+     * Le funzioni in questo gruppo servono per leggere e scrivere le entità del database.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * controller()                     | legge o scrive un blocco dati su un'entità del database
+     *
+     * funzioni di verifica
+     * --------------------
+     * Le funzioni in questo gruppo servono alla controller() e ai suoi chiamanti per decidere come trattare i dati.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * checkNomeBloccoDati()            | verifica se una chiave di $_REQUEST è un blocco dati da elaborare
+     * checkModalitaVisualizzazione()   | verifica se la richiesta va trattata in modalità view
+     * checkModalitaModifica()          | verifica se la richiesta può essere trattata in modalità modifica
+     * isFieldNumeric()                 | verifica se un campo di una tabella è di tipo numerico
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logWrite()                       | _src/_lib/_log.utils.php
+     * logger()                         | core
+     * timerCheck()                     | core
+     * timerNow()                       | core
+     * timerDiff()                      | core
+     * path2custom()                    | core
+     * getAclPermission()               | _src/_lib/_acl.utils.php
+     * getAclRights()                   | _src/_lib/_acl.utils.php
+     * getAclRightsTable()              | _src/_lib/_acl.utils.php
+     * getAclRightsAccountId()          | _src/_lib/_acl.utils.php
+     * checkFirmaImportazione()         | _src/_lib/_acl.utils.php
+     * mysqlQuery()                     | _src/_lib/_mysql.tools.php
+     * mysqlSelectRow()                 | _src/_lib/_mysql.tools.php
+     * mysqlSelectValue()               | _src/_lib/_mysql.tools.php
+     * mysqlSelectCachedValue()         | _src/_lib/_mysql.tools.php
+     * mysqlCachedQuery()               | _src/_lib/_mysql.tools.php
+     * getStaticViewExtension()         | _src/_lib/_mysql.tools.php
+     * numeric2null()                   | _src/_lib/_string.tools.php
+     * string2boolean()                 | _src/_lib/_string.tools.php
+     * arrayKeyValuesImplode()          | _src/_lib/_array.tools.php
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-16       | Fabio Mosti          | $timer passato per riferimento, cache dell'indice SORTING
+     * 2026-09-18       | Fabio Mosti          | lettura per id dalle viste con il valore scritto nella query
+     * 2026-09-23       | Fabio Mosti          | ricerca delle date scritte all'italiana
+     * 2026-09-24       | Fabio Mosti          | filtri EQ numerici scritti nella query sulle viste
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
      */
 
@@ -16,47 +145,47 @@
     define('ROW_UNMODIFIED', 'INVARIATO');
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * 
-     * introduzione
-     * ============
-     * 
-     * 
-     * 
-     * 
-     * modalità view
-     * =============
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * modalità modifica
-     * =================
-     * 
-     * 
-     * 
-     * 
-     * punti di inclusione delle controller
-     * ------------------------------------
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * TODO documentare
-     *
+     * FUNZIONI DI GESTIONE DEI DATI
      */
+
     /**
+     * legge o scrive un blocco dati su un'entità del database
+     *
+     * Questa funzione elabora il blocco dati $d per l'entità $t secondo il metodo $a, nelle due modalità descritte
+     * nella testata della libreria (view e modifica); i dettagli di ogni passo sono nei commenti dentro la funzione.
+     * In sintesi:
+     *
+     * -# separa in $d i campi della riga, i sottomoduli (i valori array) e le chiavi speciali con il doppio underscore,
+     *    e sostituisce i valori speciali (__parent_id__, __self_id__, __timestamp__, __date__, __null__);
+     * -# se $d contiene solo sottomoduli (modalità multipla) chiama sé stessa per ciascuno di essi;
+     * -# verifica i permessi sull'entità con getAclPermission() o con la firma di importazione; se mancano scrive
+     *    401 in $i['__status__'] e si ferma;
+     * -# in modalità view compone ed esegue la SELECT sulla vista e mette le righe trovate in $d;
+     * -# in modalità modifica esegue la query sulla riga, include i controller before/append/after/finally, propaga
+     *    l'operazione ai sottomoduli e integra $d con la riga letta dalla vista, oppure, se è stato richiesto il
+     *    reset (esplicitamente con __reset__ o implicitamente con una DELETE), salva $d in
+     *    $_SESSION['__latest__'][ $t ] e lo svuota lasciando solo __reset__ = 1.
+     *
+     * Il blocco dati $d, l'array degli errori $e e l'array delle informazioni $i sono passati per riferimento e
+     * vengono modificati: $d contiene alla fine il risultato (le righe dell'elenco, la riga letta o scritta con il
+     * suo id), $e['__codes__'] i codici di errore MySQL raccolti da mysqlQuery(), $i lo stato, il paginatore e le
+     * informazioni restituite dai sottomoduli, annidate per entità e indice. Se $d è vuoto viene inizializzato a un
+     * array vuoto; tutti i suoi valori passano per numeric2null().
+     *
+     * NB: nel ramo "diritti INSUFFICIENTI" (riga esistente su cui l'account non ha diritti) la funzione scrive solo
+     * una riga di log e restituisce lo stato presente in $i, o 200 se non ce n'è; il chiamante non riceve un 401.
+     *
+     * TODO nel ramo dei diritti insufficienti sulla riga lo stato restituito non segnala il rifiuto (vedi sopra)
+     *
+     * TODO in modalità view, se la tabella ha le ACL e $d contiene anche dei campi di filtro ($ks non vuoto), i valori
+     * di $vs non sono nell'ordine dei segnaposto: il ? della LEFT JOIN su account_gruppi precede nella query quelli
+     * della WHERE sui campi, ma il suo valore viene accodato dopo
+     *
+     * TODO in modalità view, una __search__ senza __fields__ fatta solo di parole più corte di tre caratteri lascia
+     * $cond non definito, e la WHERE riceve implode() di un valore non array
+     *
+     * il parametro $timer
+     * -------------------
      * `$timer` va passato per RIFERIMENTO, altrimenti i cronometri interni non escono.
      *
      * Questa funzione contiene otto `timerCheck( $timer, ... )`, ma finché `$timer` era passato
@@ -94,6 +223,30 @@
      * ⚠ Chi tocca questa firma controlli i chiamanti: passare un'espressione invece di una
      * variabile al decimo o all'undicesimo argomento diventa un fatal *"Only variables can be
      * passed by reference"*.
+     *
+     * @param       mysqli      $c      la connessione al database
+     * @param       object      $mc     la connessione a memcache, usata per le query in cache sullo schema
+     * @param       array       $d      il blocco dati da elaborare, modificato sul posto con il risultato
+     * @param       string      $t      il nome dell'entità (tabella) su cui lavorare; può essere sostituito dalla
+     *                                  chiave speciale __table__ del blocco dati
+     * @param       string      $a      il metodo da applicare (default METHOD_GET); può essere sostituito dalla
+     *                                  chiave speciale __method__ del blocco dati
+     * @param       mixed       $p      l'id del record padre, usato per il valore speciale __parent_id__ nelle
+     *                                  chiamate ricorsive sui sottomoduli (default NULL)
+     * @param       array       $e      l'array degli errori, modificato sul posto
+     * @param       array       $i      l'array delle informazioni (filtri, ordinamenti, paginazione in ingresso;
+     *                                  stato, paginatore ed errori in uscita), modificato sul posto
+     * @param       array       $pi     passato a checkModalitaModifica() e, nella ricorsione, valorizzato con
+     *                                  $i['__auth__'] del chiamante; getAclRights() però non lo riceve (si veda
+     *                                  checkModalitaModifica())
+     * @param       array       $ci     riservato e mai letto, si veda la nota sopra
+     * @param       array       $timer  l'array del cronometro, per riferimento (tipicamente $cf['speed'])
+     *
+     * @return      int                 lo stato dell'operazione, lo stesso scritto in $i['__status__']: 200 in
+     *                                  caso di successo, 401 se mancano i permessi sull'entità, 409 per una chiave
+     *                                  duplicata (errore MySQL 1062), 400 per un campo inesistente (errore 1054),
+     *                                  o il codice di errore impostato da un controller before o append
+     *
      */
     function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), &$timer = array()) {
 
@@ -112,12 +265,12 @@
 
         // inizializzazioni
         $q                      = NULL;                                         // la query MySQL che verrà eseguita
-        $s                      = array();                                      // 
-        $r                      = false;                                        // 
+        $s                      = array();                                      // l'array dei sottomoduli (subform) trovati nel blocco dati
+        $r                      = false;                                        // richiesta di reset del blocco dati (__reset__, forzata dalla DELETE)
         $ks                     = array();                                      // l'array delle chiavi (nomi dei campi)
         $vs                     = array();                                      // l'array dei valori (valori dei campi)
-        $vm                     = false;                                        // 
-        $rm                     = getStaticViewExtension($mc, $c, $t);          // 
+        $vm                     = false;                                        // richiesta di modalità view (__view_mode__)
+        $rm                     = getStaticViewExtension($mc, $c, $t);          // suffisso della vista da interrogare (_view_static o _view, NULL in modalità report)
 
         // ricerca dei controller
         $cb                    = DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace('_', '.', $t) . '}.';
@@ -221,11 +374,16 @@
         /**
          * gestione chiavi speciali
          * ------------------------
-         * 
-         * 
+         * Le richieste di modalità che nel blocco dati sono ormai obsolete (__view_mode__, __forced_view__,
+         * __report_mode__, __filesystem_mode__) possono essere passate anche nell'array delle informazioni, sotto
+         * $i['__mode__'], con valore 1; l'effetto è lo stesso delle chiavi omonime del blocco dati: __view_mode__
+         * forza la modalità view, __forced_view__ fa leggere il singolo record dalla vista invece che dalla tabella
+         * e salta l'elaborazione dei sottomoduli, __report_mode__ e __filesystem_mode__ azzerano il suffisso della
+         * vista, così che le query lavorino sulla tabella.
+         *
          */
 
-        // ...
+        // modalità passate tramite l'array delle informazioni
         if( isset( $i['__mode__'] ) ) {
             if( isset( $i['__mode__']['__view_mode__'] ) && $i['__mode__']['__view_mode__'] == 1 ){
                 $vm = true;
@@ -431,7 +589,8 @@
                  * LE                       | minore o uguale (il campo deve essere minore o uguale al valore specificato)
                  * LK                       | like (il campo deve contenere il valore specificato)
                  * IN                       | in (il campo deve essere uno dei valori specificati, separati da |)
-                 * BT                       | between (il campo deve essere compreso tra i due valori specificati, separati da |)
+                 * NI                       | not in (il campo non deve essere nessuno dei valori specificati, separati da |)
+                 * BT                      | between (il campo deve essere compreso tra i due valori specificati, separati da |)
                  * 
                  * L'applicazione di filtri e restrizioni solitamente avviene per tramite del file _src/_inc/_default.view.php, che si occupa di trasformare
                  * le direttive presenti nell'array $_REQUEST['__view__'] in direttive che vengono passate alla controller() tramite l'array $_REQUEST['__info__'].
@@ -699,10 +858,19 @@
                 /**
                  * la modalità di modifica, inserimento e cancellazione
                  * ----------------------------------------------------
-                 * 
-                 * 
-                 * 
-                 * 
+                 * Si arriva qui quando la richiesta non è un elenco e checkModalitaModifica() ha verificato che la riga
+                 * sia nuova oppure che l'account abbia i diritti su quella esistente. Il lavoro procede per passi:
+                 * inclusione dei controller before, lettura della riga com'era prima (per PUT, REPLACE, UPDATE e
+                 * DELETE con id), composizione della query in base al metodo, inclusione dei controller append,
+                 * esecuzione della query, traduzione degli errori MySQL in stato, lettura della riga com'è dopo e
+                 * confronto prima/dopo (il cui esito finisce in $comparison, con i valori ROW_CREATED, ROW_MODIFIED e
+                 * ROW_UNMODIFIED), inclusione dei controller after, elaborazione dei sottomoduli, inclusione dei
+                 * controller finally e integrazione finale del blocco dati.
+                 *
+                 * Il confronto prima/dopo esclude i campi id_account_aggiornamento e timestamp_aggiornamento, che
+                 * cambiano a ogni salvataggio. Un metodo non riconosciuto, o $a svuotato da un controller o dalla
+                 * guardia anti-riga-vuota più sotto, fa saltare composizione ed esecuzione della query senza errori.
+                 *
                  */
 
                 // log
@@ -1006,11 +1174,22 @@
                 /**
                  * gestione dei sotto moduli
                  * -------------------------
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
+                 * I sottomoduli messi da parte in $s all'inizio vengono reintegrati nel blocco dati, e poi, a meno che
+                 * non sia stata richiesta la visualizzazione forzata (__forced_view__), elaborati con una chiamata
+                 * ricorsiva della controller() per ciascuna riga:
+                 *
+                 * - in scrittura (POST, PUT, REPLACE, UPDATE) ogni riga di ogni sottomodulo presente nel blocco dati
+                 *   viene passata alla controller() con lo stesso metodo, con l'entità pari al nome del sottomodulo e
+                 *   con l'id della riga corrente come id padre, da usare con il valore speciale __parent_id__;
+                 * - in lettura (GET con id nei campi) la controller() cerca in information_schema le tabelle che hanno
+                 *   una chiave esterna verso l'entità corrente, escluse quelle il cui vincolo termina in _nofollow,
+                 *   legge gli id delle righe collegate (ordinate secondo l'eventuale indice SORTING) e chiama sé stessa
+                 *   in GET per ciascuna, riempiendo $d[ <tabella figlia> ][ <indice> ]; se una tabella figlia ha più
+                 *   di 10 righe o richiede più di 1,5 secondi viene scritta una riga nel log speed.
+                 *
+                 * La DELETE non viene propagata ai sottomoduli da questa funzione: cosa succede alle righe collegate
+                 * dipende dai vincoli di chiave esterna definiti sul database.
+                 *
                  */
 
                 // reintegrazione dei sottomoduli
@@ -1144,12 +1323,15 @@
                 /**
                  * operazioni finali
                  * -----------------
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
+                 * Se è stato richiesto il reset del blocco dati (con __reset__, o implicitamente con la DELETE) il blocco
+                 * viene salvato in $_SESSION['__latest__'][ $t ], così che la pagina possa ancora mostrare cosa è stato
+                 * appena elaborato, e poi svuotato lasciando solo la chiave __reset__ a 1.
+                 *
+                 * Altrimenti, per GET, POST, PUT, REPLACE e UPDATE, la riga viene riletta per id dalla vista dell'entità
+                 * e unita al blocco dati, in modo che il chiamante riceva anche i campi calcolati dalla vista (ad
+                 * esempio __label__); i valori già presenti nel blocco dati prevalgono su quelli letti. Se la lettura
+                 * non trova niente il blocco dati resta com'è.
+                 *
                  */
 
                 // svuotamento o integrazione del blocco dati
@@ -1246,7 +1428,7 @@
 
             } else {
 
-                // ...
+                // log dei diritti insufficienti sulla riga ( lo stato non viene impostato, vedi il TODO nel docblock )
                 logWrite("diritti INSUFFICIENTI per $t/$a - " . $d['id'], 'controller');
 
             }
@@ -1270,10 +1452,25 @@
     }
 
     /**
-     * 
-     * 
-     * 
-     * 
+     * FUNZIONI DI VERIFICA
+     */
+
+    /**
+     * verifica se una chiave di $_REQUEST è un blocco dati da elaborare
+     *
+     * Questa funzione è usata da _src/_config/_750.controller.php per decidere quali array di $_REQUEST passare alla
+     * controller(): restituisce true per ogni chiave che non comincia con il doppio underscore (il nome di
+     * un'entità) e per le chiavi che cominciano con __report, cioè le entità di report, mentre restituisce false
+     * per le altre chiavi speciali (__info__, __err__, __view__...). Una chiave vuota o di un solo carattere non
+     * comincia con __ e quindi restituisce true.
+     *
+     * NOTA il ramo strlen( $k ) < 2 non viene mai raggiunto, perché una chiave così corta non comincia con __ ed
+     * è già stata accettata dalla prima condizione
+     *
+     * @param       string      $k      la chiave di $_REQUEST da verificare
+     *
+     * @return      bool                true se la chiave è un blocco dati da elaborare, false altrimenti
+     *
      */
     function checkNomeBloccoDati( $k ) {
 
@@ -1288,11 +1485,19 @@
     }
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * 
+     * verifica se la richiesta va trattata in modalità view
+     *
+     * Questa funzione restituisce true se il metodo è esattamente METHOD_GET (il confronto è stretto e sensibile
+     * alle maiuscole) e il blocco dati non ha la chiave id, oppure se è stata richiesta esplicitamente la modalità
+     * view; in ogni altro caso restituisce false e la controller() prova la modalità modifica. Basta la presenza
+     * della chiave id, anche con valore vuoto, per escludere la modalità view.
+     *
+     * @param       string      $a      il metodo della richiesta
+     * @param       array       $d      il blocco dati
+     * @param       bool        $vm     true se è stata richiesta esplicitamente la modalità view (__view_mode__)
+     *
+     * @return      bool                true se la richiesta va trattata in modalità view, false altrimenti
+     *
      */
     function checkModalitaVisualizzazione( $a, $d, $vm ) {
 
@@ -1305,11 +1510,25 @@
     }
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * 
+     * verifica se la richiesta può essere trattata in modalità modifica
+     *
+     * Questa funzione restituisce true se il blocco dati non ha un id valorizzato (si tratta quindi di una riga
+     * nuova, per cui bastano i permessi sull'entità già verificati dalla controller()), oppure se l'account ha i
+     * diritti sulla riga esistente secondo getAclRights(), oppure se il blocco dati porta una firma di importazione
+     * valida secondo checkFirmaImportazione(); altrimenti restituisce false.
+     *
+     * NOTA $i è passato per valore, per cui le eventuali modifiche fatte da getAclRights() non tornano alla
+     * controller(); inoltre $pi viene passato a getAclRights() come quinto argomento, ma quella funzione ne
+     * dichiara solo quattro e lo ignora
+     *
+     * @param       array       $d      il blocco dati
+     * @param       string      $t      il nome dell'entità
+     * @param       string      $a      il metodo della richiesta
+     * @param       array       $i      l'array delle informazioni
+     * @param       array       $pi     ignorato (vedi la nota sopra)
+     *
+     * @return      bool                true se la richiesta può essere trattata in modalità modifica, false altrimenti
+     *
      */
     function checkModalitaModifica( $d, $t, $a, $i, $pi ) {
 
@@ -1322,7 +1541,24 @@
     }
 
     /**
-     * TODO documentare
+     * verifica se un campo di una tabella è di tipo numerico
+     *
+     * Questa funzione è usata dalla ricerca della modalità view della controller() per decidere se cercare un termine
+     * in un campo con = (campi numerici) o con LIKE (tutti gli altri). Il campo può essere passato con il prefisso
+     * della tabella (tabella.campo), che viene tolto; il tipo viene letto da INFORMATION_SCHEMA.COLUMNS del database
+     * corrente con una query in cache, e il campo è considerato numerico se il tipo è int, tinyint, smallint,
+     * mediumint, bigint, decimal, float, double o bit. Se la tabella o il campo non esistono restituisce false.
+     *
+     * NOTA la controller() le passa il nome della tabella $t e non quello della vista su cui cerca, per cui un campo
+     * che esiste solo nella vista risulta non numerico e viene cercato con LIKE; l'array $textTypes non viene usato
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       mysqli      $c      la connessione al database
+     * @param       string      $table  il nome della tabella
+     * @param       string      $field  il nome del campo, eventualmente preceduto da tabella e punto
+     *
+     * @return      bool                true se il campo è di tipo numerico, false altrimenti
+     *
      */
     function isFieldNumeric( $m, $c, $table, $field ) {
 

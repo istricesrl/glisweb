@@ -1,23 +1,156 @@
 <?php
 
     /**
+     * libreria per l'integrazione con il servizio di fatturazione elettronica Archivium
      *
+     * Questa libreria contiene le funzioni che dialogano con le API REST di Archivium, l'intermediario usato dal
+     * framework per l'invio delle fatture elettroniche attive allo SDI e per lo scarico delle fatture passive e
+     * delle notifiche, e quelle che registrano nel database i dati scaricati.
      *
+     * introduzione
+     * ============
+     * Tutte le chiamate usano il profilo Archivium attivo per lo stato corrente del sito, $cf['archivium']['profile'],
+     * dichiarato in _src/_config/_560.archivium.php e collegato al profilo corrente in _src/_config/_565.archivium.php;
+     * del profilo vengono usate le chiavi:
      *
+     * chiave           | dettagli
+     * -----------------|-----------------------------------------------------------------------
+     * url              | l'URL base delle API Archivium, a cui viene accodato l'endpoint
+     * id               | l'identificativo dell'account Archivium
+     * apikey           | la chiave API dell'account
      *
+     * L'autenticazione non passa per header ma è incorporata nel percorso dell'endpoint, nella forma
+     * <url>Admin/<id>/<apikey>/... per le funzioni di amministrazione delle aziende e <url>ISC/<id>/<apikey>/... per
+     * quelle di fatturazione. Le chiamate sono eseguite con restCall() e la risposta JSON viene restituita decodificata
+     * in array associativo; nessuna funzione verifica che il profilo esista, per cui senza configurazione le chiamate
+     * partono verso un URL incompleto e falliscono.
      *
+     * Sulle aziende va tenuta presente la distinzione fra i due identificativi: l'ID Archivium dell'azienda (il codice
+     * assegnato da Archivium, salvato in anagrafica.codice_archivium) e l'ID dell'anagrafica nel database del framework.
+     * Allo stesso modo documenti.codice_archivium conserva l'ID Archivium delle fatture e attivita.codice_archivium
+     * quello delle notifiche. I parametri di ciascuna funzione dicono quale dei due si aspetta.
      *
+     * Le funzioni sono chiamate dai task e dai job del framework e del modulo 0400.documenti, ad esempio
+     * _src/_api/_task/_anagrafica.attivazione.archivium.php, _mod/_0400.documenti/_src/_api/_task/_fattura.invia.sdi.php,
+     * _mod/_0400.documenti/_src/_api/_job/_download.fe.passive.php e _mod/_0400.documenti/_src/_api/_job/_download.note.attive.php.
      *
+     * i parametri di ricerca delle liste
+     * ----------------------------------
+     * Gli endpoint list di Archivium accettano quattro parametri di ricerca posizionali, accodati al percorso
+     * separati da slash nell'ordine limit/orderby/wildcard/params; il loro significato è descritto nella NOTA che
+     * segue archiviumGetListaAziende(). Le funzioni di lista li ricevono come argomenti $limit, $order, $wildcard e
+     * $params, ma non tutte li usano: si vedano i singoli docblock.
      *
-     * @todo documentare
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti.
+     *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le
+     * analizzeremo nel dettaglio.
+     *
+     * funzioni per la gestione delle aziende
+     * --------------------------------------
+     * Le funzioni in questo gruppo servono per gestire le aziende registrate sull'account Archivium.
+     *
+     * funzione                             | descrizione
+     * -------------------------------------|---------------------------------------------------------------
+     * archiviumGetListaAziende()           | restituisce l'elenco delle aziende registrate su Archivium
+     * archiviumGetDettagliAzienda()        | restituisce i dettagli di un'azienda registrata su Archivium
+     * archiviumPostInsertAzienda()         | registra su Archivium un'anagrafica del database come nuova azienda
+     * archiviumPostAggiornamentoAzienda()  | aggiorna su Archivium i dati di un'azienda (non implementata)
+     *
+     * funzioni per le fatture elettroniche attive
+     * -------------------------------------------
+     * Le funzioni in questo gruppo servono per inviare le fatture emesse e consultarne lo stato.
+     *
+     * funzione                             | descrizione
+     * -------------------------------------|---------------------------------------------------------------
+     * archiviumGetListaFeAttive()          | restituisce l'elenco delle fatture attive di un'azienda
+     * archiviumGetInfoFeAttiva()           | recupera le informazioni su una fattura attiva (non implementata)
+     * archiviumPostInvioFeAttiva()         | invia una fattura elettronica attiva ad Archivium
+     *
+     * funzioni per le fatture elettroniche passive
+     * --------------------------------------------
+     * Le funzioni in questo gruppo servono per scaricare le fatture ricevute e registrarle nel database.
+     *
+     * funzione                             | descrizione
+     * -------------------------------------|---------------------------------------------------------------
+     * archiviumGetListaFePassive()         | restituisce l'elenco delle fatture passive di un'azienda
+     * archiviumGetInfoFePassiva()          | restituisce le informazioni su una fattura passiva
+     * archiviumGetDownloadFePassiva()      | scarica il contenuto di una fattura passiva
+     * archiviumRegistraFePassive()         | registra nel database le fatture passive di un mese
+     * archiviumRegistraFePassiva()         | registra nel database una fattura passiva
+     *
+     * funzioni per le notifiche SDI
+     * -----------------------------
+     * Le funzioni in questo gruppo servono per scaricare le notifiche dello SDI relative alle fatture attive (che
+     * Archivium chiama note attive) e registrarle come attività sui documenti.
+     *
+     * funzione                             | descrizione
+     * -------------------------------------|---------------------------------------------------------------
+     * archiviumGetListaNoteAttive()        | restituisce l'elenco delle notifiche SDI delle fatture attive di un'azienda
+     * archiviumRegistraNoteAttive()        | registra nel database le notifiche SDI di un mese
+     * archiviumRegistraNotaAttiva()        | registra nel database una notifica SDI come attività
+     * archiviumGetInfoNotaAttiva()         | restituisce le informazioni su una notifica SDI
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
+     *
+     * funzione                             | libreria di appartenenza
+     * -------------------------------------|---------------------------------------------------------------
+     * restCall()                           | _src/_lib/_rest.tools.php
+     * mysqlQuery()                         | _src/_lib/_mysql.tools.php
+     * mysqlSelectRow()                     | _src/_lib/_mysql.tools.php
+     * mysqlSelectValue()                   | _src/_lib/_mysql.tools.php
+     * mysqlSelectColumn()                  | _src/_lib/_mysql.tools.php
+     * mysqlInsertRow()                     | _src/_lib/_mysql.tools.php
+     * is_associative_array()               | _src/_lib/_array.tools.php
+     * dieText()                            | _src/_lib/_output.tools.php
+     * logWrite()                           | _src/_lib/_log.utils.php
+     * updateAnagraficaViewStatic()         | modulo anagrafica (_mod/_0010.anagrafica o _mod/_AN000.anagrafica)
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
      * @file
      *
      */
 
     /**
+     * FUNZIONI PER LA GESTIONE DELLE AZIENDE
+     */
+
+    /**
+     * restituisce l'elenco delle aziende registrate su Archivium
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint Admin/.../Enterprises/list e restituisce la risposta decodificata, cioè
+     * l'elenco delle aziende registrate sull'account Archivium del profilo corrente. In caso di errore della chiamata
+     * restituisce quello che restCall() ottiene decodificando la risposta, tipicamente NULL.
+     *
+     * TODO i parametri di ricerca $limit, $order, $wildcard e $params sono accettati ma non vengono usati: l'endpoint
+     * viene sempre chiamato senza filtri (archiviumGetListaFePassive() mostra come accodarli)
+     *
+     * @param       int         $limit      il numero massimo di record (attualmente ignorato)
+     * @param       string      $order      il criterio di ordinamento, ad es. Data=DESC (attualmente ignorato)
+     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE (attualmente ignorato)
+     * @param       string      $params     il criterio di ricerca colonna=valore (attualmente ignorato)
+     *
+     * @return      mixed                   l'array delle aziende restituito da Archivium, o NULL in caso di errore
+     *
      */
     function archiviumGetListaAziende( $limit = NULL, $order = NULL, $wildcard = NULL, $params = NULL ) {
 
@@ -70,11 +203,19 @@
      */
 
     /**
+     * restituisce i dettagli di un'azienda registrata su Archivium
+     *
+     * Questa funzione chiama l'endpoint Admin/.../Enterprises/view/<idAzienda> e restituisce la risposta
+     * decodificata con i dati dell'azienda. Il valore di $idAzienda non viene verificato: se è vuoto la chiamata
+     * parte comunque verso un endpoint incompleto. In caso di errore restituisce quello che restCall() ottiene
+     * decodificando la risposta, tipicamente NULL.
      *
      * NOTA qui il parametro $idAzienda fa riferimento all'ID Archivium dell'azienda
-     * 
-     * @todo documentare
-     * 
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda (non l'ID dell'anagrafica nel database)
+     *
+     * @return      mixed                   l'array con i dettagli dell'azienda, o NULL in caso di errore
+     *
      */
     function archiviumGetDettagliAzienda( $idAzienda ) {
 
@@ -107,11 +248,25 @@
     }
 
     /**
+     * registra su Archivium un'anagrafica del database come nuova azienda
+     *
+     * Questa funzione legge dal database l'anagrafica indicata, la sua tipologia, l'indirizzo con ruolo di sede
+     * legale (il primo trovato), il comune con provincia e stato, la mail PEC e la prima mail non PEC, compone con
+     * questi dati il modulo richiesto da Archivium (i campi sono descritti nella NOTA che segue la funzione) e lo
+     * invia in POST all'endpoint Admin/.../Enterprises/insert. Il tipo giuridico è F se la tipologia
+     * dell'anagrafica è una persona fisica e G altrimenti: il valore E (ente pubblico) non viene mai inviato. Se
+     * l'anagrafica non ha sede legale, PEC o mail i campi corrispondenti vengono inviati vuoti.
+     *
+     * Se Archivium risponde con esito 200, l'IDAzienda restituito viene salvato in anagrafica.codice_archivium;
+     * altrimenti il database non viene toccato e la risposta non viene loggata.
      *
      * NOTA il parametro $id qui fa riferimento all'ID dell'azienda nel database
-     * 
-     * @todo documentare
-     * 
+     *
+     * @param       int         $id         l'ID dell'anagrafica nel database (non l'ID Archivium)
+     *
+     * @return      mixed                   l'esito restituito da Archivium (200 in caso di successo), o NULL se la
+     *                                      risposta non è decodificabile
+     *
      */
     function archiviumPostInsertAzienda( $id ) {
 
@@ -218,20 +373,49 @@
      */
 
     /**
+     * aggiorna su Archivium i dati di un'azienda (non implementata)
+     *
+     * Questa funzione è predisposta per inviare ad Archivium i dati aggiornati di un'azienda già registrata, ma il
+     * suo corpo è vuoto: non fa nessuna chiamata e restituisce sempre NULL.
      *
      * NOTA il parametro $id qui fa riferimento all'ID dell'azienda nel database
      * mentre $idAzienda fa riferimento all'ID Archivium dell'azienda
-     * 
-     * @todo documentare
-     * 
+     *
+     * @todo implementare la funzione
+     *
+     * @param       int         $id         l'ID dell'anagrafica nel database
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     *
+     * @return      void
+     *
      */
     function archiviumPostAggiornamentoAzienda( $id, $idAzienda ) {
     }
 
     /**
+     * FUNZIONI PER LE FATTURE ELETTRONICHE ATTIVE
+     */
+
+    /**
+     * restituisce l'elenco delle fatture attive di un'azienda
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../FEAttive/<idAzienda>/list e restituisce l'elenco delle fatture
+     * attive dell'azienda, aggiungendo a ciascun elemento la chiave IDArchiviumAzienda con l'ID Archivium
+     * dell'azienda, così che l'elemento resti identificabile anche fuori dal contesto della chiamata. Se la chiamata
+     * fallisce e la risposta non è un array il ciclo di arricchimento genera un warning e la funzione restituisce
+     * il valore ricevuto, tipicamente NULL.
+     *
+     * TODO i parametri di ricerca $limit, $order, $wildcard e $params sono accettati ma non vengono usati, a
+     * differenza di archiviumGetListaFePassive() che li accoda all'endpoint
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       int         $limit      il numero massimo di record (attualmente ignorato)
+     * @param       string      $order      il criterio di ordinamento (attualmente ignorato)
+     * @param       string      $wildcard   il tipo di ricerca (attualmente ignorato)
+     * @param       string      $params     il criterio di ricerca colonna=valore (attualmente ignorato)
+     *
+     * @return      mixed                   l'array delle fatture attive, o NULL in caso di errore
+     *
      */
     function archiviumGetListaFeAttive( $idAzienda, $limit = NULL, $order = NULL, $wildcard = NULL, $params = NULL  ) {
 
@@ -269,9 +453,18 @@
     }
 
     /**
+     * recupera le informazioni su una fattura attiva (non implementata)
      *
-     * @todo documentare
-     * 
+     * Questa funzione è predisposta per chiamare l'endpoint ISC/.../FEAttive/<idAzienda>/info/<idFattura>/<index>,
+     * ma si ferma alla composizione dell'URL: la chiamata non viene fatta e la funzione restituisce sempre NULL (si
+     * vedano i TODO nel corpo). Per la versione funzionante sulle fatture passive si veda archiviumGetInfoFePassiva().
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       string      $idFattura  l'identificativo della fattura, del tipo indicato da $index
+     * @param       string      $index      il tipo di identificativo passato in $idFattura (default IDArchivium)
+     *
+     * @return      void
+     *
      */
     function archiviumGetInfoFeAttiva( $idAzienda, $idFattura, $index = 'IDArchivium'  ) {
 
@@ -297,9 +490,23 @@
     }
 
     /**
+     * invia una fattura elettronica attiva ad Archivium
      *
-     * @todo documentare
-     * 
+     * Questa funzione invia in POST all'endpoint ISC/.../FEAttive/<idAzienda>/Send/<tipo> il file XML della fattura,
+     * accompagnato dal suo hash SHA-256 (campo File_Hash). Se $idAzienda è vuoto la funzione interrompe l'esecuzione
+     * con dieText(). Se Archivium risponde con esito 200, l'IDArchivium assegnato alla fattura viene salvato in
+     * documenti.codice_archivium per il documento $idFattura; in ogni altro caso la risposta viene scritta nel log
+     * archivium con livello LOG_ERR e la funzione restituisce false. La forma della risposta di successo è riportata
+     * nella NOTA dentro la funzione.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda che emette la fattura
+     * @param       int         $idFattura  l'ID del documento nel database, dove salvare il codice Archivium
+     * @param       string      $xmlFattura il percorso del file XML della fattura da inviare
+     * @param       string      $tipo       il tipo di invio accodato all'endpoint (default XML)
+     * @param       string      $mail       non utilizzato
+     *
+     * @return      mixed                   200 se l'invio è andato a buon fine, false altrimenti
+     *
      */
     function archiviumPostInvioFeAttiva( $idAzienda, $idFattura, $xmlFattura, $tipo = 'XML', $mail = NULL  ) {
 
@@ -361,9 +568,31 @@
     }
 
     /**
+     * FUNZIONI PER LE FATTURE ELETTRONICHE PASSIVE
+     */
+
+    /**
+     * restituisce l'elenco delle fatture passive di un'azienda
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../FEPassive/<idAzienda>/list, accodando i parametri di ricerca non
+     * vuoti uniti da slash, e restituisce l'elenco delle fatture passive dell'azienda aggiungendo a ciascun elemento
+     * la chiave IDArchiviumAzienda con l'ID Archivium dell'azienda. Se tutti i parametri sono vuoti l'endpoint viene
+     * chiamato senza filtri. I chiamanti usano la forma archiviumGetListaFePassive( $azienda, 0, 'ID=ASC', 'RIGHT',
+     * 'DataFattura=' . $anno ), cioè le fatture con data che comincia per l'anno (o per il mese Y-m) indicato.
+     *
+     * NB: i parametri sono posizionali ma i valori vuoti vengono tolti solo in testa e in coda (trim degli slash),
+     * per cui omettere un parametro intermedio produce un doppio slash; il valore 0 di $limit invece viene
+     * accodato. Se la chiamata fallisce e la risposta non è un array il ciclo di arricchimento genera un warning e
+     * la funzione restituisce il valore ricevuto, tipicamente NULL.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       int         $limit      il numero massimo di record
+     * @param       string      $order      il criterio di ordinamento, ad es. ID=ASC
+     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE
+     * @param       string      $params     il criterio di ricerca colonna=valore
+     *
+     * @return      mixed                   l'array delle fatture passive, o NULL in caso di errore
+     *
      */
     function archiviumGetListaFePassive( $idAzienda, $limit = NULL, $order = NULL, $wildcard = NULL, $params = NULL  ) {
 
@@ -404,9 +633,18 @@
     }
 
     /**
+     * restituisce le informazioni su una fattura passiva
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../FEPassive/<idAzienda>/info/<idFattura>/<index> e restituisce la
+     * risposta decodificata con i metadati della fattura (fra cui l'IDArchivium). In caso di errore restituisce
+     * quello che restCall() ottiene decodificando la risposta, tipicamente NULL.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
+     * @param       string      $idFattura  l'identificativo della fattura, del tipo indicato da $index
+     * @param       string      $index      il tipo di identificativo passato in $idFattura (default IDArchivium)
+     *
+     * @return      mixed                   l'array con le informazioni sulla fattura, o NULL in caso di errore
+     *
      */
     function archiviumGetInfoFePassiva( $idAzienda, $idFattura, $index = 'IDArchivium'  ) {
 
@@ -439,9 +677,26 @@
     }
 
     /**
+     * scarica il contenuto di una fattura passiva
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../FEPassive/<idAzienda>/Download/<idFattura>/<index>/<type>, che
+     * restituisce l'XML della fattura; la risposta viene convertita in array da restCall() tramite xml2array() e
+     * conservata anche grezza. Il ciclo di pulizia serve a ricondurre la radice del documento, che nell'XML può avere
+     * un prefisso di namespace (ad es. p:FatturaElettronica), alla chiave FatturaElettronica.
+     *
+     * TODO la condizione strpos( $k, 'FatturaElettronica' ) >= 0 è sempre vera (anche false >= 0 lo è), per cui $fe
+     * prende il valore dell'ultima chiave della risposta qualunque sia il suo nome; funziona finché la radice è
+     * l'unica chiave. Se la risposta è vuota o non è un array, $fe non viene definita e la funzione restituisce
+     * FatturaElettronica a NULL con un warning
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
+     * @param       string      $idFattura  l'identificativo della fattura, del tipo indicato da $index
+     * @param       string      $index      il tipo di identificativo passato in $idFattura (default IDArchivium)
+     * @param       string      $type       il formato da scaricare (default XML)
+     *
+     * @return      array                   un array con la chiave FatturaElettronica (la fattura convertita in array)
+     *                                      e la chiave xml (l'XML grezzo ricevuto)
+     *
      */
     function archiviumGetDownloadFePassiva( $idAzienda, $idFattura, $index = 'IDArchivium', $type = 'XML'  ) {
 
@@ -483,9 +738,20 @@
     }
 
     /**
+     * registra nel database le fatture passive di un mese
      *
-     * @todo documentare
-     * 
+     * Questa funzione scarica con archiviumGetListaFePassive() l'elenco delle fatture passive dell'azienda la cui
+     * DataFattura comincia per $data, e registra ciascuna fattura con archiviumRegistraFePassiva(), unendo a ogni
+     * elemento dell'elenco il risultato della registrazione. Se $data è vuota viene usato il mese corrente. Se la
+     * lista non è un array (errore della chiamata) il ciclo genera un warning e non viene registrato niente.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
+     * @param       string      $data       il prefisso della data delle fatture, nel formato Y-m o Y (default il mese
+     *                                      corrente)
+     *
+     * @return      mixed                   l'elenco delle fatture arricchito con i dati della registrazione, o NULL
+     *                                      in caso di errore
+     *
      */
     function archiviumRegistraFePassive( $idAzienda, $data = NULL ) {
 
@@ -532,9 +798,42 @@
      */
 
     /**
+     * registra nel database una fattura passiva
      *
-     * @todo documentare
-     * 
+     * Questa funzione scarica metadati (archiviumGetInfoFePassiva()) e contenuto (archiviumGetDownloadFePassiva())
+     * della fattura e, se il cessionario/committente ha una denominazione o un nome e cognome, la registra nel
+     * database:
+     *
+     * -# inserisce l'anagrafica del cessionario/committente (l'azienda gestita, $i['idCliente']) e le associa la
+     *    prima categoria con se_gestita = 1;
+     * -# inserisce l'anagrafica del cedente/prestatore (il fornitore, $i['idFornitore']), le associa la prima
+     *    categoria con se_fornitore = 1 e ne aggiorna la vista statica con updateAnagraficaViewStatic();
+     * -# se i metadati contengono l'IDArchivium, inserisce il documento (tipologia ricavata dal TipoDocumento, numero
+     *    e sezionale ricavati dal Numero separato da slash, XML grezzo) e poi le righe in documenti_articoli e i
+     *    pagamenti in pagamenti, riusando nell'ordine gli ID delle righe e dei pagamenti già presenti sul documento;
+     *    per ogni riga il reparto viene cercato in base all'aliquota IVA e creato se manca, per ogni pagamento con
+     *    IBAN l'IBAN viene inserito sul fornitore.
+     *
+     * Tutti gli inserimenti passano per mysqlInsertRow() con id NULL, quindi con INSERT ... ON DUPLICATE KEY UPDATE:
+     * un'anagrafica, un documento o un IBAN già esistenti vengono riconosciuti solo se i dati violano un indice
+     * univoco della tabella, altrimenti viene creata una riga nuova. Se il controllo sul cessionario/committente
+     * fallisce la funzione non scrive niente nel database.
+     *
+     * TODO la variabile $fornitore contiene in realtà l'anagrafica del cessionario/committente, non del fornitore
+     *
+     * TODO partita_iva e codice_fiscale delle anagrafiche vengono entrambi valorizzati con IdFiscaleIVA/IdCodice, mentre
+     * l'XML ha un campo CodiceFiscale distinto; per una persona fisica senza partita IVA il codice fiscale resta vuoto
+     *
+     * TODO il nome del reparto creato usa rtrim( $aliquota, '.0' ), che toglie anche gli zeri della parte intera:
+     * un'aliquota 10.00 produce "REPARTO IVA 1%" e 0.00 produce "REPARTO IVA %"
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
+     * @param       string      $idFattura  l'IDArchivium della fattura passiva
+     *
+     * @return      array                   i dati della fattura (metadati uniti al contenuto scaricato) con in più la
+     *                                      chiave __info__ che contiene gli ID creati (idCliente, idFornitore,
+     *                                      numero, idDocumento), vuota se la fattura non è stata registrata
+     *
      */
     function archiviumRegistraFePassiva( $idAzienda, $idFattura ) {
 
@@ -811,9 +1110,27 @@
     }
 
     /**
+     * FUNZIONI PER LE NOTIFICHE SDI
+     */
+
+    /**
+     * restituisce l'elenco delle notifiche SDI delle fatture attive di un'azienda
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../NOTAttive/<idAzienda>/list, con i parametri di ricerca accodati come
+     * in archiviumGetListaFePassive() (valgono le stesse avvertenze), e restituisce l'elenco delle notifiche ricevute
+     * dallo SDI per le fatture attive dell'azienda, aggiungendo a ciascun elemento la chiave IDArchiviumAzienda.
+     * Parametri e risposta vengono scritti nel log archivium. I chiamanti filtrano per data di inserimento
+     * (DataIns=<anno>) o per fattura (IDArchiviumFE=<codice>). Se la chiamata fallisce e la risposta non è un array
+     * il ciclo di arricchimento genera un warning e la funzione restituisce il valore ricevuto, tipicamente NULL.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       int         $limit      il numero massimo di record
+     * @param       string      $order      il criterio di ordinamento, ad es. ID=ASC
+     * @param       string      $wildcard   il tipo di ricerca, LEFT, RIGHT, BOTH o NONE
+     * @param       string      $params     il criterio di ricerca colonna=valore
+     *
+     * @return      mixed                   l'array delle notifiche, o NULL in caso di errore
+     *
      */
     function archiviumGetListaNoteAttive( $idAzienda, $limit = NULL, $order = NULL, $wildcard = NULL, $params = NULL  ) {
 
@@ -858,9 +1175,20 @@
     }
 
     /**
+     * registra nel database le notifiche SDI di un mese
      *
-     * @todo documentare
-     * 
+     * Questa funzione scarica con archiviumGetListaNoteAttive() l'elenco delle notifiche la cui DataIns comincia per
+     * $data e registra ciascuna notifica con archiviumRegistraNotaAttiva(), unendo a ogni elemento dell'elenco il
+     * risultato della registrazione. Se $data è vuota viene usato il mese corrente. Se la lista non è un array
+     * (errore della chiamata) il ciclo genera un warning e non viene registrato niente.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       string      $data       il prefisso della data di inserimento delle notifiche, nel formato Y-m o
+     *                                      Y (default il mese corrente)
+     *
+     * @return      mixed                   l'elenco delle notifiche arricchito con i dati della registrazione, o NULL
+     *                                      in caso di errore
+     *
      */
     function archiviumRegistraNoteAttive( $idAzienda, $data = NULL ) {
 
@@ -888,9 +1216,22 @@
     }
 
     /**
+     * registra nel database una notifica SDI come attività
      *
-     * @todo documentare
-     * 
+     * Questa funzione completa la notifica ricevuta dall'elenco con le informazioni di archiviumGetInfoNotaAttiva(),
+     * cerca la tipologia di attività il cui codice è uguale al TipoNotifica (i valori possibili sono nella NOTA che
+     * segue la funzione) e il documento il cui codice_archivium è uguale a IDArchiviumFE, e se trova entrambi
+     * inserisce un'attività sul documento con data e ora di DataIns, il nome composto da EsitoNotifica e
+     * DescrizioneEsito e il codice_archivium della notifica. Se la tipologia o il documento mancano la notifica non
+     * viene registrata e non viene segnalato niente, a parte il log archivium della notifica ricevuta.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       array       $nota       l'elemento dell'elenco restituito da archiviumGetListaNoteAttive(), che deve
+     *                                      contenere almeno la chiave IDArchivium
+     *
+     * @return      array                   i dati della notifica con in più la chiave __info__, che contiene l'ID
+     *                                      dell'attività inserita oppure un array vuoto se non è stata registrata
+     *
      */
     function archiviumRegistraNotaAttiva( $idAzienda, $nota ) {
 
@@ -973,9 +1314,19 @@
      */
 
     /**
+     * restituisce le informazioni su una notifica SDI
      *
-     * @todo documentare
-     * 
+     * Questa funzione chiama l'endpoint ISC/.../NOTAttive/<idAzienda>/info/<idNota>/<index> e restituisce la
+     * risposta decodificata con i dettagli della notifica, fra cui TipoNotifica, EsitoNotifica, DescrizioneEsito e
+     * IDArchiviumFE; la risposta viene anche scritta nel log archivium. In caso di errore restituisce quello che
+     * restCall() ottiene decodificando la risposta, tipicamente NULL.
+     *
+     * @param       string      $idAzienda  l'ID Archivium dell'azienda
+     * @param       string      $idNota     l'identificativo della notifica, del tipo indicato da $index
+     * @param       string      $index      il tipo di identificativo passato in $idNota (default IDArchivium)
+     *
+     * @return      mixed                   l'array con le informazioni sulla notifica, o NULL in caso di errore
+     *
      */
     function archiviumGetInfoNotaAttiva( $idAzienda, $idNota, $index = 'IDArchivium'  ) {
 
