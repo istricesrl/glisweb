@@ -363,20 +363,13 @@
      *
      * Mittente, oggetto, testo e nomi e indirizzi di tutti i destinatari passano da Twig con i dati $d, per cui possono contenere
      * dei placeholder; per convenzione $d contiene 'ct' => $ct e 'dt' => \<i dati della mail\>. Le chiavi to, to_cc e to_bcc
-     * del template vengono considerate solo se il loro primo elemento non è vuoto. Dopo il rendering vengono scartati i
-     * destinatari con indirizzo vuoto, e nel corpo i percorsi assoluti degli attributi src vengono trasformati in URL completi
-     * con path2url().
+     * del template vengono considerate solo se il loro primo elemento non è vuoto. In coda vanno solo i destinatari elaborati,
+     * mai la forma con i placeholder. Dopo il rendering vengono scartati i destinatari con indirizzo vuoto, e nel corpo i
+     * percorsi assoluti degli attributi src vengono trasformati in URL completi con path2url().
      *
      * Se il template non ha il mittente per la lingua richiesta ( anche perché la lingua manca del tutto ), oppure se Twig
      * solleva un'eccezione, la funzione interrompe l'esecuzione con die(). Se il tipo del template non è supportato l'errore
      * viene loggato e, non essendoci destinatari, la funzione restituisce null.
-     *
-     * TODO i destinatari passati in $to vengono copiati in $destinatari prima del rendering, e il rendering aggiunge le versioni
-     * elaborate accanto a quelle originali: se un nome o un indirizzo passato contiene un placeholder, in coda finiscono sia
-     * la versione con il placeholder sia quella elaborata. Lo stesso vale per CC e BCC.
-     *
-     * TODO nel catch print_r( $t ) senza il secondo parametro stampa l'array direttamente e restituisce true, quindi fra i tag
-     * pre compare solo 1.
      *
      * @param       object      $c                  la connessione al database
      * @param       array       $t                  il template della mail
@@ -449,9 +442,11 @@
                     $allegati    = array_merge($allegati, ((isset($attach[$l])) ? $attach[$l] : array()));
 
                     // TODO implementare la stessa cosa per i destinatari CC e BCC
-                    $destinatari = $to;
-                    $destinatari_cc = $to_cc;
-                    $destinatari_bcc = $to_bcc;
+                    // NOTA i destinatari partono vuoti e si riempiono solo con le versioni elaborate da Twig qui sotto: copiando
+                    // $to, $to_cc e $to_bcc in coda finiva anche la forma con i placeholder ( 2026-09-24 )
+                    $destinatari = array();
+                    $destinatari_cc = array();
+                    $destinatari_bcc = array();
 
                     #print_r($corpo );
                     // se è definito nel template imposto il destinatario
@@ -523,7 +518,7 @@
                     // TODO
 
                 } catch (\Exception $e) {
-                    echo '<pre>' . print_r($t) . '</pre>';
+                    echo '<pre>' . print_r($t, true) . '</pre>';
                     die($e->getMessage());
                 }
 
