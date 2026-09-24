@@ -27,11 +27,16 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * jsonCheck()                      | verifica se una stringa contiene JSON valido
-     * jsonValidate()                   | decodifica una stringa JSON interrompendo lo script in caso di errore
+     * jsonValidate()                   | decodifica una stringa JSON scrivendo nel log l'eventuale errore
      *
      * dipendenze
      * ==========
-     * Questa libreria non ha dipendenze da altre librerie del framework; utilizza soltanto le funzioni native di PHP.
+     * Questa libreria non ha dipendenze da altre librerie del framework; oltre alle funzioni native di PHP richiede
+     * soltanto la seguente funzione:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logger()                         | core
      *
      * changelog
      * =========
@@ -70,19 +75,20 @@ function jsonCheck($string) {
 }
 
     /**
-     * decodifica una stringa JSON interrompendo lo script in caso di errore
+     * decodifica una stringa JSON scrivendo nel log l'eventuale errore
      *
      * Questa funzione decodifica la stringa con json_decode() (gli oggetti JSON diventano quindi oggetti stdClass e non
-     * array associativi) e ne restituisce il risultato; se la decodifica fallisce NON restituisce un valore di errore ma
-     * termina l'esecuzione dello script con exit(), stampando il messaggio in inglese corrispondente al codice di
-     * json_last_error(). Una stringa vuota è considerata errore di sintassi e quindi termina lo script.
+     * array associativi) e ne restituisce il risultato; se la decodifica fallisce scrive nel log json, a livello LOG_ERR,
+     * il messaggio in inglese corrispondente al codice di json_last_error() e restituisce false. Una stringa vuota è
+     * considerata errore di sintassi. Poiché anche la stringa 'false' decodificata vale false, per distinguere i due casi
+     * si usi jsonCheck().
      *
-     * TODO terminare lo script con exit() da una funzione di libreria è drastico: valutare se lanciare un'eccezione
-     * o restituire un valore di errore, come suggerisce anche il commento originale nel corpo
+     * NB: fino al 2026-09-24 in caso di errore la funzione terminava lo script con exit() stampando il messaggio; nel
+     * framework non ha chiamanti, e una funzione di libreria non deve decidere di fermare chi la chiama.
      *
      * @param       string      $string     la stringa JSON da decodificare
      *
-     * @return      mixed                   il valore decodificato (in caso di errore la funzione non ritorna)
+     * @return      mixed                   il valore decodificato, oppure false se la decodifica non è riuscita
      *
      */
 function jsonValidate($string)
@@ -128,8 +134,9 @@ function jsonValidate($string)
     }
 
     if ($error !== '') {
-        // throw the Exception or exit // or whatever :)
-        exit($error);
+        // scrivo l'errore nel log e restituisco false invece di terminare lo script
+        logger('errore nella decodifica JSON: ' . $error, 'json', LOG_ERR);
+        return false;
     }
 
     // everything is OK
