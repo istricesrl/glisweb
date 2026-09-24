@@ -801,8 +801,8 @@
      * registra nel database una fattura passiva
      *
      * Questa funzione scarica metadati (archiviumGetInfoFePassiva()) e contenuto (archiviumGetDownloadFePassiva())
-     * della fattura e, se il cessionario/committente ha una denominazione o un nome e cognome, la registra nel
-     * database:
+     * della fattura e, se sia il cessionario/committente sia il cedente/prestatore hanno una denominazione o un nome e
+     * cognome, la registra nel database:
      *
      * -# inserisce l'anagrafica del cessionario/committente (l'azienda gestita, $i['idCliente']) e le associa la
      *    prima categoria con se_gestita = 1;
@@ -817,10 +817,8 @@
      *
      * Tutti gli inserimenti passano per mysqlInsertRow() con id NULL, quindi con INSERT ... ON DUPLICATE KEY UPDATE:
      * un'anagrafica, un documento o un IBAN già esistenti vengono riconosciuti solo se i dati violano un indice
-     * univoco della tabella, altrimenti viene creata una riga nuova. Se il controllo sul cessionario/committente
+     * univoco della tabella, altrimenti viene creata una riga nuova. Se il controllo su una delle due anagrafiche
      * fallisce la funzione non scrive niente nel database.
-     *
-     * TODO la variabile $fornitore contiene in realtà l'anagrafica del cessionario/committente, non del fornitore
      *
      * TODO partita_iva e codice_fiscale delle anagrafiche vengono entrambi valorizzati con IdFiscaleIVA/IdCodice, mentre
      * l'XML ha un campo CodiceFiscale distinto; per una persona fisica senza partita IVA il codice fiscale resta vuoto.
@@ -861,13 +859,18 @@
         // print_r( $d );
         // print_r( $f );
 
-        // verifico la validità dell'anagrafica
-        $fornitore = $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica'];
+        // verifico la validità delle anagrafiche
+        // NB: nella fattura passiva il fornitore è il cedente/prestatore e il cliente ( l'azienda gestita ) è il
+        // cessionario/committente; prima si controllava solo il cessionario, chiamandolo fornitore, mentre la
+        // funzione inserisce tutti e due e il tracciato FatturaPA li rende entrambi obbligatori ( 2026-09-24 )
+        $cliente = $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica'];
+        $fornitore = $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica'];
 
         // controllo formale
-        if( ( isset( $fornitore['Denominazione']['#'] ) && ! empty( $fornitore['Denominazione']['#'] ) ) || ( isset( $fornitore['Nome']['#'] ) && isset( $fornitore['Cognome']['#'] ) && ! empty( $fornitore['Nome']['#'] . $fornitore['Cognome']['#'] ) ) ) {
+        if( ( ( isset( $cliente['Denominazione']['#'] ) && ! empty( $cliente['Denominazione']['#'] ) ) || ( isset( $cliente['Nome']['#'] ) && isset( $cliente['Cognome']['#'] ) && ! empty( $cliente['Nome']['#'] . $cliente['Cognome']['#'] ) ) ) &&
+            ( ( isset( $fornitore['Denominazione']['#'] ) && ! empty( $fornitore['Denominazione']['#'] ) ) || ( isset( $fornitore['Nome']['#'] ) && isset( $fornitore['Cognome']['#'] ) && ! empty( $fornitore['Nome']['#'] . $fornitore['Cognome']['#'] ) ) ) ) {
 
-            // cerco o creo il fornitore
+            // cerco o creo il cliente
             if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
                 $i['idCliente'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
@@ -905,7 +908,7 @@
                 'anagrafica_categorie'
             );
 
-            // cerco o creo il destinatario
+            // cerco o creo il fornitore
             if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
                 $i['idFornitore'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
