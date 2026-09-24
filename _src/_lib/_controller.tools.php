@@ -177,10 +177,6 @@
      *
      * TODO nel ramo dei diritti insufficienti sulla riga lo stato restituito non segnala il rifiuto (vedi sopra)
      *
-     * TODO in modalità view, se la tabella ha le ACL e $d contiene anche dei campi di filtro ($ks non vuoto), i valori
-     * di $vs non sono nell'ordine dei segnaposto: il ? della LEFT JOIN su account_gruppi precede nella query quelli
-     * della WHERE sui campi, ma il suo valore viene accodato dopo
-     *
      * TODO in modalità view, una __search__ senza __fields__ fatta solo di parole più corte di tre caratteri lascia
      * $cond non definito, e la WHERE riceve implode() di un valore non array
      *
@@ -553,7 +549,10 @@
                     // $_SESSION['account']['id'].
                     $q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_account = " . ( (int) $aclId ) . " AND ( account_gruppi.id_gruppo = $aclTb.id_gruppo OR gruppi_path_check( $aclTb.id_gruppo, account_gruppi.id_gruppo ) OR $aclTb.id_account = ? ) )";
                     $whr[] = "( account_gruppi.id_account = ? OR $t$rm.id_account_inserimento = ? )";
-                    $vs[] = array('s' => $aclId);
+                    // NOTA il valore per il ? della JOIN va in TESTA a $vs, perché nella query quel ? precede tutti
+                    // quelli della WHERE, compresi i filtri sui campi di $d già accodati sopra; accodandolo, con $d
+                    // non vuoto i valori finivano spostati di un posto rispetto ai segnaposto ( corretto il 2026-09-24 )
+                    array_unshift( $vs, array('s' => $aclId) );
                     $vs[] = array('s' => $aclId);
                     $vs[] = array('s' => $aclId);
                     $i['__group__'] = array($t . $rm . '.id');
