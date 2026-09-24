@@ -811,8 +811,9 @@
      * -# se i metadati contengono l'IDArchivium, inserisce il documento (tipologia ricavata dal TipoDocumento, numero
      *    e sezionale ricavati dal Numero separato da slash, XML grezzo) e poi le righe in documenti_articoli e i
      *    pagamenti in pagamenti, riusando nell'ordine gli ID delle righe e dei pagamenti già presenti sul documento;
-     *    per ogni riga il reparto viene cercato in base all'aliquota IVA e creato se manca, per ogni pagamento con
-     *    IBAN l'IBAN viene inserito sul fornitore.
+     *    per ogni riga il reparto viene cercato in base all'aliquota IVA e creato se manca, con il nome "REPARTO IVA
+     *    <aliquota>%" e l'aliquota senza zeri decimali superflui ( 10.00 diventa 10, 5.50 diventa 5.5 ), per ogni
+     *    pagamento con IBAN l'IBAN viene inserito sul fornitore.
      *
      * Tutti gli inserimenti passano per mysqlInsertRow() con id NULL, quindi con INSERT ... ON DUPLICATE KEY UPDATE:
      * un'anagrafica, un documento o un IBAN già esistenti vengono riconosciuti solo se i dati violano un indice
@@ -823,9 +824,6 @@
      *
      * TODO partita_iva e codice_fiscale delle anagrafiche vengono entrambi valorizzati con IdFiscaleIVA/IdCodice, mentre
      * l'XML ha un campo CodiceFiscale distinto; per una persona fisica senza partita IVA il codice fiscale resta vuoto
-     *
-     * TODO il nome del reparto creato usa rtrim( $aliquota, '.0' ), che toglie anche gli zeri della parte intera:
-     * un'aliquota 10.00 produce "REPARTO IVA 1%" e 0.00 produce "REPARTO IVA %"
      *
      * @param       string      $idAzienda  l'ID Archivium dell'azienda destinataria
      * @param       string      $idFattura  l'IDArchivium della fattura passiva
@@ -1007,11 +1005,13 @@
                                 array( array( 's' => $row['AliquotaIVA']['#'] ) )
                             );
 
+                            // NB: floatval() toglie gli zeri decimali superflui ( 10.00 -> 10, 5.50 -> 5.5, 0.00 -> 0 ); il
+                            // rtrim( $aliquota, '.0' ) usato prima toglieva anche quelli della parte intera ( 2026-09-24 )
                             $idReparto = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
                                     'id' => NULL,
-                                    'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
+                                    'nome' => 'REPARTO IVA ' . floatval( $row['AliquotaIVA']['#'] ) . '%',
                                     'id_iva' => $idIva
                                 ),
                                 'reparti'
