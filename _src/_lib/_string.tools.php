@@ -22,8 +22,8 @@
      * costante             | spiegazione
      * ---------------------|--------------------------------------------------------------
      * CUT_CENTER           | taglia la stringa al centro, conservandone l'inizio e la fine
-     * CUT_RIGHT            | taglia la stringa a destra ( non ancora implementata in riduciStringa() )
-     * CUT_LEFT             | taglia la stringa a sinistra ( non ancora implementata in riduciStringa() )
+     * CUT_RIGHT            | taglia la stringa a destra, conservandone l'inizio
+     * CUT_LEFT             | taglia la stringa a sinistra, conservandone la fine
      *
      * funzioni
      * ========
@@ -367,37 +367,52 @@
      * riduce una stringa alla lunghezza data sostituendo la parte tagliata con un segnaposto
      *
      * Questa funzione accorcia una stringa inserendo al posto della parte eliminata il segnaposto $c; è usata da
-     * _txt.tools.php per far stare le etichette nella larghezza dei report di testo. È implementata soltanto la modalità
-     * CUT_CENTER, che conserva l'inizio e la fine della stringa: con le altre modalità la funzione restituisce NULL. La
-     * lunghezza della stringa restituita è $l - 1 caratteri ( la stringa "abcdefghijklmnopqrstuvwxyz" ridotta a 10 diventa
-     * "abcd~wxyz" ); i chiamanti di _txt.tools.php tengono conto di questo carattere in meno. Il conteggio è fatto in byte con
-     * strlen() e substr(), per cui i caratteri multibyte possono essere spezzati.
+     * _txt.tools.php per far stare le etichette nella larghezza dei report di testo. La stringa restituita è lunga $l
+     * caratteri, segnaposto compreso; con CUT_CENTER conserva l'inizio e la fine della stringa ( la stringa
+     * "abcdefghijklmnopqrstuvwxyz" ridotta a 10 diventa "abcde~wxyz", e se i caratteri da conservare sono dispari
+     * l'inizio ne ha uno in più della fine ), con CUT_RIGHT conserva l'inizio e taglia a destra ( "abcdefghi~" ), con
+     * CUT_LEFT conserva la fine e taglia a sinistra ( "~rstuvwxyz" ). Una stringa lunga al massimo $l caratteri viene
+     * restituita invariata. Il conteggio è fatto in byte con strlen() e substr(), per cui i caratteri multibyte possono
+     * essere spezzati.
      *
-     * La funzione non controlla se la stringa è già abbastanza corta: con una stringa più corta di $l l'inizio e la fine si
-     * sovrappongono e il risultato contiene parti ripetute ( "abc" ridotta a 10 diventa "abc~abc" ). Va quindi chiamata solo
-     * sulle stringhe più lunghe di $l, come fanno i chiamanti attuali.
-     *
-     * TODO implementare CUT_RIGHT e CUT_LEFT, che oggi restituiscono NULL
-     * TODO restituire la stringa invariata se è già lunga al massimo $l caratteri
+     * NB: fino al 2026-09-24 la stringa restituita era lunga $l - 1 caratteri, una stringa già corta tornava con parti
+     * ripetute ( "abc" ridotta a 10 diventava "abc~abc" ) e CUT_RIGHT e CUT_LEFT restituivano NULL; i chiamanti di
+     * _txt.tools.php, che contavano sul carattere in meno, ora passano $l - 1 e il loro output non è cambiato.
      *
      * @param       string      $s      la stringa da ridurre
-     * @param       int         $l      la lunghezza di riferimento ( la stringa ottenuta è lunga $l - 1 caratteri )
+     * @param       int         $l      la lunghezza massima della stringa ottenuta, segnaposto compreso
      * @param       string      $c      il segnaposto da inserire al posto della parte tagliata ( default '~' )
      * @param       string      $t      la modalità di taglio, una delle costanti CUT_* ( default CUT_CENTER )
      *
-     * @return      string              la stringa ridotta, oppure NULL se la modalità di taglio non è CUT_CENTER
+     * @return      string              la stringa ridotta, oppure NULL se la modalità di taglio non è riconosciuta
      *
      */
     function riduciStringa( $s, $l, $c = '~', $t = CUT_CENTER ) {
 
-        $lm = $l - strlen( $c );
-        $lx = floor( $lm / 2 );
+        // una stringa già abbastanza corta non si tocca
+        if( strlen( $s ) <= $l ) {
+            return $s;
+        }
+
+        // caratteri della stringa da conservare
+        $lm = max( 0, $l - strlen( $c ) );
+
+        // caratteri conservati all'inizio ( con CUT_CENTER )
+        $lx = ceil( $lm / 2 );
 
         switch( $t ) {
             case CUT_CENTER:
-                return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
+                return ( substr( $s, 0, $lx ) . $c . ( ( $lm - $lx > 0 ) ? substr( $s, - ( $lm - $lx ) ) : '' ) );
+                break;
+            case CUT_RIGHT:
+                return ( substr( $s, 0, $lm ) . $c );
+                break;
+            case CUT_LEFT:
+                return ( $c . ( ( $lm > 0 ) ? substr( $s, - $lm ) : '' ) );
                 break;
         }
+
+        return NULL;
 
     }
 

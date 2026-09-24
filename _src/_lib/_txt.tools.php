@@ -232,7 +232,7 @@
 	$m = $w - ( strlen( $d ) );
 
 	if( strlen( $l ) > $m ) {
-	    $l = riduciStringa( $l, $m );
+	    $l = riduciStringa( $l, $m - 1 );
 	}
 
 	$w -= strlen( $l ) + strlen( $d );
@@ -476,7 +476,7 @@ function justify( $str, $maxlen = REPORT_WIDTH) {
     function txt2fixed( $t, $w, $c = ' ', $s = STR_PAD_RIGHT ) {
 
 	if( strlen( $t ) >= $w ) {
-	    $x = riduciStringa( $t, $w );
+	    $x = riduciStringa( $t, $w - 1 );
 	} else {
 	    $x = str_pad( $t, $w - 1, $c, $s );
 	}
