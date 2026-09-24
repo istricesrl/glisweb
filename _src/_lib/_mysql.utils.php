@@ -1401,15 +1401,14 @@
      *
      * Questa funzione chiama unisciOggetti() sulla tabella anagrafica per spostare sull'anagrafica di destinazione tutto
      * quello che punta alla sorgente e cancellare la sorgente, dopodiché aggiorna la vista statica dell'anagrafica di
-     * destinazione e ripulisce quella dalle righe che non esistono più. È usata dal task _src/_api/_task/_anagrafica.deduplica.php.
-     *
-     * NOTA la funzione non restituisce niente, ma il task di deduplica ne assegna il risultato a $status, che quindi vale
-     * NULL.
+     * destinazione e ripulisce quella dalle righe che non esistono più. È usata dal task _src/_api/_task/_anagrafica.deduplica.php,
+     * che ne restituisce il risultato come JSON: per questo l'esito ha la forma dello $status dei task, con un messaggio
+     * sotto 'info' se l'anagrafica sorgente non esiste più ( unione riuscita ) o sotto 'err' se esiste ancora.
      *
      * @param       int         $sorgente       l'ID dell'anagrafica da eliminare
      * @param       int         $destinazione   l'ID dell'anagrafica da conservare
      *
-     * @return      void
+     * @return      array                       l'esito dell'unione, con le chiavi 'info' o 'err'
      *
      */
     function unisciAnagrafiche($sorgente, $destinazione)
@@ -1437,6 +1436,18 @@
 
         // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
         // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+        // esito, nella forma dello $status dei task: unisciOggetti() non segnala i fallimenti, quindi l'unica prova che
+        // l'unione è andata è che la sorgente non esista più ( 2026-09-24 )
+        $status = array();
+        if (mysqlSelectValue($cf['mysql']['connection'], 'SELECT id FROM ' . $tabella . ' WHERE ' . $colonna . ' = ?', array(array('s' => $sorgente)))) {
+            $status['err'][] = 'l\'anagrafica #' . $sorgente . ' esiste ancora, unione con #' . $destinazione . ' non riuscita';
+        } else {
+            $status['info'][] = 'anagrafica #' . $sorgente . ' unita a #' . $destinazione;
+        }
+
+        // restituisco l'esito
+        return $status;
 
     }
 
