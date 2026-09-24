@@ -6,10 +6,10 @@ supporto di tutta la nostra community per aiutarci in questo difficile e importa
 ## supported versions
 Il framework è diviso temporaneamente in due linee, che ricevono entrambe le correzioni di sicurezza:
 
-| linea | repository | release |
+| linea | repository | release corrente |
 |---|---|---|
-| stable | [istricesrl/glisweb](https://github.com/istricesrl/glisweb) | 2.0 |
-| unstable | [istricesrl/glisdev](https://github.com/istricesrl/glisdev) | 2.1 |
+| stable | [istricesrl/glisweb](https://github.com/istricesrl/glisweb) | [`_etc/_current.release`](https://github.com/istricesrl/glisweb/blob/develop/_etc/_current.release) |
+| unstable | [istricesrl/glisdev](https://github.com/istricesrl/glisdev) | [`_etc/_current.release`](https://github.com/istricesrl/glisdev/blob/develop/_etc/_current.release) |
 
 Vi preghiamo di segnalare ogni potenziale problema di sicurezza su qualsiasi linea e qualsiasi versione. Nella
 segnalazione indicate la linea, il ramo e la versione dell'installazione: la versione esatta si legge nella pagina
