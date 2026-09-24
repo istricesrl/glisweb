@@ -1519,14 +1519,16 @@
      * Questa funzione chiama ricorsivamente sé stessa per costruire un elenco di file filtrati tramite la funzione
      * fnmatch() (https://www.php.net/manual/en/function.fnmatch.php).
      * 
-     * Allo stato attuale il risultato della chiamata ricorsiva viene passato ad array_merge() senza assegnarlo, per cui
-     * va perso: la funzione restituisce soltanto i file della cartella $path che corrispondono al filtro, senza quelli
-     * delle sottocartelle, e li restituisce come nomi semplici, senza percorso. I file e le cartelle il cui nome comincia
-     * con un punto vengono ignorati. Se la cartella non si può aprire restituisce false. Nel framework la funzione non ha
-     * chiamanti.
-     * 
-     * TODO il risultato della chiamata ricorsiva va assegnato a $r, altrimenti le sottocartelle non vengono mai considerate
-     * 
+     * La funzione restituisce i file della cartella $path e di tutte le sue sottocartelle il cui nome corrisponde al filtro,
+     * ciascuno con il percorso costruito a partire da $path ( "$path/sotto/file.txt" ), come fa glob(); il filtro si applica
+     * al solo nome del file. I file e le cartelle il cui nome comincia con un punto vengono ignorati, e una sottocartella
+     * che non si può aprire viene saltata. Se la cartella $path non si può aprire restituisce false. Nel framework la
+     * funzione non ha chiamanti.
+     *
+     * NB: fino al 2026-09-24 il risultato della chiamata ricorsiva veniva passato ad array_merge() senza assegnarlo, per
+     * cui le sottocartelle non venivano mai considerate, e i file erano restituiti come nomi semplici, senza percorso;
+     * con le sottocartelle incluse il percorso serve a distinguere file con lo stesso nome in cartelle diverse.
+     *
      * @param       string      $path       il percorso della cartella da esaminare
      * @param       string      $find       il filtro da applicare
      * 
@@ -1557,7 +1559,12 @@
                 if ( is_dir( $rfile ) ) {
 
                     // chiamo ricorsivamente la funzione
-                    array_merge( $r , globRecursive( $rfile , $find ) );
+                    $s = globRecursive( $rfile , $find );
+
+                    // aggiungo i file della sottocartella, se si è potuta aprire
+                    if( is_array( $s ) ) {
+                        $r = array_merge( $r , $s );
+                    }
 
                 } else {
 
@@ -1565,7 +1572,7 @@
                     if( fnmatch( $find, $file ) ) {
 
                         // aggiungo il file all'array
-                        $r[] = $file;
+                        $r[] = $rfile;
 
                     }
 
