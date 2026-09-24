@@ -231,8 +231,7 @@
      * @param       array       $i      l'array delle informazioni (filtri, ordinamenti, paginazione in ingresso;
      *                                  stato, paginatore ed errori in uscita), modificato sul posto
      * @param       array       $pi     passato a checkModalitaModifica() e, nella ricorsione, valorizzato con
-     *                                  $i['__auth__'] del chiamante; getAclRights() però non lo riceve (si veda
-     *                                  checkModalitaModifica())
+     *                                  $i['__auth__'] del chiamante; checkModalitaModifica() però non lo usa
      * @param       array       $ci     riservato e mai letto, si veda la nota sopra
      * @param       array       $timer  l'array del cronometro, per riferimento (tipicamente $cf['speed'])
      *
@@ -1524,22 +1523,23 @@
      * diritti sulla riga esistente secondo getAclRights(), oppure se il blocco dati porta una firma di importazione
      * valida secondo checkFirmaImportazione(); altrimenti restituisce false.
      *
-     * NOTA $i è passato per valore, per cui le eventuali modifiche fatte da getAclRights() non tornano alla
-     * controller(); inoltre $pi viene passato a getAclRights() come quinto argomento, ma quella funzione ne
-     * dichiara solo quattro e lo ignora
+     * L'array delle informazioni $i è passato per riferimento, perché getAclRights() vi scrive in $i['__auth__'] i
+     * diritti letti per la riga, che la controller() passa poi ai sottomoduli; fino al 2026-09-24 era passato per
+     * valore e quei diritti andavano persi. Il parametro $pi resta nella firma ma non viene usato: prima veniva
+     * passato a getAclRights() come quinto argomento, che quella funzione non dichiara.
      *
      * @param       array       $d      il blocco dati
      * @param       string      $t      il nome dell'entità
      * @param       string      $a      il metodo della richiesta
-     * @param       array       $i      l'array delle informazioni
-     * @param       array       $pi     ignorato (vedi la nota sopra)
+     * @param       array       $i      l'array delle informazioni, modificato sul posto da getAclRights()
+     * @param       array       $pi     non usato (vedi sopra)
      *
      * @return      bool                true se la richiesta può essere trattata in modalità modifica, false altrimenti
      *
      */
-    function checkModalitaModifica( $d, $t, $a, $i, $pi ) {
+    function checkModalitaModifica( $d, $t, $a, &$i, $pi ) {
 
-        if(!isset($d['id']) || (getAclRights($t, $a, $d['id'], $i, $pi) != false || checkFirmaImportazione($d, $t) != false)) {
+        if(!isset($d['id']) || (getAclRights($t, $a, $d['id'], $i) != false || checkFirmaImportazione($d, $t) != false)) {
             return true;
         } else {
             return false;
