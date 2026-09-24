@@ -98,10 +98,10 @@
      * NULL serializzati ) vengono ignorati. Il mittente è invece obbligatorio: se il suo indirizzo non è valido la mail non
      * viene inviata e la funzione restituisce false.
      *
-     * La firma DKIM viene applicata se esiste il file etc/secret/\<dominio del mittente\>/dkim.private.pem, con il selettore
-     * fisso glisweb; la passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è ( come stringa, senza gli spazi
-     * e l'a capo finali ), altrimenti si usa $dkim_pasw.
-     * Il parametro $dkim_domain non viene usato: il dominio è sempre quello del mittente.
+     * La firma DKIM viene applicata se esiste il file etc/secret/\<dominio\>/dkim.private.pem, con il selettore fisso glisweb;
+     * il dominio è $dkim_domain se non è vuoto, altrimenti quello del mittente, e con lo stesso dominio si firma ( DKIM_domain ).
+     * La passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è ( come stringa, senza gli spazi e l'a capo
+     * finali ), altrimenti si usa $dkim_pasw.
      *
      * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_CRIT nel canale mail
      * e la funzione restituisce false, e il task della coda rimanda la mail con un tentativo in più; un destinatario, un allegato
@@ -122,7 +122,7 @@
      * @param       string      $user           lo username SMTP ( default NULL, nessuna autenticazione )
      * @param       string      $pasw           la password SMTP ( default NULL )
      * @param       int         $port           la porta del server SMTP ( default 25 )
-     * @param       string      $dkim_domain    il dominio per la firma DKIM ( non utilizzato )
+     * @param       string      $dkim_domain    il dominio per la firma DKIM ( default NULL, il dominio del mittente )
      * @param       string      $dkim_pasw      la passphrase della chiave DKIM, se non c'è il file dkim.password.key ( default NULL )
      *
      * @return      bool                        true se la mail è stata inviata, false se il mittente non è valido o l'invio fallisce
@@ -283,24 +283,28 @@
             }
 
             // DKIM
-            if (! empty($fromDomain)) {
-                if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
-                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readStringFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key', true) : $dkim_pasw;
-                    $mail->DKIM_domain = $fromDomain;
-                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+            // NOTA il dominio della firma è $dkim_domain se il chiamante lo passa, altrimenti quello del mittente; la chiave si
+            // cerca sotto etc/secret/ con lo stesso dominio. Perché la firma valga per DMARC i due domini devono essere allineati
+            // ( lo stesso dominio o lo stesso dominio organizzativo ): il task della coda passa sempre il dominio del mittente ( 2026-09-24 )
+            $dkimDomain = ( ! empty($dkim_domain) ) ? $dkim_domain : $fromDomain;
+            if (! empty($dkimDomain)) {
+                if (file_exists(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.private.pem')) {
+                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.password.key')) ? readStringFromFile(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.password.key', true) : $dkim_pasw;
+                    $mail->DKIM_domain = $dkimDomain;
+                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.private.pem';
                     $mail->DKIM_selector = 'glisweb';
                     $mail->DKIM_passphrase = $dkimPassw;
                     $mail->DKIM_identity = $mail->From;
-                    logWrite('DKIM: ' . $fromDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
-                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . $dkimDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_DEBUG);
                     logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
                     logWrite('DKIM: chiave ' . $mail->DKIM_private . ' ' . ( is_readable( $mail->DKIM_private ) ? 'sha256=' . hash_file( 'sha256', $mail->DKIM_private ) : 'NON LEGGIBILE' ), 'dkim', LOG_DEBUG);
                 } else {
-                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
-                    logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . $dkimDomain . ' file etc/secret/' . $dkimDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
                 }
             } else {
-                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR);
+                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_ERR);
             }
 
             // invio
