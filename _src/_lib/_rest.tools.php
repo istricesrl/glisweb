@@ -14,7 +14,9 @@
      * risposta. Le altre funzioni della libreria sono scorciatoie per i casi più semplici.
      * 
      * I tempi massimi di attesa delle chiamate si possono regolare per tutto il deploy definendo in un runlevel le
-     * costanti REST_CONNECTTIMEOUT e REST_TIMEOUT, come spiegato nel commento dentro restCall().
+     * costanti REST_CONNECTTIMEOUT e REST_TIMEOUT, come spiegato nel commento dentro restCall(). Allo stesso modo la
+     * costante REST_SSL_VERIFY, definita a false, disattiva la verifica del certificato del server, che è attiva per
+     * default: serve solo ai deploy di sviluppo con un certificato self-signed.
      * 
      * costanti
      * ========
@@ -38,7 +40,8 @@
      * MIME_X_WWW_FORM_URLENCODED   | tipo di contenuto application/x-www-form-urlencoded
      * 
      * La libreria legge inoltre, se definite, le costanti REST_CONNECTTIMEOUT (tempo massimo per la connessione, default
-     * 3 secondi) e REST_TIMEOUT (tempo massimo per la risposta, default 5 secondi), che non definisce.
+     * 3 secondi), REST_TIMEOUT (tempo massimo per la risposta, default 5 secondi) e REST_SSL_VERIFY (verifica del
+     * certificato del server, default true), che non definisce.
      * 
      * funzioni
      * ========
@@ -134,10 +137,9 @@
      * 
      * NOTA siccome il controllo sulla presenza dei dati è disattivato (il blocco è sotto if( true )), con $datatype
      * MIME_APPLICATION_JSON e $data NULL la funzione invia comunque il corpo "null", anche con il metodo GET.
-     * NOTA la verifica del certificato SSL del server è disattivata (CURLOPT_SSL_VERIFYPEER a false), per cui la
-     * connessione HTTPS non protegge da un server che si spaccia per quello chiamato.
+     * Il certificato SSL del server e il suo nome vengono verificati, a meno che il deploy non abbia definito la
+     * costante REST_SSL_VERIFY a false ( si veda il commento nel corpo ).
      * NOTA con $datatype 'query' i parametri vengono aggiunti dopo un ? anche se l'URL ne contiene già uno.
-     * TODO valutare se riattivare la verifica del certificato SSL
      * 
      * @param       string      $url            l'URL da chiamare
      * @param       string      $method         il metodo HTTP, una delle costanti METHOD_* (default METHOD_GET)
@@ -185,11 +187,19 @@
             }
         );
 
-        // salto la verifica ssl
-        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
+        // verifica del certificato del server
+        //
+        // Fino al 2026-09-24 CURLOPT_SSL_VERIFYPEER era a false per tutti, per cui una chiamata HTTPS non
+        // proteggeva da un server che si spacciasse per quello chiamato, e credenziali, token e dati di
+        // pagamento finivano a lui. Adesso il certificato si verifica sempre, e il deploy che ha bisogno di
+        // non farlo lo dice esplicitamente definendo in un runlevel la costante REST_SSL_VERIFY a
+        // false. Il caso reale sono le chiamate che il sito fa a se stesso su $cf['site']['url'] ( la stampa
+        // di documento.pdf e fattura.xml nel modulo 0400.documenti ): su un deploy di sviluppo con certificato
+        // self-signed senza la costante falliscono. Come per i timeout, la costante si legge a ogni chiamata.
+        $sslVerify = defined( 'REST_SSL_VERIFY' ) ? (bool) REST_SSL_VERIFY : true;
 
-        // salto la verifica dell'host
-        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, $sslVerify );
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( $sslVerify ) ? 2 : 0 );
 
         // imposto un timeout per la connessione
         //
