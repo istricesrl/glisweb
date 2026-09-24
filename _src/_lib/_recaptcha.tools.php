@@ -177,20 +177,21 @@
      * verifica il token reCAPTCHA di un blocco dati e ne registra l'esito
      * 
      * Questa funzione riceve per riferimento il blocco dati di un form (ad esempio un modulo di contatto) e vi aggiunge la
-     * chiave __spam__ con lo score e l'esito della verifica, nella sotto chiave check. I casi sono tre:
-     * 
-     * - se il token è presente e la chiave è configurata, chiama reCaptchaVerifyV3(), scrive lo score, toglie il token dal
-     *   blocco dati e imposta check a true se lo score è maggiore di 0.1;
+     * chiave __spam__ con lo score, il motivo nella sotto chiave status e l'esito della verifica nella sotto chiave check.
+     * I casi sono tre:
+     *
+     * - se il token è presente e la chiave è configurata, chiama reCaptchaVerifyV3(), scrive lo score, scrive in status
+     *   l'esito restituito da reCaptchaVerifyV3() e toglie il token dal blocco dati; se l'esito è 'score' o 'token
+     *   rifiutato' check è true solo se lo score è maggiore di 0.1, negli altri casi ( 'token scaduto', 'senza
+     *   punteggio', 'nessuna risposta' ) la verifica non è stata possibile e check è true, per cui il blocco passa e lo
+     *   status resta a dire perché;
      * - se la chiave è configurata ma il token non è arrivato, scrive score 0, status 'token non ricevuto' e check false;
      * - se la chiave non è configurata (vuota o false), scrive score 1, status 'reCAPTCHA non configurato' e check true,
      *   cioè il form passa senza verifica.
-     * 
-     * NOTA nel primo caso la chiave status non viene scritta e l'esito di reCaptchaVerifyV3() non viene richiesto, per
-     * cui un token scaduto o un servizio di Google non raggiungibile producono score 0 e check false esattamente come un
-     * bot, e il contatto viene scartato come spam.
-     * TODO usare il parametro $esito di reCaptchaVerifyV3() per non scartare i token scaduti e i disservizi, come già
-     * fa verificaSpam() in _mod/_4170.ecommerce/_src/_lib/_mysql.utils.add.php
-     * 
+     *
+     * Il chiamante ( _mod/_CT000.contatti/_src/_config/_750.controller.php ) registra il contatto se check è true e lo
+     * scarta come SPAM altrimenti; il blocco __spam__ finisce nello yaml del contatto salvato.
+     *
      * @param       array       $v      il blocco dati del form, modificato per riferimento
      * @param       string      $k      la chiave reCaptcha segreta del sito (default false, cioè non configurata)
      * 
@@ -202,17 +203,26 @@
         // verifico la challenge reCAPTCHA
         if( isset( $v['__recaptcha_token__'] ) && isset( $k ) && ! empty( $k ) ) {
 
-            // registro il valore di bot
-            $bot = reCaptchaVerifyV3( $v['__recaptcha_token__'], $k );
+            // registro il valore di bot e l'esito della verifica
+            $esito = NULL;
+            $bot = reCaptchaVerifyV3( $v['__recaptcha_token__'], $k, $esito );
 
             // integrazione dei dati
             $v['__spam__']['score'] = $bot;
+            $v['__spam__']['status'] = $esito;
 
             // pulisco il modulo
             unset( $v['__recaptcha_token__'] );
 
             // punteggio di spam
-            $v['__spam__']['check'] = ( $bot > 0.1 ) ? true : false;
+            // NB: il punteggio decide solo se Google l'ha dato o ha rifiutato il token; un token scaduto, una chiave senza
+            // punteggio o un servizio non raggiungibile non sono prove di bot, e il blocco passa marcato dall'esito in
+            // status, come fa verificaSpam() in _mod/_4170.ecommerce/_src/_lib/_mysql.utils.add.php ( 2026-09-24 )
+            if( $esito == 'score' || $esito == 'token rifiutato' ) {
+                $v['__spam__']['check'] = ( $bot > 0.1 ) ? true : false;
+            } else {
+                $v['__spam__']['check'] = true;
+            }
 
         } elseif( ! isset( $v['__recaptcha_token__'] ) && isset( $k ) && ! empty( $k ) ) {
 
