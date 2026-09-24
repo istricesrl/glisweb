@@ -556,8 +556,9 @@
      *
      * Questa funzione restituisce il nome della costante di error reporting di PHP corrispondente al valore passato; è usata
      * dall'API di stato del framework per mostrare il livello di report corrente ( REPORT_CURRENT_LEVEL ). La funzione
-     * riconosce soltanto i singoli livelli elencati nella tabella seguente fino a E_STRICT; per tutti gli altri valori, comprese
-     * le combinazioni di più livelli, restituisce NULL.
+     * riconosce i singoli livelli elencati nella tabella seguente ed E_ALL; poiché il valore passato a error_reporting() è
+     * una maschera di bit, per una combinazione di più livelli restituisce i nomi dei livelli presenti uniti da " | "
+     * ( es. "E_ERROR | E_WARNING" ). Per zero, o per un valore che non contiene nessun livello noto, restituisce NULL.
      *
      * costante              | valore   | significato
      * ----------------------|----------|-------------------------------------------------------------------
@@ -576,17 +577,20 @@
      * E_RECOVERABLE_ERROR   |   4096   | errore fatale ma gestibile, non pregiudica il funzionamento del core PHP
      * E_DEPRECATED          |   8192   | errore di obsolescenza
      * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
-     * E_ALL                 |   32767  | tutti i messaggi di errore
-     *
-     * TODO mancano i casi E_RECOVERABLE_ERROR, E_DEPRECATED, E_USER_DEPRECATED ed E_ALL, che pure sono in tabella: con
-     * REPORT_CURRENT_LEVEL a E_ALL l'API di stato mostra un nome vuoto
+     * E_ALL                 |   32767  | tutti i messaggi di errore ( 30719 da PHP 8.4, che ne toglie E_STRICT )
      *
      * @param       int         $l      il livello di report
      *
-     * @return      string              il nome della costante di report, oppure NULL se il livello non è riconosciuto
+     * @return      string              il nome della costante di report, i nomi dei livelli presenti uniti da " | ", oppure
+     *                                  NULL se il livello non è riconosciuto
      *
      */
     function reportLvl2string( $l ) {
+
+        // NB: E_ALL si confronta con la costante perché il suo valore cambia con la versione di PHP ( 2026-09-24 )
+        if( $l == E_ALL ) {
+            return 'E_ALL';
+        }
 
         switch( $l ) {
             case 1:
@@ -625,11 +629,31 @@
             case 2048:
                 return 'E_STRICT';
             break;
+            case 4096:
+                return 'E_RECOVERABLE_ERROR';
+            break;
+            case 8192:
+                return 'E_DEPRECATED';
+            break;
+            case 16384:
+                return 'E_USER_DEPRECATED';
+            break;
             default:
-                return NULL;
+
+                // NB: error_reporting() riceve una maschera di bit, per cui un valore che non è un livello singolo si
+                // scompone nei livelli che contiene, invece di restituire NULL come prima ( 2026-09-24 )
+                $r = array();
+                for( $b = 1; $b <= 16384; $b *= 2 ) {
+                    if( (int) $l & $b ) {
+                        $r[] = reportLvl2string( $b );
+                    }
+                }
+
+                return ( empty( $r ) ) ? NULL : implode( ' | ', $r );
+
             break;
         }
-    
+
     }
     
     /**
