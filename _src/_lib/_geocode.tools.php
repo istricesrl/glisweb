@@ -79,11 +79,10 @@
      * nautiche) e poi per 1,853 (i chilometri in un miglio nautico). È usata ad esempio da
      * _mod/_1000.produzione/_src/_lib/_mysql.utils.php per dare un punteggio di vicinanza.
      * 
-     * NOTA quando i due punti coincidono (o sono molto vicini) l'argomento di acos() per effetto degli arrotondamenti
-     * può superare di poco 1, e in quel caso la funzione restituisce NAN invece di 0; con coordinate casuali identiche
-     * succede in circa il 3% dei casi.
-     * TODO limitare l'argomento di acos() all'intervallo [-1, 1] o passare alla formula dell'emisenoverso
-     * 
+     * NB: quando i due punti coincidono (o sono molto vicini) l'argomento di acos() per effetto degli arrotondamenti
+     * può superare di poco 1, e fino al 2026-09-24 la funzione restituiva allora NAN invece di 0 (circa il 3% dei casi
+     * con coordinate casuali identiche); ora l'argomento viene limitato all'intervallo [-1, 1].
+     *
      * @param       float       $ltf    la latitudine del punto di partenza
      * @param       float       $lgf    la longitudine del punto di partenza
      * @param       float       $ltt    la latitudine del punto di arrivo
@@ -101,7 +100,10 @@
         $dst = sin( $ltf * $rad ) 
             * sin( $ltt * $rad ) + cos( $ltf * $rad )
             * cos( $ltt * $rad ) * cos( $tha * $rad );
-    
+
+        // limito l'argomento di acos() all'intervallo [-1, 1] per gli errori di arrotondamento
+        $dst = max( -1, min( 1, $dst ) );
+
         return acos( $dst ) / $rad * 60 *  1.853;
 
     }
