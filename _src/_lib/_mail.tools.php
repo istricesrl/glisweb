@@ -102,9 +102,9 @@
      * fisso glisweb; la passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è, altrimenti si usa $dkim_pasw.
      * Il parametro $dkim_domain non viene usato: il dominio è sempre quello del mittente.
      *
-     * TODO PHPMailer viene creato con le eccezioni attive, quindi un errore di invio solleva PHPMailer\PHPMailer\Exception invece
-     * di far restituire false a Send(): il ramo di log dell'errore qui sotto non viene raggiunto e l'eccezione arriva al
-     * chiamante, che non la intercetta. Da verificare cosa succede alla riga della coda in quel caso.
+     * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_CRIT nel canale mail
+     * e la funzione restituisce false, e il task della coda rimanda la mail con un tentativo in più; un destinatario, un allegato
+     * o un header che PHPMailer rifiuta viene saltato senza interrompere l'invio.
      *
      * TODO readFromFile() senza il secondo parametro legge in modalità FILE_READ_AS_ARRAY, quindi quando esiste il file
      * dkim.password.key a DKIM_passphrase arriva un array di righe e non una stringa.
@@ -153,7 +153,9 @@
         $status                = true;
 
         // creazione dell'oggetto mail
-        $mail                = new PHPMailer\PHPMailer\PHPMailer(true);
+        // NOTA senza eccezioni Send() restituisce false e l'errore resta in ErrorInfo, che il ramo di log qui sotto scrive a
+        // LOG_CRIT; con le eccezioni attive la mail restava in mail_out con il token del task e non veniva più ripresa ( 2026-09-24 )
+        $mail                = new PHPMailer\PHPMailer\PHPMailer(false);
 
         // configurazione dell'oggetto mail
         $mail->IsSMTP();
