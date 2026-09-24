@@ -259,8 +259,14 @@
      * riporta alla forma con il punto decimale e senza separatore delle migliaia: "1000,50", "1.000,50" e "1,000.50"
      * diventano tutti "1000.50". Se la stringa contiene solo la virgola, la virgola viene considerata decimale ( quindi
      * "1,000" diventa "1.000", cioè uno ); se contiene solo il punto viene lasciata invariata ( quindi "1.000" resta uno ).
-     * Se la stringa, tolti virgole e punti, non è numerica viene restituita invariata. Il valore restituito resta una stringa:
-     * la conversione a numero la fa PHP quando lo si usa in un'operazione aritmetica.
+     * Se la stringa, tolti virgole e punti, non è numerica viene restituita invariata, e lo stesso vale se non è numerica
+     * la stringa ottenuta dalla normalizzazione: "1,2,3" o "1,000,000" non sono numeri scritti con un separatore e restano
+     * come sono. Il valore restituito resta una stringa: la conversione a numero la fa PHP quando lo si usa in
+     * un'operazione aritmetica.
+     *
+     * NB: fino al 2026-09-24 la normalizzazione veniva restituita anche quando non era un numero, per cui "1,2,3" diventava
+     * "1.2.3"; mysqlInsertRow() passa per questa funzione tutte le colonne della riga, testi compresi, e un elenco scritto
+     * con le virgole finiva nel database con i punti.
      *
      * Se il valore è vuoto ( compresi "0" e 0 ), oppure è un array o un oggetto, viene restituito invariato, a meno che
      * $force sia true: in quel caso la funzione restituisce 0.
@@ -274,17 +280,22 @@
     function string2num( $s, $force = false ) {
         if( ! empty( $s ) && ! is_array( $s ) && ! is_object( $s ) ) {
             if( is_numeric( str_replace( array( ',', '.' ), '', $s ) ) ) {
+                $n = $s;
                 if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
                     // es. 1000,50 -> 1000.50
-                    $s = str_replace( ',', '.', $s );
+                    $n = str_replace( ',', '.', $s );
                 } elseif( strpos( $s, ',' ) !== false && strpos( $s, '.' ) !== false ) {
                     if( strpos( $s, ',' ) < strpos( $s, '.' ) ) {
                         // es. 1,000.50 -> 1000.50
-                        $s = str_replace( ',', '', $s );
+                        $n = str_replace( ',', '', $s );
                     } else {
                         // es. 1.000,50 -> 1000.50
-                        $s = str_replace( ',', '.', str_replace( '.', '', $s ) );
+                        $n = str_replace( ',', '.', str_replace( '.', '', $s ) );
                     }
+                }
+                // una normalizzazione che non dà un numero ( es. 1,2,3 -> 1.2.3 ) non si applica
+                if( is_numeric( $n ) ) {
+                    $s = $n;
                 }
             }
         } elseif( $force === true ) {
