@@ -12,21 +12,20 @@ aggiornano a ogni commit sul ramo `master` a partire dal messaggio di commit. Un
 versione nella pagina di status ( `/status` ), che le confronta con l'ultima versione pubblicata, e le espone agli
 indirizzi `/current.release` e `/current.version`.
 
-<!-- BOZZA DA RIVEDERE ( 24/09/2026 ): le voci 2.1.0, 2.0.0 e 0.1.1 sono ricostruite dalla storia git dei due
-repository, date e contenuti vanno confermati prima di creare i tag 2.0.0 e 2.1.0 -->
-
 ## 2.1.0 del 01/05/2024 — linea unstable ( glisdev )
 Prima release della linea unstable, che vive nel repository [glisdev](https://github.com/istricesrl/glisdev) ed è
-dichiarata in `_etc/_current.release` fin dal commit iniziale. Rispetto alla 2.0 porta i template di nuova
-generazione in `_src/_tpl/` ( Twig, in parte già su Bootstrap 5 ), i moduli di nuova generazione con prefisso di due
-lettere ( `_AC000.account`, `_NO000.notizie`, ... ) e non contiene più i moduli e il templating della generazione
-precedente ( `_src/_templates/`, `_src/_html/`, `_mod/_NNNN.*` ). La parte condivisa del codice è la stessa della
-linea stable, file per file.
+dichiarata in `_etc/_current.release` fin dal commit iniziale. Contiene solo la generazione nuova: i template
+Twig in `_src/_tpl/` ( in parte già su Bootstrap 5 ) e i moduli con prefisso di due lettere ( `_AC000.account`,
+`_NO000.notizie`, ... ), che dal 2025 ci sono anche nella linea stable; non contiene più i moduli e il templating
+della generazione precedente ( `_src/_templates/`, `_src/_html/`, `_mod/_NNNN.*` ). La parte condivisa del codice
+è la stessa della linea stable, file per file. Il tag `2.1.0` punta al commit iniziale del repository.
 
 ## 2.0.0 del 11/09/2023 — linea stable ( glisweb )
 Release corrente della linea stable, dichiarata con l'introduzione di `_etc/_current.release` e
 `_etc/_current.version` ( commit `5cdad4372` ). Raccoglie circa 1.800 commit successivi alla 0.1.1 e mantiene la
-compatibilità con i moduli e i template della generazione precedente.
+compatibilità con i moduli e i template della generazione precedente. Il numero non è più cambiato: fino al
+24/09/2026 la linea ha avuto altri 1.110 commit, fra cui, dal 2025, i template e i moduli di nuova generazione. Il
+tag `2.0.0` punta al commit della dichiarazione, non al codice corrente della linea.
 
 ## 0.1.1 del 04/11/2021
 Release intermedia, presente come tag nel repository.
