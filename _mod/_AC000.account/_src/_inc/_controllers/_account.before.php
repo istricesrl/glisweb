@@ -25,7 +25,7 @@
         // NOTA se sto scrivendo la password, faccio l'hash; se sto leggendo i dati, elimino la password dai dati letti
 
         if( ! empty( $vs['password']['s'] ) && empty( $vs['id_url']['s'] ) ) {
-            $vs['password']['s'] = md5( $vs['password']['s'] );
+            $vs['password']['s'] = passwordHash( $vs['password']['s'] );
         } else {
             unset( $vs['password'] );
             removeFromArray( $ks, 'password' );

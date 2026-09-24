@@ -263,9 +263,11 @@ per questo.
 **Sulla sicurezza**, il framework applica di serie le protezioni che in altri strumenti vanno
 configurate a mano: il `.htaccess` nega l'accesso a configurazione, log, sessioni e file sensibili; i
 cookie di sessione sono `secure`, `httponly` e `samesite`; l'id di sessione viene rigenerato al login;
+le password sono salvate con `password_hash()` di PHP ( bcrypt, con salt ), e gli hash MD5 delle versioni
+precedenti vengono ricalcolati da soli al primo login di ciascun utente;
 i permessi sono verificati per tabella anche sulle API; lo script dei permessi impedisce al web server
 di scrivere nei file del framework, e se la cartella di installazione è scrivibile il framework si
-rifiuta di partire. Le vulnerabilità si segnalano in privato secondo la [security policy](SECURITY.md),
+rifiuta di partire. Le vulnerabilità si segnalano in privato secondo la [security policy](https://github.com/istricesrl/glisweb/blob/develop/SECURITY.md),
 che prevede **una ricompensa in denaro** per le segnalazioni confermate.
 
 **Compatibilità:** il framework è pensato per **Debian stable e Ubuntu** con Apache, PHP 8 e
@@ -276,7 +278,7 @@ Windows si sviluppa con XAMPP.
 ## Come si comincia
 
 La strada completa, dal server vuoto al primo login, è nella
-[**guida all'installazione**](_usr/_docs/_quickstart/020.installazione.md). In breve, su un server
+[**guida all'installazione**](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_quickstart/020.installazione.md). In breve, su un server
 Debian o Ubuntu con Apache, PHP e Composer:
 
 ```bash
@@ -298,14 +300,14 @@ porta al CMS.
 
 | cosa | dove |
 |---|---|
-| **guida all'installazione**, dal server vuoto al primo login | [`_usr/_docs/_quickstart/020.installazione.md`](_usr/_docs/_quickstart/020.installazione.md) |
-| **da zero a hero**, la guida introduttiva al framework | [`_usr/_docs/_quickstart/010.da-zero-a-hero.md`](_usr/_docs/_quickstart/010.da-zero-a-hero.md) |
-| **manuale sviluppatore**: architettura, funzioni, reference di file e database, howto, integrazioni | [`_usr/_docs/_read/`](_usr/_docs/_read/) |
-| **manuale utente**: le schermate e le operazioni quotidiane | [`_usr/_docs/_user/`](_usr/_docs/_user/) |
-| **domande frequenti** e glossario | [`_usr/_docs/_read/910.faq.md`](_usr/_docs/_read/910.faq.md), [`950.glossario.md`](_usr/_docs/_read/950.glossario.md) |
+| **guida all'installazione**, dal server vuoto al primo login | [`_usr/_docs/_quickstart/020.installazione.md`](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_quickstart/020.installazione.md) |
+| **da zero a hero**, la guida introduttiva al framework | [`_usr/_docs/_quickstart/010.da-zero-a-hero.md`](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_quickstart/010.da-zero-a-hero.md) |
+| **manuale sviluppatore**: architettura, funzioni, reference di file e database, howto, integrazioni | [`_usr/_docs/_read/`](https://github.com/istricesrl/glisweb/tree/develop/_usr/_docs/_read/) |
+| **manuale utente**: le schermate e le operazioni quotidiane | [`_usr/_docs/_user/`](https://github.com/istricesrl/glisweb/tree/develop/_usr/_docs/_user/) |
+| **domande frequenti** e glossario | [`_usr/_docs/_read/910.faq.md`](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_read/910.faq.md), [`950.glossario.md`](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_read/950.glossario.md) |
 | documentazione dei singoli moduli e template | il `READ.md` di ogni cartella in `_mod/` e `_src/_tpl/` |
-| **esempi** di codice per una trentina di servizi e librerie | [`_usr/_examples/`](_usr/_examples/) |
-| dove si legge tutto questo via web, e come si genera | [`READ.md`](READ.md) |
+| **esempi** di codice per una trentina di servizi e librerie | [`_usr/_examples/`](https://github.com/istricesrl/glisweb/tree/develop/_usr/_examples/) |
+| dove si legge tutto questo via web, e come si genera | [`READ.md`](https://github.com/istricesrl/glisweb/blob/develop/READ.md) |
 
 I manuali sono scritti in markdown e si generano in HTML e PDF con `_src/_sh/_docs.build.sh --all`.
 La documentazione è **in italiano**, come il codice; il passaggio all'inglese di tutto il progetto è
@@ -318,7 +320,7 @@ aggiornati; nuovi tutorial sono previsti insieme al sito del progetto, in costru
 ## Licenza e costi
 
 GlisWeb è **gratuito**, senza costi di licenza né limiti di utilizzo, anche commerciale. È rilasciato
-sotto la licenza [SVDOL](LICENSE.md) ( *SeanVonDrake Open License* ), che non è una licenza standard
+sotto la licenza [SVDOL](https://github.com/istricesrl/glisweb/blob/develop/LICENSE.md) ( *SeanVonDrake Open License* ), che non è una licenza standard
 approvata dalla OSI e va letta prima dell'uso. In sintesi consente di usare, copiare, modificare e
 redistribuire il framework, anche a pagamento, a condizione di:
 
@@ -338,7 +340,7 @@ framework e non vanno rimossi dalle installazioni.
   nuove funzioni: ci sono i modelli per l'una e l'altra cosa;
 - **[server Discord](https://discord.gg/2nynQcXAWf)** per le domande, l'aiuto e le discussioni con chi
   sviluppa e usa il framework;
-- **vulnerabilità di sicurezza**: mai in una issue pubblica, ma secondo la [security policy](SECURITY.md).
+- **vulnerabilità di sicurezza**: mai in una issue pubblica, ma secondo la [security policy](https://github.com/istricesrl/glisweb/blob/develop/SECURITY.md).
 
 La community è piccola, e conviene dirlo chiaramente: le risposte arrivano da chi sviluppa il
 framework, non da migliaia di utenti. In compenso arrivano da chi il codice lo conosce.
@@ -346,7 +348,7 @@ framework, non da migliaia di utenti. In compenso arrivano da chi il codice lo c
 ### Contribuire
 
 Ogni aiuto è benvenuto: segnalazioni di bug, richieste di funzioni, traduzioni, refactoring, pull
-request. Le regole sono in [CONTRIBUTING.md](CONTRIBUTING.md) e nel [codice di condotta](CODE_OF_CONDUCT.md).
+request. Le regole sono in [CONTRIBUTING.md](https://github.com/istricesrl/glisweb/blob/develop/CONTRIBUTING.md) e nel [codice di condotta](https://github.com/istricesrl/glisweb/blob/develop/CODE_OF_CONDUCT.md).
 Lo sviluppo del framework avviene su [glisdev](https://github.com/istricesrl/glisdev): chi vuole
 contribuire al codice parte da lì, e deve attivare i git hook di sviluppo come spiegato nella guida
 all'installazione. Chi non può contribuire con il codice può sostenere il progetto tramite
@@ -371,7 +373,7 @@ progetto:
 Le funzioni vengono portate da glisweb a glisdev una alla volta, riviste e semplificate. Quando il
 porting sarà finito i due repository verranno riuniti. Il framework viene aggiornato continuamente:
 ogni commit ha un numero di versione ( `_etc/_current.version` ), e le release sono in
-`_etc/_current.release`, con la cronologia in [RELEASE.md](RELEASE.md) e in `_etc/_changelog.json`.
+`_etc/_current.release`, con la cronologia delle modifiche in `_etc/_changelog.json`.
 Un'installazione sa da sola se è aggiornata: la pagina di status la confronta con l'ultima versione
 pubblicata.
 

@@ -8,15 +8,15 @@
      * Il framework supporta un potente e flessibile sistema di autenticazione
      * e autorizzazione basato su account e gruppi di account. Account e gruppi
      * sono impostati nel file _200.auth.php e personalizzati nel file 200.auth.php.
-     * Le password sono archiviate in forma crittografata tramite md5() per
-     * ragioni di sicurezza.
+     * Le password sono archiviate come hash calcolato con password_hash() di PHP
+     * ( vedi passwordHash() in _src/_lib/_cryptography.tools.php ); gli hash MD5
+     * salvati prima del 24/09/2026 continuano a funzionare, e quelli del database
+     * vengono ricalcolati al primo login riuscito.
      *
-     * Se avete a disposizione una shell Bash, generare una password e cifrarla in MD5 è
-     * molto semplice:
+     * Per generare l'hash di una password da scrivere nei file di configurazione:
      *
      * \code{.bash}
-     * pwgen -nyc 16 1
-     * echo -n "<password>" | md5sum
+     * _src/_sh/_password.hash.sh "<password>"
      * \endcode
      *
      *

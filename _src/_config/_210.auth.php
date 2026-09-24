@@ -349,11 +349,24 @@
         // intercetto eventuali tentativi di login in corso
         if( $cf['session']['spam']['check'] === true ) {
 
-            // ricalcolo la password
+            // password del tentativo di login
+            //
+            // Le strade sono due. Da form, header HTTP o API arriva la password in chiaro, che va
+            // verificata contro l'hash salvato con passwordVerify(); da token JWT o API key arriva
+            // invece l'hash già letto dall'account del token, che si confronta così com'è con
+            // hash_equals(). Fino al 24/09/2026 la password in chiaro veniva trasformata subito in
+            // md5() e confrontata con l'hash anche dentro la query: adesso l'hash contiene un salt,
+            // non si può più calcolare prima di aver letto l'account, e il confronto si fa in PHP.
+            //
+            // La password in chiaro esce da $_REQUEST appena letta, perché non finisca nei log o in
+            // qualche dump della richiesta.
+            $loginPasswordChiaro = NULL;
+            $loginPasswordHash   = NULL;
             if( isset( $_REQUEST['__login__']['pasw'] ) ) {
-                $_REQUEST['__login__']['pasw'] = md5( $_REQUEST['__login__']['pasw'] );
+                $loginPasswordChiaro = (string) $_REQUEST['__login__']['pasw'];
+                unset( $_REQUEST['__login__']['pasw'] );
             } elseif( isset( $cf['auth']['jwt']['pass'] ) ) {
-                $_REQUEST['__login__']['pasw'] = $cf['auth']['jwt']['pass'];
+                $loginPasswordHash = (string) $cf['auth']['jwt']['pass'];
             }
 
             /**
@@ -366,8 +379,19 @@
             // login con gli utenti del framework
             if( in_array( $_REQUEST['__login__']['user'], array_keys( $cf['auth']['accounts'] ) ) ) {
 
+                // hash salvato nella configurazione
+                $loginHashSalvato = $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'];
+
                 // se la password combacia
-                if( is_string( $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'] ) && hash_equals( $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'], (string)( $_REQUEST['__login__']['pasw'] ?? '' ) ) ) {
+                if( is_string( $loginHashSalvato ) && (
+                    ( $loginPasswordChiaro !== NULL && passwordVerify( $loginPasswordChiaro, $loginHashSalvato ) ) ||
+                    ( $loginPasswordHash !== NULL && $loginPasswordHash !== '' && hash_equals( $loginHashSalvato, $loginPasswordHash ) )
+                ) ) {
+
+                    // un hash MD5 nella configurazione non si può riscrivere da qui: lo si segnala
+                    if( passwordIsMd5( $loginHashSalvato ) ) {
+                        logger( 'la password di ' . $_REQUEST['__login__']['user'] . ' nei file di configurazione è ancora in MD5, rigenerare l\'hash con _src/_sh/_password.hash.sh', 'auth', LOG_WARNING );
+                    }
 
                     // attribuzione dell'account
                     $_SESSION['account'] = &$cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ];
@@ -400,7 +424,6 @@
 
                     // log
                     logger( 'password errata per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
-                    logger( 'mancata corrispondenza degli hash per ' . $_REQUEST['__login__']['user'] . ': ' . $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'] . '/' . $_REQUEST['__login__']['pasw'], 'auth' );
 
                 }
 
@@ -438,15 +461,48 @@
                     // log
                     logger( 'fallback al login su database', 'auth' );
 
-                    // query di login
+                    // query di login: l'account si legge per username, la password si verifica dopo
                     $_SESSION['account'] = mysqlSelectRow(
                         $cf['mysql']['connection'],
-                        'SELECT * FROM account_view WHERE username = ? AND password = ?',
+                        'SELECT * FROM account_view WHERE username = ?',
                         array(
-                            array( 's' => $_REQUEST['__login__']['user'] ),
-                            array( 's' => $_REQUEST['__login__']['pasw'] )
+                            array( 's' => $_REQUEST['__login__']['user'] )
                         )
                     );
+
+                    // verifica della password
+                    //
+                    // ATTENZIONE: se la password non combacia l'account letto va SVUOTATO, e subito.
+                    // Tutto quello che segue decide se il login è riuscito guardando solo se_attivo,
+                    // perché prima la query con la password nel WHERE non restituiva nulla: lasciare qui
+                    // la riga letta per username vorrebbe dire far entrare chiunque conosca uno username.
+                    $loginHashSalvato = ( isset( $_SESSION['account']['password'] ) ) ? $_SESSION['account']['password'] : NULL;
+                    if( ! (
+                        ( $loginPasswordChiaro !== NULL && passwordVerify( $loginPasswordChiaro, $loginHashSalvato ) ) ||
+                        ( $loginPasswordHash !== NULL && $loginPasswordHash !== '' && is_string( $loginHashSalvato ) && hash_equals( $loginHashSalvato, $loginPasswordHash ) )
+                    ) ) {
+                        $_SESSION['account'] = array();
+                    }
+
+                    // aggiornamento dell'hash
+                    //
+                    // Al primo login riuscito con la password in chiaro, un hash MD5 ( o calcolato con un
+                    // algoritmo superato ) viene ricalcolato e salvato: il vecchio formato sparisce da solo
+                    // man mano che gli utenti entrano. Si fa solo per gli account attivi, cioè per un
+                    // login che sta per riuscire.
+                    if( $loginPasswordChiaro !== NULL && ! empty( $_SESSION['account']['se_attivo'] ) && passwordNeedsRehash( $loginHashSalvato ) ) {
+                        $loginNuovoHash = passwordHash( $loginPasswordChiaro );
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE account SET password = ? WHERE id = ?',
+                            array(
+                                array( 's' => $loginNuovoHash ),
+                                array( 's' => $_SESSION['account']['id'] )
+                            )
+                        );
+                        $_SESSION['account']['password'] = $loginNuovoHash;
+                        logger( 'hash della password aggiornato per ' . $_REQUEST['__login__']['user'], 'auth' );
+                    }
 
                     // controllo il risultato
                     if( isset( $_SESSION['account']['se_attivo'] ) && $_SESSION['account']['se_attivo'] == true ) {
@@ -689,7 +745,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_INACTIVE;
 
                         // log
-                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'] . '/' . $_REQUEST['__login__']['pasw'], 'auth', LOG_INFO );
+                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_INFO );
 
                     } else {
 
@@ -697,7 +753,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                         // log
-                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'] . '/' . $_REQUEST['__login__']['pasw'], 'auth', LOG_ERR );
+                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
 
                     }
 

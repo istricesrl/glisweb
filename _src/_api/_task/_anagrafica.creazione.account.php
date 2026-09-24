@@ -42,7 +42,7 @@
                 'id_anagrafica' => $_REQUEST['anagrafica'],
                 'id_mail' => $_REQUEST['__e__'], 
                 'username' => $mail,
-                'password' => md5( $_REQUEST['__psw__'] ), 
+                'password' => passwordHash( $_REQUEST['__psw__'] ), 
                 'se_attivo' => 1,
                 'token' => $token
             ),

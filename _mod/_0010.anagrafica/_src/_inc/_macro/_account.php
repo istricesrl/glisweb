@@ -128,14 +128,20 @@
 
                 if( ! empty( $_REQUEST['__account__']['password1'] . $_REQUEST['__account__']['password2'] ) ) {
 
-                    if( $_REQUEST['__account__']['password1'] == $_REQUEST['__account__']['password2'] ) {
+                    // la vecchia password si verifica in PHP: l'hash ha un salt e non si può confrontare nella query
+                    $hashAttuale = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT password FROM account WHERE id = ?',
+                        array( array( 's' => $_SESSION['account']['id'] ) )
+                    );
+
+                    if( $_REQUEST['__account__']['password1'] == $_REQUEST['__account__']['password2'] && passwordVerify( $_REQUEST['__account__']['password0'], $hashAttuale ) ) {
 
                         mysqlQuery(
                             $cf['mysql']['connection'],
-                            'UPDATE account SET password = ? WHERE password = ? AND id = ?',
+                            'UPDATE account SET password = ? WHERE id = ?',
                             array(
-                                array( 's' => md5( $_REQUEST['__account__']['password1'] ) ),
-                                array( 's' => md5( $_REQUEST['__account__']['password0'] ) ),
+                                array( 's' => passwordHash( $_REQUEST['__account__']['password1'] ) ),
                                 array( 's' => $_SESSION['account']['id'] )
                             )
                         );

@@ -91,6 +91,8 @@
         echo '[ -- ] utente root non attivo' . PHP_EOL;
     } elseif( bruteForceHash( $cf['auth']['accounts']['root']['password'] ) ) {
         die( '[FAIL] password di root troppo debole' . PHP_EOL );
+    } elseif( passwordIsMd5( $cf['auth']['accounts']['root']['password'] ) ) {
+        echo '[WARN] password di root salvata in MD5, rigenerare l\'hash con _src/_sh/_password.hash.sh' . PHP_EOL;
     } else {
         echo '[ OK ] utente root attivo con password non banale' . PHP_EOL;
     }

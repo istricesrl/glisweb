@@ -183,7 +183,7 @@
 					}
 
 				// creo l'account
-				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] == true ) ? 1 : NULL ) ) ) );
+				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => passwordHash( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] == true ) ? 1 : NULL ) ) ) );
 
 				// associo ai gruppi
 				foreach( $ct['etc']['profilo']['gruppi'] as $gruppo ) {

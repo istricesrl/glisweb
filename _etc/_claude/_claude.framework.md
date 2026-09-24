@@ -522,8 +522,9 @@ controllare status code e pattern nell'HTML su pagine pubbliche e su area riserv
 
 **Login flow del framework** (utile da sapere quando si scrivono test o si debuggano problemi di auth):
 
-- Il form di login non usa CSRF token: bastano i campi POST `__login__[user]` e `__login__[pasw]` (la password viene
-  hashmata in MD5 lato backend).
+- Il form di login non usa CSRF token: bastano i campi POST `__login__[user]` e `__login__[pasw]` (la password in
+  chiaro viene verificata lato backend con `passwordVerify()`, che accetta sia gli hash di `password_hash()` sia i
+  vecchi MD5; al primo login riuscito un MD5 del database viene ricalcolato).
 - URL di login per default: `/login.it-IT.html` (la pagina è dinamica, server-renderizzata da `_src/_api/_pages.php`).
 - Il backend confronta contro `$cf['auth']['accounts']` (config) o la vista MySQL `account_view` (fallback).
 - A login riuscito viene popolato `$_SESSION['account']`; il cookie di sessione è il `PHPSESSID` standard di PHP, con
