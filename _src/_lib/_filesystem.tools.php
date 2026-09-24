@@ -42,10 +42,15 @@
      *
      * costante                  | spiegazione
      * --------------------------|--------------------------------------------------------------
-     * READ_FILE_AS_ARRAY        | legge il file come un array con la funzione file()
-     * READ_FILE_AS_STRING       | legge il file come una stringa con file_get_contents()
-     * WRITE_FILE_OVERWRITE      | sovrascrive il file (lo crea se non esiste, w+)
-     * WRITE_FILE_APPEND         | appende al file (lo crea se non esiste, a+)
+     * FILE_READ_AS_ARRAY        | legge il file come un array con la funzione file()
+     * FILE_READ_AS_STRING       | legge il file come una stringa con file_get_contents()
+     * FILE_WRITE_OVERWRITE      | sovrascrive il file (lo crea se non esiste, w+)
+     * FILE_WRITE_APPEND         | appende al file (lo crea se non esiste, a+)
+     * TRIM_LINES_FROM_TOP       | per fileTrimLines(), lavora a partire dall'inizio del file
+     * TRIM_LINES_FROM_BOTTOM    | per fileTrimLines(), lavora a partire dalla fine del file
+     *
+     * Tutte le costanti sono definite solo se non esistono già, per cui possono essere ridefinite prima del caricamento
+     * della libreria.
      *
      * funzioni
      * ========
@@ -81,7 +86,7 @@
      * readFromFile()               | legge il contenuto di un file in una stringa o in un array di stringhe
      * readStringFromFile()         | legge una stringa da un file
      * readArrayFromFile()          | legge un array di stringhe da un file
-     * writeArrayToFile()           | legge un array di stringhe da un file
+     * writeArrayToFile()           | scrive un array di stringhe su un file
      * readKeyValueArrayFromFile()  | legge un array associativo da un file ini
      * writeKeyValueArrayToFile()   | scrive un array associativo su un file ini
      * 
@@ -104,9 +109,9 @@
      * checkFile()              | verifica l'esistenza e la scrivibilità di un file, creando sia il percorso che il file se necessario
      * deleteFolder()           | elimina una directory
      * deleteFile()             | elimina un file
-     * recursiveDelete()        | questa funzione cancella un intero albero di cartelle compresa la cartella di partenza
-     * emptyFolder()            | svuota una cartella senza cancellarla
-     * moveFile()               | sposa un file
+     * recursiveDelete()        | questa funzione cancella un intero albero di cartelle
+     * emptyFolder()            | svuota una cartella
+     * moveFile()               | sposta un file
      * copyFile()               | copia un file
      * 
      * funzioni per la lettura delle informazioni da file e cartelle
@@ -119,7 +124,7 @@
      * dirTreeToarray()                 | questa funzione trasforma un albero di cartelle in un array
      * getFileSize()                    | restituisce la dimensione in byte di un file
      * getFolderSize()                  | calcola ricorsivamente lo spazio occupato da una directory
-     * getSize()                        | restituisce la dimensione di un file o di una cartella
+     * getSize()                        | restituisce la dimensione di un file o cartella
      * getRecursiveFileList()           | restituisce una lista di file ricorsiva
      * getFilteredFileList()            | restituisce una lista di file filtrata
      * getFileList()                    | restituisce una lista di file
@@ -129,8 +134,8 @@
      * getRecursiveFullList()           | restituisce una lista di file e cartelle ricorsiva
      * getFullList()                    | restituisce una lista di file e cartelle
      * getFolderName()                  | restituisce la parte delle directory di un percorso
-     * getFileExtension()               | restituisce l'estensione di un file
-     * getFileNameWithoutExtension()    | restituisce il nome di un file senza estensione
+     * getFileExtension()               | restituisce l'estensione del file
+     * getFileNameWithoutExtension()    | restituisce il nome di un file senza l'estensione
      * globRecursive()                  | restituisce un elenco ricorsivo filtrato di file
      * findFileType()                   | restituisce il mime type di un file
      * isBinaryFile()                   | restituisce true se il file è binario
@@ -145,7 +150,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * checkFileConsistency()           | verifica se un file esiste ed è stato aggiornato entro un certo intervallo di tempo
-     * simplifyPath()                   | semplifica un percorso eliminando i riferimenti a cartelle correnti e genitori
+     * simplifyPath()                   | semplifica un percorso
      * 
      * alias di funzioni inseriti per retrocompatibilità
      * -------------------------------------------------
@@ -154,11 +159,16 @@
      * 
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
+     * file2array()                     | alias di readArrayFromFile()
+     * array2file()                     | alias di writeArrayToFile(), con i parametri in ordine inverso
+     * array2keyValueFile()             | alias di writeKeyValueArrayToFile(), con i parametri in ordine inverso
+     * keyValueFile2array()             | alias di readKeyValueArrayFromFile()
      * deleteDir()                      | alias di deleteFolder()
      * fileModifiedTime()               | alias di getFileModifiedTime()
      * findFileExtension()              | alias di getFileExtension()
      * getDirIterator()                 | alias di getFolderIterator()
      * emptyDir()                       | alias di emptyFolder()
+     * dirTree2Array()                  | alias di dirTreeToarray()
      * getDirSize()                     | alias di getFolderSize()
      * getRecursiveDirList()            | alias di getRecursiveFolderList()
      * getFilteredDirList()             | alias di getFilteredFolderList()
@@ -173,6 +183,10 @@
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * logger()                         | core
+     * string2url()                     | _string.tools.php
+     * 
+     * Sono inoltre richieste le estensioni PHP curl ( per le operazioni sui file remoti in copyFile(), fileExists() e
+     * getFileModifiedTime() ), mbstring ( per isBinaryFile() ) e fileinfo ( per findFileType() ).
      * 
      * Inoltre, per funzionare correttamente, la libreria richiede che siano valorizzate le
      * seguenti costanti globali.
@@ -189,6 +203,7 @@
      * -----------------|----------------------|---------------------------------------------------------------
      * 2024-02-05       | Fabio Mosti          | refactoring completo della libreria
      * 2025-05-23       | Fabio Mosti          | aggiunta della funzione simplifyPath()
+     * 2026-09-24       | Fabio Mosti          | documentazione
      * 
      * licenza
      * =======
@@ -494,10 +509,19 @@
     /**
      * legge il contenuto di un file in una stringa o in un array di stringhe
      *
-     * @param string        $f    il nome del file dal quale leggere comprensivo di percorso
-     * @param string        $m    la modalita' con cui si desidera aprire il file
+     * Questa funzione legge il file indicato, dopo averne ricavato il percorso assoluto con getFullPath(), e ne restituisce
+     * il contenuto in una delle due forme previste dalle costanti della libreria: con FILE_READ_AS_ARRAY ( il default ) un
+     * array con una riga per elemento, ciascuna ripulita con trim() dagli spazi e dai ritorni a capo sia in coda sia in testa,
+     * per cui l'indentazione delle righe va persa; con FILE_READ_AS_STRING l'intero contenuto in una stringa, così com'è.
+     * Il BOM UTF-8 eventualmente presente non viene rimosso ( si veda removeBom() in _string.tools.php ).
      *
-     * TODO documentare
+     * Se il file non esiste o non è leggibile, oppure se la modalità non è una delle due costanti, la funzione restituisce
+     * false; un file vuoto restituisce un array vuoto o una stringa vuota a seconda della modalità.
+     *
+     * @param       string      $f      il nome del file dal quale leggere, relativo a DIR_BASE o assoluto
+     * @param       string      $m      la modalità di lettura, FILE_READ_AS_ARRAY ( default ) o FILE_READ_AS_STRING
+     *
+     * @return      mixed               l'array delle righe o la stringa letti, oppure false in caso di errore
      *
      */
     function readFromFile( $f, $m = FILE_READ_AS_ARRAY ) {
@@ -526,15 +550,14 @@
      * legge una stringa da un file
      * 
      * Questa funzione utilizza la funzione readFromFile() per leggere il contenuto di un file e restituirlo come stringa.
+     * Se il file non esiste o non è leggibile restituisce false, a meno che $trim sia true: in quel caso trim() converte il
+     * false in una stringa vuota, e non è più possibile distinguere un file mancante da un file vuoto.
      * 
      * @param       string      $f      il nome del file dal quale leggere comprensivo di percorso
-     * @param       boolean     $trim   se true, la stringa letta viene trimmata
+     * @param       bool        $trim   se true, la stringa letta viene ripulita con trim() ( default false )
      * 
-     * @return      string              la stringa letta
+     * @return      string              la stringa letta, oppure false se il file non è leggibile e $trim è false
      * 
-     * 
-     * TODO documentare
-     *
      */
     function readStringFromFile( $f, $trim = false ) {
 
@@ -648,13 +671,21 @@
     /**
      * rimuove n linee da un file
      * 
+     * Questa funzione legge il file come array di righe con readArrayFromFile(), ne elimina una parte con array_slice() e lo
+     * riscrive con writeArrayToFile(). Con TRIM_LINES_FROM_TOP ( il default ) vengono eliminate le prime $n righe. Con
+     * TRIM_LINES_FROM_BOTTOM invece l'offset diventa negativo e array_slice() conserva le ultime $n righe, eliminando tutte le
+     * altre: il risultato non è quello che il nome della costante fa pensare. Poiché la lettura passa da readFromFile(), le
+     * righe riscritte perdono gli spazi in testa e in coda. Se il file non esiste la lettura restituisce false e array_slice()
+     * solleva un errore. Nel framework la funzione non ha chiamanti.
+     * 
      * @param       string      $f      il nome del file da cui rimuovere le linee
      * @param       int         $n      il numero di linee da rimuovere
-     * @param       int         $l      1 per rimuovere le righe dall'inizio del file, -1 per rimuovere le righe dalla fine del file
+     * @param       int         $l      TRIM_LINES_FROM_TOP ( 1, default ) oppure TRIM_LINES_FROM_BOTTOM ( -1 )
      * 
      * @return      boolean             restituisce true se la rimozione è andata a buon fine, false altrimenti
      * 
      * TODO implementare due costanti per dire alla funzione se togliere le righe dall'inizio o dalla fine e aggiungere il parametro alla funzione
+     * TODO con TRIM_LINES_FROM_BOTTOM la funzione conserva le ultime $n righe invece di eliminarle
      * 
      */
     function fileTrimLines( $f, $n, $l = TRIM_LINES_FROM_TOP ) {
@@ -871,12 +902,17 @@
     /**
      * svuota una cartella
      * 
-     * Questa funzione svuota una cartella eliminando tutto il suo contenuto.
+     * Questa funzione svuota una cartella eliminando tutto il suo contenuto, file e sottocartelle, ma non la cartella stessa;
+     * è recursiveDelete() con il secondo parametro a false di default, e passando $p a true si ottiene la cancellazione
+     * anche della cartella. Restituisce false appena la cancellazione di un elemento fallisce, lasciando la cartella
+     * parzialmente svuotata. Nel framework la funzione non ha chiamanti diretti.
      * 
      * @param       string      $d      il percorso della cartella da svuotare
+     * @param       bool        $p      se true elimina anche la cartella $d ( default false )
+     * 
+     * @return      bool                true se è andato tutto bene, false altrimenti
      * 
      * TODO non è un doppione di recursiveDelete()?
-     * TODO documentare
      *
      */
     function emptyFolder( $d, $p = false ) {
@@ -1202,10 +1238,15 @@
     /**
      * restituisce una lista di file
      * 
-     * Questa funzione utilizza la funzione getFolderIterator() per ottenere una lista di file.
+     * Questa funzione utilizza la funzione getFolderIterator() per ottenere una lista di file; nonostante il nome, come
+     * l'iteratore anche l'elenco è ricorsivo. Si noti che il significato di $s è opposto a quello di getRecursiveFileList():
+     * qui di default si ottengono i soli nomi, e con $s a true i percorsi assoluti. Se la cartella non esiste l'iteratore vale
+     * false, il foreach genera un warning e la funzione restituisce un array vuoto.
+     * 
+     * TODO uniformare il significato di $s con quello di getRecursiveFileList()
      * 
      * @param       string      $d      il percorso della cartella di cui si desidera ottenere l'elenco dei file
-     * @param       boolean     $s      se true, restituisce solo il nome del file senza il percorso
+     * @param       boolean     $s      se true, restituisce il percorso assoluto, altrimenti ( default ) solo il nome del file
      * 
      * @return      array               l'array contenente l'elenco dei file
      *
@@ -1233,7 +1274,7 @@
      * Questa funzione utilizza getFolderIterator() per ottenere una lista di cartelle ricorsiva.
      * 
      * @param       string      $d      il percorso della cartella di cui si desidera ottenere l'elenco delle cartelle
-     * @param       boolean     $s      se true, restituisce solo il nome della cartella senza il percorso
+     * @param       boolean     $s      se true, restituisce il percorso assoluto, altrimenti ( default ) solo il nome della cartella
      * 
      * @return      array               l'array contenente l'elenco delle cartelle
      *
@@ -1265,6 +1306,7 @@
      * 
      * @param       string      $d      il percorso della cartella da esaminare
      * @param       string      $f      il filtro da applicare
+     * @param       boolean     $s      se true, restituisce solo il nome della cartella senza il percorso ( default false )
      * 
      * @return      array               l'array contenente l'elenco delle cartelle
      * 
@@ -1302,7 +1344,7 @@
      * Questa funzione utilizza la funzione getFolderIterator() per ottenere una lista di cartelle.
      * 
      * @param       string      $d      il percorso della cartella di cui si desidera ottenere l'elenco delle cartelle
-     * @param       boolean     $s      se true, restituisce solo il nome della cartella senza il percorso
+     * @param       boolean     $s      se true, restituisce il percorso assoluto, altrimenti ( default ) solo il nome della cartella
      * 
      * @return      array               l'array contenente l'elenco delle cartelle
      *
@@ -1335,7 +1377,7 @@
      * Questa funzione utilizza getFolderIterator() per ottenere una lista di file e cartelle ricorsiva.
      * 
      * @param       string      $d      il percorso della cartella di cui si desidera ottenere l'elenco dei file
-     * @param       boolean     $s      se true, restituisce solo il nome del file senza il percorso
+     * @param       boolean     $s      se true, restituisce il percorso assoluto, altrimenti ( default ) solo il nome del file
      * 
      * @return      array               l'array contenente l'elenco dei file
      *
@@ -1364,7 +1406,7 @@
      * Questa funzione utilizza la funzione getFolderIterator() per ottenere una lista di file e cartelle.
      * 
      * @param       string      $d      il percorso della cartella di cui si desidera ottenere l'elenco delle cartelle
-     * @param       boolean     $s      se true, restituisce solo il nome della cartella senza il percorso
+     * @param       boolean     $s      se true, restituisce il percorso assoluto, altrimenti ( default ) solo il nome della cartella
      * 
      * @return      array               l'array contenente l'elenco delle cartelle
      *
@@ -1419,14 +1461,21 @@
     /**
      * restituisce l'estensione del file
      *
-     * Questa funzione considera l'ultimo elemento di un percorso come un file e ne restituisce l'estensione.
-     * 
-     * @param       $f          il file da esaminare
-     * @return      string      l'estensione del file
+     * Questa funzione considera l'ultimo elemento di un percorso come un file e ne restituisce l'estensione, cioè quello che
+     * segue l'ultimo punto del nome, senza il punto e senza modificare maiuscole e minuscole ( "foto.tar.GZ" restituisce
+     * "GZ" ). Il percorso non viene verificato né completato, per cui il file può anche non esistere.
+     *
+     * Se il nome del file non contiene punti, strrpos() restituisce false, che sommato a uno vale 1: la funzione restituisce
+     * allora il nome senza il primo carattere ( "Makefile" restituisce "akefile" ) invece di una stringa vuota. Per un file
+     * nascosto come ".htaccess" restituisce "htaccess".
+     *
+     * @param       string      $f      il percorso del file da esaminare
+     *
+     * @return      string              l'estensione del file
      *
      * TODO questa va testata
-     * TODO documentare
      * TODO questa funzione non è un doppione?
+     * TODO per un nome senza punti restituisce il nome privo del primo carattere invece di una stringa vuota
      *
      */
     function getFileExtension( $f ) {
@@ -1462,6 +1511,14 @@
      * 
      * Questa funzione chiama ricorsivamente sé stessa per costruire un elenco di file filtrati tramite la funzione
      * fnmatch() (https://www.php.net/manual/en/function.fnmatch.php).
+     * 
+     * Allo stato attuale il risultato della chiamata ricorsiva viene passato ad array_merge() senza assegnarlo, per cui
+     * va perso: la funzione restituisce soltanto i file della cartella $path che corrispondono al filtro, senza quelli
+     * delle sottocartelle, e li restituisce come nomi semplici, senza percorso. I file e le cartelle il cui nome comincia
+     * con un punto vengono ignorati. Se la cartella non si può aprire restituisce false. Nel framework la funzione non ha
+     * chiamanti.
+     * 
+     * TODO il risultato della chiamata ricorsiva va assegnato a $r, altrimenti le sottocartelle non vengono mai considerate
      * 
      * @param       string      $path       il percorso della cartella da esaminare
      * @param       string      $find       il filtro da applicare
