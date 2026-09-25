@@ -195,10 +195,10 @@
      * accentate perdono l'accento) e fa l'escape delle &, e deve essere un frammento XML ben formato perché viene
      * aggiunto con appendXML(); se non lo è il body resta vuoto e PHP emette un warning.
      * 
-     * NOTA l'HTML generato viene passato per urldecode() prima dell'invio, per cui i + del contenuto diventano spazi e
-     * le sequenze %xx vengono decodificate ("1+1" diventa "1 1"). Al momento della stesura di questa documentazione la
-     * funzione non è usata da nessun file.
-     * TODO verificare il motivo di urldecode() sull'intero documento e limitarlo agli attributi che ne hanno bisogno
+     * NOTA fino al 2026-09-24 l'HTML generato veniva passato per urldecode() prima dell'invio, probabilmente per
+     * annullare l'escape che saveHTML() applica agli URL degli attributi href e src ( uno spazio diventa %20 ); ma la
+     * decodifica prendeva l'intero documento, e i + del testo diventavano spazi ( "1+1" diventava "1 1" ) e le sequenze
+     * %xx venivano decodificate anche dentro gli URL, dove sono necessarie. Ora il documento si invia com'è.
      * 
      * TODO supportare title
      * TODO supportare tag aggiuntivi nell'head
@@ -244,7 +244,7 @@
         $body->appendChild( $contentFragment );
 
     // genero l'output
-        build( urldecode( $document->saveHTML() ), MIME_TEXT_HTML, $encoding, $headers );
+        build( $document->saveHTML(), MIME_TEXT_HTML, $encoding, $headers );
 
     }
 
