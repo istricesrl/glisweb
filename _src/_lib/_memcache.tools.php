@@ -155,21 +155,26 @@
      * legge l'età di una chiave in cache
      *
      * Questa funzione legge l'età di una chiave in cache, cioè il valore della chiave con lo stesso nome e il suffisso _AGE
-     * ( vedi memcacheAddKeyAgeSuffix() ); se questa non esiste restituisce false.
+     * ( vedi memcacheAddKeyAgeSuffix() ), che memcacheWrite() scrive insieme al dato con il timestamp della scrittura; se
+     * questa non esiste restituisce false. I chiamanti ( i runlevel _310.pages.php dei moduli dei contenuti ) confrontano
+     * il timestamp di aggiornamento di una pagina con questo valore, e la rigenerano se è più recente.
      *
-     * TODO a differenza di apcuWrite(), memcacheWrite() non scrive la chiave _AGE, e nel framework nessun altro la scrive:
-     * questa funzione restituisce quindi sempre false. I chiamanti ( i runlevel _310.pages.php dei moduli dei contenuti )
-     * confrontano il timestamp di aggiornamento con questo valore, e il confronto con false li porta a rigenerare i dati ogni
-     * volta invece di usare la cache.
+     * Se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_memcache.clean.php ) la funzione
+     * restituisce false, così che il refresh forzato rigeneri tutte le pagine anche quando una chiave è sfuggita al flush
+     * perché mancava dall'indice CACHE_INDEX; senza questo accorgimento la pagina resterebbe quella in cache ( 2026-09-24 ).
      *
      * @param       object      $conn   la connessione a Memcached
      * @param       string      $key    la chiave di cui leggere l'età, senza il seme
      *
-     * @return      mixed               il valore della chiave _AGE, oppure false se non esiste
+     * @return      mixed               il valore della chiave _AGE, oppure false se non esiste o se è in corso un refresh
      *
      */
     function memcacheGetKeyAge($conn, $key)
     {
+
+        if (defined('MEMCACHE_REFRESH')) {
+            return false;
+        }
 
         return memcacheRead($conn, memcacheAddKeyAgeSuffix($key));
     }
@@ -182,8 +187,10 @@
      * scrive un dato in cache
      *
      * Questa funzione serializza il dato e lo scrive in cache con la chiave indicata ( a cui aggiunge il seme del sito ) e con
-     * la compressione attiva; se la scrittura riesce aggiorna anche l'indice delle chiavi del sito, la chiave CACHE_INDEX, che
-     * associa a ogni chiave il momento della scrittura e il TTL, ed è quello che memcacheFlush() usa per sapere cosa cancellare.
+     * la compressione attiva; se la scrittura riesce scrive anche la chiave _AGE con il timestamp corrente e lo stesso TTL
+     * ( vedi memcacheGetKeyAge(); la chiave _AGE non entra nell'indice ) e aggiorna l'indice delle chiavi del sito, la chiave
+     * CACHE_INDEX, che associa a ogni chiave il momento della scrittura e il TTL, ed è quello che memcacheFlush() usa per
+     * sapere cosa cancellare.
      * Se la connessione è assente o non è un oggetto la funzione logga l'errore e restituisce false senza scrivere niente.
      *
      * TODO l'indice viene riscritto con il TTL dell'ultima chiave scritta: una chiave con TTL breve fa scadere l'indice prima
@@ -222,6 +229,11 @@
             if ($r === false) {
                 logger('impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR);
             } else {
+                // la chiave _AGE con il momento della scrittura, come in apcuWrite() e redisWrite(); era stata tolta il
+                // 2026-03-26 insieme all'arrivo dell'indice, e memcacheGetKeyAge() restituiva sempre false ( 2026-09-24 )
+                if ($conn->set(memcacheAddKeyAgeSuffix($key), serialize(time()), $ttl) === false) {
+                    logger('impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . memcacheAddKeyAgeSuffix($key), 'memcache', LOG_ERR);
+                }
                 $idxKey = 'CACHE_INDEX';
                 $m = memcacheRead($conn, memcacheUniqueKey($idxKey));
                 if (!is_array($m)) {
