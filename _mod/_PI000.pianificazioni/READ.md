@@ -6,6 +6,48 @@
 > `_202609251400.pianificazioni.sql` ) e la completa; la pianificazione "per duplicazione" della fase
 > precedente ( workspace JSON, `mysqlDuplicateRowRecursive()` ) non c'è.
 
+## a cosa serve
+
+Una pianificazione crea da sola, a intervalli regolari, un oggetto a partire da un modello: una fattura ogni mese con le
+sue righe e i suoi pagamenti, una todo ogni lunedì, mercoledì e venerdì, un rinnovo del contratto ogni anno. Le entità
+pianificabili sono quelle dell'enum `pianificazioni.entita`: documenti, todo, attivita, rinnovi, documenti_articoli e
+pagamenti ( queste ultime due come righe e pagamenti aggiunti a un documento esistente ). Il meccanismo è descritto in
+`_usr/_docs/_read/122.esecuzione.pianificazioni.md`, la tabella in `_usr/_docs/_read/313.database.p.md`.
+
+## come si usa
+
+1. da strumenti → pianificazioni si crea una pianificazione: entità, nome, periodicità e cadenza ( con i giorni della
+   settimana per la settimanale e lo schema per le mensili ), data da cui è attiva, data del primo oggetto, data di fine
+   ( compresa, facoltativa ), giorni di anticipo con cui creare gli oggetti e giorni di cui allungarla da sola;
+2. nella scheda modello si compila l'oggetto: per un documento tipologia, sezionale, nome, emittente e destinatario, e
+   nel sub form le righe ( nome, quantità, importo, reparto ) e i pagamenti ( modalità, importo, differimento ). Nei
+   campi di testo si possono usare le variabili Twig della data dell'oggetto ( `{{ dt.now.nome_mese }} {{ dt.now.anno }}` )
+   e, nell'importo dei pagamenti, `{{ dt.articoli.totale }}`, il totale ivato delle righe;
+3. il cron crea gli oggetti scaduti a ogni passata ( terzo blocco di `_src/_api/_cron.php` ); dalla scheda strumenti li si
+   può creare subito, o fermare la pianificazione a una data.
+
+Esempio, una fattura mensile di canone: entità documenti, periodicità mensile, cadenza 1, primo oggetto il 31/01, modello
+con tipologia fattura, sezionale `{{ dt.now.anno }}`, nome `canone {{ dt.now.nome_mese }} {{ dt.now.anno }}`, una riga
+da 100,00 al reparto IVA 22% e un pagamento `{{ dt.articoli.totale }}` a 30 giorni fine mese. Le fatture escono il 31/01,
+il 28/02, il 31/03, il 30/04..., numerate in ordine, e il pagamento della prima scade il 28/02.
+
+## debug
+
+Il task si chiama a mano con `/task/PI000.pianificazioni/pianificazioni.populate?id=<id>&d=<Y-m-d>`: `id` elabora quella
+pianificazione anche se non è scaduta, `d` lavora come se oggi fosse quella data. L'output JSON contiene le date
+calcolate, gli oggetti creati e gli errori; da cron lo stesso contenuto va in `var/log/pianificazioni/<id>/`. Se una
+pianificazione non parte, i campi da guardare sono `data_avvio` ( dev'essere passata ), `data_elaborazione` ( se è oggi è
+già stata elaborata ), `token` ( un lock più vecchio di dieci minuti viene liberato da solo ) e `data_ultimo_oggetto` ( le
+date fino a questa compresa non si ricreano ).
+
+## cosa non fa
+
+- non duplica oggetti esistenti con i loro figli, come faceva la fase per duplicazione di `_0100.pianificazioni`: il
+  modello sta nelle colonne `model_*`;
+- non cancella mai documenti: il task di interruzione li elenca e li lascia dove sono;
+- per numerare i documenti usa `generaProssimoNumeroDocumento()`, che sta in `_0400.documenti`: senza quel modulo una
+  pianificazione di documenti si ferma con un errore.
+
 ## i file del modulo
 
 ### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.populate.php
