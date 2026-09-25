@@ -11,9 +11,11 @@
      * La funzione più usata della libreria è xml2array(), che trasforma un documento XML in un array annidato ed è usata ad
      * esempio da restCall() in _src/_lib/_rest.tools.php per decodificare le risposte XML; xmlEntities() e xmlFloat() sono
      * usate per la generazione delle fatture elettroniche in _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php.
-     * La funzione inversa array2xml() al momento della stesura di questa documentazione non è usata da nessun file (in
-     * _src/_config/_980.sitemap.php ne resta solo una chiamata commentata); riconverte fedelmente l'array di xml2array(),
-     * namespace compresi.
+     * La funzione inversa array2xml() riconverte fedelmente l'array di xml2array(), namespace compresi, ed è usata per
+     * scrivere la sitemap in _src/_config/_980.sitemap.php, il tracciato delle ore per Zucchetti in
+     * _mod/_8100.cartellini/_src/_api/_print/_zucchetti.xml.php e il corpo delle chiamate di restCall() con $datatype
+     * MIME_APPLICATION_XML. La fattura elettronica resta scritta con XMLWriter, perché array2xml() non ne riprodurrebbe il
+     * testo identico ( si veda la NOTA nel docblock della funzione ).
      * 
      * formato degli array
      * -------------------
@@ -72,6 +74,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-09-25       | Fabio Mosti          | array2xml() al posto di XMLWriter per sitemap e tracciato Zucchetti
      * 
      * licenza
      * =======
@@ -149,7 +152,7 @@
     // 1) gestire in maniera trasparente l'array generato da xml2array
     // 2) gestire correttamente i namespace senza l'accrocchio del pipe
     // 3) mantenere la compatibilità con gli script che usano attualmente questa funzione
-    // il 2026-09-24 sono stati raggiunti i primi due, e il terzo non pesa perché la funzione non ha chiamanti
+    // il 2026-09-24 sono stati raggiunti i primi due, e il terzo non pesava perché la funzione non aveva chiamanti
 
     if( $xml === NULL ) {
         $dtk = array_keys( $data );
