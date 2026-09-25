@@ -190,12 +190,11 @@
      * la compressione attiva; se la scrittura riesce scrive anche la chiave _AGE con il timestamp corrente e lo stesso TTL
      * ( vedi memcacheGetKeyAge(); la chiave _AGE non entra nell'indice ) e aggiorna l'indice delle chiavi del sito, la chiave
      * CACHE_INDEX, che associa a ogni chiave il momento della scrittura e il TTL, ed è quello che memcacheFlush() usa per
-     * sapere cosa cancellare.
-     * Se la connessione è assente o non è un oggetto la funzione logga l'errore e restituisce false senza scrivere niente.
+     * sapere cosa cancellare. L'indice viene scritto senza scadenza, e a ogni scrittura perde le voci delle chiavi il cui TTL
+     * è già trascorso. Se la connessione è assente o non è un oggetto la funzione logga l'errore e restituisce false senza
+     * scrivere niente.
      *
-     * TODO l'indice viene riscritto con il TTL dell'ultima chiave scritta: una chiave con TTL breve fa scadere l'indice prima
-     * delle altre chiavi, che da quel momento memcacheFlush() non vede più. La lettura e la riscrittura dell'indice inoltre non
-     * sono atomiche, quindi due scritture contemporanee possono perdere una voce.
+     * TODO la lettura e la riscrittura dell'indice non sono atomiche, quindi due scritture contemporanee possono perdere una voce.
      *
      * @param       object      $conn   la connessione a Memcached
      * @param       string      $key    la chiave con cui scrivere il dato, senza il seme
@@ -239,8 +238,15 @@
                 if (!is_array($m)) {
                     $m = [];
                 }
+                // l'indice non scade ( TTL 0 ), perché con il TTL della chiave appena scritta una chiave breve lo faceva
+                // scadere prima di quelle che elenca; per non farlo crescere senza limiti si tolgono le voci già scadute ( 2026-09-24 )
+                foreach ($m as $k => $v) {
+                    if (! empty($v['ttl']) && $v['time'] + $v['ttl'] < time()) {
+                        unset($m[$k]);
+                    }
+                }
                 $m[$key] = array('time' => time(), 'ttl' => $ttl);
-                $r = $conn->set(memcacheUniqueKey($idxKey), serialize($m), $ttl);
+                $r = $conn->set(memcacheUniqueKey($idxKey), serialize($m), 0);
                 if ($r === false) {
                     logger('impossibile (' . $conn->getResultCode() . ') aggiornare l\'indice dopo aver scritto la chiave: ' . $key, 'memcache', LOG_ERR);
                 }
