@@ -45,8 +45,10 @@ date fino a questa compresa non si ricreano ).
 - non duplica oggetti esistenti con i loro figli, come faceva la fase per duplicazione di `_0100.pianificazioni`: il
   modello sta nelle colonne `model_*`;
 - non cancella mai documenti: il task di interruzione li elenca e li lascia dove sono;
-- per numerare i documenti usa `generaProssimoNumeroDocumento()`, che sta in `_0400.documenti`: senza quel modulo una
-  pianificazione di documenti si ferma con un errore.
+- non pianifica un'entità se nessuno dei moduli che la gestiscono è attivo: la tendina del form propone solo le entità
+  disponibili, e il task salta, scrivendolo nel log, le pianificazioni esistenti di un'entità il cui modulo è stato
+  spento. I moduli di ciascuna entità sono nel capitolo 122; i documenti vogliono `_DO000.documenti` o
+  `_0400.documenti`, i due moduli che hanno `generaProssimoNumeroDocumento()` per numerarli.
 
 ## i file del modulo
 

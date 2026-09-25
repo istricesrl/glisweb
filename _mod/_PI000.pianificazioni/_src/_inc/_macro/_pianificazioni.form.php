@@ -30,6 +30,18 @@
         array( 'id' => 'pagamenti', '__label__' => 'pagamenti di un documento' )
     );
 
+    // solo le entità gestite da un modulo attivo ( vedi pianificazioniEntitaAttiva() ); quella di una pianificazione
+    // esistente resta nella tendina anche se il suo modulo è stato spento, perché salvando il form non vada persa
+    foreach( $ct['etc']['select']['entita'] as $k => $v ) {
+        if( ! pianificazioniEntitaAttiva( $v['id'] ) ) {
+            if( isset( $_REQUEST[ $ct['form']['table'] ]['entita'] ) && $_REQUEST[ $ct['form']['table'] ]['entita'] == $v['id'] ) {
+                $ct['etc']['select']['entita'][ $k ]['__label__'] .= ' ( modulo non attivo )';
+            } else {
+                unset( $ct['etc']['select']['entita'][ $k ] );
+            }
+        }
+    }
+
     // tendina periodicità
     $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],

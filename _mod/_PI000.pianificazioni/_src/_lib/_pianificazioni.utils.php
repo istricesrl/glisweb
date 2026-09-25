@@ -49,7 +49,8 @@
      *
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
-     * pianificazioniEntita()           | restituisce la tabella e il campo data di un'entità pianificabile
+     * pianificazioniEntita()           | restituisce la tabella, il campo data e i moduli di un'entità pianificabile
+     * pianificazioniEntitaAttiva()     | verifica se è attivo un modulo che gestisce un'entità pianificabile
      * pianificazioniDatiData()         | prepara le variabili Twig relative alla data di un oggetto
      * pianificazioniRiga()             | costruisce la riga di un oggetto a partire dal modello
      * pianificazioniScadenza()         | calcola la scadenza di un pagamento pianificato
@@ -73,7 +74,7 @@
      * twigRenderText()                 | _src/_lib/_twig.tools.php
      * int2month(), int2day()           | _src/_lib/_string.tools.php
      * mysqlQuery(), mysqlInsertRow()   | _src/_lib/_mysql.tools.php
-     * generaProssimoNumeroDocumento()  | _mod/_0400.documenti/_src/_lib/_mysql.utils.add.php ( solo per i documenti )
+     * generaProssimoNumeroDocumento()  | _mod/_DO000.documenti/_src/_lib/_mysql.utils.add.php, o quella di _0400.documenti
      *
      * changelog
      * =========
@@ -81,6 +82,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-25       | Fabio Mosti          | prima versione, dal task populate di _0100.pianificazioni
+     * 2026-09-25       | Fabio Mosti          | entità disponibili secondo i moduli attivi
      *
      * licenza
      * =======
@@ -94,15 +96,20 @@
      */
 
     /**
-     * restituisce la tabella e il campo data di un'entità pianificabile
+     * restituisce la tabella, il campo data e i moduli di un'entità pianificabile
      *
      * Questa funzione restituisce, per uno dei valori dell'enum pianificazioni.entita, un array con la tabella in cui
-     * vanno creati gli oggetti ( chiave tabella ) e la colonna che riceve la data dell'oggetto ( chiave data ); per un
-     * valore sconosciuto restituisce NULL.
+     * vanno creati gli oggetti ( chiave tabella ), la colonna che riceve la data dell'oggetto ( chiave data ) e i moduli
+     * che gestiscono l'entità ( chiave moduli, ne basta uno attivo, vedi pianificazioniEntitaAttiva() ); per un valore
+     * sconosciuto restituisce NULL.
+     *
+     * Per le tre entità dei documenti basta uno dei due moduli dei documenti, _0400.documenti o _DO000.documenti ( che
+     * non si attivano mai insieme ): un documento pianificato nasce numerato, e generaProssimoNumeroDocumento() sta in
+     * tutti e due; _DO010.fatture da solo non basta, perché la numerazione è di _DO000.
      *
      * @param       string      $e      l'entità ( todo, attivita, rinnovi, documenti, documenti_articoli, pagamenti )
      *
-     * @return      mixed               l'array con tabella e campo data, oppure NULL
+     * @return      mixed               l'array con tabella, campo data e moduli, oppure NULL
      *
      */
     function pianificazioniEntita( $e ) {
@@ -117,12 +124,52 @@
             'pagamenti'             => 'data_scadenza'
         );
 
+        // moduli che gestiscono ciascuna entità
+        $moduli = array(
+            'todo'                  => array( '1200.todo' ),
+            'attivita'              => array( '0200.attivita', 'AT000.attivita' ),
+            'rinnovi'               => array( '0600.contratti' ),
+            'documenti'             => array( '0400.documenti', 'DO000.documenti' ),
+            'documenti_articoli'    => array( '0400.documenti', 'DO000.documenti' ),
+            'pagamenti'             => array( '0400.documenti', 'DO000.documenti' )
+        );
+
         // entità sconosciuta
         if( empty( $e ) || ! isset( $campi[ $e ] ) ) {
             return NULL;
         }
 
-        return array( 'tabella' => $e, 'data' => $campi[ $e ] );
+        return array( 'tabella' => $e, 'data' => $campi[ $e ], 'moduli' => $moduli[ $e ] );
+
+    }
+
+    /**
+     * verifica se è attivo un modulo che gestisce un'entità pianificabile
+     *
+     * Questa funzione restituisce true se fra i moduli attivi c'è almeno uno di quelli che pianificazioniEntita()
+     * indica per l'entità $e, false se non ce n'è nessuno o se l'entità è sconosciuta. Con questa funzione il form
+     * delle pianificazioni propone solo le entità disponibili e pianificazioniElabora() salta le pianificazioni di
+     * un'entità il cui modulo non è ( più ) attivo.
+     *
+     * @param       string      $e      l'entità ( todo, attivita, rinnovi, documenti, documenti_articoli, pagamenti )
+     *
+     * @return      bool                true se un modulo che gestisce l'entità è attivo, false altrimenti
+     *
+     */
+    function pianificazioniEntitaAttiva( $e ) {
+
+        global $cf;
+
+        // entità
+        $e = pianificazioniEntita( $e );
+
+        // entità sconosciuta
+        if( empty( $e ) ) {
+            return false;
+        }
+
+        // moduli attivi fra quelli dell'entità
+        return ( count( array_intersect( $e['moduli'], $cf['mods']['active']['array'] ) ) > 0 );
 
     }
 
@@ -415,6 +462,9 @@
      * modello ) non viene creato e la transazione si annulla, invece di riscrivere l'oggetto che c'era già. NOTA con
      * INSERT IGNORE MariaDB tronca in silenzio un valore troppo lungo invece di rifiutarlo.
      *
+     * Una pianificazione di un'entità che nessun modulo attivo gestisce ( vedi pianificazioniEntitaAttiva() ) viene
+     * saltata: la funzione lo scrive nello stato, la segna come elaborata alla data di lavoro e restituisce zero.
+     *
      * Per le altre entità si creano tutti gli oggetti della finestra; le pianificazioni figlie vengono ignorate. Se
      * dopo il giro non restano date da creare, la funzione scrive $data in data_elaborazione, che è ciò che dice al cron
      * che la pianificazione è a posto per quel giorno; se un oggetto fallisce la transazione si annulla, la funzione si
@@ -441,6 +491,15 @@
         } elseif( ! empty( $p['id_genitore'] ) ) {
             $status['err'][] = 'la pianificazione #' . $p['id'] . ' è figlia della #' . $p['id_genitore'] . ' e si elabora con lei';
             return false;
+        }
+
+        // entità il cui modulo non è attivo
+        // NOTA la pianificazione si segna come elaborata alla data di lavoro, perché altrimenti il cron la riprenderebbe
+        // a ogni passata per saltarla di nuovo; riprende da sola il giorno dopo l'attivazione del modulo ( 2026-09-25 )
+        if( ! pianificazioniEntitaAttiva( $p['entita'] ) ) {
+            $status['info'][] = 'la pianificazione #' . $p['id'] . ' crea ' . $p['entita'] . ' ma nessuno dei moduli che la gestiscono ( ' . implode( ', ', $e['moduli'] ) . ' ) è attivo: la salto';
+            mysqlQuery( $cf['mysql']['connection'], 'UPDATE pianificazioni SET data_elaborazione = ? WHERE id = ?', array( array( 's' => $data ), array( 's' => $p['id'] ) ) );
+            return 0;
         }
 
         // date da creare
@@ -507,7 +566,7 @@
 
                 // numero del documento
                 if( ! function_exists( 'generaProssimoNumeroDocumento' ) ) {
-                    $status['err'][] = 'per numerare i documenti serve generaProssimoNumeroDocumento() del modulo _0400.documenti';
+                    $status['err'][] = 'per numerare i documenti serve generaProssimoNumeroDocumento() del modulo _DO000.documenti o _0400.documenti';
                     $ok = false;
                 } elseif( empty( $riga['id_tipologia'] ) || empty( $riga['id_emittente'] ) ) {
                     $status['err'][] = 'il modello del documento non ha tipologia o emittente';
