@@ -90,7 +90,8 @@
      *
      * Questa funzione legge le dimensioni dell'immagine indicata con getimagesize() e ne ricava orientamento, lato maggiore,
      * lato minore e rapporto fra i due; il percorso può essere relativo a DIR_BASE o assoluto. Un'immagine quadrata viene
-     * considerata orizzontale. Se il file non esiste o non si può leggere la funzione restituisce false.
+     * considerata orizzontale. Se il file non esiste, non si può leggere o non è un'immagine di cui getimagesize() riconosce
+     * le dimensioni ( per esempio un PDF o un SVG ) la funzione restituisce false.
      *
      * L'array restituito ha le seguenti chiavi:
      *
@@ -103,12 +104,9 @@
      * g        | il lato maggiore dell'immagine
      * l        | il lato minore dell'immagine
      *
-     * TODO se il file esiste ma non è un'immagine getimagesize() restituisce false e le dimensioni valgono NULL, quindi il
-     * calcolo del rapporto divide per zero: da PHP 8 è un DivisionByZeroError e non un false.
-     *
      * @param       string      $f      il percorso dell'immagine
      *
-     * @return      mixed               l'array con dimensioni e orientamento, oppure false se il file non è leggibile
+     * @return      mixed               l'array con dimensioni e orientamento, oppure false se il file non è un'immagine leggibile
      *
      */
     function imageSize( $f ) {
@@ -124,6 +122,11 @@
 
         // prelevo le dimensioni del file
             $d = getimagesize( $f );
+
+        // se il file non è un'immagine getimagesize() restituisce false, e il rapporto dividerebbe per zero ( 2026-09-24 )
+            if( empty( $d[0] ) || empty( $d[1] ) ) {
+                return false;
+            }
 
             $w = $d[0];
             $h = $d[1];
