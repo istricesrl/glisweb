@@ -105,6 +105,7 @@
                 'GESTIONE_DOCUMENTI',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
+                'GESTIONE_PIANIFICAZIONI',
                 'GESTIONE_COMUNICAZIONI',
                 'GESTIONE_CATALOGO',
                 'GESTIONE_ECOMMERCE'
@@ -119,6 +120,7 @@
                 'GESTIONE_DOCUMENTI',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
+                'GESTIONE_PIANIFICAZIONI',
                 'GESTIONE_COMUNICAZIONI',
                 'GESTIONE_CATALOGO',
                 'GESTIONE_ECOMMERCE'
@@ -205,6 +207,10 @@
         'GESTIONE_CORSI' => array(
             'id' => NULL,
             'nome' => 'eseguire i task su corsi, lezioni, pianificazioni e todo'
+        ),
+        'GESTIONE_PIANIFICAZIONI' => array(
+            'id' => NULL,
+            'nome' => 'gestire le pianificazioni ed eseguire i task che generano gli oggetti pianificati'
         ),
         'GESTIONE_COMUNICAZIONI' => array(
             'id' => NULL,
