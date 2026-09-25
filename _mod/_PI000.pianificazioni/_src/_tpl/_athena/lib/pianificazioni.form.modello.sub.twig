@@ -1,0 +1,118 @@
+{# MACRO DEL MODELLO DELLE PIANIFICAZIONI
+    Queste macro compongono i subform della scheda modello delle pianificazioni. #}
+
+{# pianificazioni() - crea il subform delle pianificazioni figlie di un documento
+    Questa macro crea il subform delle pianificazioni figlie ( field è la colonna che punta al genitore, id_genitore ), che
+    sono il modello delle righe ( entità documenti_articoli ) e dei pagamenti ( entità pagamenti ) di ogni documento creato
+    dalla pianificazione. Una riga nuova chiede solo l'entità: i campi del modello compaiono dopo il salvataggio. Nell'importo
+    dei pagamenti si può usare {{ dt.articoli.totale }}, il totale ivato delle righe appena create. È la versione per il
+    template athena nuovo di bin/pianificazioni.form.modello.sub.html di _0100.pianificazioni, con la forma dei sub form di
+    lib/anagrafica.form.sub.twig di _AN000.anagrafica. #}
+{% macro pianificazioni( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as tpl %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+    {% set require = -1 %}
+    {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if r.id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    {% set sf = { 'table': table, 'subtable': subtable, 'counter': i } %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+        {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden', 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+        <div class="form-group row">
+            {% if r.entita %}
+            {{ frm.input({ 'field': { 'name': 'entita', 'type': 'hidden', 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            {% if r.entita == 'documenti_articoli' %}
+            <div class="col-12 col-md form-col">
+                <span class="label-top">riga</span>
+                {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'required': 1, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-1 form-col">
+                <span class="label-top">quantità</span>
+                {{ frm.input({ 'field': { 'name': 'model_quantita', 'type': 'number', 'step': 0.01, 'default': 1, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">UDM</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_udm', 'disabled': disabled }, 'source': { 'values': etc.select.udm }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-12 col-md-3 form-col">
+                <span class="label-top">articolo</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_articolo', 'disabled': disabled }, 'source': { 'api': 'articoli' }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-6 col-md-1 form-col">
+                <span class="label-top">importo</span>
+                {{ frm.input({ 'field': { 'name': 'model_importo_netto_totale', 'type': 'text', 'required': 1, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">reparto</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_reparto', 'required': 1, 'disabled': disabled }, 'source': { 'values': etc.select.reparti }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">listino</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_listino', 'disabled': disabled }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            {% elseif r.entita == 'pagamenti' %}
+            <div class="col-12 col-md form-col">
+                <span class="label-top">pagamento</span>
+                {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'required': 1, 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">modalità</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_modalita_pagamento', 'disabled': disabled }, 'source': { 'values': etc.select.modalita_pagamento }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">IBAN</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_iban', 'disabled': disabled }, 'source': { 'values': etc.select.iban }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-6 col-md-2 form-col">
+                <span class="label-top">importo</span>
+                {{ frm.input({ 'field': { 'name': 'model_importo_lordo_finale', 'type': 'text', 'required': 1, 'default': '{{ dt.articoli.totale }}', 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">listino</span>
+                {{ frm.select({ 'field': { 'name': 'model_id_listino', 'disabled': disabled }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-6 col-md-1 form-col">
+                <span class="label-top">giorni</span>
+                {{ frm.input({ 'field': { 'name': 'offset_giorni', 'type': 'number', 'disabled': disabled }, 'request': request, 'form': sf, 'page': page }) }}
+            </div>
+            <div class="col-6 col-md-auto form-col">
+                <span class="label-top">fine mese</span>
+                {{ frm.select({ 'field': { 'name': 'offset_fine_mese', 'disabled': disabled }, 'source': { 'values': etc.select.fine_mese }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="col form-col">
+                <span class="label-top">entità</span>
+                {{ frm.select({ 'field': { 'name': 'entita', 'required': 1, 'disabled': disabled }, 'source': { 'values': etc.select.entita }, 'request': request, 'form': sf, 'page': page, 'pages': pages }) }}
+            </div>
+            {% endif %}
+            {% if r.id %}
+            <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
+                {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            <div class="col-auto form-col text-right show-on-duplicate d-print-none hidden">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();', 'class': 'btn-secondary btn-sqr show-on-duplicate hidden' } } ) }}
+            </div>
+            {% else %}
+            <div class="col-auto form-col text-right d-print-none">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
