@@ -349,20 +349,18 @@
      * 
      * Questa funzione invia l'header Content-Type text/csv e, se è specificato un nome di file, l'header
      * Content-Disposition che fa scaricare il contenuto come allegato con quel nome; poi stampa il contenuto. Non passa
-     * per build() e non invia il charset. Il contenuto deve essere già una stringa CSV.
-     * 
-     * NOTA il parametro $e non viene usato.
+     * per build(). Il contenuto deve essere già una stringa CSV, nel charset $e dichiarato nell'header.
      * 
      * @param       string      $t      il contenuto CSV
      * @param       string      $f      il nome del file da scaricare (default NULL, cioè nessun allegato)
-     * @param       string      $e      il charset (default ENCODING_UTF8, attualmente ignorato)
+     * @param       string      $e      il charset da dichiarare nell'header (default ENCODING_UTF8)
      * 
      * @return      void
      * 
      */
     function buildCsv( $t, $f = NULL, $e = ENCODING_UTF8 ) {
 
-        header('Content-Type: text/csv');
+        header('Content-Type: text/csv; charset=' . $e );
         if( ! empty( $f ) ) {
             header('Content-Disposition: attachment; filename=' . $f );
         }
