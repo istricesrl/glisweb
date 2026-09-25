@@ -15,7 +15,7 @@
 -- ancora. I file di base sono stati aggiornati nello stesso giro, con i numeri di blocco che la tabella
 -- aveva prima ( 023800, e 023600 per i vincoli ); le righe di periodicita stanno nel blocco 050000023600.
 -- Gli id 1-8 di periodicita non sono arbitrari: creazionePianificazione() in _src/_lib/_cron.utils.php
--- ci fa sopra uno switch ( 1 giornaliera, 2 settimanale, 3 mensile, 8 annuale ).
+-- ci fa sopra uno switch ( 1 giornaliera, 2 settimanale, da 3 a 8 mensile, bimestrale ... annuale ).
 --
 -- IDEMPOTENZA. Un deploy installato prima di marzo ha ancora la tabella, nella forma del 2021 o in
 -- quella ancora precedente ( con id_turno, periodicita, ripetizione_mese, giorni_rinnovo ): la CREATE
