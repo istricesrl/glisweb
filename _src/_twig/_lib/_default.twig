@@ -293,6 +293,57 @@
     <!-- fine macro {{ _self }}::video() -->
 {% endmacro video %}
 
+{# audio() - riproduce un audio della pagina con il player HTML5
+    Questa macro è la gemella di video() per gli audio che aggiungiAudio() mette in page.contents.audio,
+    indicizzati per ruolo e ordine come i video; source.ruolo e source.ordine dicono quale, source.ietf
+    sceglie path e tipo quando l'audio ne ha uno per lingua. Non c'è un ramo per gli audio incorporati da
+    servizi esterni ( id_embed, codice_embed ), perché nessun servizio audio è implementato. #}
+{% macro audio( options ) %}
+    <!-- macro {{ _self }}::audio() -->
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'site': [],
+        'page': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'ruolo': '',
+        'ordine': '',
+        'ietf': 'it-IT',
+        'class': ''
+    }|merge( options.source ) %}
+
+    {# valori di default per l'array site #}
+    {% set site = {
+    }|merge( options.site ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# dettagli dell'audio prelevati dalla pagina #}
+    {% set audio = page.contents.audio[ source.ruolo ][ source.ordine ] %}
+
+    {# se il path è per lingua #}
+    {% if audio.path is iterable %}
+        {% set path = audio.path[ source.ietf ] %}
+        {% set mime = audio.mimetype[ source.ietf ] %}
+    {% else %}
+        {% set path = audio.path %}
+        {% set mime = audio.mimetype %}
+    {% endif %}
+
+    <!-- HTML5 AUDIO PLAYER -->
+    <audio controls{% if source.class %} class="{{ source.class }}"{% endif %}>
+        <source src="{{ site.root }}{{ path }}" type="{{ mime|default( 'audio/mpeg' ) }}">
+    </audio>
+
+    <!-- fine macro {{ _self }}::audio() -->
+{% endmacro audio %}
+
 {# INCORPORAMENTO DI UN VIDEO YOUTUBE SUBORDINATO AL CONSENSO SUI COOKIE
 
    E' la macro da usare ogni volta che in una pagina compare un video di YouTube, sia dai template
