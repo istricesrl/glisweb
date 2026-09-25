@@ -622,6 +622,7 @@
     define( 'DIR_VAR_LOG_CSV'                           , DIR_BASE . 'var/log/csv/' );
     define( 'DIR_VAR_LOG_JOB'                           , DIR_BASE . 'var/log/job/' );
     define( 'DIR_VAR_LOG_MYSQL'                         , DIR_BASE . 'var/log/mysql/' );
+    define( 'DIR_VAR_LOG_PIANIFICAZIONI'                , DIR_BASE . 'var/log/pianificazioni/' );
     define( 'DIR_VAR_LOG_LATEST'                        , DIR_BASE . 'var/log/latest/' );
     define( 'DIR_VAR_LOG_SLOW'                          , DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_LOG_TASK'                          , DIR_BASE . 'var/log/task/' );
