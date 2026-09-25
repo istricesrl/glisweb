@@ -13,9 +13,9 @@
      * usate per la generazione delle fatture elettroniche in _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php.
      * La funzione inversa array2xml() riconverte fedelmente l'array di xml2array(), namespace compresi, ed è usata per
      * scrivere la sitemap in _src/_config/_980.sitemap.php, il tracciato delle ore per Zucchetti in
-     * _mod/_8100.cartellini/_src/_api/_print/_zucchetti.xml.php e il corpo delle chiamate di restCall() con $datatype
-     * MIME_APPLICATION_XML. La fattura elettronica resta scritta con XMLWriter, perché array2xml() non ne riprodurrebbe il
-     * testo identico ( si veda la NOTA nel docblock della funzione ).
+     * _mod/_8100.cartellini/_src/_api/_print/_zucchetti.xml.php, la fattura elettronica in
+     * _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php e il corpo delle chiamate di restCall() con $datatype
+     * MIME_APPLICATION_XML.
      * 
      * formato degli array
      * -------------------
@@ -75,6 +75,7 @@
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
      * 2026-09-25       | Fabio Mosti          | array2xml() al posto di XMLWriter per sitemap e tracciato Zucchetti
+     * 2026-09-25       | Fabio Mosti          | array2xml() al posto di XMLWriter per la fattura elettronica
      * 
      * licenza
      * =======
@@ -125,8 +126,10 @@
      * NOTA rispetto allo stesso documento scritto con XMLWriter restano tre differenze, tutte senza effetto sul significato
      * dell'XML ma visibili nel testo: le dichiarazioni xmlns della radice vengono scritte prima degli altri attributi ( è
      * libxml a serializzarle così ), le virgolette nel testo degli elementi restano " invece di &quot;, e un elemento con
-     * testo vuoto diventa <x/> invece di <x></x>. Per queste ragioni la fattura elettronica
-     * ( _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php ) resta scritta con XMLWriter ( verificato il 2026-09-25 ).
+     * testo vuoto diventa <x/> invece di <x></x>. Per la fattura elettronica
+     * ( _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php ) si è verificato il 2026-09-25 che nessuna delle tre
+     * conta: il documento resta valido contro lo schema FatturaPA 1.2.3 e identico per C14N a quello di XMLWriter, e gli
+     * elementi vuoti la fattura non li scrive, perché lo schema non li accetta.
      *
      * NB: fino al 2026-09-25 un figlio senza prefisso di un elemento con prefisso, in un documento senza namespace di
      * default, veniva creato con SimpleXMLElement::addChild( ..., '' ), che gli scriveva un xmlns="" ridondante; xml2array()
@@ -510,10 +513,10 @@
      * NOTA i caratteri < e > non vengono convertiti in entità, anzi &lt; e &gt; vengono decodificati: la funzione va
      * quindi usata su testi che non li contengono, oppure su frammenti di markup (come fa buildHTML() in
      * _src/_lib/_output.tools.php). Non si corregge perché _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php passa il
-     * risultato a XMLWriter::writeElement(), che fa l'escape da sé: un "&lt;" lasciato com'è finirebbe nella fattura come
+     * risultato a array2xml(), che fa l'escape da sé: un "&lt;" lasciato com'è finirebbe nella fattura come
      * testo "&amp;lt;". Per la stessa ragione le & escapate qui arrivano nella fattura raddoppiate ( "Rossi & Figli"
      * diventa "Rossi &amp;amp; Figli" ).
-     * TODO in _fattura.xml.php non passare per xmlEntities() i testi scritti con writeElement(), o scriverli con writeRaw()
+     * TODO in _fattura.xml.php non passare per xmlEntities() i testi passati a array2xml()
      * TODO la sostituzione di € con EURO non ha effetto perché iconv() lo ha già trasformato in EUR
      *
      * @param       string      $t      il testo da preparare
