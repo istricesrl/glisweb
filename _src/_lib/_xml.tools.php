@@ -106,7 +106,9 @@
      * stato dichiarato viene scritto senza prefisso e l'anomalia finisce nel log xml. La mappa dei namespace vale per tutto
      * il documento, non solo per il ramo in cui sono dichiarati.
      *
-     * Il documento viene riformattato con DOM e, se $file è false, restituito come stringa; se $file è un percorso relativo
+     * Il documento viene dichiarato in UTF-8 ( con la stessa grafia di XMLWriter::startDocument( '1.0', 'UTF-8' ), per cui
+     * un file scritto prima con XMLWriter e poi con questa funzione non cambia per la dichiarazione ), viene riformattato con
+     * DOM, con due spazi di indentazione, e, se $file è false, restituito come stringa; se $file è un percorso relativo
      * a DIR_BASE viene salvato su file e la funzione restituisce il numero di byte scritti (false in caso di errore),
      * mentre se la cartella non è scrivibile scrive un errore nel log filesystem e restituisce NULL. Con $file NULL (è il
      * valore usato nelle chiamate ricorsive, con $xml valorizzato) non restituisce niente.
@@ -116,6 +118,14 @@
      * attributi '@'; il controllo sulle chiavi numeriche guardava la seconda chiave, per cui una serie di un elemento
      * produceva un documento vuoto ( e una serie di elementi con '#' pure ); la chiamata ricorsiva sulla radice riceveva
      * $file e il documento veniva formattato, ed eventualmente salvato, due volte.
+     *
+     * NOTA rispetto allo stesso documento scritto con XMLWriter restano quattro differenze, tutte senza effetto sul
+     * significato dell'XML ma visibili nel testo: le dichiarazioni xmlns della radice vengono scritte prima degli altri
+     * attributi ( è libxml a serializzarle così ), le virgolette nel testo degli elementi restano " invece di &quot;, un
+     * elemento con testo vuoto diventa <x/> invece di <x></x>, e un figlio senza prefisso di un elemento con prefisso,
+     * in un documento senza namespace di default, riceve un xmlns="" ridondante. Per queste ragioni la fattura elettronica
+     * ( _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php ) resta scritta con XMLWriter ( verificato il 2026-09-25 ).
+     * TODO evitare lo xmlns="" ridondante creando quei figli con DOM invece che con SimpleXMLElement::addChild()
      *
      * @param       array       $data       l'array da convertire
      * @param       mixed       $file       false per ottenere il documento come stringa, un percorso relativo a DIR_BASE per
@@ -160,7 +170,7 @@
             }
         }
 
-        $xml = new SimpleXMLElement( '<?xml version="1.0" encoding="utf-8"?><' . $root . $dcl . '></' . $root . '>' );
+        $xml = new SimpleXMLElement( '<?xml version="1.0" encoding="UTF-8"?><' . $root . $dcl . '></' . $root . '>' );
 
         // la chiamata sulla radice non produce output: la formattazione e il salvataggio si fanno una volta sola qui sotto
         if( is_array( $rootData ) ) {
