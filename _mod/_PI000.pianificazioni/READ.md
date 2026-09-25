@@ -24,7 +24,8 @@ pagamenti ( queste ultime due come righe e pagamenti aggiunti a un documento esi
    campi di testo si possono usare le variabili Twig della data dell'oggetto ( `{{ dt.now.nome_mese }} {{ dt.now.anno }}` )
    e, nell'importo dei pagamenti, `{{ dt.articoli.totale }}`, il totale ivato delle righe;
 3. il cron crea gli oggetti scaduti a ogni passata ( terzo blocco di `_src/_api/_cron.php` ); dalla scheda strumenti li si
-   può creare subito, o fermare la pianificazione a una data.
+   può creare subito, o fermare la pianificazione a una data; la scheda oggetti creati li elenca, ciascuno con il link
+   al suo form nel modulo che lo gestisce.
 
 Esempio, una fattura mensile di canone: entità documenti, periodicità mensile, cadenza 1, primo oggetto il 31/01, modello
 con tipologia fattura, sezionale `{{ dt.now.anno }}`, nome `canone {{ dt.now.nome_mese }} {{ dt.now.anno }}`, una riga
@@ -72,6 +73,9 @@ Questo task ferma una pianificazione a una data, e a richiesta cancella gli ogge
 ### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_pianificazioni.form.modello.php
 Questa è la macro della scheda modello del form delle pianificazioni.
 
+### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_pianificazioni.form.oggetti.php
+Questa è la macro della scheda oggetti creati del form delle pianificazioni.
+
 ### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_pianificazioni.form.php
 Questa è la macro del form delle pianificazioni.
 
@@ -98,6 +102,9 @@ Questa libreria contiene il sub form delle pianificazioni figlie, il modello del
 
 ### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/pianificazioni.form.modello.twig
 Questo è il template della scheda modello del form delle pianificazioni.
+
+### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/pianificazioni.form.oggetti.twig
+Questo è il template della scheda oggetti creati del form delle pianificazioni.
 
 ### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/pianificazioni.form.twig
 Questo è il template del form delle pianificazioni.

@@ -60,6 +60,7 @@
         'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
         'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form',
                                                         'pianificazioni.form.modello',
+                                                        'pianificazioni.form.oggetti',
                                                         'pianificazioni.form.tools'
                                                      ) )
     );
@@ -72,6 +73,18 @@
         'h1'			=> array( $l		=> 'modello' ),
         'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'pianificazioni.form.modello.twig' ),
         'macro'			=> array( $m . '_src/_inc/_macro/_pianificazioni.form.modello.php' ),
+        'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
+        'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+        'etc'			=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
+    );
+
+    // gestione oggetti creati dalle pianificazioni
+    $p['pianificazioni.form.oggetti'] = array(
+        'sitemap'		=> false,
+        'title'			=> array( $l		=> 'oggetti creati' ),
+        'h1'			=> array( $l		=> 'oggetti creati' ),
+        'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'pianificazioni.form.oggetti.twig' ),
+        'macro'			=> array( $m . '_src/_inc/_macro/_pianificazioni.form.oggetti.php' ),
         'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
         'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
         'etc'			=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
