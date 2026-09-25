@@ -112,7 +112,8 @@
 	$xml->writeElement( 'CodiceDestinatario', $dati['dst']['codice_sdi'] );
 
     // - - - PECDestinatario / PEC del destinatario
-	if( ! empty( $dati['dst']['pec_sdi'] ) ) {
+    // NOTA la PEC si scrive solo con il codice 0000000: con un codice valorizzato lo SDI scarta il file ( errore 00426 )
+	if( ! empty( $dati['dst']['pec_sdi'] ) && $dati['dst']['codice_sdi'] == '0000000' ) {
 	    $xml->writeElement( 'PECDestinatario', $dati['dst']['pec_sdi'] );
 	}
 
