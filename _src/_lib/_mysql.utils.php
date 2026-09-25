@@ -643,7 +643,7 @@
      * colonna $f, insieme ai loro contenuti e metadati in tutte le lingue, e le scrive in
      * $p['contents'][ chiave ][ ruolo ][ ordine ], dove la chiave è images, video, audio o files e ruolo è il nome del ruolo
      * del media. Ogni elemento ha id, nome, path, mimetype, i testi ( title, h1, h2, h3, testo, cappello ) indicizzati per
-     * lingua e i metadati, più taglio, path_alternativo e orientamento per le immagini e codice_embed e id_embed per video
+     * lingua e i metadati, più taglio, path_alternativo e orientamento per le immagini e codice_embed ed embed per video
      * e audio. Siccome la query restituisce una riga per ogni combinazione di contenuto e metadato, le righe dello stesso
      * media vengono fuse con array_replace_recursive(), e lo stesso avviene con un elemento già presente nella pagina nella
      * stessa posizione. Se $r non è NULL vengono inclusi solo i media con uno dei ruoli indicati.
@@ -673,13 +673,13 @@
                 $tk = 'images';
                 break;
             case 'video':
-                $tc = 'video.id_embed, video.codice_embed FROM video ';
+                $tc = 'video.embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
                 break;
             case 'audio':
                 // sul modello del video: la tabella audio ha le stesse colonne di embed ( 2026-09-24 )
-                $tc = 'audio.id_embed, audio.codice_embed FROM audio ';
+                $tc = 'audio.embed, audio.codice_embed FROM audio ';
                 $tf = 'id_audio';
                 $tk = 'audio';
                 break;
@@ -746,7 +746,7 @@
                 case 'video':
                     $im = array_replace_recursive($im, array(
                         'codice_embed'            => $cn['codice_embed'],
-                        'id_embed'              => $cn['id_embed']
+                        'embed'                 => $cn['embed']
                     ));
                     break;
             }

@@ -244,7 +244,7 @@
         {% set path = video.path %}
     {% endif %}
 
-    {% if page.contents.video[ source.ruolo ][ source.ordine ].id_embed == 3 %}
+    {% if page.contents.video[ source.ruolo ][ source.ordine ].embed == 'youtube' %}
 
     {% if not page.contents.video[ source.ruolo ][ source.ordine ].ratio %}
     {% set rt = '16x9' %}
@@ -269,7 +269,7 @@
         } ) }}
     </div>
 
-    {% elseif page.contents.video[ source.ruolo ][ source.ordine ].id_embed == 2 %}
+    {% elseif page.contents.video[ source.ruolo ][ source.ordine ].embed == 'vimeo' %}
 
     {# ⚠ qui c'era `page.contents.video[ role ][ num ]`, ma in questa macro le variabili si chiamano
        source.ruolo e source.ordine: `role` e `num` non esistono, il confronto era sempre falso e un
@@ -297,7 +297,7 @@
     Questa macro è la gemella di video() per gli audio che aggiungiAudio() mette in page.contents.audio,
     indicizzati per ruolo e ordine come i video; source.ruolo e source.ordine dicono quale, source.ietf
     sceglie path e tipo quando l'audio ne ha uno per lingua. Non c'è un ramo per gli audio incorporati da
-    servizi esterni ( id_embed, codice_embed ), perché nessun servizio audio è implementato. #}
+    servizi esterni ( embed, codice_embed ), perché nessun servizio audio è implementato. #}
 {% macro audio( options ) %}
     <!-- macro {{ _self }}::audio() -->
 

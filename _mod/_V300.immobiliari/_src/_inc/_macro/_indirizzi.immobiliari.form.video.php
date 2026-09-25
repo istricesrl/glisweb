@@ -34,11 +34,11 @@
     );
     
     // tendina tipologia embed
-    // valori fissi come in _mod/_VI000.video, perché la tabella embed non è più nello schema ( 2026-09-25 )
+    // i valori dell'enum embed di audio e video, che ha preso il posto della tabella embed ( 2026-09-25 )
 	$ct['etc']['select']['embed'] = array(
-	    array( 'id' => '1', '__label__' => 'HTML5' ),
-	    array( 'id' => '2', '__label__' => 'Vimeo' ),
-	    array( 'id' => '3', '__label__' => 'YouTube' ),
+	    array( 'id' => 'html5', '__label__' => 'HTML5' ),
+	    array( 'id' => 'vimeo', '__label__' => 'Vimeo' ),
+	    array( 'id' => 'youtube', '__label__' => 'YouTube' ),
 	);
 
     // macro di default

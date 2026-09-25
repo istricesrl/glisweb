@@ -75,12 +75,12 @@
 {# NOTA privacy e pages servono al consenso e stanno in fondo apposta: le chiamate gia' scritte
    non cambiano, e chi non li passa ottiene il comportamento di prima ( vedi cms.videoEmbed() ) #}
 {% import _self as cms %}
-{% if page.contents.video[ role ][ num ].id_embed == 3 %}
+{% if page.contents.video[ role ][ num ].embed == 'youtube' %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
     {{ cms.videoEmbed( page.contents.video[ role ][ num ].codice_embed, privacy, pages, lang, page, '?rel=0' ~ ( autoplay ? '&autoplay=1&mute=1' : '' ) ~ ( loop ? '&loop=1' : '' ), 'embed-responsive-item lazyload', '', '', 'YouTube', true ) }}
 </div>
-{% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
+{% elseif page.contents.video[ role ][ num ].embed == 'vimeo' %}
 {# Vimeo non e' implementato: prima di questa riga la macro stampava la parola VIMEO nel corpo
    della pagina, che e' il modo peggiore di dire che manca qualcosa. Quando si implementera',
    l'incorporamento passa da cms.iframeEmbed() come quello di YouTube, col suo servizio

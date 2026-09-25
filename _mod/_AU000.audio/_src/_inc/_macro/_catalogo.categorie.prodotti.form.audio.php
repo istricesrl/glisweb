@@ -23,9 +23,9 @@
         'SELECT id, __label__ FROM ruoli_audio_view WHERE se_categorie_prodotti = 1 ORDER BY __label__ ASC '
     );
 
-    // solo HTML5, la sola voce che la tabella embed aveva con se_audio, come nei form audio dei moduli ( 2026-09-25 )
+    // solo html5 dell'enum embed, la sola voce che la tabella embed aveva con se_audio, come nei form audio dei moduli ( 2026-09-25 )
     $ct['etc']['select']['embed'] = array( 
-        array( 'id' => '1', '__label__' => 'HTML5' ),
+        array( 'id' => 'html5', '__label__' => 'HTML5' ),
     );
 
     // tendina lingue

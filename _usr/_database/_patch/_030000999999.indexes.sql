@@ -245,7 +245,6 @@ ALTER TABLE `audio`
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_valutazione` (`id_valutazione`),
-	ADD KEY `id_embed` (`id_embed`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -2216,7 +2215,6 @@ ALTER TABLE `video`
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_valutazione` (`id_valutazione`),
-	ADD KEY `id_embed` (`id_embed`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
