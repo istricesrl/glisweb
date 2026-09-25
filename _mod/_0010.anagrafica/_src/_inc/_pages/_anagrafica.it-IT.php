@@ -102,6 +102,7 @@
 //															'anagrafica.form.promemoria',
 															'anagrafica.form.immagini',
 															'anagrafica.form.video',
+															'anagrafica.form.audio',
 															'anagrafica.form.file',
 															'anagrafica.form.metadati',
 															'anagrafica.form.archiviazione',
@@ -164,12 +165,6 @@
 	// RELAZIONI CON IL MODULO CONTRATTI
 	if( in_array( "0600.contratti", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.contratti' );
-	}
-
-	// RELAZIONI CON IL MODULO AUDIO
-	// la pagina anagrafica.form.audio la dichiara solo _mod/_AU000.audio, come in _mod/_AN000.anagrafica ( 2026-09-25 )
-	if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
-		arrayInsertBefore( 'anagrafica.form.file', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.audio' );
 	}
 
     // gestione anagrafica informazioni
@@ -355,6 +350,19 @@
 		'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.video.html' ),
 		'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.video.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica audio
+	$p['anagrafica.form.audio'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'audio' ),
+		'h1'				=> array( $l		=> 'audio' ),
+		'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.audio.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.audio.php' ),
 		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
