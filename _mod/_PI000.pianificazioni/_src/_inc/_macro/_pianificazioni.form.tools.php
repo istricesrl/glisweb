@@ -7,8 +7,9 @@
      * subito gli oggetti scaduti ( il task pianificazioni.populate con l'id, come il pulsante "esegui il task" di
      * _mod/_0030.strumenti/_src/_inc/_macro/_task.form.tools.php ) e fermarla a una data, con o senza la cancellazione
      * degli oggetti successivi ( il task pianificazioni.stop, dal modal ferma della fase a modelli di
-     * _0100.pianificazioni ). I comandi compaiono solo a chi ha il privilegio GESTIONE_PIANIFICAZIONI, che è quello
-     * richiesto dai due task.
+     * _0100.pianificazioni ) e ripianificarla da una data secondo i parametri attuali ( il task
+     * pianificazioni.ripianifica, dal modal ripianifica della fase precedente ). I comandi compaiono solo a chi ha il
+     * privilegio GESTIONE_PIANIFICAZIONI, che è quello richiesto dai tre task.
      *
      * -# tabella gestita
      * -# gruppi di controlli
@@ -49,6 +50,15 @@
             'fa' => 'fa-calendar-xmark',
             'title' => 'ferma la pianificazione',
             'text' => 'imposta la data di fine ed eventualmente cancella gli oggetti successivi'
+        );
+
+        // ripianificazione
+        $ct['page']['contents']['metro']['03.elaborazioni'][] = array(
+            'modal' => array( 'id' => 'ripianifica_pianificazione', 'include' => 'inc/pianificazioni.form.tools.modal.ripianifica.twig' ),
+            'icon' => NULL,
+            'fa' => 'fa-refresh',
+            'title' => 'ripianifica',
+            'text' => 'ricrea da una data gli oggetti non ancora lavorati secondo i parametri attuali ( mai i documenti )'
         );
 
     }

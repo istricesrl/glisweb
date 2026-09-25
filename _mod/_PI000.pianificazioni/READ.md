@@ -24,8 +24,10 @@ pagamenti ( queste ultime due come righe e pagamenti aggiunti a un documento esi
    campi di testo si possono usare le variabili Twig della data dell'oggetto ( `{{ dt.now.nome_mese }} {{ dt.now.anno }}` )
    e, nell'importo dei pagamenti, `{{ dt.articoli.totale }}`, il totale ivato delle righe;
 3. il cron crea gli oggetti scaduti a ogni passata ( terzo blocco di `_src/_api/_cron.php` ); dalla scheda strumenti li si
-   può creare subito, o fermare la pianificazione a una data; la scheda oggetti creati li elenca, ciascuno con il link
-   al suo form nel modulo che lo gestisce.
+   può creare subito, fermare la pianificazione a una data o ripianificarla: dopo aver cambiato periodicità, giorni o
+   modello, "ripianifica" cancella gli oggetti dalla data indicata in poi non ancora lavorati e li ricrea secondo i
+   parametri nuovi ( i documenti non si cancellano mai: i nuovi partono dopo l'ultimo esistente ); la scheda oggetti
+   creati li elenca, ciascuno con il link al suo form nel modulo che lo gestisce.
 
 Esempio, una fattura mensile di canone: entità documenti, periodicità mensile, cadenza 1, primo oggetto il 31/01, modello
 con tipologia fattura, sezionale `{{ dt.now.anno }}`, nome `canone {{ dt.now.nome_mese }} {{ dt.now.anno }}`, una riga
@@ -67,6 +69,10 @@ duplicazione restano come sono.
 Questo task crea gli oggetti di una pianificazione: quella indicata con `id`, oppure la prima scaduta. Lo include
 anche il blocco delle pianificazioni di `_src/_api/_cron.php`, una volta per ogni pianificazione scaduta.
 
+### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.ripianifica.php
+Questo task ricrea da una data, secondo i parametri attuali, gli oggetti non ancora lavorati di una pianificazione
+( mai i documenti ).
+
 ### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.stop.php
 Questo task ferma una pianificazione a una data, e a richiesta cancella gli oggetti successivi ( mai i documenti ).
 
@@ -96,6 +102,9 @@ Questa libreria contiene le funzioni che calcolano le date ancora da creare e cr
 
 ### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/inc/pianificazioni.form.tools.modal.ferma.twig
 Questo è il modal con cui si ferma una pianificazione.
+
+### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/inc/pianificazioni.form.tools.modal.ripianifica.twig
+Questo è il modal con cui si ripianifica una pianificazione da una data.
 
 ### /_mod/_PI000.pianificazioni/_src/_tpl/_athena/lib/pianificazioni.form.modello.sub.twig
 Questa libreria contiene il sub form delle pianificazioni figlie, il modello delle righe e dei pagamenti di un documento.

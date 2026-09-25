@@ -55,6 +55,7 @@
      * pianificazioniRiga()             | costruisce la riga di un oggetto a partire dal modello
      * pianificazioniScadenza()         | calcola la scadenza di un pagamento pianificato
      * pianificazioniDate()             | calcola le date degli oggetti ancora da creare
+     * pianificazioniUltimaRipetizione()| restituisce l'ultima ripetizione il cui oggetto non viene dopo una data
      *
      * funzioni di generazione
      * -----------------------
@@ -83,6 +84,7 @@
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-25       | Fabio Mosti          | prima versione, dal task populate di _0100.pianificazioni
      * 2026-09-25       | Fabio Mosti          | entità disponibili secondo i moduli attivi
+     * 2026-09-25       | Fabio Mosti          | ultima ripetizione per la ripianificazione
      *
      * licenza
      * =======
@@ -433,6 +435,57 @@
         $status['info'][] = 'finestra di lavoro dal ' . $inizio . ' al ' . $stop . ', date da creare: ' . count( $date );
 
         return $date;
+
+    }
+
+    /**
+     * restituisce l'ultima ripetizione il cui oggetto non viene dopo una data
+     *
+     * Questa funzione restituisce la più recente fra le date di ripetizione della pianificazione $p ( quelle di
+     * creazionePianificazione(), con i parametri attuali ) il cui oggetto ha una data non successiva a $d. Per tutte le
+     * entità tranne i pagamenti la data dell'oggetto è quella della ripetizione; per i pagamenti è la scadenza calcolata
+     * da pianificazioniScadenza(), che con un differimento cade dopo la ripetizione. Se nessuna ripetizione ha l'oggetto
+     * entro $d restituisce il giorno prima della prima ripetizione. È il valore da scrivere in data_ultimo_oggetto, che
+     * contiene sempre una data di ripetizione, quando si cancellano gli oggetti dopo una data e se ne vuole ripartire.
+     *
+     * NOTA la scadenza di un pagamento già creato si confronta con le ripetizioni calcolate con i parametri attuali: se
+     * nel frattempo è cambiato il differimento, la ripetizione ricavata è quella dei parametri nuovi.
+     *
+     * @param       array       $p      la riga della pianificazione
+     * @param       string      $d      la data dell'oggetto, nel formato Y-m-d
+     *
+     * @return      string              la data della ripetizione, nel formato Y-m-d
+     *
+     */
+    function pianificazioniUltimaRipetizione( $p, $d ) {
+
+        // entità
+        $e = pianificazioniEntita( $p['entita'] );
+
+        // data di inizio della ripetizione
+        $inizio = ( ! empty( $p['data_inizio'] ) ) ? $p['data_inizio'] : $p['data_avvio'];
+
+        // giorni della settimana ( 0 lunedì ... 6 domenica )
+        $giorni = array();
+        foreach( array( 'se_lunedi', 'se_martedi', 'se_mercoledi', 'se_giovedi', 'se_venerdi', 'se_sabato', 'se_domenica' ) as $g => $k ) {
+            if( ! empty( $p[ $k ] ) ) { $giorni[] = $g; }
+        }
+
+        // schema di ripetizione
+        $schema = ( empty( $p['schema_ripetizione'] ) ) ? 1 : $p['schema_ripetizione'];
+
+        // ripetizioni fino alla data, perché l'oggetto non viene mai prima della sua ripetizione
+        $date = ( $inizio > $d ) ? array() : creazionePianificazione( $inizio, $p['id_periodicita'], $p['cadenza'], $d, 1, $giorni, $schema, $schema );
+
+        // ultima ripetizione con l'oggetto entro la data
+        $ultima = date( 'Y-m-d', strtotime( $inizio . ' -1 day' ) );
+        foreach( (array) $date as $r ) {
+            if( ( ( $e['tabella'] == 'pagamenti' ) ? pianificazioniScadenza( $r, $p ) : $r ) <= $d ) {
+                $ultima = $r;
+            }
+        }
+
+        return $ultima;
 
     }
 
