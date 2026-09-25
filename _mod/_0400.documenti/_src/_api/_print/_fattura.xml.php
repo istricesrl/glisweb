@@ -420,7 +420,9 @@
 		}
 
 	    // - - - - RiferimentoNormativo / il riferimento normativo dell'esenzione della riga
-		if( ! empty( $row['riferimento'] ) ) {
+	    // NOTA per le specifiche il riferimento normativo si indica solo con la Natura: la descrizione di un'aliquota
+	    // ordinaria ( "IVA 22%" ) non è una norma, e fino al 2026-09-25 finiva lo stesso nel riepilogo
+		if( ! empty( $row['codice'] ) && ! empty( $row['riferimento'] ) ) {
 		    $xml->writeElement( 'RiferimentoNormativo', xmlEntities( $row['riferimento'] ) );
 		}
 
