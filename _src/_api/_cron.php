@@ -236,7 +236,8 @@
             )
         );
 
-        // chiusura esplicita: `build()` termina già lo script, questo è solo un presidio
+        // chiusura esplicita: `build()` stampa l'output ma non termina lo script, ed è questo exit che impedisce di
+        // proseguire con l'esecuzione di task e job senza il lock
         exit;
 
     }
