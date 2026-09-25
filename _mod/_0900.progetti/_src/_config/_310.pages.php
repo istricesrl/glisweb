@@ -65,8 +65,8 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // prelevo i dati dalla cache
-            $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-            $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+            $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+            $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
