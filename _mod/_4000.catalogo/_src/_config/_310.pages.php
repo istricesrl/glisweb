@@ -71,8 +71,8 @@ if ($cf['contents']['cached'] === false) {
             }
 
             // prelevo i dati dalla cache
-            $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-            $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+            $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+            $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
             // default
             $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['template'] : $pg['template'];
@@ -155,6 +155,9 @@ if ($cf['contents']['cached'] === false) {
             } else {
 
                 $cf['contents']['pages'][$pid] = $pgc;
+
+                // indice inverso dall'ID della categoria all'ID della pagina
+                $cf['contents']['reverse']['categorie_prodotti'][ $pg['id'] ] = $pid;
             }
         }
     }
