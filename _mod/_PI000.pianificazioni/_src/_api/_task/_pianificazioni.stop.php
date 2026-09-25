@@ -20,11 +20,15 @@
      * all'ultimo oggetto rimasto, così che una ripresa della pianificazione li ricrei.
      *
      * I pagamenti hanno per data la scadenza, che con un differimento cade dopo la ripetizione da cui nascono: si
-     * cancellano quelli che scadono dopo la scadenza della data di fine ( cioè quelli delle ripetizioni successive ) e
-     * data_ultimo_oggetto torna alla ripetizione dell'ultimo pagamento rimasto ( pianificazioniUltimaRipetizione() ),
-     * perché la colonna contiene sempre una data di ripetizione. NOTA fino al 2026-09-25 si confrontavano le scadenze
-     * con la data di fine e data_ultimo_oggetto prendeva la scadenza: un pagamento a 30 giorni della ripetizione del
-     * 10/03, fermando al 31/03, veniva cancellato e poi ricreato dal cron, e la ripresa saltava una ripetizione.
+     * cancellano quelli delle ripetizioni successive alla data di fine, riconosciute da data_ripetizione, e
+     * data_ultimo_oggetto torna alla ripetizione dell'ultimo pagamento rimasto, perché la colonna contiene sempre una
+     * data di ripetizione. I pagamenti creati prima che ci fosse data_ripetizione ( vuota ) si riconoscono ancora dalla
+     * scadenza: si cancellano quelli che scadono dopo la scadenza della data di fine, e la loro ripetizione si ricava con
+     * pianificazioniUltimaRipetizione(). NOTA fino al 2026-09-25 si confrontavano le scadenze con la data di fine e
+     * data_ultimo_oggetto prendeva la scadenza: un pagamento a 30 giorni della ripetizione del 10/03, fermando al 31/03,
+     * veniva cancellato e poi ricreato dal cron, e la ripresa saltava una ripetizione; e confrontando le scadenze, con il
+     * fine mese e una periodicità più breve del mese, restava il pagamento di una ripetizione successiva alla data di
+     * fine che scadeva lo stesso giorno di quello della data di fine.
      *
      * @file
      *
@@ -96,26 +100,39 @@
 
             } else {
 
-                // data dell'oggetto dell'ultima ripetizione che resta ( per i pagamenti la sua scadenza )
-                $limite = ( $e['tabella'] == 'pagamenti' ) ? pianificazioniScadenza( $data, $current ) : $data;
+                // ripetizioni successive alla data di fine ( per i pagamenti senza data_ripetizione, scadenze
+                // successive alla scadenza della data di fine )
+                $successive = ( $e['tabella'] == 'pagamenti' )
+                    ? '( data_ripetizione > ? OR ( data_ripetizione IS NULL AND data_scadenza > ? ) )'
+                    : $e['data'] . ' > ?';
 
                 // cancellazione
                 $status['cancellati'] = mysqlQuery(
                     $cf['mysql']['connection'],
-                    'DELETE FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $e['data'] . ' > ?',
-                    array( array( 's' => $current['id'] ), array( 's' => $limite ) )
+                    'DELETE FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $successive,
+                    array_merge(
+                        array( array( 's' => $current['id'] ), array( 's' => $data ) ),
+                        ( ( $e['tabella'] == 'pagamenti' ) ? array( array( 's' => pianificazioniScadenza( $data, $current ) ) ) : array() )
+                    )
                 );
 
-                // data dell'ultimo oggetto rimasto
+                // ripetizione dell'ultimo oggetto rimasto
                 $ultimo = mysqlSelectValue(
                     $cf['mysql']['connection'],
-                    'SELECT max( ' . $e['data'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ?',
+                    'SELECT max( ' . $e['ripetizione'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ?',
                     array( array( 's' => $current['id'] ) )
                 );
 
-                // per i pagamenti, la ripetizione da cui è nato
-                if( ! empty( $ultimo ) && $e['tabella'] == 'pagamenti' ) {
-                    $ultimo = pianificazioniUltimaRipetizione( $current, $ultimo );
+                // per i pagamenti senza data_ripetizione, la ripetizione si ricava dalla scadenza
+                if( $e['tabella'] == 'pagamenti' ) {
+                    $scadenza = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT max( data_scadenza ) FROM pagamenti WHERE id_pianificazione = ? AND data_ripetizione IS NULL',
+                        array( array( 's' => $current['id'] ) )
+                    );
+                    if( ! empty( $scadenza ) ) {
+                        $ultimo = max( $ultimo, pianificazioniUltimaRipetizione( $current, $scadenza ) );
+                    }
                 }
 
                 // aggiornamento della pianificazione
