@@ -31,8 +31,18 @@
         $status['token'] = getToken( __FILE__ );
     }
 
+    // se è attivo il modulo nuovo delle pianificazioni il lavoro è suo e questo task non fa niente ( 2026-09-25, vedi
+    // _mod/_PI000.pianificazioni/READ.md ): nessuna riga viene bloccata, quindi non c'è niente da elaborare
+    if( in_array( 'PI000.pianificazioni', $cf['mods']['active']['array'] ) ) {
+
+        // status
+        $status['info'][] = 'il modulo PI000.pianificazioni è attivo: lascio il lavoro a lui';
+
+        // log
+        logWrite( 'il modulo PI000.pianificazioni è attivo, il task extend di _0100.pianificazioni lascia il lavoro a lui', 'pianificazioni' );
+
     // se è specificato un ID, forzo la richiesta
-    if( isset( $_REQUEST['id'] ) ) {
+    } elseif( isset( $_REQUEST['id'] ) ) {
 
         // token della riga
         $status['id'] = mysqlQuery(

@@ -50,6 +50,16 @@ date fino a questa compresa non si ricreano ).
   spento. I moduli di ciascuna entità sono nel capitolo 122; i documenti vogliono `_DO000.documenti` o
   `_0400.documenti`, i due moduli che hanno `generaProssimoNumeroDocumento()` per numerarli.
 
+## insieme a _0100.pianificazioni
+
+I due moduli lavorano sulla stessa tabella, e un deploy che passa al modulo nuovo può avere attivi tutti e due per un
+po'. Perché gli oggetti non vengano creati due volte, i task di `_0100.pianificazioni` che generano o allungano le
+pianificazioni ( `pianificazioni.populate`, `pianificazioni.extend` e `pianificazioni.progetti.extend` ) controllano
+all'inizio se `_PI000.pianificazioni` è attivo e, se lo è, scrivono nel log `pianificazioni` che lasciano il lavoro a
+lui e non bloccano né toccano nessuna riga. È l'unica modifica fatta a `_0100` dopo il suo congelamento; i suoi task che
+non generano ( check, clean, stop, detach, populate.flag ) e la copia `_pianificazioni.populate.old.php` della fase per
+duplicazione restano come sono.
+
 ## i file del modulo
 
 ### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.populate.php
