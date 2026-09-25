@@ -25,12 +25,8 @@
      * PHP_2EOL                     | doppio fine riga di PHP
      * HTML_EOL                     | tag br seguito da un fine riga di PHP
      * HTML_2EOL                    | doppio tag br seguito da un fine riga di PHP
-     * XHTML_EOL                    | fine riga XHTML seguito da un fine riga di PHP (vedi nota sotto)
-     * XHTML_2EOL                   | doppio fine riga XHTML seguito da un fine riga di PHP (vedi nota sotto)
-     * 
-     * NOTA le costanti XHTML_EOL e XHTML_2EOL contengono la stringa '<\br>', che non è un tag valido: il fine riga
-     * XHTML sarebbe '<br />'. Al momento della stesura di questa documentazione non sono usate da nessun file.
-     * TODO correggere il valore di XHTML_EOL e XHTML_2EOL in '<br />'
+     * XHTML_EOL                    | tag br chiuso ( <br /> ) seguito da un fine riga di PHP
+     * XHTML_2EOL                   | doppio tag br chiuso seguito da un fine riga di PHP
      * 
      * funzioni
      * ========
@@ -93,8 +89,8 @@
     define( 'HTML_2EOL'            , '<br>' . HTML_EOL );
 
     // costanti XHTML
-    define( 'XHTML_EOL'            , '<\br>' . PHP_EOL );
-    define( 'XHTML_2EOL'            , '<\br>' . XHTML_EOL );
+    define( 'XHTML_EOL'            , '<br />' . PHP_EOL );
+    define( 'XHTML_2EOL'            , '<br />' . XHTML_EOL );
 
     /**
      * FUNZIONI DI OUTPUT PER FORMATO
