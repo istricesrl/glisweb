@@ -463,6 +463,11 @@ I moduli vecchi hanno `_mod/<modulo>/_src/_templates/` ( `.html` ), i nuovi `_mo
 su ventuno ), e **latest non ha nessun modulo vecchio**: è la disponibilità dei moduli a decidere se un
 deploy può passarci. Dettagli: `.claude/skills/glisweb/riferimenti/migrazioni.md`.
 
+**Una pagina può essere dichiarata due volte, purché da due moduli di generazione diversa**, uno legacy e
+uno nuovo ( `anagrafica.form.audio` sta sia in `_0010.anagrafica` sia in `_AU000.audio`, e così video,
+immagini e file ): non è un doppione da togliere. È un doppione, invece, la stessa pagina dichiarata da due
+moduli della stessa generazione.
+
 ## Job in background: come si scrive uno che non si pianta
 
 Un **job** è un lavoro lungo spezzato in iterazioni, fatto avanzare dal browser ( `_src/_api/_job.php`,
