@@ -433,7 +433,7 @@
      * anche quando mysqli lo segnala con un'eccezione ( il comportamento di default da PHP 8.1 ); un'eccezione senza codice
      * di errore sulla connessione viene loggata e la funzione restituisce false senza toccare $e.
      *
-     * NOTA per le query con parametri $e viene passato a mysqlPreparedQuery(), che non lo valorizza ( vedi la sua nota ).
+     * Per le query con parametri $e viene passato a mysqlPreparedQuery(), che lo valorizza nella stessa forma.
      *
      * @param       object      $c      la connessione mysqli
      * @param       string      $q      la query da eseguire
@@ -655,16 +655,18 @@
      *
      * Quindi anche una SHOW o una CALL eseguite con parametri restituiscono un numero e non delle righe. Se la connessione è
      * vuota, se la preparazione fallisce o se viene sollevata un'eccezione la funzione logga l'errore e restituisce false.
-     * Se invece fallisce l'esecuzione l'errore viene loggato ma il valore restituito non cambia ( vedi la nota nel corpo ):
-     * per una INSERT fallita si ottiene quindi l'ID passato nei parametri, se c'è.
+     * Se invece fallisce l'esecuzione senza eccezione ( mysqli_report() disattivato, o PHP precedente alla 8.1 ) l'errore
+     * viene loggato ma il valore restituito non cambia ( vedi la nota nel corpo ): per una INSERT fallita si ottiene quindi
+     * l'ID passato nei parametri, se c'è.
      *
-     * NOTA a differenza di mysqlQuery() questa funzione non scrive mai niente nell'array $e, che è accettato solo per
-     * simmetria di firma.
+     * In tutti i casi di errore MySQL, eccezione compresa, l'errore viene aggiunto all'array $e sotto il suo codice nella
+     * stessa forma di mysqlQuery() ( 1062 e 1054 con un messaggio fisso, gli altri con il messaggio di MySQL ); una
+     * connessione vuota o un'eccezione senza codice di errore non toccano $e.
      *
      * @param       object      $c          la connessione mysqli
      * @param       string      $q          la query da eseguire, con i segnaposto ?
      * @param       array       $params     i parametri da legare ai segnaposto, nell'ordine
-     * @param       array       $e          l'array degli errori ( non usato )
+     * @param       array       $e          l'array in cui accumulare gli errori, indicizzato per codice di errore, modificato sul posto
      *
      * @return      mixed                   il risultato della query secondo la tabella qui sopra, o false in caso di errore
      *
@@ -685,6 +687,10 @@
             return false;
 
         } else {
+
+            // codice e messaggio dell'eventuale errore MySQL
+            $errno = 0;
+            $error = NULL;
 
             try {
 
@@ -742,15 +748,19 @@
                     // scatta, e la pagina risponde 200 con il log che dice che e' filato tutto
                     // liscio mentre in archivio non c'e' niente.
                     //
-                    // Qui si logga e basta, senza cambiare il valore di ritorno: cambiarlo
+                    // Qui si logga, senza cambiare il valore di ritorno: cambiarlo
                     // vorrebbe dire toccare il comportamento di ogni chiamante del framework, e
                     // non e' una decisione da prendere dentro questa funzione. L'errore adesso
-                    // pero' si vede, ed e' il minimo perche' sia diagnosticabile.
+                    // pero' si vede, ed e' il minimo perche' sia diagnosticabile; dal 2026-09-24
+                    // finisce anche in $e, come gli errori sollevati con un'eccezione.
                     //
                     // Si usa logger() e non logWrite(): questa e' una libreria "tools", che per
                     // convenzione non dipende da $cf, mentre logWrite() sta in _log.utils.php.
                     // Tutto il resto del file logga cosi'.
                     if ($xStatement === false) {
+
+                        $errno = mysqli_stmt_errno($pq);
+                        $error = mysqli_stmt_error($pq);
 
                         logger(
                             $q . PHP_EOL
@@ -771,12 +781,12 @@
                     switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
                         case 'SELECT':
-                            return mysqlFetchPreparedResult($pq);
+                            $r = mysqlFetchPreparedResult($pq);
                             break;
 
                         case 'INSERT':
                             $id = mysqli_stmt_insert_id($pq);
-                            return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
+                            $r = ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
                             break;
 
                         case 'REPLACE':
@@ -784,7 +794,7 @@
                         case 'DELETE':
                         case 'TRUNCATE':
                         default:
-                            return mysqli_stmt_affected_rows($pq);
+                            $r = mysqli_stmt_affected_rows($pq);
                             break;
 
                     }
@@ -808,15 +818,54 @@
                      */
                     logger(__FUNCTION__ . '() errore ' . mysqli_errno($c) . ' ' . mysqli_error($c) . ' nella preparazione della query: ' . $q, 'mysql', LOG_ERR);
 
+                    $errno = mysqli_errno($c);
+                    $error = mysqli_error($c);
+
                     // restituisco false
-                    return false;
+                    $r = false;
                 }
 
             } catch (Exception $ex) {
+
+                // NOTA da PHP 8.1 mysqli solleva per default mysqli_sql_exception anche sugli errori di esecuzione dello
+                // statement ( il framework non chiama mysqli_report() ), e quindi quasi tutti gli errori delle query con
+                // parametri arrivano qui; il codice di errore MySQL è il codice dell'eccezione ( 2026-09-24 )
+                if ($ex instanceof mysqli_sql_exception) {
+                    $errno = $ex->getCode();
+                    $error = $ex->getMessage();
+                } else {
+                    $errno = mysqli_errno($c);
+                    $error = mysqli_error($c);
+                }
+
                 logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q, 'mysql', LOG_ERR);
                 logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
-                return false;
+                $r = false;
             }
+
+            // gestione specifici errori, come in mysqlQuery(): controller() legge $e per rispondere 409 sui dati duplicati
+            // e 400 sulle colonne errate, e le sue scritture passano tutte da qui ( 2026-09-24 )
+            if ($errno) {
+
+                switch ($errno) {
+
+                    case 1062:
+                        $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
+                        break;
+
+                    case 1054:
+                        $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+                        break;
+
+                    default:
+                        $e[$errno][] = $error;
+                        break;
+                }
+
+            }
+
+            // restituisco il risultato
+            return $r;
 
         }
 
