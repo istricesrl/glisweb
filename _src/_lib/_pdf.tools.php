@@ -155,12 +155,10 @@
      * interruzione automatica di pagina, e aggiunge la prima pagina. Le misure del modulo ( form/column/width eccetera ) vengono
      * calcolate solo se $info['form']['columns'] è impostata; in quel caso anche $info['form']['row']['height'] è obbligatoria.
      *
-     * NOTA la funzione sovrascrive sempre style/text/default, colors, lines e cell: uno stile di default diverso va impostato
-     * dopo la chiamata ( come fa _mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php ).
-     *
-     * TODO le chiavi lines e colors vengono sovrascritte anche se il chiamante le ha impostate prima della chiamata, come fanno
-     * _modulo.assistenza.php e _ritiro.hardware.pdf.php ( lines/thick a .3 diventa .2 ): o si rispettano i valori del chiamante
-     * o si tolgono dai chiamanti le impostazioni che non hanno effetto.
+     * Le chiavi style/text/default, colors, lines e cell ricevono un valore di default solo se il chiamante non le ha già
+     * impostate prima della chiamata, voce per voce: per esempio _modulo.assistenza.php e _ritiro.hardware.pdf.php impostano
+     * lines/thick a .3 e lines/thin a .15, che fino al 2026-09-24 venivano sovrascritti con .2 e .12. I default di lines e
+     * cell usano i colori nero e grigio, quelli del chiamante se li ha impostati.
      *
      * @param       array       $info       la configurazione del documento, completata sul posto con le misure derivate
      *
@@ -170,7 +168,9 @@
     function pdfInit( &$info ) {
 
         // impostazione stili
-        $info['style']['text']['default'] = array( 'font' => 'helvetica', 'size' => 10, 'weight' => '' );
+        if( ! isset( $info['style']['text']['default'] ) ) {
+            $info['style']['text']['default'] = array( 'font' => 'helvetica', 'size' => 10, 'weight' => '' );
+        }
 
         if( !isset( $info['style']['page']['orentation'] ) ){
             $info['style']['page']['orentation'] = 'P';
@@ -205,18 +205,34 @@
             $info['form']['row']['spacing'] = $info['form']['row']['height'] * 0.2;
         }
 
-        // definizione colori
-        $info['colors']['nero']                     = array( 0, 0, 0 );
-        $info['colors']['grigio']                   = array( 128, 128, 128 );
-        $info['colors']['bianco']                   = array( 255, 255, 255 );
+        // definizione colori, linee e bordi delle celle; le chiavi impostate dal chiamante prima della chiamata restano come sono
+        // ( fino al 2026-09-24 venivano sovrascritte, e le linee a .3 e .15 dei moduli di stampa diventavano .2 e .12 )
+        $info['colors'] = array_replace(
+            array(
+                'nero'      => array( 0, 0, 0 ),
+                'grigio'    => array( 128, 128, 128 ),
+                'bianco'    => array( 255, 255, 255 )
+            ),
+            ( isset( $info['colors'] ) ) ? $info['colors'] : array()
+        );
 
         // impostazione linee
-        $info['lines']['thick']                     = array( 'thickness' => .2, 'color' => $info['colors']['nero'] );
-        $info['lines']['thin']                      = array( 'thickness' => .12, 'color' => $info['colors']['grigio'] );
+        $info['lines'] = array_replace(
+            array(
+                'thick'     => array( 'thickness' => .2, 'color' => $info['colors']['nero'] ),
+                'thin'      => array( 'thickness' => .12, 'color' => $info['colors']['grigio'] )
+            ),
+            ( isset( $info['lines'] ) ) ? $info['lines'] : array()
+        );
 
             // bordi delle celle
-        $info['cell']['thick'] 		                = array( 'B' => array( 'width' => .2, 'color' => $info['colors']['nero']  ) );
-        $info['cell']['thin']		                = array( 'B' => array( 'width' => .12, 'color' => $info['colors']['grigio']  )	);
+        $info['cell'] = array_replace(
+            array(
+                'thick'     => array( 'B' => array( 'width' => .2, 'color' => $info['colors']['nero'] ) ),
+                'thin'      => array( 'B' => array( 'width' => .12, 'color' => $info['colors']['grigio'] ) )
+            ),
+            ( isset( $info['cell'] ) ) ? $info['cell'] : array()
+        );
 
         // imposto il titolo del documento
         $pdf->SetTitle( $info['doc']['title'] );
