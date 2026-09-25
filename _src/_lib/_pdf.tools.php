@@ -699,9 +699,6 @@
      * sono sempre state divise in due colonne; fino al 2026-09-24 la divisione automatica non avveniva mai ( strpos() aveva gli
      * argomenti invertiti ) e un testo senza § finiva tutto nella prima colonna.
      *
-     * TODO l'ascissa delle colonne si accumula ( $x = $x + ... * $current ), quindi dalla terza colonna in poi la posizione è
-     * sbagliata; con due colonne il risultato è corretto.
-     * 
      * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
      * @param       array       $info       la configurazione del documento
      * @param       int         $cols       il numero di colonne
@@ -713,7 +710,6 @@
      */
     function pdfHtmlColumns( $pdf, $info, $cols, $text, $style = 'default') {
 
-        $x = $info['style']['page']['ml'];
         $y = $pdf->GetY();
         $current = 0;
 
@@ -746,7 +742,7 @@
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
 
         foreach( $colText as $col ) {
-            $x = $x + ( $colWidth + $info['form']['column']['width'] ) * $current;
+            $x = $info['style']['page']['ml'] + ( $colWidth + $info['form']['column']['width'] ) * $current;
             $pdf->writeHTMLCell( $colWidth, 0, $x, $y, $col, 0, 0, 0, true, 'J', true );
             $current++;
 
