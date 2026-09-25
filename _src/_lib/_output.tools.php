@@ -103,8 +103,7 @@
      * codifica con json_encode() e lo invia con build() con il content type application/json. Se la codifica fallisce
      * l'errore viene scritto nel log json e al client viene inviata la stringa vuota (json_encode() restituisce false).
      * 
-     * NOTA un eventuale header Content-Type passato in $headers viene inviato ma poi sovrascritto da build(), che invia
-     * sempre application/json con il charset; si veda la nota a build().
+     * Un header Content-Type passato in $headers prende il posto di application/json con il charset; si veda build().
      * 
      * @param       mixed       $content        il contenuto da codificare in JSON
      * @param       string      $encoding       il charset da dichiarare nell'header (default ENCODING_UTF8)
@@ -121,11 +120,6 @@
         // log
         if( ! empty( json_last_error() ) ) {
             logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
-        }
-
-        // se non esiste il content-type
-        if( ! isset( $headers['Content-Type'] ) ) {
-            $headers['Content-Type'] = MIME_APPLICATION_JSON;
         }
 
     // genero l'output
@@ -265,9 +259,10 @@
      * buildContentHeader(), e infine stampa il contenuto; è la funzione su cui si basano tutte le altre funzioni build*()
      * della libreria. Non termina lo script.
      * 
-     * NOTA siccome l'header Content-Type viene inviato dopo quelli aggiuntivi e header() sostituisce un header con lo
-     * stesso nome, un Content-Type passato in $headers viene sempre sovrascritto da quello costruito con $type ed
-     * $encoding: per cambiare il content type bisogna usare il parametro $type.
+     * Se fra gli header aggiuntivi c'è già un Content-Type ( con chiave stringa, o per intero con chiave numerica, senza
+     * distinzione fra maiuscole e minuscole ) la funzione lo invia così com'è e non invia quello costruito con $type ed
+     * $encoding. Fino al 2026-09-24 lo sovrascriveva sempre, perché header() sostituisce un header con lo stesso nome e
+     * quello di $type veniva inviato dopo; buildJson(), che aggiungeva da sé un Content-Type senza charset, non lo fa più.
      * 
      * @param       string      $content        il contenuto da stampare
      * @param       string      $type           il content type (default MIME_TEXT_PLAIN)
@@ -282,8 +277,18 @@
         // invio gli headers
         buildHeaders( $headers );
 
-        // invio l'header per il contenuto
-        buildContentHeader( $type, $encoding );
+        // cerco il content type fra gli headers passati dal chiamante
+        $passed = false;
+        foreach( $headers as $header => $value ) {
+            if( strtolower( trim( ( is_string( $header ) ) ? $header : strtok( $value, ':' ) ) ) == 'content-type' ) {
+                $passed = true;
+            }
+        }
+
+        // invio l'header per il contenuto, se il chiamante non l'ha già passato
+        if( $passed === false ) {
+            buildContentHeader( $type, $encoding );
+        }
 
         // invio l'output
         echo $content;
