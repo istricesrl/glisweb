@@ -68,6 +68,13 @@
 	// die( print_r( $dati['src'], true ) );
 	// die( print_r( $dati['dst'], true ) );
 
+    // testi liberi: xmlEntities() li translittera in ASCII ( le lettere accentate perdono l'accento, € diventa EUR ), ma fa
+    // anche l'escape delle &, che array2xml() rifà: senza togliere il primo escape "Rossi & Figli" arrivava nella fattura
+    // come "Rossi &amp;amp; Figli" ( issue 591, corretto il 2026-09-25 )
+	$testoFattura = function( $t ) {
+	    return str_replace( '&amp;', '&', xmlEntities( $t ) );
+	};
+
     // versione PA o privati
 	$versione = ( empty( $dati['dst']['se_pubblica_amministrazione'] ) ) ? 'FPR12' : 'FPA12';
 
@@ -183,16 +190,16 @@
 
 		$anagraficaCessionario['Anagrafica'] = array(
 		    // - - - - - Nome / il nome del cliente privato
-		    'Nome' => xmlEntities( $dati['dst']['nome'] ),
+		    'Nome' => $testoFattura( $dati['dst']['nome'] ),
 		    // - - - - - Cognome / il cognome del cliente privato
-		    'Cognome' => xmlEntities( $dati['dst']['cognome'] )
+		    'Cognome' => $testoFattura( $dati['dst']['cognome'] )
 		);
 
 	} else {
 
 		$anagraficaCessionario['Anagrafica'] = array(
 		    // - - - - - Denominazione / la denominazione del cliente
-		    'Denominazione' => xmlEntities( $dati['dst']['denominazione_fiscale'] )
+		    'Denominazione' => $testoFattura( $dati['dst']['denominazione_fiscale'] )
 		);
 
 	}
@@ -297,7 +304,7 @@
 		    // - - - - NumeroLinea / il numero della riga
 		    'NumeroLinea' => $num + 1,
 		    // - - - - Descrizione / la descrizione della riga
-		    'Descrizione' => xmlEntities( $row['nome'] ),
+		    'Descrizione' => $testoFattura( $row['nome'] ),
 		    // - - - - Quantita / la quantità della riga
 		    // NOTA lo schema vuole almeno due decimali: la colonna quantita è decimal(9,2), ma a una riga senza quantità
 		    // generaContenutiDocumento() assegna l'intero 1, che scritto com'è rendeva il file non valido
@@ -363,7 +370,7 @@
 	    // NOTA per le specifiche il riferimento normativo si indica solo con la Natura: la descrizione di un'aliquota
 	    // ordinaria ( "IVA 22%" ) non è una norma, e fino al 2026-09-25 finiva lo stesso nel riepilogo
 		if( ! empty( $row['codice'] ) && ! empty( $row['riferimento'] ) ) {
-		    $riepilogo['RiferimentoNormativo'] = xmlEntities( $row['riferimento'] );
+		    $riepilogo['RiferimentoNormativo'] = $testoFattura( $row['riferimento'] );
 		}
 
 	    // - - - /DatiRiepilogo

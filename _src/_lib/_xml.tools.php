@@ -514,9 +514,8 @@
      * quindi usata su testi che non li contengono, oppure su frammenti di markup (come fa buildHTML() in
      * _src/_lib/_output.tools.php). Non si corregge perché _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php passa il
      * risultato a array2xml(), che fa l'escape da sé: un "&lt;" lasciato com'è finirebbe nella fattura come
-     * testo "&amp;lt;". Per la stessa ragione le & escapate qui arrivano nella fattura raddoppiate ( "Rossi & Figli"
-     * diventa "Rossi &amp;amp; Figli" ).
-     * TODO in _fattura.xml.php non passare per xmlEntities() i testi passati a array2xml()
+     * testo "&amp;lt;". Per la stessa ragione la fattura toglie l'escape delle & fatto qui prima di passare il testo a
+     * array2xml(): fino al 2026-09-25 non lo faceva, e "Rossi & Figli" arrivava come "Rossi &amp;amp; Figli" ( issue 591 ).
      * TODO la sostituzione di € con EURO non ha effetto perché iconv() lo ha già trasformato in EUR
      *
      * @param       string      $t      il testo da preparare
