@@ -20,7 +20,8 @@
      *
      * cosa si cancella
      * ================
-     * Si cancellano gli oggetti della pianificazione con data uguale o successiva a quella indicata, tranne:
+     * Si cancellano gli oggetti della pianificazione nati dalle ripetizioni uguali o successive alla data indicata,
+     * tranne:
      *
      * -# i documenti, MAI, con la stessa regola del task pianificazioni.stop: un documento pianificato nasce numerato, e
      *    un documento numerato che sparisce lascia un buco nella numerazione. Per le pianificazioni di documenti il task
@@ -28,13 +29,14 @@
      *    partano dopo l'ultimo esistente e la numerazione resti in ordine di data;
      * -# gli oggetti già lavorati: le todo chiuse ( data_chiusura ), le attività svolte ( data_attivita ) e i pagamenti
      *    pagati ( timestamp_pagamento ). Restano al loro posto, e se la loro data è ancora una data della
-     *    pianificazione pianificazioniElabora() non li ricrea, perché salta le date che hanno già un oggetto.
+     *    pianificazione pianificazioniElabora() non li ricrea, perché salta le ripetizioni che hanno già un oggetto.
      *
      * Per le altre entità data_ultimo_oggetto torna all'ultima ripetizione il cui oggetto viene prima della data indicata
      * ( pianificazioniUltimaRipetizione() ), o resta dov'era se era già più indietro, e data_elaborazione si azzera, così
-     * che si creino di nuovo gli oggetti dalla data indicata in poi. Per i pagamenti la data dell'oggetto è la scadenza:
-     * si cancellano quelli che scadono dalla data in poi, e si ricreano le ripetizioni che con i parametri attuali scadono
-     * dalla data in poi, anche se la ripetizione viene prima.
+     * che si creino di nuovo gli oggetti dalla data indicata in poi. Per i pagamenti la ripetizione è in
+     * data_ripetizione, e un pagamento pagato resta il pagamento della sua ripetizione anche se nel frattempo è cambiato
+     * il differimento; quelli creati prima che la colonna ci fosse ( data_ripetizione vuota ) si riconoscono ancora
+     * dalla scadenza: si cancellano quelli che scadono dalla data in poi.
      *
      * Il task prende il lock della pianificazione come pianificazioni.populate, perché la pulizia e la creazione non si
      * sovrappongano al cron: se la pianificazione è bloccata da un altro giro non fa niente e lo dice.
@@ -128,12 +130,20 @@
 
         } else {
 
+            // ripetizioni dalla data in poi ( per i pagamenti senza data_ripetizione, scadenze dalla data in poi )
+            $ripetizioni = ( $e['tabella'] == 'pagamenti' )
+                ? '( data_ripetizione >= ? OR ( data_ripetizione IS NULL AND data_scadenza >= ? ) )'
+                : $e['data'] . ' >= ?';
+
             // cancellazione degli oggetti non lavorati
             $status['cancellati'] = mysqlQuery(
                 $cf['mysql']['connection'],
-                'DELETE FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $e['data'] . ' >= ?' .
+                'DELETE FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $ripetizioni .
                 ( ( isset( $lavorati[ $e['tabella'] ] ) ) ? ' AND NOT ( ' . $lavorati[ $e['tabella'] ] . ' )' : '' ),
-                array( array( 's' => $current['id'] ), array( 's' => $data ) )
+                array_merge(
+                    array( array( 's' => $current['id'] ), array( 's' => $data ) ),
+                    ( ( $e['tabella'] == 'pagamenti' ) ? array( array( 's' => $data ) ) : array() )
+                )
             );
 
             // status

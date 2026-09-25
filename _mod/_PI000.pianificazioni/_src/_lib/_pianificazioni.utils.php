@@ -31,8 +31,9 @@
      * -----------
      * Ogni oggetto nasce in una transazione insieme alle sue righe figlie e all'aggiornamento di data_ultimo_oggetto
      * della pianificazione, così che un giro interrotto a metà non lasci un documento senza righe né una data saltata.
-     * Prima di creare un oggetto si controlla che non ne esista già uno della stessa pianificazione per la stessa data,
-     * e le date da creare partono dal giorno dopo data_ultimo_oggetto ( o, se manca, dopo l'ultimo oggetto esistente
+     * Prima di creare un oggetto si controlla che non ne esista già uno della stessa pianificazione per la stessa
+     * ripetizione ( la data dell'oggetto, e per i pagamenti data_ripetizione, vedi pianificazioniEntita() ), e le date da
+     * creare partono dal giorno dopo data_ultimo_oggetto ( o, se manca, dopo l'ultimo oggetto esistente
      * della pianificazione, per le pianificazioni che hanno già generato oggetti prima che la colonna fosse tenuta ).
      *
      * costanti
@@ -87,6 +88,7 @@
      * 2026-09-25       | Fabio Mosti          | entità disponibili secondo i moduli attivi
      * 2026-09-25       | Fabio Mosti          | ultima ripetizione per la ripianificazione
      * 2026-09-25       | Fabio Mosti          | pianificazione da un oggetto esistente
+     * 2026-09-25       | Fabio Mosti          | doppioni dei pagamenti per ripetizione ( pagamenti.data_ripetizione )
      *
      * licenza
      * =======
@@ -103,9 +105,16 @@
      * restituisce la tabella, il campo data e i moduli di un'entità pianificabile
      *
      * Questa funzione restituisce, per uno dei valori dell'enum pianificazioni.entita, un array con la tabella in cui
-     * vanno creati gli oggetti ( chiave tabella ), la colonna che riceve la data dell'oggetto ( chiave data ) e i moduli
-     * che gestiscono l'entità ( chiave moduli, ne basta uno attivo, vedi pianificazioniEntitaAttiva() ); per un valore
-     * sconosciuto restituisce NULL.
+     * vanno creati gli oggetti ( chiave tabella ), la colonna che riceve la data dell'oggetto ( chiave data ), la colonna
+     * che riceve la data della ripetizione da cui l'oggetto nasce ( chiave ripetizione ) e i moduli che gestiscono
+     * l'entità ( chiave moduli, ne basta uno attivo, vedi pianificazioniEntitaAttiva() ); per un valore sconosciuto
+     * restituisce NULL.
+     *
+     * La data della ripetizione è quella con cui si riconosce se una ripetizione ha già il suo oggetto. Per tutte le
+     * entità tranne i pagamenti coincide con la data dell'oggetto; per i pagamenti la data dell'oggetto è la scadenza,
+     * che con un differimento cade dopo, e la ripetizione sta in pagamenti.data_ripetizione ( patch
+     * _202609251600.pagamenti.data.ripetizione.sql ). I pagamenti creati prima di quella colonna la hanno vuota, e per
+     * loro si ragiona ancora sulla scadenza.
      *
      * Per le tre entità dei documenti basta uno dei due moduli dei documenti, _0400.documenti o _DO000.documenti ( che
      * non si attivano mai insieme ): un documento pianificato nasce numerato, e generaProssimoNumeroDocumento() sta in
@@ -113,7 +122,7 @@
      *
      * @param       string      $e      l'entità ( todo, attivita, rinnovi, documenti, documenti_articoli, pagamenti )
      *
-     * @return      mixed               l'array con tabella, campo data e moduli, oppure NULL
+     * @return      mixed               l'array con tabella, campo data, campo ripetizione e moduli, oppure NULL
      *
      */
     function pianificazioniEntita( $e ) {
@@ -143,7 +152,7 @@
             return NULL;
         }
 
-        return array( 'tabella' => $e, 'data' => $campi[ $e ], 'moduli' => $moduli[ $e ] );
+        return array( 'tabella' => $e, 'data' => $campi[ $e ], 'ripetizione' => ( ( $e == 'pagamenti' ) ? 'data_ripetizione' : $campi[ $e ] ), 'moduli' => $moduli[ $e ] );
 
     }
 
@@ -422,7 +431,7 @@
         if( empty( $ultimo ) ) {
             $ultimo = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT max( ' . $e['data'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ?',
+                'SELECT max( ' . $e['ripetizione'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ?',
                 array( array( 's' => $p['id'] ) )
             );
         }
@@ -593,18 +602,32 @@
             // riga dell'oggetto
             $riga = pianificazioniRiga( $p, $e['tabella'], $dati );
 
-            // data dell'oggetto
+            // data dell'oggetto e della ripetizione
             $riga[ $e['data'] ] = ( $e['tabella'] == 'pagamenti' ) ? pianificazioniScadenza( $d, $p ) : $d;
+            $riga[ $e['ripetizione'] ] = $d;
 
-            // controllo dei doppioni
-            $esistente = mysqlSelectValue(
-                $cf['mysql']['connection'],
-                'SELECT id FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $e['data'] . ' = ? LIMIT 1',
-                array(
-                    array( 's' => $p['id'] ),
-                    array( 's' => $riga[ $e['data'] ] )
-                )
-            );
+            // controllo dei doppioni, per ripetizione; i pagamenti creati prima che ci fosse data_ripetizione si
+            // riconoscono ancora dalla scadenza
+            if( $e['tabella'] == 'pagamenti' ) {
+                $esistente = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM pagamenti WHERE id_pianificazione = ? AND ( data_ripetizione = ? OR ( data_ripetizione IS NULL AND data_scadenza = ? ) ) LIMIT 1',
+                    array(
+                        array( 's' => $p['id'] ),
+                        array( 's' => $d ),
+                        array( 's' => $riga['data_scadenza'] )
+                    )
+                );
+            } else {
+                $esistente = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $e['data'] . ' = ? LIMIT 1',
+                    array(
+                        array( 's' => $p['id'] ),
+                        array( 's' => $d )
+                    )
+                );
+            }
 
             // se l'oggetto esiste già vado avanti
             if( ! empty( $esistente ) ) {
@@ -695,6 +718,7 @@
                     $r = pianificazioniRiga( $f, 'pagamenti', $dati );
                     $r['id_documento'] = $id;
                     $r['data_scadenza'] = pianificazioniScadenza( $d, $f );
+                    $r['data_ripetizione'] = $d;
                     $r['id_pianificazione'] = $p['id'];
 
                     // creazione
