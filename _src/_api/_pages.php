@@ -646,15 +646,20 @@
      * 
      * NOTA questa cosa viene fatta qui perché l'index potrebbe essere modificato dalle macro
      * 
+     * La scrittura era stata commentata il 2026-03-26, quando l'indice piatto di memcacheWrite() è stato rinominato da
+     * __INDEX__ a CACHE_INDEX e le due strutture si sarebbero sovrascritte a vicenda; l'indice per tabella ha ora una
+     * chiave sua, CACHE_QUERY_INDEX ( 2026-09-24 ). Si scrive solo se è cambiato, come si faceva prima, e solo se c'è una
+     * connessione: senza l'estensione Memcached memcacheRead() non può nemmeno valorizzare il suo codice di errore.
+     * 
      */
 
     // scrittura dell'indice della cache
-    // if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
-    //     memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-    // }
+    if( ! empty( $cf['memcache']['connection'] ) && $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_QUERY_INDEX' ) ) {
+        memcacheWrite( $cf['memcache']['connection'], 'CACHE_QUERY_INDEX', $cf['memcache']['index'] );
+    }
 
     // timer
-    // timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+    timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     /**
      * ricerca delle favicons

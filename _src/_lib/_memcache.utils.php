@@ -20,12 +20,16 @@
      * _src/_inc/_controllers/_default.finally.php) le query in cache che la riguardano non sono più valide, e
      * questa libreria fornisce la funzione che le cancella partendo dall'indice.
      *
-     * NOTA l'indice viene letto dalla chiave CACHE_INDEX al runlevel _src/_config/_045.cache.php, ma la sua
-     * scrittura in cache a fine richiesta (in _src/_api/_pages.php) è commentata; inoltre la chiave CACHE_INDEX
-     * è la stessa che memcacheWrite() aggiorna con un indice piatto di tutte le chiavi scritte, nella forma
-     * <chiave> => array( 'time' => ..., 'ttl' => ... ), che non ha la struttura per tabella descritta sopra. Ne
-     * segue che, di fatto, l'indice per tabella contiene solo le query messe in cache durante la richiesta
-     * corrente; si veda il TODO nel docblock di memcacheCleanFromIndex().
+     * L'indice viene letto dalla chiave CACHE_QUERY_INDEX al runlevel _src/_config/_045.cache.php e riscritto a fine
+     * richiesta in _src/_api/_pages.php, se è cambiato. Fino al 2026-09-24 stava nella chiave CACHE_INDEX, che dal
+     * 2026-03-26 è anche quella dell'indice piatto di tutte le chiavi scritte da memcacheWrite() ( nella forma
+     * <chiave> => array( 'time' => ..., 'ttl' => ... ), usato da memcacheFlush() ): per non far sovrascrivere le due
+     * strutture a vicenda la scrittura in _pages.php era stata commentata, e l'indice per tabella conteneva solo le
+     * query messe in cache durante la richiesta corrente. Ora le due strutture hanno ciascuna la sua chiave.
+     *
+     * NOTA l'indice viene salvato solo dalle richieste che passano per _src/_api/_pages.php: le query messe in cache
+     * da un task o da un'API che non ci passa non entrano nell'indice e scadono solo per TTL; inoltre lettura e
+     * riscrittura non sono atomiche, e di due richieste contemporanee che aggiungono voci vince l'ultima.
      *
      * costanti
      * ========
@@ -83,13 +87,8 @@
      * $cf['memcache']['connection'], oppure se l'indice non contiene voci per $k, la funzione non fa niente; l'esito
      * delle singole cancellazioni non viene controllato.
      *
-     * La funzione modifica l'array globale $cf['memcache']['index'], ma solo in memoria: l'indice aggiornato non
-     * viene riscritto in cache.
-     *
-     * TODO l'indice per tabella non viene mai salvato in cache (la scrittura in _src/_api/_pages.php è commentata)
-     * e la chiave CACHE_INDEX da cui viene caricato ha un'altra struttura (quella piatta di memcacheWrite()), per cui
-     * questa funzione invalida solo le query messe in cache nella richiesta corrente; le query in cache scritte da
-     * richieste precedenti restano valide fino alla scadenza del TTL anche dopo la modifica della tabella
+     * La funzione modifica l'array globale $cf['memcache']['index'] in memoria; l'indice aggiornato viene riscritto
+     * in cache, nella chiave CACHE_QUERY_INDEX, a fine richiesta da _src/_api/_pages.php.
      *
      * @param       string      $k      il nome della tabella di cui invalidare le query in cache
      *
