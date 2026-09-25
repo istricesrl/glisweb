@@ -65,8 +65,9 @@
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * logger()                         | core
+     * array2xml()                      | _src/_lib/_xml.tools.php
      * xml2array()                      | _src/_lib/_xml.tools.php
-     * 
+     *
      * changelog
      * =========
      * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
@@ -74,6 +75,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-09-25       | Fabio Mosti          | invio dei dati in XML con MIME_APPLICATION_XML
      * 
      * licenza
      * =======
@@ -117,6 +119,7 @@
      * datatype                     | trattamento dei dati
      * -----------------------------|--------------------------------------------------------------
      * MIME_APPLICATION_JSON        | codificati in JSON e inviati nel corpo, con gli header Content-Type e Content-Length
+     * MIME_APPLICATION_XML         | convertiti con array2xml() se sono un array, altrimenti inviati come sono, nel corpo, come per JSON
      * MIME_X_WWW_FORM_URLENCODED   | codificati con http_build_query() e inviati nel corpo
      * MIME_MULTIPART_FORM_DATA     | passati così come sono a cURL, che li invia come multipart (anche con CURLFile)
      * 'query' o NULL               | codificati con http_build_query() e aggiunti all'URL dopo un ?
@@ -137,7 +140,7 @@
      * 
      * Con il metodo GET e $data NULL i dati non vengono codificati e la richiesta parte senza corpo; con gli altri
      * metodi, $datatype MIME_APPLICATION_JSON e $data NULL la funzione invia il corpo "null" con l'header Content-Type
-     * ( si veda il commento nel corpo ).
+     * ( si veda il commento nel corpo ); con MIME_APPLICATION_XML nello stesso caso il corpo è vuoto, con Content-Length 0.
      * Il certificato SSL del server e il suo nome vengono verificati, a meno che il deploy non abbia definito la
      * costante REST_SSL_VERIFY a false ( si veda il commento nel corpo ).
      * NOTA con $datatype 'query' i parametri vengono aggiunti dopo un ? anche se l'URL ne contiene già uno.
@@ -259,6 +262,15 @@
                 case MIME_APPLICATION_JSON:
                     $data = json_encode( $data, JSON_UNESCAPED_SLASHES );
                     $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
+                    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+                break;
+
+                case MIME_APPLICATION_XML:
+                    if( is_array( $data ) ) {
+                        $data = array2xml( $data );
+                    }
+                    $data = (string) $data;
+                    $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_XML, 'Content-Length' => strlen( $data ) ) );
                     curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
                 break;
 
