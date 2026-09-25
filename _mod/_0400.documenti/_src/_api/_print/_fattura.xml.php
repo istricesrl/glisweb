@@ -360,7 +360,9 @@
 		$xml->writeElement( 'Descrizione', xmlEntities( $row['nome'] ) );
 
 	    // - - - - Quantita / la quantità della riga
-		$xml->writeElement( 'Quantita',  $row['qtd']  );
+	    // NOTA lo schema vuole almeno due decimali: la colonna quantita è decimal(9,2), ma a una riga senza quantità
+	    // generaContenutiDocumento() assegna l'intero 1, che scritto com'è rendeva il file non valido
+		$xml->writeElement( 'Quantita', xmlFloat( $row['qtd'] ) );
 
 	    // - - - - Unita' di misura / l'unità di misura della riga
 		$xml->writeElement( 'UnitaMisura', $row['udm']  );
