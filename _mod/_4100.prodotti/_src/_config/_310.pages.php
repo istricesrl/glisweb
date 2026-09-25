@@ -78,8 +78,8 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // prelevo i dati dalla cache
-            $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-            $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+            $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+            $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
             // default
             $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['scheda']['template'] : $pg['template'];
@@ -169,6 +169,9 @@ if( $cf['contents']['cached'] === false ) {
             } else {
 
                 $cf['contents']['pages'][$pid] = $pgc;
+
+                // canonical
+                $canon = $pid;
             }
         }
     }
@@ -249,8 +252,8 @@ if( $cf['contents']['cached'] === false ) {
                 }
 
                 // prelevo i dati dalla cache
-                $age = memcacheGetKeyAge( $cf['memcache']['connection'], $pid );
-                $pgc = memcacheRead( $cf['memcache']['connection'], $pid );
+                $age = memcacheGetKeyAge( $cf['memcache']['connection'], 'PAGE_' . $pid );
+                $pgc = memcacheRead( $cf['memcache']['connection'], 'PAGE_' . $pid );
 
                 // default: prima il prodotto, poi la configurazione del modulo
                 $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['articolo']['template'] : $pg['template'];
