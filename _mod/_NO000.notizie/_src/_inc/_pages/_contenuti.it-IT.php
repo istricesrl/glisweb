@@ -91,6 +91,11 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO FILE
     if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.file' );
@@ -220,6 +225,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE

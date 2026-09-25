@@ -93,6 +93,11 @@
         arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO FILE
     if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.file' );
