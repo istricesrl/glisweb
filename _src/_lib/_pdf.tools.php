@@ -361,20 +361,24 @@
      * larga una colonna per ogni carattere del testo, con il bordo esterno spesso ( stile lines/thick ) e le separazioni fra le
      * caselle sottili ( stile lines/thin ). Se il testo è più corto di $width viene completato con spazi fino a $width caselle,
      * in modo da ottenere una barra vuota da compilare a mano; se è più lungo non viene troncato e la barra supera $width
-     * colonne. Alla fine il cursore resta a destra dell'ultima casella.
+     * colonne. Il testo è scritto con lo stile $style, e alla fine si torna allo stile default; il cursore resta a destra
+     * dell'ultima casella.
      * 
      * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
      * @param       array       $info       la configurazione del documento
      * @param       string      $text       il testo da scrivere nelle caselle, un carattere per casella
      * @param       int         $width      il numero minimo di caselle ( default 0, tante caselle quanti i caratteri )
+     * @param       string      $style      il nome dello stile in $info['style']['text'] ( default default )
      * 
      * @return      void
      * 
      */
-    function pdfFormCellBar( $pdf, $info, $text, $width = 0 ) {
+    function pdfFormCellBar( $pdf, $info, $text, $width = 0, $style = 'default' ) {
 
         $cellWidth = $info['form']['column']['width'];
         $barHeight = $info['form']['bar']['height'];
+
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
 
         if( $width > strlen( $text ) ) {
             $text = str_pad( $text, $width );
@@ -403,6 +407,8 @@
 
         }
 
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+
     }
 
     /**
@@ -418,14 +424,12 @@
      * label/text       | l'etichetta scritta sopra la cella; se è vuota la cella non ha etichetta
      * label/style      | lo stile dell'etichetta ( default label ) e del testo inline ( default default )
      * bar/text         | il testo da scrivere in una barra a caselle, vedi pdfFormCellBar()
+     * bar/style        | lo stile del testo della barra a caselle ( default default )
      * inline/text      | il testo da scrivere direttamente nella cella, vedi pdfFormInlineCellLabel()
      * bar/barcode      | il testo da scrivere come codice a barre, vedi pdfFormBarcode()
      * 
      * Le chiavi bar/text, inline e bar/barcode sono valutate in quest'ordine e ne viene usata solo la prima presente; se non ce
      * n'è nessuna la cella resta vuota.
-     * 
-     * TODO la chiave bar/style viene passata a pdfFormCellBar() come quinto argomento, ma pdfFormCellBar() ne accetta quattro e
-     * lo ignora: lo stile della barra non è di fatto personalizzabile.
      * 
      * @param       object      $pdf        l'oggetto TCPDF su cui lavorare
      * @param       array       $info       la configurazione del documento
