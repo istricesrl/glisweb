@@ -209,9 +209,14 @@ if( $cf['contents']['cached'] === false ) {
         }
 
         // gli articoli pubblicati, con la categoria e i dati di pagina del loro prodotto
+        // NOTA la scheda dell'articolo prende dal prodotto template, sitemap e, quando l'articolo non ne ha di suoi, contenuti,
+        // immagini e metadati: per questo la sua data di aggiornamento è la più recente fra quella dell'articolo e quella del
+        // prodotto, altrimenti con la cache delle pagine attiva una modifica al solo prodotto non arrivava alle schede dei suoi
+        // articoli ( 2026-09-25 )
         $art = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT articoli.id, articoli.id_prodotto, articoli.timestamp_aggiornamento,
+            'SELECT articoli.id, articoli.id_prodotto,
+                    greatest( coalesce( articoli.timestamp_aggiornamento, 0 ), coalesce( prodotti.timestamp_aggiornamento, 0 ) ) AS timestamp_aggiornamento,
                     prodotti.template, prodotti.schema_html, prodotti.tema_css,
                     prodotti.se_sitemap, prodotti.se_cacheable,
                     prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione
