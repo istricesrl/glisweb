@@ -434,41 +434,47 @@
     // - - /DatiBeniServizi
 	$xml->endElement();
 
-    // - - DatiPagamento
-	$xml->startElement( 'DatiPagamento' );
+    // NOTA DatiPagamento è facoltativo, ma se c'è vuole almeno un DettaglioPagamento: un documento senza pagamenti
+    // produceva un blocco con le sole condizioni, che lo schema rifiuta
+	if( ! empty( $dati['doc']['pagamenti'] ) ) {
 
-    // - - CondizioniPagamento / le condizioni di pagamento del documento
-	$xml->writeElement( 'CondizioniPagamento', $dati['doc']['condizioni_pagamento'] );
+	    // - - DatiPagamento
+		$xml->startElement( 'DatiPagamento' );
 
-    // ciclo sulle scadenze
-	foreach( $dati['doc']['pagamenti'] as $row ) {
+	    // - - CondizioniPagamento / le condizioni di pagamento del documento
+		$xml->writeElement( 'CondizioniPagamento', $dati['doc']['condizioni_pagamento'] );
 
-	    // - - - DettaglioPagamento
-		$xml->startElement( 'DettaglioPagamento' );
+	    // ciclo sulle scadenze
+		foreach( $dati['doc']['pagamenti'] as $row ) {
 
-	    // - - - - ModalitaPagamento / la modalità di pagamento di questa scadenza
-		$xml->writeElement( 'ModalitaPagamento', $row['codice_pagamento'] );
+		    // - - - DettaglioPagamento
+			$xml->startElement( 'DettaglioPagamento' );
 
-	    // - - - - DataScadenzaPagamento / la data di scadenza di questa scadenza
-		if( ! empty( $row['data_standard'] ) ) {
-		    $xml->writeElement( 'DataScadenzaPagamento', $row['data_standard'] );
+		    // - - - - ModalitaPagamento / la modalità di pagamento di questa scadenza
+			$xml->writeElement( 'ModalitaPagamento', $row['codice_pagamento'] );
+
+		    // - - - - DataScadenzaPagamento / la data di scadenza di questa scadenza
+			if( ! empty( $row['data_standard'] ) ) {
+			    $xml->writeElement( 'DataScadenzaPagamento', $row['data_standard'] );
+			}
+
+		    // - - - - ImportoPagamento / l'importo di questa scadenza
+			$xml->writeElement( 'ImportoPagamento', $row['importo_lordo_totale'] );
+
+			if( !empty( $row['iban'] ) ){
+				// - - - - iban 
+				$xml->writeElement( 'IBAN', $row['iban'] );
+			}
+
+		    // - - - /DettaglioPagamento
+			$xml->endElement();
+
 		}
 
-	    // - - - - ImportoPagamento / l'importo di questa scadenza
-		$xml->writeElement( 'ImportoPagamento', $row['importo_lordo_totale'] );
-
-		if( !empty( $row['iban'] ) ){
-			// - - - - iban 
-			$xml->writeElement( 'IBAN', $row['iban'] );
-		}
-
-	    // - - - /DettaglioPagamento
+	    // - - /DatiPagamento
 		$xml->endElement();
 
 	}
-
-    // - - /DatiPagamento
-	$xml->endElement();
 
     // - /FatturaElettronicaBody
 	$xml->endElement();
