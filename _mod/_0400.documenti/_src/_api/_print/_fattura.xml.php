@@ -101,6 +101,13 @@
 		$xml->writeElement( 'FormatoTrasmissione', 'FPA12' );
 	}
 
+    // NOTA un destinatario privato che non ha comunicato il codice SDI si indica con il codice convenzionale 0000000,
+    // anche quando ha la partita IVA ( generaContenutiDocumento() lo imposta solo per chi non ce l'ha ): un codice vuoto
+    // non è valido per lo schema; alla PA invece il codice ufficio serve sempre, e se manca il file viene scartato
+	if( empty( $dati['dst']['codice_sdi'] ) && $dati['dst']['se_pubblica_amministrazione'] != 1 ) {
+	    $dati['dst']['codice_sdi'] = '0000000';
+	}
+
     // - - - CodiceDestinatario / codice SDI del destinatario
 	$xml->writeElement( 'CodiceDestinatario', $dati['dst']['codice_sdi'] );
 
