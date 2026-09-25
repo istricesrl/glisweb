@@ -20,7 +20,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_audio_view WHERE se_pagine = 1 ORDER BY __label__ ASC '
+        'SELECT id, __label__ FROM ruoli_audio_view WHERE se_anagrafica = 1 ORDER BY __label__ ASC '
     );
 
     // solo html5 dell'enum embed, la sola voce che la tabella embed aveva con se_audio, come nei form audio dei moduli ( 2026-09-25 )
