@@ -2671,6 +2671,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_annunci` tinyint(1) DEFAULT NULL,
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL
@@ -2865,6 +2867,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_annunci` tinyint(1) DEFAULT NULL,
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
