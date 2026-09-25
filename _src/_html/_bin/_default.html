@@ -193,12 +193,6 @@
 </audio>
 {% endmacro %}
 
-{% macro audio( site, page, ruolo, ordine ) %}
-<audio controls>
-    <source src="{{ site.root }}{{ page.contents.audio[ ruolo ][ ordine ].path }}" type="audio/mpeg">
-</audio>
-{% endmacro %}
-
 {% macro cardSlider( page, lang, site, name, images, auto, set ) %}
 {# richiede https://kenwheeler.github.io/slick/ #}
 {% import _self as cms %}
