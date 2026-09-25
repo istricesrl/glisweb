@@ -64,3 +64,7 @@ Questa è la macro della view dei documenti.
 
 ### /_mod/_DO000.documenti/_src/_inc/_pages/_amministrazione.it-IT.php
 Questa è la macro della dashboard dell'amministrazione.
+
+### /_mod/_DO000.documenti/_src/_lib/_mysql.utils.add.php
+Questa libreria contiene le funzioni che calcolano il numero di un nuovo documento, copiate da `_0400.documenti` perché
+le pianificazioni di documenti di `_PI000.pianificazioni` funzionino anche senza il modulo legacy.
