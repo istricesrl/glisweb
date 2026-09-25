@@ -565,10 +565,12 @@
      * aggiunge a una pagina gli audio collegati a un oggetto
      *
      * Questa funzione è una scorciatoia per aggiungiDati() con la tabella audio: gli audio finiscono in
-     * $p['contents']['audio'][ ruolo ][ ordine ], che è dove li cerca _src/_html/_bin/_default.html. Non ha chiamanti.
+     * $p['contents']['audio'][ ruolo ][ ordine ], che è dove li cerca _src/_html/_bin/_default.html. La chiamano i runlevel
+     * _420.pages.php dei moduli _3000.contenuti e _PA000.pagine, accanto a immagini, video e file.
      *
-     * NOTA lo schema standard in _usr/_database non crea più le tabelle audio e ruoli_audio ( tolte nel riallineamento
-     * d975b4a15 del 2026-03-02 ): la funzione serve sui deploy che le hanno ancora, altrove la query fallisce.
+     * Le tabelle audio e ruoli_audio, sparite dallo schema standard nel riallineamento d975b4a15 del 2026-03-02, sono
+     * state rimesse il 2026-09-25 con la patch _usr/_database/_patch/_202609251000.audio.sql: finché un deploy non l'ha
+     * applicata la query fallisce, come quella di aggiungiVideo() su un database senza video.
      *
      * @param       array       $p      l'array della pagina, modificato sul posto
      * @param       string      $id     l'ID dell'oggetto a cui sono collegati gli audio
