@@ -119,6 +119,11 @@
                                                             'produzione.attivita.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO PIANIFICAZIONI
+    if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'produzione.attivita.form.archiviazione', $p['produzione.attivita.form']['etc']['tabs'], 'produzione.attivita.form.pianificazioni' );
+    }
+
     // tools archivio produzione
     $p['produzione.attivita.form.archiviazione'] = array(
         'sitemap'            => false,

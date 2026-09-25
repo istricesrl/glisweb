@@ -64,6 +64,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * pianificazioniElabora()          | crea gli oggetti di una pianificazione fino alla data di lavoro
+     * pianificazioniDaOggetto()        | crea una pianificazione che ha per modello un oggetto esistente
      *
      * dipendenze
      * ==========
@@ -85,6 +86,7 @@
      * 2026-09-25       | Fabio Mosti          | prima versione, dal task populate di _0100.pianificazioni
      * 2026-09-25       | Fabio Mosti          | entità disponibili secondo i moduli attivi
      * 2026-09-25       | Fabio Mosti          | ultima ripetizione per la ripianificazione
+     * 2026-09-25       | Fabio Mosti          | pianificazione da un oggetto esistente
      *
      * licenza
      * =======
@@ -741,5 +743,106 @@
         $status['info'][] = 'oggetti creati: ' . $creati;
 
         return ( $ok ) ? $creati : false;
+
+    }
+
+    /**
+     * crea una pianificazione che ha per modello un oggetto esistente
+     *
+     * Questa funzione crea una pianificazione dell'entità $e il cui modello è l'oggetto $id di quell'entità: ogni colonna
+     * X dell'oggetto finisce nella colonna model_X della pianificazione, se c'è, cioè l'inverso di pianificazioniRiga().
+     * Non si copiano le colonne che ogni oggetto deve avere diverse ( numero e codice, che hanno chiavi uniche, e le date,
+     * che vengono dal calendario ). Per un documento si creano anche le pianificazioni figlie, una per riga e una per
+     * pagamento, con il differimento del pagamento ricavato dalla distanza fra la sua scadenza e la data del documento.
+     *
+     * È il modo "ripeti questo oggetto" della pianificazione per modello, al posto della duplicazione ricorsiva della fase
+     * precedente di _0100.pianificazioni. La pianificazione nasce senza periodicità e senza data_avvio, quindi il cron
+     * non la elabora finché non la si completa nel suo form.
+     *
+     * @param       string      $e      l'entità dell'oggetto ( todo, attivita, rinnovi, documenti, documenti_articoli, pagamenti )
+     * @param       int         $id     l'id dell'oggetto
+     *
+     * @return      mixed               l'id della pianificazione creata, o false se l'entità o l'oggetto non esistono
+     *
+     */
+    function pianificazioniDaOggetto( $e, $id ) {
+
+        global $cf;
+
+        // entità
+        $e = pianificazioniEntita( $e );
+
+        // oggetto
+        $o = ( empty( $e ) ) ? NULL : mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM ' . $e['tabella'] . ' WHERE id = ?',
+            array( array( 's' => $id ) )
+        );
+
+        // controlli
+        if( empty( $o ) ) {
+            return false;
+        }
+
+        // colonne della tabella pianificazioni
+        $colonne = mysqlSelectColumn(
+            'COLUMN_NAME',
+            $cf['mysql']['connection'],
+            'SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = database() AND table_name = ?',
+            array( array( 's' => 'pianificazioni' ) )
+        );
+
+        // colonne che non si copiano
+        $escluse = array( 'id', 'numero', 'codice', 'data', 'data_programmazione', 'data_inizio', 'data_fine', 'data_scadenza',
+            'timestamp_scadenza', 'anno_programmazione', 'settimana_programmazione', 'id_pianificazione' );
+
+        // modello di un oggetto
+        $modello = function( $r ) use ( $colonne, $escluse ) {
+            $m = array();
+            foreach( $r as $k => $v ) {
+                if( $v !== NULL && ! in_array( $k, $escluse ) && in_array( 'model_' . $k, $colonne ) ) {
+                    $m[ 'model_' . $k ] = $v;
+                }
+            }
+            return $m;
+        };
+
+        // pianificazione
+        $p = array_merge(
+            $modello( $o ),
+            array(
+                'entita' => $e['tabella'],
+                'nome' => ( ( ! empty( $o['nome'] ) ) ? $o['nome'] : $e['tabella'] . ' #' . $o['id'] ),
+                'cadenza' => 1,
+                'timestamp_inserimento' => time()
+            )
+        );
+
+        // creazione
+        $idPianificazione = mysqlInsertRow( $cf['mysql']['connection'], $p, 'pianificazioni', false );
+
+        // righe e pagamenti del documento
+        if( ! empty( $idPianificazione ) && $e['tabella'] == 'documenti' ) {
+
+            // righe
+            foreach( (array) mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli WHERE id_documento = ? ORDER BY id', array( array( 's' => $o['id'] ) ) ) as $r ) {
+                $f = array_merge( $modello( $r ), array( 'id_genitore' => $idPianificazione, 'entita' => 'documenti_articoli', 'timestamp_inserimento' => time() ) );
+                unset( $f['model_id_documento'] );
+                mysqlInsertRow( $cf['mysql']['connection'], $f, 'pianificazioni', false );
+            }
+
+            // pagamenti
+            foreach( (array) mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM pagamenti WHERE id_documento = ? ORDER BY id', array( array( 's' => $o['id'] ) ) ) as $r ) {
+                $f = array_merge( $modello( $r ), array( 'id_genitore' => $idPianificazione, 'entita' => 'pagamenti', 'timestamp_inserimento' => time() ) );
+                unset( $f['model_id_documento'] );
+                if( ! empty( $r['data_scadenza'] ) && ! empty( $o['data'] ) && $r['data_scadenza'] > $o['data'] ) {
+                    $f['offset_giorni'] = intval( round( ( strtotime( $r['data_scadenza'] ) - strtotime( $o['data'] ) ) / 86400 ) );
+                }
+                mysqlInsertRow( $cf['mysql']['connection'], $f, 'pianificazioni', false );
+            }
+
+        }
+
+        return $idPianificazione;
 
     }

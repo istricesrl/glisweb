@@ -102,6 +102,11 @@
                                                             'amministrazione.ciclo.attivo.fatture.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO PIANIFICAZIONI
+    if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'amministrazione.ciclo.attivo.fatture.form.relazioni', $p['amministrazione.ciclo.attivo.fatture.form']['etc']['tabs'], 'amministrazione.ciclo.attivo.fatture.form.pianificazioni' );
+    }
+
     // tools archivio amministrazione
     $p['amministrazione.ciclo.attivo.fatture.form.relazioni'] = array(
         'sitemap'            => false,

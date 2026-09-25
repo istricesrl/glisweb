@@ -34,6 +34,17 @@ con tipologia fattura, sezionale `{{ dt.now.anno }}`, nome `canone {{ dt.now.nom
 da 100,00 al reparto IVA 22% e un pagamento `{{ dt.articoli.totale }}` a 30 giorni fine mese. Le fatture escono il 31/01,
 il 28/02, il 31/03, il 30/04..., numerate in ordine, e il pagamento della prima scade il 28/02.
 
+## relazioni con gli altri moduli
+
+Quando `_PI000.pianificazioni` è attivo, i form delle fatture di `_DO010.fatture`, dei documenti di `_DO000.documenti` e
+delle attività di `_AT000.attivita` hanno una scheda pianificazione, che quei moduli inseriscono nelle loro linguette con
+il blocco `RELAZIONI CON IL MODULO PIANIFICAZIONI` e che questo modulo dichiara nei suoi `_amministrazione.it-IT.php` e
+`_produzione.it-IT.php`. La scheda porta alla pianificazione da cui l'oggetto è nato, se c'è, e ha il comando "pianifica":
+il task `pianificazione.da.oggetto` crea una pianificazione che ha l'oggetto come modello ( le sue colonne nelle
+`model_*`, tranne numero, codice e date; per un documento anche righe e pagamenti come pianificazioni figlie, con il
+differimento ricavato dalla scadenza ) e apre il suo form, dove le si danno periodicità e date: finché non ha una data di
+avvio il cron non la elabora.
+
 ## debug
 
 Il task si chiama a mano con `/task/PI000.pianificazioni/pianificazioni.populate?id=<id>&d=<Y-m-d>`: `id` elabora quella
@@ -65,6 +76,10 @@ duplicazione restano come sono.
 
 ## i file del modulo
 
+### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazione.da.oggetto.php
+Questo task crea una pianificazione che ha per modello un oggetto esistente: un documento con le sue righe e i suoi
+pagamenti, un'attività, una todo.
+
 ### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.populate.php
 Questo task crea gli oggetti di una pianificazione: quella indicata con `id`, oppure la prima scaduta. Lo include
 anche il blocco delle pianificazioni di `_src/_api/_cron.php`, una volta per ogni pianificazione scaduta.
@@ -75,6 +90,12 @@ Questo task ricrea da una data, secondo i parametri attuali, gli oggetti non anc
 
 ### /_mod/_PI000.pianificazioni/_src/_api/_task/_pianificazioni.stop.php
 Questo task ferma una pianificazione a una data, e a richiesta cancella gli oggetti successivi ( mai i documenti ).
+
+### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_amministrazione.archivio.documenti.form.pianificazioni.php
+Questa è la macro della scheda pianificazione del form dei documenti di `_DO000.documenti`.
+
+### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.pianificazioni.php
+Questa è la macro della scheda pianificazione del form delle fatture di `_DO010.fatture`.
 
 ### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_pianificazioni.form.modello.php
 Questa è la macro della scheda modello del form delle pianificazioni.
@@ -94,8 +115,17 @@ Questa è la macro della scheda strumenti della vista delle pianificazioni.
 ### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_pianificazioni.view.php
 Questa è la macro della vista delle pianificazioni.
 
+### /_mod/_PI000.pianificazioni/_src/_inc/_macro/_produzione.attivita.form.pianificazioni.php
+Questa è la macro della scheda pianificazione del form delle attività di `_AT000.attivita`.
+
+### /_mod/_PI000.pianificazioni/_src/_inc/_pages/_amministrazione.it-IT.php
+In questo file vengono definite le schede pianificazione dei form delle fatture e dei documenti.
+
 ### /_mod/_PI000.pianificazioni/_src/_inc/_pages/_pianificazioni.it-IT.php
 In questo file vengono definite le pagine del modulo pianificazioni, sotto strumenti accanto a task e job.
+
+### /_mod/_PI000.pianificazioni/_src/_inc/_pages/_produzione.it-IT.php
+In questo file viene definita la scheda pianificazione del form delle attività.
 
 ### /_mod/_PI000.pianificazioni/_src/_lib/_pianificazioni.utils.php
 Questa libreria contiene le funzioni che calcolano le date ancora da creare e creano gli oggetti.

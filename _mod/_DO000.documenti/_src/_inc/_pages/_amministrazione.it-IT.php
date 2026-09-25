@@ -84,6 +84,11 @@
                                                             'amministrazione.archivio.documenti.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO PIANIFICAZIONI
+    if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'amministrazione.archivio.documenti.form.relazioni', $p['amministrazione.archivio.documenti.form']['etc']['tabs'], 'amministrazione.archivio.documenti.form.pianificazioni' );
+    }
+
     // tools archivio amministrazione
     $p['amministrazione.archivio.documenti.form.evasione'] = array(
         'sitemap'            => false,
