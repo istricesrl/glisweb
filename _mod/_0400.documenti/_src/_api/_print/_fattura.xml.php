@@ -365,7 +365,9 @@
 		$xml->writeElement( 'Quantita', xmlFloat( $row['qtd'] ) );
 
 	    // - - - - Unita' di misura / l'unità di misura della riga
-		$xml->writeElement( 'UnitaMisura', $row['udm']  );
+		if( ! empty( $row['udm'] ) ) {
+		    $xml->writeElement( 'UnitaMisura', $row['udm']  );
+		}
 
 	    // - - - - PrezzoUnitario / il prezzo netto unitario della riga
 		$xml->writeElement( 'PrezzoUnitario', $row['importo_netto_unitario']  );
@@ -413,7 +415,9 @@
 		$xml->writeElement( 'Imposta', $row['tot'] );
 
 	    // - - - - EsigibilitaIVA / l'esigibilità della riga
-		$xml->writeElement( 'EsigibilitaIVA', $dati['doc']['codice_esigibilita'] );
+		if( ! empty( $dati['doc']['codice_esigibilita'] ) ) {
+		    $xml->writeElement( 'EsigibilitaIVA', $dati['doc']['codice_esigibilita'] );
+		}
 
 	    // - - - - RiferimentoNormativo / il riferimento normativo dell'esenzione della riga
 		if( ! empty( $row['riferimento'] ) ) {
@@ -444,7 +448,9 @@
 		$xml->writeElement( 'ModalitaPagamento', $row['codice_pagamento'] );
 
 	    // - - - - DataScadenzaPagamento / la data di scadenza di questa scadenza
-		$xml->writeElement( 'DataScadenzaPagamento', $row['data_standard'] );
+		if( ! empty( $row['data_standard'] ) ) {
+		    $xml->writeElement( 'DataScadenzaPagamento', $row['data_standard'] );
+		}
 
 	    // - - - - ImportoPagamento / l'importo di questa scadenza
 		$xml->writeElement( 'ImportoPagamento', $row['importo_lordo_totale'] );
