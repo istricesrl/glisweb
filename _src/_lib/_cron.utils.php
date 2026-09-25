@@ -53,192 +53,65 @@
     }
 
     /**
-     * genera attività in base ai parametri
+     * genera todo che si ripetono nel tempo
      *
-     * Questa funzione viene usata per generare attività che si ripetono nel tempo.
-     * 
+     * Questa funzione crea una todo per ogni data restituita da creazionePianificazione() con gli stessi parametri di
+     * ripetizione, tutte con lo stesso proprietario, cliente, luogo, orario e nome; la usa il task
+     * _src/_api/_task/_todo.generazione.php. L'ora di fine è l'ora di inizio più $ore ore. La periodicità è l'id della
+     * tabella periodicita ( 0 nessuna ripetizione, 1 giornaliera, 2 settimanale, 3 mensile, da 4 a 7 bimestrale ...
+     * semestrale, 8 annuale ), come per creazionePianificazione().
      *
-     * @param	int		$id_anagrafica	id anagrafica del soggetto proprietario dell'attività
-     * @param	int		$id_cliente     il cliente o il soggetto che fruisce dell'attività    
-     * @param	int		$id_luogo       il luogo dove l'attività pianificata verrà svolta
-     * @param	string	$data           data dell'attività(se la pianificazione è per eventi che si ripetono equivale alla data di inizio pianificazione)
-     * @param	int		$ore            durata dell'attività
-     * @param	int		$id_periodicita tipologia ti attiivita: 0 = non si ripete, 1 = giornaliera, 2 = settimanale, 3 = mensile, 4 = annuale 
-     * @param   int     $cadenza        ogni quanti giorni/settimane/mesi/anni l'attività si ripete
-     * @param   string  $data_fine      
-     * @param   int     $numero_ripetinzioni    numero di pianificazioni attività
-     *  
-     * 
-     * @return	boolean			restituisce true se la generazione delle attività ha avuto successo, false altrimenti
+     * NOTA fino al 2026-09-25 la funzione ricalcolava le date per conto suo, con gli stessi difetti che aveva
+     * creazionePianificazione() ( e con 4 per l'annuale, dalla numerazione precedente alla tabella periodicita ),
+     * scriveva nelle colonne ora_inizio_pianificazione e ora_fine_pianificazione, rinominate in *_programmazione nel
+     * 2021, usava un $id_progetto mai definito e sommava le ore a una stringa: non poteva creare niente.
      *
+     * @param       object      $c                      la connessione mysqli
+     * @param       int         $id_anagrafica          l'anagrafica proprietaria delle todo
+     * @param       int         $id_cliente             il cliente per cui si svolgono
+     * @param       int         $id_luogo               il luogo dove si svolgono
+     * @param       string      $data                   la data della prima todo ( inizio della ripetizione )
+     * @param       string      $ora                    l'ora di inizio ( HH:MM )
+     * @param       float       $ore                    la durata in ore
+     * @param       int         $id_periodicita         il tipo di ripetizione ( id della tabella periodicita )
+     * @param       string      $descrizione            il nome delle todo
+     * @param       int         $cadenza                ogni quante unità di tempo ripetere
+     * @param       string      $data_fine              la data fino alla quale ripetere, compresa
+     * @param       int         $numero_ripetizioni     quanti periodi generare se manca $data_fine
+     * @param       mixed       $giorni_settimana       i giorni della settimana per la settimanale ( 0 lunedì ... 6 domenica )
+     * @param       int         $ripetizione_mese       1 per lo stesso giorno del mese, altro per la ripetizione posizionale
+     * @param       int         $ripetizione_anno       come $ripetizione_mese, per l'annuale
      *
-     *
-     * 
+     * @return      boolean                             true se sono state create tutte le todo, false altrimenti
      *
      */
+    function pianificazioneTodo( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){
 
-    // funzione per la generazione di todo
-    function pianificazioneTodo( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+        // date in cui creare le todo
+        $date = creazionePianificazione( $data, $id_periodicita, $cadenza, $data_fine, $numero_ripetizioni, $giorni_settimana, $ripetizione_mese, $ripetizione_anno );
 
-        // TODO controlli
-            // la data inizio è successiva alla data fine
+        // ora di fine
+        $ora_fine = ( empty( $ora ) ) ? NULL : date( 'H:i', strtotime( $ora ) + round( floatval( str_replace( ',', '.', $ore ) ) * 3600 ) );
 
-            // id_anagrafica, id_luogo ed id_cliente sono presenti dell'anagrafica 
+        // esito
+        $attivita = ! empty( $date );
 
-        $number = ['first', 'second', 'third', 'fourth','fifth','sixth'];
-        $days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday' ];
-        $months = ['January','February','March','April','May','June','July','August','September','October','November','December' ];
-        $attivita = false;
-        // in base al tipo di periodicità della pianificazione vengono generate le attività
-        switch($id_periodicita){
-
-            // l'attività non si ripete
-            case 0:
-                $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $id_anagrafica), 
-                            array( 's' => $id_cliente), 
-                            array( 's' => $id_luogo), 
-                            array( 's' => $id_progetto), 
-                            array( 's' => $ora), 
-                            array( 's' => $ora + $ore), 
-                            array( 's' => $data ),
-                            array( 's' => $descrizione) )
-                );
-
-            break;
-
-            // attività con ripetizione giornaliera
-            case 1:
-                
-                if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' days')); }
-                do {
-                    $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $id_anagrafica), 
-                            array( 's' => $id_cliente), 
-                            array( 's' => $id_luogo), 
-                            array( 's' => $id_progetto), 
-                            array( 's' => $ora), 
-                            array( 's' => $ora + $ore), 
-                            array( 's' => $data ),
-                            array( 's' => $descrizione) )
-                        );
-                    // aggiorno la data con la successiva
-                    $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' days'));
-
-                } while ( $data <= $data_fine );
-            
-            break;
-
-            // attività con ripetizione settimanale
-            case 2:
-                // lunedì della settimana di inizio
-                $d_inizio = date('Y-m-d',strtotime('monday this week ', strtotime($data) ));
-                if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($d_inizio. ' + '.($cadenza * $numero_ripetizioni ).' weeks -1 day')); }
-                $giorni = explode(",",$giorni_settimana);
-                foreach($giorni as $g){
-                    if( date('N', strtotime($data)) - 1 == $g ){
-                        $d = $data;
-                    } else {
-                        $d = date('Y-m-d',strtotime(' next '.$days[$g], strtotime($d_inizio) ));
-                    }
-                    do {
-                    if($d >= $data){
-                        $attivita = mysqlQuery( $c,
-                        'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                        array(  array( 's' => $id_anagrafica), 
-                                array( 's' => $id_cliente), 
-                                array( 's' => $id_luogo), 
-                                array( 's' => $id_progetto), 
-                                array( 's' => $ora), 
-                                array( 's' => $ora + $ore), 
-                                array( 's' => $d ),
-                                array( 's' => $descrizione) )
-                    );
-                    }
-                    // aggiorno la data con la successiva
-                    $d = date('Y-m-d', strtotime($d. ' + '.$cadenza.' weeks'));
-                    
-                    } while ( $d <= $data_fine );
-                }
-            break;
-
-            // attività con ripetizione mensile
-            // TODO gestione seconda tipologia di duplicazione data
-            case 3:
-                if ( empty($data_fine) || $data_fine === NULL ){ 
-                    $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * $numero_ripetizioni .' months ')); 
-                    $data_fine = date(date('Y',strtotime($data_fine))."-".date('m',strtotime($data_fine))."-01");}                
-            if( $ripetizione_mese != 1 ){
-                $n_g = numOfDayInWeek($data, $days[ date('N', strtotime($data)) - 1 ]);
-                while ( $data < $data_fine ){
-                    
-                    $data_temp = date("Y-m-d", strtotime("+ ".$cadenza." month", strtotime($data)));
-                    $data_temp = date(date('Y',strtotime($data_temp))."-".date('m',strtotime($data_temp))."-01");
-                    $data_temp = date("Y-m-d", strtotime($number[ $n_g -1 ]." ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp." -1 day")));
-                    
-                    if( date('m', strtotime($data_temp)) != ((date('m',  strtotime($data)) + $cadenza) % 12 ) ){
-                        $data_temp = date("Y-m-d", strtotime("last ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp)));   
-                    }
-                    $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $id_anagrafica), 
-                            array( 's' => $id_cliente), 
-                            array( 's' => $id_luogo), 
-                            array( 's' => $id_progetto), 
-                            array( 's' => $ora), 
-                            array( 's' => $ora + $ore), 
-                            array( 's' => $data ),
-                            array( 's' => $descrizione) )
-                    );
-                    $data = $data_temp;
-
-                };
-            } else {
-                do {
-                    $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $id_anagrafica), 
-                            array( 's' => $id_cliente), 
-                            array( 's' => $id_luogo), 
-                            array( 's' => $id_progetto), 
-                            array( 's' => $ora), 
-                            array( 's' => $ora + $ore), 
-                            array( 's' => $data ),
-                            array( 's' => $descrizione) )
-                    );
-                    // aggiorno la data con la successiva
-                    $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' months'));
-
-                } while ( $data <= $data_fine );
-            }   
-            break;
-
-            // attività con ripetizione annuale
-            // TODO gestione seconda tipologia di duplicazione data
-            case 4:
-                if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
-                do {
-                    $attivita = mysqlQuery( $c,
-                    'INSERT INTO todo ( id_anagrafica, id_cliente, id_luogo, id_progetto, ora_inizio_pianificazione, ora_fine_pianificazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $id_anagrafica), 
-                            array( 's' => $id_cliente), 
-                            array( 's' => $id_luogo), 
-                            array( 's' => $id_progetto), 
-                            array( 's' => $ora), 
-                            array( 's' => $ora + $ore), 
-                            array( 's' => $data ),
-                            array( 's' => $descrizione) )
-                    );
-                    // aggiorno la data con la successiva
-                    $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' years'));
-
-                } while ( $data < $data_fine );
-
-            break;
-
-
+        // creo una todo per ogni data
+        foreach( $date as $d ) {
+            $attivita = mysqlInsertRow(
+                $c,
+                array(
+                    'id_anagrafica'                 => $id_anagrafica,
+                    'id_cliente'                    => $id_cliente,
+                    'id_luogo'                      => $id_luogo,
+                    'data_programmazione'           => $d,
+                    'ora_inizio_programmazione'     => $ora,
+                    'ora_fine_programmazione'       => $ora_fine,
+                    'ore_programmazione'            => $ore,
+                    'nome'                          => $descrizione
+                ),
+                'todo'
+            ) && $attivita;
         }
 
         return $attivita;
