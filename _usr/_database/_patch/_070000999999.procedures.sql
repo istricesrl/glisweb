@@ -1517,6 +1517,142 @@ CREATE
 
 END;
 
+-- | 070000034200
+
+-- ruoli_audio_path
+DROP FUNCTION IF EXISTS `ruoli_audio_path`;
+
+-- | 070000034201
+
+-- ruoli_audio_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_audio_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_audio_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_audio.id_genitore,
+				ruoli_audio.nome
+			FROM ruoli_audio
+			WHERE ruoli_audio.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000034210
+
+-- ruoli_audio_path_check
+DROP FUNCTION IF EXISTS `ruoli_audio_path_check`;
+
+-- | 070000034211
+
+-- ruoli_audio_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_audio_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_audio_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				ruoli_audio.id_genitore
+			FROM ruoli_audio
+			WHERE ruoli_audio.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000034220
+
+-- ruoli_audio_path_find_ancestor
+DROP FUNCTION IF EXISTS `ruoli_audio_path_find_ancestor`;
+
+-- | 070000034221
+
+-- ruoli_audio_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_audio_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_audio_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_audio.id_genitore,
+				ruoli_audio.id
+			FROM ruoli_audio
+			WHERE ruoli_audio.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000034300
 
 -- ruoli_documenti_path

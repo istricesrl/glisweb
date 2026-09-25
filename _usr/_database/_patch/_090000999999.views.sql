@@ -644,6 +644,57 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 	GROUP BY attivita.id                                      --
 ;                                                             --
 
+-- | 090000002100
+
+-- audio_view
+CREATE OR REPLACE VIEW `audio_view` AS
+	SELECT
+		audio.id,
+		audio.id_anagrafica,
+		audio.id_pagina,
+		audio.id_file,
+		audio.id_prodotto,
+		audio.id_articolo,
+		audio.id_categoria_prodotti,
+		audio.id_marchio,
+		audio.id_risorsa,
+		audio.id_categoria_risorse,
+		audio.id_notizia,
+		audio.id_annuncio,
+		audio.id_categoria_notizie,
+		audio.id_categoria_annunci,
+		audio.id_lingua,
+		lingue.nome AS lingua,
+		audio.id_ruolo,
+		audio.id_progetto,
+		audio.id_categoria_progetti,
+		audio.id_indirizzo,
+		audio.id_edificio,
+		audio.id_immobile,
+		audio.id_valutazione,
+		ruoli_audio.nome AS ruolo,
+		audio.ordine,
+		audio.nome,
+		audio.path,
+		audio.id_embed,
+		audio.codice_embed,
+		audio.embed_custom,
+		audio.target,
+		audio.note,
+		audio.id_account_inserimento,
+		audio.id_account_aggiornamento,
+		concat(
+			ruoli_audio.nome,
+			' # ',
+			audio.ordine,
+			' / ',
+			audio.nome
+		) AS __label__
+	FROM audio
+		LEFT JOIN lingue ON lingue.id = audio.id_lingua
+		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
+;
+
 -- | 090000002900
 
 -- caratteristiche_view
@@ -2402,6 +2453,31 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.id_account_aggiornamento,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
+;
+
+-- | 090000034200
+
+-- ruoli_audio_view
+CREATE OR REPLACE VIEW ruoli_audio_view AS
+	SELECT
+		ruoli_audio.id,
+		ruoli_audio.id_genitore,
+		ruoli_audio.nome,
+		ruoli_audio.html_entity,
+		ruoli_audio.font_awesome,
+		ruoli_audio.se_anagrafica,
+		ruoli_audio.se_pagine,
+		ruoli_audio.se_prodotti,
+		ruoli_audio.se_articoli,
+		ruoli_audio.se_categorie_prodotti,
+		ruoli_audio.se_marchi,
+		ruoli_audio.se_notizie,
+		ruoli_audio.se_categorie_notizie,
+		ruoli_audio.se_risorse,
+		ruoli_audio.se_categorie_risorse,
+		ruoli_audio.se_immobili,
+	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
+	FROM ruoli_audio
 ;
 
 -- | 090000034300

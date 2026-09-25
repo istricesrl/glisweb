@@ -475,6 +475,55 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000002100
+
+-- audio
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli audio collegati a varie entità del sistema
+--
+-- questa tabella è la gemella di video e ne ha le stesse colonne di collegamento, tranne orientamento
+-- e ratio che per un audio non hanno senso; era sparita nel riallineamento del 2026-03-02 ed è stata
+-- rimessa il 2026-09-25 insieme a ruoli_audio, perché aggiungiAudio() e i form dei moduli la usano
+--
+CREATE TABLE IF NOT EXISTS `audio` (
+  `id` bigint(20) NOT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `id_pagina` bigint(20) DEFAULT NULL,
+  `id_file` bigint(20) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
+  `id_marchio` bigint(20) DEFAULT NULL,
+  `id_risorsa` bigint(20) DEFAULT NULL,
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,
+  `id_notizia` bigint(20) DEFAULT NULL,
+  `id_annuncio` bigint(20) DEFAULT NULL,
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,
+  `id_lingua` bigint(20) DEFAULT NULL,
+  `id_ruolo` bigint(20) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,
+  `id_indirizzo` bigint(20) DEFAULT NULL,
+  `id_edificio` bigint(20) DEFAULT NULL,
+  `id_immobile` bigint(20) DEFAULT NULL,
+  `id_valutazione` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `path` char(255) DEFAULT NULL,
+  `id_embed` bigint(20) DEFAULT NULL,
+  `codice_embed` char(128) DEFAULT NULL,
+  `embed_custom` char(128) DEFAULT NULL,
+  `target` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000002900
 
 -- caratteristiche
@@ -2595,6 +2644,36 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
   `id_account_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034200
+
+-- ruoli_audio
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli degli audio
+--
+-- questa tabella contiene i ruoli degli audio, con le stesse colonne di ruoli_video; i flag se_*
+-- dicono a quali entità un ruolo è pertinente, e li leggono le tendine dei form audio dei moduli
+--
+CREATE TABLE IF NOT EXISTS `ruoli_audio` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_anagrafica` tinyint(1) DEFAULT NULL,
+  `se_pagine` tinyint(1) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300

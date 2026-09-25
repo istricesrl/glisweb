@@ -219,6 +219,41 @@ ALTER TABLE `attivita`
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000002100
+
+-- audio
+ALTER TABLE `audio`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_file` (`id_file`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_edificio` (`id_edificio`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_valutazione` (`id_valutazione`),
+	ADD KEY `id_embed` (`id_embed`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000002101
+
+-- audio
+ALTER TABLE `audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000002900
 
 -- caratteristiche
@@ -1543,6 +1578,18 @@ ALTER TABLE `relazioni_documenti`
 
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034200
+
+-- ruoli_audio
+ALTER TABLE `ruoli_audio`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000034201
+
+-- ruoli_audio
+ALTER TABLE `ruoli_audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034300
 
