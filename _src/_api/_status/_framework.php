@@ -107,8 +107,13 @@
     // controllo del livello di report
     echo '[ -- ] livello di report: ' . reportLvl2string( REPORT_CURRENT_LEVEL ) . ' (' . REPORT_CURRENT_LEVEL . ')' . PHP_EOL;
     if( $cf['site']['status'] == 'PROD' ) {
-        if( REPORT_CURRENT_LEVEL > 2 ) {
-            echo '[WARN] livello di report alto per un ambiente di produzione, messaggi superflui possono confondere l\'utente' . PHP_EOL;
+        // NB: il livello di report è una maschera di bit e non una scala come il livello di log, per cui il vecchio
+        // confronto REPORT_CURRENT_LEVEL > 2 era vero per qualsiasi valore ( anche per il default E_USER_WARNING );
+        // si segnalano invece i livelli sotto l'avviso, cioè notice, strict e deprecated ( E_STRICT è scritto col suo
+        // valore 2048 perché da PHP 8.4 la costante è deprecata ) ( 2026-09-24 )
+        $reportSuperflui = REPORT_CURRENT_LEVEL & ( E_NOTICE | E_USER_NOTICE | 2048 | E_DEPRECATED | E_USER_DEPRECATED );
+        if( $reportSuperflui ) {
+            echo '[WARN] livello di report alto per un ambiente di produzione (' . reportLvl2string( $reportSuperflui ) . '), messaggi superflui possono confondere l\'utente' . PHP_EOL;
         }
     }
 
