@@ -689,14 +689,16 @@
      * 
      * Questa funzione scrive un testo HTML giustificato su $cols colonne affiancate, alla stessa altezza e separate da una colonna
      * del modulo; la larghezza di ogni colonna è la larghezza utile della pagina, meno le separazioni, divisa per $cols. Il testo
-     * viene diviso in colonne sul carattere §: ogni pezzo va in una colonna. Alla fine il cursore resta dove lo lascia TCPDF,
-     * cioè in alto a destra dell'ultima colonna, e va riposizionato dal chiamante.
-     * 
-     * TODO la divisione automatica del testo non avviene mai: strpos() ha gli argomenti invertiti ( cerca il testo dentro '§' ),
-     * quindi wordwrap() non viene chiamata e un testo senza § finisce tutto nella prima colonna, larga 1/$cols della pagina; è
-     * quello che succede alle condizioni di servizio di _mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php. Correggendo va
-     * tenuto presente che wordwrap() su un testo HTML può spezzare i tag.
-     * 
+     * viene diviso in colonne sul carattere §: ogni pezzo va in una colonna. Se il testo non contiene § la funzione lo divide da
+     * sola in $cols parti con un numero di caratteri simile ( tag compresi ), andando a capo sugli spazi che non stanno dentro un
+     * tag; le parti non hanno per forza la stessa altezza, e un elemento aperto in una colonna ( per esempio un <b> ) non prosegue
+     * nella successiva. Alla fine il cursore resta dove lo lascia TCPDF, cioè in alto a destra dell'ultima colonna, e va
+     * riposizionato dal chiamante.
+     *
+     * NOTA le condizioni di servizio di _mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php contengono un § scritto a mano e
+     * sono sempre state divise in due colonne; fino al 2026-09-24 la divisione automatica non avveniva mai ( strpos() aveva gli
+     * argomenti invertiti ) e un testo senza § finiva tutto nella prima colonna.
+     *
      * TODO l'ascissa delle colonne si accumula ( $x = $x + ... * $current ), quindi dalla terza colonna in poi la posizione è
      * sbagliata; con due colonne il risultato è corretto.
      * 
@@ -719,7 +721,26 @@
         $colLength = $textLength / $cols;
         $colWidth = ( $info['style']['page']['viewport'] - ( $info['form']['column']['width'] * ( $cols - 1 ) ) ) / $cols;
 
-        if( strpos( '§', $text ) !== false ) { $splitText = wordwrap( $text, $colLength, '§' ); } else { $splitText = $text; }
+        // se il testo non contiene separatori lo divido in $cols parti di lunghezza simile, andando a capo sugli spazi che non
+        // stanno dentro un tag; wordwrap(), usata fino al 2026-09-24 ( ma mai eseguita, perché strpos() aveva gli argomenti
+        // invertiti ), conta i byte e non i caratteri, di solito lascia un avanzo in una colonna in più e spezza i tag
+        if( strpos( $text, '§' ) === false ) {
+            $splitText = '';
+            $splitLength = 0;
+            $splitCount = 1;
+            foreach( preg_split( '/\s+(?![^<]*>)/u', trim( $text ) ) as $word ) {
+                if( $splitLength >= $colLength * $splitCount && $splitCount < $cols ) {
+                    $splitText .= '§';
+                    $splitCount++;
+                } elseif( $splitLength > 0 ) {
+                    $splitText .= ' ';
+                }
+                $splitText .= $word;
+                $splitLength += mb_strlen( $word ) + 1;
+            }
+        } else {
+            $splitText = $text;
+        }
         $colText = explode( '§', $splitText );
 
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
