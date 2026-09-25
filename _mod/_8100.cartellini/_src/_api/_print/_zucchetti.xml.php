@@ -68,7 +68,7 @@
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
-        header('Content-Type: text/html; charset=utf-8');
+        header('Content-Type: application/xml; charset=utf-8');
         header('Content-Disposition: attachment; filename='.$filename);
 
         // root element, in forma di array per array2xml()
@@ -90,7 +90,9 @@
                 foreach( $codici as $codice => $lavoro ) {
 
                     // spacchetto le ore in ore e minuti
-                    $aLavoro = explode( ',', sprintf( '%0.2f', trim( str_replace( ',', '.', $lavoro ) ), ' ' ) );
+                    // NOTA %0.2F non segue la locale e usa sempre il punto: con %0.2f e la virgola i minuti tornavano giusti solo
+                    // dove la locale mette la virgola ( PHP 7 con it_IT ), altrove 7,75 ore diventavano 7 ore e 0 minuti ( 2026-09-25 )
+                    $aLavoro = explode( '.', sprintf( '%0.2F', trim( str_replace( ',', '.', $lavoro ) ) ) );
                     $ore = sprintf( '%0d', ( $aLavoro[0] ) );
                     $minuti = sprintf( '%0d', ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0 );
 
@@ -119,10 +121,10 @@
 
         }
 
-        // scrittura su file
-        // TODO il file viene scritto in DIR_TMP e non viene mai inviato al client, che riceve gli header del download
-        // e un corpo vuoto
-        array2xml( $fornitura, getShortPath( DIR_TMP . microtime( true ) . '.xml' ) );
+        // output del tracciato
+        // NOTA fino al 2026-09-25 il file veniva scritto in DIR_TMP e non arrivava mai al client, che riceveva gli header del
+        // download e un corpo vuoto; all'origine ( commit 760a119f0 ) XMLWriter scriveva su php://output
+        echo array2xml( $fornitura );
 
 	} else {
 
