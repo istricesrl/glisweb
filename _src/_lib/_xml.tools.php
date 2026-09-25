@@ -119,13 +119,15 @@
      * produceva un documento vuoto ( e una serie di elementi con '#' pure ); la chiamata ricorsiva sulla radice riceveva
      * $file e il documento veniva formattato, ed eventualmente salvato, due volte.
      *
-     * NOTA rispetto allo stesso documento scritto con XMLWriter restano quattro differenze, tutte senza effetto sul
-     * significato dell'XML ma visibili nel testo: le dichiarazioni xmlns della radice vengono scritte prima degli altri
-     * attributi ( è libxml a serializzarle così ), le virgolette nel testo degli elementi restano " invece di &quot;, un
-     * elemento con testo vuoto diventa <x/> invece di <x></x>, e un figlio senza prefisso di un elemento con prefisso,
-     * in un documento senza namespace di default, riceve un xmlns="" ridondante. Per queste ragioni la fattura elettronica
+     * NOTA rispetto allo stesso documento scritto con XMLWriter restano tre differenze, tutte senza effetto sul significato
+     * dell'XML ma visibili nel testo: le dichiarazioni xmlns della radice vengono scritte prima degli altri attributi ( è
+     * libxml a serializzarle così ), le virgolette nel testo degli elementi restano " invece di &quot;, e un elemento con
+     * testo vuoto diventa <x/> invece di <x></x>. Per queste ragioni la fattura elettronica
      * ( _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php ) resta scritta con XMLWriter ( verificato il 2026-09-25 ).
-     * TODO evitare lo xmlns="" ridondante creando quei figli con DOM invece che con SimpleXMLElement::addChild()
+     *
+     * NB: fino al 2026-09-25 un figlio senza prefisso di un elemento con prefisso, in un documento senza namespace di
+     * default, veniva creato con SimpleXMLElement::addChild( ..., '' ), che gli scriveva un xmlns="" ridondante; xml2array()
+     * lo rileggeva come attributo, per cui l'andata e ritorno di un soap:Envelope con il contenuto senza prefisso non tornava.
      *
      * @param       array       $data       l'array da convertire
      * @param       mixed       $file       false per ottenere il documento come stringa, un percorso relativo a DIR_BASE per
@@ -196,6 +198,21 @@
 
     }
 
+    // aggiunge a $parent il figlio $name con il testo $text nel namespace $uri; il figlio da mettere fuori da ogni namespace
+    // ( $uri '' ) si crea con DOM, perché SimpleXMLElement::addChild() gli scriverebbe un xmlns="" ridondante
+    $addChild = function( $parent, $name, $text, $uri ) {
+        if( $uri === '' ) {
+            $dom = dom_import_simplexml( $parent );
+            $child = $dom->appendChild( $dom->ownerDocument->createElement( $name ) );
+            if( $text !== NULL ) {
+                $child->appendChild( $dom->ownerDocument->createTextNode( $text ) );
+            }
+            return simplexml_import_dom( $child );
+        } else {
+            return $parent->addChild( $name, ( $text === NULL ) ? NULL : htmlspecialchars( $text ), $uri );
+        }
+    };
+
     foreach( $data as $key => $value ) {
 
         // namespace dell'elemento: quello del prefisso, se il nome ne ha uno, altrimenti quello di default; NB senza
@@ -217,7 +234,7 @@
         if( array_key_exists( '#', $value ) ) {
 
             // elemento con testo, più eventuali attributi e figli
-            $node = $xml->addChild( $key, htmlspecialchars( (string) $value['#'] ), $uri );
+            $node = $addChild( $xml, $key, (string) $value['#'], $uri );
             unset( $value['#'] );
             array2xml( $value, NULL, $node, $ns );
 
@@ -231,7 +248,7 @@
 
         } else {
 
-            $node = $xml->addChild( $key, NULL, $uri );
+            $node = $addChild( $xml, $key, NULL, $uri );
             array2xml( $value, NULL, $node, $ns );
 
         }
@@ -241,7 +258,7 @@
         if( substr( $key, 0, 1 ) == '@' ) {
             $xml[ substr( $key, 1 ) ] = $value;
         } else {
-            $xml->addChild( $key, htmlspecialchars( (string) $value ), $uri );
+            $addChild( $xml, $key, (string) $value, $uri );
         }
 
         }
