@@ -19,6 +19,13 @@
      * e li lascia dove sono. Per le altre entità cancella gli oggetti successivi e riporta data_ultimo_oggetto
      * all'ultimo oggetto rimasto, così che una ripresa della pianificazione li ricrei.
      *
+     * I pagamenti hanno per data la scadenza, che con un differimento cade dopo la ripetizione da cui nascono: si
+     * cancellano quelli che scadono dopo la scadenza della data di fine ( cioè quelli delle ripetizioni successive ) e
+     * data_ultimo_oggetto torna alla ripetizione dell'ultimo pagamento rimasto ( pianificazioniUltimaRipetizione() ),
+     * perché la colonna contiene sempre una data di ripetizione. NOTA fino al 2026-09-25 si confrontavano le scadenze
+     * con la data di fine e data_ultimo_oggetto prendeva la scadenza: un pagamento a 30 giorni della ripetizione del
+     * 10/03, fermando al 31/03, veniva cancellato e poi ricreato dal cron, e la ripresa saltava una ripetizione.
+     *
      * @file
      *
      */
@@ -89,18 +96,33 @@
 
             } else {
 
+                // data dell'oggetto dell'ultima ripetizione che resta ( per i pagamenti la sua scadenza )
+                $limite = ( $e['tabella'] == 'pagamenti' ) ? pianificazioniScadenza( $data, $current ) : $data;
+
                 // cancellazione
                 $status['cancellati'] = mysqlQuery(
                     $cf['mysql']['connection'],
                     'DELETE FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? AND ' . $e['data'] . ' > ?',
-                    array( array( 's' => $current['id'] ), array( 's' => $data ) )
+                    array( array( 's' => $current['id'] ), array( 's' => $limite ) )
                 );
 
                 // data dell'ultimo oggetto rimasto
+                $ultimo = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT max( ' . $e['data'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ?',
+                    array( array( 's' => $current['id'] ) )
+                );
+
+                // per i pagamenti, la ripetizione da cui è nato
+                if( ! empty( $ultimo ) && $e['tabella'] == 'pagamenti' ) {
+                    $ultimo = pianificazioniUltimaRipetizione( $current, $ultimo );
+                }
+
+                // aggiornamento della pianificazione
                 mysqlQuery(
                     $cf['mysql']['connection'],
-                    'UPDATE pianificazioni SET data_ultimo_oggetto = ( SELECT max( ' . $e['data'] . ' ) FROM ' . $e['tabella'] . ' WHERE id_pianificazione = ? ) WHERE id = ?',
-                    array( array( 's' => $current['id'] ), array( 's' => $current['id'] ) )
+                    'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?',
+                    array( array( 's' => $ultimo ), array( 's' => $current['id'] ) )
                 );
 
                 // status
