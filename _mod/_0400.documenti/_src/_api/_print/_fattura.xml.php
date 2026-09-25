@@ -300,7 +300,8 @@
 		// - - - DatiOrdineAcquisto
 		$xml->startElement( 'DatiOrdineAcquisto' );
 
-		$xml->writeElement( 'RiferimentoNumeroLinea', '1' );
+		// NOTA RiferimentoNumeroLinea non si scrive: l'ordine riguarda tutta la fattura, e in questo caso per le specifiche
+		// l'elemento non va valorizzato; fino al 2026-09-25 si scriveva 1, che lega CIG e CUP alla sola prima riga
 
 		$xml->writeElement( 'IdDocumento', $dati['doc']['riferimento']);
 
