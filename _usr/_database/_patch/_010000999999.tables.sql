@@ -2213,6 +2213,122 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
   `giorni` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000023800
+
+-- pianificazioni
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le pianificazioni, cioè le regole con cui generare oggetti ricorrenti a partire da un modello
+--
+-- questa tabella dice ogni quanto ( id_periodicita, cadenza, se_lunedi ... se_domenica ) e fino a quando generare
+-- oggetti della tabella indicata in entita, copiandoli dalle colonne model_* oppure dall'oggetto collegato; le righe
+-- figlie ( id_genitore ) generano gli oggetti collegati a quello del genitore, ad esempio le righe e i pagamenti di
+-- una fattura ricorrente; era sparita nel riallineamento del 2026-03-02 ed è stata rimessa il 2026-09-25, perché le
+-- colonne id_pianificazione di attivita, documenti, documenti_articoli, macro, metadati, pagamenti, progetti,
+-- rinnovi e todo e il modulo _0100.pianificazioni la usano
+--
+CREATE TABLE IF NOT EXISTS `pianificazioni` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
+  `id_todo` bigint(20) DEFAULT NULL,
+  `id_attivita` bigint(20) DEFAULT NULL,
+  `id_contratto` bigint(20) DEFAULT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_periodicita` bigint(20) DEFAULT NULL,
+  `cadenza` int(11) DEFAULT NULL,
+  `se_lunedi` tinyint(1) DEFAULT NULL,
+  `se_martedi` tinyint(1) DEFAULT NULL,
+  `se_mercoledi` tinyint(1) DEFAULT NULL,
+  `se_giovedi` tinyint(1) DEFAULT NULL,
+  `se_venerdi` tinyint(1) DEFAULT NULL,
+  `se_sabato` tinyint(1) DEFAULT NULL,
+  `se_domenica` tinyint(1) DEFAULT NULL,
+  `schema_ripetizione` int(11) DEFAULT NULL,
+  `data_avvio` date DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_elaborazione` date DEFAULT NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
+  `data_ultimo_oggetto` date DEFAULT NULL,
+  `giorni_elaborazione` int(11) DEFAULT NULL,
+  `giorni_estensione` int(11) DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `entita` enum('todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti') DEFAULT NULL,
+  `model_id_anagrafica` bigint(20) DEFAULT NULL,
+  `model_id_anagrafica_programmazione` bigint(20) DEFAULT NULL,
+  `model_id_articolo` bigint(20) DEFAULT NULL,
+  `model_id_attivita` bigint(20) DEFAULT NULL,
+  `model_id_causale` bigint(20) DEFAULT NULL,
+  `model_id_cliente` bigint(20) DEFAULT NULL,
+  `model_id_collo` bigint(20) DEFAULT NULL,
+  `model_id_condizione_pagamento` bigint(20) DEFAULT NULL,
+  `model_id_contatto` bigint(20) DEFAULT NULL,
+  `model_id_coupon` char(32) DEFAULT NULL,
+  `model_id_destinatario` bigint(20) DEFAULT NULL,
+  `model_id_documento` bigint(20) DEFAULT NULL,
+  `model_id_emittente` bigint(20) DEFAULT NULL,
+  `model_id_genitore` bigint(20) DEFAULT NULL,
+  `model_id_iban` bigint(20) DEFAULT NULL,
+  `model_id_indirizzo` bigint(20) DEFAULT NULL,
+  `model_id_immobile` bigint(20) DEFAULT NULL,
+  `model_id_licenza` bigint(20) DEFAULT NULL,
+  `model_id_listino` bigint(20) DEFAULT NULL,
+  `model_id_luogo` bigint(20) DEFAULT NULL,
+  `model_id_mastro_destinazione` bigint(20) DEFAULT NULL,
+  `model_id_mastro_provenienza` bigint(20) DEFAULT NULL,
+  `model_id_matricola` bigint(20) DEFAULT NULL,
+  `model_id_modalita_pagamento` bigint(20) DEFAULT NULL,
+  `model_id_prodotto` bigint(20) DEFAULT NULL,
+  `model_id_progetto` bigint(20) DEFAULT NULL,
+  `model_id_reparto` bigint(20) DEFAULT NULL,
+  `model_id_sede_destinatario` bigint(20) DEFAULT NULL,
+  `model_id_sede_emittente` bigint(20) DEFAULT NULL,
+  `model_id_tipologia` bigint(20) DEFAULT NULL,
+  `model_id_todo` bigint(20) DEFAULT NULL,
+  `model_id_trasportatore` bigint(20) DEFAULT NULL,
+  `model_id_udm` bigint(20) DEFAULT NULL,
+  `model_anno_programmazione` year(4) DEFAULT NULL,
+  `model_codice` char(64) DEFAULT NULL,
+  `model_data` date DEFAULT NULL,
+  `model_data_fine` date DEFAULT NULL,
+  `model_data_inizio` date DEFAULT NULL,
+  `model_data_programmazione` date DEFAULT NULL,
+  `model_esigibilita` enum('I','D','S') DEFAULT NULL,
+  `model_importo_netto_totale` char(32) DEFAULT NULL,
+  `model_importo_lordo_totale` char(32) DEFAULT NULL,
+  `model_importo_lordo_finale` char(32) DEFAULT NULL,
+  `model_nome` char(255) DEFAULT NULL,
+  `model_note` text DEFAULT NULL,
+  `model_note_cliente` text DEFAULT NULL,
+  `model_note_programmazione` text DEFAULT NULL,
+  `model_numero` char(32) DEFAULT NULL,
+  `model_ora_inizio_programmazione` time DEFAULT NULL,
+  `model_ora_fine_programmazione` time DEFAULT NULL,
+  `model_ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `model_porto` enum('franco','assegnato','-') DEFAULT NULL,
+  `model_quantita` decimal(9,2) DEFAULT NULL,
+  `model_riferimento` char(255) DEFAULT NULL,
+  `model_sconto_percentuale` decimal(9,2) DEFAULT NULL,
+  `model_sconto_valore` decimal(9,2) DEFAULT NULL,
+  `model_se_automatico` int(1) DEFAULT NULL,
+  `model_sezionale` char(32) DEFAULT NULL,
+  `model_settimana_programmazione` int(11) DEFAULT NULL,
+  `model_specifiche` char(255) DEFAULT NULL,
+  `model_data_scadenza` date DEFAULT NULL,
+  `model_timestamp_scadenza` int(11) DEFAULT NULL,
+  `offset_giorni` int(11) DEFAULT NULL,
+  `offset_fine_mese` int(1) DEFAULT NULL,
+  `workspace` longtext DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000025000
 
 -- prezzi

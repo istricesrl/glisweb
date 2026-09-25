@@ -188,6 +188,19 @@ INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,        'MP08',         'bancomat' ),
 (24,        'MP08',         'paypal' );
 
+-- | 050000023600
+
+-- periodicita
+INSERT IGNORE INTO `periodicita` (`id`, `nome`, `giorni`) VALUES
+(1,	'giornaliera',	1),
+(2,	'settimanale',	7),
+(3,	'mensile',	30),
+(4,	'bimestrale',	60),
+(5,	'trimestrale',	90),
+(6,	'quadrimestrale',	120),
+(7,	'semestrale',	180),
+(8,	'annuale',	365);
+
 -- | 050000028600
 
 -- ranking

@@ -1333,6 +1333,79 @@ ALTER TABLE `periodicita`
 -- periodicita
 ALTER TABLE `periodicita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000023800
+
+-- pianificazioni
+ALTER TABLE `pianificazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_todo` (`id_todo`),
+	ADD KEY `id_attivita` (`id_attivita`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_periodicita` (`id_periodicita`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `token` (`token`),
+	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `data_inizio` (`data_inizio`),
+	ADD KEY `data_elaborazione` (`data_elaborazione`),
+	ADD KEY `timestamp_elaborazione` (`timestamp_elaborazione`),
+	ADD KEY `entita` (`entita`),
+	ADD KEY `model_id_luogo` (`model_id_luogo`),
+	ADD KEY `model_id_anagrafica` (`model_id_anagrafica`),
+	ADD KEY `model_id_anagrafica_programmazione` (`model_id_anagrafica_programmazione`),
+	ADD KEY `model_id_articolo` (`model_id_articolo`),
+	ADD KEY `model_id_attivita` (`model_id_attivita`),
+	ADD KEY `model_id_cliente` (`model_id_cliente`),
+	ADD KEY `model_id_condizione_pagamento` (`model_id_condizione_pagamento`),
+	ADD KEY `model_id_contatto` (`model_id_contatto`),
+	ADD KEY `model_id_coupon` (`model_id_coupon`),
+	ADD KEY `model_id_destinatario` (`model_id_destinatario`),
+	ADD KEY `model_id_documento` (`model_id_documento`),
+	ADD KEY `model_id_emittente` (`model_id_emittente`),
+	ADD KEY `model_id_genitore` (`model_id_genitore`),
+	ADD KEY `model_id_iban` (`model_id_iban`),
+	ADD KEY `model_id_indirizzo` (`model_id_indirizzo`),
+	ADD KEY `model_id_immobile` (`model_id_immobile`),
+	ADD KEY `model_id_licenza` (`model_id_licenza`),
+	ADD KEY `model_id_listino` (`model_id_listino`),
+	ADD KEY `model_id_mastro_destinazione` (`model_id_mastro_destinazione`),
+	ADD KEY `model_id_mastro_provenienza` (`model_id_mastro_provenienza`),
+	ADD KEY `model_id_matricola` (`model_id_matricola`),
+	ADD KEY `model_id_modalita_pagamento` (`model_id_modalita_pagamento`),
+	ADD KEY `model_id_prodotto` (`model_id_prodotto`),
+	ADD KEY `model_id_progetto` (`model_id_progetto`),
+	ADD KEY `model_id_reparto` (`model_id_reparto`),
+	ADD KEY `model_id_tipologia` (`model_id_tipologia`),
+	ADD KEY `model_id_todo` (`model_id_todo`),
+	ADD KEY `model_id_trasportatore` (`model_id_trasportatore`),
+	ADD KEY `model_id_udm` (`model_id_udm`),
+	ADD KEY `model_anno_programmazione` (`model_anno_programmazione`),
+	ADD KEY `model_codice` (`model_codice`),
+	ADD KEY `model_data` (`model_data`),
+	ADD KEY `model_data_fine` (`model_data_fine`),
+	ADD KEY `model_data_inizio` (`model_data_inizio`),
+	ADD KEY `model_data_programmazione` (`model_data_programmazione`),
+	ADD KEY `model_importo_netto_totale` (`model_importo_netto_totale`),
+	ADD KEY `model_nome` (`model_nome`),
+	ADD KEY `model_ore_programmazione` (`model_ore_programmazione`),
+	ADD KEY `model_quantita` (`model_quantita`),
+	ADD KEY `model_sconto_percentuale` (`model_sconto_percentuale`),
+	ADD KEY `model_sconto_valore` (`model_sconto_valore`),
+	ADD KEY `model_se_automatico` (`model_se_automatico`),
+	ADD KEY `model_sezionale` (`model_sezionale`),
+	ADD KEY `model_settimana_programmazione` (`model_settimana_programmazione`),
+	ADD KEY `model_data_scadenza` (`model_data_scadenza`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
+
+-- | 030000023801
+
+-- pianificazioni
+ALTER TABLE `pianificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000025000
 
 -- prezzi
