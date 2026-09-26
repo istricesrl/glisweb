@@ -710,6 +710,12 @@
             )
         );
 
+        // se la query fallisce ( p.es. il database non ha ancora le colonne di una patch ) mysqlQuery() restituisce
+        // false e ha gia' loggato l'errore: la pagina resta senza questi media, ma non stampa un warning a video
+        if (!is_array($cnt)) {
+            return;
+        }
+
         foreach ($cnt as $cn) {
 
             $im = array(
@@ -1016,6 +1022,11 @@
                 array('s' => $id)
             )
         );
+
+        // come in aggiungiDati(): una query fallita restituisce false, l'errore e' gia' nel log
+        if (!is_array($cnt)) {
+            return;
+        }
 
         foreach ($cnt as $cn) {
             $p = array_replace_recursive(
