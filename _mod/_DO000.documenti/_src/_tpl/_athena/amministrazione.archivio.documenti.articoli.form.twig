@@ -23,9 +23,15 @@
 
                 <div class="form-group row">
                     <div class="col-12 col-lg-auto form-col">
+                        {# TIPOLOGIA DELLA RIGA, NON DEL DOCUMENTO ( fix 2026-09-28 )
+                           Come sulla linea vecchia dal 14/09/2026 ( commit e97353b0e ): il campo
+                           proponeva le tipologie di DOCUMENTO ( offerta, fattura, DDT ). Adesso
+                           `documenti_articoli.id_tipologia` e' la tipologia della RIGA e la tendina
+                           legge `tipologie_documenti_articoli`; la tipologia del documento sta in
+                           `id_tipologia_documento` e non e' a video. #}
                         <span class="label-top">tipologia</span>
-                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-                    </div>                
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti_articoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col-12 col-sm-10 col-lg form-col">
                         <span class="label-top">documento</span>
                         {{ frm.select({ 'field': { 'name': 'id_documento' }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
