@@ -218,7 +218,10 @@ Le regole che contano di più:
    flag urgente/rilevante/impattante, `(!-!)`;
 6. **chiudere una voce sono tre gesti**: marcatore, trasloco nel `DONE.md` col perché, e — se il cliente
    la vede o l'aspettava — la stessa riga nel `CHAT.md` in `### Da dirgli alla prossima occasione`, il
-   giorno stesso.
+   giorno stesso;
+7. **una domanda per il cliente si scrive quando nasce**: nello stesso turno, nel `CHAT.md` in
+   `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
+   dove muore col `/clear`.
 
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
 
