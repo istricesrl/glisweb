@@ -300,7 +300,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		concat_ws(
 			' ',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
@@ -365,7 +365,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			articoli.codice,
 			'/',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
@@ -1263,7 +1263,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			articoli.id,
 			'/',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
