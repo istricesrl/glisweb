@@ -66,21 +66,7 @@
     $dst['denominazione_fiscale'] = trim( $dst['nome'] . ' ' . $dst['cognome'] . ' ' . $dst['denominazione'] );
 
     // recupero i dati della sede dell'emittente
-    $dsi = mysqlSelectRow(
-        $cf['mysql']['connection'],
-        'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
-        'comuni.nome AS comune, provincie.sigla AS provincia, '.
-        'stati.iso31661alpha2 AS sigla_stato '.
-        'FROM anagrafica_indirizzi '.
-        'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-        'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-        'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
-        'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-        'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-        'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
-        array( array( 's' => $dst['id'] ) )
-    );
+    $dsi = sedeStampabileAnagrafica( $dst['id'] );
 
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
