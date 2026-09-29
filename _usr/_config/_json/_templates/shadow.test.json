@@ -1,0 +1,21 @@
+{%opzioni%
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "develop": {
+        "username": "%nome utente del server MySQL per DEV%",
+        "password": "%password del server MySQL per DEV%"
+      },
+      "testing": {
+        "username": "%nome utente del server MySQL per TEST%",
+        "password": "%password del server MySQL per TEST%"
+      }
+    }
+  }
+}

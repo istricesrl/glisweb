@@ -1,0 +1,8 @@
+  "smtp": {
+    "servers": {
+      "default": {
+        "username": "%username del server SMTP%",
+        "password": "%password del server SMTP%"
+      }
+    }
+  }

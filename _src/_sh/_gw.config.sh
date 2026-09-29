@@ -16,6 +16,19 @@
 # stringhe JSON, il valore viene scritto con l'escape JSON ( " e \ ): nel file diventa \" e \\, e
 # il framework, leggendolo, ritrova esattamente quello che e' stato digitato.
 #
+# I SEGRETI VANNO IN SHADOW. Accanto a template.<template>.json c'e' shadow.<template>.json, con le
+# sole chiavi segrete ( hash della password di root, utente e password dei server MySQL ), e allo
+# stesso modo un'opzione con dei segreti ha il suo _options/shadow.<opzione>.json ( oggi smtp ). Il
+# primo si copia in src/config.json, che si puo' versionare, il secondo in src/shadow.json, che e'
+# escluso da git e che il framework fonde sopra config.json ( vedi "Come trovare le credenziali" in
+# _etc/_claude/_claude.framework.md ). I segnaposto dei due file si chiedono nello stesso giro, prima
+# quelli di config e poi quelli di shadow. Il file shadow sta accanto al file di configurazione e ne
+# prende il nome: config.json -> shadow.json, prova.json -> shadow.prova.json. Fino al 30/09/2026 tutto
+# finiva in src/config.json, che per questo .gitignore.dev escludeva dal repository.
+#
+# LA PASSWORD DI ROOT si salva come hash di password_hash() ( bcrypt ), lo stesso di passwordHash() e
+# di _password.hash.sh; fino al 30/09/2026 era md5, che passwordVerify() accetta ancora.
+#
 # IL CRONTAB si installa per ogni stage di cui si conoscono protocollo, nome host e dominio. I
 # segnaposto si riconoscono sia nella forma semplice ( «%nome host del sito%», template base e
 # sviluppo ) sia in quella per stage ( «%nome host in DEV del sito%», template test ): prima del
@@ -25,29 +38,38 @@
 
 ## funzione di recupero token
 #
-# restituisce il primo segnaposto del file che non e' ancora stato trattato: i valori raccolti
-# restano da scrivere fino alla fine, quindi i segnaposto gia' visti vanno saltati
+# restituisce il primo segnaposto dei due file ( prima config, poi shadow ) che non e' ancora stato
+# trattato: i valori raccolti restano da scrivere fino alla fine, quindi i segnaposto gia' visti vanno
+# saltati
 placeholder() {
-    PLACEHOLDER="$( grep -Po '%[a-zA-Z0-9\-\., ]+%' "$FILE" | awk '!visti[$0]++' | grep -vxF -f <( printf '%s\n' "${FATTI[@]}" ) | head -1 )"
+    local FILES=( "$FILE" )
+    [ -f "$SHADOW" ] && FILES+=( "$SHADOW" )
+    PLACEHOLDER="$( grep -Poh '%[a-zA-Z0-9\-\., ]+%' "${FILES[@]}" | awk '!visti[$0]++' | grep -vxF -f <( printf '%s\n' "${FATTI[@]}" ) | head -1 )"
 }
 
-## espansione di un frammento JSON grezzo ( %opzioni% e %moduli% )
+## espansione di un frammento JSON grezzo ( %opzioni% e %moduli% ) nel file indicato
+#
+# uso: espandi <file> <segnaposto> <valore>
 #
 # NOTA segnaposto e valore passano dall'ambiente e non dalla riga di codice, quindi non vengono
 # interpretati ne' da bash ne' da php
 espandi() {
-    GW_FILE="$FILE" GW_SEGNAPOSTO="$1" GW_VALORE="$2" php -r '
+    [ -f "$1" ] || return 0
+    GW_FILE="$1" GW_SEGNAPOSTO="$2" GW_VALORE="$3" php -r '
         $f = getenv( "GW_FILE" );
         file_put_contents( $f, str_replace( getenv( "GW_SEGNAPOSTO" ), getenv( "GW_VALORE" ), file_get_contents( $f ) ) );
     '
 }
 
-## scrittura di tutti i valori raccolti, in un solo passaggio
+## scrittura di tutti i valori raccolti, in un solo passaggio per file
+#
+# uso: applica <file>
 #
 # ogni coppia arriva nell'ambiente come GW_S_<n> ( segnaposto ) e GW_V_<n> ( valore ); il valore
 # viene scritto come contenuto di una stringa JSON, cioe' con l'escape di " e \
 applica() {
-    GW_FILE="$FILE" php -r '
+    [ -f "$1" ] || return 0
+    GW_FILE="$1" php -r '
         $t = array();
         for( $i = 0; getenv( "GW_S_" . $i ) !== false; $i++ ) {
             $v = json_encode( (string) getenv( "GW_V_" . $i ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE );
@@ -80,6 +102,10 @@ if [ -z "$2" ]; then
 else
 	FILE="$2"
 fi
+
+## file dei segreti, accanto al file di lavoro: config.json -> shadow.json, prova.json -> shadow.prova.json
+BASE="$( basename "$FILE" )"
+SHADOW="$( dirname "$FILE" )/shadow.${BASE#config.}"
 
 ## parametri a linea di comando per MySQL
 if [ -n "$3" ]; then
@@ -141,11 +167,14 @@ if [ -f "$FILE" ]; then
 				VALUE="$VALUE"$'\n'"      "
 			fi
 
-			espandi "$PLACEHOLDER" "$VALUE"
+			espandi "$FILE" "$PLACEHOLDER" "$VALUE"
 
 		elif [ "$PLACEHOLDER" = "%opzioni%" ]; then
 
-			for opt in $( ls _usr/_config/_json/_templates/_options/ ); do
+			# i segreti dell'opzione, se ne ha, vanno nel file shadow
+			VALUESHADOW=""
+
+			for opt in $( cd _usr/_config/_json/_templates/_options/ && ls option.*.json ); do
 
 				opf=${opt#*.}
 				op=${opf%.*}
@@ -154,11 +183,15 @@ if [ -f "$FILE" ]; then
 
 				if [ "$SN" == "s" ]; then
 					VALUE="$VALUE"$'\n'"$(cat _usr/_config/_json/_templates/_options/$opt),"
+					if [ -f "_usr/_config/_json/_templates/_options/shadow.$op.json" ]; then
+						VALUESHADOW="$VALUESHADOW"$'\n'"$(cat _usr/_config/_json/_templates/_options/shadow.$op.json),"
+					fi
 				fi
 
 			done
 
-			espandi "$PLACEHOLDER" "$VALUE"
+			espandi "$FILE" "$PLACEHOLDER" "$VALUE"
+			espandi "$SHADOW" "$PLACEHOLDER" "$VALUESHADOW"
 
 		else
 
@@ -181,8 +214,9 @@ if [ -f "$FILE" ]; then
 					IFS= read -r -p "${PLACEHOLDER//\%}: " VALUE
 				fi
 
+				# hash come passwordHash() di _src/_lib/_cryptography.tools.php; la password passa dall'ambiente
 				if [ "$PLACEHOLDER" = "%password di root%" ]; then
-					VALUE=$( printf '%s' "$VALUE" | md5sum | cut -c 1-32 )
+					VALUE=$( GW_PASSWORD="$VALUE" php -r 'echo password_hash( (string) getenv( "GW_PASSWORD" ), PASSWORD_DEFAULT );' )
 				fi
 
 			fi
@@ -206,16 +240,20 @@ if [ -f "$FILE" ]; then
     done
 
     ## scrittura dei valori raccolti
-    applica
+    applica "$FILE"
+    applica "$SHADOW"
 
     echo "nessun placeholder rimasto da sostituire"
 
     ## controllo del risultato: un JSON rotto il framework lo rifiuta al primo avvio
-    if GW_FILE="$FILE" php -r 'json_decode( file_get_contents( getenv( "GW_FILE" ) ) ); if( json_last_error() ) { echo json_last_error_msg(); exit( 1 ); }' > /dev/null; then
-		echo "$FILE è un JSON valido"
-    else
-		echo "ATTENZIONE $FILE non è un JSON valido, va corretto a mano"
-    fi
+    for J in "$FILE" "$SHADOW"; do
+		[ -f "$J" ] || continue
+		if GW_FILE="$J" php -r 'json_decode( file_get_contents( getenv( "GW_FILE" ) ) ); if( json_last_error() ) { echo json_last_error_msg(); exit( 1 ); }' > /dev/null; then
+			echo "$J è un JSON valido"
+		else
+			echo "ATTENZIONE $J non è un JSON valido, va corretto a mano"
+		fi
+    done
 
     ## crontab, uno per ogni stage di cui si conoscono protocollo, host e dominio
     CRONTAB=""
@@ -240,9 +278,19 @@ if [ -f "$FILE" ]; then
 
 elif [ -n "$1" ] && [ -f "./_usr/_config/_json/_templates/template.$1.json" ]; then
 
+    ## un file shadow gia' presente ha delle credenziali: non si sovrascrive
+    if [ -f "./_usr/_config/_json/_templates/shadow.$1.json" ] && [ -f "$SHADOW" ]; then
+		echo "ATTENZIONE $SHADOW esiste già: spostalo o cancellalo prima di rilanciare"
+		exit 1
+    fi
+
     mkdir -p "$( dirname "$FILE" )"
 
     cp "./_usr/_config/_json/_templates/template.$1.json" "$FILE"
+
+    if [ -f "./_usr/_config/_json/_templates/shadow.$1.json" ]; then
+		cp "./_usr/_config/_json/_templates/shadow.$1.json" "$SHADOW"
+    fi
 
     ## si ripassano anche i parametri MySQL, che prima andavano persi a questo punto
     ./_src/_sh/_gw.config.sh "$1" "$FILE" "${@:3}"

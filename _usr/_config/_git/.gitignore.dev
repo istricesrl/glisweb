@@ -20,14 +20,10 @@ src/py/*/*/done/
 /src/config/ext/shadow.*
 tmp/
 var/
-# configurazione del deploy: ESCLUSA DI PROPOSITO, a differenza di /_usr/_deploy/_git/.gitignore.
-# Questo file lo copia _src/_sh/_git.init.sh, che si usa all'installazione come _src/_sh/_gw.config.sh,
-# e _gw.config.sh scrive in src/config.json anche le password ( MySQL, SMTP, hash di root ): versionato
-# cosi' com'e', il primo commit le pubblicherebbe. Chi sposta le credenziali in src/shadow.json puo'
-# togliere queste due righe. Ancorate: il vecchio `config.*` escludeva anche i config.json dei
-# moduli custom ( mod/*/src/config.json ), che sono codice e vanno versionati.
-/src/config.*
-/src/config/ext/config.*
+# la configurazione del deploy ( src/config.* e src/config/ext/config.* ) si versiona, come in
+# /_usr/_deploy/_git/.gitignore: le credenziali stanno negli shadow qui sopra, ed e' li' che le scrive
+# _src/_sh/_gw.config.sh. Fino al 30/09/2026 _gw.config.sh metteva le password in src/config.json, e
+# per questo le due righe /src/config.* e /src/config/ext/config.* lo escludevano.
 # artefatti standard della root del deploy: ancorati con lo slash iniziale, come in
 # /_usr/_deploy/_git/.gitignore, altrimenti il pattern matcha a qualsiasi profondita' e si porta
 # via anche file custom del progetto ( un .htaccess di cartella, il .gitignore di un tool ).

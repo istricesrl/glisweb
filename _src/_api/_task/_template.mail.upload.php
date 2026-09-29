@@ -42,6 +42,7 @@
                     $server['username'],
                     $server['password'],
                     $server['db'],
+                    ( ( ! empty( $server['port'] ) ) ? (int) $server['port'] : NULL )
                 );
 
                 // verifico la connessione target

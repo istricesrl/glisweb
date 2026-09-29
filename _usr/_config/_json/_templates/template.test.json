@@ -20,13 +20,6 @@
       }
     }
   },
-  "auth": {
-    "accounts": {
-      "root": {
-        "password": "%password di root%"
-      }
-    }
-  },
   "debug": {
     "DEV": {
       "log": { "lvl": 7 },
@@ -42,15 +35,11 @@
       "develop": {
         "address": "%indirizzo IP del server MySQL per DEV%",
         "port": "%porta del server MySQL per DEV%",
-        "username": "%nome utente del server MySQL per DEV%",
-        "password": "%password del server MySQL per DEV%",
         "db": "%nome del database MySQL per DEV%"
       },
       "testing": {
         "address": "%indirizzo IP del server MySQL per TEST%",
         "port": "%porta del server MySQL per TEST%",
-        "username": "%nome utente del server MySQL per TEST%",
-        "password": "%password del server MySQL per TEST%",
         "db": "%nome del database MySQL per TEST%"
       }
     },

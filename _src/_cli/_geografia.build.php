@@ -76,7 +76,11 @@
     );
 
     /**
-     * apre la connessione al database leggendo src/config.json
+     * apre la connessione al database leggendo src/config.json e src/shadow.json
+     *
+     * Le credenziali stanno in src/shadow.json ( è lì che le scrive _gw.config.sh ), il resto in
+     * src/config.json: si fondono come fa il framework, con shadow che vince su config. La porta è
+     * facoltativa, come in _src/_config/_125.mysql.php: senza, il client usa la sua di default.
      *
      * @return  mysqli|bool                 la connessione, false se non si apre
      *
@@ -90,17 +94,22 @@
             return false;
         }
 
-        $cx = json_decode( file_get_contents( $f ), true );
+        $cx = json_decode( file_get_contents( $f ), true ) ?: array();
+
+        // shadow vince su config
+        if( is_readable( GEO_BASE . 'src/shadow.json' ) ) {
+            $cx = array_replace_recursive( $cx, json_decode( file_get_contents( GEO_BASE . 'src/shadow.json' ), true ) ?: array() );
+        }
 
         if( ! isset( $cx['mysql']['servers'] ) || ! is_array( $cx['mysql']['servers'] ) ) {
-            echo 'nessun server MySQL dichiarato in src/config.json' . "\n";
+            echo 'nessun server MySQL dichiarato in src/config.json o src/shadow.json' . "\n";
             return false;
         }
 
         $s = $cx['mysql']['servers'];
         $k = array_key_first( $s );
 
-        $c = @mysqli_connect( $s[$k]['address'], $s[$k]['username'], $s[$k]['password'], $s[$k]['db'] );
+        $c = @mysqli_connect( $s[$k]['address'], $s[$k]['username'], $s[$k]['password'], $s[$k]['db'], ( ( ! empty( $s[$k]['port'] ) ) ? (int) $s[$k]['port'] : NULL ) );
 
         if( ! $c ) {
             echo 'connessione al database fallita' . "\n";

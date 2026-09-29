@@ -78,7 +78,7 @@ if [ -n "$1" -a -n "$2" ]; then
                 fi
 
                 echo "$i $QUERY"
-                IDS=$( mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
+                IDS=$( mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
                 IDA=$( echo $IDS | cut -d\| -f1 | tr -dc '0-9' )
 
                 RANDOM=$$$(date +%N)
@@ -87,12 +87,12 @@ if [ -n "$1" -a -n "$2" ]; then
                 QUERY="INSERT INTO anagrafica_categorie ( id_anagrafica, id_categoria ) VALUES ( '$IDA', '$CATEGORIA' )"
 
                 echo "$i $QUERY"
-                IDS=$( mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
+                IDS=$( mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
 
                 QUERY="INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( '$IDA', '$MAIL' )"
 
                 echo "$i $QUERY"
-                IDS=$( mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
+                IDS=$( mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
 
                 RANDOM=$$$(date +%N)
                 TIPOLOGIATELEFONO=${TIPOLOGIETELEFONI[$RANDOM % ${#TIPOLOGIETELEFONI[@]}]}
@@ -101,7 +101,7 @@ if [ -n "$1" -a -n "$2" ]; then
                 QUERY="INSERT INTO telefoni ( id_anagrafica, id_tipologia, numero ) VALUES ( '$IDA', '$TIPOLOGIATELEFONO', '$TELEFONO' )"
 
                 echo "$i $QUERY"
-                IDS=$( mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
+                IDS=$( mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER -p$SRVPASS $SRVDBNAME -e "$QUERY; SELECT LAST_INSERT_ID();" )
 
             ;;
             "catalogo")

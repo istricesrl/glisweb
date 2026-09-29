@@ -7,6 +7,8 @@ etc/latest.release.conf
 etc/latest.version.conf
 /src/ext/shadow.*
 /src/shadow.*
+# il file esterno di _src/_config.php ( DIR_SRC_CONFIG_EXT ) in versione custom sta qui, non in src/ext/
+/src/config/ext/shadow.*
 src/py/*/*/.buildozer/
 src/py/*/*/bin/
 src/py/*/*/include/

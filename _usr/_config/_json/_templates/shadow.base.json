@@ -1,0 +1,17 @@
+{%opzioni%
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "default": {
+        "username": "%nome utente del server MySQL%",
+        "password": "%password del server MySQL%"
+      }
+    }
+  }
+}

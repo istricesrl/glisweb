@@ -92,12 +92,16 @@
                     mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 
                     // connessione
+                    // NOTA la porta è facoltativa: se non è dichiarata ( o è vuota ) si passa NULL e il client usa la
+                    // sua di default ( mysqli.default_port, di solito 3306 ); il database si seleziona più sotto
                     try {
                         mysqli_real_connect(
                             $cn,
                             $cf['mysql']['servers'][ $server ]['address'],
                             $cf['mysql']['servers'][ $server ]['username'],
-                            $cf['mysql']['servers'][ $server ]['password']
+                            $cf['mysql']['servers'][ $server ]['password'],
+                            NULL,
+                            ( ( ! empty( $cf['mysql']['servers'][ $server ]['port'] ) ) ? (int) $cf['mysql']['servers'][ $server ]['port'] : NULL )
                         );
 
                         // character set

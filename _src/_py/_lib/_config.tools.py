@@ -178,7 +178,9 @@ def parametri_mysql( configurazione, profilo = 'DEV', server = None ):
         if not parametri.get( obbligatoria ):
             raise ValueError( 'al server MySQL "%s" manca la chiave %s' % ( server, obbligatoria ) )
 
-    parametri.setdefault( 'port', '3306' )
+    # la porta è facoltativa, come in _src/_config/_125.mysql.php: assente o vuota vale quella di default
+    if not parametri.get( 'port' ):
+        parametri[ 'port' ] = '3306'
     parametri.setdefault( 'password', '' )
 
     return parametri

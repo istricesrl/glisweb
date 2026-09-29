@@ -36,7 +36,7 @@ if [ -n "$1" ]; then
 
         read -p "database: " SRVDBNAME
 
-        mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE2
+        mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE2
 
     else
 
