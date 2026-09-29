@@ -89,10 +89,13 @@
      * I log dei task sono raggruppati per ID del task (con riferimento all'ID che il task ha sulla tabella dei task).
      * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
      * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
-     * log dei task pianificati sono /var/log/task/TASKID.log (che contiene informazioni generali sull'esecuzione del task)
-     * e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica esecuzione
-     * del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e suddiviso
-     * in piccole parti ognuna relativa a una data esecuzione.
+     * log dei task pianificati sono /var/log/task/TASKID.AAAAMM.log (che contiene informazioni generali sull'esecuzione del
+     * task) e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica
+     * esecuzione del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e
+     * suddiviso in piccole parti ognuna relativa a una data esecuzione.
+     *
+     * Il primo ha il mese nel nome come gli altri log del framework, e lo pota chi pota quelli; i secondi sono un file
+     * per iterazione e li pota _src/_api/_task/_log.task.clean.php, che va pianificato.
      * 
      * esecuzione dei job
      * ==================
@@ -412,7 +415,7 @@
             }
 
             // log
-            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
+            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.' . date( 'Ym' ) . '.log' );
 
         }
 
