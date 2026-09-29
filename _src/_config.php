@@ -575,10 +575,18 @@
     define( 'DIR_SRC_TWIG'                              , DIR_BASE . '_src/_twig/' );
     define( 'DIR_SRC_TWIG_BIN'                          , DIR_BASE . '_src/_twig/_bin/' );
     define( 'DIR_SRC_TWIG_INC'                          , DIR_BASE . '_src/_twig/_inc/' );
-    define( 'DIR_SRC_XSL'                               , DIR_BASE . '_src/_xsl/' );
+    define( 'DIR_SRC_XML'                               , DIR_BASE . '_src/_xml/' );
+    define( 'DIR_SRC_XML_XSD'                           , DIR_BASE . '_src/_xml/_xsd/' );
+    define( 'DIR_SRC_XML_XSL'                           , DIR_BASE . '_src/_xml/_xsl/' );
 
     // la directory _usr/ contiene codice aggiuntivo del framework che non fa parte dell'esecuzione principale
     define( 'DIR_USR'                                   , DIR_BASE . '_usr/' );
+    define( 'DIR_USR_CONFIG'                            , DIR_BASE . '_usr/_config/' );
+    define( 'DIR_USR_CONFIG_APACHE2'                    , DIR_BASE . '_usr/_config/_apache2/' );
+    define( 'DIR_USR_CONFIG_GIT'                        , DIR_BASE . '_usr/_config/_git/' );
+    define( 'DIR_USR_CONFIG_JSON'                       , DIR_BASE . '_usr/_config/_json/' );
+    define( 'DIR_USR_CONFIG_JSON_EXAMPLES'              , DIR_BASE . '_usr/_config/_json/_examples/' );
+    define( 'DIR_USR_CONFIG_JSON_TEMPLATES'             , DIR_BASE . '_usr/_config/_json/_templates/' );
     define( 'DIR_USR_DATABASE'                          , DIR_BASE . '_usr/_database/');
     define( 'DIR_USR_DATABASE_PATCH'                    , DIR_BASE . '_usr/_database/_patch/');
     define( 'DIR_USR_DEPLOY'                            , DIR_BASE . '_usr/_deploy/');
@@ -598,13 +606,9 @@
     define( 'DIR_USR_DOCS_SHOT'                         , DIR_BASE . '_usr/_docs/_shot/' );
     define( 'DIR_USR_PAGES'                             , DIR_BASE . '_usr/_pages/' );
     define( 'DIR_USR_EXAMPLES'                          , DIR_BASE . '_usr/_examples/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG'                   , DIR_BASE . '_usr/_examples/_config/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_APACHE2'           , DIR_BASE . '_usr/_examples/_config/_apache2/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_GIT'               , DIR_BASE . '_usr/_examples/_config/_git/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON'              , DIR_BASE . '_usr/_examples/_config/_json/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON_EXAMPLES'     , DIR_BASE . '_usr/_examples/_config/_json/_examples/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON_TEMPLATES'    , DIR_BASE . '_usr/_examples/_config/_json/_templates/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_PHING'             , DIR_BASE . '_usr/_examples/_config/_phing/' );
+    // le costanti DIR_USR_EXAMPLES_CONFIG* puntavano a _usr/_examples/_config/, che non e' mai
+    // esistita e che non usava nessuno: i modelli di configurazione stanno in _usr/_config/, e
+    // quelli di Phing in _usr/_deploy/_phing/ ( DIR_USR_DEPLOY_PHING )
 
     // la directory tmp/ contiene i file temporanei ed è solo custom
     define( 'DIR_TMP'                                   , DIR_BASE . 'tmp/' );

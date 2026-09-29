@@ -15,20 +15,37 @@
      *
      * parametro        | risultato
      * -----------------|-----------------------------------------------------------------------------------------
-     * f                | un JSON con il percorso del file ( usato dal task _fattura.invia.sdi.php )
+     * f                | un JSON con il percorso del file ( usato dal task _fattura.invia.sdi.php ), oppure con gli
+     *                  | errori di validazione nella chiave errori
      * d                | il file XML in download
-     * nessuno          | il file XML inline, con il foglio di stile per la visualizzazione nel browser
+     * nessuno          | la fattura in forma leggibile, trasformata in HTML sul server con il foglio di stile
+     *
+     * validazione e visualizzazione
+     * -----------------------------
+     * Prima di essere restituito il file viene validato con xmlValidate() contro lo schema ufficiale, che sta in
+     * _mod/_0400.documenti/_src/_xml/_xsd/: un file che non lo supera verrebbe scartato dallo SDI, per cui non viene
+     * restituito, e al posto del file arrivano gli errori ( in JSON con f, come testo negli altri casi ). Se lo schema
+     * manca la validazione viene saltata. La visualizzazione usa i fogli di stile ufficiali in
+     * _mod/_0400.documenti/_src/_xml/_xsl/, quello della PA se il destinatario ha se_pubblica_amministrazione, e la
+     * trasformazione si fa sul server con xmlTransform(), perché i browser stanno abbandonando XSLT ( Chrome smette di
+     * applicare <?xml-stylesheet?> dal novembre 2026 ); solo se sul server manca l'estensione xsl il file viene mandato
+     * al browser con il riferimento al foglio di stile, come si faceva fino al 2026-09-29.
      *
      * conformità alle specifiche
      * --------------------------
      * Il 2026-09-25 il file è stato rivisto contro lo schema Schema_VFPR12_v1.2.3.xsd ( specifiche tecniche 1.9 ) e
      * verificato validando con DOMDocument::schemaValidate() fatture di prova a privati con PEC, a PA con CIG e CUP e a
-     * persone fisiche. Restano da fare: DatiBollo per le operazioni senza IVA sopra 77,47 euro, DatiFattureCollegate per
-     * le note di credito ( generaContenutiDocumento() non restituisce i documenti collegati ), DatiDDT, la troncatura dei
-     * testi alle lunghezze massime dello schema ( per esempio RiferimentoNormativo a 100 caratteri ).
+     * persone fisiche. Il 2026-09-29 è stato riletto contro le specifiche 1.9.1, in vigore dal 15 maggio 2026, che non
+     * cambiano lo schema: l'attributo versione resta FPR12 / FPA12 e il namespace resta quello della 1.2. I codici
+     * ( TipoDocumento, RegimeFiscale, Natura, ModalitaPagamento ) arrivano dal database così come sono, e i valori
+     * nuovi ( TD28, TD29, RF20, MP23... ) li porta la patch _202609291300.fatturapa.codici.sql. Restano da fare:
+     * DatiBollo per le operazioni senza IVA sopra 77,47 euro, DatiFattureCollegate per le note di credito
+     * ( generaContenutiDocumento() non restituisce i documenti collegati ), DatiDDT ( necessari per le fatture
+     * differite TD24 ), DatiRitenuta e DatiCassaPrevidenziale per le parcelle, la troncatura degli altri testi alle
+     * lunghezze massime dello schema.
      *
-     * @todo DatiBollo, DatiFattureCollegate, DatiDDT
-     * @todo decidere come trattare i testi più lunghi del massimo consentito dallo schema
+     * @todo DatiBollo, DatiFattureCollegate, DatiDDT, DatiRitenuta, DatiCassaPrevidenziale
+     * @todo decidere come trattare i testi più lunghi del massimo consentito dallo schema ( oltre a RiferimentoNormativo )
      *
      * @file
      *
@@ -369,8 +386,11 @@
 	    // - - - - RiferimentoNormativo / il riferimento normativo dell'esenzione della riga
 	    // NOTA per le specifiche il riferimento normativo si indica solo con la Natura: la descrizione di un'aliquota
 	    // ordinaria ( "IVA 22%" ) non è una norma, e fino al 2026-09-25 finiva lo stesso nel riepilogo
+	    // NOTA lo schema ammette al massimo 100 caratteri, e alcune descrizioni della tabella iva sono più lunghe ( quella
+	    // del regime forfettario ne ha 123 ): fino al 2026-09-29 finivano intere e il file non era valido; il testo è già
+	    // ASCII, per cui substr() non spezza caratteri
 		if( ! empty( $row['codice'] ) && ! empty( $row['riferimento'] ) ) {
-		    $riepilogo['RiferimentoNormativo'] = $testoFattura( $row['riferimento'] );
+		    $riepilogo['RiferimentoNormativo'] = substr( $testoFattura( $row['riferimento'] ), 0, 100 );
 		}
 
 	    // - - - /DatiRiepilogo
@@ -433,19 +453,35 @@
     // leggo l'XML per righe
 	$rows = readFromFile( $outFile );
 
+    // validazione contro lo schema ufficiale
+	$errori = array();
+	$valida = xmlValidate( implode( $rows ), DIR_BASE . '_mod/_0400.documenti/_src/_xml/_xsd/Schema_VFPR12_v1.2.3.xsd', $errori );
+
+    // un file non valido verrebbe scartato dallo SDI: al posto del file si restituiscono gli errori
+	if( $valida === false ) {
+	    if( isset( $_REQUEST['f'] ) ) {
+	        buildJson( array( 'errori' => $errori ) );
+	    } else {
+	        dieText( 'la fattura non è valida per lo schema FatturaPA:' . PHP_EOL . implode( PHP_EOL, $errori ) );
+	    }
+	    exit;
+	}
+
+    // foglio di stile per la visualizzazione, PA o privati
+	$xsl = DIR_BASE . '_mod/_0400.documenti/_src/_xml/_xsl/' . ( ( $dati['dst']['se_pubblica_amministrazione'] == 1 ) ? 'fatturaPA_v1.2.3.xsl' : 'fatturaordinaria_v1.2.3.xsl' );
+
     // se è richiesto il download
 	if( isset( $_REQUEST['f'] ) ) {
         buildJson( array( 'file' => $outFile ) );
     } elseif( isset( $_REQUEST['d'] ) ) {
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
+	} elseif( ( $html = xmlTransform( implode( $rows ), $xsl ) ) !== false ) {
+	    build( $html, MIME_TEXT_HTML );
 	} else {
+	    // NOTA senza l'estensione xsl la trasformazione la fa il browser, finché la supporta
 	    header( 'Content-disposition: inline; filename=' . basename( $outFile ) );
-		if( $dati['dst']['se_pubblica_amministrazione'] == 1 ){
-			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaPA_v1.2.1.xsl" ?>' . PHP_EOL ) );
-		} else {
-			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.1.xsl" ?>' . PHP_EOL ) );
-		}
+		array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="' . $cf['site']['url'] . getShortPath( $xsl ) . '" ?>' . PHP_EOL ) );
 		buildXml( implode( $rows ) );
     }
 

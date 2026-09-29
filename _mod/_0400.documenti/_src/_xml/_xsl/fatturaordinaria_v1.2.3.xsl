@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <xsl:stylesheet 
 	version="1.1" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
@@ -166,7 +166,7 @@
 													</xsl:if>
 													<xsl:if test="CodiceDestinatario">
 														<li>
-															Codice Amministrazione destinataria:
+															Codice identificativo destinatario:
 															<span>
 																<xsl:value-of select="CodiceDestinatario" />
 															</span>
@@ -368,11 +368,14 @@
 																	<xsl:when test="$RF='RF17'">
 																		(IVA per cassa - art. 32-bis, D.L. 83/2012)
 																	</xsl:when>
+																	<xsl:when test="$RF='RF18'">
+																		(altro)
+																	</xsl:when>
 																	<xsl:when test="$RF='RF19'">
 																		(Regime forfettario)
 																	</xsl:when>
-																	<xsl:when test="$RF='RF18'">
-																		(altro)
+																	<xsl:when test="$RF='RF20'">
+																		(Regime transfrontaliero di Franchigia IVA - Direttiva UE 2020/285)
 																	</xsl:when>
 																	<xsl:when test="$RF=''">
 																	</xsl:when>
@@ -1130,9 +1133,7 @@
 																		acquisto beni ex art.17 c.2 DPR 633/72)
 																	</xsl:when>
 																	<xsl:when test="$TD='TD20'">
-																		(autofattura per regolarizzazione e 
-																		integrazione delle fatture - 
-																		art.6 c.8 d.lgs.471/97 o art.46 c.5 D.L.331/93)
+																		(Autofattura per regolarizzazione e integrazione delle fatture - ex art. 6 c.9-bis d.lgs. 471/97 o art.46 c.5 D.L. 331/93)
 																	</xsl:when>
 																	<xsl:when test="$TD='TD21'">
 																		(autofattura per splafonamento)
@@ -1145,10 +1146,10 @@
 																		con versamento IVA)
 																	</xsl:when>
 																	<xsl:when test="$TD='TD24'">
-																		(fattura differita - art.21 c.4 lett. a)
+																		(fattura differita - art.21 c.4 terzo periodo lett. a - DPR 633/72) 
 																	</xsl:when>
 																	<xsl:when test="$TD='TD25'">
-																		(fattura differita - art.21 c.4 terzo periodo lett. b)
+																		(fattura differita - art.21 c.4 terzo periodo lett. b - DPR 633/72)
 																	</xsl:when>
 																	<xsl:when test="$TD='TD26'">
 																		(cessione di beni ammortizzabili e per 
@@ -1157,6 +1158,12 @@
 																	<xsl:when test="$TD='TD27'">
 																		(fattura per autoconsumo o per cessioni 
 																		gratuite senza rivalsa)
+																	</xsl:when>
+																	<xsl:when test="$TD='TD28'">
+																		(acquisti da San Marino con IVA - Fattura Cartacea)
+																	</xsl:when>
+																	<xsl:when test="$TD='TD29'">
+																		(Comunicazione per omessa o irregolare fatturazione da parte del cedente/prestatore italiano - art. 6, comma 8, D.Lgs. 471/97)
 																	</xsl:when>
 																	<xsl:when test="$TD=''">
 																	</xsl:when>
@@ -1548,7 +1555,8 @@
 																				</xsl:when>
 																				<xsl:when test="$NT='N6.2'">
 																					(inversione contabile - cessione di oro e 
-																					argento puro)
+																					argento ai sensi della legge 7/2000 nonché di oreficeria
+                                                                                                                                                                        usata ad OPO)
 																				</xsl:when>
 																				<xsl:when test="$NT='N6.3'">
 																					(inversione contabile - subappalto nel settore 
@@ -1577,11 +1585,9 @@
 																					(inversione contabile - altri casi)
 																				</xsl:when>
 																				<xsl:when test="$NT='N7'">
-																					(IVA assolta in altro stato UE - vendite a distanza 
-																					ex art.40 c.3 e 4 e art.41 c.1 lett. b DL 331/93; 
-																					prestazione di servizi di telecomunicazioni, 
-																					tele-radiodiffusione ed elettronici ex art.7-sexies 
-																					lett. f, g, e art.74-sexies DPR 633/72)
+																					(IVA assolta in altro stato UE - prestazione di servizi di 
+																					telecomunicazioni, tele-radiodiffusione ed elettronici ex 
+																					art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)
 																				</xsl:when>
 																				<xsl:when test="$NT=''">
 																				</xsl:when>
@@ -2193,7 +2199,7 @@
 													</xsl:if>
 
 													<xsl:if
-														test="DatiGenerali/DatiTrasporto/MezzoTrasporto or DatiGenerali/DatiTrasporto/CausaleTrasporto or DatiGenerali/DatiTrasporto/NumeroColli or DatiGenerali/DatiTrasporto/Descrizione or DatiGenerali/DatiTrasporto/UnitaMisuraPeso or DatiGenerali/DatiTrasporto/PesoLordo or DatiGenerali/DatiTrasporto/PesoNetto or DatiGenerali/DatiTrasporto/DataOraRitiro or DatiGenerali/DatiTrasporto/DataInizioTrasporto or DatiGenerali/DatiTrasporto/TipoResa or DatiGenerali/DatiTrasporto/IndirizzoResa">
+														test="DatiGenerali/DatiTrasporto/MezzoTrasporto or DatiGenerali/DatiTrasporto/CausaleTrasporto or DatiGenerali/DatiTrasporto/NumeroColli or DatiGenerali/DatiTrasporto/Descrizione or DatiGenerali/DatiTrasporto/UnitaMisuraPeso or DatiGenerali/DatiTrasporto/PesoLordo or DatiGenerali/DatiTrasporto/PesoNetto or DatiGenerali/DatiTrasporto/DataOraRitiro or DatiGenerali/DatiTrasporto/DataInizioTrasporto or DatiGenerali/DatiTrasporto/TipoResa or DatiGenerali/DatiTrasporto/IndirizzoResa or DatiGenerali/DatiTrasporto/DataOraConsegna">
 														<h4>Altri dati</h4>
 
 														<ul>
@@ -2332,6 +2338,17 @@
 																		<span>
 																			<xsl:value-of select="IndirizzoResa/Nazione" />
 																		</span>
+																	</li>
+																</xsl:if>
+																<xsl:if test="DataOraConsegna">
+																	<li>
+																		Data e ora di consegna:
+																		<span>
+																			<xsl:value-of select="DataOraConsegna" />
+																		</span>
+																		<xsl:call-template name="FormatDate">
+																			<xsl:with-param name="DateTime" select="DataOraConsegna" />
+																		</xsl:call-template>
 																	</li>
 																</xsl:if>
 															</xsl:for-each>
@@ -2640,7 +2657,8 @@
 																		</xsl:when>
 																		<xsl:when test="$NAT='N6.2'">
 																			(inversione contabile - cessione di oro e 
-																			argento puro)
+																			argento ai sensi della legge 7/2000 nonché di oreficeria
+                                                                                                                                                        usata ad OPO)
 																		</xsl:when>
 																		<xsl:when test="$NAT='N6.3'">
 																			(inversione contabile - subappalto nel settore 
@@ -2669,11 +2687,9 @@
 																			(inversione contabile - altri casi)
 																		</xsl:when>
 																		<xsl:when test="$NAT='N7'">
-																			(IVA assolta in altro stato UE - vendite a distanza 
-																			ex art.40 c.3 e 4 e art.41 c.1 lett. b DL 331/93; 
-																			prestazione di servizi di telecomunicazioni, 
-																			tele-radiodiffusione ed elettronici ex art.7-sexies 
-																			lett. f, g, e art.74-sexies DPR 633/72)
+																			(IVA assolta in altro stato UE - prestazione di servizi di 
+																			 telecomunicazioni, tele-radiodiffusione ed elettronici ex 
+																			 art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)
 																		</xsl:when>
 																		<xsl:otherwise>
 																			<span>(!!! codice non previsto !!!)</span>
@@ -2818,7 +2834,8 @@
 																		</xsl:when>
 																		<xsl:when test="$NAT1='N6.2'">
 																			(inversione contabile - cessione di oro e 
-																			argento puro)
+																			argento ai sensi della legge 7/2000 nonché di oreficeria
+                                                                                                                                                        usata ad OPO)
 																		</xsl:when>
 																		<xsl:when test="$NAT1='N6.3'">
 																			(inversione contabile - subappalto nel settore 
@@ -2847,11 +2864,9 @@
 																			(inversione contabile - altri casi)
 																		</xsl:when>
 																		<xsl:when test="$NAT1='N7'">
-																			(IVA assolta in altro stato UE - vendite a distanza 
-																			ex art.40 c.3 e 4 e art.41 c.1 lett. b DL 331/93; 
-																			prestazione di servizi di telecomunicazioni, 
-																			tele-radiodiffusione ed elettronici ex art.7-sexies 
-																			lett. f, g, e art.74-sexies DPR 633/72)
+																			(IVA assolta in altro stato UE - prestazione di servizi di 
+																			 telecomunicazioni, tele-radiodiffusione ed elettronici ex 
+																			 art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)
 																		</xsl:when>
 																		<xsl:otherwise>
 																			<span>(!!! codice non previsto !!!)</span>

@@ -3,8 +3,8 @@
     /**
      * libreria per la manipolazione dei file xml
      * 
-     * Questa libreria contiene funzioni per convertire documenti XML in array e viceversa, e per preparare testi e numeri
-     * da inserire in un documento XML.
+     * Questa libreria contiene funzioni per convertire documenti XML in array e viceversa, per validarli contro uno
+     * schema XSD, per trasformarli con un foglio di stile XSL e per preparare testi e numeri da inserire in un documento XML.
      * 
      * introduzione
      * ============
@@ -16,6 +16,15 @@
      * _mod/_8100.cartellini/_src/_api/_print/_zucchetti.xml.php, la fattura elettronica in
      * _mod/_0400.documenti/_src/_api/_print/_fattura.xml.php e il corpo delle chiamate di restCall() con $datatype
      * MIME_APPLICATION_XML.
+     * 
+     * validazione e trasformazione
+     * ----------------------------
+     * Schemi e fogli di stile servono a due cose diverse. Uno schema XSD descrive la struttura che un documento deve avere
+     * ( elementi, ordine, valori ammessi ) e serve a VALIDARLO: è quello che fa xmlValidate(), ed è il controllo che per
+     * esempio lo SDI fa per primo sulle fatture elettroniche. Un foglio di stile XSL non valida niente: TRASFORMA il
+     * documento in un altro, di solito una pagina HTML leggibile, ed è quello che fa xmlTransform(). Gli schemi e i fogli
+     * del framework stanno in _src/_xml/_xsd/ e _src/_xml/_xsl/ ( DIR_SRC_XML_XSD e DIR_SRC_XML_XSL ), quelli di un modulo
+     * nelle cartelle omonime del modulo, per esempio _mod/_0400.documenti/_src/_xml/ per la fattura elettronica.
      * 
      * formato degli array
      * -------------------
@@ -49,6 +58,16 @@
      * array2xml()                      | converte un array in un documento XML
      * xml2array()                      | converte un documento XML in un array
      * 
+     * funzioni di validazione e trasformazione
+     * ----------------------------------------
+     * Le funzioni in questo gruppo servono per verificare un documento XML contro uno schema XSD e per trasformarlo con un
+     * foglio di stile XSL.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * xmlValidate()                    | verifica un documento XML contro uno schema XSD
+     * xmlTransform()                   | trasforma un documento XML con un foglio di stile XSL
+     * 
      * funzioni di formattazione
      * -------------------------
      * Le funzioni in questo gruppo servono per preparare i valori da inserire in un documento XML.
@@ -61,11 +80,13 @@
      * dipendenze
      * ==========
      * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
-     * sono richieste le seguenti funzioni, oltre alle estensioni SimpleXML, DOM e XML di PHP:
+     * sono richieste le seguenti funzioni, oltre alle estensioni SimpleXML, DOM e XML di PHP ( e all'estensione xsl per
+     * xmlTransform() ):
      * 
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * logger()                         | core
+     * fullPath()                       | _filesystem.tools.php
      * 
      * changelog
      * =========
@@ -76,6 +97,7 @@
      * 2026-09-24       | Fabio Mosti          | documentazione
      * 2026-09-25       | Fabio Mosti          | array2xml() al posto di XMLWriter per sitemap e tracciato Zucchetti
      * 2026-09-25       | Fabio Mosti          | array2xml() al posto di XMLWriter per la fattura elettronica
+     * 2026-09-29       | Fabio Mosti          | xmlValidate() e xmlTransform()
      * 
      * licenza
      * =======
@@ -491,6 +513,148 @@
     }
 
     return( $xml_array );
+
+    }
+
+    /**
+     * FUNZIONI DI VALIDAZIONE E TRASFORMAZIONE
+     */
+
+    /**
+     * verifica un documento XML contro uno schema XSD
+     * 
+     * Questa funzione carica con DOM il documento passato come stringa e lo valida con DOMDocument::schemaValidate()
+     * contro lo schema XSD $xsd, un percorso assoluto o relativo a DIR_BASE. Restituisce true se il documento è valido,
+     * false se non lo è ( o se non è nemmeno XML ben formato ), NULL se lo schema non si trova; gli errori di libxml,
+     * nella forma "riga N: messaggio", vengono aggiunti a $errors e scritti nel log xml.
+     * 
+     * La validazione dice se un documento rispetta la STRUTTURA descritta dallo schema ( quali elementi, in che ordine,
+     * con quali valori ammessi ), ed è quella che per esempio lo SDI fa per prima su una fattura elettronica: un file
+     * che non la supera viene scartato. Un foglio XSL invece non valida niente, trasforma il documento in un altro
+     * ( di solito HTML da leggere ): per quello c'è xmlTransform().
+     * 
+     * Gli schemi ufficiali importano spesso altri schemi con un URL assoluto ( quello della fattura elettronica importa
+     * lo schema delle firme XML dal sito del W3C ): per non dipendere dalla rete, e dalla sua lentezza, durante la
+     * validazione ogni file richiesto da libxml si cerca per nome prima nella cartella di $xsd e poi in
+     * DIR_SRC_XML_XSD, dove il framework tiene gli schemi di uso generale; solo se non c'è in nessuna delle due viene
+     * caricato dall'indirizzo originale. Il gestore delle entità esterne di libxml viene ripristinato alla fine.
+     * 
+     * @param       string      $xml        il documento XML
+     * @param       string      $xsd        il percorso dello schema XSD, assoluto o relativo a DIR_BASE
+     * @param       array       $errors     l'array a cui aggiungere gli errori (default array vuoto); passato per
+     *                                      riferimento
+     * 
+     * @return      mixed                   true se il documento è valido, false se non lo è, NULL se manca lo schema
+     * 
+     */
+    function xmlValidate( $xml, $xsd, &$errors = array() ) {
+
+    // percorso completo dello schema
+        fullPath( $xsd );
+
+    // se lo schema non c'è non si può dire niente del documento
+        if( ! is_readable( $xsd ) ) {
+        logger( 'schema XSD non trovato: ' . $xsd, 'xml', LOG_ERR );
+        return NULL;
+        }
+
+    // cartelle in cui cercare i file richiesti da libxml
+        $dirs = array( dirname( $xsd ) . '/', DIR_SRC_XML_XSD );
+
+    // i file richiesti si cercano per nome nelle cartelle locali, e solo in mancanza all'indirizzo originale
+        libxml_set_external_entity_loader( function( $public, $system, $context ) use ( $dirs ) {
+        if( is_file( $system ) ) {
+            return $system;
+        }
+        $name = basename( (string) parse_url( $system, PHP_URL_PATH ) );
+        foreach( $dirs as $dir ) {
+            if( ! empty( $name ) && is_file( $dir . $name ) ) {
+            return $dir . $name;
+            }
+        }
+        return $system;
+        } );
+
+    // gli errori di libxml si raccolgono invece di emettere warning
+        $internal = libxml_use_internal_errors( true );
+        libxml_clear_errors();
+
+    // caricamento e validazione
+        $dom = new DOMDocument( '1.0', 'UTF-8' );
+        $valid = ( $dom->loadXML( $xml ) && $dom->schemaValidate( $xsd ) );
+
+    // raccolta degli errori
+        foreach( libxml_get_errors() as $error ) {
+        $errors[] = 'riga ' . $error->line . ': ' . trim( $error->message );
+        logger( 'riga ' . $error->line . ': ' . trim( $error->message ) . ' ( schema ' . basename( $xsd ) . ' )', 'xml', LOG_ERR );
+        }
+
+    // ripristino dello stato di libxml
+        libxml_clear_errors();
+        libxml_use_internal_errors( $internal );
+        libxml_set_external_entity_loader( NULL );
+
+        return $valid;
+
+    }
+
+    /**
+     * trasforma un documento XML con un foglio di stile XSL
+     * 
+     * Questa funzione applica con XSLTProcessor il foglio di stile $xsl, un percorso assoluto o relativo a DIR_BASE, al
+     * documento XML passato come stringa, e restituisce il risultato come stringa ( per i fogli della fattura
+     * elettronica, una pagina HTML ); restituisce false se il documento, il foglio o la trasformazione non vanno a buon
+     * fine, e in quel caso scrive l'errore nel log xml. Richiede l'estensione xsl di PHP: se manca, la funzione lo
+     * scrive nel log e restituisce false, e il chiamante può ripiegare sulla trasformazione nel browser.
+     * 
+     * NOTA la trasformazione si fa sul server perché i browser la stanno abbandonando: Chrome ha deprecato XSLT e
+     * annunciato che l'istruzione <?xml-stylesheet?> smetterà di funzionare nelle versioni stabili dal novembre 2026.
+     * 
+     * @param       string      $xml        il documento XML
+     * @param       string      $xsl        il percorso del foglio di stile XSL, assoluto o relativo a DIR_BASE
+     * 
+     * @return      mixed                   il documento trasformato, oppure false in caso di errore
+     * 
+     */
+    function xmlTransform( $xml, $xsl ) {
+
+    // l'estensione xsl non è sempre installata
+        if( ! class_exists( 'XSLTProcessor' ) ) {
+        logger( 'la classe XSLTProcessor non esiste, manca l\'estensione xsl', 'xml', LOG_CRIT );
+        return false;
+        }
+
+    // percorso completo del foglio di stile
+        fullPath( $xsl );
+
+    // gli errori di libxml si raccolgono invece di emettere warning
+        $internal = libxml_use_internal_errors( true );
+        libxml_clear_errors();
+
+    // caricamento del documento e del foglio di stile, e trasformazione
+        $dom = new DOMDocument( '1.0', 'UTF-8' );
+        $sheet = new DOMDocument( '1.0', 'UTF-8' );
+        $result = false;
+        if( $dom->loadXML( $xml ) && is_readable( $xsl ) && $sheet->load( $xsl ) ) {
+        $processor = new XSLTProcessor();
+        if( $processor->importStylesheet( $sheet ) ) {
+            $result = $processor->transformToXml( $dom );
+        }
+        }
+
+    // log degli errori
+        if( $result === false ) {
+        logger( 'impossibile trasformare il documento con ' . $xsl, 'xml', LOG_ERR );
+        }
+        foreach( libxml_get_errors() as $error ) {
+        logger( 'riga ' . $error->line . ': ' . trim( $error->message ) . ' ( foglio ' . basename( $xsl ) . ' )', 'xml', LOG_ERR );
+        }
+
+    // ripristino dello stato di libxml
+        libxml_clear_errors();
+        libxml_use_internal_errors( $internal );
+
+        return $result;
 
     }
 

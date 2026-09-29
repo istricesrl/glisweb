@@ -62,8 +62,12 @@
         // die( '<pre>' . htmlentities( readFromFile( $x['file'], FILE_READ_AS_STRING ) ) . '</pre>' );
 
         // chiamo la funzione archiviumPostInsertAzienda()
+        // NOTA dal 2026-09-29 la stampa valida il file contro lo schema FatturaPA, e a un file non valido, che lo SDI
+        // scarterebbe, risponde con gli errori al posto del percorso
         if( ! empty( $x['file'] ) ) {
             $status['esito'] = archiviumPostInvioFeAttiva( $idAzienda, $_REQUEST['idFattura'], $x['file'] );
+        } elseif( ! empty( $x['errori'] ) ) {
+            $status['err'] = array_merge( array( 'XML fattura non valido' ), $x['errori'] );
         } else {
             $status['err'][] = 'XML fattura vuoto';        
         }
