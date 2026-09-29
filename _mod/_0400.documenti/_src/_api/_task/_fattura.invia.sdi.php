@@ -35,10 +35,18 @@
         );
 
         // genero il token di autorizzazione
-        $token = md5( time() );
+        // NOTA fino al 25/09/2026 era md5( time() ), che si indovina provando i secondi vicini; ora è casuale, con la stessa
+        // forma di 32 cifre esadecimali
+        $token = bin2hex( random_bytes( 16 ) );
 
         // imposto il token di autorizzazione per il documento
-        mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti SET token = ?', array( array( 's' => $token ) ) );
+        // NOTA fino al 25/09/2026 la query non aveva il WHERE e scriveva lo stesso token su TUTTI i documenti: con quel token
+        // si poteva stampare qualunque documento dell'archivio
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE documenti SET token = ? WHERE id = ?',
+            array( array( 's' => $token ), array( 's' => $_REQUEST['idFattura'] ) )
+        );
 
         // prelevo l'XML
         $x = restCall(

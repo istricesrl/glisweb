@@ -651,7 +651,7 @@
                                 'id_anagrafica' => $idAnagrafica,
                                 'id_mail' => ( ( isset( $idMail ) && ! empty( $idMail ) ) ? $idMail : NULL ),
                                 'username' => $job['riga']['username'],
-                                'password' => md5( $job['riga']['password'] ),
+                                'password' => passwordHash( $job['riga']['password'] ),
                                 'se_attivo' => 1
                             ),
                             'account'

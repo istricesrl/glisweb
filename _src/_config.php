@@ -248,7 +248,7 @@
      * 
      * Questa funzione viene utilizzata per verificare se una password è presente nell'elenco delle password banali.
      * 
-     * @param   string  $p          la password da verificare codificata in md5
+     * @param   string  $p          l'hash della password da verificare, in formato password_hash() o MD5
      * 
      * @return  bool                true se la password è banale, false altrimenti
      * 
@@ -256,7 +256,7 @@
     function bruteForceHash( $p ) {
         $pwds = file( FILE_COMMON_PASSWORDS, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
         foreach( $pwds as $h ) {
-            if( md5( $h ) == $p ) {
+            if( passwordVerify( $h, $p ) ) {
                 return true;
             }
         }
@@ -622,6 +622,7 @@
     define( 'DIR_VAR_LOG_CSV'                           , DIR_BASE . 'var/log/csv/' );
     define( 'DIR_VAR_LOG_JOB'                           , DIR_BASE . 'var/log/job/' );
     define( 'DIR_VAR_LOG_MYSQL'                         , DIR_BASE . 'var/log/mysql/' );
+    define( 'DIR_VAR_LOG_PIANIFICAZIONI'                , DIR_BASE . 'var/log/pianificazioni/' );
     define( 'DIR_VAR_LOG_LATEST'                        , DIR_BASE . 'var/log/latest/' );
     define( 'DIR_VAR_LOG_SLOW'                          , DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_LOG_TASK'                          , DIR_BASE . 'var/log/task/' );

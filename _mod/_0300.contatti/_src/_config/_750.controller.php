@@ -46,17 +46,26 @@
             // verifico la challenge reCAPTCHA
             if (isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
 
-                // registro il valore di bot
-                $bot = reCaptchaVerifyV3($v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private']);
+                // registro il valore di bot e l'esito della verifica
+                $esito = NULL;
+                $bot = reCaptchaVerifyV3($v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'], $esito);
 
                 // integrazione dei dati
                 $v['spam']['score'] = $bot;
+                $v['spam']['status'] = $esito;
 
                 // pulisco il modulo
                 unset($v['__recaptcha_token__']);
 
                 // punteggio di spam
-                $v['spam']['check'] = ($bot > 0.1) ? true : false;
+                // NB: stessa regola di reCaptchaVerifyFormV3() in _src/_lib/_recaptcha.tools.php: il punteggio decide solo se
+                // Google l'ha dato o ha rifiutato il token; un token scaduto o un servizio non raggiungibile non sono prove di
+                // bot, e il messaggio passa marcato dall'esito in status invece di essere scartato come spam ( 2026-09-24 )
+                if ($esito == 'score' || $esito == 'token rifiutato') {
+                    $v['spam']['check'] = ($bot > 0.1) ? true : false;
+                } else {
+                    $v['spam']['check'] = true;
+                }
             } elseif (! isset($v['__recaptcha_token__']) && isset($cf['google']['profile']['recaptcha']['keys']['private'])) {
 
                 // integrazione dei dati
@@ -152,14 +161,31 @@
             // verifico se va registrata una hit di Analytics
             if (isset($cnf['analytics'])) {
 
-                // registrazione della hit
-                if (isset($cf['google']['profile']['analytics']['ua'])) {
-                    analyticsEventHit(
+                // registrazione dell'evento
+                // NB: analyticsEventHit() mandava l'evento a Universal Analytics, dismesso, ed è commentata in
+                // _src/_lib/_analytics.tools.php, per cui chiamarla dava un errore fatale; l'evento va ora a GA4 con
+                // ga4event(), come l'acquisto di ga4purchase(), con l'azione come nome dell'evento e categoria e label nei
+                // parametri event_category ed event_label, che è la forma usata da gtag.js per gli eventi in stile
+                // Universal Analytics ( 2026-09-24 )
+                if (isset($cf['google']['profile']['analytics']['ua']) && isset($cf['google']['profile']['analytics']['mp']['secret'])) {
+                    ga4event(
                         $cf['google']['profile']['analytics']['ua'],
-                        $cnf['analytics']['categoria'],
-                        $cnf['analytics']['azione'],
-                        $cnf['analytics']['label']
+                        $cf['google']['profile']['analytics']['mp']['secret'],
+                        array(
+                            'client_id' => session_id(),
+                            'events' => array(
+                                array(
+                                    'name' => $cnf['analytics']['azione'],
+                                    'params' => array(
+                                        'event_category' => $cnf['analytics']['categoria'],
+                                        'event_label' => $cnf['analytics']['label']
+                                    )
+                                )
+                            )
+                        )
                     );
+                } elseif (isset($cf['google']['profile']['analytics']['ua'])) {
+                    logWrite('evento Analytics non inviato per il blocco ' . $k . ': manca il secret del Measurement Protocol', 'contatti', LOG_ERR);
                 }
             }
 

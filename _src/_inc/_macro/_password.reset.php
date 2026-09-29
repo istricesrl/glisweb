@@ -117,7 +117,7 @@
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE account SET password = ?, token = NULL WHERE id = ?',
-                array( array( 's' => md5( $_REQUEST['__pwreset__']['password'] ) ), array( 's' => $account['id'] ) )
+                array( array( 's' => passwordHash( $_REQUEST['__pwreset__']['password'] ) ), array( 's' => $account['id'] ) )
             );
 
             // imposto il flag per il modulo

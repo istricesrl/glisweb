@@ -109,6 +109,11 @@
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO FILE
     if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.file' );
@@ -291,6 +296,11 @@
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO FILE
     if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.file' );
@@ -377,6 +387,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE
@@ -540,6 +555,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.audio' );
     }
 
     // tools archivio produzione

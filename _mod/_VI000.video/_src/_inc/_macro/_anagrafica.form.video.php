@@ -20,13 +20,13 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view WHERE se_pagine = 1 ORDER BY __label__ ASC '
+        'SELECT id, __label__ FROM ruoli_video_view WHERE se_anagrafica = 1 ORDER BY __label__ ASC '
     );
 
     $ct['etc']['select']['embed'] = array( 
-        array( 'id' => '1', '__label__' => 'HTML5' ),
-        array( 'id' => '2', '__label__' => 'Vimeo' ),
-        array( 'id' => '3', '__label__' => 'YouTube' ),
+        array( 'id' => 'html5', '__label__' => 'HTML5' ),
+        array( 'id' => 'vimeo', '__label__' => 'Vimeo' ),
+        array( 'id' => 'youtube', '__label__' => 'YouTube' ),
     );
 
     // tendina lingue

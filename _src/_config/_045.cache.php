@@ -107,7 +107,9 @@
         define( 'MEMCACHE_DEFAULT_TTL', ( ( isset( $cf['memcache']['server']['ttl'] ) ) ? $cf['memcache']['server']['ttl'] : 0 ) );
 
         // lettura indici della cache
-        $cf['memcache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
+        // NOTA l'indice delle query per tabella sta in CACHE_QUERY_INDEX e non in CACHE_INDEX, che dal 2026-03-26 è l'indice
+        // piatto di memcacheWrite(); per i dettagli si vedano i commenti a _src/_lib/_memcache.utils.php ( 2026-09-24 )
+        $cf['memcache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_QUERY_INDEX' );
 
         // inizializzazione indice della cache
         if( empty( $cf['memcache']['index'] ) ){

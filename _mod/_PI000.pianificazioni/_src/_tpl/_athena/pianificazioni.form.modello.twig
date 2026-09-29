@@ -1,0 +1,301 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/pianificazioni.form.modello.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# ENTITÀ DELLA PIANIFICAZIONE #}
+{% set entita = request[ form.table ].entita %}
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SPIEGAZIONE #}
+            <fieldset>
+                <legend>modello <small>nei campi di testo si possono usare {{ '{{ dt.now.giorno }}' }}, {{ '{{ dt.now.nome_mese }}' }}, {{ '{{ dt.now.anno }}' }} e le altre variabili della data dell'oggetto</small></legend>
+                {% if not entita %}
+                <p>scegliere prima l'entità nella scheda principale</p>
+                {% endif %}
+            </fieldset>
+
+            {% if entita == 'documenti' %}
+
+            {# DOCUMENTO #}
+            <fieldset>
+                <legend>documento <small>data e numero vengono assegnati alla creazione</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_tipologia', 'required': 1 }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-1 form-col">
+                        <span class="label-top">sezionale</span>
+                        {{ frm.input({ 'field': { 'name': 'model_sezionale', 'type': 'text', 'default': '{{ dt.now.anno }}' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">condizioni pagamento</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_condizione_pagamento' }, 'source': { 'values': etc.select.condizioni_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">esigibilità</span>
+                        {{ frm.select({ 'field': { 'name': 'model_esigibilita' }, 'source': { 'values': etc.select.esigibilita }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'default': 'rif. {{ dt.now.nome_mese }} {{ dt.now.anno }}' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note per il cliente</span>
+                        {{ frm.textarea({ 'field': { 'name': 'model_note_cliente', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>emittente e destinatario</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">emittente</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_emittente', 'required': 1, 'autosubmit': 1 }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if etc.select.id_sedi_emittente is defined %}
+                    <div class="col col-md form-col">
+                        <span class="label-top">sede emittente</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_sede_emittente' }, 'source': { 'values': etc.select.id_sedi_emittente }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">destinatario</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_destinatario', 'required': 1, 'autosubmit': 1 }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if etc.select.id_sedi_destinatario is defined %}
+                    <div class="col col-md form-col">
+                        <span class="label-top">sede destinatario</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_sede_destinatario' }, 'source': { 'values': etc.select.id_sedi_destinatario }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+            </fieldset>
+
+            {# RIGHE E PAGAMENTI DEL DOCUMENTO #}
+            {{ sub.pianificazioni( form.table, 'pianificazioni', 'righe e pagamenti', site, page, pages, ietf, etc, request, session, 'id_genitore' ) }}
+
+            {% elseif entita == 'todo' or entita == 'attivita' %}
+
+            {# TODO E ATTIVITÀ #}
+            <fieldset>
+                <legend>{% if entita == 'todo' %}todo{% else %}attività{% endif %} <small>la data di programmazione è quella della ripetizione</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_tipologia' }, 'source': { 'values': etc.select.tipologie }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">cliente</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_cliente' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">{% if entita == 'todo' %}responsabile{% else %}operatore{% endif %}</span>
+                        {% if entita == 'todo' %}
+                        {{ frm.select({ 'field': { 'name': 'model_id_anagrafica' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {% else %}
+                        {{ frm.select({ 'field': { 'name': 'model_id_anagrafica_programmazione' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">dalle</span>
+                        {{ frm.input({ 'field': { 'name': 'model_ora_inizio_programmazione', 'type': 'time' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">alle</span>
+                        {{ frm.input({ 'field': { 'name': 'model_ora_fine_programmazione', 'type': 'time' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">ore</span>
+                        {{ frm.input({ 'field': { 'name': 'model_ore_programmazione', 'type': 'number', 'step': 0.25 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note di programmazione</span>
+                        {{ frm.input({ 'field': { 'name': 'model_note_programmazione', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                {% if entita == 'attivita' %}
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'model_note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+                {% endif %}
+
+            </fieldset>
+
+            {% elseif entita == 'rinnovi' %}
+
+            {# RINNOVI #}
+            <fieldset>
+                <legend>rinnovo <small>ogni rinnovo va dalla data della ripetizione al giorno prima della successiva, nel contratto collegato alla pianificazione</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_tipologia' }, 'source': { 'values': etc.select.tipologie }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">codice</span>
+                        {{ frm.input({ 'field': { 'name': 'model_codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'model_se_automatico', 'placeholder': 'automatico' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'model_note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% elseif entita == 'documenti_articoli' %}
+
+            {# RIGHE AUTONOME #}
+            <fieldset>
+                <legend>riga <small>viene aggiunta ogni volta al documento indicato</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">documento</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_documento', 'required': 1 }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">articolo</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_articolo' }, 'source': { 'api': 'articoli' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">quantità</span>
+                        {{ frm.input({ 'field': { 'name': 'model_quantita', 'type': 'number', 'step': 0.01, 'default': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">UDM</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_udm' }, 'source': { 'values': etc.select.udm }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">importo</span>
+                        {{ frm.input({ 'field': { 'name': 'model_importo_netto_totale', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">reparto</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_reparto' }, 'source': { 'values': etc.select.reparti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">listino</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% elseif entita == 'pagamenti' %}
+
+            {# PAGAMENTI AUTONOMI #}
+            <fieldset>
+                <legend>pagamento <small>la scadenza è la data della ripetizione, più l'eventuale differimento</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">documento</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_documento' }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'model_nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">modalità</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_modalita_pagamento' }, 'source': { 'values': etc.select.modalita_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">IBAN</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_iban' }, 'source': { 'values': etc.select.iban }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">importo</span>
+                        {{ frm.input({ 'field': { 'name': 'model_importo_lordo_finale', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">listino</span>
+                        {{ frm.select({ 'field': { 'name': 'model_id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">giorni</span>
+                        {{ frm.input({ 'field': { 'name': 'offset_giorni', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">fine mese</span>
+                        {{ frm.select({ 'field': { 'name': 'offset_fine_mese' }, 'source': { 'values': etc.select.fine_mese }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% endif %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

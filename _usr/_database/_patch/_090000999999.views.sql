@@ -300,7 +300,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		concat_ws(
 			' ',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
@@ -365,7 +365,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			articoli.codice,
 			'/',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
@@ -643,6 +643,57 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
             ON da.id = todo.id_documenti_articoli             --
 	GROUP BY attivita.id                                      --
 ;                                                             --
+
+-- | 090000002100
+
+-- audio_view
+CREATE OR REPLACE VIEW `audio_view` AS
+	SELECT
+		audio.id,
+		audio.id_anagrafica,
+		audio.id_pagina,
+		audio.id_file,
+		audio.id_prodotto,
+		audio.id_articolo,
+		audio.id_categoria_prodotti,
+		audio.id_marchio,
+		audio.id_risorsa,
+		audio.id_categoria_risorse,
+		audio.id_notizia,
+		audio.id_annuncio,
+		audio.id_categoria_notizie,
+		audio.id_categoria_annunci,
+		audio.id_lingua,
+		lingue.nome AS lingua,
+		audio.id_ruolo,
+		audio.id_progetto,
+		audio.id_categoria_progetti,
+		audio.id_indirizzo,
+		audio.id_edificio,
+		audio.id_immobile,
+		audio.id_valutazione,
+		ruoli_audio.nome AS ruolo,
+		audio.ordine,
+		audio.nome,
+		audio.path,
+		audio.embed,
+		audio.codice_embed,
+		audio.embed_custom,
+		audio.target,
+		audio.note,
+		audio.id_account_inserimento,
+		audio.id_account_aggiornamento,
+		concat(
+			ruoli_audio.nome,
+			' # ',
+			audio.ordine,
+			' / ',
+			audio.nome
+		) AS __label__
+	FROM audio
+		LEFT JOIN lingue ON lingue.id = audio.id_lingua
+		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
+;
 
 -- | 090000002900
 
@@ -1212,7 +1263,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			articoli.id,
 			'/',
 			prodotti.nome,
-			articoli.nome,
+			nullif( articoli.nome, prodotti.nome ),
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
@@ -2034,6 +2085,119 @@ CREATE OR REPLACE VIEW `pagine_view` AS						  --
 	FROM pagine										  		  --
 ;
 
+-- | 090000023800
+
+-- pianificazioni_view
+CREATE OR REPLACE VIEW `pianificazioni_view` AS
+	SELECT
+		pianificazioni.id,
+		pianificazioni.id_genitore,
+		pianificazioni.id_progetto,
+		pianificazioni.id_todo,
+		pianificazioni.id_attivita,
+		pianificazioni.id_contratto,
+		pianificazioni.id_anagrafica,
+		pianificazioni.nome,
+		pianificazioni.note,
+		pianificazioni.id_periodicita,
+		periodicita.nome AS periodicita,
+		pianificazioni.cadenza,
+		pianificazioni.se_lunedi,
+		pianificazioni.se_martedi,
+		pianificazioni.se_mercoledi,
+		pianificazioni.se_giovedi,
+		pianificazioni.se_venerdi,
+		pianificazioni.se_sabato,
+		pianificazioni.se_domenica,
+		pianificazioni.schema_ripetizione,
+		pianificazioni.data_avvio,
+		pianificazioni.data_inizio,
+		pianificazioni.data_elaborazione,
+		pianificazioni.timestamp_elaborazione,
+		from_unixtime( pianificazioni.timestamp_elaborazione, '%Y-%m-%d %H:%i' ) AS data_ora_elaborazione,
+		pianificazioni.data_ultimo_oggetto,
+		pianificazioni.giorni_elaborazione,
+		pianificazioni.giorni_estensione,
+		pianificazioni.data_fine,
+		pianificazioni.entita,
+		pianificazioni.model_id_anagrafica,
+		pianificazioni.model_id_anagrafica_programmazione,
+		pianificazioni.model_id_articolo,
+		pianificazioni.model_id_attivita,
+		pianificazioni.model_id_causale,
+		pianificazioni.model_id_cliente,
+		pianificazioni.model_id_collo,
+		pianificazioni.model_id_condizione_pagamento,
+		pianificazioni.model_id_contatto,
+		pianificazioni.model_id_coupon,
+		pianificazioni.model_id_destinatario,
+		pianificazioni.model_id_documento,
+		pianificazioni.model_id_emittente,
+		pianificazioni.model_id_genitore,
+		pianificazioni.model_id_iban,
+		pianificazioni.model_id_indirizzo,
+		pianificazioni.model_id_immobile,
+		pianificazioni.model_id_licenza,
+		pianificazioni.model_id_listino,
+		pianificazioni.model_id_luogo,
+		pianificazioni.model_id_mastro_destinazione,
+		pianificazioni.model_id_mastro_provenienza,
+		pianificazioni.model_id_matricola,
+		pianificazioni.model_id_modalita_pagamento,
+		pianificazioni.model_id_prodotto,
+		pianificazioni.model_id_progetto,
+		pianificazioni.model_id_reparto,
+		pianificazioni.model_id_sede_destinatario,
+		pianificazioni.model_id_sede_emittente,
+		pianificazioni.model_id_tipologia,
+		pianificazioni.model_id_todo,
+		pianificazioni.model_id_trasportatore,
+		pianificazioni.model_id_udm,
+		pianificazioni.model_anno_programmazione,
+		pianificazioni.model_codice,
+		pianificazioni.model_data,
+		pianificazioni.model_data_fine,
+		pianificazioni.model_data_inizio,
+		pianificazioni.model_data_programmazione,
+		pianificazioni.model_esigibilita,
+		pianificazioni.model_importo_netto_totale,
+		pianificazioni.model_importo_lordo_totale,
+		pianificazioni.model_importo_lordo_finale,
+		pianificazioni.model_nome,
+		pianificazioni.model_note,
+		pianificazioni.model_note_cliente,
+		pianificazioni.model_note_programmazione,
+		pianificazioni.model_numero,
+		pianificazioni.model_ora_inizio_programmazione,
+		pianificazioni.model_ora_fine_programmazione,
+		pianificazioni.model_ore_programmazione,
+		pianificazioni.model_porto,
+		pianificazioni.model_quantita,
+		pianificazioni.model_riferimento,
+		pianificazioni.model_sconto_percentuale,
+		pianificazioni.model_sconto_valore,
+		pianificazioni.model_se_automatico,
+		pianificazioni.model_sezionale,
+		pianificazioni.model_settimana_programmazione,
+		pianificazioni.model_specifiche,
+		pianificazioni.model_data_scadenza,
+		pianificazioni.model_timestamp_scadenza,
+		pianificazioni.offset_giorni,
+		pianificazioni.offset_fine_mese,
+		pianificazioni.workspace,
+		pianificazioni.token,
+		pianificazioni.id_account_inserimento,
+		pianificazioni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			pianificazioni.nome,
+			periodicita.nome,
+			pianificazioni.cadenza
+		) AS __label__
+	FROM pianificazioni
+		LEFT JOIN periodicita ON periodicita.id = pianificazioni.id_periodicita
+;
+
 -- | 090000025000
 
 -- prezzi_view
@@ -2404,6 +2568,33 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 	FROM ruoli_anagrafica
 ;
 
+-- | 090000034200
+
+-- ruoli_audio_view
+CREATE OR REPLACE VIEW ruoli_audio_view AS
+	SELECT
+		ruoli_audio.id,
+		ruoli_audio.id_genitore,
+		ruoli_audio.nome,
+		ruoli_audio.html_entity,
+		ruoli_audio.font_awesome,
+		ruoli_audio.se_anagrafica,
+		ruoli_audio.se_pagine,
+		ruoli_audio.se_prodotti,
+		ruoli_audio.se_articoli,
+		ruoli_audio.se_categorie_prodotti,
+		ruoli_audio.se_marchi,
+		ruoli_audio.se_notizie,
+		ruoli_audio.se_categorie_notizie,
+		ruoli_audio.se_annunci,
+		ruoli_audio.se_categorie_annunci,
+		ruoli_audio.se_risorse,
+		ruoli_audio.se_categorie_risorse,
+		ruoli_audio.se_immobili,
+	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
+	FROM ruoli_audio
+;
+
 -- | 090000034300
 
 -- ruoli_documenti_view
@@ -2531,6 +2722,8 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_marchi,
 		ruoli_video.se_notizie,
 		ruoli_video.se_categorie_notizie,
+		ruoli_video.se_annunci,
+		ruoli_video.se_categorie_annunci,
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
 		ruoli_video.se_immobili,
@@ -3080,7 +3273,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.ordine,
 		video.nome,
 		video.path,
-		video.id_embed,
+		video.embed,
 		video.codice_embed,
 		video.embed_custom,
 		video.target,

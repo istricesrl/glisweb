@@ -20,11 +20,13 @@
      * Non è un caso di scuola. Il runlevel _195.localization.php applica la locale del sito
      * ( per un sito italiano compone "it_IT.UTF8" ), e fino a PHP 7.4 incluso la conversione
      * implicita di un float in stringa segue LC_NUMERIC: il prezzo 4082.5 diventa la stringa
-     * "4082,5", MySQL la rifiuta e la scrittura fallisce. In silenzio, perché mysqlPreparedQuery()
-     * non controlla l'esito di mysqli_stmt_execute(): logga "-> OK" lo stesso e restituisce un
-     * insert_id che vale 0. Il risultato è una pagina che risponde 200, un log che dice "record
-     * INSERITO" e nessuna riga in archivio. Da PHP 8.0 la conversione non è più localizzata e il
-     * problema non si presenta, ma i deploy su PHP 7 sono ancora parecchi.
+     * "4082,5", MySQL la rifiuta e la scrittura fallisce. Fino al 2026-09-24 in silenzio, perché
+     * mysqlPreparedQuery() non controllava l'esito di mysqli_stmt_execute(): loggava "-> OK" lo stesso
+     * e restituiva un insert_id che vale 0, con una pagina che rispondeva 200, un log che diceva
+     * "record INSERITO" e nessuna riga in archivio. Oggi l'errore finisce in $e e nel log, ma per un
+     * errore di dato ( né 1062 né 1054 ) la pagina risponde ancora 200: prevenirlo resta compito di
+     * questo file. Da PHP 8.0 la conversione non è più localizzata e il problema non si presenta, ma
+     * i deploy su PHP 7 sono ancora parecchi.
      *
      * Il testo libero non viene toccato: la condizione chiede che il valore resti un numero anche
      * togliendo le virgole, quindi una nota tipo "macchina 12,5 tonnellate" passa intatta.

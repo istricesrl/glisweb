@@ -2,13 +2,86 @@
 
     /**
      * libreria di strumenti REST
+     * 
+     * Questa libreria contiene le funzioni che il framework usa per chiamare servizi web esterni tramite HTTP, e le
+     * costanti per i metodi HTTP e per i tipi di contenuto.
+     * 
+     * introduzione
+     * ============
+     * Tutte le chiamate HTTP in uscita del framework e dei moduli (servizi di pagamento, gestionali remoti, geocoding,
+     * reCAPTCHA e così via) passano per restCall(), che incapsula cURL: codifica i dati nel formato richiesto, imposta
+     * gli header e l'autenticazione, esegue la chiamata, scrive richiesta e risposta nel log rest e decodifica la
+     * risposta. Le altre funzioni della libreria sono scorciatoie per i casi più semplici.
+     * 
+     * I tempi massimi di attesa delle chiamate si possono regolare per tutto il deploy definendo in un runlevel le
+     * costanti REST_CONNECTTIMEOUT e REST_TIMEOUT, come spiegato nel commento dentro restCall(). Allo stesso modo la
+     * costante REST_SSL_VERIFY, definita a false, disattiva la verifica del certificato del server, che è attiva per
+     * default: serve solo ai deploy di sviluppo con un certificato self-signed.
+     * 
+     * costanti
+     * ========
+     * Le costanti definite e utilizzate dalla libreria sono elencate nella seguente tabella; ognuna viene definita
+     * soltanto se non esiste già, perché le stesse costanti sono dichiarate anche in _src/_config.php.
      *
+     * costante                     | spiegazione
+     * -----------------------------|--------------------------------------------------------------
+     * METHOD_DELETE                | metodo HTTP DELETE
+     * METHOD_GET                   | metodo HTTP GET
+     * METHOD_PATCH                 | metodo HTTP PATCH
+     * METHOD_POST                  | metodo HTTP POST
+     * METHOD_PUT                   | metodo HTTP PUT
+     * METHOD_REPLACE               | azione REPLACE (non è un metodo HTTP, è usata dalle controller)
+     * METHOD_UPDATE                | azione UPDATE (non è un metodo HTTP, è usata dalle controller)
+     * MIME_APPLICATION_JSON        | tipo di contenuto application/json
+     * MIME_APPLICATION_XML         | tipo di contenuto application/xml
+     * MIME_MULTIPART_FORM_DATA     | tipo di contenuto multipart/form-data
+     * MIME_TEXT_PLAIN              | tipo di contenuto text/plain
+     * MIME_TEXT_HTML               | tipo di contenuto text/html
+     * MIME_X_WWW_FORM_URLENCODED   | tipo di contenuto application/x-www-form-urlencoded
+     * 
+     * La libreria legge inoltre, se definite, le costanti REST_CONNECTTIMEOUT (tempo massimo per la connessione, default
+     * 3 secondi), REST_TIMEOUT (tempo massimo per la risposta, default 5 secondi) e REST_SSL_VERIFY (verifica del
+     * certificato del server, default true), che non definisce.
+     * 
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
+     * 
+     * funzioni per le chiamate REST
+     * -----------------------------
+     * Le funzioni in questo gruppo servono per effettuare chiamate a servizi web esterni.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * restCall()                       | esegue una chiamata REST
+     * restGetValue()                   | preleva un valore da una chiamata REST
+     * restGetString()                  | preleva un valore singolo da una chiamata REST
+     * 
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni, oltre all'estensione cURL di PHP:
+     * 
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logger()                         | core
+     * array2xml()                      | _src/_lib/_xml.tools.php
+     * xml2array()                      | _src/_lib/_xml.tools.php
      *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
-     * TODO documentare
-     *
-     *
-     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-09-25       | Fabio Mosti          | invio dei dati in XML con MIME_APPLICATION_XML
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     * 
      */
 
     // azioni
@@ -34,13 +107,65 @@
     }
 
     /**
+     * FUNZIONI PER LE CHIAMATE REST
+     */
+
+    /**
      * esegue una chiamata REST
-     *
-     *
-     *
-     *
-     * TODO documentare
-     *
+     * 
+     * Questa funzione esegue con cURL una chiamata HTTP all'URL dato con il metodo dato, e restituisce la risposta
+     * decodificata secondo $answertype. I dati vengono codificati secondo $datatype:
+     * 
+     * datatype                     | trattamento dei dati
+     * -----------------------------|--------------------------------------------------------------
+     * MIME_APPLICATION_JSON        | codificati in JSON e inviati nel corpo, con gli header Content-Type e Content-Length
+     * MIME_APPLICATION_XML         | convertiti con array2xml() se sono un array, altrimenti inviati come sono, nel corpo, come per JSON
+     * MIME_X_WWW_FORM_URLENCODED   | codificati con http_build_query() e inviati nel corpo
+     * MIME_MULTIPART_FORM_DATA     | passati così come sono a cURL, che li invia come multipart (anche con CURLFile)
+     * 'query' o NULL               | codificati con http_build_query() e aggiunti all'URL dopo un ?
+     * 'headers'                    | aggiunti agli header della richiesta
+     * qualsiasi altro valore       | non inviati
+     * 
+     * Se $answertype non è vuoto viene inviato l'header Accept; la risposta viene decodificata in array associativo per
+     * MIME_APPLICATION_JSON (NULL se il corpo non è JSON valido o è vuoto) e con xml2array() per MIME_APPLICATION_XML,
+     * mentre per qualsiasi altro tipo viene restituita la stringa grezza. Se $user e $pasw sono entrambi valorizzati
+     * viene usata l'autenticazione HTTP del tipo $auth, altrimenti se c'è $token viene inviato l'header
+     * Authorization: Bearer. Gli header vanno passati come array nome => valore. I redirect non vengono seguiti.
+     * 
+     * La richiesta e la risposta vengono scritte nel log rest, compresi i dati inviati (e quindi anche eventuali
+     * credenziali contenute nei dati); le risposte con codice diverso da 2xx o con errore cURL vengono registrate con
+     * livello LOG_ERR. La funzione non segnala gli errori con il valore restituito: per sapere com'è andata il chiamante
+     * deve leggere $status (0 se il server non ha risposto) ed $error. In caso di errore di rete la risposta è false,
+     * che decodificato come JSON diventa NULL.
+     * 
+     * Con il metodo GET e $data NULL i dati non vengono codificati e la richiesta parte senza corpo; con gli altri
+     * metodi, $datatype MIME_APPLICATION_JSON e $data NULL la funzione invia il corpo "null" con l'header Content-Type
+     * ( si veda il commento nel corpo ); con MIME_APPLICATION_XML nello stesso caso il corpo è vuoto, con Content-Length 0.
+     * Il certificato SSL del server e il suo nome vengono verificati, a meno che il deploy non abbia definito la
+     * costante REST_SSL_VERIFY a false ( si veda il commento nel corpo ).
+     * NOTA con $datatype 'query' i parametri vengono aggiunti dopo un ? anche se l'URL ne contiene già uno.
+     * 
+     * @param       string      $url            l'URL da chiamare
+     * @param       string      $method         il metodo HTTP, una delle costanti METHOD_* (default METHOD_GET)
+     * @param       mixed       $data           i dati da inviare (default NULL)
+     * @param       string      $datatype       il formato dei dati (default MIME_APPLICATION_JSON, vedi tabella)
+     * @param       string      $answertype     il formato atteso della risposta (default MIME_APPLICATION_JSON)
+     * @param       int         $status         [out] il codice HTTP della risposta, scritto per riferimento
+     * @param       array       $headers        gli header aggiuntivi nella forma nome => valore (default nessuno)
+     * @param       string      $user           il nome utente per l'autenticazione HTTP (default NULL)
+     * @param       string      $pasw           la password per l'autenticazione HTTP (default NULL)
+     * @param       string      $error          [out] il messaggio di errore di cURL, vuoto se non ci sono errori
+     * @param       string      $token          il token per l'autenticazione Bearer (default NULL)
+     * @param       int         $auth           il tipo di autenticazione HTTP, una delle costanti CURLAUTH_* (default
+     *                                          CURLAUTH_BASIC)
+     * @param       string      $raw            [out] il corpo della risposta non decodificato
+     * @param       array       $resHeaders     [out] gli header della risposta, con il nome in minuscolo come chiave e
+     *                                          un array di valori; gli header vengono aggiunti a quelli già presenti
+     * @param       int         $timeout        il tempo massimo per la risposta in secondi (default NULL, cioè
+     *                                          REST_TIMEOUT se definita, altrimenti 5)
+     * 
+     * @return      mixed                       la risposta decodificata secondo $answertype
+     * 
      */
     function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL, &$resHeaders = array(), $timeout = NULL ) {
 
@@ -66,11 +191,19 @@
             }
         );
 
-        // salto la verifica ssl
-        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
+        // verifica del certificato del server
+        //
+        // Fino al 2026-09-24 CURLOPT_SSL_VERIFYPEER era a false per tutti, per cui una chiamata HTTPS non
+        // proteggeva da un server che si spacciasse per quello chiamato, e credenziali, token e dati di
+        // pagamento finivano a lui. Adesso il certificato si verifica sempre, e il deploy che ha bisogno di
+        // non farlo lo dice esplicitamente definendo in un runlevel la costante REST_SSL_VERIFY a
+        // false. Il caso reale sono le chiamate che il sito fa a se stesso su $cf['site']['url'] ( la stampa
+        // di documento.pdf e fattura.xml nel modulo 0400.documenti ): su un deploy di sviluppo con certificato
+        // self-signed senza la costante falliscono. Come per i timeout, la costante si legge a ogni chiamata.
+        $sslVerify = defined( 'REST_SSL_VERIFY' ) ? (bool) REST_SSL_VERIFY : true;
 
-        // salto la verifica dell'host
-        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, 2 );
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, $sslVerify );
+        curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( $sslVerify ) ? 2 : 0 );
 
         // imposto un timeout per la connessione
         //
@@ -111,7 +244,13 @@
         // verifico che ci siano dati da inviare
         // NOTA perché questa riga è commentata?!
         // if( $data !== NULL && is_array( $data ) && count( $data ) > 0 ) {
-        if( true ) {
+        //
+        // NB: senza dati si salta la codifica solo in GET, dove prima con MIME_APPLICATION_JSON partiva il corpo
+        // "null"; negli altri metodi il corpo "null" resta, perché le capture di PayPal ( _paypal.advanced.capture.php
+        // in _F030.pagamenti e _4170.ecommerce ) fanno una POST senza dati e ricevono da questo blocco l'header
+        // Content-Type: application/json che l'API di PayPal richiede, e togliere il corpo cambierebbe una chiamata che
+        // oggi funziona ( 2026-09-24 )
+        if( $data !== NULL || $method != METHOD_GET ) {
 
             // codifico i dati
             switch( $datatype ) {
@@ -123,6 +262,15 @@
                 case MIME_APPLICATION_JSON:
                     $data = json_encode( $data, JSON_UNESCAPED_SLASHES );
                     $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
+                    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+                break;
+
+                case MIME_APPLICATION_XML:
+                    if( is_array( $data ) ) {
+                        $data = array2xml( $data );
+                    }
+                    $data = (string) $data;
+                    $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_XML, 'Content-Length' => strlen( $data ) ) );
                     curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
                 break;
 
@@ -146,10 +294,10 @@
 
             }
 
-            // log
-            logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
-
         }
+
+        // log
+        logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
 
         // impostazione del tipo di dati accettato
         if( ! empty( $answertype ) ) {
@@ -221,9 +369,22 @@
      * preleva un valore da una chiamata REST
      *
      * Questa funzione preleva un JSON da una chiamata REST e ne restituisce il valore di una chiave specificata.
+     * La chiamata viene fatta con restCall() sempre con il metodo GET; se la risposta non contiene la chiave (o se la
+     * chiamata fallisce) la funzione restituisce false, per cui un valore false o NULL nella risposta è
+     * indistinguibile da una chiave assente.
      *
+     * @param       string      $k              la chiave di cui restituire il valore
+     * @param       string      $url            l'URL da chiamare
+     * @param       mixed       $data           i dati da inviare (default NULL)
+     * @param       string      $datatype       il formato dei dati (default MIME_APPLICATION_JSON)
+     * @param       string      $answertype     il formato atteso della risposta (default MIME_APPLICATION_JSON)
+     * @param       int         $status         [out] il codice HTTP della risposta, scritto per riferimento
+     * @param       array       $headers        gli header aggiuntivi nella forma nome => valore (default nessuno)
+     * @param       string      $user           il nome utente per l'autenticazione HTTP (default NULL)
+     * @param       string      $pasw           la password per l'autenticazione HTTP (default NULL)
+     * @param       string      $error          [out] il messaggio di errore di cURL, scritto per riferimento
      *
-     * TODO documentare
+     * @return      mixed                       il valore della chiave, oppure false se non è presente
      *
      */
     function restGetValue( $k, $url, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
@@ -242,9 +403,12 @@
      * preleva un valore singolo da una chiamata REST
      *
      * Questa funzione preleva un valore stringa da una chiamata REST.
+     * La chiamata viene fatta con restCall() con il metodo GET, senza dati e con Accept text/plain, e la risposta viene
+     * restituita così com'è, senza decodifica; in caso di errore di rete la funzione restituisce false.
      *
+     * @param       string      $url            l'URL da chiamare
      *
-     * TODO documentare
+     * @return      mixed                       il corpo della risposta, oppure false in caso di errore di rete
      *
      */
     function restGetString( $url ) {

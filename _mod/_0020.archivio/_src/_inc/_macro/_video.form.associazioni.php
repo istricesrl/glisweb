@@ -20,14 +20,6 @@
         'SELECT id, __label__ FROM pagine_view' 
     );
 
-    // tendina eventi
-	$ct['etc']['select']['eventi'] = mysqlCachedIndexedQuery( 
-        $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM eventi_view' 
-    );
-
     // tendina prodotti
 	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery( 
         $cf['memcache']['index'],

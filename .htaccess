@@ -37,7 +37,7 @@ AddType image/webp .webp
 </FilesMatch>
 
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
-<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swp|templ|trace|twig)$">
+<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swn|swo|swp|templ|trace|twig)$">
     Deny from all
 </FilesMatch>
 

@@ -247,6 +247,12 @@ che stava aspettando, **la stessa riga va anche nel `CHAT.md`**, nella sezione
 finito e non comunicato, per il cliente, non è finito — e nessuno se ne accorge, perché da noi
 risulta fatto.
 
+⚠ **Quando nasce una domanda per il cliente, va scritta qui subito.** Regola data da Fabio il
+**28/09/2026**: nel momento in cui il lavoro fa sorgere una domanda che solo il cliente può
+sciogliere, la domanda va nel `CHAT.md`, nella sezione `### Da chiedergli alla prossima occasione`
+della persona giusta, **nello stesso turno**. Il dettaglio sta in *"Quando nasce una domanda per il
+cliente"*, più sotto.
+
 #### Una sezione per conversazione e destinatario
 
 Non un blocco unico, e non più "un progetto, un interlocutore": **una sezione `##` per persona**.
@@ -265,6 +271,9 @@ Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
 
 ### Aspettiamo noi — cosa ha chiesto lui
   - [ ] <richiesta>, arrivata il <data>
+
+### Da chiedergli alla prossima occasione
+  - [ ] <domanda>, nata il <data> da <voce del TODO o lavoro che l'ha fatta sorgere>
 
 ### Da dirgli alla prossima occasione
   - [ ] <cosa fatta che lui non sa ancora>
@@ -314,6 +323,9 @@ la sua e riprova ); scrive **solo nella sezione di quella persona**; rimette `li
   voce o per iscritto, e con quali parole;
 - prima di scrivere "da chiedere a <cliente>" da qualunque parte, **si cerca qui e nel `DONE.md`**
   se la risposta esiste già;
+- ⚠ **una domanda per il cliente non resta in conversazione**: va in `### Da chiedergli alla
+  prossima occasione` nello stesso turno in cui nasce ( vedi *"Quando nasce una domanda per il
+  cliente"* );
 - il tono delle voci è quello che si userebbe col cliente: niente nomi di tabelle, niente dettagli
   interni. Quelli stanno nel `TODO.md`;
 - **il materiale lungo non ci va**: allegati, screenshot, trascrizioni dei vocali e diagnosi stanno
@@ -411,6 +423,35 @@ ci si mette la propria riga, **si rilegge per verificare di avercela ancora**, s
 sezione di quella persona, si rimette `libero`. Un lock più vecchio di dieci minuti è stantio: si prende
 e si annota che è stato forzato. Il protocollo per esteso sta nella sezione `CHAT.md`
 qui sopra.
+
+#### ⚠ Quando nasce una domanda per il cliente, va nel `CHAT.md` subito
+
+Regola data da Fabio il **28/09/2026**: *"è fondamentale che il dialogo con il cliente sia tenuto con
+la massima continuità possibile"*.
+
+È il verso opposto della regola sulla chiusura: lì si registra quello che **dobbiamo dirgli**, qui
+quello che **dobbiamo chiedergli**. Una domanda che vive solo in conversazione muore col `/clear` o
+con la fine della sessione, e il cliente o non se la sente mai fare, o se la sente fare due volte
+da due sessioni diverse. Tutt'e due rompono la continuità del dialogo.
+
+Quando il lavoro fa sorgere una domanda che **solo il cliente può sciogliere** ( un requisito
+ambiguo, un dato che non abbiamo, una scelta che spetta a lui ):
+
+1. prima si cerca nel `CHAT.md` e nel `DONE.md` se la risposta c'è già, e nel `READ.md` se è una
+   domanda di fatti nostri e non sua;
+2. se non c'è, la domanda va **nello stesso turno** nel `CHAT.md`, in `### Da chiedergli alla
+   prossima occasione` della persona giusta, col lock come ogni scrittura: **la data** e **da dove
+   è nata** ( la voce del `TODO.md` o il lavoro ), nel tono che si userebbe col cliente;
+3. quando la domanda viene fatta — da Fabio o dall'assistente generale — si sposta in `### Aspetta
+   lui — cosa gli abbiamo chiesto` con data e canale, e la voce del `TODO.md` che ne dipende diventa
+   `[=]` con nome e data;
+4. quando arriva la risposta esce dal `CHAT.md` e diventa lavoro nel `TODO.md` o decisione nel
+   `DONE.md`, come già detto sopra.
+
+**Il test, in una riga**: *se la sessione finisse adesso, la domanda sopravviverebbe?* Se sta solo
+in conversazione, no. Per questo **prima di proporre un `/clear` o di chiudere una sessione** si
+controlla che nessuna domanda per il cliente sia rimasta solo detta a Fabio in chat: dirgliela non
+basta, va scritta.
 
 ## Come si scrive il `TODO.md` ( deciso il 15/09/2026 )
 

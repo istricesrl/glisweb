@@ -78,8 +78,8 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // prelevo i dati dalla cache
-            $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-            $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+            $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+            $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
             // default
             $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['scheda']['template'] : $pg['template'];
@@ -169,6 +169,9 @@ if( $cf['contents']['cached'] === false ) {
             } else {
 
                 $cf['contents']['pages'][$pid] = $pgc;
+
+                // canonical
+                $canon = $pid;
             }
         }
     }
@@ -206,9 +209,14 @@ if( $cf['contents']['cached'] === false ) {
         }
 
         // gli articoli pubblicati, con la categoria e i dati di pagina del loro prodotto
+        // NOTA la scheda dell'articolo prende dal prodotto template, sitemap e, quando l'articolo non ne ha di suoi, contenuti,
+        // immagini e metadati: per questo la sua data di aggiornamento è la più recente fra quella dell'articolo e quella del
+        // prodotto, altrimenti con la cache delle pagine attiva una modifica al solo prodotto non arrivava alle schede dei suoi
+        // articoli ( 2026-09-25 )
         $art = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT articoli.id, articoli.id_prodotto, articoli.timestamp_aggiornamento,
+            'SELECT articoli.id, articoli.id_prodotto,
+                    greatest( coalesce( articoli.timestamp_aggiornamento, 0 ), coalesce( prodotti.timestamp_aggiornamento, 0 ) ) AS timestamp_aggiornamento,
                     prodotti.template, prodotti.schema_html, prodotti.tema_css,
                     prodotti.se_sitemap, prodotti.se_cacheable,
                     prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione
@@ -249,8 +257,8 @@ if( $cf['contents']['cached'] === false ) {
                 }
 
                 // prelevo i dati dalla cache
-                $age = memcacheGetKeyAge( $cf['memcache']['connection'], $pid );
-                $pgc = memcacheRead( $cf['memcache']['connection'], $pid );
+                $age = memcacheGetKeyAge( $cf['memcache']['connection'], 'PAGE_' . $pid );
+                $pgc = memcacheRead( $cf['memcache']['connection'], 'PAGE_' . $pid );
 
                 // default: prima il prodotto, poi la configurazione del modulo
                 $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['articolo']['template'] : $pg['template'];

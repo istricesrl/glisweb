@@ -14,10 +14,11 @@
     // tabella gestita
     $ct['form']['table'] = 'documenti_articoli';
 
-    // tipologie di documenti
-    $ct['etc']['select']['tipologie_documenti'] = mysqlQuery(
+    // tipologie di riga ( fix 2026-09-28 ): leggeva tipologie_documenti_view, le tipologie di DOCUMENTO;
+    // dal 14/09/2026 documenti_articoli.id_tipologia punta a tipologie_documenti_articoli
+    $ct['etc']['select']['tipologie_documenti_articoli'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_documenti_view ORDER BY __label__ ASC'
+        'SELECT id, __label__ FROM tipologie_documenti_articoli_view ORDER BY ordine, nome'
     );
 
     // tipologie di documenti

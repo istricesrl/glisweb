@@ -5,30 +5,127 @@
      *
      * Questa libreria contiene alcune funzioni utili per l'invio di mail tramite phpmailer.
      *
+     * introduzione
+     * ============
+     * Nel framework le mail non si inviano quasi mai direttamente: si accodano nella tabella mail_out con queueMail() o, più
+     * spesso, con queueMailFromTemplate(), e il task _src/_api/_task/_mail.queue.send.php le preleva una alla volta, le invia
+     * con sendMail() e le sposta nella tabella mail_sent. In questo modo la pagina che genera la mail non aspetta il server SMTP,
+     * e una mail che non parte resta in coda invece di andare persa.
      *
+     * Mittente e destinatari viaggiano sempre come array nel formato 'nome' => 'indirizzo'; nella coda sono salvati serializzati,
+     * e le funzioni di conversione permettono di trasformarli in stringhe leggibili e viceversa per mostrarli e modificarli nei
+     * form del modulo della posta.
      *
+     * costanti
+     * ========
+     * Questa libreria non definisce costanti.
      *
-     * TODO finire di documentare
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le analizzeremo nel dettaglio.
      *
-     * 
+     * funzioni di invio
+     * -----------------
+     * Le funzioni in questo gruppo servono per inviare effettivamente le mail.
      *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * sendMail()                       | invia una mail
+     *
+     * funzioni di accodamento
+     * -----------------------
+     * Le funzioni in questo gruppo servono per inserire le mail nella coda di uscita.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * queueMailFromTemplate()          | accoda una mail utilizzando un template
+     * queueMail()                      | accoda una mail
+     *
+     * funzioni di conversione
+     * -----------------------
+     * Le funzioni in questo gruppo servono per convertire gli elenchi di indirizzi fra la forma array e la forma stringa.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * mailString2array()               | converte una stringa di indirizzi in un array
+     * array2mailString()               | converte un array di indirizzi in una stringa
+     *
+     * dipendenze
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni e classi:
+     *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logWrite()                       | _src/_lib/_log.utils.php
+     * fullPath()                       | _src/_lib/_filesystem.tools.php
+     * readStringFromFile()             | _src/_lib/_filesystem.tools.php
+     * path2url()                       | _src/_lib/_filesystem.utils.php
+     * mysqlQuery()                     | _src/_lib/_mysql.tools.php
+     * PHPMailer\PHPMailer\PHPMailer    | phpmailer/phpmailer ( Composer )
+     * Html2Text\Html2Text              | html2text/html2text ( Composer )
+     * Twig\Environment                 | twig/twig ( Composer )
+     *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
+     *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
+     *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
+     */
+
+    /**
+     * FUNZIONI DI INVIO
      */
 
     /**
      * invia una mail
      *
-     * @param	array	$from		array che contiene il mittente in formato 'nome' => 'indirizzo'
-     * @param	array	$to			array che contiene i destinatari in formato 'nome' => 'indirizzo'
-     * @param	string	$oggetto	
-     * @param	string	$corpo		
-     * @param	array	$attach		
-     * @param	array	$server		
+     * Questa funzione invia immediatamente una mail via SMTP con PHPMailer, senza passare dalla coda; nel framework la chiama
+     * solo il task che evade la coda ( _src/_api/_task/_mail.queue.send.php ), che le passa i campi di una riga di mail_out dopo
+     * averli deserializzati. Il corpo è HTML, e ne viene generata automaticamente la versione testuale con Html2Text.
      *
-     * @returns	int			
+     * La cifratura dipende dalla porta: TLS sulla 587, SSL sulla 465, nessuna sulle altre; l'autenticazione SMTP si attiva solo
+     * se $user non è vuoto. I destinatari CC e BCC con indirizzo vuoto vengono saltati, gli allegati che non esistono o non si
+     * possono leggere vengono saltati e loggati a LOG_CRIT, e i parametri che non sono array ( la coda contiene davvero valori
+     * NULL serializzati ) vengono ignorati. Il mittente è invece obbligatorio: se il suo indirizzo non è valido la mail non
+     * viene inviata e la funzione restituisce false.
      *
+     * La firma DKIM viene applicata se esiste il file etc/secret/\<dominio\>/dkim.private.pem, con il selettore fisso glisweb;
+     * il dominio è $dkim_domain se non è vuoto, altrimenti quello del mittente, e con lo stesso dominio si firma ( DKIM_domain ).
+     * La passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è ( come stringa, senza gli spazi e l'a capo
+     * finali ), altrimenti si usa $dkim_pasw.
      *
+     * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_CRIT nel canale mail
+     * e la funzione restituisce false, e il task della coda rimanda la mail con un tentativo in più; un destinatario, un allegato
+     * o un header che PHPMailer rifiuta viene saltato senza interrompere l'invio.
      *
-     * TODO finire di documentare
+     * Nel canale mail la password SMTP compare solo come impostata o non impostata. La trascrizione del dialogo SMTP va nel
+     * canale details/phpmailer/send, a LOG_DEBUG e solo se il sito logga a quel livello; le credenziali non vi compaiono.
+     *
+     * @param       string      $host           l'indirizzo del server SMTP
+     * @param       array       $from           il mittente, nel formato 'nome' => 'indirizzo' ( si usa il primo elemento )
+     * @param       array       $to             i destinatari, nel formato 'nome' => 'indirizzo'
+     * @param       string      $oggetto        l'oggetto della mail
+     * @param       string      $corpo          il corpo della mail in HTML
+     * @param       array       $cc             i destinatari in copia, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $bcc            i destinatari in copia nascosta, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $attach         i percorsi dei file da allegare, relativi a DIR_BASE o assoluti ( default nessuno )
+     * @param       array       $headers        gli header aggiuntivi, nel formato 'nome' => 'valore' ( default nessuno )
+     * @param       string      $user           lo username SMTP ( default NULL, nessuna autenticazione )
+     * @param       string      $pasw           la password SMTP ( default NULL )
+     * @param       int         $port           la porta del server SMTP ( default 25 )
+     * @param       string      $dkim_domain    il dominio per la firma DKIM ( default NULL, il dominio del mittente )
+     * @param       string      $dkim_pasw      la passphrase della chiave DKIM, se non c'è il file dkim.password.key ( default NULL )
+     *
+     * @return      bool                        true se la mail è stata inviata, false se il mittente non è valido o l'invio fallisce
      *
      */
     function sendMail($host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL)
@@ -54,15 +151,21 @@
         $status                = true;
 
         // creazione dell'oggetto mail
-        $mail                = new PHPMailer\PHPMailer\PHPMailer(true);
+        // NOTA senza eccezioni Send() restituisce false e l'errore resta in ErrorInfo, che il ramo di log qui sotto scrive a
+        // LOG_CRIT; con le eccezioni attive la mail restava in mail_out con il token del task e non veniva più ripresa ( 2026-09-24 )
+        $mail                = new PHPMailer\PHPMailer\PHPMailer(false);
 
         // configurazione dell'oggetto mail
         $mail->IsSMTP();
         $mail->Host                    = $host;
         $mail->Port                    = $port;
-        $mail->SMTPDebug            = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        // NOTA il livello di debug di PHPMailer ( 1 client, 2 server ) veniva passato a logWrite() come livello di log, per cui la
+        // trascrizione SMTP finiva a LOG_ALERT e LOG_CRIT e si scriveva anche in produzione; ora la trascrizione si attiva solo
+        // quando il sito logga a LOG_DEBUG e si scrive a LOG_DEBUG. Sotto DEBUG_LOWLEVEL PHPMailer non trascrive le credenziali
+        // inviate con AUTH ( [credentials hidden] ), che quindi non vanno mai nel log ( 2026-09-24 ).
+        $mail->SMTPDebug            = ( defined('LOG_CURRENT_LEVEL') && LOG_CURRENT_LEVEL >= LOG_DEBUG ) ? PHPMailer\PHPMailer\SMTP::DEBUG_SERVER : PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
         $mail->Debugoutput            = function ($str, $level) {
-            logWrite('(' . $level . ') ' . $str, 'details/phpmailer/send', $level);
+            logWrite('(' . $level . ') ' . $str, 'details/phpmailer/send', LOG_DEBUG);
         };
 
         // log
@@ -70,7 +173,7 @@
             'server: '    . $host        . ' ' .
                 'port: '    . $port        . ' ' .
                 'user: '    . $user        . ' ' .
-                'pass: '    . $pasw,
+                'pass: '    . ( empty( $pasw ) ? 'non impostata' : 'impostata' ),
             'mail',
             LOG_DEBUG
         );
@@ -180,24 +283,28 @@
             }
 
             // DKIM
-            if (! empty($fromDomain)) {
-                if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
-                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key') : $dkim_pasw;
-                    $mail->DKIM_domain = $fromDomain;
-                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+            // NOTA il dominio della firma è $dkim_domain se il chiamante lo passa, altrimenti quello del mittente; la chiave si
+            // cerca sotto etc/secret/ con lo stesso dominio. Perché la firma valga per DMARC i due domini devono essere allineati
+            // ( lo stesso dominio o lo stesso dominio organizzativo ): il task della coda passa sempre il dominio del mittente ( 2026-09-24 )
+            $dkimDomain = ( ! empty($dkim_domain) ) ? $dkim_domain : $fromDomain;
+            if (! empty($dkimDomain)) {
+                if (file_exists(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.private.pem')) {
+                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.password.key')) ? readStringFromFile(DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.password.key', true) : $dkim_pasw;
+                    $mail->DKIM_domain = $dkimDomain;
+                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $dkimDomain . '/dkim.private.pem';
                     $mail->DKIM_selector = 'glisweb';
                     $mail->DKIM_passphrase = $dkimPassw;
                     $mail->DKIM_identity = $mail->From;
-                    logWrite('DKIM: ' . $fromDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
-                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . $dkimDomain . ' : passphrase ' . ( empty( $dkimPassw ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_DEBUG);
                     logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
                     logWrite('DKIM: chiave ' . $mail->DKIM_private . ' ' . ( is_readable( $mail->DKIM_private ) ? 'sha256=' . hash_file( 'sha256', $mail->DKIM_private ) : 'NON LEGGIBILE' ), 'dkim', LOG_DEBUG);
                 } else {
-                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
-                    logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . $dkimDomain . ' file etc/secret/' . $dkimDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
                 }
             } else {
-                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR);
+                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_ERR);
             }
 
             // invio
@@ -234,11 +341,49 @@
     }
 
     /**
+     * FUNZIONI DI ACCODAMENTO
+     */
+
+    /**
      * accoda una mail utilizzando un template
      *
+     * Questa funzione compone una mail a partire da un template, tipicamente uno di quelli dichiarati in $cf['mail']['tpl']
+     * ( _src/_config/_350.mail.php ), e la accoda con queueMail(). Il template è un array con la chiave type, che per ora può
+     * valere solo twig, e una chiave per ogni lingua ( es. it-IT ) con le seguenti sotto chiavi:
      *
+     * chiave           | dettagli
+     * -----------------|-----------------------------------------------------------------------
+     * from             | il mittente, 'nome' => 'indirizzo' oppure solo l'indirizzo ( obbligatorio )
+     * oggetto          | l'oggetto della mail
+     * testo            | il corpo della mail in HTML
+     * attach           | i file da allegare ( facoltativo )
+     * to               | destinatari da aggiungere a quelli passati ( facoltativo )
+     * to_cc            | destinatari in copia da aggiungere a quelli passati ( facoltativo )
+     * to_bcc           | destinatari in copia nascosta da aggiungere a quelli passati ( facoltativo )
      *
-     * TODO finire di documentare
+     * Mittente, oggetto, testo e nomi e indirizzi di tutti i destinatari passano da Twig con i dati $d, per cui possono contenere
+     * dei placeholder; per convenzione $d contiene 'ct' => $ct e 'dt' => \<i dati della mail\>. Le chiavi to, to_cc e to_bcc
+     * del template vengono considerate solo se il loro primo elemento non è vuoto. In coda vanno solo i destinatari elaborati,
+     * mai la forma con i placeholder. Dopo il rendering vengono scartati i destinatari con indirizzo vuoto, e nel corpo i
+     * percorsi assoluti degli attributi src vengono trasformati in URL completi con path2url().
+     *
+     * Se il template non ha il mittente per la lingua richiesta ( anche perché la lingua manca del tutto ), oppure se Twig
+     * solleva un'eccezione, la funzione interrompe l'esecuzione con die(). Se il tipo del template non è supportato l'errore
+     * viene loggato e, non essendoci destinatari, la funzione restituisce null.
+     *
+     * @param       object      $c                  la connessione al database
+     * @param       array       $t                  il template della mail
+     * @param       array       $d                  i dati da passare a Twig, con le chiavi ct e dt
+     * @param       int         $timestamp_invio    il timestamp a partire dal quale la mail può essere inviata
+     * @param       array       $to                 i destinatari, nel formato 'nome' => 'indirizzo'
+     * @param       string      $l                  la lingua del template da usare in formato IETF ( default it-IT )
+     * @param       array       $to_cc              i destinatari in copia, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $to_bcc             i destinatari in copia nascosta, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $attach             allegati aggiuntivi per lingua, nel formato 'it-IT' => array( ... ) ( default nessuno )
+     * @param       array       $headers            gli header aggiuntivi, nel formato 'nome' => 'valore' ( default nessuno )
+     * @param       string      $server             la chiave del server SMTP in $cf['smtp']['servers'] ( default NULL, il server di default )
+     *
+     * @return      int                             l'ID della mail in mail_out, oppure null se non ci sono destinatari validi
      *
      */
     function queueMailFromTemplate($c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL)
@@ -296,10 +441,11 @@
                     $allegati    = ((isset($t[$l]['attach'])) ? $t[$l]['attach'] : array());
                     $allegati    = array_merge($allegati, ((isset($attach[$l])) ? $attach[$l] : array()));
 
-                    // TODO implementare la stessa cosa per i destinatari CC e BCC
-                    $destinatari = $to;
-                    $destinatari_cc = $to_cc;
-                    $destinatari_bcc = $to_bcc;
+                    // NOTA i destinatari partono vuoti e si riempiono solo con le versioni elaborate da Twig qui sotto: copiando
+                    // $to, $to_cc e $to_bcc in coda finiva anche la forma con i placeholder ( 2026-09-24 )
+                    $destinatari = array();
+                    $destinatari_cc = array();
+                    $destinatari_bcc = array();
 
                     #print_r($corpo );
                     // se è definito nel template imposto il destinatario
@@ -371,7 +517,7 @@
                     // TODO
 
                 } catch (\Exception $e) {
-                    echo '<pre>' . print_r($t) . '</pre>';
+                    echo '<pre>' . print_r($t, true) . '</pre>';
                     die($e->getMessage());
                 }
 
@@ -435,9 +581,27 @@
     /**
      * accoda una mail
      *
+     * Questa funzione inserisce una mail nella coda di uscita, la tabella mail_out, da cui la preleva il task
+     * _src/_api/_task/_mail.queue.send.php per inviarla con sendMail() quando è arrivato il momento. Mittente, destinatari,
+     * allegati e header vengono salvati serializzati; il server viene salvato così com'è e il task lo cerca in
+     * $cf['smtp']['servers'], usando $cf['smtp']['server'] se è vuoto.
      *
+     * Se fra i destinatari non ce n'è nessuno con l'indirizzo non vuoto la mail non viene accodata, l'errore viene loggato con
+     * il backtrace del chiamante e la funzione restituisce null; i destinatari CC e BCC non vengono controllati.
      *
-     * TODO finire di documentare
+     * @param       object      $c                  la connessione al database
+     * @param       int         $timestamp_invio    il timestamp a partire dal quale la mail può essere inviata
+     * @param       array       $mittente           il mittente, nel formato 'nome' => 'indirizzo'
+     * @param       array       $destinatari        i destinatari, nel formato 'nome' => 'indirizzo'
+     * @param       string      $oggetto            l'oggetto della mail
+     * @param       string      $corpo              il corpo della mail in HTML
+     * @param       array       $destinatari_cc     i destinatari in copia, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $destinatari_bcc    i destinatari in copia nascosta, nel formato 'nome' => 'indirizzo' ( default nessuno )
+     * @param       array       $allegati           i percorsi dei file da allegare ( default nessuno )
+     * @param       array       $headers            gli header aggiuntivi, nel formato 'nome' => 'valore' ( default nessuno )
+     * @param       string      $server             la chiave del server SMTP in $cf['smtp']['servers'] ( default NULL, il server di default )
+     *
+     * @return      int                             l'ID della mail in mail_out, null se non ci sono destinatari validi, false in caso di errore del database
      *
      */
     function queueMail($c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL)
@@ -512,8 +676,23 @@
     }
 
     /**
+     * FUNZIONI DI CONVERSIONE
+     */
+
+    /**
+     * converte una stringa di indirizzi in un array
      *
-     * TODO documentare
+     * Questa funzione converte una stringa di indirizzi separati da virgola o punto e virgola, come quelle che si scrivono nei
+     * campi dei form, in un array nel formato 'nome' => 'indirizzo' usato da queueMail() e sendMail(). Un elemento che è un
+     * indirizzo valido diventa 'indirizzo' => 'indirizzo'; un elemento nella forma Nome Cognome \<indirizzo\> diventa
+     * 'Nome Cognome' => 'indirizzo'. Gli elementi vengono ripuliti dagli spazi prima del controllo, per cui "a@b.it, c@d.it"
+     * dà due indirizzi. Gli elementi che non corrispondono a nessuna delle due forme, compresi quelli in cui dopo il nome non
+     * c'è un indirizzo valido ( "Mario Rossi" ), vengono scartati; una stringa vuota o NULL restituisce un array vuoto. È
+     * l'inversa di array2mailString().
+     *
+     * @param       string      $t      la stringa degli indirizzi
+     *
+     * @return      array               gli indirizzi nel formato 'nome' => 'indirizzo'
      *
      */
     function mailString2array($t)
@@ -526,6 +705,8 @@
 
         foreach ($ar1 as $ds) {
 
+            $ds = trim($ds);
+
             if (filter_var($ds, FILTER_VALIDATE_EMAIL)) {
 
                 $ar0[$ds] = $ds;
@@ -535,7 +716,7 @@
 
                 $r = preg_match('/([\S\s]+)\s([<]{0,1}[\S\@\.]+[>]{0,1})/', $ds, $dsa);
 
-                if (! empty($r)) {
+                if (! empty($r) && filter_var(trim($dsa[2], '<>'), FILTER_VALIDATE_EMAIL)) {
                     $ar0[trim($dsa[1])] = trim($dsa[2], '<>');
                 }
             }
@@ -545,8 +726,16 @@
     }
 
     /**
+     * converte un array di indirizzi in una stringa
      *
-     * TODO documentare
+     * Questa funzione converte un array nel formato 'nome' => 'indirizzo' in una stringa nella forma
+     * "nome <indirizzo>, nome <indirizzo>", adatta a essere mostrata o modificata in un campo di testo; i moduli della posta
+     * la usano sulle colonne serializzate di mail_out e mail_sent. Se $a non è un array viene restituito così com'è ( convertito
+     * in stringa ), quindi un valore NULL diventa una stringa vuota. È l'inversa di mailString2array().
+     *
+     * @param       array       $a      l'array degli indirizzi nel formato 'nome' => 'indirizzo'
+     *
+     * @return      string              la stringa degli indirizzi
      *
      */
     function array2mailString($a)

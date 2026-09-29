@@ -646,6 +646,61 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
 	);
+
+	// vista audio
+	$p['audio.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'archivio.media' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_audio.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'audio.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'audio' ),
+		'priority'	=> '040' ) ) )
+	);
+
+	// gestione audio
+	$p['audio.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'audio.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audio.form.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_audio.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+												'audio.form',
+												'audio.form.associazioni',
+												'audio.form.testo'
+												 ) )	
+	);
+
+	// gestione audio testo
+	$p['audio.form.testo'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'testo' ),
+		'h1'		=> array( $l		=> 'testo' ),
+		'parent'		=> array( 'id'		=> 'audio.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audio.form.testo.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_audio.form.testo.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['audio.form']['etc']['tabs'] )
+	);
+
+	// gestione audio associazioni
+	$p['audio.form.associazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'associazioni' ),
+		'h1'		=> array( $l		=> 'associazioni' ),
+		'parent'		=> array( 'id'		=> 'audio.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audio.form.associazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_audio.form.associazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> $p['audio.form']['etc']['tabs'] )
+	);
 /*
 	// vista valutazioni
 	// TODO ma questa dovrebbe stare qui? non fa parte di un modulo?

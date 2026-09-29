@@ -3,45 +3,196 @@
     /**
      * libreria di funzioni di supporto per MySQL
      *
+     * Questa libreria contiene le funzioni con cui il framework parla con il database: l'esecuzione delle query, semplici o
+     * preparate, la loro cache su memcache, le scorciatoie per leggere un valore, una riga o una colonna, e alcune operazioni
+     * composte sui record ( inserimento, duplicazione e cancellazione ricorsiva ) e sulle viste statiche.
+     *
      * introduzione
      * ============
+     * Tutto l'accesso al database del framework passa di qui: le funzioni ricevono la connessione mysqli come parametro ( di
+     * solito $cf['mysql']['connection'] ) e non leggono la configurazione globale, con le sole eccezioni di
+     * memcacheCleanFromIndex() chiamata da mysqlInsertRow() e della chiave $cf['controller']['no_id_inline'] usata da
+     * refreshStaticView(). Il punto d'ingresso è mysqlQuery(), che in base al primo comando della query decide cosa
+     * restituire ( le righe per una SELECT, l'ID per una INSERT, il numero di righe coinvolte per UPDATE e DELETE ) e
+     * restituisce false in caso di errore; tutte le altre funzioni sono costruite sopra di essa.
      *
-     *
+     * Come di consueto le funzioni della libreria sono raggruppate per area tematica.
      *
      * prepared statements
      * -------------------
+     * Se a mysqlQuery() viene passato un array di parametri non vuoto la query viene eseguita come prepared statement da
+     * mysqlPreparedQuery(). I parametri sono un array di array, ciascuno con una sola chiave che indica il tipo mysqli del
+     * valore ( 's' per stringa, 'i' per intero, 'd' per decimale, 'b' per blob ) e il valore stesso, nell'ordine dei
+     * segnaposto ? della query:
      *
+     * ```
+     * mysqlQuery(
+     *     $cf['mysql']['connection'],
+     *     'SELECT * FROM anagrafica WHERE id = ? AND nome = ?',
+     *     array(
+     *         array( 's' => $id ),
+     *         array( 's' => $nome )
+     *     )
+     * );
+     * ```
      *
+     * In pratica il framework usa quasi sempre il tipo 's' anche per i numeri, lasciando a MySQL la conversione. Le chiavi
+     * dell'array esterno non contano per il bind ma possono contare per il valore di ritorno: array2mysqlStatementParameters()
+     * le usa per i nomi delle colonne, e per una INSERT senza ID generato mysqlPreparedQuery() restituisce il valore della
+     * chiave 'id'.
      *
      * cache delle query
      * -----------------
-     *
-     *
+     * Le funzioni con Cached nel nome prendono come primo parametro la connessione a memcache e cercano il risultato in cache
+     * prima di interrogare il database; la chiave di cache è 'MYSQL_' seguito dall'MD5 della query e dei parametri. Se si
+     * usa mysqlCachedIndexedQuery() la chiave viene anche registrata nell'indice delle tabelle coinvolte nella query
+     * ( $cf['memcache']['index'] ), che mysqlInsertRow() usa tramite memcacheCleanFromIndex() per invalidare le query in
+     * cache quando una tabella viene scritta; le query messe in cache senza indice scadono solo per TTL. Esiste anche una
+     * cache su disco, mysqlDiskQuery(), che al momento non viene usata da nessuna parte del framework.
      *
      * costanti
-     * --------
+     * ========
+     * Questa libreria non definisce costanti; usa quelle definite altrove nel framework e riportate nella seguente tabella.
      *
+     * costante                     | spiegazione
+     * -----------------------------|--------------------------------------------------------------
+     * MEMCACHE_DEFAULT_TTL         | durata di default delle chiavi in cache ( _src/_config/_045.cache.php )
+     * FILE_LATEST_MYSQL            | file in cui loggerLatest() scrive l'ultima query eseguita
+     * DIR_BASE                     | radice del deploy, usata da mysqlDiskQuery() per la cache su disco
      *
+     * funzioni
+     * ========
+     * Le funzioni di questa libreria sono divise in gruppi in base al lavoro che svolgono; nei paragrafi successivi le
+     * analizzeremo nel dettaglio.
+     *
+     * funzioni per la cache delle query
+     * ---------------------------------
+     * Le funzioni in questo gruppo eseguono le query passando per la cache, su memcache o su disco.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlGetQueryTables()                    | restituisce le tabelle coinvolte in una query
+     * mysqlCachedIndexedQuery()                | esegue una query con cache su memcache registrandola nell'indice delle tabelle
+     * mysqlCachedQuery()                       | esegue una query con cache su memcache
+     * mysqlDiskQuery()                         | esegue una query con cache su disco
+     *
+     * funzioni di esecuzione delle query
+     * ----------------------------------
+     * Le funzioni in questo gruppo eseguono le query sul database e ne raccolgono il risultato.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlQuery()                             | esegue una query sul database
+     * mysqlFetchResult()                       | trasforma il risultato di una query semplice in un array di righe
+     * mysqlPreparedQuery()                     | esegue una query come prepared statement
+     * mysqlFetchPreparedResult()               | trasforma il risultato di un prepared statement in un array di righe
+     *
+     * funzioni di selezione
+     * ---------------------
+     * Le funzioni in questo gruppo sono scorciatoie per leggere dal database un valore, una riga o una colonna.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlSelectValue()                       | restituisce il primo valore della prima riga di una query
+     * mysqlSelectColumn()                      | restituisce una colonna del risultato di una query
+     * mysqlSelectCachedColumn()                | restituisce una colonna del risultato di una query, con cache
+     * mysqlSelectRow()                         | restituisce la prima riga del risultato di una query
+     * mysqlSelectCachedValue()                 | restituisce il primo valore della prima riga di una query, con cache
+     * mysqlSelectCachedRow()                   | restituisce la prima riga del risultato di una query, con cache
+     *
+     * funzioni di manipolazione dei record
+     * ------------------------------------
+     * Le funzioni in questo gruppo inseriscono, duplicano e cancellano record, anche seguendo le chiavi esterne.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlDuplicateRowRecursive()             | effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli nelle tabelle correlate
+     * mysqlDuplicateRow()                      | duplica una riga di una tabella
+     * mysqlDeleteRowRecursive()                | cancella una riga e, a cascata, le righe che la referenziano
+     * mysqlInsertRow()                         | inserisce o aggiorna una riga a partire da un array associativo
+     *
+     * funzioni per la composizione delle query
+     * ----------------------------------------
+     * Le funzioni in questo gruppo servono a costruire pezzi di query a partire da array associativi, o a spezzare testo SQL.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * array2mysqlFieldnames()                  | restituisce l'elenco dei nomi di colonna per una query a partire dalle chiavi di un array
+     * array2mysqlPlaceholders()                | restituisce l'elenco dei segnaposto per una query a partire da un array
+     * array2mysqlDuplicateKeyUpdateValues()    | restituisce la clausola di aggiornamento per ON DUPLICATE KEY UPDATE
+     * array2mysqlStatementParameters()         | trasforma un array associativo in parametri per un prepared statement
+     * split_sql()                              | divide un testo SQL nelle singole istruzioni
+     *
+     * funzioni per le viste statiche
+     * ------------------------------
+     * Le funzioni in questo gruppo gestiscono le viste statiche ( materializzate ) <tabella>_view_static.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * getStaticView()                          | restituisce il nome della vista statica di una tabella, se esiste
+     * refreshStaticView()                      | aggiorna una vista statica dalla vista che la alimenta
+     * getStaticViewExtension()                 | restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
      * dipendenze
-     * ----------
+     * ==========
+     * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
+     * sono richieste le seguenti funzioni:
      *
+     * funzione                         | libreria di appartenenza
+     * ---------------------------------|---------------------------------------------------------------
+     * logger()                         | core
+     * loggerLatest()                   | core
+     * array2censored()                 | core
+     * timerNow()                       | core ( o _src/_lib/_timer.tools.php )
+     * timerDiff()                      | core ( o _src/_lib/_timer.tools.php )
+     * print_l()                        | _src/_lib/_array.tools.php
+     * addStr2arrayElements()           | _src/_lib/_array.tools.php
+     * empty2null()                     | _src/_lib/_string.tools.php
+     * string2num()                     | _src/_lib/_string.tools.php
+     * writeToFile()                    | _src/_lib/_filesystem.tools.php
+     * memcacheRead()                   | _src/_lib/_memcache.tools.php
+     * memcacheWrite()                  | _src/_lib/_memcache.tools.php
+     * memcacheUniqueKey()              | _src/_lib/_memcache.tools.php
+     * memcacheCleanFromIndex()         | _src/_lib/_memcache.utils.php
+     * update<VistaStatica>()           | la libreria del modulo che definisce la vista statica ( es. updateAnagraficaViewStatic() )
      *
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2026-09-24       | Fabio Mosti          | documentazione
      *
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
      * TODO raggruppare in una funzione mysqlHandleError() il codice per la gestione degli errori che è duplicato in mysqlQuery() e in mysqlPreparedQuery()
-     * TODO documentare
-     *
-     *
      *
      */
 
     /**
+     * FUNZIONI PER LA CACHE DELLE QUERY
+     */
+
+    /**
+     * restituisce le tabelle coinvolte in una query
      *
-     * questa funzione restituisce un array delle tabelle coinvolte in una query mysql 
-     * 
-     * TODO documentare
+     * Questa funzione cerca nel testo della query i nomi che seguono FROM e JOIN e li restituisce, senza duplicati, dopo
+     * aver tolto da ciascuno la stringa '_view'; serve a mysqlCachedQuery() per registrare la query nell'indice della cache
+     * sotto ogni tabella che legge, così che una scrittura su quella tabella possa invalidarla. Se non trova niente
+     * restituisce un array vuoto.
+     *
+     * NOTA la ricerca è fatta con una espressione regolare semplice: FROM e JOIN vanno scritti in maiuscolo e il nome
+     * della tabella è riconosciuto solo se fatto di lettere minuscole e underscore, quindi un nome fra backtick o con cifre
+     * non viene riconosciuto ( o viene troncato alla prima cifra ). Togliendo '_view' una vista statica come
+     * anagrafica_view_static diventa anagrafica_static, che è la chiave che mysqlInsertRow() ripulisce accanto ad anagrafica.
+     *
+     * @param       string      $q      la query da analizzare
+     *
+     * @return      array               l'elenco delle tabelle trovate, eventualmente vuoto
      *
      */
     function mysqlGetQueryTables($q) {
@@ -59,13 +210,29 @@
     }
 
     /**
+     * esegue una query con cache su memcache registrandola nell'indice delle tabelle
      *
-     * TODO documentare
+     * Questa funzione è mysqlCachedQuery() con l'indice della cache come primo parametro: dopo aver letto il risultato dal
+     * database e averlo scritto in cache registra la chiave nell'indice $i sotto ogni tabella letta dalla query, così che
+     * mysqlInsertRow() possa invalidarla quando la tabella viene scritta. È la forma da usare per le tendine e per tutte le
+     * letture che devono vedere subito le modifiche. Se il TTL è zero e MEMCACHE_DEFAULT_TTL è definita viene usato il
+     * TTL di default; se è false viene forzata la lettura dal database come descritto per mysqlCachedQuery().
+     *
+     * @param       array       $i      l'indice della cache ( di solito $cf['memcache']['index'] ), modificato sul posto
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default, false per forzare la lettura dal database )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      mixed               il risultato della query come per mysqlQuery()
      *
      */
     function mysqlCachedIndexedQuery(&$i, $m, $c, $q, $p = false, $t = 0, &$e = array()) {
 
-        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
+        // false va passato così com'è a mysqlCachedQuery(), per cui vuol dire forzare la lettura dal database
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
@@ -73,8 +240,30 @@
     }
 
     /**
+     * esegue una query con cache su memcache
      *
-     * TODO documentare
+     * Questa funzione calcola la chiave di cache della query ( 'MYSQL_' seguito dall'MD5 di query e parametri serializzati )
+     * e la cerca su memcache; se la trova restituisce il valore in cache, altrimenti esegue la query con mysqlQuery() e, se
+     * la connessione a memcache non è vuota, scrive il risultato in cache per $t secondi e registra la chiave nell'indice
+     * $i sotto ogni tabella restituita da mysqlGetQueryTables(). Se la connessione a memcache è vuota la query viene
+     * semplicemente eseguita ogni volta. Anche un risultato false ( query fallita ) viene scritto in cache, ma alla lettura
+     * successiva è indistinguibile da una chiave assente e la query viene rieseguita.
+     *
+     * Passando $t === false la cache non viene letta: la query viene eseguita sul database e il risultato viene riscritto
+     * in cache con il TTL di default, così che anche le letture successive vedano il valore aggiornato.
+     *
+     * NOTA chiamata direttamente ( e non tramite mysqlCachedIndexedQuery() ) questa funzione scrive l'indice in un array
+     * locale che va perso, quindi la query non viene invalidata dalle scritture sulle sue tabelle e scade solo per TTL.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default, false per forzare la lettura dal database )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     * @param       array       $i      l'indice della cache, modificato sul posto
+     *
+     * @return      mixed               il risultato della query come per mysqlQuery(), dal database o dalla cache
      *
      */
     function mysqlCachedQuery($m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array()) {
@@ -83,7 +272,9 @@
         // var_dump( $q );
         // die();
 
-        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
+        // NOTA il confronto $t == 0 da solo è vero anche per $t === false, che veniva così sostituito dal TTL di default
+        // prima di arrivare al controllo qui sotto, e la lettura forzata dal database non scattava mai ( 2026-09-24 )
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
@@ -106,7 +297,9 @@
 
             if (! empty($m)) {
 
-                memcacheWrite($m, $k, $d, $t);
+                // con $t === false il risultato letto dal database aggiorna la cache con il TTL di default, perché
+                // memcacheWrite() con false scriverebbe una chiave senza scadenza
+                memcacheWrite($m, $k, $d, (($t === false) ? ((defined('MEMCACHE_DEFAULT_TTL')) ? MEMCACHE_DEFAULT_TTL : 0) : $t));
 
                 logger('query ' . $k . ' non presente in cache', 'speed');
 
@@ -127,13 +320,36 @@
     }
 
     /**
+     * esegue una query con cache su disco
      *
-     * TODO documentare
+     * Questa funzione cerca il risultato della query nel file var/cache/mysql/<md5 di query e parametri>; se il file esiste
+     * ed è stato scritto da meno di $t secondi ne restituisce il contenuto, altrimenti esegue la query con mysqlQuery() e ne
+     * scrive il risultato serializzato nel file. Come per mysqlCachedQuery() un TTL zero vuol dire MEMCACHE_DEFAULT_TTL,
+     * se è definita, e un TTL che resta zero vuol dire nessuna scadenza; passando $t === false la query viene eseguita
+     * comunque e il file riscritto. Il risultato di una query fallita non viene scritto su disco. Al momento non viene
+     * chiamata da nessuna parte del framework.
+     *
+     * NOTA il parametro $i è accettato ma ignorato: il file di cache non viene invalidato dalle scritture sulle tabelle
+     * lette dalla query, perché memcacheCleanFromIndex() cancella chiavi di memcache e non file, e scade solo per TTL.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della cache ( 0 per il default, false per forzare la lettura dal database )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     * @param       array       $i      l'indice della cache ( non usato )
+     *
+     * @return      mixed               il risultato della query come per mysqlQuery(), dal database o dal disco
      *
      */
     //    function mysqlDiskQuery( $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
     function mysqlDiskQuery($c, $q, $p = false, $t = 0, &$e = array(), &$i = array())
     {
+
+        // TTL di default, come per mysqlCachedQuery()
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t !== false && $t == 0) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
         // calcolo la chiave della query
         $k = md5($q . serialize($p));
@@ -141,17 +357,28 @@
         // cerco il valore in cache
         #        $r = memcacheRead( $m, $k );
 
-        if (! file_exists(DIR_BASE . 'var/cache/mysql/' . $k)) {
+        // NOTA la scadenza si legge dall'ora di modifica del file ( TTL zero vuol dire nessuna scadenza, come su memcache ),
+        // e un file che contiene false ( una query fallita, scritta prima del 2026-09-24 ) vale come assente
+        $r = false;
+        if ($t !== false && file_exists(DIR_BASE . 'var/cache/mysql/' . $k) && (empty($t) || filemtime(DIR_BASE . 'var/cache/mysql/' . $k) > time() - $t)) {
+            // NOTA writeToFile() aggiunge un a capo in fondo, che da PHP 8.3 fa emettere a unserialize() un avviso di dati in
+            // eccesso; un dato serializzato non finisce mai con uno spazio, quindi toglierlo è sicuro ( 2026-09-24 )
+            $r = unserialize(rtrim(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k)));
+        }
+
+        if ($r === false) {
 
             $r = mysqlQuery($c, $q, $p, $e);
 
             //    $h = fopen( DIR_BASE . 'var/cache/mysql/' . $k, 'w+' );
             //    fwrite( $h, serialize( $r ) );
 
-            writeToFile(serialize($r), DIR_BASE . 'var/cache/mysql/' . $k);
-        } else {
+            // una query fallita non si scrive su disco, altrimenti il false verrebbe restituito da lì in poi
+            if ($r !== false) {
+                writeToFile(serialize($r), DIR_BASE . 'var/cache/mysql/' . $k);
+            }
 
-            $r = unserialize(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k));
+        } else {
 
             #}
 
@@ -179,8 +406,41 @@
 
 
     /**
+     * FUNZIONI DI ESECUZIONE DELLE QUERY
+     */
+
+    /**
+     * esegue una query sul database
      *
-     * TODO documentare
+     * Questa funzione è il punto d'ingresso di tutte le query del framework. Scrive la query nel log mysql e nel file
+     * dell'ultima query eseguita; se la connessione è vuota logga l'errore e restituisce false, se l'array dei parametri
+     * non è vuoto passa la query a mysqlPreparedQuery() e ne restituisce il risultato, altrimenti la esegue direttamente.
+     * In questo caso il valore restituito dipende dalla prima parola della query:
+     *
+     * comando                              | valore restituito
+     * -------------------------------------|---------------------------------------------------------------
+     * SELECT, SHOW                         | l'array delle righe, eventualmente vuoto
+     * CALL, SET, LOCK, UNLOCK              | il valore restituito da mysqli_query()
+     * ALTER, CREATE, DROP, OPTIMIZE        | il valore restituito da mysqli_query()
+     * BEGIN, START, ROLLBACK, COMMIT       | l'esito dell'operazione sulla transazione
+     * INSERT                               | l'ID generato dall'inserimento ( 0 se la tabella non ha AUTO_INCREMENT )
+     * REPLACE, UPDATE, DELETE, TRUNCATE    | il numero di righe coinvolte
+     *
+     * Il riconoscimento del comando distingue maiuscole e minuscole: un comando scritto in minuscolo, o uno che non è in
+     * tabella ( es. WITH, EXPLAIN, DESCRIBE ), viene loggato come sconosciuto e la funzione restituisce false senza eseguire
+     * niente. Le query che impiegano più di mezzo secondo vengono registrate nei log speed e slow/mysql/query. In caso di
+     * errore MySQL l'errore viene loggato, aggiunto all'array $e sotto il suo codice e la funzione restituisce false,
+     * anche quando mysqli lo segnala con un'eccezione ( il comportamento di default da PHP 8.1 ); un'eccezione senza codice
+     * di errore sulla connessione viene loggata e la funzione restituisce false senza toccare $e.
+     *
+     * Per le query con parametri $e viene passato a mysqlPreparedQuery(), che lo valorizza nella stessa forma.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement ( vedi l'introduzione ), o false per una query semplice
+     * @param       array       $e      l'array in cui accumulare gli errori, indicizzato per codice di errore, modificato sul posto
+     *
+     * @return      mixed               il risultato della query secondo la tabella qui sopra, o false in caso di errore
      *
      */
     function mysqlQuery($c, $q, $p = false, &$e = array())
@@ -280,9 +540,19 @@
                 }
 
             } catch (Exception $ex) {
-                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
-                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql/query', LOG_ERR);
-                return false;
+
+                // NOTA da PHP 8.1 mysqli solleva per default mysqli_sql_exception sugli errori SQL ( il framework non chiama
+                // mysqli_report() ), e uscendo da qui con return false l'errore non arrivava mai in $e: chi lo usa per
+                // accorgersi del fallimento, come mysqlSelectLabel(), non se ne accorgeva; se la connessione ha un codice
+                // di errore si prosegue verso la gestione errore qui sotto, come su PHP 7 ( 2026-09-24 )
+                if (mysqli_errno($c)) {
+                    $r = false;
+                } else {
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql/query', LOG_ERR);
+                    return false;
+                }
+
             }
 
             // cronometro
@@ -338,8 +608,16 @@
     }
 
     /**
+     * trasforma il risultato di una query semplice in un array di righe
      *
-     * TODO documentare
+     * Questa funzione legge tutte le righe di un risultato mysqli come array associativi e le restituisce in un array. Gli
+     * errori di mysqli_fetch_assoc() sono soppressi, quindi se la query è fallita e $r vale false la funzione restituisce
+     * un array vuoto ( su PHP 8 però passare false a mysqli_fetch_assoc() solleva un TypeError, che la soppressione non
+     * ferma ).
+     *
+     * @param       object      $r      il risultato restituito da mysqli_query()
+     *
+     * @return      array               l'array delle righe, eventualmente vuoto
      *
      */
     function mysqlFetchResult($r)
@@ -361,8 +639,36 @@
     }
 
     /**
+     * esegue una query come prepared statement
      *
-     * TODO documentare
+     * Questa funzione prepara la query, lega i parametri ( nel formato descritto nell'introduzione ) e la esegue; di solito
+     * non la si chiama direttamente ma attraverso mysqlQuery() passando i parametri. I valori di tipo 'i' o 'd' vuoti
+     * ( compreso lo zero, per via di empty() ) vengono legati come NULL; un valore che è a sua volta un array interrompe lo
+     * script con die(). Le esecuzioni che impiegano più di mezzo secondo vengono registrate nei log speed e
+     * slow/mysql/query. Il valore restituito dipende dalla prima parola della query:
+     *
+     * comando                              | valore restituito
+     * -------------------------------------|---------------------------------------------------------------
+     * SELECT                               | l'array delle righe, eventualmente vuoto
+     * INSERT                               | l'ID generato, o se è vuoto il valore del parametro con chiave 'id', o NULL
+     * tutti gli altri                      | il numero di righe coinvolte
+     *
+     * Quindi anche una SHOW o una CALL eseguite con parametri restituiscono un numero e non delle righe. Se la connessione è
+     * vuota, se la preparazione fallisce o se viene sollevata un'eccezione la funzione logga l'errore e restituisce false.
+     * Se invece fallisce l'esecuzione senza eccezione ( mysqli_report() disattivato, o PHP precedente alla 8.1 ) l'errore
+     * viene loggato ma il valore restituito non cambia ( vedi la nota nel corpo ): per una INSERT fallita si ottiene quindi
+     * l'ID passato nei parametri, se c'è.
+     *
+     * In tutti i casi di errore MySQL, eccezione compresa, l'errore viene aggiunto all'array $e sotto il suo codice nella
+     * stessa forma di mysqlQuery() ( 1062 e 1054 con un messaggio fisso, gli altri con il messaggio di MySQL ); una
+     * connessione vuota o un'eccezione senza codice di errore non toccano $e.
+     *
+     * @param       object      $c          la connessione mysqli
+     * @param       string      $q          la query da eseguire, con i segnaposto ?
+     * @param       array       $params     i parametri da legare ai segnaposto, nell'ordine
+     * @param       array       $e          l'array in cui accumulare gli errori, indicizzato per codice di errore, modificato sul posto
+     *
+     * @return      mixed                   il risultato della query secondo la tabella qui sopra, o false in caso di errore
      *
      */
     function mysqlPreparedQuery($c, $q, $params = array(), &$e = array())
@@ -381,6 +687,10 @@
             return false;
 
         } else {
+
+            // codice e messaggio dell'eventuale errore MySQL
+            $errno = 0;
+            $error = NULL;
 
             try {
 
@@ -438,15 +748,19 @@
                     // scatta, e la pagina risponde 200 con il log che dice che e' filato tutto
                     // liscio mentre in archivio non c'e' niente.
                     //
-                    // Qui si logga e basta, senza cambiare il valore di ritorno: cambiarlo
+                    // Qui si logga, senza cambiare il valore di ritorno: cambiarlo
                     // vorrebbe dire toccare il comportamento di ogni chiamante del framework, e
                     // non e' una decisione da prendere dentro questa funzione. L'errore adesso
-                    // pero' si vede, ed e' il minimo perche' sia diagnosticabile.
+                    // pero' si vede, ed e' il minimo perche' sia diagnosticabile; dal 2026-09-24
+                    // finisce anche in $e, come gli errori sollevati con un'eccezione.
                     //
                     // Si usa logger() e non logWrite(): questa e' una libreria "tools", che per
                     // convenzione non dipende da $cf, mentre logWrite() sta in _log.utils.php.
                     // Tutto il resto del file logga cosi'.
                     if ($xStatement === false) {
+
+                        $errno = mysqli_stmt_errno($pq);
+                        $error = mysqli_stmt_error($pq);
 
                         logger(
                             $q . PHP_EOL
@@ -467,12 +781,12 @@
                     switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
                         case 'SELECT':
-                            return mysqlFetchPreparedResult($pq);
+                            $r = mysqlFetchPreparedResult($pq);
                             break;
 
                         case 'INSERT':
                             $id = mysqli_stmt_insert_id($pq);
-                            return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
+                            $r = ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
                             break;
 
                         case 'REPLACE':
@@ -480,7 +794,7 @@
                         case 'DELETE':
                         case 'TRUNCATE':
                         default:
-                            return mysqli_stmt_affected_rows($pq);
+                            $r = mysqli_stmt_affected_rows($pq);
                             break;
 
                     }
@@ -504,15 +818,54 @@
                      */
                     logger(__FUNCTION__ . '() errore ' . mysqli_errno($c) . ' ' . mysqli_error($c) . ' nella preparazione della query: ' . $q, 'mysql', LOG_ERR);
 
+                    $errno = mysqli_errno($c);
+                    $error = mysqli_error($c);
+
                     // restituisco false
-                    return false;
+                    $r = false;
                 }
 
             } catch (Exception $ex) {
+
+                // NOTA da PHP 8.1 mysqli solleva per default mysqli_sql_exception anche sugli errori di esecuzione dello
+                // statement ( il framework non chiama mysqli_report() ), e quindi quasi tutti gli errori delle query con
+                // parametri arrivano qui; il codice di errore MySQL è il codice dell'eccezione ( 2026-09-24 )
+                if ($ex instanceof mysqli_sql_exception) {
+                    $errno = $ex->getCode();
+                    $error = $ex->getMessage();
+                } else {
+                    $errno = mysqli_errno($c);
+                    $error = mysqli_error($c);
+                }
+
                 logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q, 'mysql', LOG_ERR);
                 logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
-                return false;
+                $r = false;
             }
+
+            // gestione specifici errori, come in mysqlQuery(): controller() legge $e per rispondere 409 sui dati duplicati
+            // e 400 sulle colonne errate, e le sue scritture passano tutte da qui ( 2026-09-24 )
+            if ($errno) {
+
+                switch ($errno) {
+
+                    case 1062:
+                        $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
+                        break;
+
+                    case 1054:
+                        $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+                        break;
+
+                    default:
+                        $e[$errno][] = $error;
+                        break;
+                }
+
+            }
+
+            // restituisco il risultato
+            return $r;
 
         }
 
@@ -521,8 +874,16 @@
     }
 
     /**
+     * trasforma il risultato di un prepared statement in un array di righe
      *
-     * TODO documentare
+     * Questa funzione estrae il risultato da uno statement già eseguito e ne legge tutte le righe come array associativi;
+     * se lo statement non ha prodotto righe restituisce un array vuoto. Se l'esecuzione dello statement è fallita
+     * mysqli_stmt_get_result() restituisce false e anche in questo caso la funzione restituisce un array vuoto, come fa
+     * mysqlFetchResult(); l'errore è già stato loggato da mysqlPreparedQuery().
+     *
+     * @param       object      $pq     lo statement mysqli eseguito
+     *
+     * @return      array               l'array delle righe, eventualmente vuoto
      *
      */
     function mysqlFetchPreparedResult($pq)
@@ -534,6 +895,12 @@
         // estraggo il resultset dallo statement
         $r = mysqli_stmt_get_result($pq);
 
+        // NOTA su un'esecuzione fallita $r vale false, e da PHP 8 mysqli_fetch_assoc( false ) solleva un TypeError, che è
+        // un Error e non una Exception e quindi passa attraverso il catch() di mysqlPreparedQuery() ( 2026-09-24 )
+        if ($r === false) {
+            return $arRs;
+        }
+
         // fetch del risultato
         while ($row = mysqli_fetch_assoc($r)) {
             $arRs[] = $row;
@@ -544,8 +911,23 @@
     }
 
     /**
+     * FUNZIONI DI SELEZIONE
+     */
+
+    /**
+     * restituisce il primo valore della prima riga di una query
      *
-     * TODO documentare
+     * Questa funzione esegue la query con mysqlSelectRow() e restituisce il valore della prima colonna della prima riga; è
+     * la forma da usare per leggere un singolo dato ( un ID, un conteggio, un nome ). Se la query non restituisce righe, o
+     * se fallisce, restituisce NULL: i due casi non sono distinguibili dal valore di ritorno, e solo il log ( o l'array
+     * $e, nei limiti descritti per mysqlQuery() ) dice quale dei due si è verificato.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      mixed               il primo valore della prima riga, o NULL se non ci sono righe
      *
      */
     function mysqlSelectValue($c, $q, $p = false, &$e = array())
@@ -567,8 +949,18 @@
     }
 
     /**
+     * restituisce una colonna del risultato di una query
      *
-     * TODO documentare
+     * Questa funzione esegue la query con mysqlQuery() e restituisce i valori della colonna $f di tutte le righe; se la
+     * query fallisce o non restituisce righe restituisce un array vuoto, e le righe in cui la colonna manca vengono saltate.
+     *
+     * @param       string      $f      il nome della colonna da estrarre
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      array               i valori della colonna, eventualmente vuoto
      *
      */
     function mysqlSelectColumn($f, $c, $q, $p = false, &$e = array())
@@ -590,8 +982,20 @@
     }
 
     /**
+     * restituisce una colonna del risultato di una query, con cache
      *
-     * TODO documentare
+     * Questa funzione fa lo stesso lavoro di mysqlSelectColumn() ma esegue la query con mysqlCachedQuery(), quindi il
+     * risultato può arrivare da memcache; la query non viene registrata nell'indice della cache e scade solo per TTL.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       string      $f      il nome della colonna da estrarre
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della chiave di cache ( 0 per il default )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      array               i valori della colonna, eventualmente vuoto
      *
      */
     function mysqlSelectCachedColumn($m, $f, $c, $q, $p = false, $t = 0, &$e = array())
@@ -613,8 +1017,18 @@
     }
 
     /**
+     * restituisce la prima riga del risultato di una query
      *
-     * TODO documentare
+     * Questa funzione esegue la query con mysqlQuery() e restituisce la prima riga come array associativo; se la query non
+     * restituisce righe, o fallisce, scrive una riga nel log mysql e restituisce un array vuoto, quindi anche qui una query
+     * sbagliata e un dato assente danno lo stesso valore di ritorno.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      array               la prima riga del risultato, o un array vuoto se non ci sono righe
      *
      */
     function mysqlSelectRow($c, $q, $p = false, &$e = array())
@@ -638,8 +1052,20 @@
     }
 
     /**
+     * restituisce il primo valore della prima riga di una query, con cache
      *
-     * TODO documentare
+     * Questa funzione fa lo stesso lavoro di mysqlSelectValue() ma passa per mysqlSelectCachedRow(), quindi il risultato
+     * può arrivare da memcache; la query non viene registrata nell'indice della cache e scade solo per TTL. Se la query non
+     * restituisce righe restituisce NULL.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della chiave di cache ( default MEMCACHE_DEFAULT_TTL )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      mixed               il primo valore della prima riga, o NULL se non ci sono righe
      *
      */
     function mysqlSelectCachedValue($m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array())
@@ -661,8 +1087,20 @@
     }
 
     /**
+     * restituisce la prima riga del risultato di una query, con cache
      *
-     * TODO documentare
+     * Questa funzione fa lo stesso lavoro di mysqlSelectRow() ma esegue la query con mysqlCachedQuery(), quindi il
+     * risultato può arrivare da memcache; la query non viene registrata nell'indice della cache e scade solo per TTL. Se
+     * la query non restituisce righe restituisce un array vuoto, senza scrivere niente nel log.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la query da eseguire
+     * @param       mixed       $p      i parametri del prepared statement, o false per una query semplice
+     * @param       int         $t      il TTL in secondi della chiave di cache ( default MEMCACHE_DEFAULT_TTL )
+     * @param       array       $e      l'array in cui accumulare gli errori, modificato sul posto
+     *
+     * @return      array               la prima riga del risultato, o un array vuoto se non ci sono righe
      *
      */
     function mysqlSelectCachedRow($m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array())
@@ -684,18 +1122,31 @@
     }
 
     /**
+     * FUNZIONI DI MANIPOLAZIONE DEI RECORD
+     */
+
+    /**
      * effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli nelle tabelle correlate
-     * 
-     * @param    mysqli        $c        connessione mysqli
-     * @param    string        $t        nome della tabella in cui si trova il record principale da duplicare
-     * @param    string        $o        id dell'oggetto da duplicare
-     * @param    string        $n        id dell'oggetto figlio ottenuto, passare NULL per autoincrement
-     * @param    string        $x        puntatore ad un array costruito come nell'esempio seguente, contenente due chiavi:
-     *                                 - t: array delle tabelle coinvolte nella duplicazione
-     *                                 - f: array che consente, per il nuovo record creato, di impostare un valore per determinati campi. contiene in chiave i nomi dei campi e in valore il corrispondente valore
-     * 
-     * esempio di array per la duplicazione di una pagina con relativi contenuti e immagini, e dei contenuti associati alle immagini
-     * 
+     *
+     * Questa funzione duplica con mysqlDuplicateRow() la riga $o della tabella $t, applicando le sostituzioni dichiarate
+     * in $x['t'][$t]['f'], dopodiché cerca in information_schema le chiavi esterne che puntano a $t e, per ogni riga
+     * collegata alla riga originale, chiama sé stessa sulla tabella figlia impostando la colonna di collegamento al nuovo
+     * ID. Le tabelle figlie seguite sono quelle elencate in $x['t'][$t]['t']; se l'elenco è vuoto vengono seguite TUTTE
+     * le tabelle che referenziano $t ( è il caso delle foglie dell'esempio qui sotto, come 'contenuti' => array() ), sempre
+     * escludendo le chiavi di $t verso sé stessa. Se $o è vuoto lo script viene interrotto con die().
+     *
+     * L'array $x ha per ogni tabella queste chiavi:
+     *
+     * chiave           | dettagli
+     * -----------------|-----------------------------------------------------------------------
+     * t                | array delle tabelle figlie da duplicare, ciascuna con la stessa struttura
+     * f                | valori da impostare nel nuovo record, con in chiave il nome del campo e in valore il valore
+     * r                | array di condizioni SQL aggiuntive per la ricerca delle righe figlie, messe in AND ( es. 'id_genitore IS NULL' )
+     *
+     * esempio di array per la duplicazione di una pagina con relativi contenuti e immagini, e dei contenuti associati alle
+     * immagini ( lo stesso schema è usato dalle funzioni di duplicazione in _src/_lib/_page.utils.php ):
+     *
+     * ```
      * $tbls = array(
      *      't' => array(
      *          'pagine' => array(
@@ -713,8 +1164,22 @@
      *           )
      *      )
      * );
-     * 
-     * TODO documentare
+     * ```
+     *
+     * La funzione non restituisce niente: l'ID del nuovo oggetto principale lo si trova in $y['id'].
+     *
+     * NOTA la ricerca delle righe figlie scrive $o direttamente nella query, fra virgolette, invece di usare un parametro.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella in cui si trova il record principale da duplicare
+     * @param       string      $o      l'ID dell'oggetto da duplicare
+     * @param       string      $n      l'ID da dare all'oggetto duplicato, NULL per usare l'AUTO_INCREMENT
+     * @param       array       $x      l'array delle tabelle e delle sostituzioni descritto qui sopra, modificato sul posto
+     *                                  ( la funzione vi aggiunge i default e i campi di collegamento delle tabelle figlie )
+     * @param       array       $y      l'array in cui viene scritta la riga duplicata, modificato sul posto; le righe
+     *                                  figlie finiscono sotto la chiave col nome della loro tabella, come elenco
+     *
+     * @return      void
      *
      */
     function mysqlDuplicateRowRecursive($c, $t, $o, $n = NULL, &$x = array(), &$y = array())
@@ -793,7 +1258,6 @@
 
             if (isset($x['t'][$t]['t'][$ksr['TABLE_NAME']]['r'])) {
                 $whr = ' AND ' . implode(' AND ', $x['t'][$t]['t'][$ksr['TABLE_NAME']]['r']);
-                die($whr);
             } else {
                 $whr = NULL;
             }
@@ -824,27 +1288,46 @@
 
                 #     echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
                 // chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-                mysqlDuplicateRowRecursive($c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][$t], $y[$ksr['TABLE_NAME']]);
+                // NOTA ogni riga figlia duplicata si aggiunge in fondo all'elenco della sua tabella; passando
+                // $y[<tabella>] ogni chiamata lo sovrascriveva e restava solo l'ultima ( 2026-09-24 )
+                mysqlDuplicateRowRecursive($c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][$t], $y[$ksr['TABLE_NAME']][]);
             }
         }
     }
 
     /**
-     * 
-     * TODO documentare
-     * $c    connessione
-     * $t    nome tabella
-     * $o    id del record da duplicare
-     * $n    id del record nuovo duplicato (settare NULL per autoincrement)
-     * $x    array delle trasformazioni (contiene in chiave i nomi delle colonne da modificare e in valore il valore da aggiornare)
+     * duplica una riga di una tabella
+     *
+     * Questa funzione legge da information_schema le colonne della tabella $t e copia la riga con ID $o in una nuova riga
+     * con una INSERT IGNORE ... SELECT: le colonne presenti in $x prendono il valore indicato lì, la colonna id prende $n
+     * ( o $x['id'] se presente ), tutte le altre vengono copiate dalla riga originale. Dopo l'inserimento legge la nuova
+     * riga e la scrive in $y. Essendo una INSERT IGNORE, un inserimento che viola una chiave unica non dà errore e non
+     * inserisce niente.
+     *
+     * Restituisce l'ID generato dall'inserimento; se è vuoto ( riga non inserita, o tabella senza AUTO_INCREMENT )
+     * restituisce l'ID con cui la riga è stata scritta, cioè $x['id'] se era stato passato, altrimenti $n, oppure NULL se
+     * non c'è né l'uno né l'altro, e in quel caso $y è un array vuoto.
+     *
+     * NOTA essendo una INSERT IGNORE, se l'ID passato esiste già la riga non viene inserita ma la funzione restituisce
+     * comunque quell'ID, e in $y finisce la riga che c'era già.
      *
      * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella
+     * @param       string      $o      l'ID del record da duplicare
+     * @param       string      $n      l'ID del nuovo record, NULL per usare l'AUTO_INCREMENT
+     * @param       array       $x      i valori da impostare nel nuovo record, con in chiave i nomi delle colonne
+     * @param       array       $y      l'array in cui viene scritta la nuova riga, modificato sul posto
+     *
+     * @return      mixed               l'ID del nuovo record, o NULL se non è stato possibile determinarlo
+     *
      */
     function mysqlDuplicateRow($c, $t, $o, $n = NULL, $x = array(), &$y = array())
     {
 
-        // salvo l'id
-        $id = isset($x['id']) ? $x['id'] : null;
+        // salvo l'id che avrà la nuova riga: $x['id'] se passato, altrimenti $n ( così lo scrive array_merge() qui sotto )
+        $id = isset($x['id']) ? $x['id'] : $n;
 
         // campi da modificare
         $x = array_merge(array('id' => $n), $x);
@@ -868,7 +1351,10 @@
         // composizione della query
         $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode(',', $fieldsInsert) . ') SELECT ' . str_repeat('?,', count($fieldsChanged)) . implode(',', $fieldsCopied) . ' FROM ' . $t . ' WHERE id = ?';
 
-        // NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
+        // NOTA i ruoli di $id e $n sono stati scambiati avanti e indietro: nel 2023 ( 6843f62bf, duplicazione del catalogo )
+        // il ripiego era $n, poi è tornato $x['id'] e $n è stato perso, per cui duplicaProdotto() e duplicaArticolo(), che
+        // passano $n per tabelle senza AUTO_INCREMENT, ricevevano NULL e collegavano le righe figlie a NULL; ora il ripiego
+        // è l'ID effettivamente scritto nella nuova riga, $x['id'] o $n ( 2026-09-24 )
 
         // esecuzione della query
         // $id = mysqlQuery( $c, $q, $values );
@@ -904,17 +1390,27 @@
     }
 
     /**
+     * cancella una riga e, a cascata, le righe che la referenziano
      *
-     * TODO documentare
-     * 
-     * la funzione effettua l'eliminazione ricorsiva di un oggetto e, a cascata, di tutti gli oggetti collegati da vincoli di chiave "NO ACTION".
-     * riceve in ingresso i parametri seguenti:
-     * - $m: connessione a memcache
-     * - $c: connessione al database
-     * - $t: nome della tabella
-     * - $d: id del record da eliminare
-     * 
-     * NOTA: poiché la funzione utilizza memcache, se si apportano modifiche alle tipologia dei vincoli di chiave tra le tabelle del database, svuotare sempre memcache
+     * Questa funzione effettua l'eliminazione ricorsiva di un oggetto e, a cascata, di tutti gli oggetti collegati da
+     * vincoli di chiave con regola di cancellazione "NO ACTION", cioè quelli che impedirebbero la DELETE della riga
+     * principale; i vincoli con le altre regole ( CASCADE, SET NULL, RESTRICT ) non vengono seguiti. Per ogni
+     * vincolo trovato cerca nella tabella figlia le righe con la colonna di collegamento uguale a $d e chiama sé stessa su
+     * ciascuna, dopodiché cancella la riga $d di $t. È usata dai task di cancellazione dei moduli ( documenti, contratti,
+     * progetti ). Gli esiti delle DELETE non vengono controllati.
+     *
+     * NOTA: poiché la funzione legge i vincoli attraverso memcache, se si apportano modifiche alle tipologia dei vincoli di
+     * chiave tra le tabelle del database, svuotare sempre memcache
+     *
+     * NOTA la funzione assume che ogni tabella coinvolta abbia la colonna id: la usa per cancellare la riga e per scendere
+     * nelle righe figlie.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella
+     * @param       string      $d      l'ID del record da eliminare
+     *
+     * @return      mixed               il numero di righe eliminate dalla DELETE della riga richiesta, false se la query fallisce
      *
      */
     function mysqlDeleteRowRecursive($m, $c, $t, $d)
@@ -932,7 +1428,9 @@
             'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, ' .
                 'information_schema.referential_constraints.DELETE_RULE ' .
                 'FROM information_schema.key_column_usage ' .
-                'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME ' .
+                'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.CONSTRAINT_SCHEMA = information_schema.key_column_usage.CONSTRAINT_SCHEMA ' .
+                'AND information_schema.referential_constraints.CONSTRAINT_NAME = information_schema.key_column_usage.CONSTRAINT_NAME ' .
+                'AND information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME ' .
                 'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) ' .
                 'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
             array(
@@ -972,7 +1470,9 @@
             foreach ($r as $r1) {
 
                 // chiamata ricorsiva
-                mysqlDeleteRowRecursive($m, $c, $t1, $r1[$l1]);
+                // NOTA l'ID della riga figlia è la sua colonna id, la stessa che usa la DELETE qui sotto; prima si passava
+                // $r1[ $l1 ], che coincide solo perché tutte le chiavi esterne dello schema puntano a id ( 2026-09-24 )
+                mysqlDeleteRowRecursive($m, $c, $t1, $r1['id']);
             }
         }
 
@@ -987,17 +1487,51 @@
                 array('s' => $d)
             )
         );
+        // restituisco l'esito della cancellazione ( _todo.delete.php lo mette in $status, e fino al 2026-09-24 riceveva NULL )
+        return $r;
+
     }
 
     /**
+     * inserisce o aggiorna una riga a partire da un array associativo
      *
-     * TODO documentare
+     * Questa funzione scrive nella tabella $t la riga $r, con i nomi delle colonne in chiave. Con $d a true ( il default )
+     * la query è una INSERT ... ON DUPLICATE KEY UPDATE, quindi se la riga esiste già ( stesso ID o stessa chiave unica )
+     * viene aggiornata; con $d a false è una INSERT IGNORE, che in caso di duplicato non fa niente. Prima della scrittura:
+     *
+     * -# se $u non è vuoto cerca una riga esistente con gli stessi valori nelle colonne elencate in $u ( un valore vuoto
+     *    viene cercato come IS NULL ) e ne usa l'ID, o NULL se non la trova;
+     * -# converte in NULL i valori vuoti con empty2null(), quindi anche 0 e '0' diventano NULL;
+     * -# normalizza i numeri scritti con la virgola con string2num();
+     * -# se la riga non ha la chiave id e $n è false aggiunge id a NULL, così che venga usato l'AUTO_INCREMENT.
+     *
+     * Dopo la scrittura invalida con memcacheCleanFromIndex() le query in cache che leggono $t e la sua vista statica e,
+     * se la tabella ha una vista statica <t>_view_static e la funzione update<VistaStatica>() corrispondente esiste
+     * ( es. updateAnagraficaViewStatic() ), la chiama con l'ID scritto. Ogni passaggio viene loggato nei file
+     * mysql/insertrow.<tabella>, con i valori sensibili censurati da array2censored().
+     *
+     * NOTA la query di ricerca per $u scrive i valori direttamente nel testo SQL, fra virgolette, invece di usare i
+     * parametri ( c'è un TODO nel corpo ); la query di scrittura invece è un prepared statement.
+     *
+     * NOTA il primo log va in mysql/insertrow/<tabella> e gli altri in mysql/insertrow.<tabella>, e la query composta viene
+     * loggata a livello LOG_ERR anche quando non c'è nessun errore.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       array       $r      la riga da scrivere, con in chiave i nomi delle colonne
+     * @param       string      $t      il nome della tabella
+     * @param       bool        $d      true per aggiornare la riga se esiste già, false per ignorare il duplicato
+     * @param       bool        $n      true per non aggiungere la colonna id a NULL quando la riga non la contiene
+     * @param       array       $u      l'elenco delle colonne con cui cercare una riga esistente
+     *
+     * @return      mixed               l'ID della riga scritta come restituito da mysqlQuery(), o false in caso di errore
      *
      */
     function mysqlInsertRow($c, $r, $t, $d = true, $n = false, $u = array())
     {
 
-        logger($t . PHP_EOL . print_r($r, true), 'mysql/insertrow/' . $t);
+        // nel log i valori sensibili ( password, token, ... ) vanno censurati, sulla copia e non sulla riga da scrivere
+        $l = $r;
+        logger($t . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow/' . $t);
 
         if (! empty($u)) {
 
@@ -1014,17 +1548,20 @@
             // var_dump( $uQuery . implode(' AND ', $uConds) );
             // var_dump( $r['id'] );
 
-            logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+            $l = $r;
+            logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         }
 
         $r = array_map('empty2null', $r);
 
-        logger($t . '( dopo array_map )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . '( dopo array_map )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         $r = array_map('string2num', $r);
 
-        logger($t . '( dopo string2num )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . '( dopo string2num )' . PHP_EOL . print_r(array2censored($l), true), 'mysql/insertrow.' . $t);
 
         if (! array_key_exists('id', $r) && $n == false) {
             $r['id'] = NULL;
@@ -1038,7 +1575,8 @@
 
         $a = array2mysqlStatementParameters($r);
 
-        logger($t . PHP_EOL . print_r($a, true), 'mysql/insertrow.' . $t);
+        $l = $r;
+        logger($t . PHP_EOL . print_r(array2mysqlStatementParameters(array2censored($l)), true), 'mysql/insertrow.' . $t);
 
         $i = mysqlQuery($c, $q, $a);
 
@@ -1070,8 +1608,18 @@
     }
 
     /**
+     * FUNZIONI PER LA COMPOSIZIONE DELLE QUERY
+     */
+
+    /**
+     * restituisce l'elenco dei nomi di colonna per una query a partire dalle chiavi di un array
      *
-     * TODO documentare
+     * Questa funzione prende le chiavi dell'array, le racchiude fra backtick e le unisce separate da virgola, pronte per
+     * la lista delle colonne di una INSERT; con un array vuoto restituisce una stringa vuota.
+     *
+     * @param       array       $a      l'array associativo con i nomi delle colonne in chiave
+     *
+     * @return      string              l'elenco delle colonne, es. `id`, `nome`
      *
      */
     function array2mysqlFieldnames($a)
@@ -1081,8 +1629,14 @@
     }
 
     /**
+     * restituisce l'elenco dei segnaposto per una query a partire da un array
      *
-     * TODO documentare
+     * Questa funzione restituisce tanti segnaposto ? separati da virgola quanti sono gli elementi dell'array, pronti per la
+     * clausola VALUES di un prepared statement; con un array vuoto restituisce una stringa vuota.
+     *
+     * @param       array       $a      l'array dei valori
+     *
+     * @return      string              l'elenco dei segnaposto, es. ?, ?, ?
      *
      */
     function array2mysqlPlaceholders($a)
@@ -1092,8 +1646,16 @@
     }
 
     /**
+     * restituisce la clausola di aggiornamento per ON DUPLICATE KEY UPDATE
      *
-     * TODO documentare
+     * Questa funzione restituisce, per ogni chiave dell'array, l'assegnamento `colonna` = VALUES( `colonna` ), cioè
+     * l'aggiornamento della riga esistente con i valori che si stavano inserendo. Per la colonna id vuota usa invece
+     * LAST_INSERT_ID( `id` ): in questo modo, quando la INSERT trova un duplicato su una chiave unica e aggiorna la riga
+     * esistente, l'ID restituito da MySQL è quello della riga esistente e non zero, e mysqlInsertRow() può restituirlo.
+     *
+     * @param       array       $a      l'array associativo della riga, con i nomi delle colonne in chiave
+     *
+     * @return      string              la clausola di aggiornamento, senza le parole ON DUPLICATE KEY UPDATE
      *
      */
     function array2mysqlDuplicateKeyUpdateValues($a)
@@ -1111,8 +1673,22 @@
     }
 
     /**
+     * trasforma un array associativo in parametri per un prepared statement
      *
-     * TODO documentare
+     * Questa funzione trasforma ogni valore dell'array nel formato array( 's' => valore ) atteso da mysqlQuery(),
+     * conservando le chiavi: il risultato è quindi indicizzato per nome di colonna, e mysqlPreparedQuery() usa la chiave
+     * 'id' per restituire l'ID di una INSERT che non ne genera uno. Tutti i valori sono legati come stringhe. Le stringhe
+     * che sono un numero con la virgola decimale ( es. '10,5' o '-0,25', con una sola virgola e nient'altro che cifre )
+     * vengono convertite con il punto; tutte le altre, compresi elenchi come '1,2,3' e testi con delle virgole, restano
+     * invariate.
+     *
+     * NOTA una stringa come '1,5' viene convertita anche se nelle intenzioni era un elenco di due valori. L'unico chiamante,
+     * mysqlInsertRow(), passa i valori già normalizzati da string2num(), che converte le stesse stringhe ( e altre ), per cui
+     * lì la conversione non cambia niente.
+     *
+     * @param       array       $a      l'array associativo dei valori
+     *
+     * @return      array               l'array dei parametri, con le stesse chiavi
      *
      */
     function array2mysqlStatementParameters($a)
@@ -1123,7 +1699,11 @@
         // OK foreach( $a as $v ) {
         foreach ($a as $k => $v) {
 
-            if (is_numeric($v)) {
+            // NOTA is_numeric() su una stringa con la virgola ( es. '10,5' ) restituisce false, quindi la sostituzione non
+            // avveniva mai; si convertono solo le stringhe fatte di cifre con una sola virgola decimale, così un elenco
+            // come '1,2,3' o un testo con delle virgole restano come sono; is_numeric() resta perché trasforma in stringa
+            // i numeri passati come int o float, come ha sempre fatto ( 2026-09-24 )
+            if (is_numeric($v) || (is_string($v) && preg_match('/^-?[0-9]+,[0-9]+$/', trim($v)))) {
                 $v = str_replace(',', '.', $v);
             }
 
@@ -1134,6 +1714,20 @@
         return $r;
     }
 
+    /**
+     * divide un testo SQL nelle singole istruzioni
+     *
+     * Questa funzione divide un testo SQL in istruzioni terminate da punto e virgola, senza farsi ingannare dai punti e
+     * virgola che stanno dentro stringhe fra apici singoli o doppi e dentro i commenti; gli spazi iniziali di ogni
+     * istruzione vengono scartati, il punto e virgola finale resta. I commenti non vengono tolti: fanno parte
+     * dell'istruzione che li contiene. Se il testo non contiene istruzioni restituisce un array vuoto. Al momento non viene
+     * chiamata da nessuna parte del framework.
+     *
+     * @param       string      $sql_text   il testo SQL da dividere
+     *
+     * @return      array                   l'elenco delle istruzioni, eventualmente vuoto
+     *
+     */
     function split_sql($sql_text)
     {
         // Return array of ; terminated SQL statements in $sql_text.
@@ -1158,6 +1752,27 @@
         return array();
     }
 
+    /**
+     * FUNZIONI PER LE VISTE STATICHE
+     */
+
+    /**
+     * restituisce il nome della vista statica di una tabella, se esiste
+     *
+     * Questa funzione cerca in information_schema la tabella <t>_view_static, con la cache su memcache se $m non è vuoto,
+     * e ne restituisce il nome se esiste, altrimenti false. È usata da mysqlInsertRow() per sapere se dopo una scrittura
+     * deve aggiornare la vista statica.
+     *
+     * NOTA la ricerca non filtra su TABLE_SCHEMA, quindi trova la vista statica anche se esiste in un altro database dello
+     * stesso server; lo stesso vale per getStaticViewExtension().
+     *
+     * @param       object      $m      la connessione a memcache ( NULL per non usare la cache )
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella, senza suffissi
+     *
+     * @return      mixed               il nome della vista statica, o false se non esiste
+     *
+     */
     function getStaticView($m, $c, $t)
     {
 
@@ -1369,6 +1984,20 @@
         return (bool) $esito;
     }
 
+    /**
+     * restituisce il suffisso da usare per leggere una tabella dalla sua vista
+     *
+     * Questa funzione fa la stessa ricerca di getStaticView() e restituisce '_view_static' se la tabella ha una vista
+     * statica, '_view' altrimenti; il chiamante la accoda al nome della tabella per ottenere l'oggetto da cui leggere
+     * ( es. in controller() e nel titolo delle schede tramite mysqlSelectLabel() ).
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      il nome della tabella, senza suffissi
+     *
+     * @return      string              '_view_static' oppure '_view'
+     *
+     */
     function getStaticViewExtension($m, $c, $t)
     {
 

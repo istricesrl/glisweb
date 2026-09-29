@@ -74,17 +74,25 @@
          * precedente le colonne inline non esistono e si ripiega sulla lettura storica dal
          * collegato — vedi `anagraficaIndirizziInline()`.
          *
+         * Di norma una sede senza comune non è stampabile e viene scartata. Con `$tollerante` la
+         * catena comune → stato passa in LEFT JOIN e la sede torna anche incompleta, con quei
+         * campi vuoti: è il comportamento storico delle `_packing` sulla sede del destinatario,
+         * dove un indirizzo parziale sulla bolla è meglio di nessun indirizzo.
+         *
          * @param       integer     $idAnagrafica
          * @param       boolean     $soloSedeLegale     limita alle righe con ruolo di sede legale
+         * @param       boolean     $tollerante         restituisce anche le sedi senza comune
          * @return      array                           riga della sede, vuota se non ce n'è una completa
          */
-        function sedeStampabileAnagrafica( $idAnagrafica, $soloSedeLegale = false ) {
+        function sedeStampabileAnagrafica( $idAnagrafica, $soloSedeLegale = false, $tollerante = false ) {
 
             global $cf;
 
             if( empty( $idAnagrafica ) ) {
                 return array();
             }
+
+            $join = ( $tollerante ) ? 'LEFT JOIN ' : 'INNER JOIN ';
 
             if( anagraficaIndirizziInline() ) {
 
@@ -97,10 +105,10 @@
                     'FROM anagrafica_indirizzi '.
                     ( ( $soloSedeLegale ) ? 'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo ' : '' ).
                     'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
-                    'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
-                    'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-                    'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-                    'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                    $join.'comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+                    $join.'provincie ON provincie.id = comuni.id_provincia '.
+                    $join.'regioni ON regioni.id = provincie.id_regione '.
+                    $join.'stati ON stati.id = regioni.id_stato '.
                     'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
                     ( ( $soloSedeLegale ) ? 'AND ruoli_indirizzi.se_sede_legale = 1 ' : '' ),
                     array( array( 's' => $idAnagrafica ) )
@@ -115,12 +123,12 @@
                 'stati.iso31661alpha2 AS sigla_stato '.
                 'FROM anagrafica_indirizzi '.
                 ( ( $soloSedeLegale ) ? 'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo ' : '' ).
-                'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-                'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-                'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
-                'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-                'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-                'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                $join.'indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+                $join.'tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
+                $join.'comuni ON comuni.id = indirizzi.id_comune '.
+                $join.'provincie ON provincie.id = comuni.id_provincia '.
+                $join.'regioni ON regioni.id = provincie.id_regione '.
+                $join.'stati ON stati.id = regioni.id_stato '.
                 'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
                 ( ( $soloSedeLegale ) ? 'AND ruoli_indirizzi.se_sede_legale = 1 ' : '' ),
                 array( array( 's' => $idAnagrafica ) )

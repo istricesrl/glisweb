@@ -157,7 +157,8 @@
 		// var_dump( $dkim );
 
 		// log
-		logWrite( 'DKIM: ' . print_r( $dkim, true ), 'dkim', LOG_DEBUG );
+		// NOTA la passphrase non si scrive: fino al 24/09/2026 print_r( $dkim ) la metteva in chiaro nel log dkim
+		logWrite( 'DKIM: ' . $dkim['domain'] . ' : passphrase ' . ( empty( $dkim['pasw'] ) ? 'non impostata' : 'impostata' ), 'dkim', LOG_DEBUG );
 
 		// invio la mail
 		$r = sendMail(

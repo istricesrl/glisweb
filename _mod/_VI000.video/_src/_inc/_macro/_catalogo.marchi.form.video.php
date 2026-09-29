@@ -24,9 +24,9 @@
     );
 
     $ct['etc']['select']['embed'] = array( 
-        array( 'id' => '1', '__label__' => 'HTML5' ),
-        array( 'id' => '2', '__label__' => 'Vimeo' ),
-        array( 'id' => '3', '__label__' => 'YouTube' ),
+        array( 'id' => 'html5', '__label__' => 'HTML5' ),
+        array( 'id' => 'vimeo', '__label__' => 'Vimeo' ),
+        array( 'id' => 'youtube', '__label__' => 'YouTube' ),
     );
 
     // tendina lingue

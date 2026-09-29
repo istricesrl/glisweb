@@ -19,9 +19,9 @@
 
 {% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
-{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
-{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
+{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
 {% include '_inc/_recaptcha.close.html' %}
 

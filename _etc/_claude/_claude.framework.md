@@ -218,7 +218,10 @@ Le regole che contano di più:
    flag urgente/rilevante/impattante, `(!-!)`;
 6. **chiudere una voce sono tre gesti**: marcatore, trasloco nel `DONE.md` col perché, e — se il cliente
    la vede o l'aspettava — la stessa riga nel `CHAT.md` in `### Da dirgli alla prossima occasione`, il
-   giorno stesso.
+   giorno stesso;
+7. **una domanda per il cliente si scrive quando nasce**: nello stesso turno, nel `CHAT.md` in
+   `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
+   dove muore col `/clear`.
 
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
 
@@ -244,6 +247,15 @@ generatore**.
   non si pubblica, non si cita, non si versiona;
 - si genera con `_src/_sh/_docs.build.sh`, che **non fa il bootstrap del framework** e sui deploy cliente
   scrive solo dentro `usr/`, mai sotto `_*`.
+
+## Commenti al codice
+
+I commenti seguono il canone dei file già documentati: in italiano, testata `/** … */` con titolo in
+minuscolo e sezioni sottolineate, docblock di funzione con `@param`/`@return` allineati, etichette `//`
+canoniche nelle macro ( `// tabella gestita`, `// macro di default`… ). Il commento dice **perché**, e
+un commit di documentazione **non cambia il codice**. La guida completa, coi modelli per tipo di file:
+`.claude/skills/glisweb/riferimenti/commenti.md` — **leggerla prima di commentare o di sciogliere un
+`TODO documentare`**.
 
 ## Come trovare le credenziali del database (e degli altri servizi)
 
@@ -454,6 +466,11 @@ I moduli vecchi hanno `_mod/<modulo>/_src/_templates/` ( `.html` ), i nuovi `_mo
 su ventuno ), e **latest non ha nessun modulo vecchio**: è la disponibilità dei moduli a decidere se un
 deploy può passarci. Dettagli: `.claude/skills/glisweb/riferimenti/migrazioni.md`.
 
+**Una pagina può essere dichiarata due volte, purché da due moduli di generazione diversa**, uno legacy e
+uno nuovo ( `anagrafica.form.audio` sta sia in `_0010.anagrafica` sia in `_AU000.audio`, e così video,
+immagini e file ): non è un doppione da togliere. È un doppione, invece, la stessa pagina dichiarata da due
+moduli della stessa generazione.
+
 ## Job in background: come si scrive uno che non si pianta
 
 Un **job** è un lavoro lungo spezzato in iterazioni, fatto avanzare dal browser ( `_src/_api/_job.php`,
@@ -522,8 +539,9 @@ controllare status code e pattern nell'HTML su pagine pubbliche e su area riserv
 
 **Login flow del framework** (utile da sapere quando si scrivono test o si debuggano problemi di auth):
 
-- Il form di login non usa CSRF token: bastano i campi POST `__login__[user]` e `__login__[pasw]` (la password viene
-  hashmata in MD5 lato backend).
+- Il form di login non usa CSRF token: bastano i campi POST `__login__[user]` e `__login__[pasw]` (la password in
+  chiaro viene verificata lato backend con `passwordVerify()`, che accetta sia gli hash di `password_hash()` sia i
+  vecchi MD5; al primo login riuscito un MD5 del database viene ricalcolato).
 - URL di login per default: `/login.it-IT.html` (la pagina è dinamica, server-renderizzata da `_src/_api/_pages.php`).
 - Il backend confronta contro `$cf['auth']['accounts']` (config) o la vista MySQL `account_view` (fallback).
 - A login riuscito viene popolato `$_SESSION['account']`; il cookie di sessione è il `PHPSESSID` standard di PHP, con

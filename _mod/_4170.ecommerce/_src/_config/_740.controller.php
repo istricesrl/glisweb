@@ -69,15 +69,20 @@
 
                     foreach( $_SESSION['carrello']['articoli'] as $riga ) {
 
-                        $anagrafica = mysqlSelectRow(
+                        // ( fix 2026-09-28 ) era `SELECT * FROM anagrafica_view WHERE id = ?` per usarne
+                        // solo la __label__: col segnaposto la condizione non entra nella vista, che si
+                        // materializza per intero ( 13 s in produzione su polmasi, per ogni riga del
+                        // carrello, 100-300 documenti al giorno ); con l'id scritto 0,02 s. Si resta
+                        // sulla vista viva e non sulla statica perche' la __label__ della statica puo'
+                        // avere un'altra forma e cambierebbe il nome dei documenti
+                        $anagrafica = mysqlSelectLabel(
                             $cf['mysql']['connection'],
-                            'SELECT * FROM anagrafica_view WHERE id = ?',
-                            array(
-                                array( 's' => $riga['destinatario_id_anagrafica'] )
-                            )
+                            'anagrafica',
+                            '_view',
+                            $riga['destinatario_id_anagrafica']
                         );
 
-                        $nome = 'documento creato automaticamente per il carrello #' . $_SESSION['carrello']['id'] . ' anagrafica ' . $anagrafica['__label__'];
+                        $nome = 'documento creato automaticamente per il carrello #' . $_SESSION['carrello']['id'] . ' anagrafica ' . $anagrafica;
                         $sezionale = 'C/' . date('Y');
                         $emittente = trovaIdAziendaGestita();
                         $numero = generaProssimoNumeroDocumento( $_REQUEST['ck_cassa'], $sezionale, $emittente );

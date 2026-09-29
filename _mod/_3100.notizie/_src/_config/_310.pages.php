@@ -68,8 +68,8 @@
                 }
 
                 // prelevo i dati dalla cache
-                $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-                $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+                $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+                $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
                 // valuto se i dati in cache sono ancora validi
                 if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
@@ -133,6 +133,9 @@
 
                     // scrivo la pagina in cache
                     memcacheWrite($cf['memcache']['connection'], 'PAGE_' . $pid, $cf['contents']['pages'][$pid]);
+                } else {
+
+                    $cf['contents']['pages'][$pid] = $pgc;
                 }
             }
         }
@@ -205,8 +208,8 @@
                     }
 
                     // prelevo i dati dalla cache
-                    $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-                    $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+                    $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+                    $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
                     // valuto se i dati in cache sono ancora validi
                     if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
@@ -285,6 +288,15 @@
 
                         // scrivo la pagina della notizia in cache
                         memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
+                    } else {
+
+                        $cf['contents']['pages'][$pid] = $pgc;
+
+                        // ...
+                        $cf['notizie']['index'][$pg['id']] = $pid;
+
+                        // canonical
+                        $canon = $pid;
                     }
                 }
             }

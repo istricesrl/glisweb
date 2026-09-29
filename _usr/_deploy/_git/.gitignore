@@ -50,3 +50,8 @@ usr/pages/quickstart/
 # sovrascrive, non tutta .claude/, perche il progetto cliente puo averci dentro
 # skill proprie o un settings.json suoi, che vanno versionati.
 .claude/skills/glisweb/
+
+# file di swap di vim ( .swp, e .swo/.swn quando lo stesso file e' aperto due volte ):
+# nascono accanto al file aperto e restano li' finche' l'editor non si chiude, quindi
+# su un deploy dove si lavora a mano finiscono nel git status come untracked.
+*.sw[nop]

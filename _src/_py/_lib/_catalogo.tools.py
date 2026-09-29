@@ -24,7 +24,7 @@
 #   riempirle a caso sarebbe peggio che lasciarle vuote.
 
 STANDARD = frozenset( (
-    'colori', 'comuni', 'condizioni_pagamento', 'continenti', 'embed', 'iva', 'lingue',
+    'colori', 'comuni', 'condizioni_pagamento', 'continenti', 'iva', 'lingue',
     'modalita_pagamento', 'periodicita', 'provincie', 'regimi', 'regioni',
     'ruoli_anagrafica', 'ruoli_articoli', 'ruoli_audio', 'ruoli_file', 'ruoli_immagini',
     'ruoli_indirizzi', 'ruoli_mail', 'ruoli_matricole', 'ruoli_prodotti', 'ruoli_video',

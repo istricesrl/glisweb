@@ -129,7 +129,8 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 
 -- NOTA la timestamp di cambio password non viene attualmente utilizzata ma è stata mantenuta per eventuali sviluppi futuri
 --
--- TODO l'hash md5 non è il massimo, in futuro migrare a un algoritmo più robusto
+-- NOTA la password si salva con password_hash() ( passwordHash() in _src/_lib/_cryptography.tools.php ); i vecchi hash MD5
+-- restano validi e vengono ricalcolati al primo login riuscito
 
 -- | 010000000120
 
@@ -473,6 +474,55 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'attività
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000002100
+
+-- audio
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene gli audio collegati a varie entità del sistema
+--
+-- questa tabella è la gemella di video e ne ha le stesse colonne di collegamento, tranne orientamento
+-- e ratio che per un audio non hanno senso; era sparita nel riallineamento del 2026-03-02 ed è stata
+-- rimessa il 2026-09-25 insieme a ruoli_audio, perché aggiungiAudio() e i form dei moduli la usano
+--
+CREATE TABLE IF NOT EXISTS `audio` (
+  `id` bigint(20) NOT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `id_pagina` bigint(20) DEFAULT NULL,
+  `id_file` bigint(20) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
+  `id_marchio` bigint(20) DEFAULT NULL,
+  `id_risorsa` bigint(20) DEFAULT NULL,
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,
+  `id_notizia` bigint(20) DEFAULT NULL,
+  `id_annuncio` bigint(20) DEFAULT NULL,
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,
+  `id_lingua` bigint(20) DEFAULT NULL,
+  `id_ruolo` bigint(20) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,
+  `id_indirizzo` bigint(20) DEFAULT NULL,
+  `id_edificio` bigint(20) DEFAULT NULL,
+  `id_immobile` bigint(20) DEFAULT NULL,
+  `id_valutazione` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `path` char(255) DEFAULT NULL,
+  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,
+  `codice_embed` char(128) DEFAULT NULL,
+  `embed_custom` char(128) DEFAULT NULL,
+  `target` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000002900
 
@@ -2106,6 +2156,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `importo_lordo_finale` decimal(9,2) DEFAULT NULL,
   `id_listino` bigint(20) DEFAULT NULL,
   `id_pianificazione` bigint(20) DEFAULT NULL, 
+  `data_ripetizione` date DEFAULT NULL,
   `provider_pagamento` char(128) DEFAULT NULL,
   `timestamp_pagamento` int(11) DEFAULT NULL,
   `token_pagamento` char(128) DEFAULT NULL,
@@ -2161,6 +2212,122 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` bigint(20) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `giorni` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000023800
+
+-- pianificazioni
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le pianificazioni, cioè le regole con cui generare oggetti ricorrenti a partire da un modello
+--
+-- questa tabella dice ogni quanto ( id_periodicita, cadenza, se_lunedi ... se_domenica ) e fino a quando generare
+-- oggetti della tabella indicata in entita, copiandoli dalle colonne model_* oppure dall'oggetto collegato; le righe
+-- figlie ( id_genitore ) generano gli oggetti collegati a quello del genitore, ad esempio le righe e i pagamenti di
+-- una fattura ricorrente; era sparita nel riallineamento del 2026-03-02 ed è stata rimessa il 2026-09-25, perché le
+-- colonne id_pianificazione di attivita, documenti, documenti_articoli, macro, metadati, pagamenti, progetti,
+-- rinnovi e todo e il modulo _0100.pianificazioni la usano
+--
+CREATE TABLE IF NOT EXISTS `pianificazioni` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
+  `id_todo` bigint(20) DEFAULT NULL,
+  `id_attivita` bigint(20) DEFAULT NULL,
+  `id_contratto` bigint(20) DEFAULT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_periodicita` bigint(20) DEFAULT NULL,
+  `cadenza` int(11) DEFAULT NULL,
+  `se_lunedi` tinyint(1) DEFAULT NULL,
+  `se_martedi` tinyint(1) DEFAULT NULL,
+  `se_mercoledi` tinyint(1) DEFAULT NULL,
+  `se_giovedi` tinyint(1) DEFAULT NULL,
+  `se_venerdi` tinyint(1) DEFAULT NULL,
+  `se_sabato` tinyint(1) DEFAULT NULL,
+  `se_domenica` tinyint(1) DEFAULT NULL,
+  `schema_ripetizione` int(11) DEFAULT NULL,
+  `data_avvio` date DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_elaborazione` date DEFAULT NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
+  `data_ultimo_oggetto` date DEFAULT NULL,
+  `giorni_elaborazione` int(11) DEFAULT NULL,
+  `giorni_estensione` int(11) DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `entita` enum('todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti') DEFAULT NULL,
+  `model_id_anagrafica` bigint(20) DEFAULT NULL,
+  `model_id_anagrafica_programmazione` bigint(20) DEFAULT NULL,
+  `model_id_articolo` bigint(20) DEFAULT NULL,
+  `model_id_attivita` bigint(20) DEFAULT NULL,
+  `model_id_causale` bigint(20) DEFAULT NULL,
+  `model_id_cliente` bigint(20) DEFAULT NULL,
+  `model_id_collo` bigint(20) DEFAULT NULL,
+  `model_id_condizione_pagamento` bigint(20) DEFAULT NULL,
+  `model_id_contatto` bigint(20) DEFAULT NULL,
+  `model_id_coupon` char(32) DEFAULT NULL,
+  `model_id_destinatario` bigint(20) DEFAULT NULL,
+  `model_id_documento` bigint(20) DEFAULT NULL,
+  `model_id_emittente` bigint(20) DEFAULT NULL,
+  `model_id_genitore` bigint(20) DEFAULT NULL,
+  `model_id_iban` bigint(20) DEFAULT NULL,
+  `model_id_indirizzo` bigint(20) DEFAULT NULL,
+  `model_id_immobile` bigint(20) DEFAULT NULL,
+  `model_id_licenza` bigint(20) DEFAULT NULL,
+  `model_id_listino` bigint(20) DEFAULT NULL,
+  `model_id_luogo` bigint(20) DEFAULT NULL,
+  `model_id_mastro_destinazione` bigint(20) DEFAULT NULL,
+  `model_id_mastro_provenienza` bigint(20) DEFAULT NULL,
+  `model_id_matricola` bigint(20) DEFAULT NULL,
+  `model_id_modalita_pagamento` bigint(20) DEFAULT NULL,
+  `model_id_prodotto` bigint(20) DEFAULT NULL,
+  `model_id_progetto` bigint(20) DEFAULT NULL,
+  `model_id_reparto` bigint(20) DEFAULT NULL,
+  `model_id_sede_destinatario` bigint(20) DEFAULT NULL,
+  `model_id_sede_emittente` bigint(20) DEFAULT NULL,
+  `model_id_tipologia` bigint(20) DEFAULT NULL,
+  `model_id_todo` bigint(20) DEFAULT NULL,
+  `model_id_trasportatore` bigint(20) DEFAULT NULL,
+  `model_id_udm` bigint(20) DEFAULT NULL,
+  `model_anno_programmazione` year(4) DEFAULT NULL,
+  `model_codice` char(64) DEFAULT NULL,
+  `model_data` date DEFAULT NULL,
+  `model_data_fine` date DEFAULT NULL,
+  `model_data_inizio` date DEFAULT NULL,
+  `model_data_programmazione` date DEFAULT NULL,
+  `model_esigibilita` enum('I','D','S') DEFAULT NULL,
+  `model_importo_netto_totale` char(32) DEFAULT NULL,
+  `model_importo_lordo_totale` char(32) DEFAULT NULL,
+  `model_importo_lordo_finale` char(32) DEFAULT NULL,
+  `model_nome` char(255) DEFAULT NULL,
+  `model_note` text DEFAULT NULL,
+  `model_note_cliente` text DEFAULT NULL,
+  `model_note_programmazione` text DEFAULT NULL,
+  `model_numero` char(32) DEFAULT NULL,
+  `model_ora_inizio_programmazione` time DEFAULT NULL,
+  `model_ora_fine_programmazione` time DEFAULT NULL,
+  `model_ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `model_porto` enum('franco','assegnato','-') DEFAULT NULL,
+  `model_quantita` decimal(9,2) DEFAULT NULL,
+  `model_riferimento` char(255) DEFAULT NULL,
+  `model_sconto_percentuale` decimal(9,2) DEFAULT NULL,
+  `model_sconto_valore` decimal(9,2) DEFAULT NULL,
+  `model_se_automatico` int(1) DEFAULT NULL,
+  `model_sezionale` char(32) DEFAULT NULL,
+  `model_settimana_programmazione` int(11) DEFAULT NULL,
+  `model_specifiche` char(255) DEFAULT NULL,
+  `model_data_scadenza` date DEFAULT NULL,
+  `model_timestamp_scadenza` int(11) DEFAULT NULL,
+  `offset_giorni` int(11) DEFAULT NULL,
+  `offset_fine_mese` int(1) DEFAULT NULL,
+  `workspace` longtext DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000025000
@@ -2596,6 +2763,38 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000034200
+
+-- ruoli_audio
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli degli audio
+--
+-- questa tabella contiene i ruoli degli audio, con le stesse colonne di ruoli_video; i flag se_*
+-- dicono a quali entità un ruolo è pertinente, e li leggono le tendine dei form audio dei moduli
+--
+CREATE TABLE IF NOT EXISTS `ruoli_audio` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_anagrafica` tinyint(1) DEFAULT NULL,
+  `se_pagine` tinyint(1) DEFAULT NULL,
+  `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
+  `se_notizie` tinyint(1) DEFAULT NULL,
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_annunci` tinyint(1) DEFAULT NULL,
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,
+  `se_risorse` tinyint(1) DEFAULT NULL,
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000034300
 
 -- ruoli_documenti
@@ -2785,6 +2984,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
+  `se_annunci` tinyint(1) DEFAULT NULL,
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
@@ -3717,7 +3918,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
-  `id_embed` bigint(20) DEFAULT NULL,
+  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,
   `codice_embed` char(128) DEFAULT NULL,
   `embed_custom` char(128) DEFAULT NULL,
   `target` char(255) DEFAULT NULL,

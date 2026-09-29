@@ -31,7 +31,7 @@
    
         if( empty($_REQUEST['__desc__']) || $_REQUEST['__desc__'] == ''){ $_REQUEST['__desc__'] = ' ';}
    
-        $restult = pianificazioneTodo( $cf['mysql']['connection'], $_REQUEST['__anagrafica__'], $_REQUEST['__cliente__'], $_REQUEST['__luogo__'], $_REQUEST['__data__'], $_REQUEST['__ora__'], $_REQUEST['__ore__'], $_REQUEST['__p__'],$_REQUEST['__desc__'],$_REQUEST['__cad__'], $_REQUEST['__datafine__'], $_REQUEST['__nr__'],$_REQUEST['__gs__'],$_REQUEST['__rm__'],$_REQUEST['__ra__']);
+        $restult = pianificazioneTodo( $cf['mysql']['connection'], $_REQUEST['__anagrafica__'], $_REQUEST['__cliente__'], $_REQUEST['__luogo__'], $_REQUEST['__data__'], $_REQUEST['__ora__'] ?? NULL, $_REQUEST['__ore__'] ?? NULL, $_REQUEST['__p__'] ?? 0,$_REQUEST['__desc__'],$_REQUEST['__cad__'] ?? NULL, $_REQUEST['__datafine__'] ?? NULL, $_REQUEST['__nr__'] ?? 1,$_REQUEST['__gs__'] ?? NULL,$_REQUEST['__rm__'] ?? 1,$_REQUEST['__ra__'] ?? 1);
     
         if( $restult ){
             $status['__status__'] = 'Pianificazione completata';

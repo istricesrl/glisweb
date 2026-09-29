@@ -117,6 +117,11 @@
         arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.metadati' );

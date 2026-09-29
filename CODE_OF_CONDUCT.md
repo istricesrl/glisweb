@@ -20,3 +20,9 @@ Viceversa i seguenti comportamenti saranno sanzionati con l'esclusione:
 
 ## il nostro impegno
 Come gestori del progetto, ci impegnamo a far rispettare queste regole, che valgono per tutti gli spazi fisici e virtuali in cui si incontrano i membri della comunità intesi come partecipanti al progetto, a qualsiasi titolo.
+
+## dove valgono queste regole
+Le regole valgono in tutti gli spazi del progetto: le issue e le pull request su GitHub, il [server Discord](https://discord.gg/2nynQcXAWf) e qualsiasi altro luogo, fisico o virtuale, in cui si partecipa a GlisWeb.
+
+## come segnalare un problema
+Se assistete a un comportamento che viola queste regole, o ne siete vittime, scrivete ai gestori del progetto all'indirizzo info@istricesrl.it. Le segnalazioni vengono trattate con riservatezza.

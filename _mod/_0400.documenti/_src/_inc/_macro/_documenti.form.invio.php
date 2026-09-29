@@ -54,7 +54,8 @@
     // se c'è un invio da accodare
     if( isset( $_REQUEST['__invio__']) ) {
 
-        $token = md5( time() );
+        // NOTA fino al 25/09/2026 era md5( time() ), che si indovina provando i secondi vicini
+        $token = bin2hex( random_bytes( 16 ) );
         $attach = 'tmp/documento.' . $_REQUEST[ $ct['form']['table'] ]['id'] . '.pdf';
 
         // il token e' la chiave d'accesso usa e getta con cui il generatore del PDF viene chiamato

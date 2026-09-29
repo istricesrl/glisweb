@@ -54,7 +54,7 @@
             $cf['mysql']['connection'],
             'UPDATE account SET password = ? WHERE id = ?',
             array(
-                array( 's' => md5( $password ) ),
+                array( 's' => passwordHash( $password ) ),
                 array( 's' => $account['id'] )
             )
         );

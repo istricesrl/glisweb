@@ -214,6 +214,16 @@
         // timer
         timerCheck( $cf['speed'], '-> fine inserimento video' );
 
+        // aggiungo gli audio
+        aggiungiAudio(
+            $cf['contents']['page'],
+            $joinValue,
+            $joinField
+        );
+
+        // timer
+        timerCheck( $cf['speed'], '-> fine inserimento audio' );
+
         // aggiungo i file
         aggiungiFile(
             $cf['contents']['page'],

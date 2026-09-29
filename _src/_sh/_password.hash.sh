@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# TODO documentare
-# qui documentare come il framework gestisce le password a livello di file di configurazione
+# genera l'hash di una password per i file di configurazione ( auth.accounts.<utente>.password )
+#
+# uso: _password.hash.sh [password]
+#
+# Senza argomenti genera una password casuale con pwgen. L'hash si calcola con password_hash() di PHP,
+# lo stesso algoritmo che il framework usa per le password salvate nel database ( vedi passwordHash() in
+# _src/_lib/_cryptography.tools.php ); fino al 24/09/2026 questo script produceva un hash MD5, che il
+# framework continua ad accettare ma che la pagina di status segnala come da rigenerare.
+#
+# L'hash contiene il carattere $: nei file YAML va scritto fra virgolette, nella shell fra apici.
 #
 
 ## pulizia schermo
@@ -25,7 +33,7 @@ else
 fi
 
 ## calcolo hash
-HASH="$(echo -n "$PASS" | md5sum  | awk '{print $1}')"
+HASH="$(php -r 'echo password_hash( $argv[1], PASSWORD_DEFAULT );' -- "$PASS")"
 
 ## output
 echo "password: $PASS"
