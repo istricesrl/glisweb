@@ -92,8 +92,17 @@
      */
 
     /**
+     * avvia un pagamento XPay con la pagina ospitata e ne restituisce i dati
      * 
+     * La funzione fa la POST all'endpoint init_api del profilo con l'api_key e un Correlation-Id generato al volo,
+     * mandando come codice ordine l'ID del carrello e come importo il suo prezzo_lordo_finale convertito in centesimi.
+     * Gli URL di ritorno ( success_url, error_url ) e del listener ( listener_url ) devono essere già stati scritti
+     * in $k dal chiamante.
      * 
+     * @param       array       $c          il carrello ( servono id e prezzo_lordo_finale )
+     * @param       array       $k          il profilo del provider nexi, con gli URL di ritorno già risolti
+     * 
+     * @return      array                   paymentId, hostedPage, securityToken e correlationId
      * 
      */
     function nexiGetSecurityKey( $c, $k ) {
@@ -101,16 +110,29 @@
         $apiUrl = $k['init_api'];
         $apiKey = $k['api_key'];
         $orderId = $c['id'];
-        
+
+        // importo in centesimi
+        //
+        // XPay vuole l'importo in centesimi, come stringa di sole cifre ( 12,34 euro diventano "1234" ): è
+        // la stessa unità che il listener ( _mod/_4170.ecommerce/_src/_api/_nexi.listener.php ) riceve in
+        // operationAmount e divide per 100, e che il ramo nexi-semplice di _carrello.riepilogo.php manda nel
+        // campo importo, con la stessa espressione. Fino al 2026-09-29 qui l'importo era scritto fisso a 10,
+        // per cui ogni ordine veniva addebitato 10 centesimi qualunque fosse il totale del carrello. Si parte
+        // da prezzo_lordo_finale e non da prezzo_lordo_totale per le ragioni scritte in _monetaweb.tools.php
+        // ( il totale prima degli sconti ). Si tolgono sia il punto sia la virgola perché %f di sprintf()
+        // segue il locale corrente, e si passa per un intero per non mandare uno zero iniziale ( "030" per 0,30 euro ).
+        $amount = (string) intval( str_replace( array( '.', ',' ), '', sprintf( '%01.2f', $c['prezzo_lordo_finale'] ) ) );
+
+        // TODO la divisa e la lingua sono fisse come negli altri provider ( valuta e lingua del carrello )
         $params = array(
             "order" => array(
                 "orderId" => $orderId,
-                "amount" => 10,
+                "amount" => $amount,
                 "currency" => "EUR",
             ),
             "paymentSession" => array(
                 "actionType" => "PAY",
-                "amount" => 10,
+                "amount" => $amount,
                 "recurrence" => array(
                   "action" => "NO_RECURRING",
                 ),

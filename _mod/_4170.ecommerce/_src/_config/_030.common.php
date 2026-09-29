@@ -222,6 +222,11 @@
      * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/hosted/init/http
      * oppure https://www.monetaonline.it/monetaweb/payment/2/xml (verificare)
      * 
+     * NOTA SU MONETAWEB
+     * la chiamata a init_api verifica il certificato del server; se un ambiente di test del gateway ha un certificato
+     * non valido, sul deploy che lo usa si definisce in un runlevel custom la costante MONETAWEB_SSL_VERIFY a false
+     * (vedi monetawebGetPaymentDetails() in _src/_lib/_monetaweb.tools.php)
+     * 
      * 
      */
 

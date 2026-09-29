@@ -101,8 +101,8 @@
             // pagamento con Nexi
             case 'nexi':
 
-                // preparazione del totale
-                    $c['prezzo_lordo_finale']               = str_replace( '.', ',', sprintf( '%01.2f', $c['prezzo_lordo_finale'] ) );
+                // NOTA il totale non si prepara qui: nexiGetSecurityKey() lo converte da sé in centesimi partendo dal
+                // valore numerico, per cui non va trasformato prima in stringa con la virgola
 
                 // URL espliciti
                     $k['success_url']                       = ( ! isset( $k['success_url'] ) || empty( $k['success_url'] ) ) ? $cf['contents']['pages'][ $k['success'] ]['url'][ $l ] : $k['success_url'];

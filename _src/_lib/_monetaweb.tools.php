@@ -69,8 +69,18 @@
      */
 
     /**
+     * chiede a Monetaweb il PaymentID e l'URL della pagina di pagamento ospitata
      * 
+     * La funzione fa la POST initialize all'endpoint init_api del profilo con le credenziali del terminale, l'ID del
+     * carrello come merchantOrderId e il suo prezzo_lordo_finale come importo. Il certificato del server viene
+     * verificato, a meno che il deploy non abbia definito la costante MONETAWEB_SSL_VERIFY a false ( si veda il
+     * commento nel corpo ). Gli URL error_url e listener_url devono essere già stati scritti in $k dal chiamante.
      * 
+     * @param       array       $c          il carrello ( servono id e prezzo_lordo_finale )
+     * @param       array       $k          il profilo del provider monetaweb, con gli URL di ritorno già risolti
+     * 
+     * @return      array                   response ( hostedpageurl, paymentid, securitytoken ) e redirecturl, oppure un
+     *                                      array vuoto se il gateway non ha restituito paymentid e hostedpageurl
      * 
      */
     function monetawebGetPaymentDetails( $c, $k ) {
@@ -127,13 +137,31 @@
         );
 
 
+          // verifica del certificato del server
+          //
+          // Fino al 2026-09-29 CURLOPT_SSL_VERIFYPEER era a false, per cui la chiamata che manda ID e password del
+          // terminale non proteggeva da un server che si spacciasse per il gateway. Adesso il certificato si verifica
+          // sempre, e il deploy che ha bisogno di non farlo ( ad esempio contro un ambiente di test del gateway con un
+          // certificato non valido ) lo dice esplicitamente definendo in un runlevel la costante MONETAWEB_SSL_VERIFY
+          // a false. È lo stesso schema di REST_SSL_VERIFY in restCall(), per cui si vedano i commenti in
+          // _src/_lib/_rest.tools.php; come lì, la costante si legge a ogni chiamata perché le librerie vengono
+          // incluse prima dei runlevel.
+          $sslVerify = defined( 'MONETAWEB_SSL_VERIFY' ) ? (bool) MONETAWEB_SSL_VERIFY : true;
+
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $k['init_api']);
-          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, $sslVerify );
+          curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, ( $sslVerify ) ? 2 : 0 );
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
           curl_setopt($ch, CURLOPT_POST, true);
           curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
           $result = curl_exec($ch);
+
+          // con la verifica accesa un certificato non valido fa fallire la chiamata: lo scrivo nel log
+          if( curl_errno( $ch ) ) {
+              logger( 'errore curl per carrello ' . $c['id'] . ': ' . curl_error( $ch ), 'monetaweb', LOG_ERR );
+          }
+
           curl_close($ch);
 
 //          $response = new SimpleXMLElement($xmlResponse);
@@ -148,6 +176,10 @@ $dettagli = xml2array( $result, false );
             logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') risposta: ' . print_r( $dettagli, true ), 'monetaweb' );
 
 
+          // valore di ritorno, vuoto se il gateway non ha restituito paymentid e hostedpageurl ( i chiamanti
+          // controllano redirecturl )
+          $info = array();
+
           if( ! empty( $dettagli['response']['paymentid']['#'] ) && ! empty( $dettagli['response']['hostedpageurl']['#'] ) ) {
 
             $info['response']['hostedpageurl'] = $dettagli['response']['hostedpageurl']['#'];
@@ -161,131 +193,4 @@ $dettagli = xml2array( $result, false );
 
         return $info;
           
-    }
-
-    function monetawebGetPaymentDetailsOld( $c, $k ) {
-
-/*
-
-
-$params = array(
-	  'id' => $terminalId,
-	  'password' => $terminalPassword,
-	  'operationType' => 'initialize',
-	  'amount' => '1.00',	  
-	  'language' => 'ITA',
-	  'responseToMerchantUrl' => $merchantDomain.'/notify.php',
-          'merchantOrderId' => 'TRCK0001',
-  );
-
-  $curlHandle = curl_init();
-  curl_setopt($curlHandle, CURLOPT_URL, $setefiPaymentGatewayDomain.'/monetaweb/payment/2/xml');
-  curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curlHandle, CURLOPT_POST, true);
-  curl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($params));
-  curl_setopt($curlHandle, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
-  $xmlResponse = curl_exec($curlHandle);
-  curl_close($curlHandle);
-
-  $response = new SimpleXMLElement($xmlResponse);
-  $paymentId = $response->paymentid;
-  $paymentUrl = $response->hostedpageurl;
-
-  $securityToken = $response->securitytoken;
-
-  $setefiPaymentPageUrl = "$paymentUrl?PaymentID=$paymentId";
-  header("Location: $setefiPaymentPageUrl");
-
-*/
-
-//        $url = $k['init_api'] . '?' . http_build_query( array(
-        $params = array(
-            'id'            => $k['term_id'],                                   // ID del terminale
-            'password'      => $k['term_passwd'],                               // password del terminale
-            'action'        => 4,                                               // richiesta di autorizzazione
-            // 'operationType' => 'initialize',                                    // tipo di operazione
-            'amt'           => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
-            // 'amount'        => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
-            'currencycode'  => 978,                                             // euro
-            // 'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
-            'language'      => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU, RUS)
-             'responseurl'   => $k['success_url'],                               // URL di ritorno in caso di successo
-             'errorurl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
-            // 'responseTomerchantUrl' => $k['success_url'],                       // URL di ritorno in caso di successo
-            // 'responseTomerchantUrl' => $k['listener_url'],                       // URL di ritorno in caso di successo
-            //'recoveryUrl'   => $k['error_url'],                                 // URL di ritorno in caso di errore
-            'trackid'       => $c['id'],                                        // ID del carrello
-            // 'merchantOrderId' => $c['id'],                                      // ID del carrello
-            // 'udf1'          => 'pagamento Monetaweb'                            // descrizione del pagamento
-        );
-//        ) );
-
-        logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') invio: ' . print_r( $params, true ), 'monetaweb' );
-
-        /*
-        $result = restCall(
-            $url,
-            METHOD_POST,
-            array(),
-            MIME_X_WWW_FORM_URLENCODED,
-            // MIME_APPLICATION_XML,
-            MIME_TEXT_PLAIN,
-            $status,
-            // array(),
-            // $k['client_id'],
-            // $k['client_secret'],
-            // $error
-        );
-        */
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $k['init_api']);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        // curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') risposta: ' . $result, 'monetaweb' );
-
-        // print_r( $params );
-        // die( 'risposta: ' . $result );
-
-/*
-        $response = new SimpleXMLElement( $xmlResponse );
-        $paymentId = $response->paymentid;
-        $paymentUrl = $response->hostedpageurl;
-        $securityToken = $response->securitytoken;
-      
-        logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $url . ') risposta: ' . print_r( $result, true ), 'monetaweb' );
-*/
-
-        $dettagli = explode( ':', $result );
-
-        /*
-        <response>
-              <paymentid>123456789012345678</paymentid>
-              <securitytoken>80957febda6a467c82d34da0e0673a6e</securitytoken>
-              <hostedpageurl>https://www.monetaonline.it/monetaweb/...</hostedpageurl>
-        </response>
-        */
-
-        // $dettagli = xml2array( $result, false );
-
-        // if( count( $dettagli ) == 3 ) {
-        if( ! empty( $dettagli['response']['paymentid'] ) && ! empty( $dettagli['response']['hostedpageurl'] ) ) {
-
-            // $dettagli[3] = $dettagli[1] . ':' . $dettagli[2] . '?PaymentID=' . $dettagli[0];
-            $dettagli['redirecturl'] = $dettagli['response']['hostedpageurl'] . '?PaymentID=' . $dettagli['response']['paymentid'];
-
-        }
-
-        return $dettagli;
-
     }
