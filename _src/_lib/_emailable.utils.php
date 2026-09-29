@@ -492,6 +492,32 @@
     }
 
     /**
+     * funzione che ricava lo stato Emailable di un verdetto letto dalla cache
+     *
+     * Un verdetto scritto da mailStatusWrite() ha lo stato grezzo di Emailable in `stato`; uno
+     * arrivato per altre vie ( p.es. importato da un gestionale ) puo' non averlo, e allora lo si
+     * legge dalla tipologia: una tipologia dichiaratamente non recapitabile vale 'undeliverable',
+     * tutto il resto 'unknown', coerentemente con il fail-open della libreria. La usano
+     * _src/_api/_emailable.verifica.php, per rispondere al form, e _src/_api/_emailable.scarti.php,
+     * per accettare solo gli scarti che il server ha davvero verificato.
+     *
+     * @param    array    v    riga di mail_status come la restituisce mailStatusRead()
+     *
+     * @return                 stato Emailable ( 'deliverable', 'undeliverable', 'risky', 'unknown' )
+     */
+    function mailStatusState( $v ) {
+
+        if( ! empty( $v['stato'] ) ) {
+            return $v['stato'];
+        } elseif( isset( $v['se_recapitabile'] ) && $v['se_recapitabile'] !== NULL && empty( $v['se_recapitabile'] ) ) {
+            return 'undeliverable';
+        } else {
+            return 'unknown';
+        }
+
+    }
+
+    /**
      * funzione che scrive in cache il verdetto di un indirizzo
      *
      * L'INSERT ... ON DUPLICATE KEY UPDATE si appoggia all'indice unico su mail_status.indirizzo:

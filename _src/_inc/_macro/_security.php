@@ -58,7 +58,7 @@
      * richiesta ( di norma con HTTP 429 ). I registri stanno in var/spool/security/limiti/, una cartella per canale e un
      * file per IP, e ogni superamento viene annotato nel file di log dell'IP accanto a banned.hosts.conf. Diversamente
      * dalle parole proibite, superare un limite NON mette l'IP in banned.hosts.conf.
-     * Primo utilizzatore: _src/_api/_emailable.verifica.php.
+     * Utilizzatori: _src/_api/_emailable.verifica.php e _src/_api/_emailable.scarti.php.
      *
      * TODO implementare un sistema di protezione dai DOS
      * TODO documentare
