@@ -82,7 +82,7 @@ Le linguette della scheda di un articolo sono:
 | linguetta | cosa ci sta |
 |---|---|
 | caratteristiche | le caratteristiche dell'articolo, una per riga, come per il prodotto; in più la spunta **assente**, per dire che su questo articolo una caratteristica **non c'è** |
-| distinta | predisposta per la distinta base; nello standard è vuota |
+| distinta | la **distinta base**: gli articoli che compongono questo, uno per riga, con la **quantità** che ne serve; il componente si cerca scrivendo almeno tre lettere del suo nome |
 | metadati, immagini, video, audio, file | le informazioni aggiuntive e i media, se ci sono i moduli che li gestiscono |
 | barcode | i **codici a barre** dell'articolo: l'**EAN**, il codice a barre commerciale, e l'**ISBN** dei libri |
 | relazioni | i legami dell'articolo con altri articoli o prodotti, uno per riga, come per il prodotto |
@@ -135,6 +135,5 @@ Le linguette *stampe* e *azioni* hanno la forma di tutte le pagine di riquadri (
 
 - le **tipologie** di prodotto: dove si configurano e che effetto hanno;
 - dove si definiscono le **caratteristiche** e i **tipi di relazione** che le tendine propongono;
-- la **distinta**, finché la sua linguetta resta vuota;
 - come si vede, dalla scheda di un prodotto, **quanto costa** in ciascun listino;
 - come il prodotto arriva sul **sito**, e cosa lo rende visibile al visitatore.

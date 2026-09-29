@@ -36,13 +36,12 @@ controller() segue la chiave articoli_caratteristiche_ibfk_01; la tendina legge 
 se_articoli, perché la chiave esterna di id_caratteristica punta alla tabella caratteristiche.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
-Questa è la macro della scheda distinta base del modulo di gestione degli articoli.
-
-> **attenzione** — la scheda è ancora vuota: la tabella distinta non ha chiavi esterne ( né verso articoli per
-> id_articolo né per id_componente ), quindi controller() non porta le sue righe dentro la scheda dell'articolo e un
-> sotto-elenco non mostrerebbe mai le righe salvate. Il sotto-elenco si aggiunge sul modello di quello delle
-> caratteristiche quando c'è la chiave distinta_ibfk_01 ( id_articolo, seguita ) e distinta_ibfk_02_nofollow
-> ( id_componente ).
+Questa è la macro della scheda distinta base del modulo di gestione degli articoli. Il sotto-elenco delle righe di
+distinta ( macro distinta di lib/catalogo.articoli.form.sub.twig, sul modello di quella delle relazioni ) arriva con la
+scheda perché controller() segue la chiave distinta_ibfk_01 ( id_articolo, l'articolo composto ); ogni riga ha il
+componente, scelto con la ricerca degli articoli ( source api articoli, come l'articolo collegato delle relazioni ), e
+la quantità. La chiave di id_componente è distinta_ibfk_02_nofollow, quindi la scheda del componente non carica le
+distinte in cui compare; la macro non prepara tendine.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
 Questa è la macro del modulo di gestione degli articoli.
