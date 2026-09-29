@@ -1,6 +1,5 @@
 {
   "mail": {
-    "postmaster": { "nomePostmaster": "mailPostmaster" },
     "tpl": {
       "TEMPLATE_DI_PROVA": {
         "type": "twig",

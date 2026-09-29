@@ -5,8 +5,8 @@
       "slack": {
         "profiles": {
           "DEV": {
-            "default-sito": {
-              "": {
+            "webhooks": {
+              "default": {
                 "sa": "",
                 "sb": "",
                 "sc": ""

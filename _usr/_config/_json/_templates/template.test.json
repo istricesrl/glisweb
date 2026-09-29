@@ -29,16 +29,12 @@
   },
   "debug": {
     "DEV": {
-      "*" : {
-        "log": { "lvl": 7 },
-        "report": { "lvl": 32767 }
-      }
+      "log": { "lvl": 7 },
+      "report": { "lvl": 32767 }
     },
     "TEST": {
-      "*" : {
-        "log": { "lvl": 3 },
-        "report": { "lvl": 2 }
-      }
+      "log": { "lvl": 3 },
+      "report": { "lvl": 2 }
     }
   },
   "mysql": {

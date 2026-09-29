@@ -28,9 +28,23 @@
 #   --server       server su cui costruire il database di prova, se diverso da quello del
 #                  profilo. Serve un utente con CREATE / DROP DATABASE: l'utente applicativo
 #                  di solito ha i privilegi sul solo database del progetto.
-#   --prova        nome del database di prova ( default: <database>__rebuild )
+#   --prova        nome del database di prova ( default: <database>__rebuild ); deve finire
+#                  anch'esso con __rebuild
 #   --inventario   elenca tutti gli oggetti divergenti invece del solo riepilogo
 #   --tieni        non cancella il database di prova alla fine ( per guardarci dentro )
+#
+# IL DATABASE DI PROVA E' USA-E-GETTA, E LO SCRIPT LO GARANTISCE. Fino al 29/09/2026 lo script
+# faceva `DROP DATABASE IF EXISTS` sul nome ricevuto con --prova, all'inizio e alla fine: bastava
+# passargli per sbaglio il nome del database vero perche' lo distruggesse. Ora cancella soltanto
+# un database che ha creato lui, e lo riconosce da due firme insieme:
+#
+#   - il nome finisce con __rebuild ( --prova con un altro nome viene rifiutato );
+#   - dentro c'e' la tabella __rebuild_check__, che lo script crea subito dopo il database e che
+#     il confronto ignora.
+#
+# Un database che porta il nome giusto ma non la tabella e' di qualcun altro: lo script si
+# rifiuta di toccarlo e si ferma. Rifiuta anche qualunque nome coincida con il database di uno
+# dei server dichiarati in mysql.servers ( config e shadow ), qualunque sia il suffisso.
 
 RL="../../"
 cd $(dirname "$0")
@@ -73,6 +87,21 @@ VERO  = servers[ nomi[0] ]
 BANCO = dict( servers[ SERVER ] ) if SERVER else dict( VERO )
 banco_db = PROVA or ( VERO[ 'db' ] + '__rebuild' )
 
+# le due firme del database usa-e-getta: il suffisso del nome e la tabella marcatore
+SUFFISSO = '__rebuild'
+MARCA    = '__rebuild_check__'
+
+# il nome finisce dentro backtick e apici: si accettano solo caratteri che non ne escano
+if not re.match( r'^[A-Za-z0-9_]+$', banco_db ):
+    print( 'ERRORE: nome del database di prova non valido: %s' % banco_db ); sys.exit( 1 )
+if not banco_db.endswith( SUFFISSO ) or banco_db == SUFFISSO:
+    print( 'ERRORE: il database di prova deve chiamarsi <qualcosa>%s, non %s' % ( SUFFISSO, banco_db ) )
+    print( '  ( e\' la firma che lo rende riconoscibile come usa-e-getta )' ); sys.exit( 1 )
+configurati = sorted( set( s.get( 'db' ) for s in servers.values() if s.get( 'db' ) ) )
+if banco_db in configurati:
+    print( 'ERRORE: %s e\' il database di un server dichiarato in mysql.servers: non lo uso come banco' % banco_db )
+    sys.exit( 1 )
+
 def cli( s, db = None, extra = None ):
     c = [ 'mysql', '-h', s.get( 'address' ) or '127.0.0.1', '-P', str( s.get( 'port' ) or 3306 ),
           '-u', s.get( 'username' ) or 'root' ] + ( extra or [] )
@@ -89,7 +118,8 @@ def oggetti( s, db ):
         "SELECT c.table_name, t.table_type, group_concat( c.column_name ORDER BY c.ordinal_position ) "
         "FROM information_schema.columns c JOIN information_schema.tables t "
         "ON t.table_schema = c.table_schema AND t.table_name = c.table_name "
-        "WHERE c.table_schema = database() GROUP BY c.table_name, t.table_type;" )
+        "WHERE c.table_schema = database() AND c.table_name <> '%s' "
+        "GROUP BY c.table_name, t.table_type;" % MARCA )
     d = {}
     for riga in out.split( '\n' ):
         if riga.count( '\t' ) >= 2:
@@ -101,8 +131,40 @@ print( 'ricostruzione dello schema dai patch' )
 print( '  profilo %s, database vero: %s su %s' % ( stato, VERO[ 'db' ], VERO.get( 'address' ) ) )
 print( '  banco di prova: %s su %s' % ( banco_db, BANCO.get( 'address' ) ) )
 
-rc, _, err = sql( BANCO, None, 'DROP DATABASE IF EXISTS `%s`; CREATE DATABASE `%s` '
-                  'DEFAULT CHARACTER SET utf8;' % ( banco_db, banco_db ) )
+def esiste( db ):
+    rc, out, err = sql( BANCO, None, "SELECT count(*) FROM information_schema.schemata "
+                                     "WHERE schema_name = '%s';" % db )
+    if rc != 0:
+        print( '  ERRORE: non riesco a interrogare il server del banco: %s' % err.strip()[:300] ); sys.exit( 1 )
+    return out.strip() != '0'
+
+def usa_e_getta( db ):
+    """Vero solo se il database porta la tabella marcatore che questo script crea insieme a lui."""
+    rc, out, _ = sql( BANCO, None, "SELECT count(*) FROM information_schema.tables "
+                                   "WHERE table_schema = '%s' AND table_name = '%s';" % ( db, MARCA ) )
+    return rc == 0 and out.strip() == '1'
+
+def butta( db ):
+    # si ricontrolla la firma anche qui: il DROP non parte mai su un database che non e' del banco
+    if usa_e_getta( db ):
+        sql( BANCO, None, 'DROP DATABASE `%s`;' % db )
+    else:
+        print( '  ATTENZIONE: %s non porta piu\' la tabella %s, non lo cancello' % ( db, MARCA ) )
+
+# un banco lasciato in piedi da un giro precedente ( --tieni ) si ricrea; qualunque altro no
+if esiste( banco_db ):
+    if not usa_e_getta( banco_db ):
+        print( '  ERRORE: %s esiste gia\' e non l\'ha creato questo script ( manca la tabella %s ):'
+               % ( banco_db, MARCA ) )
+        print( '  non lo tocco. Scegliere un altro nome con --prova, oppure cancellarlo a mano se e\' davvero da buttare.' )
+        sys.exit( 1 )
+    print( '  il banco di un giro precedente viene ricreato' )
+    butta( banco_db )
+
+rc, _, err = sql( BANCO, None, 'CREATE DATABASE `%s` DEFAULT CHARACTER SET utf8; '
+                  'CREATE TABLE `%s`.`%s` ( `database_vero` varchar( 64 ), `creato` datetime ); '
+                  "INSERT INTO `%s`.`%s` VALUES ( '%s', now() );"
+                  % ( banco_db, banco_db, MARCA, banco_db, MARCA, VERO[ 'db' ].replace( "'", '' ) ) )
 if rc != 0:
     print( '  ERRORE: non riesco a creare il database di prova: %s' % err.strip()[:300] )
     print( '  ( serve un utente con CREATE DATABASE: usare --server per indicarne un altro )' )
@@ -206,7 +268,7 @@ if INVENTARIO:
 if TIENI:
     print( '\n  il database di prova %s e\' stato lasciato in piedi' % banco_db )
 else:
-    sql( BANCO, None, 'DROP DATABASE IF EXISTS `%s`;' % banco_db )
+    butta( banco_db )
 
 print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti'
        % ( errori, len( solo_db ), len( diverse ) ) )

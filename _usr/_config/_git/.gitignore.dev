@@ -14,19 +14,43 @@ src/py/*/*/share/
 src/py/*/*/lib64
 src/py/*/*/todo/
 src/py/*/*/done/
-src/ext/shadow.*
-src/shadow.*
+/src/ext/shadow.*
+/src/shadow.*
+# il file esterno di _src/_config.php ( DIR_SRC_CONFIG_EXT ) in versione custom sta qui, non in src/ext/
+/src/config/ext/shadow.*
 tmp/
 var/
-.gitignore
-.htaccess
-composer.*
+# configurazione del deploy: ESCLUSA DI PROPOSITO, a differenza di /_usr/_deploy/_git/.gitignore.
+# Questo file lo copia _src/_sh/_git.init.sh, che si usa all'installazione come _src/_sh/_gw.config.sh,
+# e _gw.config.sh scrive in src/config.json anche le password ( MySQL, SMTP, hash di root ): versionato
+# cosi' com'e', il primo commit le pubblicherebbe. Chi sposta le credenziali in src/shadow.json puo'
+# togliere queste due righe. Ancorate: il vecchio `config.*` escludeva anche i config.json dei
+# moduli custom ( mod/*/src/config.json ), che sono codice e vanno versionati.
+/src/config.*
+/src/config/ext/config.*
+# artefatti standard della root del deploy: ancorati con lo slash iniziale, come in
+# /_usr/_deploy/_git/.gitignore, altrimenti il pattern matcha a qualsiasi profondita' e si porta
+# via anche file custom del progetto ( un .htaccess di cartella, il .gitignore di un tool ).
+/.gitignore
+/.htaccess
+/composer.*
+# robots.* e sitemap.* restano non ancorati, come in /_usr/_deploy/_git/.gitignore
 robots.*
 sitemap.*
-config.*
+# i markdown della root sono quelli del framework, che arrivano con lo zip; la documentazione del
+# progetto ( usr/docs/, i READ.md e USER.md di mod/ ) e' scritta a mano e va versionata. Il vecchio
+# `*.md` non ancorato la escludeva tutta.
+/*.md
+# l'output di _src/_sh/_docs.build.sh si rigenera, il sorgente sta in usr/docs/
+usr/pages/manual/
+usr/pages/quickstart/
+# hook e skill che lo zip del framework sovrascrive: solo quei nomi, non le cartelle intere
+.githooks/commit-msg
+.githooks/post-commit
+.githooks/pre-commit
+.claude/skills/glisweb/
 *.log
 *.pem
 *.old
-*.md
 .#*
 *.sw[nop]

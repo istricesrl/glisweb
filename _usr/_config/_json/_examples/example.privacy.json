@@ -1,15 +1,17 @@
 {
   "privacy": {
-    "titolare": {
-      "denominazione": "denominazioneTitolare",
-      "indirizzo": "indirizzoSedeTitolare",
-      "cap": "capSedeTitolare",
-      "citta": "cittàSedeTitolare",
-      "provincia": "provinciaSedeTitolare",
-      "cf": "codiceFiscaleTitolare",
-      "piva": "partitaIvaTitolare",
-      "telefono": "telefonoSedeTitolare",
-      "mail": "mailTitolare"
+    "persone": {
+      "titolare": {
+        "denominazione": "denominazioneTitolare",
+        "indirizzo": "indirizzoSedeTitolare",
+        "cap": "capSedeTitolare",
+        "citta": "cittàSedeTitolare",
+        "provincia": "provinciaSedeTitolare",
+        "cf": "codiceFiscaleTitolare",
+        "piva": "partitaIvaTitolare",
+        "telefono": "telefonoSedeTitolare",
+        "mail": "mailTitolare"
+      }
     },
     "moduli": {
     },
