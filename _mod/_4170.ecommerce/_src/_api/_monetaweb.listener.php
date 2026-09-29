@@ -91,6 +91,15 @@
 	$_REQUEST['trackid'] = ( ! empty( $_REQUEST['trackid'] ) ) ? $_REQUEST['trackid'] : $_REQUEST['merchantorderid'];
 	$_REQUEST['ref'] = ( ! empty( $_REQUEST['ref'] ) ) ? $_REQUEST['ref'] : $_REQUEST['securitytoken'];
 
+	// se la notifica non porta il carrello lo cerco col PaymentID, salvato in ordine_pagamento all'avvio del pagamento
+	if( empty( $_REQUEST['trackid'] ) && ! empty( $_REQUEST['paymentid'] ) ) {
+		$_REQUEST['trackid'] = mysqlSelectValue(
+			$cf['mysql']['connection'],
+			'SELECT id FROM carrelli WHERE ordine_pagamento = ?',
+			array( array( 's' => $_REQUEST['paymentid'] ) )
+		);
+	}
+
     // pagina di redirect
     $redirect = $cf['ecommerce']['profile']['provider']['monetaweb']['error'];
 
@@ -211,7 +220,7 @@
 	} else {
 
 	    // log
-		logWrite( 'trackid mancante', 'monetaweb', LOG_ERR );
+		logWrite( 'trackid mancante, campi ricevuti: ' . implode( ', ', array_keys( $_REQUEST ) ), 'monetaweb', LOG_ERR );
 
 	}
 
