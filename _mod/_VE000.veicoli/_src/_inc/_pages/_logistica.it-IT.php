@@ -27,7 +27,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'logistica.veicoli.view',
                                                             'logistica.tipologie.veicoli.view',
-                                                            'logistica.veicoli.view.archiviate',
+                                                            'logistica.veicoli.view.archiviati',
                                                             'logistica.veicoli.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'veicoli' ),
                                                                             'priority'    => '800' ) ) )
@@ -62,24 +62,24 @@
     $p['logistica.tipologie.veicoli.form.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'azioni logistica veicoli' ),
+        'title'                => array( $l        => 'azioni logistica tipologie veicoli form' ),
         'h1'                => array( $l        => 'azioni' ),
-        'parent'            => array( 'id'        => 'logistica.tipologie.veicoli.form' ),
+        'parent'            => array( 'id'        => 'logistica.tipologie.veicoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_logistica.tipologie.veicoli.tools.php' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_logistica.tipologie.veicoli.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'logistica.tipologie.veicoli.form' )
     );
 
     // tools archivio produzione
-    $p['logistica.veicoli.view.archiviate'] = array(
+    $p['logistica.veicoli.view.archiviati'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'veicoli archiviate' ),
-        'h1'                => array( $l        => 'archiviate' ),
+        'title'                => array( $l        => 'veicoli archiviati' ),
+        'h1'                => array( $l        => 'archiviati' ),
         'parent'            => array( 'id'        => 'logistica.veicoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_logistica.veicoli.view.archiviate.php' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_logistica.veicoli.view.archiviati.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'logistica.veicoli.view' )
     );
@@ -111,3 +111,28 @@
                                                             'logistica.veicoli.form.tools' ) )
     );
 
+    // tools archivio produzione
+    $p['logistica.veicoli.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione logistica veicoli form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'logistica.veicoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'logistica.veicoli.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_logistica.veicoli.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'logistica.veicoli.form' )
+    );
+
+    // tools archivio produzione
+    $p['logistica.veicoli.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni logistica veicoli form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'logistica.veicoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_logistica.veicoli.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'logistica.veicoli.form' )
+    );

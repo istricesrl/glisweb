@@ -33,6 +33,22 @@
                     </div>
                 </div>
 
+                {# SECONDA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md-1 form-col">
+                        <span class="label-top">ordine</span>
+                        {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">entità HTML</span>
+                        {{ frm.input({ 'field': { 'name': 'html_entity', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">icona Font Awesome</span>
+                        {{ frm.input({ 'field': { 'name': 'font_awesome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
             </fieldset>
 
             {# BOTTONI E COMANDI DEL MODULO #}

@@ -39,6 +39,34 @@
 
             </fieldset>
 
+            <fieldset>
+                <legend>costruttore e modello</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">costruttore</span>
+                        {{ frm.select({ 'field': { 'name': 'id_costruttore' }, 'source': { 'values': etc.select.produttori }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">modello</span>
+                        {{ frm.input({ 'field': { 'name': 'modello', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>descrizione</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">descrizione</span>
+                        {{ frm.textarea({ 'field': { 'name': 'descrizione', 'rows': 5 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, form.table, request ) }}
