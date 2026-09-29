@@ -219,7 +219,9 @@
 			);
 
 			// controllo l'esito dello spostamento
-			if( empty( $s1 ) ) {
+			// NOTA mysqlQuery() restituisce false se la query solleva un'eccezione, ma -1 ( le righe toccate da uno statement
+			// fallito ) se l'esecuzione fallisce senza eccezione, come succede prima di PHP 8.1
+			if( empty( $s1 ) || $s1 < 0 ) {
 
 				// NOTA l'SMS è già partito: la riga resta nella sms_out con il token di questo giro, che la toglie da tutte
 				// le modalità di evasione, così non viene né persa né inviata una seconda volta
