@@ -349,6 +349,41 @@ CREATE OR REPLACE VIEW anagrafica_progetti_view AS
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
 ;
 
+-- | 090000000961
+
+-- attesa_view
+-- le righe di anagrafica_progetti in lista di attesa ( se_attesa ), per il modulo _0635.attesa;
+-- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026
+CREATE OR REPLACE VIEW attesa_view AS
+	SELECT
+		anagrafica_progetti.id,
+		anagrafica_progetti.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_progetti.id_progetto,
+		progetti.nome AS progetto,
+		todo.data_programmazione AS data_lezione,
+		todo.ora_inizio_programmazione AS ora_lezione,
+		anagrafica_progetti.id_ruolo,
+		ruoli_progetti.nome as ruolo,
+		anagrafica_progetti.ordine,
+		anagrafica_progetti.se_attesa,
+		from_unixtime( anagrafica_progetti.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
+		anagrafica_progetti.id_account_inserimento,
+		anagrafica_progetti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_progetti.nome
+		) AS __label__
+	FROM anagrafica_progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
+		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
+		LEFT JOIN todo ON todo.id = anagrafica_progetti.id_todo
+	WHERE anagrafica_progetti.se_attesa IS NOT NULL
+;
+
 -- | 090000001201
 
 -- anagrafica_settori_view
@@ -1017,6 +1052,8 @@ CREATE OR REPLACE VIEW `campagne_view` AS
 	SELECT
 		campagne.id,
 		campagne.nome,
+		campagne.testo,
+		( SELECT count( contatti.id ) FROM contatti WHERE contatti.id_campagna = campagne.id ) AS n_contatti,
 		campagne.id_account_inserimento,
 		campagne.id_account_aggiornamento,
 		campagne.nome AS __label__
@@ -1524,6 +1561,8 @@ CREATE OR REPLACE VIEW contatti_view AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
 		contatti.id_ranking,
 		ranking.nome AS ranking,
+		contatti.id_campagna,
+		campagne.nome AS campagna,
 		contatti.id_sito,
         contatti.utm_id,
         contatti.utm_source,
@@ -1548,6 +1587,7 @@ CREATE OR REPLACE VIEW contatti_view AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
 		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
+		LEFT JOIN campagne ON campagne.id = contatti.id_campagna
 ;
 
 -- | 090000006900
@@ -1685,6 +1725,66 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
 	FROM
 		conversazioni_account
+;
+
+-- | 090000007901
+
+-- costi_contratti_view
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
+CREATE OR REPLACE VIEW `costi_contratti_view` AS
+	SELECT
+		costi_contratti.id,
+		costi_contratti.id_contratto,
+		costi_contratti.id_tipologia,
+		costi_contratti.note,
+		costi_contratti.costo_orario,
+		concat(
+			if( tipologie_attivita_inps.codice IS NOT NULL, concat( tipologie_attivita_inps.codice, ' - ' ), '' ),
+			tipologie_attivita_inps.nome
+		) AS __label__
+	FROM costi_contratti
+		LEFT JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = costi_contratti.id_tipologia
+;
+
+-- | 090000008001
+
+-- coupon_view
+-- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026, con il codice che il cliente digita
+CREATE OR REPLACE VIEW `coupon_view` AS
+	SELECT
+		coupon.id,
+		coupon.codice,
+		coupon.nome,
+		coupon.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		coupon.timestamp_inizio,
+		from_unixtime( coupon.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+		coupon.timestamp_fine,
+		from_unixtime( coupon.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+		coupon.sconto_percentuale,
+		coupon.sconto_fisso,
+		coupon.se_multiuso,
+		coupon.se_globale,
+		coupon.se_vincolato,
+		coupon.causale,
+		coupon.causale_id_contratto,
+		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
+		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
+		group_concat( DISTINCT aree.nome ) AS aree,
+		coupon.id_account_inserimento,
+		coupon.timestamp_inserimento,
+		coupon.id_account_aggiornamento,
+		coupon.timestamp_aggiornamento,
+		concat_ws( ' ', coupon.codice, coupon.nome ) AS __label__
+	FROM coupon
+		LEFT JOIN anagrafica AS a1 ON a1.id = coupon.id_anagrafica
+		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
+		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
+		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+	GROUP BY coupon.id
 ;
 
 -- | 090000008101
@@ -3266,6 +3366,30 @@ CREATE OR REPLACE VIEW `orari_view` AS
 		orari.ora_fine,
 		orari.nome AS __label__
 	FROM orari
+;
+
+-- | 090000022401
+
+-- orari_contratti_view
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
+CREATE OR REPLACE VIEW `orari_contratti_view` AS
+	SELECT
+		orari_contratti.id,
+		orari_contratti.id_contratto,
+		orari_contratti.turno,
+		orari_contratti.id_giorno,
+		orari_contratti.ora_inizio,
+		orari_contratti.ora_fine,
+		orari_contratti.id_costo,
+		orari_contratti.se_lavoro,
+		orari_contratti.se_disponibile,
+		concat(
+			'turno ', orari_contratti.turno, ' ',
+			orari_contratti.id_giorno, ' ',
+			orari_contratti.ora_inizio, ' ',
+			orari_contratti.ora_fine
+		) AS __label__
+	FROM orari_contratti
 ;
 
 -- | 090000023100
@@ -4872,6 +4996,24 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
             tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
 	FROM tipologie_attivita                                   --
 ;                                                             --
+
+-- | 090000050431
+
+-- tipologie_attivita_inps_view
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
+CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
+	SELECT
+		tipologie_attivita_inps.id,
+		tipologie_attivita_inps.id_genitore,
+		tipologie_attivita_inps.nome,
+		tipologie_attivita_inps.codice,
+		tipologie_attivita_inps.se_quadratura,
+		concat(
+			if( tipologie_attivita_inps.codice IS NOT NULL, concat( tipologie_attivita_inps.codice, ' - ' ), '' ),
+			tipologie_attivita_inps.nome
+		) AS __label__
+	FROM tipologie_attivita_inps
+;
 
 -- | 090000050451
 

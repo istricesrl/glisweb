@@ -217,6 +217,12 @@
      * `$couponOk = true` ): un coupon scaduto restava spendibile a tempo indeterminato e un
      * codice inesistente veniva comunque salvato su carrelli.id_coupon.
      *
+     * Il coupon si identifica con coupon.id, che è quello che carrelli.id_coupon e coupon_articoli.id_coupon
+     * contengono; $codice è il codice digitato dal cliente ( coupon.codice ) e serve solo a dire di quale coupon
+     * si parla. Fino al 2026-09-30 le due query qui sotto confrontavano id_coupon con il codice, che coincideva con
+     * l'id solo prima del 02/03/2026, quando coupon.id era il codice: con l'id numerico il controllo di uso singolo
+     * non trovava mai gli utilizzi precedenti e quello sugli articoli vincolati non trovava mai i vincoli.
+     *
      * Regole applicate, nell'ordine:
      * -# il codice deve esistere in tabella coupon
      * -# la validità non deve essere ancora iniziata ( timestamp_inizio, NULL = nessun limite )
@@ -230,7 +236,7 @@
      *
      * @param   resource    connessione     connessione mysql
      * @param   array       coupon          riga della tabella coupon ( vuota se non esiste )
-     * @param   string      codice          codice inserito dall'utente
+     * @param   string      codice          codice inserito dall'utente ( coupon.codice ), solo descrittivo
      * @param   array       carrello        $_SESSION['carrello']
      *
      * @return  array( 'ok' => bool, 'errore' => 'inesistente' | 'non_ancora_valido' | 'scaduto'
@@ -282,7 +288,7 @@
                            OR ( provider_pagamento = 'contanti' AND timestamp_checkout IS NOT NULL ) )",
                         array(
                             array( 's' => isset( $carrello['id'] ) ? $carrello['id'] : 0 ),
-                            array( 's' => $codice ),
+                            array( 's' => $coupon['id'] ),
                             array( 's' => $mail ),
                             array( 's' => $mail ),
                             array( 's' => $cfis ),
@@ -304,7 +310,7 @@
                 $vincoli = mysqlQuery(
                     $connessione,
                     'SELECT id_articolo, gruppo_alternative FROM coupon_articoli WHERE id_coupon = ?',
-                    array( array( 's' => $codice ) )
+                    array( array( 's' => $coupon['id'] ) )
                 );
 
                 // nessun vincolo censito: il coupon resta utilizzabile

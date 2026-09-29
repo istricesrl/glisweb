@@ -536,7 +536,7 @@ CREATE TABLE `articoli` (
 --
 CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_articolo` char(32) NOT NULL,                              -- chiave esterna per l'articolo
+  `id_articolo` bigint(20) NOT NULL,                           -- chiave esterna per l'articolo
   `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
   `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
@@ -813,6 +813,7 @@ CREATE TABLE IF NOT EXISTS `banner_zone` (
 CREATE TABLE IF NOT EXISTS `campagne` (
   `id` bigint(20) NOT NULL,
   `nome` char(128) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -888,7 +889,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 --
 CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_prodotto` char(32) DEFAULT NULL,                          -- chiave esterna per il prodotto
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
   `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
   `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
   `valore` text DEFAULT NULL,                                   -- valore della caratteristica
@@ -957,7 +958,7 @@ CREATE TABLE `carrelli_articoli` (
   `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,
   `sconto_percentuale` decimal(16,5) DEFAULT NULL,
   `sconto_valore` decimal(16,5) DEFAULT NULL,
-  `id_coupon` char(32) DEFAULT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `coupon_percentuale` decimal(16,5) DEFAULT NULL,
   `coupon_valore` decimal(16,6) DEFAULT NULL,
   `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
@@ -1461,7 +1462,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
 CREATE TABLE `consensi_moduli` (                              --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_lingua` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lingua
-  `id_consenso` char(64) DEFAULT NULL,                        -- chiave esterna per il consenso
+  `id_consenso` bigint(20) DEFAULT NULL,                       -- chiave esterna per il consenso
   `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
   `ordine` int(11) DEFAULT NULL,                              -- campo di ordinamento
   `azione` char(32) DEFAULT NULL,                             -- etichetta per l'azione che l'utente deve compiere per accettare il consenso
@@ -1542,6 +1543,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (                       --
   `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata al contatto
   `id_inviante` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica dell'inviante
   `id_ranking` bigint(20) DEFAULT NULL,                          -- chiave esterna per il ranking
+  `id_campagna` bigint(20) DEFAULT NULL,                         -- chiave esterna per la campagna che ha portato il contatto
   `id_sito` bigint(20) DEFAULT NULL,                             -- chiave esterna per il sito di acquisizione
   `utm_id` char(128) DEFAULT NULL,                            -- UTM id
   `utm_source` char(128) DEFAULT NULL,                        -- UTM source
@@ -1813,6 +1815,25 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000007900
+
+-- costi_contratti
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i costi orari di un contratto per tipologia di attivita' INPS
+--
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
+-- bigint: la usano il modulo _0600.contratti ( costi_contratti_view ) e _1000.produzione
+--
+CREATE TABLE IF NOT EXISTS `costi_contratti` (
+  `id` bigint(20) NOT NULL,
+  `id_contratto` bigint(20) NOT NULL,
+  `id_tipologia` bigint(20) NOT NULL,
+  `note` text DEFAULT NULL,
+  `costo_orario` decimal(16,5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000008000
 
 -- coupon
@@ -1821,10 +1842,12 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
 -- struttura: tabella base
 -- funzione: contiene i coupon di sconto
 --
--- questa tabella contiene i coupon di sconto, con le informazioni principali
+-- questa tabella contiene i coupon di sconto, con le informazioni principali; id e' numerico dal
+-- riallineamento del 02/03/2026, e il codice che il cliente digita sta in codice ( prima di marzo era l'id )
 --
 CREATE TABLE IF NOT EXISTS `coupon` (
-  `id` char(32) NOT NULL,
+  `id` bigint(20) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_anagrafica` bigint(20) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -2016,7 +2039,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `riferimento` char(255) DEFAULT NULL,                       -- riferimento del documento
   `timestamp_invio` int(11) DEFAULT NULL,                     -- timestamp di invio del documento
   `progressivo_invio` char(5) DEFAULT NULL,                   -- progressivo di invio del documento
-  `id_coupon` char(32) DEFAULT NULL,                          -- chiave esterna per il coupon associato al documento
+  `id_coupon` bigint(20) DEFAULT NULL,                        -- chiave esterna per il coupon associato al documento
   `id_mastro_provenienza` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di provenienza
   `id_mastro_destinazione` bigint(20) DEFAULT NULL,              -- chiave esterna per il mastro di destinazione
   `porto` enum('franco','assegnato','-') DEFAULT NULL,        -- modalità di consegna
@@ -2408,6 +2431,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
   `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo
   `civico` char(16) DEFAULT NULL,                             -- civico
   `cap` char(11) DEFAULT NULL,                                -- CAP
+  `id_zona` bigint(20) DEFAULT NULL,                             -- chiave esterna per la zona, assegnata dal CAP ( zone_cap )
   `note` text DEFAULT NULL,                                   -- note sull'indirizzo
   `latitudine` decimal(11,7) DEFAULT NULL,                    -- latitudine
   `longitudine` decimal(11,7) DEFAULT NULL,                   -- longitudine
@@ -2682,7 +2706,7 @@ CREATE TABLE IF NOT EXISTS `macro` (                            --
   `id_risorsa` bigint(20) DEFAULT NULL,
   `id_categoria_risorse` bigint(20) DEFAULT NULL,
   `id_progetto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,
   `id_pianificazione` bigint(20) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
   `macro` char(255) DEFAULT NULL,
@@ -3317,6 +3341,29 @@ CREATE TABLE IF NOT EXISTS `orari` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000022400
+
+-- orari_contratti
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene i turni di lavoro e di disponibilita' di un contratto
+--
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
+-- bigint: la usano i moduli _0600.contratti e _1000.produzione, e non e' la tabella orari
+--
+CREATE TABLE IF NOT EXISTS `orari_contratti` (
+  `id` bigint(20) NOT NULL,
+  `id_contratto` bigint(20) NOT NULL,
+  `turno` int(11) DEFAULT '1',
+  `id_giorno` bigint(20) NOT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `id_costo` bigint(20) NOT NULL,
+  `se_lavoro` int(1) DEFAULT '1',
+  `se_disponibile` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000022800
 
 -- organizzazioni
@@ -3371,7 +3418,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id_mastro_destinazione` bigint(20) DEFAULT NULL,
   `id_iban` bigint(20) DEFAULT NULL,
   `importo_lordo_totale` decimal(9,2) DEFAULT NULL,
-  `id_coupon` char(32) DEFAULT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `coupon_valore` decimal(9,2) DEFAULT NULL,
   `importo_lordo_finale` decimal(9,2) DEFAULT NULL,
   `id_listino` bigint(20) DEFAULT NULL,
@@ -3526,7 +3573,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `model_id_collo` bigint(20) DEFAULT NULL,
   `model_id_condizione_pagamento` bigint(20) DEFAULT NULL,
   `model_id_contatto` bigint(20) DEFAULT NULL,
-  `model_id_coupon` char(32) DEFAULT NULL,
+  `model_id_coupon` bigint(20) DEFAULT NULL,
   `model_id_destinatario` bigint(20) DEFAULT NULL,
   `model_id_documento` bigint(20) DEFAULT NULL,
   `model_id_emittente` bigint(20) DEFAULT NULL,
@@ -3933,8 +3980,8 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
   `id_risorsa` bigint(20) DEFAULT NULL,                            -- ID della risorsa
   `id_categoria_risorse` bigint(20) DEFAULT NULL,                  -- ID della categoria risorse
   `id_progetto` bigint(20) DEFAULT NULL,                          -- ID del progetto
-  `id_categoria_progetti` INT(11) DEFAULT NULL,                 -- ID della categoria progetti
-  `id_banner` INT(11) DEFAULT NULL,                             -- ID del banner
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- ID della categoria progetti
+  `id_banner` bigint(20) DEFAULT NULL,                           -- ID del banner
   `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
   `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio pubblicazione
   `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine pubblicazione
@@ -5160,6 +5207,25 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000050430
+
+-- tipologie_attivita_inps
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di attivita' ai fini INPS, a cui si legano i costi dei contratti
+--
+-- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
+-- bigint: la usano i moduli _0600.contratti, _1000.produzione e _0920.corsi
+--
+CREATE TABLE IF NOT EXISTS `tipologie_attivita_inps` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `se_quadratura` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000050450
 
@@ -6443,7 +6509,7 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
   `fatturazione_strategia` enum('SINGOLA','MULTIPLA') DEFAULT NULL,
   `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
-  `id_coupon` char(32) DEFAULT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `codice_coupon` char(32) DEFAULT NULL,
   `sconto_percentuale_coupon` decimal(16,5) DEFAULT NULL,
   `sconto_valore_coupon` decimal(16,5) DEFAULT NULL,
@@ -6492,7 +6558,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id_periodicita` bigint(20) DEFAULT NULL,
   `id_contratto` bigint(20) DEFAULT NULL,
   `id_licenza` bigint(20) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
   `id_tipologia_contratto` bigint(20) DEFAULT NULL,
   `id_categoria_progetti` bigint(20) DEFAULT NULL,
   `id_pianificazione` bigint(20) DEFAULT NULL,
@@ -6567,8 +6633,8 @@ CREATE TABLE IF NOT EXISTS `licenze` (
 CREATE TABLE IF NOT EXISTS `istruzioni` (
   `id` bigint(20) NOT NULL,                                    -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                      -- chiave esterna per la tipologia
-  `id_prodotto` char(32) DEFAULT NULL,                         -- chiave esterna per il prodotto
-  `id_articolo` char(32) DEFAULT NULL,                         -- chiave esterna per l'articolo
+  `id_prodotto` bigint(20) DEFAULT NULL,                       -- chiave esterna per il prodotto
+  `id_articolo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'articolo
   `nome` char(128) DEFAULT NULL,                               -- nome dell'istruzione
   `id_account_inserimento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha inserito
   `timestamp_inserimento` int(11) DEFAULT NULL,                -- timestamp di inserimento

@@ -495,6 +495,15 @@
                         $r = mysqli_query($c, $q);
                         break;
 
+                    // NOTA le patch del database mettono dentro PREPARE le operazioni che dipendono dallo schema ( SET della
+                    // query guardata da information_schema, PREPARE, EXECUTE, DEALLOCATE ); fino al 29/09/2026 queste tre
+                    // cadevano nel default, non venivano eseguite e _mysql.patch.php registrava comunque la patch come fatta
+                    case 'PREPARE':
+                    case 'EXECUTE':
+                    case 'DEALLOCATE':
+                        $r = mysqli_query($c, $q);
+                        break;
+
                     case 'BEGIN':
                     case 'START':
                         $r = mysqli_begin_transaction($c);

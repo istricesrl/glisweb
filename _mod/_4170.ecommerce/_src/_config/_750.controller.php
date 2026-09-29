@@ -888,10 +888,27 @@ ini_set("display_errors", 1);
 
             // TODO se è stato inviato un codice coupon generale per il carrello lo aggiungo alla carrelli_coupon
             // TODO qui gestire l'aggiunta dei coupon a carrelli_coupon
+            // NOTA il cliente digita il codice del coupon ( coupon.codice ), mentre carrelli.id_coupon e le altre
+            // colonne id_coupon contengono coupon.id: prima del 02/03/2026 le due cose coincidevano, perché l'id del
+            // coupon era il codice, e questo blocco scriveva il codice digitato direttamente in id_coupon; da quando
+            // coupon.id è numerico il codice va tradotto nell'id, e il codice resta in carrelli.codice_coupon, che è
+            // anche il campo che il template del carrello rimostra al cliente ( 2026-09-30 )
             if( isset( $_REQUEST['__carrello__']['codice_coupon'] ) ) {
 
-                // ...
-                $_SESSION['carrello']['id_coupon'] = $_REQUEST['__carrello__']['codice_coupon'];
+                // codice digitato, vuoto se il cliente ha tolto il coupon
+                $_SESSION['carrello']['codice_coupon'] = trim( (string) $_REQUEST['__carrello__']['codice_coupon'] );
+
+                // id del coupon con quel codice, vuoto se il codice non esiste
+                $_SESSION['carrello']['id_coupon'] = ( $_SESSION['carrello']['codice_coupon'] === '' ) ? NULL : mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM coupon WHERE codice = ?',
+                    array( array( 's' => $_SESSION['carrello']['codice_coupon'] ) )
+                );
+
+                // un codice vuoto non è un coupon
+                if( $_SESSION['carrello']['codice_coupon'] === '' ) {
+                    $_SESSION['carrello']['codice_coupon'] = NULL;
+                }
 
             } elseif( isset( $_REQUEST['__carrello__']['id_coupon'] ) ) {
 
@@ -901,10 +918,12 @@ ini_set("display_errors", 1);
             }
 
             // TODO qui fare un ciclo e per ogni coupon calcolare il valore poi incrementare il campo totale_lordo_coupon del carrello
-            if( ! empty( $_SESSION['carrello']['id_coupon'] ) ) {
+            // NOTA si entra anche con un codice digitato che non corrisponde a nessun coupon, perché la verifica qui sotto
+            // lo respinga come inesistente e il cliente ne veda il motivo
+            if( ! empty( $_SESSION['carrello']['id_coupon'] ) || ! empty( $_SESSION['carrello']['codice_coupon'] ) ) {
 
                 // prelevo i dettagli relativi al coupon
-                $coupon = mysqlSelectRow(
+                $coupon = ( empty( $_SESSION['carrello']['id_coupon'] ) ) ? array() : mysqlSelectRow(
                     $cf['mysql']['connection'],
                     'SELECT * FROM coupon WHERE id = ?',
                     array( array( 's' => $_SESSION['carrello']['id_coupon'] ) )
@@ -918,7 +937,7 @@ ini_set("display_errors", 1);
                 $esitoCoupon = verificaValiditaCoupon(
                     $cf['mysql']['connection'],
                     $coupon,
-                    $_SESSION['carrello']['id_coupon'],
+                    $_SESSION['carrello']['codice_coupon'] ?? NULL,
                     $_SESSION['carrello']
                 );
 
@@ -972,10 +991,11 @@ ini_set("display_errors", 1);
                     // die( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' non utilizzabile' );
 
                     // log
-                    logWrite( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                    logWrite( 'coupon ' . ( $_SESSION['carrello']['codice_coupon'] ?? $_SESSION['carrello']['id_coupon'] ) . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
 
                     // rimuovo il coupon inutilizzabile
                     $_SESSION['carrello']['id_coupon'] =
+                    $_SESSION['carrello']['codice_coupon'] =
                     $_SESSION['carrello']['sconto_valore_coupon'] =
                     $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
 
@@ -988,6 +1008,7 @@ ini_set("display_errors", 1);
 
                 // rimuovo il coupon inutilizzabile
                 $_SESSION['carrello']['id_coupon'] =
+                $_SESSION['carrello']['codice_coupon'] =
                 $_SESSION['carrello']['sconto_valore_coupon'] =
                 $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
 

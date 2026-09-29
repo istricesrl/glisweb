@@ -140,6 +140,14 @@ if( carrelloForm.checkValidity() ) {
 
   calcolo dei coupon
   ------------------
+  Il cliente digita il codice del coupon nel campo *codice_coupon* del carrello. Nello step 6 di _src/_config/_750.controller.php
+  il codice si cerca in *coupon.codice*, l'id trovato va in *carrelli.id_coupon* e il codice digitato resta in
+  *carrelli.codice_coupon*, che il template rimostra; un codice vuoto toglie il coupon. verificaValiditaCoupon()
+  ( _src/_lib/_mysql.utils.add.php ) controlla esistenza, date di validità, uso singolo per persona e articoli vincolati
+  confrontando *carrelli.id_coupon* e *coupon_articoli.id_coupon* con l'id del coupon; un coupon respinto si toglie dal
+  carrello e il motivo va in `$_SESSION['coupon']['errore']`. Fino al 2026-09-30 il codice digitato finiva direttamente in
+  *id_coupon*, che dal 02/03/2026 è numerico: nessun coupon veniva mai trovato. I coupon per riga ( *carrelli_articoli.id_coupon* )
+  e quelli dei pagamenti si scelgono da elenchi e usano già l'id.
 
   calcolo dei costi di spedizione
   -------------------------------
