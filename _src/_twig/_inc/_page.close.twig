@@ -27,17 +27,14 @@
 {# SCRIPT JAVASCRIPT DEL TEMPLATE #}
 {% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
-{# CODICE DI CHIUSURA PER FACEBOOK MESSENGER #}
-{% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.twig' %}{% endif %}
-
 {# CODICE DI CHIUSURA PER CRITEO #}
-{% if criteo.account %}{% include '_inc/_criteo.twig' %}{% endif %}
+{% if criteo.profile.account %}{% include '_inc/_criteo.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER CHARTJS #}
 {% if page.contents.chartjs %}{% include '_inc/_chartjs.script.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER SMARTSUPP #}
-{% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
+{% if smartsupp.profile.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER EMAILABLE #}
 {% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.twig' %}{% endif %}

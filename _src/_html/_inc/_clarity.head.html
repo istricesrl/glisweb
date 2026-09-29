@@ -1,7 +1,18 @@
-{# FILE PER LA GENERAZIONE DEL TAG <script> DI MICROSOFT CLARITY ALL'INTERNO DEL TAG <head> #}
+{# FILE PER LA GENERAZIONE DEL TAG <script> DI MICROSOFT CLARITY ALL'INTERNO DEL TAG <head>
+    L'id è quello del profilo corrente ( _src/_config/_160.microsoft.php ). Il consenso segue la regola
+    di iframeEmbed() in _src/_twig/_lib/_default.twig: se Clarity è dichiarato in
+    privacy.cookie.terzi.analitici e non è anonimo lo script parte solo col consenso, se non è
+    dichiarato il framework non ha niente da far rispettare e lo script esce, e un commento lo dice.
+    NOTA non si è adottata la regola più stretta del pixel di Facebook perché Clarity è in esercizio
+    senza dichiarazione del cookie dal 2025-12-28: con quella regola si spegnerebbe in silenzio #}
 
 <!-- inizio file: {{ _self }} -->
-{% if microsoft.profile.clarity.id is defined %}
+{% set dettagli = privacy.cookie.terzi.analitici.Clarity %}
+{% if microsoft.profile.clarity.id %}
+{% if dettagli and not dettagli.anonimo and dettagli.consenso != 'ok' %}
+<!-- profilo Clarity settato, consenso {% if dettagli.consenso %}negato{% else %}non prestato{% endif %} -->
+{% else %}
+{% if not dettagli %}<!-- Clarity non è dichiarato in privacy.cookie.terzi.analitici: lo script esce senza verifica del consenso -->{% endif %}
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -9,6 +20,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "{{ microsoft.profile.clarity.id }}");
 </script>
+{% endif %}
 {% else %}
 <!-- nessun id trovato in microsoft.profile.clarity.id -->
 {% endif %}
