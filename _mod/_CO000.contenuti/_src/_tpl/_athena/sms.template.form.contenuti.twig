@@ -47,9 +47,13 @@
                 <legend>mittente</legend>
 
                 <div class="form-group row">
-                    <div class="col form-col">
-                        <span class="label-top">mittente</span>
-                        {{ frm.input({ 'field': { 'name': 'mittente_mail', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">nome del mittente</span>
+                        {{ frm.input({ 'field': { 'name': 'mittente_nome', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">numero del mittente</span>
+                        {{ frm.input({ 'field': { 'name': 'mittente_numero', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
                     </div>
                 </div>
 
@@ -61,38 +65,18 @@
                 <div class="form-group row">
                     <div class="col-12 col-md form-col">
                         <span class="label-top">destinatari</span>
-                        {{ frm.textarea({ 'field': { 'name': 'destinatari_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-                    </div>
-                    <div class="col-12 col-md form-col">
-                        <span class="label-top">destinatari CC</span>
-                        {{ frm.textarea({ 'field': { 'name': 'destinatari_cc_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-                    </div>
-                    <div class="col-12 col-md form-col">
-                        <span class="label-top">destinatari BCC</span>
-                        {{ frm.textarea({ 'field': { 'name': 'destinatari_bcc_mail', 'rows': 2 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'destinatari_numero', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
                     </div>
                 </div>
 
             </fieldset>
 
             <fieldset class="d-flex flex-column h-100">
-                <legend>
-                    contenuto della mail
-                    {% if request[ form.table ][ subtable ][ i ].id %}
-                    <small>(<a href="{{ pages['contenuti.archivio.contenuti.form.wysiwyg'].url[ ietf ] }}?contenuti[id]={{ request[ form.table ][ subtable ][ i ].id }}&__backurl__={{ page.backurl[ ietf ] }}">vai all'editor visuale</a>)</small>
-                    {% endif %}
-                </legend>
-
-                <div class="form-group row">
-                    <div class="col form-col">
-                        <span class="label-top">oggetto</span>
-                        {{ frm.input({ 'field': { 'name': 'cappello', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-                    </div>
-                </div>
+                <legend>contenuto dell'SMS</legend>
 
                 <div class="form-group row h-100">
                     <div class="col-12 col-md form-col">
-                        {{ frm.textarea({ 'field': { 'name': 'testo', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                        {{ frm.textarea({ 'field': { 'name': 'testo', 'rows': 5 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
                     </div>
                 </div>
 
@@ -100,7 +84,7 @@
 
             {% else %}
 
-            {% for field in ['mittente_mail','destinatari_mail','destinatari_cc_mail','destinatari_bcc_mail','cappello'] %}
+            {% for field in ['mittente_nome','mittente_numero','destinatari_numero'] %}
             {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             {% endfor %}
 

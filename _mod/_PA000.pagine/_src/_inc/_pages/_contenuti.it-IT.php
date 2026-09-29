@@ -159,6 +159,32 @@
         'etc'                => array( 'tabs'    => 'contenuti.archivio' )
     );
 
+    // gestione voci di menu
+    $p['contenuti.menu.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'contenuti menu form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.menu.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.menu.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.menu.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'contenuti.menu.form',
+                                                            'contenuti.menu.form.tools' ) )
+    );
+
+    // tools voci di menu
+    $p['contenuti.menu.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni contenuti menu form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.menu.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.menu.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.menu.form' )
+    );
+
     // tools archivio contenuti
     $p['contenuti.redirect.view'] = array(
         'sitemap'            => false,

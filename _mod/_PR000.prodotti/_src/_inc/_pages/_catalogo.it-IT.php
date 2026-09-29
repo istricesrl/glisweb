@@ -120,18 +120,6 @@
     }
 
     // tools archivio produzione
-    $p['catalogo.prodotti.form.categorie'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'catalogo prodotti form categorie' ),
-        'h1'                => array( $l        => 'categorie' ),
-        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.categorie.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.categorie.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
-    );
-
-    // tools archivio produzione
     $p['catalogo.prodotti.form.caratteristiche'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo prodotti form caratteristiche' ),

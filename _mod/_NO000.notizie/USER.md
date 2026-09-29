@@ -75,10 +75,7 @@ la linguetta **menu**, da cui la pagina della categoria si aggiunge ai menu del 
 <!-- @pagina: contenuti.tipologie.notizie.view -->
 
 La linguetta **tipologie** elenca i tipi di notizia che si possono scegliere nelle schede. La
-scheda di una tipologia ha **genitore**, **nome** e **note**, e nessun'altra linguetta.
-
-> **attenzione** — il campo **note** della scheda delle tipologie non ha un posto dove essere
-> registrato: il salvataggio di una tipologia può non andare a buon fine.
+scheda di una tipologia ha **genitore** e **nome**, e nessun'altra linguetta.
 
 ## archiviare invece di cancellare
 <!-- @pubblico: operatore, amministratore -->

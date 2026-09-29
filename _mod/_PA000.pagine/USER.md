@@ -116,9 +116,25 @@ Nell'archivio dei contenuti la linguetta **menu** elenca **tutte** le voci di me
 pagine, con la tendina del sito per restringere l'elenco: serve a vedere un menu intero, cosa che
 dalla scheda di una singola pagina non si può.
 
-> **nota** — la scheda di una voce di menu **non c'è**: un clic su una riga di questo elenco porta
-> a una pagina che non si compone. Le voci si modificano dalla linguetta *menu* della pagina a cui
-> appartengono.
+## la scheda di una voce di menu
+<!-- @pubblico: amministratore -->
+<!-- @pagina: contenuti.menu.form -->
+
+Un clic su una riga dell'elenco apre la scheda della voce, il più ne apre una nuova. La linguetta
+*gestione* ha tre riquadri:
+
+| riquadro | campi |
+|---|---|
+| dati generali | **menu** ( il nome del menu del sito in cui compare ), **ordine**, **lingua** e **voce**, cioè il testo |
+| collegamento | dove porta la voce: una **pagina**, una **categoria di prodotti** o una **categoria di notizie** |
+| comportamento | **target** ( se il link si apre in una nuova scheda ), **ancora** e **sottopagine** ( se sotto la voce compaiono anche le pagine figlie ) |
+
+L'altra linguetta è **azioni**, dove lo standard prepara i gruppi ma non mette riquadri.
+
+> **nota** — qui il **menu** si scrive a mano, e deve essere esattamente uno dei nomi di menu del
+> template del sito. Dalla linguetta *menu* della pagina a cui la voce appartiene, invece, si
+> sceglie da una tendina: di solito conviene lavorare da lì, e usare questa scheda per rivedere un
+> menu intero.
 
 ## archiviare invece di cancellare
 <!-- @pubblico: operatore, amministratore -->

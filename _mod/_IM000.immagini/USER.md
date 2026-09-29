@@ -60,10 +60,10 @@ La scheda di un'immagine ha queste linguette:
 La linguetta *collegamenti* serve a **spostare** un'immagine da un oggetto a un altro senza
 ricaricarla, o a scoprire a cosa appartiene un'immagine trovata nell'elenco.
 
-> **nota** — la linguetta *azioni* della scheda dovrebbe offrire il riquadro **scalatura immagine**,
-> che rifà subito le versioni ridotte di quell'immagine, ma per ora **non compare**. Le versioni
-> ridotte le prepara un lavoro periodico dell'installazione, in un secondo momento: un'immagine
-> appena caricata può comparire sul sito con qualche minuto di ritardo.
+Nella linguetta *azioni*, fra le **elaborazioni**, il riquadro **scalatura immagine** rifà subito le
+versioni ridotte di quell'immagine. Di solito non serve: le versioni ridotte le prepara un lavoro
+periodico dell'installazione, in un secondo momento, e un'immagine appena caricata può comparire
+sul sito con qualche minuto di ritardo; il riquadro serve quando la si vuole vedere subito.
 
 ## quello che questo capitolo non dice ancora
 

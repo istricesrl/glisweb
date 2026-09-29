@@ -33,7 +33,9 @@ Questa è la macro della scheda contenuti del form di gestione dei marchi.
 Questa è la macro della scheda SEM/SMM del form di gestione dei marchi.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.web.php
-Questa è la macro della scheda web del form di gestione dei marchi.
+Questa è la macro della scheda web del form di gestione dei marchi. A differenza delle schede web di prodotti, categorie
+e notizie non ha il sotto-elenco delle pubblicazioni: la tabella pubblicazioni non ha una colonna id_marchio, e il
+sotto-elenco che c'era scriveva l'id del marchio in id_notizia.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.contenuti.php
 Questa è la macro della scheda di gestione contenuti della pagina di gestione prodotti.
@@ -51,7 +53,9 @@ Questa è la macro della dashboard dell'archivio dei contenuti.
 Questa è la macro della pagina di gestione dell'archivio dei contenuti.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.tools.php
-Questa è la macro della pagina degli strumenti della pagina di gestione dei contenuti.
+Questa è la macro della pagina degli strumenti della pagina di gestione dei contenuti: dichiara i gruppi di riquadri come
+le altre schede tools ( esportazioni, importazioni, elaborazioni, viste statiche ) e chiama _default.tools.php prima di
+_default.form.php.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.archivio.contenuti.form.wysiwyg.php
 Questa è la macro della scheda WYSIWYG della pagina di gestione contenuti.
@@ -104,6 +108,11 @@ Quesa è la macro della pagina di gestione SEM/SMM delle pagine.
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_mail.template.form.contenuti.php
 Questa è la macro della scheda contenuti della pagina di gestione dei template mail.
 
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_sms.template.form.contenuti.php
+Questa è la macro della scheda contenuti della pagina di gestione dei template SMS, gemella di quella dei template mail:
+i contenuti per lingua del template ( mittente_nome, mittente_numero, destinatari_numero, testo della tabella contenuti ),
+senza oggetto né allegati.
+
 ### /_mod/_CO000.contenuti/_src/_inc/_pages/_catalogo.it-IT.php
 Questo file contiene le dichiarazioni delle pagine di gestione contenuti del catalogo prodotti.
 
@@ -112,3 +121,7 @@ Qui vengono definite le pagine del modulo contenuti.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_pages/_mail.it-IT.php
 Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template mail.
+
+### /_mod/_CO000.contenuti/_src/_inc/_pages/_sms.it-IT.php
+Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template SMS ( sms.template.form.contenuti ),
+che /_mod/_TE000.template/_src/_inc/_pages/_sms.it-IT.php inserisce fra le linguette se il modulo contenuti è attivo.

@@ -18,10 +18,10 @@
      *
      */
 
-    // configurazione della vista template mail
+    // configurazione della vista template sms
     $ct['view'] = array(
         'table' => 'template',
-        'open'  => array( 'page' => 'mail.template.form' ),
+        'open'  => array( 'page' => 'sms.template.form' ),
         'data'  => array(),
         'cols'  => array(
             'id' => '#',

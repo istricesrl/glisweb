@@ -75,25 +75,13 @@
         'etc'                => array( 'tabs'    => 'contenuti.archivio.contenuti.form' )
     );
 
-    // gestione pagine form contenuti
-    $p['contenuti.archivio.contenuti.form.sem'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'gestione SEO/SEM' ),
-        'h1'                => array( $l        => 'SEO/SEM' ),
-        'parent'            => array( 'id'        => 'contenuti.archivio.contenuti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.contenuti.form.sem.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.contenuti.form.sem.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'contenuti.archivio.contenuti.form' )
-    );
-
     // tools archivio contenuti
     $p['contenuti.archivio.contenuti.form.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
         'title'                => array( $l        => 'azioni archivio contenuti form' ),
         'h1'                => array( $l        => 'azioni' ),
-        'parent'            => array( 'id'        => 'contenuti.archivio' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.contenuti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.contenuti.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),

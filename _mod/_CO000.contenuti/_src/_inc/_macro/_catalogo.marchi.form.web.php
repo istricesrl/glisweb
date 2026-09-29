@@ -47,9 +47,6 @@
 
     }
 
-    // tendina tipologie pubblicazioni
-    $ct['etc']['select']['tipologie_pubblicazioni'] = tendinaTipologiePubblicazioni();
-
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.form.php';
 

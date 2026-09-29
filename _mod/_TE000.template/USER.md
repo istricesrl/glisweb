@@ -60,11 +60,25 @@ Le altre linguette compaiono se ci sono i moduli che le gestiscono:
 <!-- @pagina: sms.template.view -->
 
 Nella sezione *sms* la linguetta **template** elenca i template degli SMS, con le stesse colonne di
-quelli delle mail.
+quelli delle mail. Un clic su una riga apre la scheda, il più ne apre una nuova.
 
-> **nota** — la scheda di un template SMS è **dichiarata ma non c'è**. Un clic su una riga di
-> questo elenco apre la scheda dei **template mail**, che mostra lo stesso template ma è pensata per
-> le mail: salvarlo da lì lo segna anche come template mail.
+## la scheda di un template SMS
+<!-- @pubblico: amministratore -->
+<!-- @pagina: sms.template.form -->
+
+La linguetta *gestione* è uguale a quella dei template mail: **nome**, **ruolo**, **tipo** e
+**note**, con la stessa attenzione al ruolo. Un template salvato da qui è un template SMS.
+
+Le altre linguette sono:
+
+| linguetta | cosa ci sta |
+|---|---|
+| contenuti | il messaggio, **una versione per lingua**: nome e numero del mittente, destinatari e testo; non ci sono oggetto né allegati. Compare se c'è il modulo dei contenuti |
+| azioni | le operazioni sul template; nello standard la pagina prepara i gruppi ma non ci mette riquadri |
+
+> **nota** — i testi scritti nella linguetta *contenuti* di un template SMS **non vengono ancora
+> usati** per comporre i messaggi: l'applicazione riconosce il template dal ruolo, ma il testo lo
+> prende solo dai template predefiniti.
 
 ## quello che questo capitolo non dice ancora
 

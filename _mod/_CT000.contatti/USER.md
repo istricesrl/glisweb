@@ -50,12 +50,13 @@ rispondere a una richiesta.
 > quello che il visitatore ha mandato**: correggerlo cambia la prova di cosa è stato chiesto. Le
 > annotazioni vanno nelle *note* della prima linguetta.
 
-Le altre linguette sono **archiviazione** ( data e note ) e **azioni**, per ora vuota.
+La linguetta **privacy** elenca i **consensi** che il visitatore ha dato o negato con l'invio, uno
+per riga: il consenso, il modulo del sito da cui è arrivato e se è stato *prestato* o *non
+prestato*. È la stessa forma della linguetta *privacy* della scheda di un'anagrafica, dove si
+leggono i consensi di un visitatore riconosciuto; qui si vedono quelli legati a **questo invio**, e
+si consultano soltanto.
 
-> **nota** — la scheda dichiara anche una linguetta **privacy**, per i consensi prestati dal
-> visitatore con l'invio, ma la pagina non è ancora stata realizzata e non va aperta. I consensi
-> vengono comunque registrati, e quelli di un visitatore riconosciuto si leggono nella linguetta
-> *privacy* della sua scheda in anagrafica.
+Le altre linguette sono **archiviazione** ( data e note ) e **azioni**, per ora vuota.
 
 ## archiviare i contatti
 <!-- @pubblico: operatore, amministratore -->

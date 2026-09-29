@@ -65,10 +65,6 @@ indirizzo e i suoi testi per i motori di ricerca.
 | meta tag | **title** ( il titolo che compare nella scheda del browser e nei risultati di ricerca ), **keywords**, **description** ( le righe sotto il titolo nei risultati ), **robots** ( le istruzioni ai motori di ricerca ) |
 | OpenGraph protocol | come la pagina si presenta quando la si condivide su un social: tipo, determinante, titolo, immagine, audio, video, descrizione |
 
-> **attenzione** — nel riquadro *OpenGraph* il campo **OG:video** salva il suo valore al posto di
-> **OG:title**: scrivere un video sovrascrive il titolo per la condivisione. Finché non viene
-> sistemato, quel campo va lasciato vuoto.
-
 ## la pubblicazione sul sito
 <!-- @pubblico: operatore, amministratore -->
 
@@ -87,10 +83,9 @@ notizia che deve uscire lunedì mattina, o un prodotto che deve sparire a fine s
 > **nota** — le tendine *schema* e *tema* dipendono dal template scelto, e si riempiono **dopo aver
 > salvato** la scheda col template impostato.
 
-> **attenzione** — nella linguetta *web* dei **prodotti** e dei **marchi** le righe di
-> pubblicazione non si agganciano correttamente all'oggetto aperto, e così pure i testi delle
-> linguette *catalogo* e *SEO/SEM* dei **marchi**. Sulle pagine, sulle notizie e sulle categorie il
-> problema non c'è.
+> **nota** — la linguetta *web* dei **marchi** non ha il sotto-elenco delle pubblicazioni: un
+> marchio non ha periodi di pubblicazione suoi, e resta online secondo il sito e i flag della
+> linguetta.
 
 ## voci di menu, metadati, macro
 <!-- @pubblico: operatore, amministratore -->
@@ -135,8 +130,8 @@ la mail contiene:
 | oggetto | l'oggetto della mail |
 | testo | il corpo della mail |
 
-> **nota** — la stessa linguetta è prevista anche sui template degli **SMS**, ma lì porta a una
-> pagina che l'applicazione non ha ancora.
+Sui template degli **SMS** la stessa linguetta tiene, lingua per lingua, il **nome** e il
+**numero** del mittente, i **destinatari** e il **testo**: un SMS non ha oggetto né copie.
 
 ## l'archivio dei contenuti
 <!-- @pubblico: amministratore -->
@@ -153,7 +148,7 @@ motori di ricerca e i social descritti qui sopra, più due linguette per il corp
 |---|---|
 | testo | il corpo del testo nell'editor di codice |
 | WYSIWYG | il corpo del testo nell'editor visuale, già impaginato |
-| azioni | per ora **vuota** |
+| azioni | le operazioni sul testo; lo standard prepara i gruppi ma non ci mette riquadri |
 
 > **nota** — di norma i testi si modificano dalla scheda dell'oggetto a cui appartengono, dove si
 > vede il contesto. L'archivio è lo strumento per cercarli e per il lavoro di revisione.

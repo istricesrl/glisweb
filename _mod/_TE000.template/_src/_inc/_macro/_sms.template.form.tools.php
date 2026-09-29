@@ -1,13 +1,18 @@
 <?php
 
     /**
-     *
-     *
-     *
-     * TODO implementare
+     * 
+     * 
+     * 
+     * 
+     * 
      * TODO documentare
-     *
+     * 
+     * 
      */
+
+    // tabella gestita
+    $ct['form']['table'] = 'template';
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
@@ -22,8 +27,17 @@
         ),
         '05.static' => array(
             'label' => 'viste statiche'
+        ),
+        '08.account' => array(
+            'label' => 'account'
+        ),
+        '12.archivium' => array(
+            'label' => 'Archivium'
         )
     );
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
+
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';

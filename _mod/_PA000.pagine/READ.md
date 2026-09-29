@@ -17,6 +17,16 @@ In questo file vengono caricati i dati specifici della pagina corrente.
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.archivio.menu.view.php
 Questa è la macro della view dei menu dell'archivio contenuti.
 
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.menu.form.php
+Questa è la macro della scheda di una voce di menu ( contenuti.menu.form ), che l'elenco dell'archivio menu apre; prima
+la pagina era citata dalla vista ma non esisteva. È un form semplice sulla tabella menu sul modello di
+contenuti.redirect.form, con le tendine della linguetta menu delle pagine ( sottopagine, target, lingue ) e quella delle
+categorie notizie; pagina e categoria prodotti si cercano via API. Il nome del menu è un campo di testo perché l'elenco
+dei menu dipende dal template della pagina collegata, che qui non è noto a priori.
+
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.menu.form.tools.php
+Questa è la macro della scheda strumenti della voce di menu, sul canone delle schede tools.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.archiviazione.php
 Questa è la macro della scheda archiviazione del modulo di gestione delle pagine.
 

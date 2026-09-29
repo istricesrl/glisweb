@@ -1,0 +1,97 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">menu</span>
+                        {{ frm.input({ 'field': { 'name': 'menu', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-1 form-col">
+                        <span class="label-top">ordine</span>
+                        {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">lingua</span>
+                        {{ frm.select({ 'field': { 'name': 'id_lingua', 'required': 1 }, 'source': { 'values': etc.select.lingue }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">voce</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SEZIONE COLLEGAMENTO #}
+            <fieldset>
+                <legend>collegamento</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">pagina</span>
+                        {{ frm.select({ 'field': { 'name': 'id_pagina' }, 'source': { 'api': 'pagine' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">categoria prodotti</span>
+                        {{ frm.select({ 'field': { 'name': 'id_categoria_prodotti' }, 'source': { 'api': 'categorie_prodotti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">categoria notizie</span>
+                        {{ frm.select({ 'field': { 'name': 'id_categoria_notizie' }, 'source': { 'values': etc.select.categorie_notizie }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SEZIONE COMPORTAMENTO #}
+            <fieldset>
+                <legend>comportamento</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">target</span>
+                        {{ frm.select({ 'field': { 'name': 'target' }, 'source': { 'values': etc.select.target }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">ancora</span>
+                        {{ frm.input({ 'field': { 'name': 'ancora', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">sottopagine</span>
+                        {{ frm.select({ 'field': { 'name': 'sottopagine' }, 'source': { 'values': etc.select.sottopagine }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

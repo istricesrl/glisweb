@@ -44,11 +44,11 @@ Le linguette della scheda sono:
 
 | linguetta | cosa ci sta |
 |---|---|
-| caratteristiche | predisposta per le caratteristiche tecniche del prodotto; nello standard è vuota |
+| caratteristiche | le **caratteristiche tecniche** del prodotto, una per riga: la caratteristica ( scelta fra quelle previste per i prodotti ), la lingua, il valore, le note e l'ordine in cui mostrarle |
 | articoli | gli **articoli di questo prodotto**; il più ne crea uno nuovo già legato al prodotto |
 | web, SEO/SEM, contenuti, metadati | la pubblicazione del prodotto sul sito, i dati per i motori di ricerca, i testi lingua per lingua, le informazioni aggiuntive — se c'è il modulo dei contenuti |
 | immagini, video, audio, file | i media e gli allegati, se ci sono i moduli che li gestiscono |
-| relazioni | predisposta per i legami fra prodotti ( accessori, alternative ); nello standard è vuota |
+| relazioni | i **legami** del prodotto con altri prodotti o articoli ( accessori, alternative, ricambi ), uno per riga: il tipo di relazione e il prodotto o l'articolo collegato |
 | stampe | i documenti che si possono stampare per questo prodotto |
 | archiviazione | la data di archiviazione e le note che la spiegano |
 | azioni | le operazioni sul prodotto |
@@ -71,18 +71,23 @@ La scheda di un articolo ha:
 |---|---|
 | dati generali | **prodotto** a cui l'articolo appartiene, **codice**, **nome** — cioè ciò che distingue l'articolo dagli altri dello stesso prodotto |
 | descrizione e codifica | **note** e **note di codifica** |
-| produttore | **codice produttore** ed **EAN**, il codice a barre commerciale |
+| produttore | **codice produttore** |
 
 > **nota** — conviene dare all'articolo **solo la parte che lo distingue** ( *M blu* ), non di
 > nuovo il nome del prodotto: il nome completo lo compone l'applicazione. Se i due coincidono,
 > l'applicazione lo scrive una volta sola.
 
-Le linguette della scheda di un articolo sono **caratteristiche** e **distinta** ( predisposte, e
-nello standard vuote ), **metadati** e i media se ci sono i moduli che li gestiscono, **barcode**,
-**relazioni** ( vuota ), **archiviazione** e **azioni**.
+Le linguette della scheda di un articolo sono:
 
-> **nota** — la linguetta **barcode** è **dichiarata ma non c'è**: aprendola si arriva a una pagina
-> che non si compone.
+| linguetta | cosa ci sta |
+|---|---|
+| caratteristiche | le caratteristiche dell'articolo, una per riga, come per il prodotto; in più la spunta **assente**, per dire che su questo articolo una caratteristica **non c'è** |
+| distinta | predisposta per la distinta base; nello standard è vuota |
+| metadati, immagini, video, audio, file | le informazioni aggiuntive e i media, se ci sono i moduli che li gestiscono |
+| barcode | i **codici a barre** dell'articolo: l'**EAN**, il codice a barre commerciale, e l'**ISBN** dei libri |
+| relazioni | i legami dell'articolo con altri articoli o prodotti, uno per riga, come per il prodotto |
+| archiviazione | la data di archiviazione e le note che la spiegano |
+| azioni | le operazioni sull'articolo |
 
 ## le categorie
 <!-- @pubblico: operatore, amministratore -->
@@ -129,7 +134,7 @@ Le linguette *stampe* e *azioni* hanno la forma di tutte le pagine di riquadri (
 ## quello che questo capitolo non dice ancora
 
 - le **tipologie** di prodotto: dove si configurano e che effetto hanno;
-- le **caratteristiche**, le **relazioni** e la **distinta**, finché le loro linguette restano
-  vuote;
+- dove si definiscono le **caratteristiche** e i **tipi di relazione** che le tendine propongono;
+- la **distinta**, finché la sua linguetta resta vuota;
 - come si vede, dalla scheda di un prodotto, **quanto costa** in ciascun listino;
 - come il prodotto arriva sul **sito**, e cosa lo rende visibile al visitatore.

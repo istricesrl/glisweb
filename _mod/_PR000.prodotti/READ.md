@@ -24,17 +24,35 @@ Questa controller viene eseguita alla fine di ogni gruppo di elaborazioni della 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
 Questa è la macro della scheda archiviazione del modulo di gestione degli articoli.
 
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.barcode.php
+Questa è la macro della scheda barcode del modulo di gestione degli articoli. I codici a barre dell'articolo sono le
+colonne ean e isbn della tabella articoli ( non c'è una tabella dei barcode ): la scheda è un form semplice sulla tabella
+articoli, sul modello della scheda archiviazione, e l'EAN non sta più nella linguetta principale.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
-Questa è la macro della scheda caratteristiche del modulo di gestione degli articoli.
+Questa è la macro della scheda caratteristiche del modulo di gestione degli articoli. Il sotto-elenco delle righe di
+articoli_caratteristiche ( macro caratteristiche di lib/catalogo.articoli.form.sub.twig ) arriva con la scheda perché
+controller() segue la chiave articoli_caratteristiche_ibfk_01; la tendina legge caratteristiche_view filtrata su
+se_articoli, perché la chiave esterna di id_caratteristica punta alla tabella caratteristiche.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
 Questa è la macro della scheda distinta base del modulo di gestione degli articoli.
+
+> **attenzione** — la scheda è ancora vuota: la tabella distinta non ha chiavi esterne ( né verso articoli per
+> id_articolo né per id_componente ), quindi controller() non porta le sue righe dentro la scheda dell'articolo e un
+> sotto-elenco non mostrerebbe mai le righe salvate. Il sotto-elenco si aggiunge sul modello di quello delle
+> caratteristiche quando c'è la chiave distinta_ibfk_01 ( id_articolo, seguita ) e distinta_ibfk_02_nofollow
+> ( id_componente ).
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
 Questa è la macro del modulo di gestione degli articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
-Questa è la macro della scheda relazioni del modulo di gestione articoli.
+Questa è la macro della scheda relazioni del modulo di gestione articoli: prepara la tendina dei ruoli ( ruoli_articoli_view )
+per il sotto-elenco delle righe di relazioni_articoli ( macro relazioni di lib/catalogo.articoli.form.sub.twig, sul
+modello di /_mod/_AN000.anagrafica/_src/_tpl/_athena/lib/anagrafica.form.relazioni.sub.twig ). Siccome controller()
+segue sia relazioni_articoli_ibfk_01 sia _ibfk_02, nel sotto-elenco compaiono anche le relazioni in cui l'articolo è
+quello collegato: per questo la riga mostra anche l'articolo principale.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione articoli.
@@ -91,16 +109,18 @@ Questa è la macro della scheda archiviazione del modulo di gestione prodotti.
 Questa è la macro della scheda articoli del modulo di gestione prodotti.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.caratteristiche.php
-Questa è la macro della scheda caratteristiche del modulo di gestione prodotti.
-
-### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.categorie.php
-Questa è la macro della scheda categorie del modulo di gestione prodotti.
+Questa è la macro della scheda caratteristiche del modulo di gestione prodotti: il sotto-elenco delle righe di
+prodotti_caratteristiche ( macro caratteristiche di lib/catalogo.prodotti.form.sub.twig ) arriva con la scheda tramite la
+chiave prodotti_caratteristiche_ibfk_01; la tendina legge caratteristiche_view filtrata su se_prodotti. Le categorie del
+prodotto non hanno una scheda loro: si compilano nel sotto-elenco della linguetta principale.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.php
 Questa è la macro del modulo di gestione prodotti.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.relazioni.php
-Questa è la macro della scheda relazioni del modulo di gestione prodotti.
+Questa è la macro della scheda relazioni del modulo di gestione prodotti: prepara la tendina dei ruoli ( ruoli_prodotti_view )
+per il sotto-elenco delle righe di relazioni_prodotti ( macro relazioni di lib/catalogo.prodotti.form.sub.twig ), che
+come per gli articoli comprende anche le relazioni in cui il prodotto è quello collegato ( relazioni_prodotti_ibfk_02 ).
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione prodotti.
