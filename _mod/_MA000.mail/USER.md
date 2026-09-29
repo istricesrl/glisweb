@@ -35,7 +35,8 @@ gli **strumenti mail**.
 > tentativi cresce di uno e l'invio viene rimandato di tante ore quanti sono i tentativi fatti —
 > un'ora dopo il primo errore, due dopo il secondo, e così via. Una mail che resta a lungo in questo
 > elenco con l'invio sempre spostato in avanti è il segnale di un problema col server di posta o
-> con l'indirizzo.
+> con l'indirizzo. Una mail rimasta a metà di un giro interrotto torna in coda da sola dopo un'ora
+> ( o il tempo impostato sull'installazione ).
 
 ## la scheda di una mail
 <!-- @pubblico: amministratore -->
@@ -69,9 +70,11 @@ linguetta, **strumenti**, ha un riquadro solo:
 <!-- @pagina: mail.sent.view -->
 
 La linguetta *inviate* ha le stesse colonne della coda in uscita, ma la data è quella in cui la mail
-**è partita davvero**. È il posto dove guardare quando qualcuno dice di non aver ricevuto una mail:
-se è qui, l'applicazione l'ha consegnata al server di posta, e il resto del percorso non dipende più
-da lei.
+**è partita davvero**; *data non registrata* vuol dire che la mail è partita ma l'applicazione non
+è riuscita a segnarne l'ora. È il posto dove guardare quando qualcuno dice di non aver ricevuto una
+mail: se è qui, l'applicazione l'ha consegnata al server di posta, e il resto del percorso non
+dipende più da lei. Se c'è il modulo dei file, la linguetta **file** della mail inviata elenca gli
+allegati con cui è partita.
 
 ## rimettere in coda una mail inviata
 <!-- @pubblico: amministratore -->
@@ -97,7 +100,7 @@ L'ultima linguetta della sezione raccoglie le operazioni sulle code intere. Nel 
 | riquadro | cosa fa |
 |---|---|
 | invia la prossima mail in uscita | spedisce subito la prima mail della coda, **anche se il suo invio era previsto più avanti** |
-| elabora coda mail in uscita | rende subito inviabili **tutte** le mail della coda, comprese quelle programmate e quelle rimandate dopo un errore; le spedisce poi il giro automatico, una alla volta ( chiede conferma ) |
+| elabora coda mail in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutte le mail, comprese quelle programmate e quelle rimandate dopo un errore, e libera quelle rimaste bloccate da un giro interrotto. In quel momento **non spedisce niente**: le spedisce il giro automatico dal passaggio successivo, una alla volta ( chiede conferma ) |
 
 Nel gruppo **code**:
 

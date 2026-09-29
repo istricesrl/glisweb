@@ -70,7 +70,7 @@
     'icon' => NULL,
     'fa' => 'fa-paper-plane',
     'title' => 'elabora coda mail in uscita',
-    'text' => 'forza elaborazione di tutta la coda delle mail in uscita'
+    'text' => 'rimette in circolo tutta la coda delle mail in uscita, che il cron riprende dal prossimo giro'
     );
 
     // macro di default

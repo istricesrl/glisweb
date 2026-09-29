@@ -33,7 +33,8 @@ gli **strumenti sms**.
 > **nota** — se un invio non riesce, l'SMS **resta in coda**: il numero dei tentativi cresce di uno
 > e l'invio viene rimandato di tante ore quanti sono i tentativi fatti. Succede anche quando il
 > fornitore del servizio **non è configurato**: in quel caso gli SMS si accumulano qui e non
-> partiranno finché chi amministra l'installazione non lo configura.
+> partiranno finché chi amministra l'installazione non lo configura. Un SMS rimasto a metà di un
+> giro interrotto torna in coda da solo dopo un'ora ( o il tempo impostato sull'installazione ).
 
 ## la scheda di un SMS
 <!-- @pubblico: amministratore -->
@@ -62,7 +63,8 @@ L'ultima linguetta, **strumenti**, ha un riquadro solo:
 <!-- @pagina: sms.sent.view -->
 
 La linguetta *inviati* ha le stesse colonne della coda in uscita, ma la data è quella in cui l'SMS
-**è partito davvero**, cioè è stato accettato dal fornitore del servizio.
+**è partito davvero**, cioè è stato accettato dal fornitore del servizio; *data non registrata* vuol
+dire che l'SMS è partito ma l'applicazione non è riuscita a segnarne l'ora.
 
 ## rimettere in coda un SMS inviato
 <!-- @pubblico: amministratore -->
@@ -84,7 +86,7 @@ L'ultima linguetta della sezione raccoglie le operazioni sulle code intere. Nel 
 | riquadro | cosa fa |
 |---|---|
 | invia il prossimo SMS in uscita | spedisce subito il primo SMS della coda, **anche se il suo invio era previsto più avanti** |
-| elabora coda SMS in uscita | rende subito inviabili **tutti** gli SMS della coda, compresi quelli programmati e quelli rimandati dopo un errore; li spedisce poi il giro automatico, uno alla volta ( chiede conferma ) |
+| elabora coda SMS in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutti gli SMS, compresi quelli programmati e quelli rimandati dopo un errore, e libera quelli rimasti bloccati da un giro interrotto. In quel momento **non spedisce niente**: li spedisce il giro automatico dal passaggio successivo, uno alla volta ( chiede conferma ) |
 
 Nel gruppo **code**:
 

@@ -17,8 +17,21 @@
      * -----------------|------------------------------------------------------------------------------------------
      * id=<id>          | invia l'SMS indicato anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato
      * hard=1           | invia il primo SMS della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
-     * full=1           | azzera `timestamp_invio` su tutta la coda, così che i giri successivi la evadano per intero; in questo giro non invia nulla
+     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe e non invia nulla, la coda la riprende il cron dal giro successivo
      * nessuno          | invia il primo SMS la cui data prevista è passata o assente
+     *
+     * Con `full=1` il task risponde con quanti SMS avevano una data prevista, ora azzerata ( `rimesse` ), e quanti ne ha
+     * sbloccati ( `sbloccate`, vedi sotto ). Fino al 2026-09-30 rispondeva "nessun SMS da evadere", che sembrava un
+     * errore.
+     *
+     * righe marcate e mai rilasciate
+     * ==============================
+     * Il task marca la riga con il proprio token e scrive in `timestamp_elaborazione` l'ora della marcatura, nello stesso
+     * UPDATE; alla fine del giro il token si toglie. Se il processo muore a metà, la riga resterebbe marcata e nessuna
+     * modalità la prenderebbe più: per questo all'inizio di ogni giro, in tutte le modalità, il task toglie il token
+     * alle righe marcate da più di `$cf['sms']['minuti_sblocco']` minuti ( default 60, in `_src/_config/_540.sms.php` ),
+     * che tornano in coda come le altre, come fa il task delle mail. Un SMS sbloccato così può partire due volte, se il
+     * processo era morto dopo averlo consegnato al provider e prima di spostarlo fra gli inviati.
      *
      * server e provider
      * =================
@@ -34,9 +47,10 @@
      * ==============================
      * La copia in `sms_sent` è un `REPLACE INTO sms_sent SELECT * FROM sms_out`, quindi le due tabelle devono avere le
      * stesse colonne nello stesso ordine. Se la copia fallisce l'SMS è già stato consegnato al provider: la riga NON
-     * viene cancellata da `sms_out` e NON viene rimessa in coda, ma resta marcata con il token di questo giro, che la
-     * esclude da tutte le modalità di evasione ( anche da `id` ), e l'errore va nel log `sms` a livello LOG_CRIT. Va
-     * sistemata a mano, allineando le tabelle e spostando la riga, o cancellandola dalla scheda dell'SMS in uscita.
+     * viene cancellata da `sms_out` e NON viene rimessa in coda, ma resta marcata con il token dedicato `COPIA_FALLITA`,
+     * che la esclude da tutte le modalità di evasione ( anche da `id` ) e dallo sblocco delle righe abbandonate, e
+     * l'errore va nel log `sms` a livello LOG_CRIT. Va sistemata a mano, allineando le tabelle e spostando la riga, o
+     * cancellandola dalla scheda dell'SMS in uscita.
      *
      * Il task ha un gemello identico nel modulo `SM000.sms` ( `_mod/_SM000.sms/_src/_api/_task/_sms.queue.send.php` ),
      * come le mail lo hanno in `MA000.mail`: le due copie vanno tenute uguali, cambia solo l'inclusione del framework.
@@ -70,6 +84,22 @@
         $status['token'] = getToken( __FILE__ );
     }
 
+    // sblocco degli SMS marcati e mai rilasciati
+    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano
+    $status['sbloccate'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE sms_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token <> ? AND timestamp_elaborazione < ?',
+        array(
+            array( 's' => 'COPIA_FALLITA' ),
+            array( 's' => strtotime( '-' . $cf['sms']['minuti_sblocco'] . ' minutes' ) )
+        )
+    );
+
+    // log
+    if( ! empty( $status['sbloccate'] ) ) {
+        logWrite( 'sbloccati ' . $status['sbloccate'] . ' SMS marcati da più di ' . $cf['sms']['minuti_sblocco'] . ' minuti', 'sms', LOG_WARNING );
+    }
+
 	// modalità di evasione (specifico SMS, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
 
@@ -79,9 +109,10 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE sms_out SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE sms_out SET token = ?, timestamp_elaborazione = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
+                array( 's' => time() ),
                 array( 's' => $_REQUEST['id'] )
             )
         );
@@ -94,10 +125,11 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE sms_out SET token = ? WHERE token IS NULL
+            'UPDATE sms_out SET token = ?, timestamp_elaborazione = ? WHERE token IS NULL
                 ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => time() )
             )
         );
 
@@ -106,11 +138,17 @@
 		// status
 		$status['info'][] = 'forzatura elaborazione totale della coda';
 
-		// token della riga
-        $status['id'] = mysqlQuery(
+		// rimetto in circolo tutta la coda
+        $status['rimesse'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE sms_out SET timestamp_invio = NULL'
         );
+
+		// status
+		$status['info'][] = 'SMS con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', SMS sbloccati: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro';
+
+		// log
+		logWrite( 'coda degli SMS rimessa in circolo: ' . intval( $status['rimesse'] ) . ' date previste azzerate', 'sms' );
 
 	} else {
 
@@ -120,11 +158,12 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE sms_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL )
+            'UPDATE sms_out SET token = ?, timestamp_elaborazione = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL )
                 AND token IS NULL
                 ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => time() )
             )
         );
 
@@ -223,9 +262,20 @@
 			// fallito ) se l'esecuzione fallisce senza eccezione, come succede prima di PHP 8.1
 			if( empty( $s1 ) || $s1 < 0 ) {
 
-				// NOTA l'SMS è già partito: la riga resta nella sms_out con il token di questo giro, che la toglie da tutte
-				// le modalità di evasione, così non viene né persa né inviata una seconda volta
-				logWrite( 'SMS #' . $sms['id'] . ' inviato ma non copiato nella sms_sent, resta nella sms_out bloccato dal token ' . $status['token'], 'sms', LOG_CRIT );
+				// NOTA l'SMS è già partito: la riga resta nella sms_out con il token dedicato COPIA_FALLITA, che la toglie da
+				// tutte le modalità di evasione e dallo sblocco delle righe abbandonate, così non viene né persa né inviata una
+				// seconda volta
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE sms_out SET token = ? WHERE token = ?',
+					array(
+						array( 's' => 'COPIA_FALLITA' ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+				// log
+				logWrite( 'SMS #' . $sms['id'] . ' inviato ma non copiato nella sms_sent, resta nella sms_out bloccato dal token COPIA_FALLITA', 'sms', LOG_CRIT );
 
 				// status
 				$status['err'][] = 'SMS inviato ma non spostato fra gli inviati';
@@ -238,7 +288,7 @@
 				// aggiorno la timestamp di invio
 				$s2 = mysqlQuery(
 					$cf['mysql']['connection'],
-					'UPDATE sms_sent SET timestamp_invio = ?, token = NULL WHERE token = ?',
+					'UPDATE sms_sent SET timestamp_invio = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
 					array(
 						array( 's' => time() ),
 						array( 's' => $status['token'] )
@@ -276,7 +326,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
+				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),
@@ -292,7 +342,10 @@
         $iter = ( ! empty( $task['iterazioni'] ) ) ? $task['iterazioni'] : 0;
 
 		// status
-		$status['info'][] = 'nessun SMS da evadere';
+		// NOTA con full=1 il task non cerca SMS da inviare, e ha già detto cosa ha fatto
+		if( ! isset( $_REQUEST['full'] ) ) {
+			$status['info'][] = 'nessun SMS da evadere';
+		}
 
 	}
 

@@ -70,7 +70,7 @@
     'icon' => NULL,
     'fa' => 'fa-paper-plane',
     'title' => 'elabora coda SMS in uscita',
-    'text' => 'forza elaborazione di tutta la coda degli SMS in uscita'
+    'text' => 'rimette in circolo tutta la coda degli SMS in uscita, che il cron riprende dal prossimo giro'
     );
 
     // macro di default

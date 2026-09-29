@@ -17,8 +17,22 @@
      * -----------------|------------------------------------------------------------------------------------------
      * id=<id>          | invia la mail indicata anche se non è ancora il suo momento, purché nessun altro processo l'abbia già marcata
      * hard=1           | invia la prima mail della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
-     * full=1           | azzera `timestamp_invio` su tutta la coda, così che i giri successivi la evadano per intero; in questo giro non invia nulla
+     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe e non invia nulla, la coda la riprende il cron dal giro successivo
      * nessuno          | invia la prima mail la cui data prevista è passata o assente
+     *
+     * Con `full=1` il task risponde con quante mail avevano una data prevista, ora azzerata ( `rimesse` ), e quante ne ha
+     * sbloccate ( `sbloccate`, vedi sotto ). Fino al 2026-09-30 rispondeva "nessuna mail da evadere", che sembrava un
+     * errore.
+     *
+     * righe marcate e mai rilasciate
+     * ==============================
+     * Il task marca la riga con il proprio token e scrive in `timestamp_elaborazione` l'ora della marcatura, nello stesso
+     * UPDATE; alla fine del giro il token si toglie. Se il processo muore a metà, la riga resterebbe marcata e nessuna
+     * modalità la prenderebbe più: per questo all'inizio di ogni giro, in tutte le modalità, il task toglie il token
+     * alle righe marcate da più di `$cf['mail']['minuti_sblocco']` minuti ( default 60, in `_src/_config/_350.mail.php` ),
+     * che tornano in coda come le altre. È lo stesso recupero che `_src/_api/_cron.php` fa su task, job e pianificazioni.
+     * Una mail sbloccata così può partire due volte, se il processo era morto dopo averla consegnata al server SMTP e
+     * prima di spostarla fra le inviate.
      *
      * server SMTP
      * ===========
@@ -31,10 +45,15 @@
      * =============================
      * La copia in `mail_sent` è un `REPLACE INTO mail_sent SELECT * FROM mail_out`, quindi le due tabelle devono avere le
      * stesse colonne nello stesso ordine. Se la copia fallisce la mail è già partita: la riga NON viene cancellata da
-     * `mail_out` e NON viene rimessa in coda, ma resta marcata con il token di questo giro, che la esclude da tutte le
-     * modalità di evasione ( anche da `id` ), e l'errore va nel log `mail` a livello LOG_CRIT. Va sistemata a mano,
-     * allineando le tabelle e spostando la riga, o cancellandola dalla scheda della mail in uscita. Fino al 2026-09-29 il
-     * task cancellava la riga da `mail_out` senza guardare l'esito della copia, e una copia fallita faceva sparire la mail.
+     * `mail_out` e NON viene rimessa in coda, ma resta marcata con il token dedicato `COPIA_FALLITA`, che la esclude da
+     * tutte le modalità di evasione ( anche da `id` ) e dallo sblocco delle righe abbandonate, e l'errore va nel log `mail`
+     * a livello LOG_CRIT. Va sistemata a mano, allineando le tabelle e spostando la riga, o cancellandola dalla scheda
+     * della mail in uscita. Fino al 2026-09-29 il task cancellava la riga da `mail_out` senza guardare l'esito della
+     * copia, e una copia fallita faceva sparire la mail.
+     *
+     * Dopo la copia i file collegati alla mail ( `file.id_mail_out` ) passano alla mail inviata ( `file.id_mail_sent` ),
+     * prima di cancellare la riga da `mail_out`, il cui vincolo ON DELETE SET NULL li staccherebbe dalla mail. Fino al
+     * 2026-09-30 non si faceva, e la linguetta file della mail inviata era sempre vuota.
      *
      * Il task è la copia nel modulo `MA000.mail` di quello del core ( `_src/_api/_task/_mail.queue.send.php` ), e la chiama
      * la scheda strumenti della mail in uscita ( `mail.out.form.tools` ): le due copie vanno tenute uguali, cambia solo
@@ -77,6 +96,22 @@
     // inizializzo la variabile per l'invio
 	// $mail = NULL;
 
+    // sblocco delle mail marcate e mai rilasciate
+    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano
+    $status['sbloccate'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE mail_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token <> ? AND timestamp_elaborazione < ?',
+        array(
+            array( 's' => 'COPIA_FALLITA' ),
+            array( 's' => strtotime( '-' . $cf['mail']['minuti_sblocco'] . ' minutes' ) )
+        )
+    );
+
+    // log
+    if( ! empty( $status['sbloccate'] ) ) {
+        logWrite( 'sbloccate ' . $status['sbloccate'] . ' mail marcate da più di ' . $cf['mail']['minuti_sblocco'] . ' minuti', 'mail', LOG_WARNING );
+    }
+
 	// modalità di evasione (specifica mail, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
 
@@ -86,9 +121,10 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE mail_out SET token = ?, timestamp_elaborazione = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
+                array( 's' => time() ),
                 array( 's' => $_REQUEST['id'] )
             )
         );
@@ -101,10 +137,11 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE token IS NULL 
+            'UPDATE mail_out SET token = ?, timestamp_elaborazione = ? WHERE token IS NULL 
                 ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => time() )
             )
         );
 
@@ -113,11 +150,17 @@
 		// status
 		$status['info'][] = 'forzatura elaborazione totale della coda';
 
-		// token della riga
-        $status['id'] = mysqlQuery(
+		// rimetto in circolo tutta la coda
+        $status['rimesse'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE mail_out SET timestamp_invio = NULL'
         );
+
+		// status
+		$status['info'][] = 'mail con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', mail sbloccate: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro';
+
+		// log
+		logWrite( 'coda delle mail rimessa in circolo: ' . intval( $status['rimesse'] ) . ' date previste azzerate', 'mail' );
 
 	} else {
 
@@ -127,11 +170,12 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) 
+            'UPDATE mail_out SET token = ?, timestamp_elaborazione = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) 
                 AND token IS NULL 
                 ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => time() )
             )
         );
 
@@ -273,9 +317,20 @@
 			// fallito ) se l'esecuzione fallisce senza eccezione, come succede prima di PHP 8.1
 			if( empty( $s1 ) || $s1 < 0 ) {
 
-				// NOTA la mail è già partita: la riga resta nella mail_out con il token di questo giro, che la toglie da tutte
-				// le modalità di evasione, così non viene né persa né inviata una seconda volta
-				logWrite( 'mail #' . $mail['id'] . ' inviata ma non copiata nella mail_sent, resta nella mail_out bloccata dal token ' . $status['token'], 'mail', LOG_CRIT );
+				// NOTA la mail è già partita: la riga resta nella mail_out con il token dedicato COPIA_FALLITA, che la toglie da
+				// tutte le modalità di evasione e dallo sblocco delle righe abbandonate, così non viene né persa né inviata una
+				// seconda volta
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE mail_out SET token = ? WHERE token = ?',
+					array(
+						array( 's' => 'COPIA_FALLITA' ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+				// log
+				logWrite( 'mail #' . $mail['id'] . ' inviata ma non copiata nella mail_sent, resta nella mail_out bloccata dal token COPIA_FALLITA', 'mail', LOG_CRIT );
 
 				// status
 				$status['err'][] = 'mail inviata ma non spostata fra le inviate';
@@ -288,7 +343,7 @@
 				// aggiorno la timestamp di invio
 				$s2 = mysqlQuery(
 					$cf['mysql']['connection'],
-					'UPDATE mail_sent SET timestamp_invio = ?, token = NULL WHERE token = ?',
+					'UPDATE mail_sent SET timestamp_invio = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
 					array(
 						array( 's' => time() ),
 						array( 's' => $status['token'] )
@@ -297,6 +352,22 @@
 
 				// log
 				logWrite( 'timestamp di invio della mail #' . $mail['id'] . ' aggiornato', 'mail' );
+
+				// sposto gli allegati sulla mail inviata
+				// NOTA va fatto prima del DELETE, che con il vincolo ON DELETE SET NULL azzera file.id_mail_out; l'indice unico
+				// ( id_mail_sent, id_ruolo, path ) non può collidere: nessun file punta già a questa mail inviata, perché la
+				// riga di mail_sent l'ha appena scritta il REPLACE, e se ne esisteva una con lo stesso id il REPLACE l'ha
+				// cancellata staccandone i file con lo stesso vincolo
+				$s4 = mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE file SET id_mail_sent = id_mail_out WHERE id_mail_out = ?',
+					array(
+						array( 's' => $mail['id'] )
+					)
+				);
+
+				// log
+				logWrite( 'file collegati alla mail #' . $mail['id'] . ' spostati sulla mail inviata: ' . intval( $s4 ), 'mail' );
 
 				// elimino la mail inviata dalla coda delle mail in uscita
 				$s3 = mysqlQuery(
@@ -326,7 +397,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
+				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),
@@ -342,7 +413,10 @@
         $iter = ( ! empty( $task['iterazioni'] ) ) ? $task['iterazioni'] : 0;
 
 		// status
-		$status['info'][] = 'nessuna mail da evadere';
+		// NOTA con full=1 il task non cerca mail da inviare, e ha già detto cosa ha fatto
+		if( ! isset( $_REQUEST['full'] ) ) {
+			$status['info'][] = 'nessuna mail da evadere';
+		}
 
 	}
 

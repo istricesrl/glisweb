@@ -16,6 +16,20 @@
      */
 
     /**
+     * CODA DELLE MAIL
+     * ===============
+     * Il task di invio ( `_src/_api/_task/_mail.queue.send.php` ) marca con il proprio token la mail che sta inviando;
+     * se il processo muore prima di togliere il token la riga resterebbe bloccata per sempre, quindi all'inizio di ogni
+     * giro il task sblocca le mail marcate da più di `minuti_sblocco` minuti. Il valore si cambia da `src/config.json`
+     * o `src/config.yaml` ( chiave `mail.minuti_sblocco` ), e va tenuto più lungo del giro più lento che il task possa
+     * fare, altrimenti una mail ancora in lavorazione torna in coda e può partire due volte.
+     *
+     */
+
+    // minuti dopo i quali una mail marcata e mai rilasciata torna in coda
+    $cf['mail']['minuti_sblocco'] = 60;
+
+    /**
      * DICHIARAZIONE DEI TEMPLATE MAIL
      * ===============================
      * 

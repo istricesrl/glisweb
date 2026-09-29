@@ -21,9 +21,15 @@ massimo di tentativi.
 
 La copia in `sms_sent` è un `SELECT *`, quindi le due tabelle devono avere le stesse colonne nello stesso
 ordine. Se la copia fallisce l'SMS è già partito: il task non cancella la riga e non la rimette in coda,
-la lascia in `sms_out` marcata con il proprio token, che la esclude da tutte le modalità di evasione, e
-scrive l'errore nel log `sms` a livello critico. La riga va sistemata a mano, allineando le tabelle o
-cancellandola dalla sua scheda.
+la lascia in `sms_out` marcata con il token dedicato `COPIA_FALLITA`, che la esclude da tutte le modalità di
+evasione e dallo sblocco descritto qui sotto, e scrive l'errore nel log `sms` a livello critico. La riga va
+sistemata a mano, allineando le tabelle o cancellandola dalla sua scheda.
+
+Insieme al token il task scrive l'ora della marcatura in `timestamp_elaborazione`. Se il processo muore a metà
+giro la riga resterebbe marcata per sempre: per questo all'inizio di ogni giro, in tutte le modalità, il task
+toglie il token alle righe marcate da più di `$cf['sms']['minuti_sblocco']` minuti ( default 60, runlevel
+`/_src/_config/_540.sms.php` ), che tornano in coda. Un SMS sbloccato così può partire due volte, se il processo
+era morto dopo averlo consegnato al provider. Fino al 2026-09-30 queste righe restavano bloccate.
 
 ## dipendenze
 Il modulo si appoggia a funzioni del core, che vengono caricate sempre:
@@ -43,7 +49,8 @@ Il modulo lavora su `sms_out` ( la coda in uscita ) e `sms_sent` ( gli inviati )
 colonna nel capitolo `315.database.s.md`; i diritti di accesso sono in `/_src/_config/_250.auth.php`
 ( controllo completo a `roots` e `staff` ). Le definizioni, con le viste `sms_out_view` e `sms_sent_view`,
 stanno nei file di base di `_usr/_database/_patch/` e nella patch `_202609291000.sms.sql`, che le ha
-rimesse dopo che il riallineamento del 02/03/2026 le aveva perse.
+rimesse dopo che il riallineamento del 02/03/2026 le aveva perse; la colonna `timestamp_elaborazione` l'ha
+aggiunta la patch `_202609301600.code.marcatura.sql`.
 
 ## configurazione
 Il task sceglie il server così: se la riga di `sms_out` ha la colonna `server` valorizzata usa
@@ -51,6 +58,9 @@ Il task sceglie il server così: se la riga di `sms_out` ha la colonna `server` 
 Del server legge `type`, `username` e `password`, e per Ehiweb anche `id_api`; i tipi gestiti sono
 `skebby` ed `ehiweb`. Un server nominato nella riga ma assente dalla configurazione, un profilo senza
 server o un tipo sconosciuto sono un errore di invio: l'SMS resta in coda e l'errore va nel log.
+
+La chiave `sms.minuti_sblocco` ( default 60 ) dice dopo quanti minuti una riga marcata e mai rilasciata torna
+in coda; va tenuta più lunga del giro più lento che il task possa fare.
 
 ```
 sms:
@@ -96,7 +106,7 @@ Il task si chiama come `/task/SM000.sms/sms.queue.send` e richiede il privilegio
 |---|---|
 | `id=<id>` | invia l'SMS indicato, anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato |
 | `hard=1` | invia il primo SMS della coda per `ordine` e `timestamp_invio`, ignorando la data prevista |
-| `full=1` | azzera `timestamp_invio` su tutta la coda, così che i giri successivi la evadano per intero; in questo giro non invia nulla |
+| `full=1` | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe e non invia nulla, la coda la riprende il cron dal giro successivo; la risposta dice quante date ha azzerato e quante righe ha sbloccato |
 | nessuno | invia il primo SMS la cui data prevista è passata o assente |
 
 Il task è la copia nel modulo di quello del core, `/_src/_api/_task/_sms.queue.send.php`
@@ -124,8 +134,8 @@ Svuota l'archivio degli SMS inviati ( `sms_sent` ) e ottimizza la tabella; è la
 
 ### /_mod/_SM000.sms/_src/_api/_task/_sms.queue.resend.php
 Rimette in coda l'SMS inviato indicato con `id=<id>`, gemello di `mail.queue.resend` del modulo
-`MA000.mail`: lo marca con il proprio token, lo copia in `sms_out` con lo stesso ID azzerando token,
-tentativi e data prevista, e lo cancella da `sms_sent`. Se la copia fallisce la riga resta fra gli inviati,
+`MA000.mail`: lo marca con il proprio token, lo copia in `sms_out` con lo stesso ID azzerando token, ora
+della marcatura, tentativi e data prevista, e lo cancella da `sms_sent`. Se la copia fallisce la riga resta fra gli inviati,
 senza token, e l'errore va nel log. Lo chiama la scheda `sms.sent.form.tools`; richiede
 `GESTIONE_COMUNICAZIONI`.
 
@@ -135,11 +145,20 @@ richiede `GESTIONE_COMUNICAZIONI`. Marca con il proprio token una riga di `sms_o
 scelta ( `id`, `hard`, `full` o standard, vedi sopra ), la invia con `skebbySend()` o `ehiwebSend()` secondo
 il tipo del server e in caso di successo la sposta in `sms_sent`, controllando l'esito della copia prima di
 cancellare la riga; in caso di errore incrementa `tentativi` e rimanda l'invio di altrettante ore, senza un
-limite massimo. È la copia identica del task omonimo del core, che va tenuta allineata.
+limite massimo. All'inizio di ogni giro sblocca le righe marcate da più di `$cf['sms']['minuti_sblocco']`
+minuti. È la copia identica del task omonimo del core, che va tenuta allineata.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.form.php
 Macro della scheda `sms.out.form`: dichiara `sms_out` come tabella gestita e lascia il resto alla macro di
-default. Ricalca `_mail.out.form.php` del modulo `MA000.mail`.
+default. Ricalca `_mail.out.form.php` del modulo `MA000.mail`. Il campo *invio* è un input `datetime-local` su
+`timestamp_invio`, convertito in lettura e in scrittura dalle controller di default
+( `/_src/_inc/_controllers/_default.after.php` e `_default.before.php` ).
+
+> **attenzione** — a differenza delle schede delle mail, che hanno le controller `_mail.out.*` e `_mail.sent.*`
+> per convertire gli indirizzi, le schede degli SMS mostrano mittente e destinatari come sono nel database,
+> serializzati, e una modifica fatta lì scrive testo libero dove il task si aspetta un valore serializzato. Per
+> convertirli servono delle controller `_sms.out.*` e
+> `_sms.sent.*` e una funzione inversa di `array2smsString()`, che oggi non esiste.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.form.tools.php
 Macro della scheda `sms.out.form.tools`: offre l'invio immediato dell'SMS aperto
@@ -163,10 +182,12 @@ Ricalca `_mail.sent.form.tools.php` del modulo `MA000.mail`.
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.sent.view.php
 Macro della vista `sms.sent.view`: identica a quella della coda in uscita ma su `sms_sent`, con le righe
 che aprono `sms.sent.form` e la colonna della data intitolata *invio*, come nella vista delle mail inviate.
+Una riga senza data di invio mostra *data non registrata*: fino al 2026-09-30 mostrava *in uscita*, come la coda.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.tools.php
 Macro della pagina `sms.tools`. Dichiara i gruppi di strumenti e ne popola due: in *elaborazioni* l'invio
-del prossimo SMS ( `sms.queue.send?hard=1` ) e l'evasione di tutta la coda ( `?full=1` ), in *code* lo
+del prossimo SMS ( `sms.queue.send?hard=1` ) e la rimessa in circolo di tutta la coda, che il cron riprende dal
+giro successivo ( `?full=1` ), in *code* lo
 svuotamento delle code degli inviati e degli SMS in uscita con i task del modulo
 ( `/task/SM000.sms/sms.queue.clean.sent` e `/task/SM000.sms/sms.queue.clean.out` ).
 

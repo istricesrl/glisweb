@@ -302,20 +302,32 @@
                         // log
                         logWrite( $contenuto, 'privacy', LOG_CRIT );
 
+                        // ID del consenso
+                        // NOTA $ck è il codice del consenso ( PRIVACY_POLICY, ... ), anagrafica_consensi.id_consenso è l'id della riga di consensi
+                        $idConsenso = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM consensi WHERE codice = ?',
+                            array( array( 's' => $ck ) )
+                        );
+
                         // TODO salvare il consenso nella tabella contatti_consensi
-						$prvId = mysqlInsertRow(
-							$cf['mysql']['connection'],
-							array(
-								'id' => NULL,
-								'id_account' => $idAccount,
-								'id_anagrafica' => $idAnagrafica,
-								'id_consenso' => $ck,
-								'se_prestato' => $cv['value'],
-								'note' => $contenuto,
-								'timestamp_consenso' => $timestamp
-							),
-							'anagrafica_consensi'
-						);
+						if( ! empty( $idConsenso ) ) {
+							$prvId = mysqlInsertRow(
+								$cf['mysql']['connection'],
+								array(
+									'id' => NULL,
+									'id_account' => $idAccount,
+									'id_anagrafica' => $idAnagrafica,
+									'id_consenso' => $idConsenso,
+									'se_prestato' => $cv['value'],
+									'note' => $contenuto,
+									'timestamp_consenso' => $timestamp
+								),
+								'anagrafica_consensi'
+							);
+						} else {
+							logWrite( 'il consenso ' . $ck . ' non esiste nella tabella consensi, non registrato per l\'anagrafica #' . $idAnagrafica, 'privacy', LOG_ERR );
+						}
 
 					}
 				}

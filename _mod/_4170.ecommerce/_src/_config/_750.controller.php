@@ -70,21 +70,33 @@ ini_set("display_errors", 1);
                     // log
                     logWrite( $contenuto, 'privacy', LOG_CRIT );
 
-                    // salvo le informazioni nella tabella carrelli_consensi
-                    $prvId = mysqlInsertRow(
+                    // ID del consenso
+                    // NOTA $ck è il codice del consenso ( PRIVACY_POLICY, ... ), carrelli_consensi.id_consenso è l'id della riga di consensi
+                    $idConsenso = mysqlSelectValue(
                         $cf['mysql']['connection'],
-                        array(
-                            'id' => NULL,
-                            'id_carrello' => $_SESSION['carrello']['id'],
-                            'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
-                            'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
-                            'id_consenso' => $ck,
-                            'se_prestato' => $cv['value'],
-                            'note' => $contenuto,
-                            'timestamp_consenso' => $timestamp
-                        ),
-                        'carrelli_consensi'
+                        'SELECT id FROM consensi WHERE codice = ?',
+                        array( array( 's' => $ck ) )
                     );
+
+                    // salvo le informazioni nella tabella carrelli_consensi
+                    if( ! empty( $idConsenso ) ) {
+                        $prvId = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_carrello' => $_SESSION['carrello']['id'],
+                                'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
+                                'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
+                                'id_consenso' => $idConsenso,
+                                'se_prestato' => $cv['value'],
+                                'note' => $contenuto,
+                                'timestamp_consenso' => $timestamp
+                            ),
+                            'carrelli_consensi'
+                        );
+                    } else {
+                        logWrite( 'il consenso ' . $ck . ' non esiste nella tabella consensi, non registrato per il carrello #' . $_SESSION['carrello']['id'], 'privacy', LOG_ERR );
+                    }
 
                 }
 

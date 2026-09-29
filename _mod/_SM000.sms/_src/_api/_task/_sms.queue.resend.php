@@ -9,9 +9,9 @@
      * `GESTIONE_COMUNICAZIONI`.
      *
      * La riga viene marcata con il token del task, copiata in `sms_out` con lo stesso ID e cancellata da `sms_sent`. Nella
-     * coda il token, i tentativi e la data prevista vengono azzerati: la copia porterebbe con sé il token di questo giro,
-     * che la escluderebbe da tutte le modalità di evasione, e la data di invio effettiva, che è già passata e la manderebbe
-     * comunque subito. Se la copia fallisce la riga resta fra gli inviati, senza token, e l'errore va nel log `sms`.
+     * coda il token, l'ora della marcatura ( `timestamp_elaborazione` ), i tentativi e la data prevista vengono azzerati:
+     * la copia porterebbe con sé il token di questo giro, che la escluderebbe da tutte le modalità di evasione, e la data
+     * di invio effettiva, che è già passata e la manderebbe comunque subito. Se la copia fallisce la riga resta fra gli inviati, senza token, e l'errore va nel log `sms`.
      *
      * @file
      *
@@ -88,10 +88,10 @@
         // se l'inserimento è andato a buon fine
         if( ! empty( $idSmsRiaccodato ) ) {
 
-            // azzero token, tentativi e data prevista
+            // azzero token, ora della marcatura, tentativi e data prevista
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE sms_out SET token = NULL, tentativi = 0, timestamp_invio = NULL WHERE id = ?',
+                'UPDATE sms_out SET token = NULL, timestamp_elaborazione = NULL, tentativi = 0, timestamp_invio = NULL WHERE id = ?',
                 array(
                     array( 's' => $sms['id'] )
                 )

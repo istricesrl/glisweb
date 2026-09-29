@@ -971,6 +971,7 @@ ALTER TABLE `condizioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- consensi
 ALTER TABLE `consensi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`), 
 	ADD UNIQUE KEY `nome` (`nome`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
