@@ -1603,6 +1603,34 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = listini.id_emittente
 ;
 
+-- | 090000017491
+
+-- listini_zone_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:20 Fabio Mosti
+CREATE OR REPLACE VIEW `listini_zone_view` AS
+	SELECT
+		listini_zone.id,
+		listini_zone.id_listino,
+		concat( listini.nome, ' ', valute.iso4217 ) AS listino,
+		listini_zone.id_zona,
+		zone.nome AS zona,
+		listini_zone.ordine,
+		listini_zone.id_account_inserimento,
+		listini_zone.id_account_aggiornamento,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217,
+			' / ',
+			zone.nome
+		) AS __label__
+	FROM listini_zone
+		LEFT JOIN listini ON listini.id = listini_zone.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN zone ON zone.id = listini_zone.id_zona
+;
+
 -- | 090000018200
 
 -- macro_view
@@ -1884,6 +1912,33 @@ CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
     modalita_pagamento.provider,
     concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
     FROM modalita_pagamento
+;
+
+-- | 090000021951
+
+-- modalita_spedizione
+CREATE OR REPLACE VIEW `modalita_spedizione_view` AS
+	SELECT
+		modalita_spedizione.id,
+		modalita_spedizione.id_tipologia,
+		modalita_spedizione.id_zona,
+		zone.nome AS zona,
+		modalita_spedizione.id_categoria_prodotti,
+		modalita_spedizione.id_prodotto,
+		modalita_spedizione.id_articolo,
+		modalita_spedizione.lotto_spedizione,
+		modalita_spedizione.importo_netto,
+		modalita_spedizione.id_valuta,
+		valute.utf8 AS valuta,
+		modalita_spedizione.id_iva,
+		iva.nome AS iva,
+		modalita_spedizione.giorni_spedizione,
+		modalita_spedizione.giorni_consegna,
+		concat( zone.nome, ' - ', coalesce( modalita_spedizione.id_prodotto, modalita_spedizione.id_articolo ) ) AS __label__
+	FROM modalita_spedizione
+		LEFT JOIN zone ON zone.id = modalita_spedizione.id_zona
+		LEFT JOIN iva ON iva.id = modalita_spedizione.id_iva
+		LEFT JOIN valute ON valute.id = modalita_spedizione.id_valuta
 ;
 
 -- | 090000022000
@@ -2525,6 +2580,20 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
+-- | 090000030470
+
+-- relazioni_prodotti_view
+CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
+	SELECT 
+		relazioni_prodotti.id,
+		relazioni_prodotti.id_prodotto,
+		relazioni_prodotti.id_ruolo,
+		relazioni_prodotti.id_prodotto_collegato,
+		relazioni_prodotti.id_articolo_collegato,
+		concat( relazioni_prodotti.id_prodotto,' - ', relazioni_prodotti.id_prodotto_collegato) AS __label__
+	FROM relazioni_prodotti
+;
+
 -- | 090000030800
 
 -- reparti_view
@@ -2692,6 +2761,22 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 	FROM ruoli_indirizzi									  --
 ;                                                             --
 
+-- | 090000034871
+
+-- ruoli_mastri_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 11:23 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_mastri_view AS
+	SELECT
+		ruoli_mastri.id,
+		ruoli_mastri.id_genitore,
+		ruoli_mastri.nome,
+    	ruoli_mastri.html_entity,
+    	ruoli_mastri.font_awesome,
+	 	ruoli_mastri_path( ruoli_mastri.id ) AS __label__
+	FROM ruoli_mastri
+;
+
 -- | 090000035000
 
 -- ruoli_prodotti_view
@@ -2729,6 +2814,55 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_immobili,
 	 	ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
+;
+
+-- | 090000036001
+
+-- sconti_view
+CREATE OR REPLACE VIEW `sconti_view` AS
+	SELECT
+	sconti.id,
+	sconti.nome,
+	sconti.timestamp_inizio,
+	from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+	sconti.timestamp_fine,
+	from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+	concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
+	FROM sconti
+;
+
+-- | 090000036201
+
+-- sconti_articoli_view
+CREATE OR REPLACE VIEW `sconti_articoli_view` AS
+	SELECT
+		sconti_articoli.id,
+		sconti_articoli.id_sconto,
+		sconti.nome AS sconto,
+		sconti_articoli.id_articolo,
+		articoli.id_prodotto,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', sconti.nome, articoli.id ) AS __label__
+	FROM sconti_articoli
+		LEFT JOIN sconti ON sconti.id = sconti_articoli.id_sconto
+		LEFT JOIN articoli ON articoli.id = sconti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+;
+
+-- | 090000036401
+
+-- sconti_listini_view
+CREATE OR REPLACE VIEW `sconti_listini_view` AS
+	SELECT
+		sconti_listini.id,
+		sconti_listini.id_sconto,
+		sconti.nome AS sconto,
+		sconti_listini.id_listino,
+		listini.nome AS listino,	
+		concat_ws( ' ', sconti.nome, listini.nome ) AS __label__
+	FROM sconti_listini
+		LEFT JOIN sconti ON sconti.id = sconti_listini.id_sconto
+		LEFT JOIN listini ON listini.id = sconti_listini.id_listino
 ;
 
 -- | 090000037000
@@ -3143,6 +3277,17 @@ CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS        --
 	FROM tipologie_pubblicazioni                                --
 ;                                                               --
 
+-- | 090000055901
+
+-- tipologie_sconti_view
+CREATE OR REPLACE VIEW `tipologie_sconti_view` AS
+	SELECT
+		tipologie_sconti.id,
+		tipologie_sconti.nome,
+		tipologie_sconti.nome AS __label__
+	FROM tipologie_sconti
+;
+
 -- | 090000056200
 
 -- tipologie_telefoni_view
@@ -3194,6 +3339,25 @@ CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
 		tipologie_veicoli_path( tipologie_veicoli.id ) AS __label__   -- etichetta per le tendine e le liste
 	FROM tipologie_veicoli                                        --
 ;                                                             --
+
+-- | 090000056951
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 16:40 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_zone_view` AS
+	SELECT
+		tipologie_zone.id,
+		tipologie_zone.id_genitore,
+		tipologie_zone.ordine,
+		tipologie_zone.nome,
+		tipologie_zone.html_entity,
+		tipologie_zone.font_awesome,
+		tipologie_zone.id_account_inserimento,
+		tipologie_zone.id_account_aggiornamento,
+		tipologie_zone_path( tipologie_zone.id ) AS __label__
+	FROM tipologie_zone
+;
 
 -- | 090000062000
 
@@ -3354,6 +3518,25 @@ CREATE OR REPLACE VIEW `video_view` AS
 	FROM video
 		LEFT JOIN lingue ON lingue.id = video.id_lingua
 		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
+;
+
+-- | 090000100001
+
+-- zone_view
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_view AS
+	SELECT
+		zone.id,
+		zone.id_genitore,
+		zone.id_tipologia,
+		tipologie_zone.nome AS tipologia,
+		zone.nome,
+		zone.id_account_inserimento,
+		zone.id_account_aggiornamento,
+		zone_path( zone.id ) AS __label__
+	FROM zone
+		LEFT JOIN tipologie_zone ON tipologie_zone.id = zone.id_tipologia
 ;
 
 -- | 090000999000

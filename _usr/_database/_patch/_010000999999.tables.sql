@@ -675,6 +675,28 @@ CREATE TABLE `carrelli_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000003065
+
+-- distinta
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: contiene la distinta base degli articoli
+--
+-- questa tabella dice di quali componenti, e in che quantita', e' fatto un articolo: id_articolo e' il composto,
+-- id_componente l'articolo che ne fa parte
+--
+CREATE TABLE IF NOT EXISTS `distinta` (
+  `id` bigint(20) NOT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_componente` char(32) DEFAULT NULL,
+  `quantita` decimal(16,5) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003100
 
 -- categorie_anagrafica
@@ -1646,6 +1668,27 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000017490
+
+-- listini_zone
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega i listini alle zone in cui valgono
+--
+-- questa tabella contiene l'associazione molti a molti fra listini e zone, con l'ordine di applicazione
+--
+CREATE TABLE IF NOT EXISTS `listini_zone` (
+  `id` bigint(20) NOT NULL,
+  `id_listino` bigint(20) DEFAULT NULL,
+  `id_zona` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000018200
 
 -- macro
@@ -2056,6 +2099,36 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000021950
+
+-- modalita_spedizione
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le modalita' e i costi di spedizione
+--
+-- questa tabella contiene i costi e i tempi di spedizione per tipologia, zona e, se serve, per categoria,
+-- prodotto o articolo
+--
+CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
+  `id` bigint(20) NOT NULL,
+  `id_tipologia` bigint(20) DEFAULT NULL,
+  `id_zona` bigint(20) DEFAULT NULL,
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `lotto_spedizione` int(11) DEFAULT NULL,
+  `importo_netto` int(11) DEFAULT NULL,
+  `id_valuta` bigint(20) DEFAULT NULL,
+  `id_iva` bigint(20) DEFAULT NULL,
+  `giorni_spedizione` int(11) DEFAULT NULL,
+  `giorni_consegna` int(11) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022000
@@ -2745,6 +2818,29 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000030470
+
+-- relazioni_prodotti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega i prodotti fra loro secondo un ruolo
+--
+-- questa tabella contiene le relazioni fra un prodotto e un altro prodotto o articolo collegato ( accessori,
+-- ricambi, alternative ), qualificate dal ruolo
+--
+CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
+  `id` bigint(20) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_ruolo` bigint(20) DEFAULT NULL,
+  `id_prodotto_collegato` char(32) DEFAULT NULL,
+  `id_articolo_collegato` char(32) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+);
+
 -- | 010000030800
 
 -- reparti
@@ -2971,6 +3067,33 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
   `se_helpdesk` tinyint(1) DEFAULT NULL                       -- se l'indirizzo mail è di tipo helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000034870
+
+-- ruoli_mastri
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei mastri
+--
+-- questa tabella contiene i ruoli dei mastri, con le icone e i flag che dicono in quali ambiti il ruolo
+-- si usa
+--
+CREATE TABLE IF NOT EXISTS `ruoli_mastri` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` tinyint(1) DEFAULT NULL,
+  `se_commerciale` tinyint(1) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_amministrazione` tinyint(1) DEFAULT NULL,
+  `se_acquisti` tinyint(1) DEFAULT NULL,
+  `se_ordini` tinyint(1) DEFAULT NULL,
+  `se_logistica` tinyint(1) DEFAULT NULL,
+  `se_helpdesk` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000035000
 
 -- ruoli_prodotti
@@ -3021,6 +3144,73 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036000
+
+-- sconti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli sconti
+--
+-- questa tabella contiene gli sconti, percentuali o fissi, con la quantita' minima e il periodo di validita'
+--
+CREATE TABLE IF NOT EXISTS `sconti` (
+  `id` bigint(20) NOT NULL,
+  `id_tipologia` bigint(20) DEFAULT NULL,
+  `nome` varchar(255) DEFAULT NULL,
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
+  `sconto_fisso` decimal(5,2) DEFAULT NULL,
+  `qta_min` int(11) DEFAULT NULL,
+  `id_valuta` bigint(20) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036200
+
+-- sconti_articoli
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega gli sconti agli articoli a cui si applicano
+--
+-- questa tabella contiene l'associazione molti a molti fra sconti e articoli
+--
+CREATE TABLE IF NOT EXISTS `sconti_articoli` (
+  `id` bigint(20) NOT NULL,
+  `id_sconto` bigint(20) DEFAULT NULL,
+  `id_articolo` char(32) NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036400
+
+-- sconti_listini
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega gli sconti ai listini a cui si applicano
+--
+-- questa tabella contiene l'associazione molti a molti fra sconti e listini
+--
+CREATE TABLE IF NOT EXISTS `sconti_listini` (
+  `id` bigint(20) NOT NULL,
+  `id_sconto` bigint(20) DEFAULT NULL,
+  `id_listino` bigint(20) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000037000
@@ -3707,6 +3897,26 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000055900
+
+-- tipologie_sconti
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di sconti
+--
+-- questa tabella contiene le tipologie di sconti
+--
+CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
+  `id` int NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000056200
 
 -- tipologie_telefoni
@@ -3807,6 +4017,32 @@ CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (             --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000056950
+
+-- tipologie_zone
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di zone
+--
+-- questa tabella contiene le tipologie di zone, con i flag che dicono in quali ambiti si usano
+--
+CREATE TABLE IF NOT EXISTS `tipologie_zone` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_ecommerce` tinyint(1) DEFAULT NULL,
+  `se_commerciale` tinyint(1) DEFAULT NULL,
+  `se_immobiliare` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000060000
 
@@ -4025,6 +4261,28 @@ CREATE TABLE IF NOT EXISTS `video` (
   `orientamento` enum('L','P','S') DEFAULT NULL,
   `ratio` char(8) DEFAULT NULL,
   `note` text DEFAULT NULL,                                  
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000100000
+
+-- zone
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le zone geografiche e commerciali
+--
+-- questa tabella contiene le zone a cui si legano listini, modalita' di spedizione e indirizzi
+--
+CREATE TABLE IF NOT EXISTS `zone` (
+`id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `id_tipologia` bigint(20) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
