@@ -16,8 +16,11 @@ L'evasione avviene un messaggio alla volta con lo schema a token usato anche per
 con il proprio token una riga di `sms_out`, la legge, la passa al provider e, se l'invio riesce, la copia
 in `sms_sent` ( `REPLACE INTO sms_sent SELECT * FROM sms_out` ), vi scrive la timestamp di invio e la
 cancella da `sms_out`. Se l'invio fallisce la riga resta in coda, il contatore `tentativi` sale di uno e
-l'invio viene rimandato di tante ore quanti sono i tentativi fatti; come per le mail non c'è un numero
-massimo di tentativi.
+l'invio viene rimandato di tante ore quanti sono i tentativi fatti, fino a `$cf['sms']['tentativi_massimi']`
+tentativi falliti ( default 10, runlevel `_540.sms.php`; 0 toglie il limite ), come per le mail: lì la riga resta
+in `sms_out` ferma con il token dedicato `TROPPI_TENTATIVI`, l'errore va nel log `sms` e il titolo della scheda
+( la `__label__` di `sms_out_view` ) dice dopo quanti tentativi. La ferma non la riprendono né il giro normale, né
+`hard`, né `full`, né lo sblocco: la fa ripartire, con i tentativi azzerati, l'invio forzato dalla scheda ( `id` ).
 
 La copia in `sms_sent` è un `SELECT *`, quindi le due tabelle devono avere le stesse colonne nello stesso
 ordine. Se la copia fallisce l'SMS è già partito: il task non cancella la riga e non la rimette in coda,
@@ -144,9 +147,10 @@ Task di evasione della coda degli SMS, raggiungibile come `/task/SM000.sms/sms.q
 richiede `GESTIONE_COMUNICAZIONI`. Marca con il proprio token una riga di `sms_out` secondo la modalità
 scelta ( `id`, `hard`, `full` o standard, vedi sopra ), la invia con `skebbySend()` o `ehiwebSend()` secondo
 il tipo del server e in caso di successo la sposta in `sms_sent`, controllando l'esito della copia prima di
-cancellare la riga; in caso di errore incrementa `tentativi` e rimanda l'invio di altrettante ore, senza un
-limite massimo. All'inizio di ogni giro sblocca le righe marcate da più di `$cf['sms']['minuti_sblocco']`
-minuti. È la copia identica del task omonimo del core, che va tenuta allineata.
+cancellare la riga; in caso di errore incrementa `tentativi` e rimanda l'invio di altrettante ore, fino a
+`$cf['sms']['tentativi_massimi']` tentativi falliti, dopo i quali la riga resta ferma con il token
+`TROPPI_TENTATIVI` ( vedi sopra ). All'inizio di ogni giro sblocca le righe marcate da più di
+`$cf['sms']['minuti_sblocco']` minuti, tranne quelle con `COPIA_FALLITA` o `TROPPI_TENTATIVI`. È la copia identica del task omonimo del core, che va tenuta allineata.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.form.php
 Macro della scheda `sms.out.form`: dichiara `sms_out` come tabella gestita e lascia il resto alla macro di

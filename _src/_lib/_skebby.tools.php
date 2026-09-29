@@ -77,21 +77,21 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 			$to = array($to);
 		}
 
-		// elimino da $to tutti i caratteri non numerici
+		// porto i destinatari in formato internazionale
+		// NOTA fino al 2026-09-30 qui si toglieva il + e si rimetteva +39 davanti a tutto quello che non cominciava con +39,
+		// e +39 333 1234567 diventava +39393331234567; la regola ora sta in string2smsNumber() ( _src/_lib/_sms.tools.php )
 		foreach ($to as $key => $value) {
-			$to[$key] = preg_replace('/[^0-9]/', '', $value);
+			$to[$key] = string2smsNumber($value);
+			if ($to[$key] === false) {
+				logWrite('destinatario senza cifre scartato: ' . print_r($value, true), 'skebby', LOG_ERR);
+				unset($to[$key]);
+			}
 		}
 
-		// aggiungo +39 all'inizio di ogni elemento in $to se manca
-		foreach ($to as $key => $value) {
-			if (substr($value, 0, 4) == '0039') {
-				$to[$key] = '+' . substr($value, 2);
-			}
-			// NOTA il controllo va fatto sul valore appena convertito: fatto su $value, un numero scritto 0039... diventava
-			// +390039...
-			if (substr($to[$key], 0, 3) != '+39') {
-				$to[$key] = '+39' . $to[$key];
-			}
+		// NOTA senza destinatari validi non c'è niente da inviare, e l'invio è fallito
+		if (empty($to)) {
+			logWrite('invio senza destinatari validi', 'skebby', LOG_ERR);
+			return false;
 		}
 
 		$recipient = array_values($to);

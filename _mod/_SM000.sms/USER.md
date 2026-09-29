@@ -33,8 +33,11 @@ gli **strumenti sms**.
 > **nota** — se un invio non riesce, l'SMS **resta in coda**: il numero dei tentativi cresce di uno
 > e l'invio viene rimandato di tante ore quanti sono i tentativi fatti. Succede anche quando il
 > fornitore del servizio **non è configurato**: in quel caso gli SMS si accumulano qui e non
-> partiranno finché chi amministra l'installazione non lo configura. Un SMS rimasto a metà di un
-> giro interrotto torna in coda da solo dopo un'ora ( o il tempo impostato sull'installazione ).
+> partiranno finché chi amministra l'installazione non lo configura. Dopo dieci tentativi falliti
+> ( o il numero impostato sull'installazione ) l'SMS **si ferma**: resta nell'elenco ma non viene più
+> riprovato, e il titolo della sua scheda dice "fermo dopo N tentativi"; lo si fa ripartire con
+> **invia immediatamente l'SMS** dagli strumenti della scheda, che azzera i tentativi. Un SMS rimasto
+> a metà di un giro interrotto torna in coda da solo dopo un'ora ( o il tempo impostato sull'installazione ).
 
 ## la scheda di un SMS
 <!-- @pubblico: amministratore -->
@@ -53,7 +56,7 @@ L'ultima linguetta, **strumenti**, ha un riquadro solo:
 
 | riquadro | cosa fa |
 |---|---|
-| invia immediatamente l'SMS | tenta subito l'invio di **questo** SMS, senza aspettare il giro automatico, e porta all'elenco degli inviati |
+| invia immediatamente l'SMS | tenta subito l'invio di **questo** SMS, senza aspettare il giro automatico, e porta all'elenco degli inviati; un SMS fermo per troppi tentativi riparte con i tentativi azzerati |
 
 > **attenzione** — un SMS è stato composto da un altro modulo, e la correzione fatta qui vale solo
 > per quella copia: se l'errore è nel testo, va corretto nel **template** da cui è nato.
@@ -86,7 +89,7 @@ L'ultima linguetta della sezione raccoglie le operazioni sulle code intere. Nel 
 | riquadro | cosa fa |
 |---|---|
 | invia il prossimo SMS in uscita | spedisce subito il primo SMS della coda, **anche se il suo invio era previsto più avanti** |
-| elabora coda SMS in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutti gli SMS, compresi quelli programmati e quelli rimandati dopo un errore, e libera quelli rimasti bloccati da un giro interrotto. In quel momento **non spedisce niente**: li spedisce il giro automatico dal passaggio successivo, uno alla volta ( chiede conferma ) |
+| elabora coda SMS in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutti gli SMS, compresi quelli programmati e quelli rimandati dopo un errore, e libera quelli rimasti bloccati da un giro interrotto; gli SMS fermi per troppi tentativi restano fermi. In quel momento **non spedisce niente**: li spedisce il giro automatico dal passaggio successivo, uno alla volta ( chiede conferma ) |
 
 Nel gruppo **code**:
 

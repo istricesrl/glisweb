@@ -35,7 +35,10 @@ gli **strumenti mail**.
 > tentativi cresce di uno e l'invio viene rimandato di tante ore quanti sono i tentativi fatti —
 > un'ora dopo il primo errore, due dopo il secondo, e così via. Una mail che resta a lungo in questo
 > elenco con l'invio sempre spostato in avanti è il segnale di un problema col server di posta o
-> con l'indirizzo. Una mail rimasta a metà di un giro interrotto torna in coda da sola dopo un'ora
+> con l'indirizzo. Dopo dieci tentativi falliti ( o il numero impostato sull'installazione ) la mail
+> **si ferma**: resta nell'elenco ma non viene più riprovata, e il titolo della sua scheda dice
+> "ferma dopo N tentativi". Quando il problema è risolto la si fa ripartire con **invia
+> immediatamente la mail** dagli strumenti della scheda, che azzera i tentativi. Una mail rimasta a metà di un giro interrotto torna in coda da sola dopo un'ora
 > ( o il tempo impostato sull'installazione ).
 
 ## la scheda di una mail
@@ -59,7 +62,7 @@ linguetta, **strumenti**, ha un riquadro solo:
 
 | riquadro | cosa fa |
 |---|---|
-| invia immediatamente la mail | tenta subito l'invio di **questa** mail, senza aspettare il giro automatico, e porta all'elenco delle inviate |
+| invia immediatamente la mail | tenta subito l'invio di **questa** mail, senza aspettare il giro automatico, e porta all'elenco delle inviate; una mail ferma per troppi tentativi riparte con i tentativi azzerati |
 
 > **attenzione** — modificare a mano una mail in coda è un intervento da fare di rado: la mail è
 > stata composta da un altro modulo, e la correzione vale solo per quella copia. Se l'errore è nel
@@ -100,7 +103,7 @@ L'ultima linguetta della sezione raccoglie le operazioni sulle code intere. Nel 
 | riquadro | cosa fa |
 |---|---|
 | invia la prossima mail in uscita | spedisce subito la prima mail della coda, **anche se il suo invio era previsto più avanti** |
-| elabora coda mail in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutte le mail, comprese quelle programmate e quelle rimandate dopo un errore, e libera quelle rimaste bloccate da un giro interrotto. In quel momento **non spedisce niente**: le spedisce il giro automatico dal passaggio successivo, una alla volta ( chiede conferma ) |
+| elabora coda mail in uscita | rimette in circolo **tutta** la coda: rende subito inviabili tutte le mail, comprese quelle programmate e quelle rimandate dopo un errore, e libera quelle rimaste bloccate da un giro interrotto; le mail ferme per troppi tentativi restano ferme. In quel momento **non spedisce niente**: le spedisce il giro automatico dal passaggio successivo, una alla volta ( chiede conferma ) |
 
 Nel gruppo **code**:
 

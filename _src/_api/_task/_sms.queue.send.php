@@ -6,8 +6,8 @@
      * Questo task invia un SMS della coda `sms_out` a ogni chiamata, con lo stesso schema a token del task gemello delle
      * mail ( `_src/_api/_task/_mail.queue.send.php` ): marca una riga con il proprio token, la legge, la passa al
      * provider e, se l'invio riesce, la sposta in `sms_sent`; se l'invio fallisce la riga resta in coda, `tentativi`
-     * sale di uno e l'invio viene rimandato di tante ore quanti sono i tentativi fatti. Richiede il privilegio
-     * `GESTIONE_COMUNICAZIONI` ed è pensato per il cron ogni minuto con più iterazioni.
+     * sale di uno e l'invio viene rimandato di tante ore quanti sono i tentativi fatti, fino al limite descritto più
+     * sotto. Richiede il privilegio `GESTIONE_COMUNICAZIONI` ed è pensato per il cron ogni minuto con più iterazioni.
      *
      * modalità di evasione
      * ====================
@@ -15,14 +15,14 @@
      *
      * parametro        | comportamento
      * -----------------|------------------------------------------------------------------------------------------
-     * id=<id>          | invia l'SMS indicato anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato
+     * id=<id>          | invia l'SMS indicato anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato; un SMS fermo per troppi tentativi riparte con i tentativi azzerati
      * hard=1           | invia il primo SMS della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
-     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe e non invia nulla, la coda la riprende il cron dal giro successivo
+     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe, tranne quelle ferme per troppi tentativi, e non invia nulla, la coda la riprende il cron dal giro successivo
      * nessuno          | invia il primo SMS la cui data prevista è passata o assente
      *
-     * Con `full=1` il task risponde con quanti SMS avevano una data prevista, ora azzerata ( `rimesse` ), e quanti ne ha
-     * sbloccati ( `sbloccate`, vedi sotto ). Fino al 2026-09-30 rispondeva "nessun SMS da evadere", che sembrava un
-     * errore.
+     * Con `full=1` il task risponde con quanti SMS avevano una data prevista, ora azzerata ( `rimesse` ), quanti ne ha
+     * sbloccati ( `sbloccate`, vedi sotto ) e quanti restano fermi per troppi tentativi ( `ferme` ). Fino al 2026-09-30
+     * rispondeva "nessun SMS da evadere", che sembrava un errore.
      *
      * righe marcate e mai rilasciate
      * ==============================
@@ -55,8 +55,15 @@
      * Il task ha un gemello identico nel modulo `SM000.sms` ( `_mod/_SM000.sms/_src/_api/_task/_sms.queue.send.php` ),
      * come le mail lo hanno in `MA000.mail`: le due copie vanno tenute uguali, cambia solo l'inclusione del framework.
      *
-     * NOTA come la coda delle mail, il task non ha un numero massimo di tentativi: un SMS che fallisce sempre viene
-     * riprovato all'infinito, a intervalli che crescono di un'ora a ogni tentativo.
+     * limite di tentativi
+     * ===================
+     * Quando i tentativi falliti arrivano a `$cf['sms']['tentativi_massimi']` ( default 10, in `_src/_config/_540.sms.php`;
+     * con 0 il limite non c'è ) l'SMS non si riprova più: la riga resta in `sms_out` con i tentativi fatti e il token
+     * dedicato `TROPPI_TENTATIVI`, e l'errore va nel log `sms` a livello LOG_ERR. Come `COPIA_FALLITA` il token la toglie
+     * dal giro normale, da `hard=1` e dallo sblocco delle righe abbandonate, e `full=1` non la rimette in circolo, come
+     * fa il task delle mail. Lo fa ripartire `id=<id>`, cioè l'invio forzato dalla scheda dell'SMS in uscita, che toglie
+     * il token e azzera i tentativi prima di marcarlo: se fallisce ancora ricomincia il conteggio. Fino al 2026-09-30 un
+     * SMS che falliva sempre veniva riprovato all'infinito.
      *
      * @file
      *
@@ -85,12 +92,14 @@
     }
 
     // sblocco degli SMS marcati e mai rilasciati
-    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano
+    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano, e quelle ferme
+    // per troppi tentativi, che riparte solo l'invio forzato di quella riga
     $status['sbloccate'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'UPDATE sms_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token <> ? AND timestamp_elaborazione < ?',
+        'UPDATE sms_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token NOT IN ( ?, ? ) AND timestamp_elaborazione < ?',
         array(
             array( 's' => 'COPIA_FALLITA' ),
+            array( 's' => 'TROPPI_TENTATIVI' ),
             array( 's' => strtotime( '-' . $cf['sms']['minuti_sblocco'] . ' minutes' ) )
         )
     );
@@ -105,6 +114,22 @@
 
 		// status
 		$status['info'][] = 'evasione specifico messaggio in coda';
+
+        // se la riga è ferma per troppi tentativi la rimetto in coda con i tentativi azzerati
+        // NOTA è l'unico modo di farla ripartire: il giro normale, hard e full non la prendono
+        $status['riprese'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE sms_out SET token = NULL, tentativi = 0 WHERE id = ? AND token = ?',
+            array(
+                array( 's' => $_REQUEST['id'] ),
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
+        );
+
+        // log
+        if( ! empty( $status['riprese'] ) ) {
+            logWrite( 'SMS #' . $_REQUEST['id'] . ' fermo per troppi tentativi rimesso in coda a mano, con i tentativi azzerati', 'sms' );
+        }
 
         // token della riga
         $status['id'] = mysqlQuery(
@@ -139,13 +164,26 @@
 		$status['info'][] = 'forzatura elaborazione totale della coda';
 
 		// rimetto in circolo tutta la coda
+        // NOTA le righe ferme per troppi tentativi restano ferme, le riparte solo l'invio forzato di quella riga
         $status['rimesse'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE sms_out SET timestamp_invio = NULL'
+            'UPDATE sms_out SET timestamp_invio = NULL WHERE ( token IS NULL OR token <> ? )',
+            array(
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
+        );
+
+        // conto le righe ferme per troppi tentativi
+        $status['ferme'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count( id ) FROM sms_out WHERE token = ?',
+            array(
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
         );
 
 		// status
-		$status['info'][] = 'SMS con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', SMS sbloccati: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro';
+		$status['info'][] = 'SMS con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', SMS sbloccati: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro, tranne gli SMS fermi per troppi tentativi: ' . intval( $status['ferme'] ) . ', che riparte solo l\'invio forzato dalla scheda';
 
 		// log
 		logWrite( 'coda degli SMS rimessa in circolo: ' . intval( $status['rimesse'] ) . ' date previste azzerate', 'sms' );
@@ -320,19 +358,44 @@
 			// incremento il numero di tentativi per l'SMS
 			$tnInvio = $sms['tentativi'] + 1;
 
-			// se l'invio dà errore, procrastino
-			$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
+			// controllo il limite di tentativi
+			if( ! empty( $cf['sms']['tentativi_massimi'] ) && $tnInvio >= $cf['sms']['tentativi_massimi'] ) {
 
-			// aggiorno la timestamp di invio
-			mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
-				array(
-					array( 's' => $tsInvio ),
-					array( 's' => $tnInvio ),
-					array( 's' => $status['token'] )
-				)
-			);
+				// NOTA la riga resta in coda con il token dedicato TROPPI_TENTATIVI, che la toglie dal giro normale, da hard e
+				// full e dallo sblocco delle righe abbandonate; la riparte solo l'invio forzato di quella riga ( id )
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE sms_out SET tentativi = ?, token = ?, timestamp_elaborazione = NULL WHERE token = ?',
+					array(
+						array( 's' => $tnInvio ),
+						array( 's' => 'TROPPI_TENTATIVI' ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+				// log
+				logWrite( 'SMS #' . $sms['id'] . ' non inviato dopo ' . $tnInvio . ' tentativi, resta nella sms_out fermo con il token TROPPI_TENTATIVI', 'sms', LOG_ERR );
+
+				// status
+				$status['err'][] = 'SMS non inviato dopo ' . $tnInvio . ' tentativi, non verrà più ritentato';
+
+			} else {
+
+				// se l'invio dà errore, procrastino
+				$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
+
+				// aggiorno la timestamp di invio
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
+					array(
+						array( 's' => $tsInvio ),
+						array( 's' => $tnInvio ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+			}
 
 		}
 

@@ -6,8 +6,8 @@
      * Questo task invia una mail della coda `mail_out` a ogni chiamata: marca una riga con il proprio token, la legge, la
      * passa a sendMail() ( `_src/_lib/_mail.tools.php` ) e, se l'invio riesce, la sposta in `mail_sent`; se l'invio
      * fallisce la riga resta in coda, `tentativi` sale di uno e l'invio viene rimandato di tante ore quanti sono i
-     * tentativi fatti. Richiede il privilegio `GESTIONE_COMUNICAZIONI` ed è pensato per il cron ogni minuto con più
-     * iterazioni.
+     * tentativi fatti, fino al limite descritto più sotto. Richiede il privilegio `GESTIONE_COMUNICAZIONI` ed è pensato
+     * per il cron ogni minuto con più iterazioni.
      *
      * modalità di evasione
      * ====================
@@ -15,14 +15,14 @@
      *
      * parametro        | comportamento
      * -----------------|------------------------------------------------------------------------------------------
-     * id=<id>          | invia la mail indicata anche se non è ancora il suo momento, purché nessun altro processo l'abbia già marcata
+     * id=<id>          | invia la mail indicata anche se non è ancora il suo momento, purché nessun altro processo l'abbia già marcata; una mail ferma per troppi tentativi riparte con i tentativi azzerati
      * hard=1           | invia la prima mail della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
-     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe e non invia nulla, la coda la riprende il cron dal giro successivo
+     * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe, tranne quelle ferme per troppi tentativi, e non invia nulla, la coda la riprende il cron dal giro successivo
      * nessuno          | invia la prima mail la cui data prevista è passata o assente
      *
-     * Con `full=1` il task risponde con quante mail avevano una data prevista, ora azzerata ( `rimesse` ), e quante ne ha
-     * sbloccate ( `sbloccate`, vedi sotto ). Fino al 2026-09-30 rispondeva "nessuna mail da evadere", che sembrava un
-     * errore.
+     * Con `full=1` il task risponde con quante mail avevano una data prevista, ora azzerata ( `rimesse` ), quante ne ha
+     * sbloccate ( `sbloccate`, vedi sotto ) e quante restano ferme per troppi tentativi ( `ferme` ). Fino al 2026-09-30
+     * rispondeva "nessuna mail da evadere", che sembrava un errore.
      *
      * righe marcate e mai rilasciate
      * ==============================
@@ -60,8 +60,18 @@
      * l'inclusione del framework. Fino al 2026-09-29 questa copia non aveva la correzione del dominio DKIM per i mittenti
      * non validi che il core aveva già.
      *
-     * NOTA il task non ha un numero massimo di tentativi: una mail che fallisce sempre viene riprovata all'infinito, a
-     * intervalli che crescono di un'ora a ogni tentativo.
+     * limite di tentativi
+     * ===================
+     * Quando i tentativi falliti arrivano a `$cf['mail']['tentativi_massimi']` ( default 10, in `_src/_config/_350.mail.php`;
+     * con 0 il limite non c'è ) la mail non si riprova più: la riga resta in `mail_out` con i tentativi fatti e il token
+     * dedicato `TROPPI_TENTATIVI`, e l'errore va nel log `mail` a livello LOG_ERR. Come `COPIA_FALLITA` il token la toglie
+     * dal giro normale, da `hard=1` e dallo sblocco delle righe abbandonate, e `full=1` non la rimette in circolo: una
+     * mail che ha fallito tante volte di fila ha di solito un problema che il tempo non risolve ( un indirizzo rifiutato,
+     * un server sbagliato ), e ritentarla a ogni "elabora coda" riempirebbe il log senza farla partire. La fa ripartire
+     * `id=<id>`, cioè l'invio forzato dalla scheda della mail in uscita, che toglie il token e azzera i tentativi prima di
+     * marcarla: se fallisce ancora ricomincia il conteggio. Il limite c'era già nel primo disegno del task, del 2020
+     * ( "se i tentativi sono più di 5, notificare il mittente e spostarla in mail_unsent" ), ma non era mai stato scritto:
+     * fino al 2026-09-30 una mail che falliva sempre veniva riprovata all'infinito.
      *
      * @file
      *
@@ -97,12 +107,14 @@
 	// $mail = NULL;
 
     // sblocco delle mail marcate e mai rilasciate
-    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano
+    // NOTA restano fuori le righe bloccate apposta dopo una copia fallita, che vanno sistemate a mano, e quelle ferme
+    // per troppi tentativi, che riparte solo l'invio forzato di quella riga
     $status['sbloccate'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'UPDATE mail_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token <> ? AND timestamp_elaborazione < ?',
+        'UPDATE mail_out SET token = NULL, timestamp_elaborazione = NULL WHERE token IS NOT NULL AND token NOT IN ( ?, ? ) AND timestamp_elaborazione < ?',
         array(
             array( 's' => 'COPIA_FALLITA' ),
+            array( 's' => 'TROPPI_TENTATIVI' ),
             array( 's' => strtotime( '-' . $cf['mail']['minuti_sblocco'] . ' minutes' ) )
         )
     );
@@ -117,6 +129,22 @@
 
 		// status
 		$status['info'][] = 'evasione specifico messaggio in coda';
+
+        // se la riga è ferma per troppi tentativi la rimetto in coda con i tentativi azzerati
+        // NOTA è l'unico modo di farla ripartire: il giro normale, hard e full non la prendono
+        $status['riprese'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE mail_out SET token = NULL, tentativi = 0 WHERE id = ? AND token = ?',
+            array(
+                array( 's' => $_REQUEST['id'] ),
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
+        );
+
+        // log
+        if( ! empty( $status['riprese'] ) ) {
+            logWrite( 'mail #' . $_REQUEST['id'] . ' ferma per troppi tentativi rimessa in coda a mano, con i tentativi azzerati', 'mail' );
+        }
 
         // token della riga
         $status['id'] = mysqlQuery(
@@ -151,13 +179,26 @@
 		$status['info'][] = 'forzatura elaborazione totale della coda';
 
 		// rimetto in circolo tutta la coda
+        // NOTA le righe ferme per troppi tentativi restano ferme, le riparte solo l'invio forzato di quella riga
         $status['rimesse'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET timestamp_invio = NULL'
+            'UPDATE mail_out SET timestamp_invio = NULL WHERE ( token IS NULL OR token <> ? )',
+            array(
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
+        );
+
+        // conto le righe ferme per troppi tentativi
+        $status['ferme'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count( id ) FROM mail_out WHERE token = ?',
+            array(
+                array( 's' => 'TROPPI_TENTATIVI' )
+            )
         );
 
 		// status
-		$status['info'][] = 'mail con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', mail sbloccate: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro';
+		$status['info'][] = 'mail con la data prevista azzerata: ' . intval( $status['rimesse'] ) . ', mail sbloccate: ' . intval( $status['sbloccate'] ) . '; tutta la coda è inviabile e la riprende il cron dal prossimo giro, tranne le mail ferme per troppi tentativi: ' . intval( $status['ferme'] ) . ', che riparte solo l\'invio forzato dalla scheda';
 
 		// log
 		logWrite( 'coda delle mail rimessa in circolo: ' . intval( $status['rimesse'] ) . ' date previste azzerate', 'mail' );
@@ -391,19 +432,44 @@
 			// incremento il numero di tentativi per la mail
 			$tnInvio = $mail['tentativi'] + 1;
 
-			// se l'invio dà errore, procrastino
-			$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
+			// controllo il limite di tentativi
+			if( ! empty( $cf['mail']['tentativi_massimi'] ) && $tnInvio >= $cf['mail']['tentativi_massimi'] ) {
 
-			// aggiorno la timestamp di invio
-			mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
-				array(
-					array( 's' => $tsInvio ),
-					array( 's' => $tnInvio ),
-					array( 's' => $status['token'] )
-				)
-			);
+				// NOTA la riga resta in coda con il token dedicato TROPPI_TENTATIVI, che la toglie dal giro normale, da hard e
+				// full e dallo sblocco delle righe abbandonate; la riparte solo l'invio forzato di quella riga ( id )
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE mail_out SET tentativi = ?, token = ?, timestamp_elaborazione = NULL WHERE token = ?',
+					array(
+						array( 's' => $tnInvio ),
+						array( 's' => 'TROPPI_TENTATIVI' ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+				// log
+				logWrite( 'mail #' . $mail['id'] . ' non inviata dopo ' . $tnInvio . ' tentativi, resta nella mail_out ferma con il token TROPPI_TENTATIVI', 'mail', LOG_ERR );
+
+				// status
+				$status['err'][] = 'mail non inviata dopo ' . $tnInvio . ' tentativi, non verrà più ritentata';
+
+			} else {
+
+				// se l'invio dà errore, procrastino
+				$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
+
+				// aggiorno la timestamp di invio
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL, timestamp_elaborazione = NULL WHERE token = ?',
+					array(
+						array( 's' => $tsInvio ),
+						array( 's' => $tnInvio ),
+						array( 's' => $status['token'] )
+					)
+				);
+
+			}
 
 		}
 

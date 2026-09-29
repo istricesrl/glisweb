@@ -50,14 +50,18 @@
 		    }
 
 		// pulizia destinatario
-		    $to = str_replace( '+', '', $to );
-		    $to = str_replace( '.', '', $to );
-		    $to = str_replace( '/', '', $to );
-		    $to = str_replace( ' ', '', $to );
-		    $to = ltrim( $to, '0' );
+		// NOTA Ehiweb vuole il numero internazionale senza il +; fino al 2026-09-30 qui si toglievano gli zeri iniziali e si
+		// aggiungeva 39 solo se mancava, quindi un cellulare italiano 39x restava senza prefisso e uno fisso perdeva lo 0
+		    $to = string2smsNumber( $to );
 
-		// BRUTTISSIMO rendere più flessibile
-		    if( substr( $to, 0, 2 ) != '39' ) { $to = '39' . $to; }
+		// destinatario senza cifre
+		    if( $to === false ) {
+				logWrite( 'destinatario senza cifre', 'ehiweb', LOG_ERR );
+				return false;
+		    }
+
+		// tolgo il +
+		    $to = ltrim( $to, '+' );
 
 		// pulisco il body
 #		    $testo = filter_var( $testo, FILTER_SANITIZE_FULL_SPECIAL_CHARS );

@@ -30,6 +30,21 @@
     $cf['mail']['minuti_sblocco'] = 60;
 
     /**
+     * LIMITE DI TENTATIVI
+     * ===================
+     * Una mail che non parte resta in coda e viene riprovata dopo tante ore quanti sono i tentativi fatti; arrivata a
+     * `tentativi_massimi` tentativi falliti il task di invio non la riprova più: la riga resta in `mail_out` marcata con
+     * il token dedicato `TROPPI_TENTATIVI`, che la esclude dal giro normale, da `hard=1` e da `full=1`, e l'errore va nel
+     * log `mail`. La fa ripartire, con i tentativi azzerati, l'invio forzato dalla scheda della mail in uscita
+     * ( `id=<id>` ). Il valore si cambia da `src/config.json` o `src/config.yaml` ( chiave `mail.tentativi_massimi` );
+     * con 0 il limite non c'è, e la mail si riprova per sempre come prima del 2026-09-30.
+     *
+     */
+
+    // tentativi falliti dopo i quali una mail non si riprova più
+    $cf['mail']['tentativi_massimi'] = 10;
+
+    /**
      * DICHIARAZIONE DEI TEMPLATE MAIL
      * ===============================
      * 

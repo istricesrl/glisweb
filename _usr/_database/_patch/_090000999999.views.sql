@@ -2980,7 +2980,8 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 		concat(
 			mail_out.id,
 			' / ',
-			mail_out.oggetto
+			mail_out.oggetto,
+			if( mail_out.token = 'TROPPI_TENTATIVI', concat( ' ( ferma dopo ', mail_out.tentativi, ' tentativi )' ), '' )
 		) AS __label__
 	FROM mail_out
 ;
@@ -4775,7 +4776,8 @@ CREATE OR REPLACE VIEW `sms_out_view` AS
 		concat(
 			sms_out.id,
 			' / ',
-			sms_out.corpo
+			sms_out.corpo,
+			if( sms_out.token = 'TROPPI_TENTATIVI', concat( ' ( fermo dopo ', sms_out.tentativi, ' tentativi )' ), '' )
 		) AS __label__
 	FROM sms_out
 ;

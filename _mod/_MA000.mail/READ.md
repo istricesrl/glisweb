@@ -32,10 +32,13 @@ l'inclusione del framework. Marca con il proprio token una riga di `mail_out`, s
 `timestamp_elaborazione`, la invia con `sendMail()` e in caso di successo la sposta in `mail_sent` insieme ai suoi
 file, controllando l'esito della copia prima di cancellare la riga: se la copia fallisce la riga resta in
 `mail_out` bloccata dal token dedicato `COPIA_FALLITA` e l'errore va nel log a livello critico. In caso di errore
-di invio incrementa `tentativi` e rimanda l'invio di altrettante ore, senza un limite massimo. All'inizio di ogni
-giro sblocca le righe marcate da più di `$cf['mail']['minuti_sblocco']` minuti ( default 60 ), tranne quelle col
-token `COPIA_FALLITA`. Con `full=1` rimette in circolo tutta la coda, azzerando le date previste, e non invia
-nulla: le mail le spedisce il cron dai giri successivi. Lo chiama la scheda `mail.out.form.tools` con `id=<id>`
+di invio incrementa `tentativi` e rimanda l'invio di altrettante ore, fino a `$cf['mail']['tentativi_massimi']`
+tentativi falliti ( default 10 ): lì la riga resta in `mail_out` ferma con il token dedicato `TROPPI_TENTATIVI` e
+l'errore va nel log `mail`, e la fa ripartire con i tentativi azzerati solo `id=<id>`, cioè l'invio forzato dalla
+scheda. All'inizio di ogni giro sblocca le righe marcate da più di `$cf['mail']['minuti_sblocco']` minuti
+( default 60 ), tranne quelle col token `COPIA_FALLITA` o `TROPPI_TENTATIVI`. Con `full=1` rimette in circolo tutta
+la coda tranne le mail ferme per troppi tentativi, azzerando le date previste, e non invia nulla: le mail le spedisce
+il cron dai giri successivi. Lo chiama la scheda `mail.out.form.tools` con `id=<id>`
 e la pagina `mail.tools` con `hard=1` e `full=1`.
 
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.after.php

@@ -141,6 +141,56 @@
 
     // NOTA la funzione processSmsQueue() non esiste in quanto l'elaborazione della coda viene fatta direttamente nel task
 
+    /**
+     * normalizza un numero di telefono per l'invio di un SMS
+     *
+     * Questa funzione riceve un numero di telefono scritto come capita ( spazi, punti, barre, trattini, parentesi ) e lo
+     * restituisce in formato internazionale, cioè un + seguito dalle sole cifre, come lo vogliono i provider; le funzioni
+     * di invio dei provider ( skebbySend(), ehiwebSend() ) la chiamano su ogni destinatario. La regola è questa, nell'ordine:
+     *
+     * - un numero che comincia con + o con 00 è già internazionale: si tolgono gli 00 e si mette il +;
+     * - un numero che, tolto tutto quello che non è una cifra, è 39 seguito da 10 cifre è già internazionale, con il
+     *   prefisso italiano scritto senza + né 00;
+     * - tutti gli altri sono numeri italiani, e ci si mette davanti +39.
+     *
+     * Fino al 2026-09-30 skebbySend() toglieva il + e rimetteva +39 davanti a tutto quello che non cominciava già con +39,
+     * quindi +39 333 1234567 diventava +39393331234567, e ehiwebSend() non aggiungeva 39 ai numeri italiani che cominciano
+     * per 39 ( i cellulari 39x ).
+     *
+     * @param       string      $n                  il numero di telefono
+     *
+     * @return      string|false                    il numero nel formato +<cifre>, false se il numero non contiene cifre
+     *
+     */
+    function string2smsNumber( $n ) {
+
+        // numero scritto con il + davanti ( eventualmente dopo spazi o parentesi )
+        $internazionale = ( preg_match( '/^[^0-9]*\+/', (string) $n ) === 1 );
+
+        // tengo solo le cifre
+        $cifre = preg_replace( '/[^0-9]/', '', (string) $n );
+
+        // numero senza cifre
+        if( $cifre === '' ) {
+            return false;
+        }
+
+        // numero scritto con 00 davanti
+        if( substr( $cifre, 0, 2 ) == '00' ) {
+            $internazionale = true;
+            $cifre = substr( $cifre, 2 );
+        }
+
+        // numero internazionale, o italiano con il 39 già davanti
+        if( $internazionale || preg_match( '/^39[0-9]{10}$/', $cifre ) ) {
+            return '+' . $cifre;
+        }
+
+        // numero italiano
+        return '+39' . $cifre;
+
+    }
+
     function array2smsString($a)
     {
 
