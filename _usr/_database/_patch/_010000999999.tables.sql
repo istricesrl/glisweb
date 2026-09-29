@@ -4125,7 +4125,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_articoli` (
 -- | 010000030350
 
 -- relazioni_categorie_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione relazioni e categorie progetti
@@ -4166,7 +4166,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 -- | 010000030410
 
 -- relazioni_documenti_articoli
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione relazioni e documenti articoli
@@ -4185,7 +4185,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
 -- | 010000030440
 
 -- relazioni_pagamenti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione relazioni e pagamenti
@@ -4226,7 +4226,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
 -- | 010000030490
 
 -- relazioni_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione relazioni e progetti
@@ -4245,7 +4245,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
 -- | 010000030500
 
 -- relazioni_software
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione relazioni e software
