@@ -63,7 +63,9 @@
 
         // chiamo la funzione archiviumPostInsertAzienda()
         // NOTA dal 2026-09-29 la stampa valida il file contro lo schema FatturaPA, e a un file non valido, che lo SDI
-        // scarterebbe, risponde con gli errori al posto del percorso
+        // scarterebbe, risponde con gli errori al posto del percorso; dal 2026-09-30 fra gli errori ci sono anche i
+        // controlli che lo schema non fa ( nota di credito senza fattura collegata, TD24 senza DDT, nature generiche ):
+        // è solo qui, all'invio, che gli errori fermano la fattura, mentre visualizzazione e download la mostrano lo stesso
         if( ! empty( $x['file'] ) ) {
             $status['esito'] = archiviumPostInvioFeAttiva( $idAzienda, $_REQUEST['idFattura'], $x['file'] );
         } elseif( ! empty( $x['errori'] ) ) {

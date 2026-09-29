@@ -61,7 +61,7 @@
                     {% for coupon in etc.coupon.disponibili %}
 
                     <div class="col-12 col-md-4">
-                        <h2>{{ coupon.id }}</h2>
+                        <h2>{{ coupon.codice|default( coupon.id ) }}</h2>
                         {% if coupon.timestamp_fine %}
                         <h3>valido fino al {{ coupon.timestamp_fine|date('d/m/Y') }}</h3>
                         {% else %}

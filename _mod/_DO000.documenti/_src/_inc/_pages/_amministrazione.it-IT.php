@@ -71,6 +71,7 @@
         'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.form',
                                                             'amministrazione.archivio.documenti.form.documenti.articoli',
                                                             'amministrazione.archivio.documenti.form.pagamenti',
+                                                            'amministrazione.archivio.documenti.form.dati.fiscali',
                                                             'amministrazione.archivio.documenti.form.evasione',
                                                             'amministrazione.archivio.documenti.form.relazioni',
                                                             'amministrazione.archivio.documenti.form.archiviazione',
@@ -92,6 +93,19 @@
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.evasione.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.evasione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['amministrazione.archivio.documenti.form.dati.fiscali'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-scale-balanced" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione archivio documenti form dati fiscali' ),
+        'h1'                => array( $l        => 'dati fiscali' ),
+        'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.dati.fiscali.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.dati.fiscali.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.form' )
     );

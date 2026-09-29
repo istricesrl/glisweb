@@ -16,6 +16,34 @@ INSERT IGNORE INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity
 (3,	'unità di vendita',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	'normativa FSC',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000003080
+
+-- casse_previdenziali
+-- i codici TipoCassa delle specifiche tecniche 1.9 della fattura elettronica, con le descrizioni della rappresentazione tabellare
+INSERT IGNORE INTO `casse_previdenziali` (`id`, `codice`, `nome`) VALUES
+(1,		'TC01',		'Cassa nazionale previdenza e assistenza avvocati e procuratori legali'),
+(2,		'TC02',		'Cassa previdenza dottori commercialisti'),
+(3,		'TC03',		'Cassa previdenza e assistenza geometri'),
+(4,		'TC04',		'Cassa nazionale previdenza e assistenza ingegneri e architetti liberi professionisti'),
+(5,		'TC05',		'Cassa nazionale del notariato'),
+(6,		'TC06',		'Cassa nazionale previdenza e assistenza ragionieri e periti commerciali'),
+(7,		'TC07',		'Ente nazionale assistenza agenti e rappresentanti di commercio (ENASARCO)'),
+(8,		'TC08',		'Ente nazionale previdenza e assistenza consulenti del lavoro (ENPACL)'),
+(9,		'TC09',		'Ente nazionale previdenza e assistenza medici (ENPAM)'),
+(10,	'TC10',		'Ente nazionale previdenza e assistenza farmacisti (ENPAF)'),
+(11,	'TC11',		'Ente nazionale previdenza e assistenza veterinari (ENPAV)'),
+(12,	'TC12',		'Ente nazionale previdenza e assistenza impiegati dell\'agricoltura (ENPAIA)'),
+(13,	'TC13',		'Fondo previdenza impiegati imprese di spedizione e agenzie marittime'),
+(14,	'TC14',		'Istituto nazionale previdenza giornalisti italiani (INPGI)'),
+(15,	'TC15',		'Opera nazionale assistenza orfani sanitari italiani (ONAOSI)'),
+(16,	'TC16',		'Cassa autonoma assistenza integrativa giornalisti italiani (CASAGIT)'),
+(17,	'TC17',		'Ente previdenza periti industriali e periti industriali laureati (EPPI)'),
+(18,	'TC18',		'Ente previdenza e assistenza pluricategoriale (EPAP)'),
+(19,	'TC19',		'Ente nazionale previdenza e assistenza biologi (ENPAB)'),
+(20,	'TC20',		'Ente nazionale previdenza e assistenza professione infermieristica (ENPAPI)'),
+(21,	'TC21',		'Ente nazionale previdenza e assistenza psicologi (ENPAP)'),
+(22,	'TC22',		'INPS');
+
 -- | 050000003100
 
 -- categorie_anagrafica
@@ -170,6 +198,9 @@ INSERT IGNORE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `
 -- | 050000016000
 
 -- iva
+-- le righe 35, 57 e 58 sono archiviate dal 2026-09-30: la natura generica N6 lo SDI la scarta dal 2021 ( errore 00445 ), e
+-- l'art. 71 verso San Marino ha la natura N3.3 ( riga 60 ); restano per i documenti gia' emessi che le citano, ma le
+-- tendine dei documenti non le propongono; le righe da 60 a 70 sono i codici delle specifiche 1.9
 INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
 (1,	22.00,	'IVA 22%',	'IVA 22%',	NULL,	NULL),
 (2,	10.00,	'IVA agevolata 10%',	'IVA agevolata 10%',	NULL,	NULL),
@@ -205,7 +236,7 @@ INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `ti
 (32,	0.00,	'non imponibile ex art. 8 bis d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 8 bis del d.P.R. 633/1972',	'N3.4',	NULL),
 (33,	0.00,	'non imponibile ex art. 9 c. 1 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 9 comma 1 del d.P.R. 633/1972',	'N3.6',	NULL),
 (34,	0.00,	'non imponibile ex art. 72 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 72 del d.P.R. 633/1972',	'N3.6',	NULL),
-(35,	0.00,	'non imponibile ex art. 71 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 71 del d.P.R. 633/1972',	'N3.6',	NULL),
+(35,	0.00,	'non imponibile ex art. 71 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 71 del d.P.R. 633/1972',	'N3.6',	1790726400),
 (36,	0.00,	'non imponibile ex art. 8 c. 1 lett. b bis d.P.R. 633/1972',	'operazione non imponibile ex art. 8 comma 1 lettera b bis del d.P.R. 633/1972',	'N3.1',	NULL),
 (37,	0.00,	'non imponibile ex art. 8 c. 1 lett. c d.P.R. 633/1972',	'operazione non imponibile ex art. 8 comma 1 lettera c del d.P.R. 633/1972',	'N3.5',	NULL),
 (38,	0.00,	'non imponibile ex art. 8 bis c. 2 d.P.R. 633/1972',	'operazione non imponibile ex art. 8 bis comma 2 del d.P.R. 633/1972',	'N3.4',	NULL),
@@ -227,9 +258,20 @@ INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `ti
 (54,	0.00,	'regime ex art. 36 c. 5 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 5 d.l. 41/1995',	'N5',	NULL),
 (55,	0.00,	'regime ex art. 36 c. 6 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 6 d.l. 41/1995',	'N5',	NULL),
 (56,	0.00,	'regime ex art. 74 ter d.P.R. 633/1972 (ag. di viaggio)',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 74 ter del d.P.R. 633/1972 (regime speciale agenzie di viaggio)',	'N5',	NULL),
-(57,	0.00,	'regime ex art. 17 c. 6 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 comma 6 del d.P.R. 633/1972',	'N6',	NULL),
-(58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	NULL),
-(59,	0.00,	'esente ex art. 36 bis l. 112/2023',	'operazione esente IVA ex art. 36 bis legge 112/2023',	'N4',	NULL);
+(57,	0.00,	'regime ex art. 17 c. 6 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 comma 6 del d.P.R. 633/1972',	'N6',	1790726400),
+(58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	1790726400),
+(59,	0.00,	'esente ex art. 36 bis l. 112/2023',	'operazione esente IVA ex art. 36 bis legge 112/2023',	'N4',	NULL),
+(60,	0.00,	'non imponibile ex art. 71 d.P.R. 633/1972 (San Marino)',	'operazione non imponibile ex art. 71 del d.P.R. 633/1972 (cessione verso San Marino)',	'N3.3',	NULL),
+(61,	0.00,	'rev. charge ex art. 74 cc. 7 e 8 d.P.R. 633/1972 (rottami)',	'inversione contabile ex art. 74 commi 7 e 8 del d.P.R. 633/1972 (rottami e materiali di recupero)',	'N6.1',	NULL),
+(62,	0.00,	'rev. charge ex art. 17 c. 5 d.P.R. 633/1972 (oro e argento)',	'inversione contabile ex art. 17 comma 5 del d.P.R. 633/1972 (oro e argento)',	'N6.2',	NULL),
+(63,	0.00,	'rev. charge ex art. 17 c. 6 lett. a d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera a del d.P.R. 633/1972 (subappalto nel settore edile)',	'N6.3',	NULL),
+(64,	0.00,	'rev. charge ex art. 17 c. 6 lett. a bis d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera a bis del d.P.R. 633/1972 (cessione di fabbricati)',	'N6.4',	NULL),
+(65,	0.00,	'rev. charge ex art. 17 c. 6 lett. b d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera b del d.P.R. 633/1972 (telefoni cellulari)',	'N6.5',	NULL),
+(66,	0.00,	'rev. charge ex art. 17 c. 6 lett. c d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera c del d.P.R. 633/1972 (prodotti elettronici)',	'N6.6',	NULL),
+(67,	0.00,	'rev. charge ex art. 17 c. 6 lett. a ter d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera a ter del d.P.R. 633/1972 (comparto edile)',	'N6.7',	NULL),
+(68,	0.00,	'rev. charge ex art. 17 c. 6 lett. d bis-quater d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettere d bis, d ter e d quater del d.P.R. 633/1972',	'N6.8',	NULL),
+(69,	0.00,	'rev. charge, altri casi',	'operazione soggetta a inversione contabile (reverse charge), altri casi',	'N6.9',	NULL),
+(70,	0.00,	'IVA assolta in altro stato UE',	'IVA assolta in altro stato UE ex art. 7 octies e art. 74 sexies del d.P.R. 633/1972',	'N7',	NULL);
 
 -- | 050000016800
 
@@ -461,6 +503,18 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 (5,	59,	NULL,	'DIDATTICA ASD 0%',	'operazione esente IVA ex art. 36 bis legge 112/2023',	NULL,	NULL,	NULL,	NULL),
 (9,	9,	NULL,	'LOCAZIONE IVA 0%',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000033000
+
+-- ritenute
+-- i codici TipoRitenuta delle specifiche tecniche 1.9 della fattura elettronica, con le descrizioni della rappresentazione tabellare
+INSERT IGNORE INTO `ritenute` (`id`, `codice`, `nome`) VALUES
+(1,		'RT01',		'ritenuta persone fisiche'),
+(2,		'RT02',		'ritenuta persone giuridiche'),
+(3,		'RT03',		'contributo INPS'),
+(4,		'RT04',		'contributo ENASARCO'),
+(5,		'RT05',		'contributo ENPAM'),
+(6,		'RT06',		'altro contributo previdenziale');
+
 -- | 050000034000
 
 -- ruoli_anagrafica
@@ -533,7 +587,9 @@ INSERT INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 (1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL,	NULL),
 (2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1,	NULL),
 (3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	1),
-(4,	NULL,	'missione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1);
+(4,	NULL,	'missione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1),
+(5,	NULL,	'fattura collegata',	NULL,	NULL,	1,	1,	1,	1,	NULL,	NULL,	NULL),
+(6,	NULL,	'DDT collegato',	NULL,	NULL,	1,	1,	1,	1,	NULL,	NULL,	NULL);
 
 -- | 050000034400
 

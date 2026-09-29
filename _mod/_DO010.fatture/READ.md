@@ -17,6 +17,13 @@ apre la scheda riga del modulo documenti, `amministrazione.archivio.documenti.ar
 ### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.archiviazione.php
 Questa è la macro della scheda archiviazione della pagina di gestione delle fatture attive.
 
+### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.dati.fiscali.php
+Questa è la macro della scheda dati fiscali della pagina di gestione delle fatture attive, gemella di
+quella del modulo documenti ( `_amministrazione.archivio.documenti.form.dati.fiscali.php` ): bollo
+virtuale, ritenute e contributi alle casse previdenziali, cioè i dati dei blocchi DatiBollo, DatiRitenuta
+e DatiCassaPrevidenziale della fattura elettronica. Come per le relazioni, il modulo ha una sua copia del
+template e del sotto modulo.
+
 ### /_mod/_DO010.fatture/_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.documenti.articoli.php
 Questa è la macro della scheda articoli della pagina di gestione delle fatture attive; apre e inserisce
 le righe con la scheda riga del modulo documenti, `amministrazione.archivio.documenti.articoli.form`,

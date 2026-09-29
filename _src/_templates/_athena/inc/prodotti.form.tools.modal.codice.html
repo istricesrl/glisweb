@@ -19,8 +19,8 @@
 				return;
 			}
 
-			// il codice e' anche la chiave della pagina: senza ricaricare si resterebbe su una
-			// scheda che non esiste piu'
+			// l'id non cambia, cambia solo il codice: si torna all'elenco, dove il codice
+			// nuovo si vede subito
 			$('#btncodiceprodotti').html('<i class="fa fa-check"></i>');
 			submitFormOkay = true;
 			window.open( '{{ page.parent.path[ ietf ] }}', '_self' );

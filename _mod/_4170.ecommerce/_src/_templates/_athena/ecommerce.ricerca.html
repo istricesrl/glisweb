@@ -10,7 +10,7 @@
             {% for risultato in risultati %}
             <div class="form-group form-row">
                 <div class="col-12 col-md">
-                    <h3>{{ risultato.id_prodotto }}/{{ risultato.id }} {{ risultato.prodotto }} {{ risultato.nome }}</h3>
+                    <h3>{{ risultato.codice_prodotto|default( risultato.id_prodotto ) }}/{{ risultato.codice|default( risultato.id ) }} {{ risultato.prodotto }} {{ risultato.nome }}</h3>
                     <p><i>{% if risultato.giacenza %}giacenza in {{ risultato.magazzino }}: {{ risultato.giacenza }}{% else %}nessuna giacenza{% endif %}</i></p>
                     {% if risultato.note %}<p>{{ risultato.note }}</p>{% endif %}
                 </div>

@@ -147,7 +147,14 @@
                         <span class="label-top">€ tot finale</span>
                         {{ frm.input({ 'field': { 'name': 'importo_lordo_finale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                </div> 
+                </div>
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_ritenuta', 'placeholder': 'soggetta a ritenuta' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
 
             </fieldset>
 

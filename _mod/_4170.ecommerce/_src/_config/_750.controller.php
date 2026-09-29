@@ -325,6 +325,17 @@ ini_set("display_errors", 1);
             // die( print_r( $_SESSION['carrello']['articoli'], true ) );
             // die( print_r( $_REQUEST['__carrello__']['__articolo__'], true ) );
 
+            // NOTA un id_articolo che non e' un numero e' un codice: link e moduli scritti prima del 02/03/2026, quando
+            // l'id dell'articolo era il suo codice. Si traduce nell'id ( articoli.codice ); se il codice non esiste
+            // l'articolo non si aggiunge ( 2026-09-30 )
+            if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) && ! ctype_digit( (string) $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
+                $_REQUEST['__carrello__']['__articolo__']['id_articolo'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM articoli WHERE codice = ?',
+                    array( array( 's' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) )
+                );
+            }
+
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
 
@@ -736,6 +747,14 @@ ini_set("display_errors", 1);
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
                                 'SELECT prodotto FROM articoli_view WHERE id = ?',
+                                array( array( 's' => $dati['id_articolo'] ) )
+                            );
+
+                            // il codice dell'articolo, che il carrello mostra: id_articolo e' l'id numerico ( 2026-09-30 )
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['codice_articolo'] = mysqlSelectCachedValue(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                'SELECT codice FROM articoli_view WHERE id = ?',
                                 array( array( 's' => $dati['id_articolo'] ) )
                             );
 

@@ -55,6 +55,7 @@
 															'note.credito.amministrazione.form.relazioni',
 															'note.credito.amministrazione.form.righe',
 															'note.credito.amministrazione.form.pagamenti',
+															'note.credito.amministrazione.form.dati.fiscali',
 															'note.credito.amministrazione.form.chiusura',
 															'note.credito.amministrazione.form.stampe',
 															'note.credito.amministrazione.form.tools' ) )
@@ -97,6 +98,18 @@
 			'parent'		=> array( 'id'		=> 'note.credito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione dati fiscali note di credito
+		$p['note.credito.amministrazione.form.dati.fiscali'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'dati fiscali' ),
+			'h1'			=> array( $l		=> 'dati fiscali' ),
+			'parent'		=> array( 'id'		=> 'note.credito.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.dati.fiscali.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.dati.fiscali.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['note.credito.amministrazione.form']['etc']['tabs'] )
 		);

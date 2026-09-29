@@ -191,7 +191,7 @@
         $pdf->Rotate(180);
         
 
-        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts  ,0.17, $style);
+        $pdf->write1DBarcode( ( ! empty( $articoli[$i]['codice'] ) ) ? $articoli[$i]['codice'] : $articoli[$i]['id'], 'C128', '', '', '', $fnts  ,0.17, $style);
        
         if( !empty($articoli[$i]['codice_produttore']) ){
             $pdf -> setTextColor( 26, 99, 154 );

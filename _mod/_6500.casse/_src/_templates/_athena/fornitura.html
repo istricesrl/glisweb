@@ -229,7 +229,7 @@
                 <form method="post">
 
                     {%  set table = 'progetti' %}
-                    {{ frm.input( table, '', '', 'id', '', '', request,  'now'|date('YmdHi'), 'hidden' ) }}
+                    {{ frm.input( table, '', '', 'codice', '', '', request,  'now'|date('YmdHi'), 'hidden' ) }}
                     {{ frm.input( table, '', '', 'id_tipologia', '', '', request, 6, 'hidden' ) }}
                     {{ frm.input( table, '', '', 'nome', '', '', request, 'fornitura per '~etc.cliente.__label__ , 'hidden') }}
                     {{ frm.input( table, '', '', 'id_cliente', '', '', request, session.assistenza.id_cliente, 'hidden' ) }}

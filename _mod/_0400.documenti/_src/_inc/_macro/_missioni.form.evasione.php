@@ -104,7 +104,7 @@
     // ...
     $ct['etc']['dati'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+        'SELECT documenti_articoli.id_articolo, articoli.codice AS codice_articolo, sum( quantita ) AS quantita,
             concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
             group_concat( concat( documenti.numero, "/", documenti.sezionale, " del ", documenti.data ) SEPARATOR "|" ) AS documenti
         FROM documenti_articoli 

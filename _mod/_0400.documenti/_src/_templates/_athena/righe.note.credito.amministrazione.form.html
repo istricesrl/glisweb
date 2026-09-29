@@ -112,6 +112,11 @@
 				<span class="label-top remove-after-duplicate">reparto</span>
 				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request ) }}
 			</div>
+			<div class="col-auto col-form-label">
+				<div class="form-check">
+					{{ frm.checkbox( table, '', '', 'se_ritenuta', 'soggetta a ritenuta', '', request ) }}
+				</div>
+			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">listino</span>
 				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}

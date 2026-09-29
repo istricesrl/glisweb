@@ -148,16 +148,19 @@
                 array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
             );
         
-            $_REQUEST[ $ct['form']['table'] ]['coupon'] = $_REQUEST[ $ct['form']['table'] ]['__comando__']; 
+            // il comando e' il codice del coupon ( coupon.codice ); sul documento va il suo id ( documenti.id_coupon ),
+            // vuoto se il codice non esiste
+            $_REQUEST[ $ct['form']['table'] ]['id_coupon'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM coupon WHERE codice = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) )
+            );
+
             // controllo validità e valore coupon
-
-
-            //print_r($_REQUEST[ $ct['form']['table'] ]);
-            //
             $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(),   $_REQUEST[ $ct['form']['table'] ] );
 
-                mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET coupon = ? WHERE id = ?',
-                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['coupon']), array('s' => $_REQUEST['documenti']['id']) ) );
+                mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET id_coupon = ? WHERE id = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_coupon'] ), array('s' => $_REQUEST['documenti']['id']) ) );
 
 
             //print_r('coupon');
@@ -244,21 +247,33 @@
         } else{
             //print_r('articolo');
             // verifico se esiste l'atricolo e se ha un prezzo associato
+            // NOTA il comando e' il codice letto dal codice a barre, che sta in articoli.codice: dal 02/03/2026
+            // articoli.id e' numerico; trovato l'articolo, __comando__ diventa il suo id, che e' quello che va
+            // in documenti_articoli.id_articolo
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
-                , array( array('s' => $ct['etc']['default_listino'])  ) );
+                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.codice = ? LIMIT 1"
+                , array( array('s' => $ct['etc']['default_listino']), array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ) );
 
             if( empty( $articolo )){
                 // verifico se esiste l'atricolo associato all'ean  e se ha un prezzo associato
                 $articolo = mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.codice_produttore = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
-                    , array( array('s' => $ct['etc']['default_listino'])  ) );
+                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.codice_produttore = ? LIMIT 1"
+                    , array( array('s' => $ct['etc']['default_listino']), array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ) );
 
-                
-                    $_REQUEST[ $ct['form']['table'] ]['__comando__'] = $articolo['id'];
+            }
 
+            // l'id numerico, dove non c'e' un codice cosi' ( la tendina del carico ore passa l'id )
+            if( empty( $articolo ) && ctype_digit( (string) $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ){
+                $articolo = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.id = ? LIMIT 1"
+                    , array( array('s' => $ct['etc']['default_listino']), array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ) );
+            }
+
+            if( ! empty( $articolo ) ){
+                $_REQUEST[ $ct['form']['table'] ]['__comando__'] = $articolo['id'];
             }
 
             if( !empty($articolo) ){    
@@ -277,8 +292,8 @@
                 // verifico se l'articolo è già nel documento
                 $in_doc = mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    "SELECT * FROM documenti_articoli  WHERE  id_articolo = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\"  AND id_documento = ?",
-                    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id']  ) )
+                    "SELECT * FROM documenti_articoli  WHERE  id_articolo = ?  AND id_documento = ?",
+                    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id']  ) )
                 );
 
                 if( $in_doc && !$articolo['se_matricola'] ){
@@ -316,8 +331,9 @@
                     // id_tipologia dal 15/09/2026 e' la tipologia della RIGA
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza, id_tipologia_documento )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza, id_tipologia_documento )  VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
+                                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['__comando__'] ),
                                     array( 's' => $ct['etc']['default_listino'] ),
                                     array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),
                                     array( 's' => ( isset( $_REQUEST['__progetto__']) && !empty($_REQUEST['__progetto__'])  ?  $_REQUEST['__progetto__'] : NULL ) ),
@@ -430,7 +446,7 @@
         if( isset( $_REQUEST['__del_cpon__'] ) ){
             $update = mysqlQuery( 
                 $cf['mysql']['connection'], 
-                'UPDATE documenti SET coupon = NULL WHERE id = ?',
+                'UPDATE documenti SET id_coupon = NULL WHERE id = ?',
                 array( 
                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
 
@@ -477,7 +493,7 @@
          }
      
      }
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['coupon'] ) && (!isset($ct['etc']['sconto']) || empty($ct['etc']['sconto']))  ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_coupon'] ) && (!isset($ct['etc']['sconto']) || empty($ct['etc']['sconto']))  ){
         
         $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = $ct['etc']['righe'];
         $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(),   $_REQUEST[ $ct['form']['table'] ] );
@@ -521,7 +537,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT articoli_view.id, articoli_view.__label__, contenuti.testo FROM articoli_view '.
+	    'SELECT articoli_view.id, articoli_view.codice, articoli_view.__label__, contenuti.testo FROM articoli_view '.
         'LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1'
 	);
     

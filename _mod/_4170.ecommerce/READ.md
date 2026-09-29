@@ -56,6 +56,12 @@
 
   [...] lo step 01 del processo di acquisto.
 
+  L'articolo si aggiunge con *__carrello__[__articolo__][id_articolo]*, che è l'id numerico dell'articolo. Un valore che
+  non è un numero si prende per il codice ( *articoli.codice* ) e si traduce nell'id, per i link e i moduli scritti
+  quando l'id dell'articolo era il codice ( prima del 02/03/2026 ); un codice che non esiste non aggiunge niente. Le
+  righe del carrello in sessione hanno anche *codice_articolo*, che il template del carrello mostra al posto dell'id e
+  che va ad Analytics come item_id.
+
   la pagina di inserimento dati del carrello
   ------------------------------------------
 

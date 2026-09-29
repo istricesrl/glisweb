@@ -26,7 +26,7 @@
 		<div class="container-fluid">
 		    <div class="form-row">
 				<div class="col">
-                    questa operazione rimuoverà le to-do e le attività pianificate per il progetto {{ request[table].id }} nei periodi di sospensione
+                    questa operazione rimuoverà le to-do e le attività pianificate per il progetto {{ request[table].codice|default( request[table].id ) }} nei periodi di sospensione
 				</div>
 			</div>
 	    </div>

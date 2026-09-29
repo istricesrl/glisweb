@@ -1143,6 +1143,19 @@ CREATE OR REPLACE VIEW carrelli_documenti_view AS
 		carrelli_documenti.id_account_aggiornamento
 	FROM carrelli_documenti;
 
+-- | 090000003081
+
+-- casse_previdenziali_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW casse_previdenziali_view AS
+	SELECT
+		casse_previdenziali.id,
+		casse_previdenziali.codice,
+		casse_previdenziali.nome,
+		concat( casse_previdenziali.codice, ' - ', casse_previdenziali.nome ) AS __label__
+	FROM casse_previdenziali
+;
+
 -- | 090000003100
 
 -- categorie_anagrafica_view
@@ -2297,6 +2310,50 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN tipologie_documenti_articoli ON tipologie_documenti_articoli.id = documenti_articoli.id_tipologia
 ;
 
+-- | 090000010051
+
+-- documenti_casse_previdenziali_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW documenti_casse_previdenziali_view AS
+	SELECT
+		documenti_casse_previdenziali.id,
+		documenti_casse_previdenziali.id_documento,
+		documenti_casse_previdenziali.id_cassa_previdenziale,
+		casse_previdenziali.codice AS cassa_previdenziale,
+		documenti_casse_previdenziali.aliquota,
+		documenti_casse_previdenziali.imponibile,
+		documenti_casse_previdenziali.importo,
+		documenti_casse_previdenziali.id_iva,
+		iva.nome AS iva,
+		documenti_casse_previdenziali.se_ritenuta,
+		documenti_casse_previdenziali.id_account_inserimento,
+		documenti_casse_previdenziali.id_account_aggiornamento,
+		concat_ws( ' ', casse_previdenziali.codice, concat( documenti_casse_previdenziali.aliquota, '%' ) ) AS __label__
+	FROM documenti_casse_previdenziali
+		LEFT JOIN casse_previdenziali ON casse_previdenziali.id = documenti_casse_previdenziali.id_cassa_previdenziale
+		LEFT JOIN iva ON iva.id = documenti_casse_previdenziali.id_iva
+;
+
+-- | 090000010101
+
+-- documenti_ritenute_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW documenti_ritenute_view AS
+	SELECT
+		documenti_ritenute.id,
+		documenti_ritenute.id_documento,
+		documenti_ritenute.id_ritenuta,
+		ritenute.codice AS ritenuta,
+		documenti_ritenute.aliquota,
+		documenti_ritenute.causale_pagamento,
+		documenti_ritenute.importo,
+		documenti_ritenute.id_account_inserimento,
+		documenti_ritenute.id_account_aggiornamento,
+		concat_ws( ' ', ritenute.codice, concat( documenti_ritenute.aliquota, '%' ), documenti_ritenute.causale_pagamento ) AS __label__
+	FROM documenti_ritenute
+		LEFT JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta
+;
+
 -- | 090000012001
 
 -- edifici
@@ -3272,8 +3329,10 @@ CREATE OR REPLACE VIEW `modalita_spedizione_view` AS
 		iva.nome AS iva,
 		modalita_spedizione.giorni_spedizione,
 		modalita_spedizione.giorni_consegna,
-		concat( zone.nome, ' - ', coalesce( modalita_spedizione.id_prodotto, modalita_spedizione.id_articolo ) ) AS __label__
+		concat( zone.nome, ' - ', coalesce( prodotti.codice, articoli.codice, modalita_spedizione.id_prodotto, modalita_spedizione.id_articolo ) ) AS __label__
 	FROM modalita_spedizione
+		LEFT JOIN prodotti ON prodotti.id = modalita_spedizione.id_prodotto
+		LEFT JOIN articoli ON articoli.id = modalita_spedizione.id_articolo
 		LEFT JOIN zone ON zone.id = modalita_spedizione.id_zona
 		LEFT JOIN iva ON iva.id = modalita_spedizione.id_iva
 		LEFT JOIN valute ON valute.id = modalita_spedizione.id_valuta
@@ -4159,8 +4218,11 @@ CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
 		relazioni_articoli.id_ruolo,
 		relazioni_articoli.id_prodotto_collegato,
 		relazioni_articoli.id_articolo_collegato,
-		concat( relazioni_articoli.id_articolo,' - ', relazioni_articoli.id_articolo_collegato) AS __label__
+		concat_ws( ' - ', coalesce( a1.codice, a1.id ), coalesce( a2.codice, p2.codice, a2.id, p2.id ) ) AS __label__
 	FROM relazioni_articoli
+		LEFT JOIN articoli AS a1 ON a1.id = relazioni_articoli.id_articolo
+		LEFT JOIN articoli AS a2 ON a2.id = relazioni_articoli.id_articolo_collegato
+		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_articoli.id_prodotto_collegato
 ;
 
 -- | 090000030351
@@ -4234,8 +4296,11 @@ CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
 		relazioni_prodotti.id_ruolo,
 		relazioni_prodotti.id_prodotto_collegato,
 		relazioni_prodotti.id_articolo_collegato,
-		concat( relazioni_prodotti.id_prodotto,' - ', relazioni_prodotti.id_prodotto_collegato) AS __label__
+		concat_ws( ' - ', coalesce( p1.codice, p1.id ), coalesce( p2.codice, a2.codice, p2.id, a2.id ) ) AS __label__
 	FROM relazioni_prodotti
+		LEFT JOIN prodotti AS p1 ON p1.id = relazioni_prodotti.id_prodotto
+		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_prodotti.id_prodotto_collegato
+		LEFT JOIN articoli AS a2 ON a2.id = relazioni_prodotti.id_articolo_collegato
 ;
 
 -- | 090000030491
@@ -4409,6 +4474,19 @@ CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 		) AS __label__
 	FROM risorse_categorie
 		LEFT JOIN risorse ON risorse.id = risorse_categorie.id_risorsa
+;
+
+-- | 090000033001
+
+-- ritenute_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ritenute_view AS
+	SELECT
+		ritenute.id,
+		ritenute.codice,
+		ritenute.nome,
+		concat( ritenute.codice, ' - ', ritenute.nome ) AS __label__
+	FROM ritenute
 ;
 
 -- | 090000034001
@@ -4713,7 +4791,7 @@ CREATE OR REPLACE VIEW `sconti_articoli_view` AS
 		sconti_articoli.id_articolo,
 		articoli.id_prodotto,
 		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
-		concat_ws( ' ', sconti.nome, articoli.id ) AS __label__
+		concat_ws( ' ', sconti.nome, coalesce( articoli.codice, articoli.id ) ) AS __label__
 	FROM sconti_articoli
 		LEFT JOIN sconti ON sconti.id = sconti_articoli.id_sconto
 		LEFT JOIN articoli ON articoli.id = sconti_articoli.id_articolo

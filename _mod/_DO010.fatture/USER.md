@@ -49,6 +49,7 @@ le tendine delle **sedi** si riempiono dopo aver scelto il contatto e salvato.
 |---|---|
 | righe | il sotto-elenco delle righe della fattura |
 | pagamenti | il sotto-elenco delle scadenze della fattura |
+| dati fiscali | il bollo virtuale, le ritenute e i contributi alle casse previdenziali della fattura elettronica, come nella scheda dei documenti |
 | relazioni | i legami con altri documenti: la nota di credito che la storna, il DDT da cui nasce |
 | archiviazione | la data di archiviazione e le note |
 | stampe | per ora **senza riquadri** |
@@ -56,6 +57,10 @@ le tendine delle **sedi** si riempiono dopo aver scelto il contatto e salvato.
 
 Se l'installazione gestisce le pianificazioni, compare anche la linguetta **pianificazioni**, per le
 fatture che si ripetono — un canone, un abbonamento.
+
+La linguetta **dati fiscali** e le relazioni *fattura collegata* e *DDT collegato* sono descritte nel
+capitolo dei documenti: una fattura differita *TD24* va legata ai suoi DDT, altrimenti la fattura
+elettronica si vede e si scarica ma non si può inviare allo SDI.
 
 Nelle linguette **righe** e **pagamenti**, sia della scheda sia dell'elenco, il clic su una riga e
 il più per aggiungerne una aprono la **scheda della riga** e la **scheda del pagamento** dei

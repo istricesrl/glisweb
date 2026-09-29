@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
 CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `id` bigint(20) PRIMARY KEY NOT NULL,
   `codice` char(32) DEFAULT NULL,                             --
-  `id_prodotto` char(32) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
   `prodotto` char(255) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
@@ -189,14 +189,14 @@ CREATE TABLE `attivita_view_static` (                         --
   `id_asset` bigint(20) DEFAULT NULL,                            --
   `asset` char(255) DEFAULT NULL,                             --
   `ore` decimal(5,2) DEFAULT NULL,                            --
-  `id_articolo` char(32) DEFAULT NULL,                        --
+  `id_articolo` bigint(20) DEFAULT NULL,                      --
   `quantita_prevista` decimal(9,2) DEFAULT NULL,              --
   `nome` char(255) DEFAULT NULL,                              --
   `id_documento` bigint(20) DEFAULT NULL,                        --
   `documento` char(255) DEFAULT NULL,                         --
   `id_corrispondenza` bigint(20) DEFAULT NULL,                   --
   `corrispondenza` char(255) DEFAULT NULL,                    --
-  `id_progetto` char(32) DEFAULT NULL,                        --
+  `id_progetto` bigint(20) DEFAULT NULL,                      --
   `progetto` char(255) DEFAULT NULL,                          --
   `id_contratto` bigint(20) DEFAULT NULL,                        --
   `contratto` char(255) DEFAULT NULL,                         --
@@ -314,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `data_chiusura` char(21) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_contatto` bigint(20) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
   `progetto` char(255) DEFAULT NULL,
   `discipline` char(255) DEFAULT NULL,
   `id_documento` bigint(20) DEFAULT NULL,

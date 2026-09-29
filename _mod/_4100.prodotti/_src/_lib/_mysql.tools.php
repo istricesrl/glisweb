@@ -11,15 +11,18 @@
 		// se ho un documento
 		if( ! empty($documento) ){
 		
-			if( isset( $documento['coupon'] ) && !empty( $documento['coupon'] ) ){
+			// NOTA documenti.id_coupon e' l'id del coupon ( numerico dal 02/03/2026 ); documenti.coupon non esiste: se
+			// il chiamante ha solo il codice digitato o letto dal codice a barre lo passa in 'coupon', e lo si cerca
+			// in coupon.codice
+			if( ! empty( $documento['id_coupon'] ) || ! empty( $documento['coupon'] ) ){
 
 				// TODO: bisognerebbe separare il caso in cui il codice coupon non esiste da quello in cui esiste ma non è più valido				
 				
 				// controllo che il codice coupon sia valido, altrimenti restituisco 0
-				$coupon = mysqlSelectRow( $c, "SELECT * from coupon WHERE id = ? AND ("
+				$coupon = mysqlSelectRow( $c, "SELECT * from coupon WHERE " . ( ( ! empty( $documento['id_coupon'] ) ) ? "id" : "codice" ) . " = ? AND ("
 										. "(timestamp_inizio IS NULL AND timestamp_fine IS NULL) OR (timestamp_inizio <= ? AND timestamp_fine >= ?) OR (timestamp_inizio <= ? AND timestamp_fine IS NULL) )", 
 							array(
-								array( "s" => $documento['coupon']),
+								array( "s" => ( ! empty( $documento['id_coupon'] ) ) ? $documento['id_coupon'] : $documento['coupon'] ),
 								array( "s" => time() ),
 								array( "s" => time() ),
 								array( "s" => time() )
@@ -129,7 +132,7 @@
 					// 4) se la verifica sulla categoria non ha dato esito positivo, verifico sul marchio
 						if( $verificato == 0 ){
 							
-							$marchio = mysqlSelectValue( $c, "SELECT id_marchio from prodotti WHERE id_prodotto = ?",
+							$marchio = mysqlSelectValue( $c, "SELECT id_marchio from prodotti WHERE id = ?",
 											array(
 												array( "s" => $prodotto )
 											)
@@ -192,15 +195,18 @@
 		// se ho un carrello pieno...
 		if( ! empty($carrello) ){
 		
-			if( isset( $carrello['coupon'] ) && !empty( $carrello['coupon'] ) ){
+			// NOTA come per il documento: carrelli.id_coupon e' l'id, il codice digitato e' in carrelli.codice_coupon
+			// ( o in 'coupon', per i chiamanti di prima ) e si cerca in coupon.codice
+			$codiceCoupon = ( ! empty( $carrello['codice_coupon'] ) ) ? $carrello['codice_coupon'] : ( $carrello['coupon'] ?? NULL );
+			if( ! empty( $carrello['id_coupon'] ) || ! empty( $codiceCoupon ) ){
 
 				// TODO: bisognerebbe separare il caso in cui il codice coupon non esiste da quello in cui esiste ma non è più valido				
 				
 				// controllo che il codice coupon sia valido, altrimenti restituisco 0
-				$coupon = mysqlSelectRow( $c, "SELECT * from coupon WHERE id = ? AND ("
+				$coupon = mysqlSelectRow( $c, "SELECT * from coupon WHERE " . ( ( ! empty( $carrello['id_coupon'] ) ) ? "id" : "codice" ) . " = ? AND ("
 										. "(timestamp_inizio IS NULL AND timestamp_fine IS NULL) OR (timestamp_inizio <= ? AND timestamp_fine >= ?) OR (timestamp_inizio <= ? AND timestamp_fine IS NULL) )", 
 							array(
-								array( "s" => $carrello['coupon']),
+								array( "s" => ( ! empty( $carrello['id_coupon'] ) ) ? $carrello['id_coupon'] : $codiceCoupon ),
 								array( "s" => time() ),
 								array( "s" => time() ),
 								array( "s" => time() )
@@ -309,7 +315,7 @@
 					// 4) se la verifica sulla categoria non ha dato esito positivo, verifico sul marchio
 						if( $verificato == 0 ){
 							
-							$marchio = mysqlSelectValue( $c, "SELECT id_marchio from prodotti WHERE id_prodotto = ?",
+							$marchio = mysqlSelectValue( $c, "SELECT id_marchio from prodotti WHERE id = ?",
 											array(
 												array( "s" => $prodotto )
 											)

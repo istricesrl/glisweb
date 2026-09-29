@@ -791,12 +791,14 @@ def genera_catalogo( contesto, quantita ):
     for _ in range( quantita ):
 
         progressivo_prodotto += 1
-        id_prodotto = 'DEMO.PRD.%05d' % progressivo_prodotto
+        ##  l'id è numerico e il codice sta in codice ( dal 02/03/2026 )
+        id_prodotto = schema.prossimo_id( 'prodotti' )
         inserimento = contesto.timestamp_recente()
         nome_prodotto = casuali.nome_prodotto()
 
         riga_prodotto = {
             'id': id_prodotto,
+            'codice': 'DEMO.PRD.%05d' % progressivo_prodotto,
             'id_tipologia': casuali.scegli( tipologie_prodotto ) if tipologie_prodotto else None,
             'nome': nome_prodotto,
             'note': casuali.paragrafo(),
@@ -828,11 +830,12 @@ def genera_catalogo( contesto, quantita ):
             for ordine in range( casuali.intero( 1, 3 ) ):
 
                 progressivo_articolo += 1
-                id_articolo = 'DEMO.ART.%06d' % progressivo_articolo
+                id_articolo = schema.prossimo_id( 'articoli' )
                 prezzo = casuali.decimale( 4, 1800, 2 )
 
                 riga_articolo = {
                     'id': id_articolo,
+                    'codice': 'DEMO.ART.%06d' % progressivo_articolo,
                     'id_prodotto': id_prodotto,
                     'ordine': ordine + 1,
                     'nome': casuali.nome_articolo(),
@@ -1191,7 +1194,7 @@ def genera_progetti( contesto, quantita ):
     for _ in range( quantita ):
 
         progressivo += 1
-        id_progetto = 'DEMO.PRG.%05d' % progressivo
+        id_progetto = schema.prossimo_id( 'progetti' )
         inserimento = contesto.timestamp_recente( 540 )
         apertura = contesto.data_da_timestamp( inserimento )
         cliente = casuali.scegli( anagrafiche )
@@ -1200,6 +1203,7 @@ def genera_progetti( contesto, quantita ):
 
         riga_progetto = {
             'id': id_progetto,
+            'codice': 'DEMO.PRG.%05d' % progressivo,
             'id_tipologia': casuali.scegli( tipologie ) if tipologie else None,
             'id_cliente': cliente[ 'id' ],
             'nome': '%s per %s' % ( casuali.tema_progetto(), cliente[ 'etichetta' ] ),

@@ -400,11 +400,21 @@
             }
 
             // verifico che l'oggetto collegato esista
+            // NOTA nel nome del file c'e' il codice ( prodotti.codice, articoli.codice ): dal 02/03/2026 l'id e'
+            // numerico, e nella riga dell'immagine va l'id; un numero che non e' un codice vale come id
             $check = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT id FROM ' . $table . ' WHERE id = ?',
+                'SELECT id FROM ' . $table . ' WHERE codice = ?',
                 array( array( 's' => $codice ) )
             );
+
+            if( empty( $check ) && ctype_digit( (string) $codice ) ) {
+                $check = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM ' . $table . ' WHERE id = ?',
+                    array( array( 's' => $codice ) )
+                );
+            }
 
             // se l'oggetto esiste
             if( ! empty( $check ) ) {
@@ -433,7 +443,7 @@
                     'timestamp_inserimento' => time()
                 );
 
-                $riga[ $field ] = $codice;
+                $riga[ $field ] = $check;
 
                 // debug
                 // die( print_r( $riga, true ) );

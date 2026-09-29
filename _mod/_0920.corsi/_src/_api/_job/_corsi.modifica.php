@@ -108,14 +108,18 @@
                 // cerco il prodotto (progetti.id_prodotto -> prodotti.id) o lo creo
                 if( empty( $job['corso']['id_prodotto'] ) ) {
 
+                    // NOTA il prodotto prende come codice quello del corso ( o il suo id ); l'id lo da' l'AUTO_INCREMENT
                     $job['corso']['id_prodotto'] = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
-                            'id' => $job['corso']['id'],
+                            'codice' => ( ! empty( $job['corso']['codice'] ) ) ? $job['corso']['codice'] : $job['corso']['id'],
                             'id_tipologia' => 1,
                             'nome' => $job['corso']['nome']
                         ),
-                        'prodotti'
+                        'prodotti',
+                        true,
+                        false,
+                        array( 'codice' )
                     );
             
                     mysqlQuery(
@@ -147,7 +151,7 @@
                     $idArticolo = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
-                            'id' => time(),
+                            'codice' => time(),
                             'id_prodotto' => $job['corso']['id_prodotto'],
                             'nome' => 'iscrizione ' . $job['workspace']['sostituzioni']['periodo_prezzi'] . ' al corso ' . $job['corso']['nome']
                         ),

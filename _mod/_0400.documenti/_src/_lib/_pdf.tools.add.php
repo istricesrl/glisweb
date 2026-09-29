@@ -1281,7 +1281,7 @@
 
             // riga della tabella
             $pdf->Cell( $etc['pag']['spacer']['col'] * 3, $trh, $row['collocazione_breve'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
-            $pdf->Cell( $etc['pag']['spacer']['col'] * 1, $trh, $row['id_articolo'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
+            $pdf->Cell( $etc['pag']['spacer']['col'] * 1, $trh, ( ! empty( $row['codice_articolo'] ) ) ? $row['codice_articolo'] : $row['id_articolo'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
             $pdf->MultiCell( $etc['pag']['spacer']['col'] * 6, $trh, $row['descrizione'], $etc['tbl']['celle']['dati'], 'L', false, 0 );
             $pdf->Cell( $etc['pag']['spacer']['col'] * 2, $trh, $row['qta_da_prelevare'], $etc['tbl']['celle']['dati'], 1, 'R', false, '', 0, false, 'T', 'T' );
 

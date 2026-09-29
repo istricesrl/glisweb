@@ -183,8 +183,8 @@
 
 	foreach( $carrello['articoli'] as $item ) {
 	    $items[] = array(
-		'item_id' => $item['id_articolo'],
-		'item_name' => $item['id_articolo'],
+		'item_id' => $item['codice_articolo'] ?? $item['id_articolo'],
+		'item_name' => $item['codice_articolo'] ?? $item['id_articolo'],
 #		'coupon' => NULL,
 		'currency' => 'EUR',
 		'discount' => 0.0,
@@ -250,7 +250,9 @@ var_dump($status);
 
 		foreach( $carrello['articoli'] as $item ) {
 			$items[] = array(
-				'item_id' => $item['id_articolo'],
+				// l'id dell'articolo e' numerico dal 02/03/2026: ad Analytics va il codice, che il carrello tiene in
+				// codice_articolo ( _mod/_4170.ecommerce/_src/_config/_750.controller.php )
+				'item_id' => $item['codice_articolo'] ?? $item['id_articolo'],
 				'item_name' => $item['descrizione'],
 // NOTA inserire il coupon solo se c'è, altrimenti va in errore
 //				'coupon' => NULL,

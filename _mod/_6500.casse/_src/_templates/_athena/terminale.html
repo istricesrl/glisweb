@@ -141,7 +141,7 @@
                                                 <td class="text-right"><h3>Totale</h3></td>
                                                 <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
-                                            {% if request[table].coupon %}
+                                            {% if request[table].id_coupon %}
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
@@ -181,9 +181,9 @@
                                     <button type="submit" class="btn btn-secondary" data-placement="bottom" data-delay="1000" title="invio">esegui</button>
                                 </div>
                     </div>
-                    {% if session.coupon and not request[table].coupon %}
+                    {% if session.coupon_codice and not request[table].id_coupon %}
                     <div class="form-row row">
-                        <div class="form-row media-body p-3" onclick="window.open('{{ cassa }}?__cpon__={{session.coupon}}','_self' )">
+                        <div class="form-row media-body p-3" onclick="window.open('{{ cassa }}?__cpon__={{ session.coupon_codice|url_encode }}','_self' )">
                             <div class="col-auto"><i class="fa fa-plus" aria-hidden="true"></i></div>
                             <div class="col">
                             <h3>è presente un coupo in sessione, fai clic qui per aggiungerlo allo scontrino</h3>
@@ -191,7 +191,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% if request[table].coupon %}
+                    {% if request[table].id_coupon %}
                     <div class="form-row row">
                         <div class="form-row media-body p-3" onclick="window.open('{{ cassa }}?__del_cpon__={{session.coupon}}','_self' )">
                         <div class="col-auto"><i class="fa fa-trash" aria-hidden="true"></i></div>
@@ -249,7 +249,7 @@
                 <legend>articoli frequenti</legend>
             <div class="box" style="height: 85vh;" >
                 {% for articolo in etc.articoli_frequenti %}
-                <a href="{{ cassa }}?__art__={{ articolo.id }}">
+                <a href="{{ cassa }}?__art__={{ articolo.codice|default( articolo.id )|url_encode }}">
                 <div class="media">
                    
                     <div class="media-body p-3">

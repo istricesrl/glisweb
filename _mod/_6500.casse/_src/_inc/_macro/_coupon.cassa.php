@@ -35,6 +35,7 @@
 
     if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['coupon'] );
+        unset( $_SESSION['coupon_codice'] );
         unset($_REQUEST[ 'coupon' ]['id'] );
     }
 
@@ -43,8 +44,11 @@
         unset($_REQUEST[ 'documenti' ]['id'] );
     }
 
-    if( isset( $_REQUEST['coupon']['id'] ) && !isset( $_SESSION['coupon'] ) ){
+    // in sessione l'id del coupon ( per documenti.id_coupon e la cancellazione ) e il suo codice, che e' quello
+    // che il terminale legge come comando CPON.<...> e che la stampa mette nel codice a barre
+    if( ! empty( $_REQUEST['coupon']['id'] ) && !isset( $_SESSION['coupon'] ) ){
         $_SESSION['coupon'] = $_REQUEST['coupon']['id'];
+        $_SESSION['coupon_codice'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT codice FROM coupon WHERE id = ?', array( array( 's' => $_SESSION['coupon'] ) ) );
     }
 
 

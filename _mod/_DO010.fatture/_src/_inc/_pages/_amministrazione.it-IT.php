@@ -96,6 +96,7 @@
         'etc'                => array( 'tabs'    => array(    'amministrazione.ciclo.attivo.fatture.form',
                                                             'amministrazione.ciclo.attivo.fatture.form.documenti.articoli',
                                                             'amministrazione.ciclo.attivo.fatture.form.pagamenti',
+                                                            'amministrazione.ciclo.attivo.fatture.form.dati.fiscali',
                                                             'amministrazione.ciclo.attivo.fatture.form.relazioni',
                                                             'amministrazione.ciclo.attivo.fatture.form.archiviazione',
                                                             'amministrazione.ciclo.attivo.fatture.form.stampe',
@@ -106,6 +107,19 @@
     if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'amministrazione.ciclo.attivo.fatture.form.relazioni', $p['amministrazione.ciclo.attivo.fatture.form']['etc']['tabs'], 'amministrazione.ciclo.attivo.fatture.form.pianificazioni' );
     }
+
+    // tools archivio amministrazione
+    $p['amministrazione.ciclo.attivo.fatture.form.dati.fiscali'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-scale-balanced" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione fatture attive form dati fiscali' ),
+        'h1'                => array( $l        => 'dati fiscali' ),
+        'parent'            => array( 'id'        => 'amministrazione.ciclo.attivo.fatture.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.ciclo.attivo.fatture.form.dati.fiscali.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.dati.fiscali.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione.ciclo.attivo.fatture.form' )
+    );
 
     // tools archivio amministrazione
     $p['amministrazione.ciclo.attivo.fatture.form.relazioni'] = array(

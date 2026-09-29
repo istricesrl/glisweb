@@ -15,21 +15,28 @@
      *
      * parametro        | risultato
      * -----------------|-----------------------------------------------------------------------------------------
-     * f                | un JSON con il percorso del file ( usato dal task _fattura.invia.sdi.php ), oppure con gli
-     *                  | errori di validazione nella chiave errori
-     * d                | il file XML in download
-     * nessuno          | la fattura in forma leggibile, trasformata in HTML sul server con il foglio di stile
+     * f                | un JSON con il percorso del file ( usato dal task _fattura.invia.sdi.php ), oppure, se il
+     *                  | file ha errori, con gli errori nella chiave errori e senza il percorso
+     * d                | il file XML in download, anche se ha errori ( che vanno nel log xml )
+     * nessuno          | la fattura in forma leggibile, trasformata in HTML sul server con il foglio di stile, con
+     *                  | gli errori e gli avvisi sopra la fattura
      *
      * validazione e visualizzazione
      * -----------------------------
      * Prima di essere restituito il file viene validato con xmlValidate() contro lo schema ufficiale, che sta in
-     * _mod/_0400.documenti/_src/_xml/_xsd/: un file che non lo supera verrebbe scartato dallo SDI, per cui non viene
-     * restituito, e al posto del file arrivano gli errori ( in JSON con f, come testo negli altri casi ). Se lo schema
-     * manca la validazione viene saltata. La visualizzazione usa i fogli di stile ufficiali in
+     * _mod/_0400.documenti/_src/_xml/_xsd/, e passa per alcuni controlli che lo schema non fa e lo SDI sì, o che le
+     * specifiche chiedono per il tipo di documento ( la nota di credito senza la fattura collegata, la fattura
+     * differita TD24 senza DDT, le nature generiche N2, N3 e N6, la data di una fattura collegata successiva a quella
+     * del documento ). Gli errori fermano solo l'invio allo SDI ( parametro f ), perché un file che ne ha verrebbe
+     * scartato: la visualizzazione li mostra sopra la fattura, insieme agli avvisi ( cose da verificare che non
+     * fermano niente, come il bollo che forse è dovuto ), e il download scarica comunque il file e li scrive nel log.
+     * Fino al 2026-09-30 un file non valido non si poteva nemmeno guardare: al suo posto arrivavano gli errori. Se lo
+     * schema manca la validazione viene saltata. La visualizzazione usa i fogli di stile ufficiali in
      * _mod/_0400.documenti/_src/_xml/_xsl/, quello della PA se il destinatario ha se_pubblica_amministrazione, e la
      * trasformazione si fa sul server con xmlTransform(), perché i browser stanno abbandonando XSLT ( Chrome smette di
      * applicare <?xml-stylesheet?> dal novembre 2026 ); solo se sul server manca l'estensione xsl il file viene mandato
-     * al browser con il riferimento al foglio di stile, come si faceva fino al 2026-09-29.
+     * al browser con il riferimento al foglio di stile, come si faceva fino al 2026-09-29, e gli errori stanno in un
+     * commento in testa al file.
      *
      * conformità alle specifiche
      * --------------------------
@@ -38,13 +45,26 @@
      * persone fisiche. Il 2026-09-29 è stato riletto contro le specifiche 1.9.1, in vigore dal 15 maggio 2026, che non
      * cambiano lo schema: l'attributo versione resta FPR12 / FPA12 e il namespace resta quello della 1.2. I codici
      * ( TipoDocumento, RegimeFiscale, Natura, ModalitaPagamento ) arrivano dal database così come sono, e i valori
-     * nuovi ( TD28, TD29, RF20, MP23... ) li porta la patch _202609291300.fatturapa.codici.sql. Restano da fare:
-     * DatiBollo per le operazioni senza IVA sopra 77,47 euro, DatiFattureCollegate per le note di credito
-     * ( generaContenutiDocumento() non restituisce i documenti collegati ), DatiDDT ( necessari per le fatture
-     * differite TD24 ), DatiRitenuta e DatiCassaPrevidenziale per le parcelle, la troncatura degli altri testi alle
-     * lunghezze massime dello schema.
+     * nuovi ( TD28, TD29, RF20, MP23... ) li porta la patch _202609291300.fatturapa.codici.sql.
      *
-     * @todo DatiBollo, DatiFattureCollegate, DatiDDT, DatiRitenuta, DatiCassaPrevidenziale
+     * Il 2026-09-30 sono arrivati i blocchi che mancavano, con i dati che li alimentano ( patch
+     * _202609301800.fatturapa.blocchi.sql ), letti e calcolati da generaContenutiDocumento():
+     *
+     * blocco                   | da dove arriva
+     * -------------------------|-----------------------------------------------------------------------------------
+     * DatiRitenuta             | documenti_ritenute ( tipo RT01 - RT06, aliquota, causale ); l'importo, se non è
+     *                          | indicato, si calcola sulle righe soggette ( documenti_articoli.se_ritenuta ) e sui
+     *                          | contributi di cassa soggetti; le righe soggette hanno Ritenuta SI
+     * DatiBollo                | documenti.se_bollo_virtuale e documenti.importo_bollo
+     * DatiCassaPrevidenziale   | documenti_casse_previdenziali ( cassa TC01 - TC22, aliquota, IVA ); il contributo
+     *                          | entra nel riepilogo della sua aliquota e nel totale del documento
+     * DatiFattureCollegate     | i documenti collegati con un ruolo che ha se_xml ( 'fattura collegata' )
+     * DatiDDT                  | i documenti di trasporto collegati con un ruolo che ha se_xml ( 'DDT collegato' )
+     *
+     * In DatiFattureCollegate e DatiDDT RiferimentoNumeroLinea si scrive solo se alcune righe, e non tutte, sono legate
+     * alle righe del documento collegato ( relazioni_documenti_articoli ); l'IdDocumento e il NumeroDDT sono il numero
+     * del documento collegato, come lo scrive Numero di questo file.
+     *
      * @todo decidere come trattare i testi più lunghi del massimo consentito dallo schema ( oltre a RiferimentoNormativo )
      *
      * @file
@@ -247,23 +267,107 @@
 	    'CessionarioCommittente' => $cessionario
 	);
 
+    // errori, che fermano l'invio allo SDI, e avvisi, che non fermano niente; oltre alla validazione contro lo schema, i
+    // controlli che lo schema non fa ( vedi l'intestazione )
+	$errori = array();
+	$avvisi = array();
+
+    // - - DatiGeneraliDocumento
+	$generaliDocumento = array(
+	    // - - - - TipoDocumento / la tipologia del documento
+	    'TipoDocumento' => $dati['doc']['codice_tipologia'],
+	    // - - - - Divisa / la valuta del documento
+	    'Divisa' => $dati['doc']['divisa'],
+	    // - - - - Data / la data del documento
+	    'Data' => $dati['doc']['data'],
+	    // - - - - Numero / il numero del documento
+	    'Numero' => $dati['doc']['numero']
+	);
+
+    // - - - - DatiRitenuta / le ritenute, una per tipo
+	foreach( $dati['doc']['ritenute'] as $ritenuta ) {
+	    $generaliDocumento['DatiRitenuta'][] = array(
+	        // - - - - - TipoRitenuta / il tipo di ritenuta ( RT01 - RT06 )
+	        'TipoRitenuta' => $ritenuta['codice_ritenuta'],
+	        // - - - - - ImportoRitenuta / l'importo della ritenuta
+	        'ImportoRitenuta' => $ritenuta['importo'],
+	        // - - - - - AliquotaRitenuta / l'aliquota della ritenuta
+	        'AliquotaRitenuta' => $ritenuta['aliquota'],
+	        // - - - - - CausalePagamento / la causale del pagamento, come nella Certificazione Unica
+	        'CausalePagamento' => $ritenuta['causale_pagamento']
+	    );
+	    if( empty( $ritenuta['causale_pagamento'] ) ) {
+	        $errori[] = 'la ritenuta ' . $ritenuta['codice_ritenuta'] . ' non ha la causale del pagamento';
+	    }
+	}
+
+    // - - - - DatiBollo / il bollo assolto in modo virtuale
+	if( ! empty( $dati['doc']['se_bollo_virtuale'] ) ) {
+	    $generaliDocumento['DatiBollo'] = array( 'BolloVirtuale' => 'SI' );
+	    if( ! empty( $dati['doc']['importo_bollo'] ) ) {
+	        $generaliDocumento['DatiBollo']['ImportoBollo'] = xmlFloat( $dati['doc']['importo_bollo'] );
+	    }
+	}
+
+    // - - - - DatiCassaPrevidenziale / i contributi alle casse previdenziali
+    // NOTA il contributo entra nel totale del documento e, con la sua IVA, nel riepilogo della sua aliquota ( controlli
+    // 00419, 00422 e 00444 dello SDI )
+	$totaleDocumento = $dati['doc']['tot']['importo_lordo_totale'];
+	foreach( $dati['doc']['casse'] as $cassa ) {
+	    $blocco = array(
+	        // - - - - - TipoCassa / la cassa ( TC01 - TC22 )
+	        'TipoCassa' => $cassa['codice_cassa'],
+	        // - - - - - AlCassa / l'aliquota del contributo
+	        'AlCassa' => $cassa['aliquota'],
+	        // - - - - - ImportoContributoCassa / l'importo del contributo
+	        'ImportoContributoCassa' => $cassa['importo'],
+	        // - - - - - ImponibileCassa / l'importo su cui si calcola il contributo
+	        'ImponibileCassa' => $cassa['imponibile'],
+	        // - - - - - AliquotaIVA / l'IVA applicata al contributo
+	        'AliquotaIVA' => $cassa['aliquota_iva']
+	    );
+	    // - - - - - Ritenuta / se il contributo è soggetto a ritenuta ( controllo 00415: serve DatiRitenuta )
+	    if( ! empty( $cassa['se_ritenuta'] ) ) {
+	        if( ! empty( $dati['doc']['ritenute'] ) ) {
+	            $blocco['Ritenuta'] = 'SI';
+	        } else {
+	            $avvisi[] = 'il contributo ' . $cassa['codice_cassa'] . ' è segnato come soggetto a ritenuta, ma il documento non ha ritenute: non viene indicato come tale';
+	        }
+	    }
+	    // - - - - - Natura / la natura del contributo senza IVA
+	    if( $cassa['aliquota_iva'] == 0 && ! empty( $cassa['codice_iva'] ) ) {
+	        $blocco['Natura'] = $cassa['codice_iva'];
+	    }
+	    if( empty( $cassa['id_iva'] ) ) {
+	        $errori[] = 'il contributo ' . $cassa['codice_cassa'] . ' non ha l\'aliquota IVA';
+	    }
+	    $generaliDocumento['DatiCassaPrevidenziale'][] = $blocco;
+	    // riepilogo e totale
+	    if( isset( $dati['doc']['iva'][ $cassa['id_iva'] ] ) ) {
+	        $dati['doc']['iva'][ $cassa['id_iva'] ]['imponibile_tot'] += $cassa['importo'];
+	        $dati['doc']['iva'][ $cassa['id_iva'] ]['tot'] += $cassa['importo_iva'];
+	    } else {
+	        $dati['doc']['iva'][ $cassa['id_iva'] ] = array(
+	            'imponibile_tot' => $cassa['importo'],
+	            'tot' => $cassa['importo_iva'],
+	            'codice' => $cassa['codice_iva'],
+	            'aliquota' => $cassa['aliquota_iva'],
+	            'riferimento' => $cassa['descrizione_iva']
+	        );
+	    }
+	    $totaleDocumento += $cassa['importo'] + $cassa['importo_iva'];
+	}
+
+    // - - - - ImportoTotaleDocumento / l'importo lordo totale del documento, con i contributi di cassa e la loro IVA
+	$generaliDocumento['ImportoTotaleDocumento'] = xmlFloat( $totaleDocumento );
+
+    // - - - - Causale / la causale del documento
+	$generaliDocumento['Causale'] = $dati['doc']['causale'];
+
     // - - DatiGenerali
 	$generali = array(
 	    // - - - DatiGeneraliDocumento
-	    'DatiGeneraliDocumento' => array(
-	        // - - - - TipoDocumento / la tipologia del documento
-	        'TipoDocumento' => $dati['doc']['codice_tipologia'],
-	        // - - - - Divisa / la valuta del documento
-	        'Divisa' => $dati['doc']['divisa'],
-	        // - - - - Data / la data del documento
-	        'Data' => $dati['doc']['data'],
-	        // - - - - Numero / il numero del documento
-	        'Numero' => $dati['doc']['numero'],
-	        // - - - - ImportoTotaleDocumento / l'importo lordo totale del documento
-	        'ImportoTotaleDocumento' => $dati['doc']['tot']['importo_lordo_totale'],
-	        // - - - - Causale / la causale del documento
-	        'Causale' => $dati['doc']['causale']
-	    )
+	    'DatiGeneraliDocumento' => $generaliDocumento
 	);
 
 	if( $dati['dst']['se_pubblica_amministrazione'] == 1 ){
@@ -285,30 +389,81 @@
 
 	}
 
-	// ciclo sulle fatture collegate
-	if( isset( $dati['dcl'] ) && ! empty( $dati['dcl'] ) ) {
-		foreach( $dati['dcl'] AS $dcl ) {
+    // ciclo sulle fatture collegate
+	foreach( $dati['doc']['collegati']['fatture'] as $collegata ) {
 
-			// - - - DatiFattureCollegate
+	    // - - - DatiFattureCollegate
+		$blocco = array();
 
-			// - - - - RiferimentoNumeroLinea
-
-			// - - - - IdDocumento
-
-			// - - - - Data
-
-			// - - - /DatiFattureCollegate
-
+	    // - - - - RiferimentoNumeroLinea / le righe a cui si riferisce, se non è tutto il documento
+		if( ! empty( $collegata['linee'] ) ) {
+		    $blocco['RiferimentoNumeroLinea'] = $collegata['linee'];
 		}
+
+	    // - - - - IdDocumento / il numero della fattura collegata
+		$blocco['IdDocumento'] = $collegata['numero'];
+
+	    // - - - - Data / la data della fattura collegata ( controllo 00418: non può essere successiva a questa )
+		if( ! empty( $collegata['data'] ) ) {
+		    $blocco['Data'] = $collegata['data'];
+		    if( $collegata['data'] > $dati['doc']['data'] ) {
+		        $errori[] = 'la fattura collegata n. ' . $collegata['numero'] . ' ha una data successiva a quella del documento';
+		    }
+		}
+
+	    // - - - - CodiceCUP e CodiceCIG / i codici della fattura collegata
+		if( ! empty( $collegata['cup'] ) ) {
+		    $blocco['CodiceCUP'] = $collegata['cup'];
+		}
+		if( ! empty( $collegata['cig'] ) ) {
+		    $blocco['CodiceCIG'] = $collegata['cig'];
+		}
+
+		if( empty( $collegata['numero'] ) ) {
+		    $errori[] = 'una fattura collegata non ha il numero';
+		}
+
+	    // - - - /DatiFattureCollegate
+		$generali['DatiFattureCollegate'][] = $blocco;
+
 	}
 
-	// ciclo sui DDT collegati
-	// TODO
-	// - - - DatiDDT
-	// - - - - NumeroDDT
-	// - - - - DataDDT
-	// - - - - RiferimentoNumeroLinea
-	// - - - /DatiDDT
+    // la nota di credito indica sempre la fattura che rettifica
+	if( $dati['doc']['codice_tipologia'] == 'TD04' && empty( $dati['doc']['collegati']['fatture'] ) ) {
+	    $errori[] = 'la nota di credito non indica la fattura a cui si riferisce: va collegata nelle relazioni del documento, con il ruolo "fattura collegata"';
+	}
+
+    // ciclo sui DDT collegati
+	foreach( $dati['doc']['collegati']['ddt'] as $ddt ) {
+
+	    // - - - DatiDDT
+		$blocco = array(
+		    // - - - - NumeroDDT / il numero del documento di trasporto
+		    'NumeroDDT' => $ddt['numero'],
+		    // - - - - DataDDT / la data del documento di trasporto
+		    'DataDDT' => $ddt['data']
+		);
+
+	    // - - - - RiferimentoNumeroLinea / le righe a cui si riferisce, se non è tutta la fattura
+		if( ! empty( $ddt['linee'] ) ) {
+		    $blocco['RiferimentoNumeroLinea'] = $ddt['linee'];
+		}
+
+		if( empty( $ddt['numero'] ) || empty( $ddt['data'] ) ) {
+		    $errori[] = 'un documento di trasporto collegato non ha il numero o la data';
+		}
+
+	    // - - - /DatiDDT
+		$generali['DatiDDT'][] = $blocco;
+
+	}
+
+    // la fattura differita indica i documenti di trasporto
+	if( $dati['doc']['codice_tipologia'] == 'TD24' && empty( $dati['doc']['collegati']['ddt'] ) ) {
+	    $errori[] = 'la fattura differita TD24 non indica i documenti di trasporto: vanno collegati nelle relazioni del documento, con il ruolo "DDT collegato"';
+	} elseif( $dati['doc']['codice_tipologia'] == 'TD25' && empty( $dati['doc']['collegati']['ddt'] ) ) {
+	    $avvisi[] = 'la fattura differita TD25 non indica documenti di trasporto';
+	}
 
     // - - DatiBeniServizi
 	$beniServizi = array( 'DettaglioLinee' => array(), 'DatiRiepilogo' => array() );
@@ -342,9 +497,24 @@
 	    // - - - - AliquotaIVA / l'aliquota IVA della riga
 		$linea['AliquotaIVA'] = $row['aliquota'];
 
+	    // - - - - Ritenuta / se la riga è soggetta a ritenuta ( controllo 00411: serve DatiRitenuta )
+		if( ! empty( $row['se_ritenuta'] ) ) {
+		    if( ! empty( $dati['doc']['ritenute'] ) ) {
+		        $linea['Ritenuta'] = 'SI';
+		    } else {
+		        $avvisi[] = 'la riga ' . ( $num + 1 ) . ' è segnata come soggetta a ritenuta, ma il documento non ha ritenute: non viene indicata come tale';
+		    }
+		}
+
 	    // - - - - Natura / il codice di esenzione IVA della riga
 		if( ! empty( $row['codice_iva'] ) ) {
 		    $linea['Natura'] = $row['codice_iva'];
+		}
+
+	    // le nature generiche N2, N3 e N6 lo SDI le scarta dal 2021 ( controllo 00445 ): le aliquote che le hanno sono
+	    // archiviate, ma i documenti di prima le citano ancora
+		if( in_array( $row['codice_iva'], array( 'N2', 'N3', 'N6' ) ) ) {
+		    $errori[] = 'la riga ' . ( $num + 1 ) . ' ha la natura generica ' . $row['codice_iva'] . ', che lo SDI non accetta più: va scelto un reparto con un\'aliquota che ha la natura di dettaglio';
 		}
 
 		// controllo arrotondamento
@@ -356,6 +526,18 @@
 	    // - - - /DettaglioLinee
 		$beniServizi['DettaglioLinee'][] = $linea;
 
+	}
+
+    // il bollo sulle operazioni senza IVA oltre 77,47 euro: non si può dedurre con certezza dalle nature ( le esportazioni
+    // e le cessioni intracomunitarie, per esempio, ne sono esenti ), per cui è un avviso e non un errore
+	$senzaIva = 0;
+	foreach( $dati['doc']['iva'] as $row ) {
+	    if( preg_match( '/^(N1|N2|N3\.[3-6]|N4)/', (string) $row['codice'] ) ) {
+	        $senzaIva += $row['imponibile_tot'];
+	    }
+	}
+	if( $senzaIva > 77.47 && empty( $dati['doc']['se_bollo_virtuale'] ) ) {
+	    $avvisi[] = 'le operazioni senza IVA superano 77,47 euro e il documento non ha il bollo virtuale: verificare se l\'imposta di bollo è dovuta';
 	}
 
     // ciclo sulle aliquote IVA
@@ -373,10 +555,11 @@
 		}
 
 	    // - - - - ImponibileImporto / l'imponibile della riga
-		$riepilogo['ImponibileImporto'] = $row['imponibile_tot'];
+	    // NOTA con i contributi di cassa imponibile e imposta sono somme, e vanno riportati a due decimali
+		$riepilogo['ImponibileImporto'] = xmlFloat( $row['imponibile_tot'] );
 
 	    // - - - - Imposta / l'imposta della riga
-		$riepilogo['Imposta'] = $row['tot'];
+		$riepilogo['Imposta'] = xmlFloat( $row['tot'] );
 
 	    // - - - - EsigibilitaIVA / l'esigibilità della riga
 		if( ! empty( $dati['doc']['codice_esigibilita'] ) ) {
@@ -453,35 +636,59 @@
     // leggo l'XML per righe
 	$rows = readFromFile( $outFile );
 
-    // validazione contro lo schema ufficiale
-	$errori = array();
-	$valida = xmlValidate( implode( $rows ), DIR_BASE . '_mod/_0400.documenti/_src/_xml/_xsd/Schema_VFPR12_v1.2.3.xsd', $errori );
+    // validazione contro lo schema ufficiale ( gli errori si aggiungono a quelli dei controlli )
+	$erroriSchema = array();
+	xmlValidate( implode( $rows ), DIR_BASE . '_mod/_0400.documenti/_src/_xml/_xsd/Schema_VFPR12_v1.2.3.xsd', $erroriSchema );
+	foreach( $erroriSchema as $errore ) {
+	    $errori[] = 'schema FatturaPA, ' . $errore;
+	}
 
-    // un file non valido verrebbe scartato dallo SDI: al posto del file si restituiscono gli errori
-	if( $valida === false ) {
-	    if( isset( $_REQUEST['f'] ) ) {
-	        buildJson( array( 'errori' => $errori ) );
-	    } else {
-	        dieText( 'la fattura non è valida per lo schema FatturaPA:' . PHP_EOL . implode( PHP_EOL, $errori ) );
-	    }
-	    exit;
+    // gli errori vanno nel log, qualunque sia l'uscita
+	if( ! empty( $errori ) ) {
+	    logger( 'la fattura ' . basename( $outFile ) . ' ( documento ' . $dati['doc']['id'] . ' ) non si può inviare allo SDI: ' . implode( ' | ', $errori ), 'xml', LOG_ERR );
 	}
 
     // foglio di stile per la visualizzazione, PA o privati
 	$xsl = DIR_BASE . '_mod/_0400.documenti/_src/_xml/_xsl/' . ( ( $dati['dst']['se_pubblica_amministrazione'] == 1 ) ? 'fatturaPA_v1.2.3.xsl' : 'fatturaordinaria_v1.2.3.xsl' );
 
-    // se è richiesto il download
+    // uscita
+    // NOTA gli errori fermano solo l'invio allo SDI, che scarterebbe il file: con f al posto del percorso arrivano gli
+    // errori; il download scarica comunque il file, e la visualizzazione mostra errori e avvisi sopra la fattura
 	if( isset( $_REQUEST['f'] ) ) {
-        buildJson( array( 'file' => $outFile ) );
+	    if( ! empty( $errori ) ) {
+	        buildJson( array( 'errori' => $errori ) );
+	    } else {
+	        buildJson( array( 'file' => $outFile ) );
+	    }
     } elseif( isset( $_REQUEST['d'] ) ) {
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
 	} elseif( ( $html = xmlTransform( implode( $rows ), $xsl ) ) !== false ) {
+	    // riquadro con errori e avvisi, subito dopo l'apertura del body della pagina prodotta dal foglio di stile
+	    $riquadro = '';
+	    if( ! empty( $errori ) ) {
+	        $riquadro .= '<div style="margin:1em;padding:.5em 1em;border:2px solid #c00;background:#fee;font-family:sans-serif;">'
+	            . '<p><strong>Questa fattura non può essere inviata allo SDI:</strong></p><ul><li>'
+	            . implode( '</li><li>', array_map( 'htmlspecialchars', $errori ) ) . '</li></ul></div>';
+	    }
+	    if( ! empty( $avvisi ) ) {
+	        $riquadro .= '<div style="margin:1em;padding:.5em 1em;border:2px solid #c90;background:#ffe;font-family:sans-serif;">'
+	            . '<p><strong>Da verificare:</strong></p><ul><li>'
+	            . implode( '</li><li>', array_map( 'htmlspecialchars', $avvisi ) ) . '</li></ul></div>';
+	    }
+	    if( ! empty( $riquadro ) ) {
+	        $html = preg_replace_callback( '/<body[^>]*>/i', function( $m ) use ( $riquadro ) { return $m[0] . $riquadro; }, $html, 1 );
+	    }
 	    build( $html, MIME_TEXT_HTML );
 	} else {
-	    // NOTA senza l'estensione xsl la trasformazione la fa il browser, finché la supporta
+	    // NOTA senza l'estensione xsl la trasformazione la fa il browser, finché la supporta; errori e avvisi stanno in un
+	    // commento in testa al file, perché la pagina la costruisce il browser
 	    header( 'Content-disposition: inline; filename=' . basename( $outFile ) );
-		array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="' . $cf['site']['url'] . getShortPath( $xsl ) . '" ?>' . PHP_EOL ) );
+		$testa = array( '<?xml-stylesheet type="text/xsl" href="' . $cf['site']['url'] . getShortPath( $xsl ) . '" ?>' . PHP_EOL );
+		if( ! empty( $errori ) || ! empty( $avvisi ) ) {
+		    $testa[] = '<!-- ' . str_replace( '--', '- -', implode( PHP_EOL, array_merge( $errori, $avvisi ) ) ) . ' -->' . PHP_EOL;
+		}
+		array_splice( $rows, 1, 0, $testa );
 		buildXml( implode( $rows ) );
     }
 

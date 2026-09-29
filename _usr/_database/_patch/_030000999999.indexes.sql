@@ -281,7 +281,8 @@ ALTER TABLE `annunci_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- articoli
 ALTER TABLE `articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_reparto` (`id_reparto`),
 	ADD KEY `id_taglia` (`id_taglia`),
 	ADD KEY `id_colore` (`id_colore`),
@@ -673,6 +674,20 @@ ALTER TABLE `carrelli_documenti`
 -- carrelli_documenti
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000003080
+
+-- casse_previdenziali
+-- tipologia: tabella standard
+ALTER TABLE `casse_previdenziali`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`);
+
+-- | 030000003081
+
+-- casse_previdenziali
+-- tipologia: tabella standard
+ALTER TABLE `casse_previdenziali` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003100
 
@@ -1482,6 +1497,43 @@ ALTER TABLE `documenti_articoli`
 
 -- documenti_articoli
 ALTER TABLE `documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000010050
+
+-- documenti_casse_previdenziali
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_casse_previdenziali`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_documento`,`id_cassa_previdenziale`),
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_cassa_previdenziale` (`id_cassa_previdenziale`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000010051
+
+-- documenti_casse_previdenziali
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_casse_previdenziali` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000010100
+
+-- documenti_ritenute
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_ritenute`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_documento`,`id_ritenuta`),
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_ritenuta` (`id_ritenuta`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000010101
+
+-- documenti_ritenute
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_ritenute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000012000
 
@@ -2705,6 +2757,7 @@ ALTER TABLE `prezzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- prodotti
 ALTER TABLE `prodotti`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
@@ -2738,8 +2791,9 @@ ALTER TABLE `prodotti_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- progetti
 ALTER TABLE `progetti`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
@@ -3313,6 +3367,20 @@ ALTER TABLE `risorse_categorie`
 -- risorse_categorie
 -- tipologia: tabella di supporto
 ALTER TABLE `risorse_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000033000
+
+-- ritenute
+-- tipologia: tabella standard
+ALTER TABLE `ritenute`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`);
+
+-- | 030000033001
+
+-- ritenute
+-- tipologia: tabella standard
+ALTER TABLE `ritenute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034100
 

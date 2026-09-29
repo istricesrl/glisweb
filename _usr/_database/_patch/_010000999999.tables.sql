@@ -1035,6 +1035,23 @@ CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000003080
+
+-- casse_previdenziali
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene le casse previdenziali della fattura elettronica
+--
+-- questa tabella contiene le casse di previdenza delle categorie professionali, con il codice TipoCassa ( TC01 - TC22 )
+-- delle specifiche tecniche della fattura elettronica
+--
+CREATE TABLE IF NOT EXISTS `casse_previdenziali` (
+  `id` bigint(20) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003100
 
 -- categorie_anagrafica
@@ -2032,6 +2049,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `note_spedizione` text DEFAULT NULL,                        -- note per la spedizione
   `id_condizione_pagamento` bigint(20) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
   `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
+  `se_bollo_virtuale` tinyint(1) DEFAULT NULL,                -- se l'imposta di bollo è assolta in modo virtuale ( DatiBollo della fattura elettronica )
+  `importo_bollo` decimal(16,2) DEFAULT NULL,                 -- importo dell'imposta di bollo
   `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium
   `codice_sdi` char(64) DEFAULT NULL,                         -- codice SDI per fatturazione elettronica
   `cig` char(16) DEFAULT NULL,                                -- codice CIG
@@ -2115,6 +2134,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `sconto_percentuale` decimal(9,2) DEFAULT NULL,               -- sconto percentuale
   `sconto_valore` decimal(9,2) DEFAULT NULL,                    -- sconto in valore assoluto
   `importo_lordo_finale` decimal(16,2) DEFAULT NULL,            -- importo lordo finale
+  `se_ritenuta` tinyint(1) DEFAULT NULL,                        -- se la riga è soggetta a ritenuta ( Ritenuta della fattura elettronica )
   `nome` char(255) DEFAULT NULL,                                -- nome dell'articolo
   `specifiche` text DEFAULT NULL,                               -- specifiche dell'articolo
   `note` text DEFAULT NULL,                                     -- note sull'articolo
@@ -2126,6 +2146,56 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'articolo
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           -- tabella articoli
+
+-- | 010000010050
+
+-- documenti_casse_previdenziali
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa ai documenti i contributi alle casse previdenziali
+--
+-- questa tabella contiene i contributi alle casse di previdenza addebitati in un documento, con i dati del blocco
+-- DatiCassaPrevidenziale della fattura elettronica; imponibile e importo, se vuoti, li calcola generaContenutiDocumento()
+--
+CREATE TABLE IF NOT EXISTS `documenti_casse_previdenziali` (    --
+  `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento
+  `id_cassa_previdenziale` bigint(20) DEFAULT NULL,                -- chiave esterna per la cassa previdenziale
+  `aliquota` decimal(5,2) DEFAULT NULL,                         -- aliquota del contributo ( AlCassa )
+  `imponibile` decimal(16,2) DEFAULT NULL,                      -- importo su cui si calcola il contributo, se diverso dal totale delle righe
+  `importo` decimal(16,2) DEFAULT NULL,                         -- importo del contributo, se diverso da quello calcolato
+  `id_iva` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'aliquota IVA applicata al contributo
+  `se_ritenuta` tinyint(1) DEFAULT NULL,                        -- se il contributo è soggetto a ritenuta
+  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000010100
+
+-- documenti_ritenute
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa ai documenti le ritenute
+--
+-- questa tabella contiene le ritenute applicate a un documento, con i dati del blocco DatiRitenuta della fattura
+-- elettronica; l'importo, se vuoto, lo calcola generaContenutiDocumento() sulle righe soggette a ritenuta
+--
+CREATE TABLE IF NOT EXISTS `documenti_ritenute` (               --
+  `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento
+  `id_ritenuta` bigint(20) DEFAULT NULL,                           -- chiave esterna per la ritenuta
+  `aliquota` decimal(5,2) DEFAULT NULL,                         -- aliquota della ritenuta
+  `causale_pagamento` char(2) DEFAULT NULL,                     -- causale del pagamento ( codice della Certificazione Unica )
+  `importo` decimal(16,2) DEFAULT NULL,                         -- importo della ritenuta, se diverso da quello calcolato
+  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000012000
 
@@ -2992,7 +3062,7 @@ CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
   `codice` char(64) DEFAULT NULL,                               -- codice della collocazione
   `id_ruolo` bigint(20) DEFAULT NULL,                              -- ruolo della collocazione
   `id_mastro` bigint(20) DEFAULT NULL,                             -- chiave esterna per il mastro ( l'ubicazione )
-  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
   `scorta_minima` decimal(21,2) DEFAULT NULL,                   -- sotto questa giacenza l'ubicazione va rifornita; NULL = nessuna soglia
   `scorta_massima` decimal(21,2) DEFAULT NULL,                  -- fin qui si riempie rifornendo; NULL = fino alla scorta minima
   `id_udm` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'unita' di misura in cui sono scritte le soglie
@@ -4434,7 +4504,24 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` bigint(20) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL	
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000033000
+
+-- ritenute
+-- tipologia: tabella standard
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i tipi di ritenuta della fattura elettronica
+--
+-- questa tabella contiene i tipi di ritenuta e di contributo previdenziale trattenuto, con il codice TipoRitenuta
+-- ( RT01 - RT06 ) delle specifiche tecniche della fattura elettronica
+--
+CREATE TABLE IF NOT EXISTS `ritenute` (
+  `id` bigint(20) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034000

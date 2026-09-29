@@ -79,7 +79,7 @@
     // carico le righe del documento
     $doc['righe']['grezze'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli_view.*, articoli.peso, count(agg.id) AS aggregate, '.
+        'SELECT documenti_articoli_view.*, articoli.peso, articoli.codice AS codice_articolo, count(agg.id) AS aggregate, '.
         'udm.sigla AS udm FROM documenti_articoli_view '.
         'LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
         'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id LEFT JOIN articoli ON articoli.id = documenti_articoli_view.id_articolo '.
@@ -411,7 +411,7 @@
 
 	//	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
 	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 2, $trh, ( ! empty( $row['codice_articolo'] ) ) ? $row['codice_articolo'] : $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 	$pdf->Cell( $col * 2, $trh, ($row['peso']*$row['quantita']) . ' kg', $brdc, 0, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento

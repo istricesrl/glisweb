@@ -31,14 +31,19 @@
             )
         );
 
+        // NOTA TESS.<tipologia> e' il codice del prodotto ( prodotti.codice ): l'id e' numerico dal 02/03/2026, lo
+        // da' l'AUTO_INCREMENT, o se il prodotto c'e' gia' lo si ritrova per codice
         $idProdotto = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
-                'id' => 'TESS.'.sprintf( '%04d', $idTipologia ),
+                'codice' => 'TESS.'.sprintf( '%04d', $idTipologia ),
                 'id_tipologia' => 1,
                 'nome' => $tipologia['nome']
             ),
-            'prodotti'
+            'prodotti',
+            true,
+            false,
+            array( 'codice' )
         );
 
         mysqlInsertRow(

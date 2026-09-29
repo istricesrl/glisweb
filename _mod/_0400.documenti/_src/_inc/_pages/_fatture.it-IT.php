@@ -50,6 +50,7 @@
 															'fatture.amministrazione.form.relazioni',
 															'fatture.amministrazione.form.righe',
 															'fatture.amministrazione.form.pagamenti',
+															'fatture.amministrazione.form.dati.fiscali',
 															'fatture.amministrazione.form.chiusura',
 															'fatture.amministrazione.form.file',
 															'fatture.amministrazione.form.stampe',
@@ -93,6 +94,18 @@
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione dati fiscali fatture
+		$p['fatture.amministrazione.form.dati.fiscali'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'dati fiscali' ),
+			'h1'			=> array( $l		=> 'dati fiscali' ),
+			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.dati.fiscali.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.dati.fiscali.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
 		);

@@ -144,6 +144,26 @@
 
     }
 
+    /**
+     * raccoglie i dati di un documento per le stampe
+     *
+     * Restituisce un array con il documento ( doc, con le righe, i totali per aliquota in iva, i pagamenti ), l'emittente
+     * ( src, la sua sede sri e il suo regime srr ) e il destinatario ( dst e la sua sede dsi ), usato dalle stampe PDF e
+     * dalla fattura elettronica ( _src/_api/_print/_fattura.xml.php ). Dal 2026-09-30 doc ha anche i dati dei blocchi
+     * condizionati della fattura elettronica:
+     *
+     * chiave               | contenuto
+     * ---------------------|-----------------------------------------------------------------------------------------
+     * collegati            | i documenti collegati con un ruolo che ha se_xml, divisi in fatture e ddt, ciascuno con le
+     *                      | linee di questo documento a cui si riferisce ( vuoto se è tutto il documento )
+     * casse                | i contributi alle casse previdenziali, con imponibile, importo e IVA calcolati se vuoti
+     * ritenute             | le ritenute, con l'importo calcolato se vuoto; le righe soggette hanno se_ritenuta
+     *
+     * @param       integer     $idDocumento    l'ID del documento
+     *
+     * @return      array                       i dati del documento
+     *
+     */
     function generaContenutiDocumento( $idDocumento ) {
 
         // ...
@@ -393,9 +413,9 @@
         // seleziono tutte le righe di missione
         $r['doc']['missione']['righe'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+            'SELECT documenti_articoli.id_articolo, articoli.codice AS codice_articolo, sum( quantita ) AS quantita,
                 concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
-                group_concat( concat_ws( " - ", 
+                group_concat( concat_ws( " - ",
                 concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
             FROM documenti_articoli 
             INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
@@ -697,22 +717,148 @@
 
         }
 
-        // documenti collegati
-        // TODO selezionare in base al ruolo
-        // TODO selezionare solo le fatture
-        // TODO fare la UNION in $dcl anche delle relazioni fra righe (una riga di nota di credito può far riferimento a una o più righe di fattura specifiche e non all'intera fattura)
-        $dcl = mysqlSelectRow(
+        // numero di linea di ogni riga, come lo scrive la fattura elettronica ( NumeroLinea, dalla posizione della riga )
+        $numeriLinea = array();
+        foreach( $r['doc']['righe'] as $n => $rigaLinea ) {
+            $numeriLinea[ $rigaLinea['id'] ] = $n + 1;
+        }
+
+        // documenti collegati, per DatiFattureCollegate e DatiDDT della fattura elettronica
+        // NOTA contano solo le relazioni con un ruolo che ha se_xml ( dal 2026-09-30 'fattura collegata' e 'DDT collegato' ):
+        // quelle con gli altri ruoli ( conferma, evasione, missione... ) o senza ruolo, come la fattura generata da una pro
+        // forma, non riguardano la fattura elettronica; il documento collegato va in DatiDDT se la sua tipologia è di
+        // trasporto, in DatiFattureCollegate negli altri casi
+        $r['doc']['collegati'] = array( 'fatture' => array(), 'ddt' => array() );
+        $collegati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_view.* '.
+            'SELECT documenti.id, documenti.numero, documenti.sezionale, documenti.data, documenti.cig, documenti.cup, '.
+            'tipologie_documenti.se_trasporto '.
             'FROM relazioni_documenti '.
-            'INNER JOIN documenti_view ON documenti_view.id = relazioni_documenti.id_documento_collegato '.
-            'WHERE relazioni_documenti.id_documento = ?',
+            'INNER JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo '.
+            'INNER JOIN documenti ON documenti.id = relazioni_documenti.id_documento_collegato '.
+            'LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+            'WHERE relazioni_documenti.id_documento = ? AND ruoli_documenti.se_xml = 1 '.
+            'ORDER BY documenti.data, documenti.id',
             array( array( 's' => $r['doc']['id'] ) )
         );
 
-        // TODO DDT collegati
-        // cercare i DDT
-        // compilare la sezione <DatiDDT>
+        // righe del documento legate alle righe del documento collegato ( RiferimentoNumeroLinea )
+        // NOTA se il collegamento riguarda tutte le righe, o nessuna in particolare, per le specifiche RiferimentoNumeroLinea
+        // non si scrive: il riferimento vale per l'intero documento
+        if( ! empty( $collegati ) ) {
+            foreach( $collegati as $collegato ) {
+                $collegato['linee'] = array();
+                $idRighe = mysqlSelectColumn(
+                    'id_documenti_articolo',
+                    $cf['mysql']['connection'],
+                    'SELECT DISTINCT relazioni_documenti_articoli.id_documenti_articolo '.
+                    'FROM relazioni_documenti_articoli '.
+                    'INNER JOIN documenti_articoli AS righe ON righe.id = relazioni_documenti_articoli.id_documenti_articolo '.
+                    'INNER JOIN documenti_articoli AS collegate ON collegate.id = relazioni_documenti_articoli.id_documenti_articolo_collegato '.
+                    'WHERE righe.id_documento = ? AND collegate.id_documento = ?',
+                    array( array( 's' => $r['doc']['id'] ), array( 's' => $collegato['id'] ) )
+                );
+                foreach( $idRighe as $idRiga ) {
+                    if( isset( $numeriLinea[ $idRiga ] ) ) {
+                        $collegato['linee'][] = $numeriLinea[ $idRiga ];
+                    }
+                }
+                sort( $collegato['linee'] );
+                if( count( $collegato['linee'] ) == count( $numeriLinea ) ) {
+                    $collegato['linee'] = array();
+                }
+                $r['doc']['collegati'][ ( ! empty( $collegato['se_trasporto'] ) ) ? 'ddt' : 'fatture' ][] = $collegato;
+            }
+        }
+
+        // contributi alle casse previdenziali ( DatiCassaPrevidenziale )
+        // NOTA l'imponibile, se non è indicato, è il totale netto delle righe tranne quelle escluse ex art. 15 ( natura N1,
+        // come le spese anticipate in nome e per conto del cliente, su cui il contributo non si calcola ), e l'importo, se non
+        // è indicato, è l'imponibile per l'aliquota della cassa; l'IVA del contributo è quella dell'aliquota scelta, e se
+        // l'aliquota è a zero la sua natura va nel blocco al posto dell'IVA
+        $r['doc']['casse'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_casse_previdenziali.*, casse_previdenziali.codice AS codice_cassa, '.
+            'iva.aliquota AS aliquota_iva, iva.codice AS codice_iva, iva.nome AS nome_iva, iva.descrizione AS descrizione_iva '.
+            'FROM documenti_casse_previdenziali '.
+            'INNER JOIN casse_previdenziali ON casse_previdenziali.id = documenti_casse_previdenziali.id_cassa_previdenziale '.
+            'LEFT JOIN iva ON iva.id = documenti_casse_previdenziali.id_iva '.
+            'WHERE documenti_casse_previdenziali.id_documento = ? '.
+            'ORDER BY documenti_casse_previdenziali.id',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // calcolo dei contributi
+        if( empty( $r['doc']['casse'] ) ) {
+            $r['doc']['casse'] = array();
+        }
+        $baseCassa = 0;
+        foreach( $r['doc']['righe'] as $rigaCassa ) {
+            if( $rigaCassa['codice_iva'] != 'N1' ) {
+                $baseCassa += $rigaCassa['importo_netto_totale'];
+            }
+        }
+        foreach( array_keys( $r['doc']['casse'] ) as $k ) {
+            $cassa = &$r['doc']['casse'][ $k ];
+            if( ! is_numeric( $cassa['imponibile'] ) ) {
+                $cassa['imponibile'] = $baseCassa;
+            }
+            if( ! is_numeric( $cassa['importo'] ) ) {
+                $cassa['importo'] = round( $cassa['imponibile'] * $cassa['aliquota'] / 100, 2 );
+            }
+            $cassa['importo_iva'] = round( $cassa['importo'] * $cassa['aliquota_iva'] / 100, 2 );
+            $cassa['aliquota']       = str_replace( ',', '.', sprintf( '%0.2f', $cassa['aliquota'] ) );
+            $cassa['imponibile']     = str_replace( ',', '.', sprintf( '%0.2f', $cassa['imponibile'] ) );
+            $cassa['importo']        = str_replace( ',', '.', sprintf( '%0.2f', $cassa['importo'] ) );
+            $cassa['importo_iva']    = str_replace( ',', '.', sprintf( '%0.2f', $cassa['importo_iva'] ) );
+            $cassa['aliquota_iva']   = str_replace( ',', '.', sprintf( '%0.2f', $cassa['aliquota_iva'] ) );
+            unset( $cassa );
+        }
+
+        // ritenute ( DatiRitenuta )
+        $r['doc']['ritenute'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_ritenute.*, ritenute.codice AS codice_ritenuta '.
+            'FROM documenti_ritenute '.
+            'INNER JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta '.
+            'WHERE documenti_ritenute.id_documento = ? '.
+            'ORDER BY documenti_ritenute.id',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // calcolo delle ritenute
+        // NOTA la base della ritenuta sono le righe soggette ( se_ritenuta ) e i contributi di cassa soggetti; se il documento
+        // ha una ritenuta ma nessuna riga è segnata, come succede per le parcelle fatte solo di compensi, sono soggette tutte
+        // le righe tranne quelle escluse ex art. 15 ( natura N1, le spese anticipate per conto del cliente ), e così le scrive
+        // la fattura elettronica; l'importo, se non è indicato, è la base per l'aliquota
+        if( empty( $r['doc']['ritenute'] ) ) {
+            $r['doc']['ritenute'] = array();
+        } else {
+            $righeSoggette = array_filter( array_column( $r['doc']['righe'], 'se_ritenuta' ) );
+            $baseRitenuta = 0;
+            foreach( array_keys( $r['doc']['righe'] ) as $k ) {
+                if( empty( $righeSoggette ) && $r['doc']['righe'][ $k ]['codice_iva'] != 'N1' ) {
+                    $r['doc']['righe'][ $k ]['se_ritenuta'] = 1;
+                }
+                if( ! empty( $r['doc']['righe'][ $k ]['se_ritenuta'] ) ) {
+                    $baseRitenuta += $r['doc']['righe'][ $k ]['importo_netto_totale'];
+                }
+            }
+            foreach( $r['doc']['casse'] as $cassa ) {
+                if( ! empty( $cassa['se_ritenuta'] ) ) {
+                    $baseRitenuta += $cassa['importo'];
+                }
+            }
+            foreach( array_keys( $r['doc']['ritenute'] ) as $k ) {
+                $ritenuta = &$r['doc']['ritenute'][ $k ];
+                if( ! is_numeric( $ritenuta['importo'] ) ) {
+                    $ritenuta['importo'] = round( $baseRitenuta * $ritenuta['aliquota'] / 100, 2 );
+                }
+                $ritenuta['aliquota']    = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['aliquota'] ) );
+                $ritenuta['importo']     = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['importo'] ) );
+                unset( $ritenuta );
+            }
+        }
 
         /**
          * Fattura elettronica a privato senza p iva: obbligo di legge

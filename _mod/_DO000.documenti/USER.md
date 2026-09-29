@@ -61,6 +61,7 @@ scrivendone il nome.
 |---|---|
 | righe | il sotto-elenco delle righe del documento, con codice e descrizione; il più aggiunge una riga, un clic su una riga la apre |
 | pagamenti | il sotto-elenco dei pagamenti legati al documento, con le stesse regole |
+| dati fiscali | il bollo virtuale, le ritenute e i contributi alle casse previdenziali, che vanno nella fattura elettronica |
 | evasione | per ora **vuota**: la pagina c'è ma non ha ancora campi |
 | relazioni | i legami con altri documenti, una riga per legame: documento principale, tipo di relazione, documento collegato |
 | archiviazione | la data di archiviazione e le note che la spiegano |
@@ -72,6 +73,34 @@ documenti che si ripetono nel tempo.
 
 > **esempio** — una nota di credito che storna una fattura si lega a lei nella linguetta
 > *relazioni*: da una delle due si risale all'altra senza doverla cercare.
+
+Due tipi di relazione finiscono anche nella **fattura elettronica**: *fattura collegata*, per la
+fattura a cui si riferisce una nota di credito ( o una fattura di saldo dopo un acconto ), e *DDT
+collegato*, per i documenti di trasporto di una fattura differita. La relazione si mette sul documento
+che si sta emettendo: la nota di credito è il documento principale, la fattura quello collegato. Una
+nota di credito senza la fattura collegata, o una fattura differita *TD24* senza DDT, si può vedere e
+scaricare, ma **non si può inviare** allo SDI.
+
+### i dati fiscali
+<!-- @pubblico: operatore, amministratore -->
+<!-- @pagina: amministrazione.archivio.documenti.form.dati.fiscali -->
+
+La linguetta **dati fiscali** raccoglie quello che la fattura elettronica chiede in certi casi:
+
+| riquadro | campi |
+|---|---|
+| imposta di bollo | se il bollo è assolto in modo virtuale, e il suo importo ( di solito 2 euro ) |
+| ritenute | una riga per tipo di ritenuta: il tipo ( ritenuta d'acconto, contributo INPS, ENASARCO… ), l'aliquota, la causale della Certificazione Unica e, solo se non va calcolato, l'importo |
+| contributi alle casse previdenziali | una riga per cassa: la cassa, l'aliquota, l'imponibile e l'importo solo se non vanno calcolati, l'IVA sul contributo e se il contributo è soggetto a ritenuta |
+
+Gli importi lasciati vuoti li calcola la stampa della fattura elettronica: il contributo di cassa sul
+totale delle righe ( tranne le spese escluse dall'IVA per l'art. 15, come le anticipazioni per conto
+del cliente ), la ritenuta sulle righe **soggette a ritenuta** ( una casella della scheda della riga )
+e sui contributi soggetti; se nessuna riga è segnata, sono soggette tutte tranne quelle escluse.
+
+> **attenzione** — il bollo non si mette da solo: quando le righe senza IVA superano 77,47 euro la
+> fattura elettronica lo **segnala** fra le cose da verificare, perché alcune operazioni senza IVA
+> ( le esportazioni, le cessioni verso altri paesi UE ) ne sono esenti.
 
 ## le righe
 <!-- @pubblico: operatore, amministratore -->
@@ -88,7 +117,12 @@ La scheda di una riga è la stessa che si apre dalla linguetta *righe* di un doc
 | dati generali | tipologia, documento, codice, data, descrizione, note |
 | contenuto della riga | quantità, unità di misura, articolo, specifiche |
 | costi della riga | costo unitario e totale, note sui costi |
-| valore della riga | prezzo unitario, sconto in percentuale o in valore, reparto, listino, totale della merce, totale fisso, totale lordo, totale finale |
+| valore della riga | prezzo unitario, sconto in percentuale o in valore, reparto, listino, totale della merce, totale fisso, totale lordo, totale finale, se la riga è soggetta a ritenuta |
+
+Il **reparto** decide l'aliquota IVA della riga. La tendina non propone i reparti con un'aliquota
+**archiviata**, come il reverse charge con la natura generica *N6* che lo SDI non accetta più: una
+riga che ne ha già uno lo mantiene, segnato *aliquota archiviata*, e va corretta scegliendo un reparto
+con la natura di dettaglio ( *N6.1*… *N6.9* ).
 
 > **nota** — la scheda di una riga ha anche un riquadro *attribuzione* e una linguetta **righe
 > aggregate**, entrambi per ora **vuoti**.
