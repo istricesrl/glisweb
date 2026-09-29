@@ -4041,7 +4041,7 @@ CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
 -- | 090000030351
 
 -- relazioni_categorie_progetti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS
 	SELECT
@@ -4071,7 +4071,7 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 -- | 090000030411
 
 -- relazioni_documenti_articoli_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	SELECT
@@ -4088,7 +4088,7 @@ CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 -- | 090000030441
 
 -- relazioni_pagamenti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 	SELECT
@@ -4116,7 +4116,7 @@ CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
 -- | 090000030491
 
 -- relazioni_progetti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_progetti_view AS
 	SELECT
@@ -4133,7 +4133,7 @@ CREATE OR REPLACE VIEW relazioni_progetti_view AS
 -- | 090000030501
 
 -- relazioni_software_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_software_view AS
 	SELECT

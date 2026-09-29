@@ -134,7 +134,7 @@ ALTER TABLE `anagrafica_certificazioni`
 -- | 030000000601
 
 -- anagrafica_certificazioni
--- tipologia: tabella gestita	
+-- tipologia: tabella gestita
 ALTER TABLE `anagrafica_certificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000700
@@ -3003,7 +3003,7 @@ ALTER TABLE `relazioni_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000030350
 
 -- relazioni_categorie_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-02-03 11:12 Chiara GDL
 ALTER TABLE `relazioni_categorie_progetti`
 	ADD PRIMARY KEY (`id`), 
@@ -3018,7 +3018,7 @@ ALTER TABLE `relazioni_categorie_progetti`
 -- | 030000030351
 
 -- relazioni_anagrafica
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 ALTER TABLE `relazioni_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030400
@@ -3041,7 +3041,7 @@ ALTER TABLE `relazioni_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- | 030000030410
 
 -- relazioni_documenti_articoli
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
@@ -3055,13 +3055,13 @@ ALTER TABLE `relazioni_documenti_articoli`
 -- | 030000030411
 
 -- relazioni_documenti_articoli
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 ALTER TABLE `relazioni_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030440
 
 -- relazioni_pagamenti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_pagamenti`
 	ADD PRIMARY KEY (`id`), 
@@ -3074,7 +3074,7 @@ ALTER TABLE `relazioni_pagamenti`
 -- | 030000030441
 
 -- relazioni_pagamenti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 ALTER TABLE `relazioni_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030470
@@ -3098,7 +3098,7 @@ ALTER TABLE `relazioni_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000030490
 
 -- relazioni_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_progetti`
 	ADD PRIMARY KEY (`id`), 
@@ -3112,13 +3112,13 @@ ALTER TABLE `relazioni_progetti`
 -- | 030000030491
 
 -- relazioni_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 ALTER TABLE `relazioni_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030500
 
 -- relazioni_software
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_software`
 	ADD PRIMARY KEY (`id`), 
@@ -3132,7 +3132,7 @@ ALTER TABLE `relazioni_software`
 -- | 030000030501
 
 -- relazioni_software
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 ALTER TABLE `relazioni_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030800
@@ -3569,7 +3569,7 @@ ALTER TABLE `software`
 -- | 030000041401
 
 -- software
--- tipologia: tabella di gestita
+-- tipologia: tabella gestita
 ALTER TABLE `software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042000

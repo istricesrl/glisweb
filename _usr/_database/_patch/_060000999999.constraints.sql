@@ -906,7 +906,7 @@ ALTER TABLE `relazioni_articoli`
 -- | 060000030350
 
 -- relazioni_categorie_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-02-03 11:12 Chiara GDL
 ALTER TABLE `relazioni_categorie_progetti`
     ADD CONSTRAINT `relazioni_categorie_progetti_ibfk_01` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -918,7 +918,7 @@ ALTER TABLE `relazioni_categorie_progetti`
 -- | 060000030410
 
 -- relazioni_documenti_articoli
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_documenti_articoli`
     ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_01` FOREIGN KEY (`id_documenti_articolo`) REFERENCES `documenti_articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -930,7 +930,7 @@ ALTER TABLE `relazioni_documenti_articoli`
 -- | 060000030440
 
 -- relazioni_pagamenti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_pagamenti`
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_01` FOREIGN KEY (`id_pagamento`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -952,7 +952,7 @@ ALTER TABLE `relazioni_prodotti`
 -- | 060000030490
 
 -- relazioni_progetti
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_progetti`
     ADD CONSTRAINT `relazioni_progetti_ibfk_01` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -964,7 +964,7 @@ ALTER TABLE `relazioni_progetti`
 -- | 060000030500
 
 -- relazioni_software
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_software`
     ADD CONSTRAINT `relazioni_software_ibfk_01` FOREIGN KEY (`id_software`) REFERENCES `software` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -5673,7 +5673,7 @@ CREATE VIEW IF NOT EXISTS `relazioni_articoli_view` AS
 -- | 202609292237
 
 -- relazioni_categorie_progetti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 CREATE VIEW IF NOT EXISTS relazioni_categorie_progetti_view AS
 	SELECT
 	relazioni_categorie_progetti.id,
@@ -5687,7 +5687,7 @@ CREATE VIEW IF NOT EXISTS relazioni_categorie_progetti_view AS
 -- | 202609292238
 
 -- relazioni_documenti_articoli_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 CREATE VIEW IF NOT EXISTS relazioni_documenti_articoli_view AS
 	SELECT
 		relazioni_documenti_articoli.id,
@@ -5703,7 +5703,7 @@ CREATE VIEW IF NOT EXISTS relazioni_documenti_articoli_view AS
 -- | 202609292239
 
 -- relazioni_pagamenti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 CREATE VIEW IF NOT EXISTS relazioni_pagamenti_view AS
 	SELECT
 	relazioni_pagamenti.id,
@@ -5716,7 +5716,7 @@ CREATE VIEW IF NOT EXISTS relazioni_pagamenti_view AS
 -- | 202609292240
 
 -- relazioni_progetti_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 CREATE VIEW IF NOT EXISTS relazioni_progetti_view AS
 	SELECT
 	relazioni_progetti.id,
@@ -5732,7 +5732,7 @@ CREATE VIEW IF NOT EXISTS relazioni_progetti_view AS
 -- | 202609292241
 
 -- relazioni_software_view
--- tipologia: tabella relazione
+-- tipologia: tabella gestita
 CREATE VIEW IF NOT EXISTS relazioni_software_view AS
 	SELECT
 	relazioni_software.id,
