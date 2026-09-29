@@ -5991,16 +5991,16 @@ CREATE VIEW IF NOT EXISTS `testate_view` AS
 -- tipologia: tabella assistita
 CREATE VIEW IF NOT EXISTS `tipologie_badge_view` AS
 	SELECT
-		tipologie_banner.id,
-		tipologie_banner.id_genitore,
-		tipologie_banner.ordine,
-		tipologie_banner.nome,
-		tipologie_banner.html_entity,
-		tipologie_banner.font_awesome,
-		tipologie_banner.id_account_inserimento,
-		tipologie_banner.id_account_aggiornamento,
-		tipologie_banner_path( tipologie_banner.id ) AS __label__
-	FROM tipologie_banner
+		tipologie_badge.id,
+		tipologie_badge.id_genitore,
+		tipologie_badge.ordine,
+		tipologie_badge.nome,
+		tipologie_badge.html_entity,
+		tipologie_badge.font_awesome,
+		tipologie_badge.id_account_inserimento,
+		tipologie_badge.id_account_aggiornamento,
+		tipologie_badge.nome AS __label__
+	FROM tipologie_badge
 ;
 
 -- | 202609292255
