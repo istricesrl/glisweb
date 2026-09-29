@@ -1,8 +1,12 @@
+{# LOGO DEL SITO
+    Il logo si prende da site.metadati.logo ( percorso relativo alla root del sito ), la stessa collocazione di
+    site.metadati.theme che usa Athena; se il sito non lo dichiara si usa il logo del framework. Il testo alternativo
+    è il nome del sito nella lingua corrente. #}
 <!-- file {{ _self }} -->
 <div class="col text-right d-flex">
     <div class="logo mt-md-auto mb-auto py-2">
         <a href="{{ pages[ site.home ].url[ localization.language.ietf ] }}">
-            <img src="/_src/_img/_logo/_istrice-bn.png" class="img-fluid" alt="logo Istrice srl">
+            <img src="{{ site.root }}{{ site.metadati.logo|default( '_src/_img/_logo/_istrice-bn.png' ) }}" class="img-fluid" alt="{{ site.name[ localization.language.ietf ] }}">
         </a>
     </div>
 </div>

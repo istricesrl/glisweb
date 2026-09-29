@@ -15,25 +15,25 @@
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">nome</span>
-                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'nome' }, 'request': request, 'page': page } ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">cognome</span>
-                {{ frm.input( table, '', '', 'cognome', '', '', request ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'cognome' }, 'request': request, 'page': page } ) }}
             </div>
         </div>
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">e-mail</span>
-                {{ frm.input( table, '', '', 'mail', '', '', request ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'mail' }, 'request': request, 'page': page } ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">telefono</span>
-                {{ frm.input( table, '', '', 'telefono', '', '', request ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'telefono' }, 'request': request, 'page': page } ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">cellulare</span>
-                {{ frm.input( table, '', '', 'cellulare', '', '', request ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'cellulare' }, 'request': request, 'page': page } ) }}
             </div>
         </div>
     </fieldset>
@@ -42,23 +42,22 @@
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">password corrente</span>
-                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password', '', '', '', '', '', 'also-required="__account___password1,__account___password2"' ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password0', 'type': 'password' }, 'page': page, 'extras': 'also-required="__account___password1,__account___password2"' } ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password</span>
-                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password1', 'type': 'password', 'disabled': 1 }, 'page': page, 'extras': 'required-equals="__account___password1,__account___password2"' } ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password (ripetere)</span>
-                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password2', 'type': 'password', 'disabled': 1 }, 'page': page, 'extras': 'required-equals="__account___password1,__account___password2"' } ) }}
             </div>
         </div>
     </fieldset>
     <fieldset>
         <div class="form-row">
             <div class="col">
-                <!-- <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button> -->
-                {{ cms.formButton( 'registrati', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formAccount', google.profile.recaptcha, '__account__', '' ) }}
+                {{ cms.formButton( { 'field': { 'text': 'modifica dati' }, 'form': { 'id': 'formAccount', 'table': '__account__' }, 'recaptcha': google.profile.recaptcha } ) }}
             </div>
         </div>
     </fieldset>

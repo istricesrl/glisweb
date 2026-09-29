@@ -1,11 +1,14 @@
 <!-- file {{ _self }} -->
+{% set footer = [ 'privacy', 'fornitura', 'affiliazioni' ] %}
+{% set links = footer|filter( p => pages[ p ].url[ localization.language.ietf ] ) %}
 <div class="col d-flex align-items-center justify-content-start">
     <p>
-        <a href="{{ pages.privacy.url[ localization.language.ietf ] }}">{{ pages.privacy.h1[ localization.language.ietf ] }}</a>
-        |
-        <a href="{{ pages.fornitura.url[ localization.language.ietf ] }}">{{ pages.fornitura.h1[ localization.language.ietf ] }}</a>
-        |
-        <a href="{{ pages.affiliazioni.url[ localization.language.ietf ] }}">{{ pages.affiliazioni.h1[ localization.language.ietf ] }}</a>
+        {% for p in links %}
+        <a href="{{ pages[ p ].url[ localization.language.ietf ] }}">{{ pages[ p ].h1[ localization.language.ietf ] }}</a>{% if not loop.last %} | {% endif %}
+        {% endfor %}
+        {% for p in footer %}{% if p not in links %}
+        <!-- ATTENZIONE link alla pagina {{ p }} non trovato per questa lingua! -->
+        {% endif %}{% endfor %}
     </p>
 </div>
 <!-- fine file {{ _self }} -->

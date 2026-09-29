@@ -1,11 +1,9 @@
 # Lydia, il sito con l'area riservata
 
-> **nota** — Lydia è un template **da riallineare**. È nato per una versione precedente del
-> framework, e diverse pagine che lo nominano — il carrello, le schede prodotto, la ricerca — puntano
-> ancora a quella versione e non a questo template. Fra le pagine standard di oggi l'unica che lo usa
-> davvero è la **reimpostazione della password**. Questo capitolo descrive quello che il template
-> disegna; i moduli di accesso e dell'account, in particolare, vanno provati sull'installazione prima
-> di indicarli agli utenti, perché possono non comparire.
+> **nota** — diverse pagine che nominano Lydia — il carrello, le schede prodotto, la ricerca — usano
+> ancora la versione precedente del template e non questa. Fra le pagine standard di oggi l'unica che
+> la usa davvero è la **reimpostazione della password**; le altre pagine descritte qui compaiono dove
+> il sito le ha configurate.
 
 Lydia è un template per il **sito pubblico con un'area riservata**: oltre al menu e al contenuto ha
 una barra delle categorie con la ricerca, le immagini di testata, la galleria, e le pagine per
@@ -32,9 +30,9 @@ sezione: sulle pagine di primo livello non c'è.
 
 ## menu e ricerca
 
-Su schermo stretto i menu della testata e quello delle categorie si raccolgono ciascuno nel suo
-pulsante con le **tre linee**; si preme per aprirli. Le sotto-voci compaiono elencate sotto la voce
-a cui appartengono.
+Su schermo stretto i due menu della testata si raccolgono insieme in un pulsante con le **tre
+linee**, e quello delle categorie nel suo; si preme per aprirli. Il sottomenu resta sempre visibile.
+Le sotto-voci compaiono elencate sotto la voce a cui appartengono.
 
 La **casella di ricerca** sta nella barra delle categorie: si scrive la parola e si preme la lente.
 I risultati si aprono in una pagina a parte, che è del modulo di ricerca e non del template.
@@ -45,12 +43,12 @@ Quando si apre una pagina riservata senza essere entrati, al posto del contenuto
 **accesso utenti registrati**: *username*, *password* e il pulsante *login*. Sotto c'è
 **password dimenticata?**, che porta alla reimpostazione.
 
-> **nota** — se il sito permette di registrarsi, accanto al modulo di accesso dovrebbe comparire
-> quello di registrazione. Nel template standard quel pezzo **non c'è ancora**.
+Se il sito permette di registrarsi, sotto c'è anche **registrati**, che porta alla pagina di
+registrazione.
 
 ## il proprio account
 
-La pagina dell'account ha due gruppi di campi e un pulsante in fondo per salvare:
+La pagina dell'account ha due gruppi di campi e in fondo il pulsante **modifica dati** per salvare:
 
 | gruppo | campi |
 |---|---|
