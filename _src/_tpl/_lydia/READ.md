@@ -70,9 +70,6 @@ ruolo           | dove compare              | cosa usa
 `jumbotron`     | sotto la barra, fissa      | la prima immagine come sfondo; i testi dai metadati della pagina `jt_h3`, `jt_h1`, `jt_h1_href`, `jt_h2`, `jt_content`, `jt_action`, `jt_href`, `jt_target`, `jt_col_class`
 `gallery`       | sotto il contenuto         | le miniature, che Colorbox apre ingrandite
 
-> **attenzione** — `cms.image()` scrive l'immagine con `data-src` ma senza la classe `lazyload`, e lazysizes
-> non la carica: finché la macro non viene corretta in `_src/_twig/_lib/_default.twig` carosello e galleria
-> mostrano solo lo spazio delle immagini ( il jumbotron no, perché usa l'immagine come sfondo CSS ).
 
 # moduli
 

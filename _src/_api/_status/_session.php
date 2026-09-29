@@ -40,7 +40,6 @@
                 'notes' => array(
                     'used ' => date( 'Y-m-d H:i:s', $_SESSION['used'] ),
                     'expire ' => date( 'Y-m-d H:i:s', $_SESSION['used'] + SESSION_LIMIT ),
-                    'files' => get_included_files(),
                     'redis' => (
                         ( isset( $cf['redis']['connection'] ) && ! empty( $cf['redis']['connection'] ) ) 
                         ? 1
