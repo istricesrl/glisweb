@@ -15,13 +15,13 @@
 # riscritto sul meccanismo attuale. Le patch sono incrementali, quindi per aggiornare non serve
 # piu' cancellare niente: questo script NON fa DROP DATABASE in nessun caso.
 #
-# COME LEGGE LE PATCH. Come il task, riga per riga: un marcatore `-- | <livello>` apre una patch,
-# le righe che seguono ( commenti esclusi ) si accumulano e la patch si esegue quando arriva il
-# marcatore SUCCESSIVO, come UNA sola query. Si applica solo cio' che sta sopra il livello
-# registrato in __patch__, si registra ogni patch eseguita e ci si ferma al primo errore. Le
-# regole sono duplicate qui perche' il task non si puo' includere fuori dal framework avviato
-# ( vuole la connessione e i privilegi del bootstrap ): se cambiano la', vanno cambiate anche qui
-# e nello spezzatore di _database.rebuild.check.sh.
+# COME LEGGE LE PATCH. Non lo sa: lo chiede alle funzioni mysqlPatch...() di
+# _src/_lib/_mysql.tools.php, le stesse che usano il task e _database.rebuild.check.sh, e che si
+# possono includere senza il bootstrap del framework. Un marcatore `-- | <livello>` apre una patch,
+# le righe che seguono ( commenti esclusi ) si accumulano e ogni patch e' UNA sola query; si applica
+# solo cio' che sta sopra il livello registrato in __patch__, si registra ogni patch eseguita e ci
+# si ferma al primo errore. Fino al 29/09/2026 queste regole erano copiate qui, nel task e in
+# _database.rebuild.check.sh, e le tre copie si comportavano in modo diverso.
 #
 # uso: _mysql.upgrade.sh <STATO> [ --server <nome> ] [ --si ] [ --senza-backup ]
 #
@@ -95,6 +95,9 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
 
     list( , $docroot, $stato, $server, $esegui, $backup, $dest ) = $argv;
 
+    // le regole delle patch: lettura, livello, esecuzione
+    require_once $docroot . '/_src/_lib/_mysql.tools.php';
+
     // lettura della configurazione, come in _backup.nightly.sh
     function carica( $f ) {
         $j = ( is_readable( $f ) ) ? json_decode( file_get_contents( $f ), true ) : NULL;
@@ -153,71 +156,22 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     mysqli_query( $cn, 'SET NAMES utf8mb4 COLLATE utf8mb4_general_ci' );
 
     // livello di patch del database; senza tabella __patch__ il database e' da creare
-    $r = mysqli_query( $cn, 'SELECT id AS patch_level FROM __patch__ ORDER BY id DESC LIMIT 1' );
-    $patchLevel = ( $r ) ? ( mysqli_fetch_row( $r )[0] ?? NULL ) : NULL;
-    if( empty( $patchLevel ) ) {
-        $patchLevel = '000000000000';
+    $patchLevel = mysqlPatchLevel( $cn );
+    if( $patchLevel === false ) {
+        echo '  ERRORE: livello di patch illeggibile: ' . mysqli_errno( $cn ) . ' ' . mysqli_error( $cn ) . PHP_EOL;
+        exit( 1 );
     }
     $livelloIniziale = $patchLevel;
 
     echo '  livello di patch attuale: ' . $patchLevel . PHP_EOL;
 
-    // i file di patch, standard e custom, come li cerca il task con glob2custom()
-    $pFiles = array();
-    foreach( glob( $docroot . '/{,_}usr/{,_}database/{,_}patch/{,_}*.*.sql', GLOB_BRACE ) as $f ) {
-        if( is_file( $f ) ) {
-            $pFiles[] = $f;
-        }
-    }
-    $pFiles = array_unique( $pFiles );
-    sort( $pFiles );
+    // le patch da applicare, nell'ordine; l'elenco a vuoto ( senza --si ) e' lo stesso che l'esecuzione applichera'
+    $segnalazioni = array();
+    $daApplicare = mysqlPatchRead( mysqlPatchFiles( $docroot . '/' ), $patchLevel, $segnalazioni );
 
-    // le patch da applicare, nell'ordine: ogni voce e' array( file, id, query )
-    //
-    // NOTA il livello avanza come nel task, cioe' a ogni patch che si applicherebbe: l'elenco a
-    // vuoto ( senza --si ) e' quindi lo stesso che l'esecuzione applichera'
-    $daApplicare = array();
-    $simulato = $patchLevel;
-
-    foreach( $pFiles as $pFile ) {
-
-        // livello del file dal nome, come nel task
-        $pFilePatchLevel = substr( str_replace( '_', '', basename( $pFile ) ), 0, 12 );
-
-        if( $pFilePatchLevel > $simulato ) {
-
-            $pId = '';
-            $pQuery = '';
-            $coda = false;
-
-            foreach( file( $pFile, FILE_IGNORE_NEW_LINES ) as $row ) {
-
-                if( substr( trim( $row ), 0, 4 ) == '-- |' ) {
-
-                    if( ! empty( trim( $pQuery ) ) && $pId > $simulato ) {
-                        $daApplicare[] = array( $pFile, $pId, $pQuery );
-                        $simulato = $pId;
-                    }
-
-                    $pId = substr( $row, 5, 12 );
-                    if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
-                    $pQuery = '';
-
-                } elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
-
-                    $pQuery .= $row . PHP_EOL;
-
-                }
-
-            }
-
-            // il task butta via in silenzio cio' che sta dopo l'ultimo marcatore: qui almeno si dice
-            if( ! empty( trim( $pQuery ) ) ) {
-                echo '  ATTENZIONE: ' . basename( $pFile ) . ' ha SQL dopo l\'ultimo marcatore, che non viene eseguito ( manca `-- | FINE` in fondo )' . PHP_EOL;
-            }
-
-        }
-
+    // SQL fuori dalle patch e id non crescenti: non si applicano, ma si dice
+    foreach( $segnalazioni as $w ) {
+        echo '  ATTENZIONE: ' . $w . PHP_EOL;
     }
 
     if( empty( $daApplicare ) ) {
@@ -228,7 +182,7 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     // riepilogo per file: su un database vuoto le patch sono centinaia
     $perFile = array();
     foreach( $daApplicare as $p ) {
-        $perFile[ $p[0] ][] = $p[1];
+        $perFile[ $p['file'] ][] = $p['id'];
     }
     echo '  patch da applicare: ' . count( $daApplicare ) . PHP_EOL;
     foreach( $perFile as $f => $ids ) {
@@ -292,49 +246,21 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
 
     }
 
-    // la tabella delle patch, identica a quella che crea il task
-    mysqli_query(
-        $cn,
-        'CREATE TABLE IF NOT EXISTS `__patch__` (
-            `id` char(12) NOT NULL PRIMARY KEY,
-            `patch` text COLLATE utf8_unicode_ci,
-            `timestamp_esecuzione` int(11) DEFAULT NULL,
-            `token` char(128) DEFAULT NULL,
-            `note_esecuzione` text
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
-    );
-
     echo PHP_EOL;
 
-    // applicazione, una patch per volta; ci si ferma al primo errore, come nel task
-    foreach( $daApplicare as $p ) {
+    // applicazione, una patch per volta; la tabella __patch__ la crea mysqlPatchApply() se non c'e'
+    $errore = array();
+    foreach( mysqlPatchApply( $cn, $daApplicare, $errore ) as $p ) {
+        echo '  patch ' . $p['id'] . ' applicata correttamente' . PHP_EOL;
+        $patchLevel = $p['id'];
+    }
 
-        list( $pFile, $pId, $pQuery ) = $p;
-
-        mysqli_query( $cn, $pQuery );
-
-        if( mysqli_errno( $cn ) ) {
-            echo '  ERRORE nella patch ' . $pId . ' di ' . basename( $pFile ) . ': ' . mysqli_errno( $cn ) . ' ' . mysqli_error( $cn ) . PHP_EOL;
-            echo trim( $pQuery ) . PHP_EOL;
-            echo '  livello di patch fermo a ' . $patchLevel . ': le patch successive non sono state applicate' . PHP_EOL;
-            exit( 1 );
-        }
-
-        $st = mysqli_prepare( $cn, 'INSERT IGNORE INTO `__patch__` ( id, patch, timestamp_esecuzione, note_esecuzione ) VALUES ( ?, ?, ?, ? )' );
-        $testo = trim( $pQuery );
-        $ora = time();
-        $nota = 'OK';
-        mysqli_stmt_bind_param( $st, 'ssis', $pId, $testo, $ora, $nota );
-        mysqli_stmt_execute( $st );
-
-        if( mysqli_errno( $cn ) ) {
-            echo '  ERRORE nella scrittura di ' . $pId . ' sulla tabella delle patch: ' . mysqli_error( $cn ) . PHP_EOL;
-            exit( 1 );
-        }
-
-        echo '  patch ' . $pId . ' applicata correttamente' . PHP_EOL;
-        $patchLevel = $pId;
-
+    // ci si ferma al primo errore, come nel task
+    if( ! empty( $errore ) ) {
+        echo '  ERRORE nella patch ' . $errore['id'] . ( ( empty( $errore['file'] ) ) ? '' : ' di ' . basename( $errore['file'] ) ) . ': ' . $errore['errno'] . ' ' . $errore['error'] . PHP_EOL;
+        echo trim( $errore['query'] ) . PHP_EOL;
+        echo '  livello di patch fermo a ' . $patchLevel . ': le patch successive non sono state applicate' . PHP_EOL;
+        exit( 1 );
     }
 
     echo PHP_EOL . '  livello di patch: ' . $livelloIniziale . ' -> ' . $patchLevel . PHP_EOL;

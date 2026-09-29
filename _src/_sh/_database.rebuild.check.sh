@@ -13,7 +13,8 @@
 # ricostruito da li'. Questo script rende quell'errore impossibile da non vedere.
 #
 # COSA RIPORTA:
-#   1. gli errori incontrati applicando i patch, con file e riga;
+#   1. il primo errore incontrato applicando i patch, con file e patch ( ci si ferma li', come il
+#      task: l'applicazione e' quella di _src/_lib/_mysql.tools.php, la stessa di un deploy );
 #   2. le divergenze fra lo schema ricostruito e quello vero, in tre gruppi:
 #      - solo nei patch      ( dichiarato e mai creato: di solito un patch che non gira )
 #      - solo nel database   ( esiste ma nessuno lo dichiara: la fonte di verita' e' altrove )
@@ -57,7 +58,7 @@ if [ -z "$1" ]; then
 fi
 
 python3 - "$( pwd )" "$@" <<'PYTHON'
-import glob, io, json, os, re, subprocess, sys, tempfile
+import json, os, re, subprocess, sys
 
 docroot = sys.argv[1]
 args    = sys.argv[2:]
@@ -170,64 +171,31 @@ if rc != 0:
     print( '  ( serve un utente con CREATE DATABASE: usare --server per indicarne un altro )' )
     sys.exit( 1 )
 
-# i patch, nell'ordine: prima lo standard, poi il progetto
-files = sorted( glob.glob( os.path.join( docroot, '_usr/_database/_patch/*.sql' ) ) ) \
-      + sorted( glob.glob( os.path.join( docroot,  'usr/database/patch/*.sql' ) ) )
-if not files:
-    print( '  ERRORE: nessun file di patch trovato' ); sys.exit( 1 )
-
-def blocchi( percorso ):
-    """Spezza un file di patch come fa il task _mysql.patch.php: le righe si accumulano fino al
-    marcatore di livello successivo ( "-- | 070000002900" ) e ogni blocco vale UNA query. E' il
-    motivo per cui questi file non hanno DELIMITER: le funzioni con i punti e virgola interni
-    non sono mai passate da un client che spezzi sul punto e virgola. Dare il file in pasto a
-    `mysql` produce infatti centinaia di errori fasulli ( "Undeclared variable", "END IF" )."""
-    fuori, corrente = [], []
-    for riga in io.open( percorso, encoding = 'utf-8', errors = 'replace' ):
-        if riga.strip()[:4] == '-- |':
-            if ''.join( corrente ).strip():
-                fuori.append( ''.join( corrente ) )
-            corrente = []
-        else:
-            corrente.append( riga )
-    if ''.join( corrente ).strip():
-        fuori.append( ''.join( corrente ) )
-    return [ b for b in fuori if [ l for l in b.split( '\n' ) if l.strip() and not l.strip().startswith( '--' ) ] ]
-
-errori = 0
-print( '\napplicazione dei patch ( %d file )' % len( files ) )
+# i patch si applicano con le funzioni mysqlPatch...() di _src/_lib/_mysql.tools.php, le stesse del
+# task _mysql.patch.php e di _mysql.upgrade.sh, tramite _src/_cli/_mysql.patch.php: l'ordine dei file
+# ( prima lo standard, poi il progetto ), un blocco per marcatore `-- |` eseguito come UNA query, la
+# registrazione in __patch__ e l'arresto al primo errore sono quelli di un deploy vero. Fino al
+# 29/09/2026 questo script aveva un suo spezzatore e dava i blocchi al client `mysql` con --force e
+# DELIMITER: proseguiva dopo gli errori, e non vedeva i blocchi che il task saltava o registrava
+# senza eseguirli. Ora un errore ferma l'applicazione, e il confronto che segue e' su uno schema
+# parziale: va letto sapendolo.
+print( '\napplicazione dei patch' )
 env = dict( os.environ, MYSQL_PWD = BANCO.get( 'password' ) or '' )
-for f in files:
-    parti = blocchi( f )
-    # Il delimitatore serve SOLO ai blocchi con un corpo composto ( funzioni, procedure,
-    # trigger ): la' i punti e virgola interni spezzerebbero lo statement. Gli altri si
-    # scrivono come sono - avvolgerli tutti fa fallire quelli che portano un commento in
-    # coda al punto e virgola.
-    pezzi = []
-    for b in parti:
-        b = b.strip()
-        composto = re.search( r'\b(FUNCTION|PROCEDURE|TRIGGER)\b', b, re.I ) and re.search( r'\bBEGIN\b', b, re.I )
-        if composto:
-            corpo = b[:-1] if b.endswith( ';' ) else b
-            pezzi.append( 'DELIMITER $$\n%s$$\nDELIMITER ;\n' % corpo )
-        else:
-            pezzi.append( b if b.endswith( ';' ) else b + ';' )
-    with tempfile.NamedTemporaryFile( mode = 'w', suffix = '.sql', delete = False, encoding = 'utf-8' ) as t:
-        t.write( '\n'.join( pezzi ) )
-        tmp = t.name
-    try:
-        r = subprocess.run( cli( BANCO, banco_db, [ '--force' ] ), stdin = open( tmp ),
-                            env = env, capture_output = True, text = True )
-    finally:
-        os.unlink( tmp )
-    righe = [ l for l in r.stderr.split( '\n' ) if l.startswith( 'ERROR' ) ]
-    print( '  %-46s %3d blocchi, %s' % ( os.path.basename( f ), len( parti ),
-                                         'OK' if not righe else '%d errori' % len( righe ) ) )
-    for l in righe[:8]:
-        print( '      %s' % l[:200] )
-    if len( righe ) > 8:
-        print( '      ... e altri %d' % ( len( righe ) - 8 ) )
-    errori += len( righe )
+r = subprocess.run( [ 'php', os.path.join( docroot, '_src/_cli/_mysql.patch.php' ),
+                      BANCO.get( 'address' ) or '127.0.0.1', str( BANCO.get( 'port' ) or 3306 ),
+                      BANCO.get( 'username' ) or 'root', banco_db ],
+                    cwd = docroot, env = env, capture_output = True, text = True )
+sys.stdout.write( r.stdout )
+if r.stderr.strip():
+    print( '      %s' % r.stderr.strip()[:600] )
+errori = 0 if r.returncode == 0 else 1
+if r.returncode == 2:
+    print( '  ERRORE: patch non applicate, niente da confrontare' )
+    if not TIENI:
+        butta( banco_db )
+    sys.exit( 1 )
+if errori:
+    print( '  ATTENZIONE: le patch si sono fermate al primo errore, il confronto qui sotto e\' su uno schema parziale' )
 
 # confronto
 ric  = oggetti( BANCO, banco_db )

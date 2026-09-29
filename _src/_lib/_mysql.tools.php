@@ -133,6 +133,21 @@
      * refreshStaticView()                      | aggiorna una vista statica dalla vista che la alimenta
      * getStaticViewExtension()                 | restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
+     * funzioni per le patch del database
+     * ----------------------------------
+     * Le funzioni in questo gruppo leggono i file di _usr/_database/_patch/ ( e di usr/database/patch/ ) e li applicano al
+     * database. Sono l'unica implementazione delle regole delle patch: le chiamano il task _src/_api/_task/_mysql.patch.php
+     * con la connessione del framework, e gli script _src/_sh/_mysql.upgrade.sh e _src/_sh/_database.rebuild.check.sh
+     * ( quest'ultimo tramite _src/_cli/_mysql.patch.php ) con una connessione mysqli aperta da loro, senza il bootstrap.
+     * Per questo non usano nessun'altra funzione del framework, né costanti, né $cf: si possono includere da sole.
+     *
+     * funzione                                 | descrizione
+     * -----------------------------------------|---------------------------------------------------------------
+     * mysqlPatchFiles()                        | restituisce i file di patch, standard e custom, nell'ordine di applicazione
+     * mysqlPatchLevel()                        | restituisce il livello di patch del database
+     * mysqlPatchRead()                         | legge dai file le patch da applicare sopra un livello
+     * mysqlPatchApply()                        | applica le patch e le registra in __patch__, fermandosi al primo errore
+     *
      * dipendenze
      * ==========
      * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
@@ -163,6 +178,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-09-29       | Fabio Mosti          | funzioni per le patch del database, prima duplicate nel task e in due script
      *
      * licenza
      * =======
@@ -497,7 +513,8 @@
 
                     // NOTA le patch del database mettono dentro PREPARE le operazioni che dipendono dallo schema ( SET della
                     // query guardata da information_schema, PREPARE, EXECUTE, DEALLOCATE ); fino al 29/09/2026 queste tre
-                    // cadevano nel default, non venivano eseguite e _mysql.patch.php registrava comunque la patch come fatta
+                    // cadevano nel default, non venivano eseguite e _mysql.patch.php registrava comunque la patch come fatta;
+                    // dallo stesso giorno le patch non passano più di qui ma da mysqlPatchApply(), che usa mysqli direttamente
                     case 'PREPARE':
                     case 'EXECUTE':
                     case 'DEALLOCATE':
@@ -2024,4 +2041,320 @@
         } else {
             return '_view';
         }
+    }
+
+    /**
+     * FUNZIONI PER LE PATCH DEL DATABASE
+     */
+
+    /**
+     * restituisce i file di patch, standard e custom, nell'ordine di applicazione
+     *
+     * Questa funzione cerca i file _*.*.sql di _usr/_database/_patch/ e i file *.*.sql di usr/database/patch/ sotto la
+     * cartella $b e li restituisce con il percorso assoluto, senza duplicati e ordinati: prima tutti quelli dello standard,
+     * poi quelli del progetto, ciascun gruppo in ordine di nome e quindi di livello. Il percorso di ricerca è quello che
+     * glob2custom() ricava da DIR_USR_DATABASE_PATCH . '_*.*.sql', cioè ogni underscore sostituito da {,_}, ma la
+     * sostituzione si fa solo sulla parte dopo $b: glob2custom() sta in _src/_config.php, che gli script da riga di comando
+     * non includono, e così un underscore nel percorso della document root non viene toccato.
+     *
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               l'elenco dei file, eventualmente vuoto
+     *
+     */
+    function mysqlPatchFiles($b)
+    {
+
+        // percorso di ricerca, standard e custom
+        $p = $b . str_replace('_', '{,_}', '_usr/_database/_patch/_*.*.sql');
+
+        // elenco dei file
+        $f = array();
+        foreach (glob($p, GLOB_BRACE) as $t) {
+            if (is_file($t)) {
+                $f[] = $t;
+            }
+        }
+
+        // il pattern trova due volte i file dello standard ( con e senza il primo underscore del nome )
+        $f = array_values(array_unique($f));
+
+        // ordino per percorso: _usr viene prima di usr, quindi lo standard prima del progetto
+        sort($f);
+
+        // restituisco l'elenco
+        return $f;
+    }
+
+    /**
+     * restituisce il livello di patch del database
+     *
+     * Questa funzione legge dalla tabella __patch__ l'id più alto registrato. Se la tabella non esiste o è vuota il
+     * database non ha ancora ricevuto patch e la funzione restituisce '000000000000', cioè "tutte da applicare"; per
+     * qualsiasi altro errore restituisce false, e il chiamante deve fermarsi: scambiare una connessione caduta per un
+     * database vuoto vorrebbe dire rieseguire da capo tutte le patch su un database in esercizio.
+     *
+     * @param       object      $c      la connessione mysqli
+     *
+     * @return      mixed               il livello di patch, '000000000000' per un database senza patch, false in caso di errore
+     *
+     */
+    function mysqlPatchLevel($c)
+    {
+
+        // leggo l'ultima patch registrata
+        try {
+            $r = mysqli_query($c, 'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1');
+            $n = mysqli_errno($c);
+        } catch (mysqli_sql_exception $x) {
+            $r = false;
+            $n = $x->getCode();
+        }
+
+        // la tabella __patch__ non esiste ancora ( 1146 ): database da creare
+        if ($r === false) {
+            return ($n == 1146) ? '000000000000' : false;
+        }
+
+        // livello di patch, o nessuna patch registrata
+        $l = mysqli_fetch_row($r);
+        return (empty($l[0])) ? '000000000000' : $l[0];
+    }
+
+    /**
+     * legge dai file le patch da applicare sopra un livello
+     *
+     * Questa funzione legge i file di patch nell'ordine ricevuto e restituisce le patch con id maggiore di $l, ciascuna come
+     * array( 'file' => percorso, 'id' => id, 'query' => testo ). Le regole di lettura sono queste:
+     *
+     * - un file si salta per intero se il livello ricavato dal nome ( tolti gli underscore, le prime dodici cifre ) non è
+     *   maggiore del livello raggiunto fin lì;
+     * - una riga che, tolti gli spazi, comincia con `-- |` è un marcatore: chiude la patch che si stava leggendo e ne apre
+     *   una nuova con l'id scritto dopo il marcatore, dodici caratteri;
+     * - l'id `------------` vale la data e l'ora correnti nel formato YmdHi ( dodici cifre come la colonna __patch__.id );
+     * - le altre righe che cominciano con `--` sono commenti e si scartano; tutte le altre si accumulano nella patch così
+     *   come sono, e la patch è UNA query, che si esegue senza spezzarla ai punti e virgola ( per questo i file non hanno
+     *   DELIMITER );
+     * - una patch vuota o fatta di soli commenti non si applica e non si registra;
+     * - una patch si applica se il suo id è maggiore del livello raggiunto fin lì, che avanza a ogni patch presa: una patch
+     *   con id non crescente fra quelle da applicare non girerebbe mai, e va in $w;
+     * - una patch si chiude solo con il marcatore successivo: l'SQL dopo l'ultimo marcatore del file non si applica e va in
+     *   $w, per questo ogni file finisce con `-- | FINE`;
+     * - un marcatore con un id che non è di dodici cifre ( es. `-- | FINE FILE` ) chiude la patch precedente e basta: l'SQL
+     *   che lo segue, come quello prima del primo marcatore, non si applica e va in $w.
+     *
+     * Le patch con id non maggiore di $l sono quelle che il database ha già e si saltano senza segnalarle.
+     *
+     * @param       array       $f      i file di patch, nell'ordine di mysqlPatchFiles()
+     * @param       string      $l      il livello di patch del database, di mysqlPatchLevel()
+     * @param       array       $w      l'array in cui accumulare le segnalazioni, modificato sul posto
+     *
+     * @return      array               le patch da applicare, nell'ordine, eventualmente vuoto
+     *
+     */
+    function mysqlPatchRead($f, $l, &$w = array())
+    {
+
+        // patch da applicare
+        $r = array();
+
+        // livello raggiunto leggendo
+        $s = $l;
+
+        // processo un file alla volta
+        foreach ($f as $pFile) {
+
+            // livello del file dal nome
+            $pFileLevel = substr(str_replace('_', '', basename($pFile)), 0, 12);
+
+            // un file che non supera il livello raggiunto non contiene niente da applicare
+            if ($pFileLevel <= $s) {
+                continue;
+            }
+
+            // patch corrente; $pId false vuol dire nessun marcatore valido aperto
+            $pId = false;
+            $pQuery = '';
+            $pRow = 1;
+
+            // leggo le righe, e una riga NULL in fondo per accorgermi dell'SQL dopo l'ultimo marcatore
+            $rows = file($pFile, FILE_IGNORE_NEW_LINES);
+            $rows[] = NULL;
+
+            foreach ($rows as $i => $row) {
+
+                // la riga di chiusura o un marcatore chiudono la patch corrente
+                if ($row === NULL || substr(trim($row), 0, 4) == '-- |') {
+
+                    if (trim($pQuery) !== '') {
+
+                        if ($row === NULL) {
+
+                            // SQL dopo l'ultimo marcatore: una patch si chiude solo con il marcatore successivo
+                            $w[] = basename($pFile) . ' riga ' . $pRow . ': SQL dopo l\'ultimo marcatore, non applicato ( manca il marcatore di chiusura -- | FINE )';
+
+                        } elseif ($pId === false) {
+
+                            // SQL fuori da una patch: prima del primo marcatore o dopo un marcatore senza id
+                            $w[] = basename($pFile) . ' riga ' . $pRow . ': SQL fuori da una patch, non applicato';
+
+                        } elseif ($pId > $s) {
+
+                            // patch da applicare
+                            $r[] = array('file' => $pFile, 'id' => $pId, 'query' => $pQuery);
+                            $s = $pId;
+
+                        } elseif ($pId > $l) {
+
+                            // né già applicata né applicabile: l'id non è crescente
+                            $w[] = basename($pFile) . ' riga ' . $pRow . ': patch ' . $pId . ' non crescente rispetto a ' . $s . ', non applicata';
+
+                        }
+
+                    }
+
+                    // fine del file
+                    if ($row === NULL) {
+                        break;
+                    }
+
+                    // id della nuova patch
+                    $pId = substr(trim($row), 5, 12);
+
+                    // l'id segnaposto vale la data corrente, nel formato della colonna __patch__.id
+                    if ($pId == '------------') {
+                        $pId = date('YmdHi');
+                    } elseif (! preg_match('/^[0-9]{12}$/', $pId)) {
+                        $pId = false;
+                    }
+
+                    // svuoto la query per ricominciare ad aggiungere righe
+                    $pQuery = '';
+                    $pRow = $i + 2;
+
+                } elseif (substr(trim($row), 0, 2) == '--') {
+
+                    // commento, si scarta
+
+                } else {
+
+                    // aggiungo la riga alla patch corrente
+                    $pQuery .= rtrim($row, "\r") . PHP_EOL;
+
+                }
+
+            }
+
+        }
+
+        // restituisco le patch da applicare
+        return $r;
+    }
+
+    /**
+     * applica le patch e le registra in __patch__, fermandosi al primo errore
+     *
+     * Questa funzione crea la tabella __patch__ se non esiste, poi esegue le patch ricevute da mysqlPatchRead() una alla
+     * volta con mysqli_query(), ciascuna come una sola query, e registra ognuna in __patch__ con l'ora di esecuzione e la
+     * nota 'OK'. Al primo errore, della patch o della sua registrazione, si ferma: le patch successive non si applicano e
+     * $e riceve array( 'file', 'id', 'errno', 'error', 'query' ) della patch fallita. Restituisce le patch applicate.
+     *
+     * NOTA le patch passano da mysqli e non da mysqlQuery() di proposito: mysqlQuery() sceglie cosa fare dalla prima parola
+     * della query e un comando che non conosce lo scarta senza errore, e fino al 29/09/2026 il task registrava così come
+     * fatte le patch con PREPARE, EXECUTE e DEALLOCATE senza eseguirle. Qui ogni patch va al server così com'è: un'istruzione
+     * che il server non conosce è un errore di sintassi, che ferma tutto. mysqlQuery() inoltre scrive nei log del framework,
+     * che gli script da riga di comando non hanno. Gli errori si leggono sia da mysqli_errno() sia dall'eccezione che mysqli
+     * solleva per default da PHP 8.1.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       array       $p      le patch da applicare, di mysqlPatchRead()
+     * @param       array       $e      l'array in cui scrivere l'errore, vuoto se tutto è andato bene, modificato sul posto
+     *
+     * @return      array               le patch applicate e registrate, nell'ordine
+     *
+     */
+    function mysqlPatchApply($c, $p, &$e = array())
+    {
+
+        // patch applicate
+        $r = array();
+
+        // la tabella delle patch, se non c'è; la sua creazione si esegue e fallisce come una patch, prima di tutte, ma
+        // non si registra ( id NULL )
+        array_unshift($p, array(
+            'file' => NULL,
+            'id' => NULL,
+            'query' => 'CREATE TABLE IF NOT EXISTS `__patch__` (
+                `id` char(12) NOT NULL PRIMARY KEY,
+                `patch` text COLLATE utf8_unicode_ci,
+                `timestamp_esecuzione` int(11) DEFAULT NULL,
+                `token` char(128) DEFAULT NULL,
+                `note_esecuzione` text
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8'
+        ));
+
+        // applico una patch alla volta
+        foreach ($p as $patch) {
+
+            // esecuzione della patch e registrazione
+            try {
+
+                // eseguo la patch
+                $x = mysqli_query($c, $patch['query']);
+
+                // una patch che restituisce righe ( SELECT, o CALL di una procedura che ne restituisce ) va letta fino in
+                // fondo, altrimenti la query successiva fallisce con "Commands out of sync"
+                if ($x instanceof mysqli_result) {
+                    mysqli_free_result($x);
+                }
+                while (mysqli_more_results($c) && mysqli_next_result($c)) {
+                    if ($x = mysqli_store_result($c)) {
+                        mysqli_free_result($x);
+                    }
+                }
+
+                // registro la patch, salvo la creazione della tabella
+                if (! mysqli_errno($c) && $patch['id'] !== NULL) {
+                    $t = time();
+                    $s = mysqli_prepare($c, 'INSERT INTO `__patch__` ( id, patch, timestamp_esecuzione, note_esecuzione ) VALUES ( ?, ?, ?, \'OK\' )');
+                    if ($s) {
+                        $v = trim($patch['query']);
+                        mysqli_stmt_bind_param($s, 'ssi', $patch['id'], $v, $t);
+                        mysqli_stmt_execute($s);
+                        mysqli_stmt_close($s);
+                    }
+                }
+
+                // codice e testo dell'errore, se c'è
+                $n = mysqli_errno($c);
+                $m = mysqli_error($c);
+
+            } catch (mysqli_sql_exception $x) {
+
+                // mysqli con MYSQLI_REPORT_ERROR solleva l'eccezione invece di restituire false
+                $n = $x->getCode();
+                $m = $x->getMessage();
+
+            }
+
+            // al primo errore mi fermo
+            if (! empty($n)) {
+                $e = array(
+                    'file' => $patch['file'],
+                    'id' => $patch['id'],
+                    'errno' => $n,
+                    'error' => $m,
+                    'query' => $patch['query']
+                );
+                return $r;
+            }
+
+            // patch applicata
+            if ($patch['id'] !== NULL) {
+                $r[] = $patch;
+            }
+        }
+
+        // restituisco le patch applicate
+        return $r;
     }
