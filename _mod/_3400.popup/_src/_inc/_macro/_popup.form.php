@@ -23,12 +23,14 @@
 	);
 
     // tendina tipologie popup
-	$ct['etc']['select']['tipologie_popup'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_popup_view'
-    );
+    // i valori della vecchia tabella tipologie_popup ( dati standard fino a fc9951d71 ), che ha lasciato il posto a un elenco fisso ( 2026-09-29 );
+    // gli id sono quelli che _420.pages.php traduce nelle classi popup-open, popup-close, popup-delay e popup-scroll
+	$ct['etc']['select']['tipologie_popup'] = array(
+	    array( 'id' => 1, '__label__' => 'all\'apertura della pagina' ),
+	    array( 'id' => 2, '__label__' => 'alla chiusura della pagina' ),
+	    array( 'id' => 3, '__label__' => 'dopo secondi' ),
+	    array( 'id' => 4, '__label__' => 'dopo scroll' ),
+	);
 
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
