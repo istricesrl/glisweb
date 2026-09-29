@@ -61,6 +61,11 @@
      * tabella task, la cui struttura è simile a quella del file /etc/crontab di Linux. Ogni volta che viene chiamata
      * l'API cron (/api/cron) il framework controlla se ci sono task da eseguire in quel momento, e nel caso
      * provvede ad eseguirli.
+     *
+     * La somiglianza con crontab si ferma ai nomi dei campi: ciascuno contiene un solo valore ( NULL vale "ogni" ),
+     * senza intervalli, liste né passi, e giorno_della_settimana va da 1 ( lunedì ) a 7 ( domenica ) perché si
+     * confronta con date( 'N' ). La domenica è 7 e non 0 come in crontab: un task con 0 non parte mai. È lo stesso
+     * range della tendina del form dei task ( _mod/_0030.strumenti/_src/_inc/_macro/_task.form.php ).
      * 
      * test dei task
      * -------------
