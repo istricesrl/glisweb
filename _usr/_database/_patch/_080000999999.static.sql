@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
 -- ha aggiunte in coda su tre deploy, che quindi hanno le stesse 40 colonne in ordine diverso — e
 -- va bene cosi'.
 CREATE TABLE IF NOT EXISTS `todo_view_static` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) PRIMARY KEY NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,

@@ -35,12 +35,11 @@ Schema e viste stanno nei file di `_usr/_database/_patch/`; i diritti in `/_src/
 danno il controllo completo a `roots` e `staff`. Le colonne sono descritte nei capitoli della reference
 del database, alle voci `veicoli` e `tipologie_veicoli`.
 
-> **attenzione** — lo schema di base crea le tabelle `veicoli`, `tipologie_veicoli` e
-> `mastri_tipologie_veicoli` ma non assegna loro né la chiave primaria né l'AUTO_INCREMENT su `id`
-> ( in `_030000999999.indexes.sql` non ci sono ), né indici o vincoli sulle chiavi esterne ( in
-> `_060000999999.constraints.sql` nemmeno ). Su un database creato dalle patch del framework le maschere
-> del modulo non possono quindi inserire righe nuove in modo affidabile: la colonna `id` è `NOT NULL`
-> senza valore di default.
+> **nota** — `veicoli`, `tipologie_veicoli` e `mastri_tipologie_veicoli` hanno chiave primaria,
+> AUTO_INCREMENT e indici dal 29/09/2026 ( `_030000999999.indexes.sql`, e per i deploy esistenti
+> `_202609291500.chiavi.primarie.sql` ); fino ad allora le maschere non potevano inserire righe nuove.
+> Vincoli sulle chiavi esterne non ce ne sono, come per le altre tabelle dei mastri. Dove una tabella
+> aveva già id ripetuti la patch non aggiunge la chiave e lo dice: i doppioni vanno risolti a mano.
 
 ## pagine
 Tutte le pagine sono aperte ai gruppi `roots` e `staff`; la vista dei veicoli compare nel menu di

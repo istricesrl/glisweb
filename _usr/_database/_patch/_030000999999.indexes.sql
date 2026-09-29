@@ -1141,6 +1141,41 @@ ALTER TABLE `mastri`
 -- mastri
 ALTER TABLE `mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000020700
+
+-- mastri_articoli
+ALTER TABLE `mastri_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_mastro` (`id_mastro`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_udm` (`id_udm`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_mastro`,`id_articolo`,`scorta_minima`,`scorta_massima`);
+
+-- | 030000020701
+
+-- mastri_articoli
+ALTER TABLE `mastri_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000020800
+
+-- mastri_tipologie_veicoli
+ALTER TABLE `mastri_tipologie_veicoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_mastro`,`id_tipologia`),
+	ADD KEY `id_mastro` (`id_mastro`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000020801
+
+-- mastri_tipologie_veicoli
+ALTER TABLE `mastri_tipologie_veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000021000
 
 -- matricole
@@ -1981,6 +2016,27 @@ ALTER TABLE `tipologie_attivita`
 -- tipologie_attivita
 ALTER TABLE `tipologie_attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000050700
+
+-- tipologie_colli
+ALTER TABLE `tipologie_colli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `sigla` (`sigla`),
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`);
+
+-- | 030000050701
+
+-- tipologie_colli
+ALTER TABLE `tipologie_colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000050800
 
 -- tipologie_contatti
@@ -2112,6 +2168,24 @@ ALTER TABLE `tipologie_indirizzi`
 
 -- tipologie_indirizzi
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000053600
+
+-- tipologie_listini
+ALTER TABLE `tipologie_listini`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+
+-- | 030000053601
+
+-- tipologie_listini
+ALTER TABLE `tipologie_listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053700
 
@@ -2272,6 +2346,24 @@ ALTER TABLE `tipologie_url`
 -- tipologie_url
 ALTER TABLE `tipologie_url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000056900
+
+-- tipologie_veicoli
+ALTER TABLE `tipologie_veicoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+
+-- | 030000056901
+
+-- tipologie_veicoli
+ALTER TABLE `tipologie_veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000060000
 
 -- todo
@@ -2353,6 +2445,25 @@ ALTER TABLE `taglie`
 
 -- taglie
 ALTER TABLE `taglie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+-- | 030000064000
+
+-- veicoli
+ALTER TABLE `veicoli`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_costruttore` (`id_costruttore`),
+	ADD KEY `targa` (`targa`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`targa`,`nome`,`data_archiviazione`);
+
+-- | 030000064001
+
+-- veicoli
+ALTER TABLE `veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000065000
 
 -- video

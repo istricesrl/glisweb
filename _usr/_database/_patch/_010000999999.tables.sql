@@ -1870,6 +1870,38 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000020700
+
+-- mastri_articoli
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega gli articoli ai mastri di magazzino in cui sono collocati, con le soglie di scorta
+--
+-- questa tabella dice quali articoli stanno in quale ubicazione di magazzino e, se l'ubicazione e'
+-- sorvegliata, sotto quale giacenza va rifornita ( scorta_minima ) e fin dove si riempie
+-- ( scorta_massima ); le soglie sono scritte nell'unita' id_udm, e dove id_udm e' vuoto
+-- nell'unita' inventariale dell'articolo. La legge il task
+-- _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php; lo schema e' quello del deploy
+-- in cui il sottoscorta e' nato, portato a bigint come il resto dei file di base
+--
+CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
+  `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `codice` char(64) DEFAULT NULL,                               -- codice della collocazione
+  `id_ruolo` bigint(20) DEFAULT NULL,                              -- ruolo della collocazione
+  `id_mastro` bigint(20) DEFAULT NULL,                             -- chiave esterna per il mastro ( l'ubicazione )
+  `id_articolo` char(32) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `scorta_minima` decimal(21,2) DEFAULT NULL,                   -- sotto questa giacenza l'ubicazione va rifornita; NULL = nessuna soglia
+  `scorta_massima` decimal(21,2) DEFAULT NULL,                  -- fin qui si riempie rifornendo; NULL = fino alla scorta minima
+  `id_udm` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'unita' di misura in cui sono scritte le soglie
+  `note` text DEFAULT NULL,                                     -- note sulla collocazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la collocazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la collocazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000020800
 
 -- mastri_veicoli
