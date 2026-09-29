@@ -22,6 +22,8 @@
 
                 <main class="col col-md-10 d-flex flex-column">
 
+                    {% block errors %}{% include 'inc/errors.html' %}{% endblock %}
+
                     {{ nav.tabs( page, pages, localization.language.ietf, etc, form, request ) }}
 
                     {% block main %}{% endblock %}
