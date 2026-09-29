@@ -2745,6 +2745,68 @@ CREATE OR REPLACE VIEW settori_view AS
 	FROM settori
 ;
 
+-- | 090000041000
+
+-- sms_out_view
+CREATE OR REPLACE VIEW `sms_out_view` AS
+	SELECT
+		sms_out.id,
+		sms_out.id_telefono,
+		sms_out.ordine,
+		sms_out.timestamp_composizione,
+		sms_out.mittente,
+		sms_out.destinatari,
+		sms_out.corpo,
+		sms_out.server,
+		sms_out.host,
+		sms_out.port,
+		sms_out.user,
+		sms_out.password,
+		sms_out.token,
+		sms_out.tentativi,
+		sms_out.timestamp_invio,
+		from_unixtime( sms_out.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		sms_out.id_account_inserimento,
+		sms_out.id_account_aggiornamento,
+		concat(
+			sms_out.id,
+			' / ',
+			sms_out.corpo
+		) AS __label__
+	FROM sms_out
+;
+
+-- | 090000041200
+
+-- sms_sent_view
+CREATE OR REPLACE VIEW `sms_sent_view` AS
+	SELECT
+		sms_sent.id,
+		sms_sent.id_telefono,
+		sms_sent.ordine,
+		sms_sent.timestamp_composizione,
+		sms_sent.mittente,
+		sms_sent.destinatari,
+		sms_sent.corpo,
+		sms_sent.server,
+		sms_sent.host,
+		sms_sent.port,
+		sms_sent.user,
+		sms_sent.password,
+		sms_sent.token,
+		sms_sent.tentativi,
+		sms_sent.timestamp_invio,
+		from_unixtime( sms_sent.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		sms_sent.id_account_inserimento,
+		sms_sent.id_account_aggiornamento,
+		concat(
+			sms_sent.id,
+			' / ',
+			sms_sent.corpo
+		) AS __label__
+	FROM sms_sent
+;
+
 -- | 090000042000
 
 -- stati_view

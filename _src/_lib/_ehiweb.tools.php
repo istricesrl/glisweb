@@ -28,6 +28,12 @@
 	// destinatari multipli
 	    if( is_array( $to ) ) {
 
+		// NOTA senza destinatari il risultato resterebbe NULL, che il task di invio legge come un successo
+		    if( empty( $to ) ) {
+				logWrite( 'invio senza destinatari', 'ehiweb', LOG_ERR );
+				return false;
+		    }
+
 		// invio multiplo
 		    foreach( $to as $ds ) {
 			$rs = ehiwebSend( $testo, $ds, $user, $pasw, $from, $id_api, $url );
@@ -44,10 +50,10 @@
 		    }
 
 		// pulizia destinatario
-		    $to = str_replace( '+', NULL, $to );
-		    $to = str_replace( '.', NULL, $to );
-		    $to = str_replace( '/', NULL, $to );
-		    $to = str_replace( ' ', NULL, $to );
+		    $to = str_replace( '+', '', $to );
+		    $to = str_replace( '.', '', $to );
+		    $to = str_replace( '/', '', $to );
+		    $to = str_replace( ' ', '', $to );
 		    $to = ltrim( $to, '0' );
 
 		// BRUTTISSIMO rendere più flessibile

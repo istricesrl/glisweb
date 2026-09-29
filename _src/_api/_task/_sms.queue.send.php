@@ -1,11 +1,48 @@
 <?php
 
     /**
+     * evasione della coda degli SMS in uscita
      *
+     * Questo task invia un SMS della coda `sms_out` a ogni chiamata, con lo stesso schema a token del task gemello delle
+     * mail ( `_src/_api/_task/_mail.queue.send.php` ): marca una riga con il proprio token, la legge, la passa al
+     * provider e, se l'invio riesce, la sposta in `sms_sent`; se l'invio fallisce la riga resta in coda, `tentativi`
+     * sale di uno e l'invio viene rimandato di tante ore quanti sono i tentativi fatti. Richiede il privilegio
+     * `GESTIONE_COMUNICAZIONI` ed è pensato per il cron ogni minuto con più iterazioni.
      *
+     * modalità di evasione
+     * ====================
+     * La modalità si sceglie con i parametri della richiesta:
      *
+     * parametro        | comportamento
+     * -----------------|------------------------------------------------------------------------------------------
+     * id=<id>          | invia l'SMS indicato anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato
+     * hard=1           | invia il primo SMS della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
+     * full=1           | azzera `timestamp_invio` su tutta la coda, così che i giri successivi la evadano per intero; in questo giro non invia nulla
+     * nessuno          | invia il primo SMS la cui data prevista è passata o assente
      *
-     * @todo commentare
+     * server e provider
+     * =================
+     * Se la riga ha la colonna `server` valorizzata si usa `$cf['sms']['servers'][ <server> ]`, altrimenti il server del
+     * profilo corrente, `$cf['sms']['server']`. Il `type` del server sceglie la funzione del provider: `skebby` chiama
+     * skebbySend() ( `_src/_lib/_skebby.tools.php` ), `ehiweb` chiama ehiwebSend() ( `_src/_lib/_ehiweb.tools.php` ).
+     * Un server nominato nella riga ma assente dalla configurazione, un profilo senza server o un tipo sconosciuto sono
+     * un errore di invio come gli altri: l'SMS resta in coda, il tentativo si conta e l'errore va nel log `sms`.
+     * Fino al 2026-09-29 il task del modulo `SM000.sms` in quel caso considerava l'SMS inviato e lo spostava fra gli
+     * inviati senza che fosse mai partito.
+     *
+     * lo spostamento fra gli inviati
+     * ==============================
+     * La copia in `sms_sent` è un `REPLACE INTO sms_sent SELECT * FROM sms_out`, quindi le due tabelle devono avere le
+     * stesse colonne nello stesso ordine. Se la copia fallisce l'SMS è già stato consegnato al provider: la riga NON
+     * viene cancellata da `sms_out` e NON viene rimessa in coda, ma resta marcata con il token di questo giro, che la
+     * esclude da tutte le modalità di evasione ( anche da `id` ), e l'errore va nel log `sms` a livello LOG_CRIT. Va
+     * sistemata a mano, allineando le tabelle e spostando la riga, o cancellandola dalla scheda dell'SMS in uscita.
+     *
+     * Il task ha un gemello identico nel modulo `SM000.sms` ( `_mod/_SM000.sms/_src/_api/_task/_sms.queue.send.php` ),
+     * come le mail lo hanno in `MA000.mail`: le due copie vanno tenute uguali, cambia solo l'inclusione del framework.
+     *
+     * NOTA come la coda delle mail, il task non ha un numero massimo di tentativi: un SMS che fallisce sempre viene
+     * riprovato all'infinito, a intervalli che crescono di un'ora a ogni tentativo.
      *
      * @file
      *
@@ -22,18 +59,24 @@
     // inizializzo l'array del risultato
 	$status = array();
 
+    // status
+	$status['info'][] = 'inizio evasione coda SMS';
+
     // log
-	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms', LOG_DEBUG );
+	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms' );
 
     // chiave di lock
     if( ! isset( $status['token'] ) ) {
         $status['token'] = getToken( __FILE__ );
     }
 
-	// modalità di evasione (specifica sms, evasione forzata, evasione naturale)
+	// modalità di evasione (specifico SMS, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
 
-		// token della riga
+		// status
+		$status['info'][] = 'evasione specifico messaggio in coda';
+
+        // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE sms_out SET token = ? WHERE id = ? AND token IS NULL',
@@ -45,33 +88,49 @@
 
 	} elseif( isset( $_REQUEST['hard'] ) ) {
 
+		// status
+		$status['info'][] = 'evasione forzata della coda';
+
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE sms_out SET token = ? WHERE token IS NULL '.
-            'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+            'UPDATE sms_out SET token = ? WHERE token IS NULL
+                ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
         );
 
-	} else {
+	} elseif( isset( $_REQUEST['full'] ) ) {
+
+		// status
+		$status['info'][] = 'forzatura elaborazione totale della coda';
 
 		// token della riga
         $status['id'] = mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE sms_out SET token = ? '.
-			'WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) '.
-			'AND token IS NULL '.
-			'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+            $cf['mysql']['connection'],
+            'UPDATE sms_out SET timestamp_invio = NULL'
+        );
+
+	} else {
+
+		// status
+		$status['info'][] = 'strategia standard di evasione della coda';
+
+		// token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE sms_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL )
+                AND token IS NULL
+                ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
-		);
+        );
 
 	}
 
-	// prelevo una sms dalla coda
+	// prelevo un SMS dalla coda
 	$sms = mysqlSelectRow(
 		$cf['mysql']['connection'],
 		'SELECT * FROM sms_out WHERE token = ?',
@@ -80,50 +139,77 @@
 		)
 	);
 
-    // se c'è almeno un SMS da inviare
+	// se c'è almeno un SMS da inviare
 	if( ! empty( $sms ) ) {
 
+		// status
+		$status['info'][] = 'trovato un SMS da evadere';
+
 		// prelevo i dati del server
-		$srv = (
+		// NOTA un server nominato nella riga ma assente da $cf['sms']['servers'] non ricade sul server di default:
+		// resta NULL e finisce nel ramo default dello switch qui sotto, come un profilo senza server
+		$server = (
 			( ! empty( $sms['server'] ) )
-			? $cf['sms']['servers'][ $sms['server'] ]
+			? ( $cf['sms']['servers'][ $sms['server'] ] ?? NULL )
 			: $cf['sms']['server']
 		);
 
+		// mittente
+		$mittente = unserialize( $sms['mittente'] ?? '' );
+
 		// invio l'SMS
-		switch( $srv['type'] ) {
+		switch( $server['type'] ?? NULL ) {
+
 			case 'skebby':
+
+				// NOTA skebbySend() riceve il mittente nella forma array( nome => numero ) e ne usa il numero, o il nome
+				// se il numero è vuoto ( 2026-04-13, riallineamento da gimbe )
 				$r = skebbySend(
 					$sms['corpo'],
-					array_values( unserialize( $sms['destinatari'] ) ),
-					$srv['username'],
-					$srv['password'],
-					current( array_keys( unserialize( $sms['mittente'] ) ) )
+					unserialize( $sms['destinatari'] ?? '' ),
+					$server['username'],
+					$server['password'],
+					$mittente
 				);
+
 			break;
+
 			case 'ehiweb':
+
+				// NOTA a Ehiweb si passa il nome del mittente, come ha sempre fatto questo task
 				$r = ehiwebSend(
 					$sms['corpo'],
-					array_values( unserialize( $sms['destinatari'] ) ),
-					$srv['username'],
-					$srv['password'],
-					current( array_keys( unserialize( $sms['mittente'] ) ) ),
-					$srv['id_api']
+					unserialize( $sms['destinatari'] ?? '' ),
+					$server['username'],
+					$server['password'],
+					( ( is_array( $mittente ) ) ? array_key_first( $mittente ) : $mittente ),
+					$server['id_api'] ?? NULL
 				);
+
 			break;
+
 			default:
-				logWrite( 'metodo di invio SMS non supportato: ' . $srv['type'], 'sms', LOG_ERR );
+
+				// log
+				logWrite( 'server ' . ( ( ! empty( $sms['server'] ) ) ? $sms['server'] : 'di default' ) . ' per l\'SMS #' . $sms['id'] . ' non configurato o di tipo non supportato: ' . ( $server['type'] ?? '(nessun tipo)' ), 'sms', LOG_ERR );
+
+				// status
+				$status['err'][] = 'server SMS non configurato o di tipo non supportato';
+
+				// esito
 				$r = false;
+
 			break;
+
 		}
 
 		// controllo l'esito dell'invio
 		if( $r !== false ) {
 
 			// log
-			logWrite( 'invio SMS #' . $sms['id'] . ' completato: ' . $r, 'sms', LOG_NOTICE );
+			logWrite( 'invio SMS #' . $sms['id'] . ' completato: ' . $r, 'sms' );
 
-			// sposto la sms nella coda delle inviate
+			// sposto l'SMS nella coda degli inviati
 			$s1 = mysqlQuery(
 				$cf['mysql']['connection'],
 				'REPLACE INTO sms_sent SELECT * FROM sms_out WHERE token = ?',
@@ -132,38 +218,52 @@
 				)
 			);
 
-			// log
-			logWrite( 'spostamento SMS #' . $sms['id'] . ' dalla sms_out alla sms_sent completato', 'sms', LOG_NOTICE );
+			// controllo l'esito dello spostamento
+			if( empty( $s1 ) ) {
 
-			// aggiorno la timestamp di invio
-			$s2 = mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE sms_sent SET timestamp_invio = ?, token = NULL WHERE token = ?',
-				array(
-					array( 's' => time() ),
-					array( 's' => $status['token'] )
-				)
+				// NOTA l'SMS è già partito: la riga resta nella sms_out con il token di questo giro, che la toglie da tutte
+				// le modalità di evasione, così non viene né persa né inviata una seconda volta
+				logWrite( 'SMS #' . $sms['id'] . ' inviato ma non copiato nella sms_sent, resta nella sms_out bloccato dal token ' . $status['token'], 'sms', LOG_CRIT );
+
+				// status
+				$status['err'][] = 'SMS inviato ma non spostato fra gli inviati';
+
+			} else {
+
+				// log
+				logWrite( 'spostamento SMS #' . $sms['id'] . ' dalla sms_out alla sms_sent completato', 'sms' );
+
+				// aggiorno la timestamp di invio
+				$s2 = mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE sms_sent SET timestamp_invio = ?, token = NULL WHERE token = ?',
+					array(
+						array( 's' => time() ),
+						array( 's' => $status['token'] )
+					)
 				);
 
-			// log
-			logWrite( 'timestamp di invio SMS #' . $sms['id'] . ' aggiornato', 'sms', LOG_NOTICE );
+				// log
+				logWrite( 'timestamp di invio SMS #' . $sms['id'] . ' aggiornato', 'sms' );
 
-			// elimino la sms inviata dalla coda delle sms in uscita
-			$s3 = mysqlQuery(
-				$cf['mysql']['connection'],
-				'DELETE FROM sms_out WHERE token = ?',
-				array(
-					array( 's' => $status['token'] )
-				)
-			);
+				// elimino l'SMS inviato dalla coda degli SMS in uscita
+				$s3 = mysqlQuery(
+					$cf['mysql']['connection'],
+					'DELETE FROM sms_out WHERE token = ?',
+					array(
+						array( 's' => $status['token'] )
+					)
+				);
 
-			// log
-			logWrite( 'SMS #' . $sms['id'] . ' rimosso dalla sms_out', 'sms', LOG_NOTICE );
+				// log
+				logWrite( 'SMS #' . $sms['id'] . ' rimosso dalla sms_out', 'sms' );
+
+			}
 
 		} else {
 
 			// log
-			logWrite( 'impossibile inviare SMS #' . $sms['id'] . ' (errore phpsmser)', 'sms', LOG_ERR );
+			logWrite( 'impossibile inviare l\'SMS #' . $sms['id'] . ' (errore)', 'sms', LOG_ERR );
 
 			// incremento il numero di tentativi per l'SMS
 			$tnInvio = $sms['tentativi'] + 1;
@@ -187,13 +287,10 @@
 	} else {
 
         // chiudo il ciclo
-        $iter = $task['iterazioni'];
+        $iter = ( ! empty( $task['iterazioni'] ) ) ? $task['iterazioni'] : 0;
 
-	    // log
-		logWrite( 'nessun SMS in coda da processare', 'sms' );
-
-	    // status
-		$status['info'][] = 'nessun SMS in coda da processare';
+		// status
+		$status['info'][] = 'nessun SMS da evadere';
 
 	}
 

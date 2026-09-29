@@ -1755,6 +1755,34 @@ ALTER TABLE `settori`
 -- settori
 ALTER TABLE `settori` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000041000
+
+-- sms_out
+ALTER TABLE `sms_out`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_telefono` (`id_telefono`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000041001
+
+-- sms_out
+ALTER TABLE `sms_out` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000041200
+
+-- sms_sent
+ALTER TABLE `sms_sent`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_telefono` (`id_telefono`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000041201
+
+-- sms_sent
+ALTER TABLE `sms_sent` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000042000
 
 -- stati

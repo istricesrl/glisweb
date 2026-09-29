@@ -3010,6 +3010,74 @@ CREATE TABLE IF NOT EXISTS `settori` (
   `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000041000
+
+-- sms_out
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli SMS in uscita
+--
+-- questa tabella contiene gli SMS in uscita, con le informazioni relative al mittente, ai destinatari,
+-- al corpo, al server di invio e allo stato di invio; ha le stesse colonne, nello stesso ordine, di
+-- sms_sent, perche' il task di invio sposta le righe con REPLACE INTO sms_sent SELECT * FROM sms_out
+--
+CREATE TABLE IF NOT EXISTS `sms_out` (
+  `id` bigint(20) NOT NULL,
+  `id_telefono` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000041200
+
+-- sms_sent
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene gli SMS inviati
+--
+-- questa tabella contiene gli SMS inviati, con le informazioni relative al mittente, ai destinatari,
+-- al corpo, al server di invio e alla data di invio; ha le stesse colonne, nello stesso ordine, di
+-- sms_out
+--
+CREATE TABLE IF NOT EXISTS `sms_sent` (
+  `id` bigint(20) NOT NULL,
+  `id_telefono` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_composizione` int(11) DEFAULT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT 0,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000042000
 
 -- stati
@@ -3070,7 +3138,7 @@ CREATE TABLE IF NOT EXISTS `task` (                           --
   `ora` int(11) DEFAULT NULL,                                 -- ora di esecuzione (0-23, NULL sta per ogni ora)
   `giorno_del_mese` int(11) DEFAULT NULL,                     -- giorno del mese di esecuzione (1-31, NULL sta per ogni giorno del mese)
   `mese` int(11) DEFAULT NULL,                                -- mese di esecuzione (1-12, NULL sta per ogni mese)
-  `giorno_della_settimana` int(11) DEFAULT NULL,              -- giorno della settimana di esecuzione (0-6, NULL sta per ogni giorno della settimana)
+  `giorno_della_settimana` int(11) DEFAULT NULL,              -- giorno della settimana di esecuzione (1-7, 1 lunedì e 7 domenica come date( 'N' ), NULL sta per ogni giorno della settimana)
   `settimana` int(11) DEFAULT NULL,                           -- settimana di esecuzione (1-53, NULL sta per ogni settimana)
   `task` char(255) DEFAULT NULL,                              -- percorso del file del task
   `iterazioni` int(11) DEFAULT NULL,                          -- numero di iterazioni del task per ogni esecuzione

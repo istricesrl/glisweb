@@ -1,8 +1,8 @@
 # modulo SMS
 
 Il modulo SMS è l'interfaccia di amministrazione della coda degli SMS del framework: mostra gli SMS in
-uscita e quelli già inviati, offre gli strumenti per forzare l'evasione della coda, e porta con sé una
-propria versione del task di invio. Il meccanismo vero e proprio — accodamento, provider, configurazione
+uscita e quelli già inviati, offre gli strumenti per forzare l'evasione della coda, e porta con sé le
+copie dei task della coda, come il modulo `MA000.mail` fa per le mail. Il meccanismo vero e proprio — accodamento, provider, configurazione
 dei server — sta nel core e il modulo lo usa così com'è: la descrizione generale è nel capitolo
 `151.sms.md`, qui si documenta solo quello che il modulo aggiunge.
 
@@ -16,19 +16,22 @@ L'evasione avviene un messaggio alla volta con lo schema a token usato anche per
 con il proprio token una riga di `sms_out`, la legge, la passa al provider e, se l'invio riesce, la copia
 in `sms_sent` ( `REPLACE INTO sms_sent SELECT * FROM sms_out` ), vi scrive la timestamp di invio e la
 cancella da `sms_out`. Se l'invio fallisce la riga resta in coda, il contatore `tentativi` sale di uno e
-l'invio viene rimandato di tante ore quanti sono i tentativi fatti.
+l'invio viene rimandato di tante ore quanti sono i tentativi fatti; come per le mail non c'è un numero
+massimo di tentativi.
 
-> **attenzione** — la copia in `sms_sent` è un `SELECT *`: le due tabelle devono avere le stesse colonne
-> nello stesso ordine. Una colonna aggiunta a una sola delle due fa fallire la copia, e il task non ne
-> controlla l'esito: la riga viene comunque cancellata da `sms_out`, per cui l'SMS già consegnato dal
-> provider sparisce senza comparire fra gli inviati.
+La copia in `sms_sent` è un `SELECT *`, quindi le due tabelle devono avere le stesse colonne nello stesso
+ordine. Se la copia fallisce l'SMS è già partito: il task non cancella la riga e non la rimette in coda,
+la lascia in `sms_out` marcata con il proprio token, che la esclude da tutte le modalità di evasione, e
+scrive l'errore nel log `sms` a livello critico. La riga va sistemata a mano, allineando le tabelle o
+cancellandola dalla sua scheda.
 
 ## dipendenze
 Il modulo si appoggia a funzioni del core, che vengono caricate sempre:
 
 - `/_src/_lib/_sms.tools.php` per l'accodamento e per `array2smsString()`, con cui le viste rendono
   leggibili mittente e destinatari serializzati;
-- `/_src/_lib/_skebby.tools.php` per `skebbySend()`, l'unico provider che il task del modulo sa usare;
+- `/_src/_lib/_skebby.tools.php` e `/_src/_lib/_ehiweb.tools.php` per `skebbySend()` ed `ehiwebSend()`,
+  le funzioni dei due provider che il task sa usare;
 - i runlevel `/_src/_config/_340.sms.php`, `/_src/_config/_540.sms.php` e `/_src/_config/_545.sms.php`,
   che definiscono template, server e profili SMS.
 
@@ -38,16 +41,16 @@ da quel modulo e inserita da questo prima degli strumenti. Senza, la scheda semp
 ## tabelle del database
 Il modulo lavora su `sms_out` ( la coda in uscita ) e `sms_sent` ( gli inviati ), descritte colonna per
 colonna nel capitolo `315.database.s.md`; i diritti di accesso sono in `/_src/_config/_250.auth.php`
-( controllo completo a `roots` e `staff` ).
-
-> **attenzione** — le due tabelle sono elencate nel capitolo del database e nei diritti, ma nei file di
-> schema di `_usr/_database/_patch/` non c'è il loro `CREATE TABLE`: su un'installazione nuova vanno
-> create a mano, altrimenti le viste e il task falliscono sulla prima query.
+( controllo completo a `roots` e `staff` ). Le definizioni, con le viste `sms_out_view` e `sms_sent_view`,
+stanno nei file di base di `_usr/_database/_patch/` e nella patch `_202609291000.sms.sql`, che le ha
+rimesse dopo che il riallineamento del 02/03/2026 le aveva perse.
 
 ## configurazione
 Il task sceglie il server così: se la riga di `sms_out` ha la colonna `server` valorizzata usa
 `$cf['sms']['servers'][ <server> ]`, altrimenti il server del profilo corrente, `$cf['sms']['server']`.
-Del server legge `type`, `username` e `password`; il task del modulo gestisce solo `type: skebby`.
+Del server legge `type`, `username` e `password`, e per Ehiweb anche `id_api`; i tipi gestiti sono
+`skebby` ed `ehiweb`. Un server nominato nella riga ma assente dalla configurazione, un profilo senza
+server o un tipo sconosciuto sono un errore di invio: l'SMS resta in coda e l'errore va nel log.
 
 ```
 sms:
@@ -74,17 +77,16 @@ in uscita compare nel menu di amministrazione come **sms** ( priorità 950 ).
 | `sms.out.view` | la coda degli SMS in uscita, con la data di invio prevista o *in uscita* se non ce n'è una |
 | `sms.sent.view` | gli SMS inviati |
 | `sms.tools` | gli strumenti della coda: invio del prossimo SMS, evasione dell'intera coda, svuotamento delle code |
-| `sms.out.form`, `sms.out.form.tools` | la scheda di un SMS in uscita |
-| `sms.sent.form`, `sms.sent.form.tools` | la scheda di un SMS inviato |
+| `sms.out.form`, `sms.out.form.tools` | la scheda di un SMS in uscita, con l'invio immediato fra gli strumenti |
+| `sms.sent.form`, `sms.sent.form.tools` | la scheda di un SMS inviato, con la reimmissione in coda fra gli strumenti |
 
-> **attenzione** — le pagine di scheda ( `sms.out.form`, `sms.sent.form` e i loro strumenti ) puntano a
-> macro e template che il modulo non ha: `_sms.out.form.php`, `_sms.out.form.tools.php`,
-> `_sms.sent.form.php`, `_sms.sent.form.tools.php`, `sms.out.form.twig` e `sms.sent.form.twig` non
-> esistono nell'albero. Un clic su una riga delle viste apre una pagina rotta.
+Le schede ricalcano quelle delle mail del modulo `MA000.mail`: macro e template hanno la stessa forma,
+senza i campi che un SMS non ha ( copia, copia nascosta, oggetto, allegati ).
 
 > **nota** — il modulo legacy `0030.strumenti` definisce pagine con gli stessi ID ( `sms.out.view`,
-> `sms.sent.view`, `sms.tools`, ... ) sui template vecchi a `.html`. Con tutti e due attivi prevale la
-> definizione caricata per ultima.
+> `sms.sent.view`, `sms.tools`, ... ) sui template vecchi a `.html`. È il caso ammesso di una pagina
+> dichiarata da due moduli di generazione diversa; con tutti e due attivi prevale la definizione
+> caricata per ultima.
 
 ## il task di invio
 Il task si chiama come `/task/SM000.sms/sms.queue.send` e richiede il privilegio
@@ -92,55 +94,92 @@ Il task si chiama come `/task/SM000.sms/sms.queue.send` e richiede il privilegio
 
 | parametro | comportamento |
 |---|---|
-| `id=<id>` | invia l'SMS indicato, anche se non è ancora il suo momento |
+| `id=<id>` | invia l'SMS indicato, anche se non è ancora il suo momento, purché nessun altro processo lo abbia già marcato |
 | `hard=1` | invia il primo SMS della coda per `ordine` e `timestamp_invio`, ignorando la data prevista |
 | `full=1` | azzera `timestamp_invio` su tutta la coda, così che i giri successivi la evadano per intero; in questo giro non invia nulla |
 | nessuno | invia il primo SMS la cui data prevista è passata o assente |
 
-Esiste anche il task del core `/_src/_api/_task/_sms.queue.send.php` ( `/task/sms.queue.send` ), con la
-stessa logica: i due non sono la stessa cosa e oggi divergono. Quello del core supporta anche Ehiweb e
-rifiuta i tipi di server sconosciuti, quello del modulo ha la modalità `full` e i messaggi di stato. Lo
-svuotamento delle code esiste invece solo nel core ( `/_src/_api/_task/_sms.queue.clean.out.php` e
-`/_src/_api/_task/_sms.queue.clean.sent.php` ).
+Il task è la copia nel modulo di quello del core, `/_src/_api/_task/_sms.queue.send.php`
+( `/task/sms.queue.send` ), come il modulo `MA000.mail` ha la sua copia del task delle mail: le due copie
+sono identiche a parte l'inclusione del framework e vanno tenute uguali. Allo stesso modo il modulo ha le
+copie dei due task di svuotamento delle code ( `sms.queue.clean.out` e `sms.queue.clean.sent` ), che
+chiamano i pulsanti della pagina `sms.tools`, e in più il task `sms.queue.resend`, gemello di
+`mail.queue.resend`, che rimette in coda un SMS inviato.
 
 ## log
-Il task scrive nella factory `sms`, la libreria di Skebby nella factory `skebby` ( autenticazione, dati
-inviati ed esito di ogni chiamata ).
+I task scrivono nella factory `sms`, la libreria di Skebby nella factory `skebby` ( autenticazione, dati
+inviati ed esito di ogni chiamata ), quella di Ehiweb nella factory `ehiweb`.
 
 ## i file del modulo
+
+### /_mod/_SM000.sms/_src/_api/_task/_sms.queue.clean.out.php
+Svuota la coda degli SMS in uscita ( `sms_out` ), senza inviarli, e ottimizza la tabella; è la copia nel
+modulo di `/_src/_api/_task/_sms.queue.clean.out.php` e la chiama il pulsante della pagina `sms.tools`.
+Richiede `GESTIONE_COMUNICAZIONI`.
+
+### /_mod/_SM000.sms/_src/_api/_task/_sms.queue.clean.sent.php
+Svuota l'archivio degli SMS inviati ( `sms_sent` ) e ottimizza la tabella; è la copia nel modulo di
+`/_src/_api/_task/_sms.queue.clean.sent.php` e la chiama il pulsante della pagina `sms.tools`. Richiede
+`GESTIONE_COMUNICAZIONI`.
+
+### /_mod/_SM000.sms/_src/_api/_task/_sms.queue.resend.php
+Rimette in coda l'SMS inviato indicato con `id=<id>`, gemello di `mail.queue.resend` del modulo
+`MA000.mail`: lo marca con il proprio token, lo copia in `sms_out` con lo stesso ID azzerando token,
+tentativi e data prevista, e lo cancella da `sms_sent`. Se la copia fallisce la riga resta fra gli inviati,
+senza token, e l'errore va nel log. Lo chiama la scheda `sms.sent.form.tools`; richiede
+`GESTIONE_COMUNICAZIONI`.
 
 ### /_mod/_SM000.sms/_src/_api/_task/_sms.queue.send.php
 Task di evasione della coda degli SMS, raggiungibile come `/task/SM000.sms/sms.queue.send` o dal cron;
 richiede `GESTIONE_COMUNICAZIONI`. Marca con il proprio token una riga di `sms_out` secondo la modalità
-scelta ( `id`, `hard`, `full` o standard, vedi sopra ), la invia con `skebbySend()` e in caso di successo
-la sposta in `sms_sent`; in caso di errore incrementa `tentativi` e rimanda l'invio di altrettante ore,
-senza un limite massimo. È una variante del task omonimo del core, non un suo override.
+scelta ( `id`, `hard`, `full` o standard, vedi sopra ), la invia con `skebbySend()` o `ehiwebSend()` secondo
+il tipo del server e in caso di successo la sposta in `sms_sent`, controllando l'esito della copia prima di
+cancellare la riga; in caso di errore incrementa `tentativi` e rimanda l'invio di altrettante ore, senza un
+limite massimo. È la copia identica del task omonimo del core, che va tenuta allineata.
 
-> **attenzione** — lo `switch` sul tipo di server ha il solo ramo `skebby` e nessun `default`: con un
-> server di altro tipo, o senza server configurato, `$r` resta indefinito, il controllo `$r !== false`
-> passa e l'SMS viene spostato fra gli inviati senza essere mai partito. In modalità `id` inoltre la
-> riga viene marcata anche se ha già il token di un altro processo, cosa che il task del core evita.
+### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.form.php
+Macro della scheda `sms.out.form`: dichiara `sms_out` come tabella gestita e lascia il resto alla macro di
+default. Ricalca `_mail.out.form.php` del modulo `MA000.mail`.
+
+### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.form.tools.php
+Macro della scheda `sms.out.form.tools`: offre l'invio immediato dell'SMS aperto
+( `/task/SM000.sms/sms.queue.send?id=<id>` ), che al termine porta alla vista degli inviati. Ricalca
+`_mail.out.form.tools.php` del modulo `MA000.mail`.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.out.view.php
 Macro della vista `sms.out.view`: elenca `sms_out` con ID, data di invio prevista, destinatari e corpo e
 apre le righe su `sms.out.form`. Dopo la macro di default converte `timestamp_invio` in data leggibile
 ( o *in uscita* se è vuota ) e deserializza mittente e destinatari con `array2smsString()`.
 
+### /_mod/_SM000.sms/_src/_inc/_macro/_sms.sent.form.php
+Macro della scheda `sms.sent.form`: dichiara `sms_sent` come tabella gestita e lascia il resto alla macro
+di default. Ricalca `_mail.sent.form.php` del modulo `MA000.mail`.
+
+### /_mod/_SM000.sms/_src/_inc/_macro/_sms.sent.form.tools.php
+Macro della scheda `sms.sent.form.tools`: offre la reimmissione in coda dell'SMS aperto
+( `/task/SM000.sms/sms.queue.resend?id=<id>` ), che al termine porta alla vista degli SMS in uscita.
+Ricalca `_mail.sent.form.tools.php` del modulo `MA000.mail`.
+
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.sent.view.php
 Macro della vista `sms.sent.view`: identica a quella della coda in uscita ma su `sms_sent`, con le righe
-che aprono `sms.sent.form`. La colonna della data si chiama ancora *invio previsto* anche se qui contiene
-la data di invio effettiva: è un residuo della copia dalla vista in uscita.
+che aprono `sms.sent.form` e la colonna della data intitolata *invio*, come nella vista delle mail inviate.
 
 ### /_mod/_SM000.sms/_src/_inc/_macro/_sms.tools.php
 Macro della pagina `sms.tools`. Dichiara i gruppi di strumenti e ne popola due: in *elaborazioni* l'invio
 del prossimo SMS ( `sms.queue.send?hard=1` ) e l'evasione di tutta la coda ( `?full=1` ), in *code* lo
-svuotamento delle code degli inviati e degli SMS in uscita.
-
-> **attenzione** — i due pulsanti di svuotamento chiamano `/task/SM000.sms/sms.queue.clean.sent` e
-> `/task/SM000.sms/sms.queue.clean.out`, che nel modulo non esistono: i task di pulizia ci sono solo nel
-> core, raggiungibili come `/task/sms.queue.clean.sent` e `/task/sms.queue.clean.out`.
+svuotamento delle code degli inviati e degli SMS in uscita con i task del modulo
+( `/task/SM000.sms/sms.queue.clean.sent` e `/task/SM000.sms/sms.queue.clean.out` ).
 
 ### /_mod/_SM000.sms/_src/_inc/_pages/_sms.it-IT.php
 Definisce le pagine del modulo ( vedi la tabella delle pagine sopra ): le due viste, le due schede con i
 rispettivi strumenti e la pagina degli strumenti della coda. Se `TE000.template` è attivo inserisce la
 scheda `sms.template.view` fra quelle della vista, prima di `sms.tools`.
+
+### /_mod/_SM000.sms/_src/_tpl/_athena/sms.out.form.twig
+Template della scheda `sms.out.form` sul tema Athena: mittente, destinatari, corpo e data di invio, con i
+comandi standard del form. Ricalca `mail.out.form.twig` del modulo `MA000.mail` senza i campi che un SMS
+non ha e senza l'editor CodeMirror, perché il corpo di un SMS è testo semplice.
+
+### /_mod/_SM000.sms/_src/_tpl/_athena/sms.sent.form.twig
+Template della scheda `sms.sent.form`, identico a quello della scheda in uscita ma sulla tabella
+`sms_sent`, come per le mail.

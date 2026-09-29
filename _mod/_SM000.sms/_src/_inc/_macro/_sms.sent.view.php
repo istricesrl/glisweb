@@ -24,7 +24,7 @@
         'data'  => array(),
         'cols'  => array(
             'id' => '#',
-            'timestamp_invio' => 'invio previsto',
+            'timestamp_invio' => 'invio',
             'destinatari' => 'destinatari',
             'corpo' => 'corpo'
         ),

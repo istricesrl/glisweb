@@ -71,6 +71,12 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 		// log
 		logWrite('autenticazione su Skebby effettuata con successo: ' . $auth, 'skebby');
 
+		// NOTA un destinatario singolo passato come stringa diventa un array di un elemento: senza, il foreach qui sotto
+		// e array_values() fermavano il task di invio con la riga ancora marcata dal token
+		if (! is_array($to)) {
+			$to = array($to);
+		}
+
 		// elimino da $to tutti i caratteri non numerici
 		foreach ($to as $key => $value) {
 			$to[$key] = preg_replace('/[^0-9]/', '', $value);
@@ -81,8 +87,10 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 			if (substr($value, 0, 4) == '0039') {
 				$to[$key] = '+' . substr($value, 2);
 			}
-			if (substr($value, 0, 3) != '+39') {
-				$to[$key] = '+39' . $value;
+			// NOTA il controllo va fatto sul valore appena convertito: fatto su $value, un numero scritto 0039... diventava
+			// +390039...
+			if (substr($to[$key], 0, 3) != '+39') {
+				$to[$key] = '+39' . $to[$key];
 			}
 		}
 
