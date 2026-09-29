@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 -- account_gruppi
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: mette in relazione gli account e i gruppi a cui appartengono
 -- funzioni: associa molti a molti gli account ai gruppi
 --
@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
 -- anagrafica_categorie
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: associa molti a molti le anagrafiche alle categorie
 --
 -- questa tabella contiene le associazioni molti a molti tra le anagrafiche e le categorie
@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: associa molti a molti le anagrafiche agli indirizzi
 --
 -- questa tabella contiene le associazioni molti a molti tra le anagrafiche e gli indirizzi
@@ -349,7 +349,7 @@ CREATE TABLE `articoli` (
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: collega un articolo alle sue caratteristiche
 --
 -- questa tabella collega un articolo all'albero delle caratteristiche ( caratteristiche_prodotti )
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: collega un prodotto alle sue caratteristiche
 --
 -- gemella di articoli_caratteristiche. L'indice unico e' ( id_prodotto, id_caratteristica ) e NON
@@ -2310,7 +2310,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (                       --
 -- progetti_categorie
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: tabella di relazione molti a molti tra progetti e categorie
 --
 -- questa tabella contiene la relazione molti a molti tra progetti e categorie, con le informazioni relative
@@ -2529,7 +2529,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
 -- relazioni_documenti
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: tabella di relazione molti a molti tra documenti
 --
 -- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
@@ -3887,7 +3887,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 -- contratti_anagrafica
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
--- struttura: tabella di relazione
+-- struttura: tabella base
 -- funzione: mette in relazione i contratti e le anagrafiche, con il ruolo di ciascuna
 CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id` bigint(20) NOT NULL,
