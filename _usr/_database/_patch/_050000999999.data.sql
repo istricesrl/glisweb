@@ -23,6 +23,53 @@ INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `codic
 (11,	2,	NULL,	NULL,	'istruttori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	NULL,	NULL,	NULL,	'produttori',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000004700
+
+-- certificazioni
+-- tipologia: tabella assistita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+INSERT IGNORE INTO `certificazioni` (`id`, `nome`, `se_identificazione`, `se_medico`, `se_sportivo`, `se_agonistico`, `se_immobili`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'carta di identità',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'passaporto',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'patente di guida',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'certificato medico agonistico',	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	'certificato medico sportivo',	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'tessera sanitaria',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	'certificazione energetica',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+(1, 'G', NULL, NULL, 'ff2a1a'),
+(2, 'F', NULL, NULL, 'c0504d'),
+(3, 'E', NULL, NULL, 'e46c1c'),
+(4, 'D', NULL, NULL, 'ffc02b'),
+(5, 'C', NULL, NULL, 'fef934'),
+(6, 'B', NULL, NULL, '99cc26'),
+(7, 'A1', NULL, NULL, '00cc22'),
+(8, 'A2', NULL, NULL, '009917'),
+(9, 'A3', NULL, NULL, '00660c'),
+(10, 'A4', NULL, NULL, '33660d');
+
+-- | 050000005100
+
+-- colori
+-- tipologia: tabella standard
+-- verifica: 2021-06-02 22:27 Fabio Mosti
+INSERT INTO `colori` (`id`, `id_genitore`, `nome`, `hex`, `r`, `g`, `b`, `ral`, `pantone`, `c`, `m`, `y`, `k`, `css`) VALUES
+(1,	NULL,	'rosso',	'ff0000',	255,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'bianco',	'ffffff',	255,	255,	255,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'nero',	'000000',	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'blu',	'0000ff',	0,	0,	255,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'verde',	'00ff00',	0,	255,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'traffic white',	'edede6',	237,	237,	230,	'9016',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'signal red',	'9a2926',	154,	41,	38,	'3001',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'luminous yellow',	'ffff00',	255,	255,	0,	'1026',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'carbon look',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'background-color: rgb(32, 32, 32); background-image: linear-gradient( 45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32) ); background-size: 10px 10px, 10px 10px, 10px 5px; background-position: 0px 0px, 5px 5px, 0px 0px;');
+
 -- | 050000006000
 
 -- condizioni_pagamento
@@ -32,6 +79,16 @@ INSERT IGNORE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 (1,	    'TP01',	'pagamento a rate'),
 (2,	    'TP02',	'pagamento completo'),
 (3,	    'TP03',	    'anticipo');
+
+-- | 050000006050
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT IGNORE INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'nuovo',	1,	1),
+(2,	'usato',	1,	NULL),
+(3,	'da ristrutturare',	NULL,	1);
 
 -- | 050000006200
 
@@ -60,6 +117,29 @@ INSERT IGNORE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (5,	'AU',	'Oceania'),
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
+
+-- | 050000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT IGNORE INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'disponibile',	1,	1),
+(2,	'in riassortimento',	1,	NULL),
+(3,	'nuda proprietà',	NULL,	1),
+(4,	'occupato',	NULL,	1);
+
+-- | 050000015150
+
+-- giorni
+INSERT IGNORE INTO `giorni` (`id`, `nome`) VALUES
+(1,	'lunedì'),
+(2,	'martedì'),
+(3,	'mercoledì'),
+(4,	'giovedì'),
+(5,	'venerdì'),
+(6,	'sabato'),
+(7,	'domenica');
 
 -- | 050000015200
 
@@ -201,6 +281,112 @@ INSERT IGNORE INTO `periodicita` (`id`, `nome`, `giorni`) VALUES
 (7,	'semestrale',	180),
 (8,	'annuale',	365);
 
+-- | 050000023700
+
+-- pesi_tipologie_corrispondenza
+INSERT IGNORE INTO `pesi_tipologie_corrispondenza` (`id`, `id_tipologia`, `nome`, `grammi_min`, `grammi_max`) VALUES
+(1,	1,	'PP fino a 20g',	0.00,	20.00),
+(2,	1,	'PP da 21g a 50g',	20.00,	50.00),
+(5,	1,	'PP da 51g a 100g',	50.00,	100.00),
+(6,	1,	'PP da 101g a 250g',	100.00,	250.00),
+(9,	1,	'PP da 251g a 350g',	250.00,	350.00),
+(10,	1,	'PP da 351g a 1000g',	350.00,	1000.00),
+(11,	1,	'PP da 1001g a 2000g',	1000.00,	2000.00),
+(12,	2,	'RA fino a 20 g',	0.00,	20.00),
+(13,	2,	'RA da 21g a 50g',	20.00,	50.00),
+(14,	2,	'RA da 51g a 100g',	51.00,	100.00),
+(15,	2,	'RA da 101g a 250g',	101.00,	250.00),
+(16,	2,	'RA da 251g a 350g',	251.00,	350.00),
+(17,	2,	'RA da 351g a 1000g',	350.00,	1000.00),
+(18,	2,	'RA da 1001g a 2000g',	1000.00,	2000.00),
+(19,	2,	'RA oltre 2kg',	2000.00,	0.00),
+(20,	3,	'AG fino 20g',	0.00,	20.00),
+(21,	3,	'AG da 21g a 50g',	20.00,	50.00),
+(22,	3,	'AG da 51g a 100g',	50.00,	100.00),
+(23,	3,	'AG da 101g a 250g',	100.00,	250.00),
+(24,	3,	'AG da 251g a 350g',	250.00,	350.00),
+(25,	3,	'AG da 351g a 1000g',	351.00,	1000.00),
+(27,	3,	'AG da 1001g a 2000g',	1000.00,	2000.00),
+(28,	4,	'AR fino a 20g',	0.00,	20.00),
+(29,	4,	'AR fino a 20g non standard',	0.00,	20.00),
+(30,	4,	'AR da 21g a 50g',	20.00,	50.00),
+(31,	4,	'AR da 51g a 100g',	50.00,	100.00),
+(32,	4,	'AR da 101g a 250g',	100.00,	250.00),
+(33,	4,	'AR da 251g a 350g',	250.00,	350.00),
+(34,	4,	'AR da 351g a 1000g',	350.00,	1000.00),
+(35,	4,	'AR da 1001g a 2000g',	1000.00,	2000.00),
+(36,	4,	'AR oltre 2kg',	2000.00,	0.00),
+(37,	6,	'PDL da 0 a 2Kg',	0.00,	2000.00),
+(38,	6,	'PDL da 2Kg a 5Kg',	2000.00,	5000.00),
+(39,	5,	'PDL MAAF fino a 2Kg',	0.00,	2000.00),
+(40,	5,	'PDL MAAF fino a 5Kg',	2001.00,	5000.00),
+(41,	7,	'RA fino a 20 g',	0.00,	20.00),
+(42,	7,	'RA da 21g a 50g',	20.00,	50.00),
+(43,	7,	'RA da 51g a 100g',	51.00,	100.00),
+(44,	7,	'RA da 101g a 250g',	101.00,	250.00),
+(45,	7,	'RA da 251g a 350g',	251.00,	350.00),
+(46,	7,	'RA da 351g a 1000g',	350.00,	1000.00),
+(47,	7,	'RA da 1001g a 2000g',	1000.00,	2000.00),
+(48,	7,	'RA oltre 2kg',	2000.00,	0.00),
+(56,	7,	'PDL da 0 a 2Kg',	0.00,	2000.00),
+(57,	7,	'PDL da 2Kg a 5Kg',	2000.00,	5000.00),
+(58,	8,	'CE normalizzato fino a 20g',	0.00,	20.00),
+(59,	8,	'CE compatto da 21g a 50g',	20.00,	50.00),
+(60,	8,	'CE compatto da 51g a 100g',	50.00,	100.00),
+(61,	8,	'CE compatto da 101g a 250g',	100.00,	250.00),
+(62,	8,	'CE compatto da 251g a 350g',	250.00,	350.00),
+(63,	8,	'CE voluminoso fino 350g',	0.00,	350.00),
+(64,	8,	'CE voluminoso da 351g a 1000g',	350.00,	1000.00),
+(65,	8,	'CE voluminoso da 1000g a 2000g',	1000.00,	2000.00),
+(66,	9,	'AE fino a 20g',	0.00,	20.00),
+(67,	9,	'AE da 21g a 50g',	20.00,	50.00),
+(68,	9,	'AE da 51g a 100g',	50.00,	100.00),
+(69,	9,	'AE da 101g a 250g',	100.00,	250.00),
+(70,	9,	'AE da 251g a 350g',	251.00,	350.00),
+(71,	9,	'AE da 351g a 1000g',	350.00,	1000.00),
+(72,	9,	'AE da 1000g a 2000g',	1000.00,	2000.00),
+(73,	10,	'RE fino 20g',	0.00,	20.00),
+(74,	10,	'RE da 21g a 50g',	20.00,	50.00),
+(75,	10,	'RE da 51g a 100g',	50.00,	100.00),
+(76,	10,	'RE da 101g a 250g',	100.00,	250.00),
+(77,	10,	'RE da 251g a 350g',	250.00,	350.00),
+(78,	10,	'RE da 351g a 1000g',	350.00,	1000.00),
+(79,	10,	'RE da 1001g a 2000g',	1000.00,	2000.00),
+(80,	2,	'PDL da 0 a 2Kg',	0.00,	2000.00),
+(81,	2,	'PDL da 2Kg a 5Kg',	2000.00,	5000.00),
+(82,	12,	'PP fino a 20g',	0.00,	20.00),
+(83,	12,	'PP da 21g a 50g',	20.00,	50.00),
+(84,	12,	'PP da 51g a 100g',	50.00,	100.00),
+(85,	12,	'PP da 101g a 250g',	100.00,	250.00),
+(86,	12,	'PP da 251g a 350g',	250.00,	350.00),
+(87,	12,	'PP da 351g a 1000g',	350.00,	1000.00),
+(88,	12,	'PP da 1001g a 2000g',	1000.00,	2000.00),
+(89,	11,	'fino a 100g',	0.00,	100.00),
+(90,	11,	'da 101g a 500g',	101.00,	500.00),
+(91,	11,	'da 501g a 2000g',	501.00,	2000.00),
+(92,	13,	'fino a 50g',	0.00,	50.00),
+(93,	13,	'da 51g a 100g',	51.00,	100.00),
+(94,	13,	'da 101g a 250g',	101.00,	250.00),
+(95,	13,	'da 251g fino a 350g',	251.00,	350.00),
+(96,	13,	'fino a 350g',	0.00,	350.00),
+(97,	13,	'da 351g a 1000g',	351.00,	1000.00),
+(98,	13,	'da 1001g a 2000g',	1001.00,	2000.00),
+(99,	14,	'fino a 20g',	0.00,	20.00),
+(100,	14,	'fino a 50g',	0.00,	50.00),
+(101,	14,	'da 51g a 100g',	51.00,	100.00),
+(102,	14,	'da 101g a 250g',	101.00,	250.00),
+(103,	14,	'da 251g fino a 350g',	251.00,	350.00),
+(104,	14,	'fino a 350g',	0.00,	350.00),
+(105,	14,	'da 351g a 1000g',	351.00,	1000.00),
+(106,	14,	'da 1001g a 2000g',	1001.00,	2000.00),
+(107,	15,	'RE fino 20g',	0.00,	20.00),
+(108,	15,	'RE da 21g a 50g',	20.00,	50.00),
+(109,	15,	'RE da 51g a 100g',	50.00,	100.00),
+(110,	15,	'RE da 101g a 250g',	100.00,	250.00),
+(111,	15,	'RE da 251g a 350g',	250.00,	350.00),
+(112,	15,	'RE da 351g a 1000g',	350.00,	1000.00),
+(113,	15,	'RE da 1001g a 2000g',	1000.00,	2000.00);
+
 -- | 050000028600
 
 -- ranking
@@ -304,6 +490,17 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (42,	NULL,	'revisore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (43,	NULL,	'editore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000034100
+
+-- ruoli_articoli
+INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_risorse`, `se_acquisto`, `se_rinnovo`) VALUES
+(1,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'principale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'suggerito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'accessorio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'consumabile',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'bundle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000034200
 
 -- ruoli_audio
@@ -371,6 +568,15 @@ INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
+-- | 050000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:45 Fabio Mosti
+INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	'attrezzatura',	    '',	    ''),
+(2,	'prodotto',	    '',	    '');
+
 -- | 050000035000
 
 -- ruoli_prodotti
@@ -381,6 +587,16 @@ INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_
 (4,	NULL,	'accessorio',	NULL,	NULL),
 (5,	NULL,	'consumabile',	NULL,	NULL),
 (6,	NULL,	'bundle',	NULL,	NULL);
+
+-- | 050000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`) VALUES
+(1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 -- | 050000035200
 
@@ -408,6 +624,15 @@ INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`
 (3,     2,      '01.1',       'COLTIVAZIONE DI COLTURE AGRICOLE NON PERMANENTI',                                      'colture non permanenti'),
 (4,     2,      '01.11',      'Coltivazione di cereali (escluso il riso), legumi da granella e semi oleosi',          'coltivazione di cereali, legumi e semi'),
 (5,     4,      '01.11.1',    'Coltivazione di cereali (escluso il riso)',                                            'coltivazione di cereali');
+
+-- | 050000042200
+
+-- stati_lingue
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 15:42 Fabio Mosti
+INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`, `ordine`) VALUES
+(1,	1,	1,	1),
+(2,	12,	4,	1);
 
 -- | 050000050000
 
@@ -471,6 +696,13 @@ INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 (42,	41,	    NULL,	NULL,	'lettura',	                                    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,   NULL),
 (43,	NULL,	NULL,	NULL,	'download file',	                            NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000050450
+
+-- tipologie_badge
+INSERT IGNORE INTO `tipologie_badge` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'tesserini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'token di accesso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000050700
 
 -- tipologie_colli
@@ -488,6 +720,49 @@ INSERT IGNORE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, 
 (3,	NULL,	NULL,	'mail',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	NULL,	NULL,	'form web',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	'chat',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000051000
+
+-- tipologie_corrispondenza
+INSERT INTO `tipologie_corrispondenza` (`id`, `id_genitore`, `nome`, `se_massivo`, `se_corrispondenza`, `se_pesata`, `se_atto`, `se_ricevuta_ritorno`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	'Posta Prioritaria PRO',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'Raccomandate PRO / RACCOMANDATA MARKET - NO ATT.',	0,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'Atti giudiziari',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'Assicurate retail / ASSICURATA MARKET',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'Pieghi di libri MAAF',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'Pieghi di libri',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'Raccomandate A/R / RACCOMANDATA MARKET CON ATTESTAZIONE DI CONSEGNA',	0,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'Corrispondenza estera',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'Assicurate estere',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'Raccomandate estere',	0,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'Posta 1 PRO',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'Posta 4 PRO / POSTA CONTEST 4 (ORDINARIA)',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'Posta Priority Internazionale',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'Posta Mail Internazionale',	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'Posta Raccomandata internazionale',	0,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	NULL,	'MINI BOX (ORDINARIA ESTERO) ZONA 1',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	NULL,	'MINI BOX (ORDINARIA ESTERO) ZONA 2',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	NULL,	'MINI BOX (ORDINARIA ESTERO) ZONA 3',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(52,	NULL,	'accesso atti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(53,	NULL,	'accesso atti - contratto cimiteriale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(54,	NULL,	'accesso atti - edilizia',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(55,	NULL,	'accesso atti - polizia',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(56,	NULL,	'atto Corte d\'Appello',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(57,	NULL,	'autorizzazione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(58,	NULL,	'autorizzazione - ambiente',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(59,	NULL,	'autorizzazione - edilizia',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(60,	NULL,	'attestazione - idoneità dell\'alloggio',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(61,	NULL,	'autorizzazione - occupazione suolo',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(62,	NULL,	'assenti (Art. 140) - cartelle esattoriali',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(63,	NULL,	'irreperibili (Art. 60) - EQUITALIA (vecchi)',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(64,	NULL,	'certificato destinazione urbanistica',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(65,	NULL,	'atti notificati (Art. 140)',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(66,	NULL,	'ATTI SPORTELLO EDILIZIA',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(67,	NULL,	'Irreperibili (Art.143) - atti amministrativi',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(68,	NULL,	'irreperibili (Art. 60) - AGENZIA ENTRATE',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(69,	NULL,	'attestazione - regolarità soggiorno',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(70,	NULL,	'assenti (Art. 140) - AGENZIA ENTRATE',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(71,	NULL,	'irreperibili (Art. 60) - cartelle esattoriali',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000052600
 
@@ -537,6 +812,32 @@ INSERT IGNORE INTO `tipologie_documenti_articoli` (`id`, `id_genitore`, `ordine`
 (1,	NULL,	1,	'raggruppamento a sommare',	'somma',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	2,	'raggruppamento in alternativa',	'alt.',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000052800
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT IGNORE INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
+(1, NULL, 'palazzo'),
+(2, NULL, 'palazzo storico'),
+(3, NULL, 'palazzina'),
+(4, NULL, 'complesso'),
+(5, NULL, 'residence'),
+(6, NULL, 'edificio indipendente');
+
+-- | 050000052900
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT IGNORE INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
+(1, 'appartamento', 1, NULL),
+(3, 'abitazione', 1, NULL),
+(6, 'garage', 1, NULL),
+(7, 'magazzino', 1, 1),
+(8, 'ufficio', NULL, 1),
+(9, 'negozio', NULL, 1);
+
 -- | 050000053000
 
 -- tipologie_indirizzi
@@ -583,6 +884,30 @@ INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`,
 (40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000053300
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+INSERT IGNORE INTO `tipologie_luoghi` (`id`, `nome`) VALUES
+(1, 'teatro'),
+(2, 'palestra'),
+(3, 'piscina'),
+(4, 'sala'),
+(5, 'aula'),
+(6, 'online');
+
+-- | 050000053400
+
+-- tipologie_mastri
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `se_credito`,`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'crediti',	NULL,	NULL,	NULL,	NULL,	NULL,	1, NULL,	NULL,	NULL,	NULL);
+
 -- | 050000053700
 
 -- tipologie_mail_status
@@ -604,6 +929,18 @@ INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `
 (1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'blog post',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'articolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000054100
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+INSERT INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_corsi`, `se_tesseramenti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	NULL,	'feste',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	'anno sportivo',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	NULL,	'sospensione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000054600
 
@@ -640,6 +977,14 @@ INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `no
 (2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'in evidenza',	    NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000055800
+
+-- tipologie_risorse
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT IGNORE INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000056200
 
 -- tipologie_telefoni
@@ -668,6 +1013,15 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 (13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000056950
+
+-- tipologie_zone
+-- tipologia: tabella assistita
+INSERT INTO `tipologie_zone` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_ecommerce`, `se_commerciale`, `se_immobiliare`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'e-commerce',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'immobiliare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000062000
 
@@ -717,5 +1071,11 @@ INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note
 -- valute
 INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
 (1,	'EUR',	'&#8634;',	'€');
+
+-- | 050000100000
+
+-- zone
+INSERT INTO `zone` (`id`, `id_genitore`, `id_tipologia`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	1,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | FINE FILE

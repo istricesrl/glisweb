@@ -11,7 +11,8 @@
 -- potrebbe non avere; chiave primaria, indici e AUTO_INCREMENT solo dove la tabella non ha una chiave
 -- primaria e non ha doppioni, con la stessa guardia di _202609291500.chiavi.primarie.sql ( dove ci sono
 -- doppioni non fa niente e lo dice ); le funzioni *_path dei ruoli dei mastri, delle zone e delle loro
--- tipologie; le viste. Di proposito niente chiavi esterne, come per le altre tabelle ripristinate.
+-- tipologie; le viste. Le chiavi esterne stanno nei file di base ( _060000999999.constraints.sql ): sui deploy
+-- vecchi ci sono gia', e su quelli dove le tabelle nascono qui arrivano col confronto di _database.rebuild.check.sh.
 --
 -- I marcatori saltano i minuti oltre il 59 perche' restino orari validi.
 --
@@ -22,8 +23,8 @@
 -- distinta
 CREATE TABLE IF NOT EXISTS `distinta` (
   `id` bigint(20) NOT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
-  `id_componente` char(32) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
+  `id_componente` bigint(20) DEFAULT NULL,
   `quantita` decimal(16,5) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -53,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
   `id_tipologia` bigint(20) DEFAULT NULL,
   `id_zona` bigint(20) DEFAULT NULL,
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
   `lotto_spedizione` int(11) DEFAULT NULL,
   `importo_netto` int(11) DEFAULT NULL,
   `id_valuta` bigint(20) DEFAULT NULL,
@@ -72,10 +73,10 @@ CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
 -- relazioni_prodotti
 CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
   `id` bigint(20) NOT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
   `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_prodotto_collegato` char(32) DEFAULT NULL,
-  `id_articolo_collegato` char(32) DEFAULT NULL,
+  `id_prodotto_collegato` bigint(20) DEFAULT NULL,
+  `id_articolo_collegato` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -127,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `sconti` (
 CREATE TABLE IF NOT EXISTS `sconti_articoli` (
   `id` bigint(20) NOT NULL,
   `id_sconto` bigint(20) DEFAULT NULL,
-  `id_articolo` char(32) NULL,
+  `id_articolo` bigint(20) NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -153,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `sconti_listini` (
 CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
   `id` int NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char NULL,
+  `nome` char(64) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
