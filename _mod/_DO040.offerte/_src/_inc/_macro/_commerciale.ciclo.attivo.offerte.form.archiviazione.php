@@ -12,11 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'attivita';
-
-    // tendina tipologie attivita
-    $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
+    $ct['form']['table'] = 'documenti';
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.form.php';
-

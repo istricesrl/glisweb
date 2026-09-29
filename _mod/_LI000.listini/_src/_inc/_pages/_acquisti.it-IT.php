@@ -85,7 +85,34 @@
             'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.form.php' ),
             'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
             'etc'                => array( 'tabs'    => array(    'acquisti.listini.acquisto.form',
+                                                                'acquisti.listini.acquisto.form.archiviazione',
                                                                 'acquisti.listini.acquisto.form.tools' ) )
+        );
+
+        // acquisti listini acquisto form archiviazione
+        $p['acquisti.listini.acquisto.form.archiviazione'] = array(
+            'sitemap'            => false,
+            'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+            'title'                => array( $l        => 'archiviazione acquisti listini acquisto form' ),
+            'h1'                => array( $l        => 'archiviazione' ),
+            'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
+            'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'acquisti.listini.acquisto.form.archiviazione.twig' ),
+            'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.form.archiviazione.php' ),
+            'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+            'etc'                => array( 'tabs'    => 'acquisti.listini.acquisto.form' )
+        );
+
+        // tools listini acquisto form
+        $p['acquisti.listini.acquisto.form.tools'] = array(
+            'sitemap'            => false,
+            'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+            'title'                => array( $l        => 'azioni acquisti listini acquisto form' ),
+            'h1'                => array( $l        => 'azioni' ),
+            'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
+            'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+            'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.form.tools.php' ),
+            'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+            'etc'                => array( 'tabs'    => 'acquisti.listini.acquisto.form' )
         );
 
     }

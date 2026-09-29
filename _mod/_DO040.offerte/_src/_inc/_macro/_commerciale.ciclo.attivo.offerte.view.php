@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro listini acquisto view
+     * macro della view delle offerte
      * 
      * 
      * 
@@ -23,37 +23,53 @@
      * 
      */
 
+    // tipologie di documento che sono offerte ( le stesse della tendina della scheda )
+    $ct['etc']['tipologie_offerte'] = mysqlSelectColumn(
+        'id',
+        $cf['mysql']['connection'],
+        'SELECT id FROM tipologie_documenti WHERE se_offerta = 1'
+    );
+
     // informazioni della vista
     $ct['view'] = array(
-        'table' => 'listini',
+        'table' => 'documenti',
         'open' => array(
-            'page' => 'acquisti.listini.acquisto.form',
-            'table' => 'listini'
+            'page' => 'commerciale.ciclo.attivo.offerte.form',
+            'table' => 'documenti'
         ),
         'cols' => array(
             'id' => '#',
-            '__label__' => 'listino',
+            'codice' => 'codice',
+            'tipologia' => 'tipologia',
+            'data' => 'data',
+            'numero_sezionale' => 'numero',
+            'nome' => 'documento',
+            'emittente' => 'emittente',
+            'destinatario' => 'destinatario',
+            '__label__' => 'documento',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
-            '__label__' => 'no-wrap text-start',
+            'codice' => 'no-wrap',
+            'tipologia' => 'no-wrap text-start',
+            'data' => 'no-wrap',
+            'numero_sezionale' => 'no-wrap',
+            'nome' => 'text-start',
+            '__label__' => 'd-none',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array('NL' => true),
-            'id_emittente' => array( 'NN' => true, 'NI' => implode( '|', array_column( tendinaAziendeGestite() ?: array(), 'id' ) ) )
+            'data_archiviazione' => array( 'NL' => true ),
+            'id_tipologia' => array( 'IN' => implode( '|', $ct['etc']['tipologie_offerte'] ) )
         ),
         '__sort__' => array(
-            '__label__' => 'ASC'
+            'data' => 'DESC'
         ),
     );
-
-    // debug
-    // die( print_r( $ct['view'], true ) );
 
     /**
      * configurazione della pagina
@@ -72,9 +88,6 @@
      * 
      * 
      */
-
-
-
 
     /**
      * macro di default
@@ -97,14 +110,13 @@
      */
 
     // elaborazione righe
-    if(is_array($ct['view']['data'])){
-        foreach ($ct['view']['data'] as &$row) {
-            if (is_array($row)) {
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
 
-                $buttons = [];
+            $buttons = [];
 
-                $row[NULL] = implode($buttons);
+            $row[ NULL ] = implode( $buttons );
 
-            }
         }
+
     }

@@ -33,6 +33,9 @@ dashboard con la sua linguetta **azioni**, dove sono previsti i gruppi esportazi
 elaborazioni e viste statiche. Sono i posti pensati per le maschere che guardano la vendita dal lato
 del cliente e l'acquisto dal lato del fornitore.
 
+Sotto il **ciclo attivo** il modulo offerte aggiunge la voce **offerte**: l'elenco delle offerte ai clienti,
+con le loro righe e la scheda di ciascuna. È descritta nel capitolo di quel modulo.
+
 ## l'archivio del commerciale
 <!-- @pubblico: amministratore -->
 <!-- @pagina: commerciale.archivio -->
@@ -40,12 +43,12 @@ del cliente e l'acquisto dal lato del fornitore.
 È l'ultima voce dell'area, ed è il posto riservato agli elenchi di servizio. Ha due linguette,
 **archivio** e **azioni**, con gli stessi gruppi di riquadri dei due cicli.
 
-> **nota** — nello standard **nessun modulo aggiunge ancora voci** al commerciale: la dashboard, i
-> due cicli, l'archivio e le loro azioni ci sono, ma sono vuoti e mostrano solo il pulsante per
-> tornare indietro. Si riempiono con i moduli che li usano o con le personalizzazioni
+> **nota** — a parte le offerte, nello standard nessun modulo aggiunge ancora voci al commerciale: la
+> dashboard, il ciclo passivo, l'archivio e le azioni ci sono, ma sono vuoti e mostrano solo il pulsante
+> per tornare indietro. Si riempiono con i moduli che li usano o con le personalizzazioni
 > dell'installazione.
 
 ## quello che questo capitolo non dice ancora
 
-- quali moduli occuperanno il ciclo attivo e il ciclo passivo, e con quali maschere;
+- quali altri moduli occuperanno il ciclo attivo e il ciclo passivo, e con quali maschere;
 - i riquadri che una personalizzazione tipica mette nella dashboard e nelle stampe dell'area.

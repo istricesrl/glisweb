@@ -22,8 +22,8 @@
 	 * pagina                         					| genitore              					| descrizione
 	 * -------------------------------------------------|-------------------------------------------|---------------------
 	 * amministrazione.archivio.reparti.view 			| amministrazione.archivio      			| vista reparti
-	 * amministrazione.archivio.reparti.form 			| amministrazione.archivio      			| form reparti
-	 * amministrazione.archivio.reparti.form.tools 		| amministrazione.archivio     				| tools form reparti
+	 * amministrazione.archivio.reparti.form 			| amministrazione.archivio.reparti.view		| form reparti
+	 * amministrazione.archivio.reparti.form.tools 		| amministrazione.archivio.reparti.view		| tools form reparti
 	 * 
 	 * Infine il modulo prevede le pagine per la gestione dei cicli attivo e passivo:
 	 * 
@@ -120,13 +120,12 @@
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione reparto' ),
 	    'h1'				=> array( $l		=> 'gestione' ),
-	    'parent'			=> array( 'id'		=> 'amministrazione.archivio' ),
-	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.form.twig' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.archivio.reparti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.reparti.form.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> array(
-														'amministrazione.archivio.reparti.form'
-		) )
+	    'etc'				=> array( 'tabs'	=> array(	'amministrazione.archivio.reparti.form',
+														'amministrazione.archivio.reparti.form.tools' ) )
 	);
 
 	// tools della gestione reparto
@@ -135,7 +134,7 @@
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 	    'title'				=> array( $l		=> 'azioni gestione reparto' ),
 	    'h1'				=> array( $l		=> 'azioni' ),
-	    'parent'			=> array( 'id'		=> 'amministrazione.archivio' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.archivio.reparti.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.form.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),

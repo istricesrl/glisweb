@@ -32,13 +32,7 @@
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-#        'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.view',
-#                                                            'amministrazione.archivio.documenti.articoli.view',
-#                                                            'amministrazione.archivio.documenti.pagamenti.view',
-#                                                            'amministrazione.archivio.documenti.tools' ) ),
-        'etc'                => array( 'tabs'    => 'amministrazione.archivio' ),
-#        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'documenti' ),
-#                                                                            'priority'    => '600' ) ) )
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio' )
     );
 
     // tools archivio amministrazione

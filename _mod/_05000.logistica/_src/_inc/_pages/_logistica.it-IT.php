@@ -74,7 +74,6 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_logistica.archivio.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'logistica.archivio',
-														// 'logistica.archivio.reparti.view',
 														'logistica.archivio.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),

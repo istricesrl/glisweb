@@ -11,6 +11,17 @@
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.php
 Questa è la macro dell'archivio dell'amministrazione.
 
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.reparti.form.php
+Questa è la macro della scheda di un reparto ( `amministrazione.archivio.reparti.form` ): gestisce la
+tabella `reparti` e prepara le tendine `iva` ( da `iva_view` ) e `settori` ( da `settori_view` ), poi
+passa a `_default.form.php`. Il template è `amministrazione.archivio.reparti.form.twig`; accanto alla
+scheda c'è la linguetta `amministrazione.archivio.reparti.form.tools`, e tutt'e due hanno per genitore
+la vista `amministrazione.archivio.reparti.view`, come le altre schede di tabelle semplici.
+
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.reparti.form.tools.php
+Questa è la macro della linguetta azioni della scheda di un reparto: gruppi esportazioni,
+importazioni, elaborazioni e viste statiche, vuoti nello standard.
+
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.reparti.view.php
 Questa è la macro della pagina di vista dell'archivio reparti.
 
@@ -40,3 +51,6 @@ Questa è la macro della pagina degli strumenti della dashboard dell'amministraz
 
 ### /_mod/_06000.amministrazione/_src/_inc/_pages/_amministrazione.it-IT.php
 Qui vengono definite le pagine del modulo amministrazione.
+
+### /_mod/_06000.amministrazione/_src/_tpl/_athena/amministrazione.archivio.reparti.form.twig
+Template della scheda di un reparto: nome, aliquota IVA e settore, poi le note.

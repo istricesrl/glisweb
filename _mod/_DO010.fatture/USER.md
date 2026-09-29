@@ -22,10 +22,11 @@ documenti: codice, tipologia, data, numero e sezionale, nome, emittente, destina
 | archiviate | le fatture archiviate |
 | azioni | per ora **senza riquadri** |
 
-> **attenzione** — l'elenco mostra le sole tipologie **fattura** e **fattura accompagnatoria**,
-> mentre la tendina della scheda propone tutti i tipi di fattura ( acconti, integrazioni… ). Una
-> fattura d'acconto salvata da qui **non ricompare** in questo elenco: la si ritrova nell'archivio
-> dei documenti.
+L'elenco mostra tutti i documenti la cui tipologia è un tipo di **fattura** — la fattura, la
+fattura accompagnatoria, gli acconti, le integrazioni, le parcelle, le note di debito… — cioè gli
+stessi tipi che propone la tendina della scheda: una fattura salvata da qui ricompare sempre qui.
+Le linguette **righe** e **pagamenti** seguono lo stesso criterio, sulla tipologia del documento a
+cui la riga o il pagamento appartengono.
 
 ## la scheda di una fattura
 <!-- @pubblico: operatore, amministratore -->
@@ -56,16 +57,13 @@ le tendine delle **sedi** si riempiono dopo aver scelto il contatto e salvato.
 Se l'installazione gestisce le pianificazioni, compare anche la linguetta **pianificazioni**, per le
 fatture che si ripetono — un canone, un abbonamento.
 
-> **attenzione** — nelle linguette **righe** e **pagamenti**, sia della scheda sia dell'elenco, il
-> clic su una riga e il più per aggiungerne una portano a pagine che l'applicazione **non ha**.
-> Finché non viene sistemato, righe e pagamenti di una fattura si inseriscono e si correggono
-> dall'archivio dei **documenti**, nell'area *amministrazione*, dove la stessa fattura si apre con
-> tutte le sue linguette funzionanti.
+Nelle linguette **righe** e **pagamenti**, sia della scheda sia dell'elenco, il clic su una riga e
+il più per aggiungerne una aprono la **scheda della riga** e la **scheda del pagamento** dei
+documenti, descritte nel capitolo di quel modulo: righe e pagamenti di una fattura sono quelli di un
+documento qualsiasi, e si gestiscono con le stesse maschere.
 
 ## quello che questo capitolo non dice ancora
 
 - le fatture **ricevute**, del ciclo passivo, che questo modulo non mostra;
-- quali righe e quali pagamenti compaiono nelle linguette **righe** e **pagamenti** dell'elenco, che
-  sono filtrate con un criterio da verificare;
 - la **numerazione** delle fatture e i sezionali;
 - le **stampe** della fattura, quando saranno configurate.

@@ -91,10 +91,9 @@ guardano le attività da due lati diversi:
 Gli inserimenti rapidi aprono un riquadro sopra l'elenco e registrano l'attività senza lasciare la
 scheda del contatto: la data è già impostata a oggi, e il contatto da cui si parte è già collegato.
 
-> **attenzione** — nelle linguette *attività* e *lavoro* della scheda di un contatto, il clic su una
-> riga dovrebbe aprire la scheda dell'attività, ma porta a una pagina che l'applicazione **non
-> ha**. Finché non viene sistemato, per correggere un'attività registrata da lì la si cerca
-> nell'elenco delle attività, nell'area *produzione*.
+Il clic su una riga delle due linguette apre la **scheda dell'attività**, la stessa che si apre
+dall'elenco dell'area *produzione* e descritta più sopra; il pulsante per tornare indietro riporta
+alla scheda del contatto.
 
 ## archiviare le attività
 <!-- @pubblico: amministratore -->

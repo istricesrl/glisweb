@@ -11,8 +11,12 @@
      * 
      */
 
-    // tabella gestita
-    $ct['form']['table'] = 'documenti';
+    // tipologie di documento che sono offerte ( le stesse della tendina della scheda )
+    $ct['etc']['tipologie_offerte'] = mysqlSelectColumn(
+        'id',
+        $cf['mysql']['connection'],
+        'SELECT id FROM tipologie_documenti WHERE se_offerta = 1'
+    );
 
     // informazioni della vista
     $ct['view'] = array(
@@ -20,17 +24,12 @@
         'open' => array(
             'page' => 'amministrazione.archivio.documenti.articoli.form',
             'table' => 'documenti_articoli',
-            'preset' => array(
-                'field' => 'id_documento',
-            )
-        ),
-        'insert' => array(
-            'page' => 'amministrazione.archivio.documenti.articoli.form',
-            'table' => 'documenti_articoli',
         ),
         'cols' => array(
             'id' => '#',
             'codice' => 'codice',
+            'tipologia' => 'tipologia',
+            'documento' => 'documento',
             'nome' => 'descrizione',
             '__label__' => 'documento',
             NULL => 'azioni'
@@ -38,6 +37,8 @@
         'class' => array(
             'id' => 'd-none',
             'codice' => 'no-wrap',
+            'tipologia' => 'no-wrap text-start',
+            'documento' => 'no-wrap text-start',
             'nome' => 'text-start',
             '__label__' => 'd-none',
             NULL => 'no-wrap'
@@ -46,7 +47,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'id_documento' => array( 'EQ' => $_REQUEST['documenti']['id'] )
+            'data_archiviazione' => array( 'NL' => true ),
+            'id_tipologia' => array( 'IN' => implode( '|', $ct['etc']['tipologie_offerte'] ) )
         ),
         '__sort__' => array(
             'id' => 'DESC'
@@ -55,6 +57,3 @@
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.view.php';
-
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default/_default.form.php';

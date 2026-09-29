@@ -16,12 +16,6 @@
     // modulo di questo file
     $m = DIR_MOD . '_AT000.attivita/';
 
-    /* RELAZIONI CON IL MODULO PRODUZIONE
-    if( in_array( "01000.produzione", $cf['mods']['active']['array'] ) ) {
-        arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.attivita' );
-        arrayInsertSeq( 'produzione.attivita', $p['produzione']['etc']['tabs'], 'produzione.tipologie.attivita' );
-    }*/
-
     // tools archivio produzione
     $p['produzione.attivita.view'] = array(
         'sitemap'            => false,
@@ -64,20 +58,6 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
     );
-
-    // produzione attivita view stampe
-    $p['produzione.attivita.stampe'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'produzione attivita stampe' ),
-        'h1'                => array( $l        => 'stampe' ),
-        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.stampe.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
-    );
-
 
     // tools archivio produzione
     $p['produzione.attivita.view.archiviate'] = array(
@@ -148,18 +128,6 @@
         'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'produzione.attivita.form' )
-    );
-
-    // tools archivio produzione
-    $p['produzione.tipologie.attivita.view'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'produzione tipologie attivita' ),
-        'h1'                => array( $l        => 'tipologie attivita' ),
-        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
     );
 
     // tools archivio produzione

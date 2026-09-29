@@ -103,6 +103,7 @@
                 'GESTIONE_IMPORT',
                 'GESTIONE_ANAGRAFICA',
                 'GESTIONE_DOCUMENTI',
+                'GESTIONE_ATTIVITA',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
                 'GESTIONE_PIANIFICAZIONI',
@@ -118,6 +119,7 @@
                 'GESTIONE_CACHE',
                 'GESTIONE_ANAGRAFICA',
                 'GESTIONE_DOCUMENTI',
+                'GESTIONE_ATTIVITA',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
                 'GESTIONE_PIANIFICAZIONI',
@@ -199,6 +201,10 @@
         'GESTIONE_DOCUMENTI' => array(
             'id' => NULL,
             'nome' => 'eseguire i task sui documenti contabili'
+        ),
+        'GESTIONE_ATTIVITA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sulle attivita\''
         ),
         'GESTIONE_CONTRATTI' => array(
             'id' => NULL,

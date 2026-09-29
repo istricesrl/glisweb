@@ -80,9 +80,26 @@ lavoro di tutti i giorni si fa dalle voci dei due cicli.
 La linguetta **reparti** elenca i reparti a cui si possono riferire i prezzi, uno per riga col suo
 nome, in ordine alfabetico inverso.
 
-> **attenzione** — nello standard la **scheda di un reparto non si apre**: il clic su una riga porta
-> a una pagina dichiarata ma priva della maschera che dovrebbe mostrarla. Finché non viene
-> sistemata, i reparti si consultano da questo elenco ma non si creano né si modificano da qui.
+#### la scheda di un reparto
+<!-- @pubblico: amministratore -->
+<!-- @pagina: amministrazione.archivio.reparti.form -->
+
+Il clic su una riga dell'elenco, o il pulsante per aggiungerne uno, apre la scheda del reparto, con
+due linguette:
+
+| linguetta | cosa contiene |
+|---|---|
+| gestione | i dati del reparto |
+| azioni | le operazioni sul reparto, divise in esportazioni, importazioni, elaborazioni e viste statiche; nello standard sono vuote |
+
+Nella linguetta **gestione** si compilano:
+
+| campo | cosa indica |
+|---|---|
+| nome | il nome del reparto, obbligatorio |
+| IVA | l'aliquota IVA del reparto, obbligatoria |
+| settore | il settore di attività a cui il reparto appartiene, facoltativo |
+| note | appunti liberi |
 
 ## quello che questo capitolo non dice ancora
 

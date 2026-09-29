@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro anagrafica view
+     * macro della view delle offerte archiviate
      * 
      * 
      * 
@@ -23,38 +23,39 @@
      * 
      */
 
+    // tipologie di documento che sono offerte ( le stesse della tendina della scheda )
+    $ct['etc']['tipologie_offerte'] = mysqlSelectColumn(
+        'id',
+        $cf['mysql']['connection'],
+        'SELECT id FROM tipologie_documenti WHERE se_offerta = 1'
+    );
+
     // informazioni della vista
     $ct['view'] = array(
-        'table' => 'attivita',
+        'table' => 'documenti',
         'open' => array(
-            'page' => 'produzione.attivita.form',
-            'table' => 'attivita'
+            'page' => 'commerciale.ciclo.attivo.offerte.form',
+            'table' => 'documenti'
         ),
         'cols' => array(
             'id' => '#',
             'codice' => 'codice',
             'tipologia' => 'tipologia',
-            'data_riferimento' => 'data',
-            'ora_inizio_riferimento' => 'inizio',
-            'ora_fine_riferimento' => 'fine',
-            'anagrafica_riferimento' => 'riferimento',
-            'cliente' => 'cliente',
-            'nome' => 'attività',
-            'ore' => 'ore',
-            '__label__' => 'attività',
+            'data' => 'data',
+            'numero_sezionale' => 'numero',
+            'nome' => 'documento',
+            'emittente' => 'emittente',
+            'destinatario' => 'destinatario',
+            '__label__' => 'documento',
             NULL => 'azioni'
         ),
         'class' => array(
             'id' => 'd-none',
-            'data_riferimento' => 'no-wrap',
-            'anagrafica_riferimento' => 'no-wrap',
-            'cliente' => 'no-wrap',
-            'ora_inizio_riferimento' => 'no-wrap',
-            'ora_fine_riferimento' => 'no-wrap',
-            'nome' => 'no-wrap text-start',
-            'tipologia' => 'no-wrap',
             'codice' => 'no-wrap',
-            'ore' => 'no-wrap',
+            'tipologia' => 'no-wrap text-start',
+            'data' => 'no-wrap',
+            'numero_sezionale' => 'no-wrap',
+            'nome' => 'text-start',
             '__label__' => 'd-none',
             NULL => 'no-wrap'
         ),
@@ -62,10 +63,11 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NL' => true )
+            'data_archiviazione' => array( 'NN' => true ),
+            'id_tipologia' => array( 'IN' => implode( '|', $ct['etc']['tipologie_offerte'] ) )
         ),
         '__sort__' => array(
-            'data_riferimento' => 'DESC'
+            'data' => 'DESC'
         ),
     );
 

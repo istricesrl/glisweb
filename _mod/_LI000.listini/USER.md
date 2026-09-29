@@ -9,8 +9,11 @@ Lo stesso oggetto compare in **due aree del menu**, secondo chi lo emette:
 
 | dove | quali listini | a cosa servono |
 |---|---|---|
-| catalogo → listini | quelli emessi da una delle aziende che l'installazione gestisce | i prezzi a cui si **vende** |
+| catalogo → listini | quelli emessi da una delle aziende che l'installazione gestisce, e quelli senza emittente | i prezzi a cui si **vende** |
 | acquisti → listini | quelli emessi da chiunque altro | i prezzi a cui si **compra** dai fornitori |
+
+Ogni listino sta quindi in uno solo dei due elenchi, e a deciderlo è il campo **emittente** della
+scheda.
 
 La voce compare in un'area solo se quell'area c'è. Tutte le pagine del modulo sono aperte a chi
 appartiene allo **staff** o agli **amministratori**.
@@ -37,14 +40,10 @@ La linguetta *gestione* ha un solo riquadro, **dati generali**:
 | codice | un codice breve del listino |
 | nome | il nome con cui il listino compare nelle tendine e negli elenchi |
 | valuta | la valuta in cui sono espressi i prezzi |
+| emittente | l'azienda gestita che emette il listino; la tendina propone solo le aziende gestite, e si può lasciare vuota |
 | note | annotazioni libere |
 
 Le altre linguette della scheda sono **archiviazione**, **stampe** e **azioni**.
-
-> **attenzione** — la scheda **non ha un campo per l'emittente**, che è proprio il dato che decide
-> se un listino è di vendita o di acquisto. Un listino creato da qui e rimasto senza emittente non
-> compare **né** fra quelli di vendita **né** fra quelli di acquisto: esiste, ma nessuno dei due
-> elenchi lo mostra.
 
 ## i listini di acquisto
 <!-- @pubblico: operatore, amministratore -->
@@ -54,9 +53,17 @@ Le altre linguette della scheda sono **archiviazione**, **stampe** e **azioni**.
 un'azienda gestita, cioè di norma da un fornitore. Le linguette sono le stesse — **archiviati**,
 **stampe** e **azioni**.
 
-> **nota** — la scheda di un listino di acquisto è **dichiarata ma non c'è**: un clic su una riga
-> di questo elenco porta a una pagina che non si compone. Nel frattempo i listini di acquisto si
-> vedono qui ma non si modificano da qui.
+### la scheda di un listino di acquisto
+<!-- @pubblico: operatore, amministratore -->
+<!-- @pagina: acquisti.listini.acquisto.form -->
+
+Un clic su una riga, o il più, apre la scheda del listino di acquisto. Ha gli stessi campi della
+scheda di vendita, con una differenza: l'**emittente** è **obbligatorio** e si cerca in tutta
+l'anagrafica scrivendone il nome, perché è il fornitore che ha emesso il listino. Le linguette sono
+**gestione**, **archiviazione** e **azioni**.
+
+> **attenzione** — se come emittente si sceglie una delle aziende gestite, il listino diventa di
+> vendita: salvato, sparisce da questo elenco e si ritrova fra i listini del catalogo.
 
 ## archiviare un listino
 <!-- @pubblico: operatore, amministratore -->
@@ -66,9 +73,10 @@ Un listino che non si usa più **si archivia**: nella linguetta *archiviazione* 
 compila la **data** e, se serve, le **note** che spiegano perché. Da quel momento esce dall'elenco
 ordinario e passa nella linguetta *archiviati*, e i prezzi che conteneva restano leggibili.
 
-> **nota** — le due linguette *archiviati*, quella del catalogo e quella degli acquisti, mostrano
-> **tutti** i listini archiviati, di vendita e di acquisto insieme: la separazione fra i due vale
-> solo per i listini attivi. Un clic su una riga apre sempre la scheda del listino di vendita.
+Le due linguette *archiviati*, quella del catalogo e quella degli acquisti, separano i listini
+archiviati con lo stesso criterio degli elenchi ordinari, e un clic su una riga apre la scheda del
+listino dal lato giusto: di vendita dal catalogo, di acquisto dagli acquisti. Un listino di acquisto
+si archivia dalla linguetta *archiviazione* della sua scheda, come uno di vendita.
 
 ## stampe e azioni
 <!-- @pubblico: operatore, amministratore -->
@@ -85,5 +93,4 @@ pagine di riquadri ( vedi il capitolo *la pagina strumenti* ): le stampe prevedo
 - a cosa serve il **genitore** di un listino nel calcolo dei prezzi, e come si comportano i prezzi
   di un listino derivato rispetto a quelli del listino da cui deriva;
 - le **tipologie** di listino: dove si configurano e che effetto hanno;
-- come si **assegna un listino a un cliente**, che è materia dell'anagrafica e dei documenti;
-- come si registra l'**emittente** di un listino finché la scheda non ha il campo.
+- come si **assegna un listino a un cliente**, che è materia dell'anagrafica e dei documenti.

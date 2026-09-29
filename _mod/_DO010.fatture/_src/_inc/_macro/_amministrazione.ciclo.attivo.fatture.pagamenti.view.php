@@ -11,11 +11,18 @@
      * 
      */
 
+    // tipologie di documento che sono fatture ( le stesse della tendina della scheda )
+    $ct['etc']['tipologie_fatture'] = mysqlSelectColumn(
+        'id',
+        $cf['mysql']['connection'],
+        'SELECT id FROM tipologie_documenti WHERE se_fattura = 1'
+    );
+
     // informazioni della vista
     $ct['view'] = array(
         'table' => 'pagamenti',
         'open' => array(
-            'page' => 'amministrazione.ciclo.attivo.fatture.pagamenti.form',
+            'page' => 'amministrazione.archivio.documenti.pagamenti.form',
             'table' => 'pagamenti',
         ),
         'cols' => array(
@@ -36,7 +43,7 @@
         ),
         '__restrict__' => array(
             'data_archiviazione' => array( 'NL' => true ),
-            'id_tipologia' => array( 'IN' => '1|2' )
+            'id_tipologia_documento' => array( 'IN' => implode( '|', $ct['etc']['tipologie_fatture'] ) )
         ),
         '__sort__' => array(
             'id' => 'DESC'

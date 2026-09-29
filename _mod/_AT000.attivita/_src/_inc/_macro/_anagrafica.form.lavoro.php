@@ -19,14 +19,14 @@
     $ct['view'] = array(
         'table' => 'attivita',
         'open' => array(
-            'page' => 'produzione.archivio.attivita.form',
+            'page' => 'produzione.attivita.form',
             'table' => 'attivita',
             'preset' => array(
                 'field' => 'id_anagrafica',
             )
         ),
         'insert' => array(
-            'page' => 'produzione.archivio.attivita.form',
+            'page' => 'produzione.attivita.form',
         ),
         'cols' => array(
             'id' => '#',

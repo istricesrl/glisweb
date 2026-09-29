@@ -27,8 +27,8 @@
     $ct['view'] = array(
         'table' => 'listini',
         'open' => array(
-            'page' => 'catalogo.listini.vendita.form',
-            'table' => 'prodotti'
+            'page' => 'acquisti.listini.acquisto.form',
+            'table' => 'listini'
         ),
         'cols' => array(
             'id' => '#',
@@ -44,7 +44,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array('NN' => true)
+            'data_archiviazione' => array('NN' => true),
+            'id_emittente' => array( 'NN' => true, 'NI' => implode( '|', array_column( tendinaAziendeGestite() ?: array(), 'id' ) ) )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
