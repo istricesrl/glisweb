@@ -309,52 +309,12 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 -- | 202609251021
 
 -- audio_view
-CREATE OR REPLACE VIEW `audio_view` AS
-	SELECT
-		audio.id,
-		audio.id_anagrafica,
-		audio.id_pagina,
-		audio.id_file,
-		audio.id_prodotto,
-		audio.id_articolo,
-		audio.id_categoria_prodotti,
-		audio.id_marchio,
-		audio.id_risorsa,
-		audio.id_categoria_risorse,
-		audio.id_notizia,
-		audio.id_annuncio,
-		audio.id_categoria_notizie,
-		audio.id_categoria_annunci,
-		audio.id_lingua,
-		lingue.nome AS lingua,
-		audio.id_ruolo,
-		audio.id_progetto,
-		audio.id_categoria_progetti,
-		audio.id_indirizzo,
-		audio.id_edificio,
-		audio.id_immobile,
-		audio.id_valutazione,
-		ruoli_audio.nome AS ruolo,
-		audio.ordine,
-		audio.nome,
-		audio.path,
-		audio.id_embed,
-		audio.codice_embed,
-		audio.embed_custom,
-		audio.target,
-		audio.note,
-		audio.id_account_inserimento,
-		audio.id_account_aggiornamento,
-		concat(
-			ruoli_audio.nome,
-			' # ',
-			audio.ordine,
-			' / ',
-			audio.nome
-		) AS __label__
-	FROM audio
-		LEFT JOIN lingue ON lingue.id = audio.id_lingua
-		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
-;
+--
+-- 2026-09-29 — qui c'era la CREATE VIEW di audio_view con la colonna audio.id_embed. Su un'installazione
+-- nuova falliva: i file di base creano gia' audio con la colonna embed che _202609251300.embed.sql ha
+-- introdotto, e il CREATE TABLE IF NOT EXISTS di questo file non la tocca. La vista giusta la crea
+-- _202609251300.embed.sql ( marcatore 202609251320 e seguenti ), che gira sia sui deploy vecchi sia sulle
+-- installazioni nuove; questo marcatore resta vuoto perche' i deploy che l'hanno gia' eseguito lo
+-- ritrovino nella numerazione.
 
 -- | FINE FILE

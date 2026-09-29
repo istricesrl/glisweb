@@ -26,13 +26,52 @@
 --    progetto, non dello standard.
 --
 -- IDEMPOTENTE ( CREATE TABLE IF NOT EXISTS, ADD COLUMN IF NOT EXISTS ). MariaDB 10.3.
+--
+-- 2026-09-29 — il file si chiamava _202609171000.report.sottoscorta.sql e non aveva nessun marcatore
+-- prima delle istruzioni: _src/_api/_task/_mysql.patch.php le leggeva come una patch senza id e le
+-- saltava in silenzio, quindi le due tabelle non sono mai nate su nessun deploy aggiornato dai
+-- patch. Ha preso la data del giorno in cui e' stato corretto, e non quella originale, perche' i
+-- deploy che hanno gia' superato il 17/09 scarterebbero come obsoleti dei marcatori con quella data.
+
+-- | 202609291400
 
 -- la soglia si dichiara nell'unita' del magazzino ( "12 scatole" ) e il task la converte
 -- nell'unita' inventariale per confrontarla con la giacenza: serve sapere in quale unita' e'
 -- stata scritta, altrimenti chi ha scritto 12 si rilegge 2.400 senza un appiglio.
-ALTER TABLE `mastri_articoli`
+--
+-- L'ALTER E' DENTRO UN PREPARE, come in _202609151510.sedi.inline.backfill.sql: i file di base oggi
+-- non creano mastri_articoli ( la tabella e' uscita dai file di base nel riallineamento del
+-- 02/03/2026 ) e dove manca, o manca la colonna scorta_massima dopo cui id_udm si aggiunge, un ALTER
+-- statico fermerebbe il task e ogni patch successiva. Li' la patch non fa niente e lo dice.
+SET @sottoscorta = IF(
+    EXISTS (
+        SELECT 1 FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = database()
+          AND TABLE_NAME   = 'mastri_articoli'
+          AND COLUMN_NAME  = 'scorta_massima'
+    ),
+    "ALTER TABLE `mastri_articoli`
 	ADD COLUMN IF NOT EXISTS `id_udm` bigint(20) DEFAULT NULL AFTER `scorta_massima`,
-	ADD KEY IF NOT EXISTS `id_udm` (`id_udm`);
+	ADD KEY IF NOT EXISTS `id_udm` (`id_udm`)",
+    "SELECT 'mastri_articoli non ha scorta_massima: niente id_udm da aggiungere' AS nota"
+);
+
+-- | 202609291401
+
+-- si prepara
+PREPARE sottoscorta FROM @sottoscorta;
+
+-- | 202609291402
+
+-- si esegue
+EXECUTE sottoscorta;
+
+-- | 202609291403
+
+-- si libera
+DEALLOCATE PREPARE sottoscorta;
+
+-- | 202609291404
 
 -- le segnalazioni, e le ubicazioni sorvegliate che invece sono a posto: se_allarme distingue le
 -- une dalle altre, e la scheda si apre sulle sole in allarme
@@ -81,6 +120,8 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 202609291405
+
 -- le soglie che non si sanno convertire: stanno in una tabella loro e non in una riga a parte del
 -- report, perche' non sono segnalazioni ( non hanno giacenza, ne' mancante, ne' esito ) e
 -- mescolarle gonfierebbe il conteggio dei sottoscorta. Il task le svuota e le riscrive a ogni giro
@@ -103,4 +144,4 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
 	KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | FINE
+-- | FINE FILE

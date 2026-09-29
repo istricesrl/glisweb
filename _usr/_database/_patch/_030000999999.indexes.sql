@@ -951,6 +951,20 @@ ALTER TABLE `indirizzi`
 -- indirizzi
 ALTER TABLE `indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000016000
+
+-- iva
+ALTER TABLE `iva`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `aliquota` (`aliquota`),
+	ADD KEY `timestamp_archiviazione` (`timestamp_archiviazione`),
+	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`);
+
+-- | 030000016001
+
+-- iva
+ALTER TABLE `iva` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000016200
 
 -- job
@@ -1634,6 +1648,23 @@ ALTER TABLE `regioni`
 -- regioni
 ALTER TABLE `regioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030300
+
+-- relazioni_anagrafica
+ALTER TABLE `relazioni_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_anagrafica_collegata` (`id_anagrafica_collegata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000030301
+
+-- relazioni_anagrafica
+ALTER TABLE `relazioni_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030400
 
 -- relazioni_documenti
@@ -1650,6 +1681,23 @@ ALTER TABLE `relazioni_documenti`
 
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000030800
+
+-- reparti
+ALTER TABLE `reparti` 
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_settore` (`id_settore`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_iva`,`id_settore`,`nome`);
+
+-- | 030000030801
+
+-- reparti
+ALTER TABLE `reparti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034200
 
@@ -1730,6 +1778,20 @@ ALTER TABLE `ruoli_mail`
 
 -- ruoli_mail
 ALTER TABLE `ruoli_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000035000
+
+-- ruoli_prodotti
+ALTER TABLE `ruoli_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+
+-- | 030000035001
+
+-- ruoli_prodotti
+ALTER TABLE `ruoli_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035200
 
