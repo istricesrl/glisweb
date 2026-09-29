@@ -62,6 +62,16 @@ non ce l'hanno. Quella del **progetto** nasce dai **soli** sorgenti custom, sta 
 ( `/manual/read/`, `/manual/user/`, `/quickstart/` ) ed è dietro **Basic auth**, perché descrive le
 personalizzazioni. Ogni documento rimanda agli altri, e uno pubblico rimanda ai soli pubblici.
 
+⚠ **La documentazione dello standard non parla di nessun deploy.** Regola data da Fabio il
+**29/09/2026**. I sorgenti `_*` — `_usr/_docs/`, i `READ.md` e `USER.md` sotto `_mod/_*/` e
+`_src/_tpl/_*/` — descrivono lo standard in sé: il comportamento, la regola, il motivo tecnico. Non
+dicono su quale deploy una cosa è emersa: niente nomi di clienti o di deploy, niente host dei
+clienti, niente "da una segnalazione della sessione che lavora su…", niente date o numeri di un
+incidente. Quello che di un caso vale per tutti si tiene, detto in generale ( "manca sui deploy
+installati prima che la tabella entrasse nei file di base" ); un paragrafo che è solo la cronaca
+dell'incidente si toglie. Restano i domini del framework ( le release, i dati geografici ), e la
+cronaca di un deploy va nelle sue istruzioni o nel `DONE.md`, non qui.
+
 ⚠ **La documentazione di progetto non è mai ridondante rispetto a quella del framework: è soltanto
 CORRETTIVA, SOSTITUTIVA o ADDITIVA.** Regola data da Fabio il **21/09/2026**. Fino a quel giorno il
 manuale di progetto era la *somma* dei due, cioè si portava dentro una copia integrale del manuale
