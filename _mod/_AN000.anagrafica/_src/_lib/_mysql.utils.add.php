@@ -286,17 +286,6 @@
             $riga['timestamp_aggiornamento'] = $tCat;
         }
 
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE anagrafica_categorie SET timestamp_aggiornamento = ? WHERE id = ?',
-            array(
-                array('s' => $riga['timestamp_aggiornamento']),
-                array('s' => $riga['id'])
-            )
-        );
-
-        // die( 'updateAnagraficaViewStaticCategorie: ' . $riga['id'] . ' - ' . $riga['timestamp_aggiornamento'] );
-
     }
 
     /**

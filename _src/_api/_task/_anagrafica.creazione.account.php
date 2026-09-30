@@ -15,8 +15,8 @@
      * __psw__          | la password, SOLO in POST; se manca la si genera
      *
      * LA PASSWORD NON SI LEGGE DALLA QUERYSTRING: un URL finisce nei log del web server, nella cronologia del browser
-     * e negli header Referer, e la password con lui. Chi la passa in GET se la vede ignorare, e riceve per mail una
-     * password generata come fa `_account.reset.password.php`.
+     * e negli header Referer, e la password con lui. Chi la passa in GET riceve un errore e l'account non viene creato,
+     * così se ne accorge; senza password in POST se ne genera una come fa `_account.reset.password.php`.
      *
      * La mail di benvenuto usa il template indicato nella chiave `mail` del profilo, e in mancanza
      * `NOTIFICA_NUOVO_ACCOUNT`. Risponde con `__status__` OK o KO, e con gli errori in `err` come fa
@@ -45,6 +45,11 @@
 
         // status
         $status['err'][] = 'privilegi insufficienti';
+
+    } elseif( isset( $_GET['__psw__'] ) ) {
+
+        // status
+        $status['err'][] = 'la password va passata in POST, non nell\'indirizzo';
 
     } elseif( empty( $_REQUEST['anagrafica'] ) || empty( $_REQUEST['__e__'] ) ) {
 
