@@ -261,7 +261,7 @@
         $sdc = $sdec['linee'];
     
         // oggetto del documento
-        $dati['doc']['oggetto'] = $dati['doc']['tipologia'] . ' n. ' . $dati['doc']['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $dati['doc']['data'] ) );
+        $dati['doc']['oggetto'] = $dati['doc']['tipologia'] . ' n. ' . numeroDocumentoFattura( $dati['doc']['numero'], $dati['doc']['sezionale'] ?? '', $dati['doc']['data'] ) . ' del ' . strftime( '%d %B %Y', strtotime( $dati['doc']['data'] ) );
 
         // titolo del documento
         $pdf->SetTitle( $dati['doc']['oggetto'].' di .pdf');

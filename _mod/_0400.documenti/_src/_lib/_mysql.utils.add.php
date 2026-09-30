@@ -35,7 +35,7 @@
      * Il numero e' un `MAX( numero ) + 1` e chi lo chiede lo usa **piu' tardi**, quando inserisce
      * il documento. Fra le due cose c'e' una finestra, e due richieste che ci entrano insieme
      * calcolano lo **stesso numero**. Non finisce con due ricevute pari numero: `documenti` ha
-     * `UNIQUE KEY unica ( id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
+     * `UNIQUE KEY unica ( id_emittente, id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
      * `INSERT ... ON DUPLICATE KEY UPDATE`, quindi il secondo INSERT **aggiorna la ricevuta del
      * primo** e ne restituisce l'id: righe e pagamenti del secondo finiscono nel documento del
      * primo, intestato a un'altra persona.
@@ -141,6 +141,34 @@
         $status['new'] = strtoupper( str_pad( $status['new'], 5, '0', STR_PAD_LEFT ) );
 
         return $status['new'];
+
+    }
+
+    /**
+     * restituisce il numero di un documento come va scritto nella fattura elettronica e nella sua copia PDF
+     *
+     * Il numero porta il sezionale, se c'e', come lo mostra l'interfaccia ( "12/E/2026" ): lo SDI non conosce i sezionali
+     * e scarta come duplicata una fattura con numero, data e cedente gia' visti, per cui lo stesso numero in due
+     * sezionali diversi passava solo col sezionale scritto nel numero. I documenti con data anteriore al 2026-10-01
+     * sono stati trasmessi col numero senza sezionale, e chi li cita ( la nota di credito con la fattura che rettifica,
+     * la ristampa ) deve citarli come lo SDI li ha ricevuti: per loro il sezionale non si aggiunge.
+     *
+     * @param  string $numero     il numero del documento
+     * @param  string $sezionale  il sezionale, anche vuoto
+     * @param  string $data       la data del documento ( Y-m-d )
+     *
+     * @return string             il numero, con /sezionale quando si aggiunge
+     */
+    function numeroDocumentoFattura( $numero, $sezionale, $data ) {
+
+        $numero = trim( (string) $numero );
+        $sezionale = trim( (string) $sezionale );
+
+        if( $sezionale === '' || ( ! empty( $data ) && $data < '2026-10-01' ) ) {
+            return $numero;
+        }
+
+        return $numero . '/' . $sezionale;
 
     }
 

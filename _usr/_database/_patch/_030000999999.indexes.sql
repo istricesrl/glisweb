@@ -1419,7 +1419,7 @@ ALTER TABLE `disponibilita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- documenti
 ALTER TABLE `documenti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`numero`,`sezionale`),
+	ADD UNIQUE KEY `unica` (`id_emittente`,`id_tipologia`,`numero`,`sezionale`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
 	ADD UNIQUE KEY `unica_codice_sdi` (`codice_sdi`),

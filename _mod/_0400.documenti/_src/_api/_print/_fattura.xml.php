@@ -285,6 +285,12 @@
 	$errori = array();
 	$avvisi = $troncati;
 
+    // numero di un documento come va nell'XML: con il sezionale se c'e', vedi numeroDocumentoFattura()
+	$numeroXml = function( $numero, $sezionale, $data ) use ( $testoFattura ) {
+	    return $testoFattura( numeroDocumentoFattura( $numero, $sezionale, $data ) );
+	};
+	$numeroDocumento = $numeroXml( $dati['doc']['numero'], $dati['doc']['sezionale'] ?? '', $dati['doc']['data'] );
+
     // - - DatiGeneraliDocumento
 	$generaliDocumento = array(
 	    // - - - - TipoDocumento / la tipologia del documento
@@ -293,9 +299,16 @@
 	    'Divisa' => $dati['doc']['divisa'],
 	    // - - - - Data / la data del documento
 	    'Data' => $dati['doc']['data'],
-	    // - - - - Numero / il numero del documento
-	    'Numero' => $dati['doc']['numero']
+	    // - - - - Numero / il numero del documento, con il sezionale se c'e' ( "12/E/2026", come lo mostra l'interfaccia ):
+	    // lo SDI non conosce i sezionali e scarta come duplicata una fattura con numero, data e cedente gia' visti, per cui
+	    // lo stesso numero in due sezionali diversi passava solo col sezionale scritto nel numero ( dal 2026-09-30 )
+	    'Numero' => $numeroDocumento
 	);
+
+    // lo schema ammette al massimo 20 caratteri
+	if( strlen( $numeroDocumento ) > 20 ) {
+	    $errori[] = 'il numero del documento con il sezionale ( ' . $numeroDocumento . ' ) supera i 20 caratteri ammessi dallo schema: accorciare il sezionale';
+	}
 
     // - - - - DatiRitenuta / le ritenute, una per tipo
 	foreach( $dati['doc']['ritenute'] as $ritenuta ) {
@@ -419,7 +432,7 @@
 		}
 
 	    // - - - - IdDocumento / il numero della fattura collegata
-		$blocco['IdDocumento'] = $collegata['numero'];
+		$blocco['IdDocumento'] = $numeroXml( $collegata['numero'], $collegata['sezionale'] ?? '', $collegata['data'] ?? '' );
 
 	    // - - - - Data / la data della fattura collegata ( controllo 00418: non può essere successiva a questa )
 		if( ! empty( $collegata['data'] ) ) {
