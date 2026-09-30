@@ -15,12 +15,10 @@ che usano le maschere di prodotti e marchi di `PR000.prodotti`, e legge da `anag
 anagrafiche con una categoria che ha `se_produttore`. Un costruttore che non sta in una categoria di
 produttori non compare nella tendina.
 
-La funzione `tendinaTipologieVeicoli()` è usata anche fuori dal modulo, dalla scheda veicoli dei
-magazzini del modulo legacy `0500.mastri`: con quel modulo attivo e questo spento la scheda va in errore
-per funzione inesistente. La funzione resta comunque qui, perché tutte le `tendinaTipologie…()` dei moduli
-della linea nuova stanno nella libreria del proprio modulo, e nella libreria del core stanno solo le
-tendine che non appartengono a un modulo ( stati, province, anni, mesi… ): il difetto è della macro
-legacy, che chiama una funzione di un modulo senza verificare che sia attivo.
+La scheda veicoli dei magazzini del modulo legacy `0500.mastri` non usa `tendinaTipologieVeicoli()`: legge
+`tipologie_veicoli_view` direttamente, perché con questo modulo spento la funzione non esiste. Tutte le
+`tendinaTipologie…()` dei moduli della linea nuova stanno nella libreria del proprio modulo, e nella libreria del
+core stanno solo le tendine che non appartengono a un modulo ( stati, province, anni, mesi… ).
 
 ## tabelle del database
 | tabella | contenuto |
