@@ -124,6 +124,7 @@
                 'merchant_id'   => '004400001',                                                                // ID del commerciante
                 'term_id'       => '44000001',                                                                // ID del terminale
                 'term_passwd'   => 'Password1',                                                                // password del terminale
+                'ssl_verify'    => true,                                                                // verifica del certificato di init_api ( false solo in DEV/TEST )
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_monetaweb.listener.php',            // listener per la conferma di pagamento in background
@@ -224,8 +225,8 @@
      * 
      * NOTA SU MONETAWEB
      * la chiamata a init_api verifica il certificato del server; se un ambiente di test del gateway ha un certificato
-     * non valido, sul deploy che lo usa si definisce in un runlevel custom la costante MONETAWEB_SSL_VERIFY a false
-     * (vedi monetawebGetPaymentDetails() in _src/_lib/_monetaweb.tools.php)
+     * non valido, nel profilo DEVELOPEMENT o TESTING del deploy che lo usa si mette la chiave ssl_verify del provider
+     * a false; in PRODUCTION la chiave si ignora (vedi monetawebGetPaymentDetails() in _src/_lib/_monetaweb.tools.php)
      * 
      * 
      */

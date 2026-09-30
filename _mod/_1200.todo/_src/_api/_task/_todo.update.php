@@ -34,11 +34,11 @@
         
         if( ! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']=='0'  ){
 
-            $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
+            $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
-            logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
             
-            if( $restult ){
+            if( $result ){
 
                 $status['__status__'] = 'trovate todo da modificare';
 
@@ -68,7 +68,7 @@
                         else{ $where = '';}
 
                         // aggiornamento todo ed attivita
-                        foreach( $restult as $data ){
+                        foreach( $result as $data ){
 
                             $params[count($params)] =  array( 's' => $data );
 /*
@@ -113,7 +113,7 @@
                     $status['action'][] = 'aggiunta istruttore';
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();
@@ -164,7 +164,7 @@
                 if( ! empty( $_REQUEST['__removei__'] ) ){
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();
@@ -208,10 +208,10 @@
                 if( ! empty( $_REQUEST['__deletei__'] ) && ! empty( $_REQUEST['__newi__'] ) ){
 
                     $status['action'][] = 'sostituzione istruttore';
-                    $status['date'] = $restult;
+                    $status['date'] = $result;
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();

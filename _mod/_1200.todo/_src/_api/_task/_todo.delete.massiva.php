@@ -39,15 +39,15 @@
 
         if( ! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']=='0'  ){
 
-                $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
+                $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
-                logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
+                logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
                 
-                if( $restult ){
+                if( $result ){
 
                     $status['__status__'] = 'trovate todo da eliminare';
-                    $status['date'] = $restult;
-                    $status['n'] = count($restult);
+                    $status['date'] = $result;
+                    $status['n'] = count($result);
 
                     $where = array();
                     $params = array();
@@ -71,7 +71,7 @@
                     else{ $where = '';}
                     
                     // creazione todo [andrebbe fatto un job?]
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
                         $params[count($params)] =  array( 's' => $data );
                       
                         mysqlQuery( $cf['mysql']['connection'],

@@ -173,9 +173,15 @@
                 // richiedo il PaymentID e l'URL per il redirect
                 $paymentDetails = monetawebGetPaymentDetails( $c, $k );
 
-                // modifico la destinazione del form di riepilogo
-                // $ct['etc']['meta']['action'] = $paymentDetails[3];
-                $ct['etc']['meta']['action'] = $paymentDetails['redirecturl'];
+                // modifico la destinazione del form di riepilogo; se il gateway non ha risposto il template
+                // mostra un errore invece di un form senza destinazione
+                if( ! empty( $paymentDetails['redirecturl'] ) ) {
+                    $ct['etc']['meta']['action'] = $paymentDetails['redirecturl'];
+                } else {
+                    $ct['etc']['meta']['action'] = NULL;
+                    $ct['etc']['meta']['errore'] = 'pagamento_non_disponibile';
+                    logger( 'nessun redirecturl da Monetaweb per il carrello ' . $c['id'], 'monetaweb', LOG_ERR );
+                }
 
                 // debug
                 // die( print_r( $paymentID, true ) );

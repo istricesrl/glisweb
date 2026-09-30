@@ -73,8 +73,8 @@
      * 
      * La funzione fa la POST initialize all'endpoint init_api del profilo con le credenziali del terminale, l'ID del
      * carrello come merchantOrderId e il suo prezzo_lordo_finale come importo. Il certificato del server viene
-     * verificato, a meno che il deploy non abbia definito la costante MONETAWEB_SSL_VERIFY a false ( si veda il
-     * commento nel corpo ). Gli URL error_url e listener_url devono essere già stati scritti in $k dal chiamante.
+     * verificato, a meno che il profilo non abbia la chiave ssl_verify a false, cosa che vale solo fuori da
+     * PRODUCTION ( si veda il commento nel corpo ). Gli URL error_url e listener_url devono essere già stati scritti in $k dal chiamante.
      * 
      * @param       array       $c          il carrello ( servono id e prezzo_lordo_finale )
      * @param       array       $k          il profilo del provider monetaweb, con gli URL di ritorno già risolti
@@ -142,11 +142,10 @@
           // Fino al 2026-09-29 CURLOPT_SSL_VERIFYPEER era a false, per cui la chiamata che manda ID e password del
           // terminale non proteggeva da un server che si spacciasse per il gateway. Adesso il certificato si verifica
           // sempre, e il deploy che ha bisogno di non farlo ( ad esempio contro un ambiente di test del gateway con un
-          // certificato non valido ) lo dice esplicitamente definendo in un runlevel la costante MONETAWEB_SSL_VERIFY
-          // a false. È lo stesso schema di REST_SSL_VERIFY in restCall(), per cui si vedano i commenti in
-          // _src/_lib/_rest.tools.php; come lì, la costante si legge a ogni chiamata perché le librerie vengono
-          // incluse prima dei runlevel.
-          $sslVerify = defined( 'MONETAWEB_SSL_VERIFY' ) ? (bool) MONETAWEB_SSL_VERIFY : true;
+          // certificato non valido ) lo dice esplicitamente con la chiave ssl_verify a false nel profilo del provider
+          // ( $cf['ecommerce']['profiles'][ DEVELOPEMENT | TESTING ]['provider']['monetaweb']['ssl_verify'] ); in
+          // PRODUCTION la chiave si ignora e il certificato si verifica comunque.
+          $sslVerify = ( isset( $k['ssl_verify'] ) && $k['ssl_verify'] === false && SITE_STATUS !== PRODUCTION ) ? false : true;
 
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $k['init_api']);

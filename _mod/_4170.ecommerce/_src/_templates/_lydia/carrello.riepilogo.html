@@ -138,6 +138,11 @@
   <button type="submit">PAGA</button>
 </form>
 
+{% elseif etc.meta.errore %}
+
+<!-- errore del provider di pagamento -->
+<p class="errore-pagamento">{{ trn.tr({ 'w': etc.meta.errore, 'l': ietf, 'v': tr.generic }) }}</p>
+
 {% else %}
 <!-- qualcosa manca qui... per funzionare questa pagina ha bisogno di: -->
 <!-- action: {{ etc.meta.action }} -->

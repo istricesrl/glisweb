@@ -41,20 +41,20 @@
 
             if( $_REQUEST['__g__'] != '' ) {
             
-                $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__'] );
-                //die(print_r($restult));  
+                $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__'] );
+                //die(print_r($result));  
 
             } else {
             
-                $restult = createDateRangeArray($_REQUEST['__di__'],$_REQUEST['__df__']);
+                $result = createDateRangeArray($_REQUEST['__di__'],$_REQUEST['__df__']);
             
             }
 
-            logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
             
             // die( print_r( $status, true ) );
 
-            if( $restult ) {
+            if( $result ) {
 
                 // se vanno eliminate le chiusure
                 if( isset( $_REQUEST['__periodi__'] ) && ! empty( $_REQUEST['__periodi__'] ) ){
@@ -76,7 +76,7 @@
                         foreach( $chiusure as $c ){
                             $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
                             $status['dateSalt'] = array_merge( $status['dateSalt'], $range );
-                            // $restult = array_diff($restult, $range);
+                            // $result = array_diff($result, $range);
                         }
                         
                     }
@@ -86,8 +86,8 @@
                 }
 
                 $status['__status__'] = 'Pianificazione completata';
-                $status['date'] = $restult;
-                $status['n'] = count($restult);
+                $status['date'] = $result;
+                $status['n'] = count($result);
 
                 // if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) && ! empty( $_REQUEST['__a__'] )  ) {
                 if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) ) {
@@ -108,7 +108,7 @@
                     }
 
                     // creazione todo [andrebbe fatto un job?]
-                    foreach( $restult as $data ) {
+                    foreach( $result as $data ) {
 
                         logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_ERR ); 
 
