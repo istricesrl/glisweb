@@ -75,26 +75,12 @@
 
             }     
             
-           // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
-           mysqlQuery(
-                $cf['mysql']['connection'],
-                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-                array(
-                    array( 's' => 'attivita' ),
-                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
-                    array( 's' => time() )
-                )
-            );
+           // aggiorno attivita_view_static e todo_view_static ( refresh_view_statiche e' stata dismessa il 2026-09-30 )
+           cleanStaticView( $cf['mysql']['connection'], 'attivita' );
+           refreshStaticView( $cf['mysql']['connection'], 'attivita' );
 
-            mysqlQuery(
-                $cf['mysql']['connection'],
-                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-                array(
-                    array( 's' => 'todo' ),
-                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
-                    array( 's' => time() )
-                )
-            );
+            cleanStaticView( $cf['mysql']['connection'], 'todo' );
+            refreshStaticView( $cf['mysql']['connection'], 'todo' );
            
         }
        

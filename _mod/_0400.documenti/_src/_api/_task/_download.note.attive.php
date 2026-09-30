@@ -25,8 +25,9 @@
 
         }
 
-        // ...
-        $status['static'] = mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
+        // aggiornamento di attivita_view_static ( la procedura attivita_view_static() non esiste piu' da marzo 2026 )
+        cleanStaticView( $cf['mysql']['connection'], 'attivita' );
+        $status['static'] = refreshStaticView( $cf['mysql']['connection'], 'attivita' );
 
         // debug
         // print_r( $status );

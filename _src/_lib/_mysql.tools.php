@@ -158,8 +158,8 @@
      * logger()                         | core
      * loggerLatest()                   | core
      * array2censored()                 | core
-     * timerNow()                       | core ( o _src/_lib/_timer.tools.php )
-     * timerDiff()                      | core ( o _src/_lib/_timer.tools.php )
+     * timerNow()                       | core ( _src/_config.php )
+     * timerDiff()                      | core ( _src/_config.php )
      * print_l()                        | _src/_lib/_array.tools.php
      * addStr2arrayElements()           | _src/_lib/_array.tools.php
      * empty2null()                     | _src/_lib/_string.tools.php
@@ -2008,6 +2008,46 @@
         }
 
         return (bool) $esito;
+    }
+
+    /**
+     * toglie da una vista materializzata le righe che non esistono piu' nella tabella
+     *
+     * refreshStaticView() riscrive con REPLACE le righe che la vista restituisce, quindi non tocca quelle
+     * cancellate dalla tabella: chi cancella in blocco ( i task di pulizia delle pianificazioni, di eliminazione
+     * di eventi e progetti ) chiama questa funzione prima di refreshStaticView(). Se la statica non esiste sul
+     * deploy non fa niente.
+     *
+     * @param mysqli $c  connessione
+     * @param string $t  nome della tabella ( senza suffissi: 'attivita', non 'attivita_view_static' )
+     *
+     * @return bool true se la pulizia e' andata a buon fine o non serviva
+     */
+    function cleanStaticView($c, $t)
+    {
+
+        if (! preg_match('/^[a-z0-9_]+$/', $t)) {
+            return false;
+        }
+
+        $static = $t . '_view_static';
+
+        $esiste = mysqlSelectValue(
+            $c,
+            'SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+            array(array('s' => $static))
+        );
+
+        if (empty($esiste)) {
+            return true;
+        }
+
+        mysqlQuery(
+            $c,
+            'DELETE `' . $static . '` FROM `' . $static . '` LEFT JOIN `' . $t . '` ON `' . $t . '`.id = `' . $static . '`.id WHERE `' . $t . '`.id IS NULL'
+        );
+
+        return empty(mysqli_errno($c));
     }
 
     /**
