@@ -265,6 +265,17 @@
                             // ...
                             if( ! empty( $idDocumento ) ) {
 
+                                // lo sconto della riga e' netto ( dal 2026-09-30 ): il coupon del carrello e' un valore lordo,
+                                // per cui lo si riporta all'imponibile con l'aliquota del reparto della riga
+                                $aliquotaRiga = mysqlSelectValue(
+                                    $cf['mysql']['connection'],
+                                    'SELECT iva.aliquota FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE reparti.id = ?',
+                                    array( array( 's' => 5 ) )
+                                );
+                                $scontoNettoRiga = ( is_numeric( $articolo['coupon_valore'] ) && $articolo['coupon_valore'] > 0 )
+                                    ? round( $articolo['coupon_valore'] / ( 1 + ( (float) $aliquotaRiga / 100 ) ), 2 )
+                                    : NULL;
+
                                 // inserisco la riga
                                 $idDocumentiArticoli = mysqlInsertRow(
                                     $cf['mysql']['connection'],
@@ -277,7 +288,7 @@
                                         'id_udm' => 1,
                                         'importo_netto_totale' => $articolo['prezzo_netto_totale'],
                                         'importo_lordo_totale' => $articolo['prezzo_lordo_totale'],
-                                        'sconto_valore' => $articolo['coupon_valore'],
+                                        'sconto_valore' => $scontoNettoRiga,
                                         'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
                                         'id_listino' => 1,
                                         'id_reparto' => 5,

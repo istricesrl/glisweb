@@ -496,6 +496,82 @@
 	    $avvisi[] = 'la fattura differita TD25 non indica documenti di trasporto';
 	}
 
+    // - - - DatiTrasporto / la fattura accompagnatoria: vettore, causale, colli e peso, inizio del trasporto con la data del
+    // documento, indirizzo e data di consegna ( vedi generaContenutiDocumento() )
+	if( ! empty( $dati['doc']['se_fattura'] ) && ! empty( $dati['doc']['se_trasporto'] ) ) {
+
+	    $trasporto = array();
+	    $tr = $dati['doc']['trasporto'];
+
+	    // - - - - DatiAnagraficiVettore / il vettore, che lo schema vuole con la partita IVA
+		if( ! empty( $tr['vettore'] ) ) {
+		    $pivaVettore = strtoupper( str_replace( ' ', '', (string) $tr['vettore']['partita_iva'] ) );
+		    if( $pivaVettore === '' ) {
+		        $avvisi[] = 'il vettore non ha la partita IVA, che lo schema richiede: non viene indicato';
+		    } else {
+		        $paeseVettore = ( preg_match( '/^([A-Z]{2})(.+)$/', $pivaVettore, $m ) ) ? $m[1] : 'IT';
+		        $codiceVettore = ( isset( $m[2] ) ) ? $m[2] : $pivaVettore;
+		        $vettore = array( 'IdFiscaleIVA' => array( 'IdPaese' => $paeseVettore, 'IdCodice' => $codiceVettore ) );
+		        if( ! empty( $tr['vettore']['codice_fiscale'] ) ) {
+		            $vettore['CodiceFiscale'] = strtoupper( $tr['vettore']['codice_fiscale'] );
+		        }
+		        if( ! empty( $tr['vettore']['denominazione'] ) ) {
+		            $vettore['Anagrafica'] = array( 'Denominazione' => $testoLimitato( $tr['vettore']['denominazione'], 80, 'la denominazione del vettore' ) );
+		        } else {
+		            $vettore['Anagrafica'] = array(
+		                'Nome' => $testoLimitato( $tr['vettore']['nome'], 60, 'il nome del vettore' ),
+		                'Cognome' => $testoLimitato( $tr['vettore']['cognome'], 60, 'il cognome del vettore' )
+		            );
+		        }
+		        $trasporto['DatiAnagraficiVettore'] = $vettore;
+		    }
+		}
+
+	    // - - - - CausaleTrasporto / la causale del documento
+		if( ! empty( $tr['causale'] ) ) {
+		    $trasporto['CausaleTrasporto'] = $testoLimitato( $tr['causale'], 100, 'la causale del trasporto' );
+		}
+
+	    // - - - - NumeroColli, UnitaMisuraPeso e PesoLordo / dai colli del documento; il peso solo se hanno tutti la stessa
+	    // unita' di misura
+		if( ! empty( $tr['colli']['numero'] ) ) {
+		    $trasporto['NumeroColli'] = min( (int) $tr['colli']['numero'], 9999 );
+		    if( ! empty( $tr['colli']['peso'] ) && $tr['colli']['udm_diverse'] <= 1 && ! empty( $tr['colli']['udm_peso'] ) ) {
+		        $trasporto['UnitaMisuraPeso'] = substr( $testoFattura( $tr['colli']['udm_peso'] ), 0, 10 );
+		        $trasporto['PesoLordo'] = xmlFloat( $tr['colli']['peso'] );
+		    } elseif( ! empty( $tr['colli']['peso'] ) ) {
+		        $avvisi[] = 'i colli hanno il peso in unità di misura diverse: il peso non viene indicato';
+		    }
+		}
+
+	    // - - - - DataInizioTrasporto / la merce parte con la fattura che la accompagna
+		$trasporto['DataInizioTrasporto'] = $dati['doc']['data'];
+
+	    // - - - - IndirizzoResa / la sede di consegna
+		if( ! empty( $tr['resa'] ) ) {
+		    $resa = array( 'Indirizzo' => $testoLimitato( trim( $tr['resa']['tipologia'] . ' ' . $tr['resa']['indirizzo'] ), 60, 'l\'indirizzo di consegna' ) );
+		    if( ! empty( $tr['resa']['civico'] ) ) {
+		        $resa['NumeroCivico'] = substr( $testoFattura( $tr['resa']['civico'] ), 0, 8 );
+		    }
+		    $resa['CAP'] = $tr['resa']['cap'];
+		    $resa['Comune'] = $testoLimitato( $tr['resa']['comune'], 60, 'il comune di consegna' );
+		    if( ! empty( $tr['resa']['provincia'] ) ) {
+		        $resa['Provincia'] = $tr['resa']['provincia'];
+		    }
+		    $resa['Nazione'] = $tr['resa']['sigla_stato'];
+		    $trasporto['IndirizzoResa'] = $resa;
+		}
+
+	    // - - - - DataOraConsegna / la data di consegna
+		if( ! empty( $dati['doc']['data_consegna'] ) ) {
+		    $trasporto['DataOraConsegna'] = $dati['doc']['data_consegna'] . 'T00:00:00';
+		}
+
+	    // - - - /DatiTrasporto
+		$generali['DatiTrasporto'] = $trasporto;
+
+	}
+
     // - - DatiBeniServizi
 	$beniServizi = array( 'DettaglioLinee' => array(), 'DatiRiepilogo' => array() );
 
@@ -519,8 +595,18 @@
 		    $linea['UnitaMisura'] = $row['udm'];
 		}
 
-	    // - - - - PrezzoUnitario / il prezzo netto unitario della riga
+	    // - - - - PrezzoUnitario / il prezzo netto unitario della riga, prima dello sconto
 		$linea['PrezzoUnitario'] = $row['importo_netto_unitario'];
+
+	    // - - - - ScontoMaggiorazione / lo sconto di riga: la percentuale se lo sconto e' dato solo in percentuale, altrimenti
+	    // l'importo per unita' ( lo schema lo applica al prezzo unitario ), con otto decimali perche' PrezzoTotale torni
+		if( ! empty( $row['sconto_netto'] ) && $row['sconto_netto'] > 0 ) {
+		    if( ! ( is_numeric( $row['sconto_valore'] ?? NULL ) && $row['sconto_valore'] > 0 ) ) {
+		        $linea['ScontoMaggiorazione'] = array( 'Tipo' => 'SC', 'Percentuale' => xmlFloat( $row['sconto_percentuale'] ) );
+		    } else {
+		        $linea['ScontoMaggiorazione'] = array( 'Tipo' => 'SC', 'Importo' => preg_replace( '/(\.\d\d\d*?)0+$/', '$1', sprintf( '%0.8F', $row['sconto_netto'] / $row['qtd'] ) ) );
+		    }
+		}
 
 	    // - - - - PrezzoTotale / il prezzo netto totale della riga
 		$linea['PrezzoTotale'] = $row['importo_netto_totale'];
@@ -550,8 +636,8 @@
 
 		// controllo arrotondamento
 		// TODO questo non andrebbe fatto nel file _fattura.default.php in modo da impattare anche sul PDF?
-		if( sprintf( '%0.2f', $row['importo_netto_unitario'] * $row['qtd'] ) != sprintf( '%0.2f',$row['importo_netto_totale'] ) ) {
-			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_totale'] . ' diverso da ' . ( $row['importo_netto_unitario'] * $row['qtd'] ) );
+		if( sprintf( '%0.2f', $row['importo_netto_unitario'] * $row['qtd'] ) != sprintf( '%0.2f',$row['importo_netto_prima_sconto'] ) ) {
+			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_prima_sconto'] . ' diverso da ' . ( $row['importo_netto_unitario'] * $row['qtd'] ) );
 		}
 
 	    // - - - /DettaglioLinee

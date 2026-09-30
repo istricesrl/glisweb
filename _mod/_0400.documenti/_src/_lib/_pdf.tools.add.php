@@ -406,6 +406,12 @@
         // righe della tabella di dettaglio
         foreach( $dati['doc']['righe'] as $row ) {
 
+            // lo sconto della riga si scrive accanto alla descrizione: quantita' per prezzo unitario danno il prezzo prima
+            // dello sconto, il totale e' gia' scontato
+            if( ! empty( $row['sconto_netto'] ) && $row['sconto_netto'] > 0 ) {
+                $row['nome'] .= ' ( sconto ' . number_format( $row['sconto_netto'], 2, ',', '.' ) . ' € )';
+            }
+
             $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// calcolo l'altezza della riga
             $pdf->SetFont( $fnt, '', $fnts );
     /*

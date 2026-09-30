@@ -265,6 +265,17 @@
                             // TODO aggiungo le righe al documento
                             foreach( $articoli as $articolo ) {
 
+                                // sconto e coupon della riga del carrello sono lordi ( li toglie da prezzo_lordo_finale ),
+                                // lo sconto della riga del documento e' netto ( dal 2026-09-30 ): si riportano all'imponibile
+                                // con l'aliquota della riga; prima non si scrivevano, e la fattura riportava il prezzo pieno
+                                $scontoLordoRiga = (float) ( $articolo['sconto_valore'] ?? 0 ) + (float) ( $articolo['coupon_valore'] ?? 0 );
+                                $aliquotaRiga = (float) mysqlSelectValue(
+                                    $cf['mysql']['connection'],
+                                    'SELECT aliquota FROM iva WHERE id = ?',
+                                    array( array( 's' => $articolo['id_iva'] ) )
+                                );
+                                $scontoNettoRiga = ( $scontoLordoRiga > 0 ) ? round( $scontoLordoRiga / ( 1 + $aliquotaRiga / 100 ), 2 ) : NULL;
+
                                 $idRiga[] = mysqlInsertRow(
                                     $cf['mysql']['connection'],
                                     array(
@@ -276,6 +287,7 @@
                                         'quantita' => $articolo['quantita'],
                                         'id_listino' => $carrello['id_listino'],
                                         'importo_netto_totale' => $articolo['prezzo_netto_totale'],
+                                        'sconto_valore' => $scontoNettoRiga,
                                         'note' => 'riga inserita automaticamente per il carrello #' . $carrello['id'] . ' riga #' . $articolo['id']
                                     ),
                                     'documenti_articoli'

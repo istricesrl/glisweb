@@ -118,7 +118,7 @@
                         {{ frm.input({ 'field': { 'name': 'sconto_percentuale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>  
                     <div class="col-12 col-md-2 form-col">
-                        <span class="label-top">sc. €</span>
+                        <span class="label-top">sc. € netto</span>
                         {{ frm.input({ 'field': { 'name': 'sconto_valore', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>                                                          
                     <div class="col-12 col-md-3 form-col">
@@ -222,16 +222,18 @@
             },
             success: function(data) {
                 console.log(data);
-                let base_imponibile = $('#documenti_articoli_importo_netto_totale').val() || 0;
+                // lo sconto si applica all'imponibile ( dal 2026-09-30; prima si applicava al lordo, e la fattura
+                // elettronica non lo vedeva ): sconto_valore e' lo sconto netto sull'intera riga
+                let base_imponibile = parseFloat($('#documenti_articoli_importo_netto_totale').val()) || 0;
                 let aliquota_iva = parseFloat(data.iva) || 0;
                 let importo_lordo_totale = base_imponibile * (1 + (aliquota_iva / 100));
                 console.log('importo_lordo_totale: ' + importo_lordo_totale);
                 $('#documenti_articoli_importo_lordo_totale').val(importo_lordo_totale.toFixed(2));
                 if( $('#documenti_articoli_sconto_percentuale').val() != '' && $('#documenti_articoli_sconto_valore').val() == '' ) {
-                    $('#documenti_articoli_sconto_valore').val( (importo_lordo_totale * (parseFloat($('#documenti_articoli_sconto_percentuale').val()) / 100)).toFixed(2) );
+                    $('#documenti_articoli_sconto_valore').val( (base_imponibile * (parseFloat($('#documenti_articoli_sconto_percentuale').val()) / 100)).toFixed(2) );
                 }
                 let sconto_valore = parseFloat($('#documenti_articoli_sconto_valore').val()) || 0;
-                let importo_lordo_finale = importo_lordo_totale - sconto_valore;
+                let importo_lordo_finale = (base_imponibile - sconto_valore) * (1 + (aliquota_iva / 100));
                 $('#documenti_articoli_importo_lordo_finale').val(importo_lordo_finale.toFixed(2));
             }
         });

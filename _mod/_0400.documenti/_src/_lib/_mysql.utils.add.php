@@ -186,6 +186,10 @@
      *                      | linee di questo documento a cui si riferisce ( vuoto se è tutto il documento )
      * casse                | i contributi alle casse previdenziali, con imponibile, importo e IVA calcolati se vuoti
      * ritenute             | le ritenute, con l'importo calcolato se vuoto; le righe soggette hanno se_ritenuta
+     * trasporto            | per la fattura accompagnatoria: vettore, causale, colli ( numero, peso, unità ), resa
+     *
+     * Ogni riga ha importo_netto_totale già scontato: lo sconto di riga ( sconto_valore, netto sull'intera riga, o in
+     * mancanza sconto_percentuale ) è in sconto_netto, e il prezzo di prima in importo_netto_prima_sconto.
      *
      * @param       integer     $idDocumento    l'ID del documento
      *
@@ -213,7 +217,7 @@
             'SELECT documenti.*, '.
             'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, tipologie_documenti.nome AS tipologia, '.
             'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
-            'tipologie_documenti.codice AS codice_tipologia, '.
+            'tipologie_documenti.codice AS codice_tipologia, tipologie_documenti.se_trasporto, '.
             'condizioni_pagamento.codice AS codice_pagamento '.
             'FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
@@ -305,7 +309,22 @@
             $riga['qtd'] = ( empty( $riga['quantita'] ) ) ? 1 : $riga['quantita'];
 
             $riga['importo_netto_unitario']         = str_replace( ',', '.', round( ( $riga['importo_netto_totale'] / $riga['qtd'] ), 2 ) );
-            $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_totale'] , 2 ) );
+
+            // sconto di riga: si applica all'imponibile, come vuole la fattura; sconto_valore e' lo sconto netto sull'intera
+            // riga, sconto_percentuale serve quando il valore manca; importo_netto_totale diventa l'imponibile scontato, e il
+            // prezzo di prima resta in importo_netto_prima_sconto per la fattura elettronica ( ScontoMaggiorazione )
+            // NOTA fino al 2026-09-30 lo sconto si calcolava sul lordo e toccava solo importo_lordo_finale: la fattura
+            // elettronica e il PDF riportavano la riga a prezzo pieno
+            $riga['importo_netto_prima_sconto']     = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['importo_netto_totale'], 2 ) ) );
+            if( is_numeric( $riga['sconto_valore'] ?? NULL ) && $riga['sconto_valore'] > 0 ) {
+                $riga['sconto_netto'] = round( $riga['sconto_valore'], 2 );
+            } elseif( is_numeric( $riga['sconto_percentuale'] ?? NULL ) && $riga['sconto_percentuale'] > 0 ) {
+                $riga['sconto_netto'] = round( $riga['importo_netto_prima_sconto'] * $riga['sconto_percentuale'] / 100, 2 );
+            } else {
+                $riga['sconto_netto'] = 0;
+            }
+            $riga['sconto_netto']                   = min( $riga['sconto_netto'], $riga['importo_netto_prima_sconto'] );
+            $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_prima_sconto'] - $riga['sconto_netto'], 2 ) );
             $riga['importo_iva_totale']             = str_replace( ',', '.', round( $riga['importo_netto_totale'] * ( $riga['aliquota'] / 100 ), 2 ) );
             $riga['importo_lordo_totale']           = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] + $riga['importo_iva_totale'] ) );
             $riga['aliquota']                       = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['aliquota'], 2 ) ) );
@@ -886,6 +905,59 @@
                 $ritenuta['importo']     = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['importo'] ) );
                 unset( $ritenuta );
             }
+        }
+
+        // dati del trasporto ( DatiTrasporto ), per la fattura che accompagna la merce ( tipologia di fattura con
+        // se_trasporto, la fattura accompagnatoria ): il vettore, la causale, i colli con il loro peso, l'indirizzo e
+        // la data di consegna, quando il documento li ha
+        $r['doc']['trasporto'] = array();
+        if( ! empty( $r['doc']['se_fattura'] ) && ! empty( $r['doc']['se_trasporto'] ) ) {
+
+            if( ! empty( $r['doc']['id_trasportatore'] ) ) {
+                $r['doc']['trasporto']['vettore'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT id, nome, cognome, denominazione, partita_iva, codice_fiscale FROM anagrafica WHERE id = ?',
+                    array( array( 's' => $r['doc']['id_trasportatore'] ) )
+                );
+            }
+
+            if( ! empty( $r['doc']['id_causale'] ) ) {
+                $r['doc']['trasporto']['causale'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT nome FROM causali WHERE id = ?',
+                    array( array( 's' => $r['doc']['id_causale'] ) )
+                );
+            }
+
+            // i colli del documento: il numero, e il peso se hanno tutti la stessa unita' di misura
+            $colli = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT count(*) AS numero, sum( colli.peso ) AS peso, count( DISTINCT colli.id_udm_peso ) AS udm_diverse, '.
+                'max( udm.sigla ) AS udm_peso FROM colli LEFT JOIN udm ON udm.id = colli.id_udm_peso '.
+                'WHERE colli.id_documento = ? AND colli.id_genitore IS NULL',
+                array( array( 's' => $r['doc']['id'] ) )
+            );
+            if( ! empty( $colli['numero'] ) ) {
+                $r['doc']['trasporto']['colli'] = $colli;
+            }
+
+            // la sede di consegna, se il documento ne indica una
+            if( ! empty( $r['doc']['id_sede_destinatario_spedizione'] ) ) {
+                $r['doc']['trasporto']['resa'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
+                    'comuni.nome AS comune, provincie.sigla AS provincia, stati.iso31661alpha2 AS sigla_stato '.
+                    'FROM anagrafica_indirizzi '.
+                    'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+                    'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                    'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                    'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                    'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+                    'WHERE anagrafica_indirizzi.id = ?',
+                    array( array( 's' => $r['doc']['id_sede_destinatario_spedizione'] ) )
+                );
+            }
+
         }
 
         /**
