@@ -2,7 +2,9 @@
     Questa libreria contiene le macro necessarie per il funzionamento del sistema di traduzione dei microcontenuti del framework #}
 
 {# tr() - traduce un microcontenuto
-    Questa macro si appoggia all'array $cf['tr'] per tradurre i microcontenuti da rappresentare sulle pagine #}
+    Questa macro si appoggia all'array $cf['tr'] per tradurre i microcontenuti da rappresentare sulle pagine.
+    Opzioni: w la chiave, l la lingua ( default it-IT ), v il dizionario ( di solito tr.generic ), d il testo da
+    mostrare se la chiave non è tradotta in quella lingua; senza d al suo posto compare "TOKEN MANCANTE" #}
 {% macro tr( options ) %}
 
     {# valori di default #}
@@ -12,6 +14,8 @@
 
     {% if options.v[ options.w ][ options.l ] %}
     {{ options.v[ options.w ][ options.l ] }}
+    {% elseif options.d is defined %}
+    {{ options.d }}
     {% elseif options.l %}
     TOKEN MANCANTE {{ options.w }} PER {{ options.l }}
     {% else %}
@@ -21,5 +25,7 @@
 {% endmacro tr %}
 
 {# trw() - traduce un microcontenuto e restituisce l'output trimmato
-    Questa macro è un wrapper per tr() che restituisce l'output trimmato #}
-{% macro trw( options ) %}{{ _self.tr( options )|trim }}{% endmacro trw %}
+    Questa macro è un wrapper per tr() che restituisce l'output trimmato. L'output di tr() è già escapato, e trim lo
+    trasforma in una stringa normale: senza raw verrebbe escapato una seconda volta ( "d'accueil" diventava
+    "d&amp;#039;accueil" ) #}
+{% macro trw( options ) %}{{ _self.tr( options )|trim|raw }}{% endmacro trw %}

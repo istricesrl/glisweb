@@ -1,5 +1,6 @@
 {# LIBRERIE #}
 {% import '_lib/_default.twig' as cms %}
+{% import '_lib/_translation.twig' as trn %}
 
 <!-- file {{ _self }} -->
 <form action="{{ page.path[ localization.language.ietf ] }}" class="" id="formLogin" method="post">
@@ -12,30 +13,30 @@
 
     {# MODULO DI LOGIN #}
     <fieldset>
-        <legend>accesso utenti registrati</legend>
+        <legend>{{ trn.trw({ 'w': 'accesso_utenti_registrati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'accesso utenti registrati' }) }}</legend>
 
         {# MODULO PRINCIPALE #}
         <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-4 col-form-label">username</label>
-            <div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+            <label class="d-none d-md-block col-md-4 col-form-label">{{ trn.trw({ 'w': 'username', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'username' }) }}</label>
+            <div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="{{ trn.trw({ 'w': 'username', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'username' }) }}"></div>
         </div>
         <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-4 col-form-label">password</label>
-            <div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+            <label class="d-none d-md-block col-md-4 col-form-label">{{ trn.trw({ 'w': 'password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password' }) }}</label>
+            <div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="{{ trn.trw({ 'w': 'password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password' }) }}"></div>
         </div>
         <div class="form-group form-row">
-            <div class="col-12">{{ cms.formButton( { 'field': { 'text': 'login' }, 'form': { 'id': 'formLogin', 'table': '__login__' }, 'recaptcha': google.profile.recaptcha } ) }}</div>
+            <div class="col-12">{{ cms.formButton( { 'field': { 'text': trn.trw({ 'w': 'login', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'login' }) }, 'form': { 'id': 'formLogin', 'table': '__login__' }, 'recaptcha': google.profile.recaptcha } ) }}</div>
         </div>
 
         {# RECUPERO PASSWORD #}
         <div class="form-group form-row">
-            <div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a></div>
+            <div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">{{ trn.trw({ 'w': 'password_dimenticata', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password dimenticata' }) }}?</a></div>
         </div>
 
         {# REGISTRAZIONE NUOVO UTENTE #}
         {% if '0350.registrazione' in mods.active.array %}
         <div class="form-group form-row">
-            <div class="col-12"><a href="{{ pages['registrazione'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">registrati</a></div>
+            <div class="col-12"><a href="{{ pages['registrazione'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">{{ trn.trw({ 'w': 'registrati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'registrati' }) }}</a></div>
         </div>
         {% endif %}
 

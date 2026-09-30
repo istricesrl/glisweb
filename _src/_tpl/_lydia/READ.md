@@ -87,5 +87,7 @@ password corrente ( `also-required` ), e devono coincidere ( `required-equals` )
 `_src/_js/_lib/_form.js`. Se è attivo il modulo `0350.registrazione` il modulo di accesso mostra anche il link
 *registrati* verso la pagina `registrazione`, come fa Athena.
 
-I testi del template sono scritti in italiano, come in Athena: nessun template della linea nuova usa ancora il
-dizionario `tr.generic`.
+I testi dei moduli di accesso, dell'account e del reset della password vengono dal dizionario `tr.generic`
+( `trn.trw()` di `_src/_twig/_lib/_translation.twig` ), con il testo italiano come ripiego ( opzione `d` ) per le
+lingue in cui la chiave non è tradotta: oggi il dizionario è completo per it-IT, en-GB e fr-FR. Athena ha
+ancora i testi scritti in italiano nel template.
