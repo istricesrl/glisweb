@@ -356,10 +356,8 @@
             METHOD_GET => array( 'users' )
         ),
         'prezzi' => array(
-            CONTROL_FULL => array( 'roots' )
-        ),          
-        'prodotti_categorie' => array(
-            CONTROL_FULL => array( 'roots' )
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         ),
         'prodotti_caratteristiche' => array(
             CONTROL_FULL => array( 'roots' ),

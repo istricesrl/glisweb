@@ -144,6 +144,55 @@
     }
 
     /**
+     * questa funzione verifica se una pagina ha il contesto di cui ha bisogno
+     *
+     * Le schede alla destra della prima di un gruppo ( etc.tabs della definizione pagina ) lavorano
+     * sull'oggetto aperto nella prima scheda, e senza il suo id non hanno niente su cui lavorare: si
+     * aprirebbero lo stesso, eseguirebbero la loro macro e salverebbero oggetti secondari scollegati.
+     *
+     * Hanno un contesto i soli gruppi la cui prima scheda e' un modulo, cioe' finisce in `.form`: i
+     * gruppi che cominciano con una vista hanno a destra altre viste, stampe e strumenti globali, che
+     * un id non lo chiedono. Un gruppo fuori da questa convenzione non viene controllato.
+     *
+     * L'id si cerca su qualunque tabella della richiesta, perche' la tabella del modulo la dichiara la
+     * macro, che quando si chiama questa funzione non e' ancora stata eseguita.
+     *
+     * @param       string      $p      ID della pagina
+     *
+     * @return      boolean             false se la pagina richiede un contesto che manca, true altrimenti
+     *
+     */
+    function getPageContext( $p ) {
+
+        // namespace globale
+        global $cf;
+
+        // se viene passato $cf['page'] anziché l'ID della pagina
+        if( is_array( $p ) ) {
+            $p = $p['id'];
+        }
+
+        // schede del gruppo
+        $tabs = ( isset( $cf['contents']['pages'][ $p ]['etc']['tabs'] ) ) ? $cf['contents']['pages'][ $p ]['etc']['tabs'] : array();
+
+        // la prima scheda, o una pagina fuori da un gruppo con contesto, non chiede niente
+        if( count( $tabs ) < 2 || $p == reset( $tabs ) || substr( reset( $tabs ), -5 ) != '.form' ) {
+            return true;
+        }
+
+        // cerco l'id dell'oggetto su qualunque tabella della richiesta
+        foreach( $_REQUEST as $k => $v ) {
+            if( is_array( $v ) && ! empty( $v['id'] ) ) {
+                return true;
+            }
+        }
+
+        // contesto mancante
+        return false;
+
+    }
+
+    /**
      * questa funzione verifica se l'utente ha i permessi per effettuare un'azione su una tabella
      * 
      * Questa funzione verifica tramite il confronto fra i permessi dell'utente e quelli della tabella

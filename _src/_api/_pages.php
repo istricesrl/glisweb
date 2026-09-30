@@ -484,6 +484,14 @@
          */
         $ct['page']['macro'] = array();
 
+    } elseif( getPageContext( $ct['page'] ) !== true ) {
+
+        // switch dello schema per le schede che richiedono un contesto che manca ( 2026-09-29 ): come per i
+        // permessi niente macro, perche' fra quelle delle schede ce ne sono che scrivono; vedi getPageContext()
+        $contextSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'context.twig' ) ) ? 'context.twig' : 'context.html';
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['context'] ) ) ? $ct['page']['template']['context'] : $contextSchema;
+        $ct['page']['macro'] = array();
+
     }
 
     // switch dello schema in caso di schema non specificato

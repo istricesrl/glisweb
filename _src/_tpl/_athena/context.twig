@@ -1,0 +1,10 @@
+{% extends 'ext/main.twig' %}
+
+{% block main %}
+{# scheda che richiede un contesto aperta senza l'id dell'oggetto: vedi getPageContext() #}
+<div class="alert alert-warning" role="alert">
+    {{ tr.generic.scheda_senza_contesto[ localization.language.ietf ] }}
+    <a class="alert-link" href="{{ pages[ page.parent.id ].path[ localization.language.ietf ] }}">{{ tr.generic.questa_vista[ localization.language.ietf ] }}</a>
+    {{ tr.generic.per_proseguire[ localization.language.ietf ] }}
+</div>
+{% endblock %}
