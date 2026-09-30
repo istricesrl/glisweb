@@ -187,6 +187,7 @@
      * casse                | i contributi alle casse previdenziali, con imponibile, importo e IVA calcolati se vuoti
      * ritenute             | le ritenute, con l'importo calcolato se vuoto; le righe soggette hanno se_ritenuta
      * trasporto            | per la fattura accompagnatoria: vettore, causale, colli ( numero, peso, unità ), resa
+     * dichiarazione_intento| la dichiarazione d'intento del cliente valida alla data, se il documento ha righe N3.5
      *
      * Ogni riga ha importo_netto_totale già scontato: lo sconto di riga ( sconto_valore, netto sull'intera riga, o in
      * mancanza sconto_percentuale ) è in sconto_netto, e il prezzo di prima in importo_netto_prima_sconto.
@@ -915,6 +916,29 @@
                 $ritenuta['importo']     = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['importo'] ) );
                 unset( $ritenuta );
             }
+        }
+
+        // dichiarazione d'intento del cliente valida alla data del documento, per le righe con natura N3.5: la piu' recente
+        // fra quelle ricevute entro la data, dello stesso anno ( se lo indicano ) e col periodo che la comprende ( se ne
+        // indicano uno )
+        $r['doc']['dichiarazione_intento'] = array();
+        if( in_array( 'N3.5', array_column( $r['doc']['righe'], 'codice_iva' ) ) && ! empty( $r['doc']['id_destinatario'] ) ) {
+            $r['doc']['dichiarazione_intento'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM dichiarazioni_intento WHERE id_anagrafica = ? '.
+                'AND data_protocollo <= ? '.
+                'AND ( anno IS NULL OR anno = year( ? ) ) '.
+                'AND ( data_inizio IS NULL OR data_inizio <= ? ) '.
+                'AND ( data_fine IS NULL OR data_fine >= ? ) '.
+                'ORDER BY data_protocollo DESC, id DESC LIMIT 1',
+                array(
+                    array( 's' => $r['doc']['id_destinatario'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] )
+                )
+            );
         }
 
         // dati del trasporto ( DatiTrasporto ), per la fattura che accompagna la merce ( tipologia di fattura con

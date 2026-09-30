@@ -1396,6 +1396,22 @@ ALTER TABLE `crediti`
 -- tipologia: tabella gestita
 ALTER TABLE `crediti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000008950
+
+-- dichiarazioni_intento
+ALTER TABLE `dichiarazioni_intento`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`protocollo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `data_protocollo` (`data_protocollo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000008951
+
+-- dichiarazioni_intento
+ALTER TABLE `dichiarazioni_intento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000009000
 
 -- disponibilita

@@ -682,6 +682,21 @@
 		    $linea['Natura'] = $row['codice_iva'];
 		}
 
+	    // - - - - AltriDatiGestionali / la dichiarazione d'intento per le righe non imponibili N3.5: protocollo e data della
+	    // ricevuta telematica, con TipoDato INTENTO come chiedono le specifiche dal 2022
+		if( $row['codice_iva'] == 'N3.5' ) {
+		    if( ! empty( $dati['doc']['dichiarazione_intento'] ) ) {
+		        $linea['AltriDatiGestionali'] = array(
+		            'TipoDato' => 'INTENTO',
+		            'RiferimentoTesto' => $testoLimitato( $dati['doc']['dichiarazione_intento']['protocollo'], 60, 'il protocollo della dichiarazione d\'intento' ),
+		            'RiferimentoData' => $dati['doc']['dichiarazione_intento']['data_protocollo']
+		        );
+		    } elseif( empty( $erroreIntento ) ) {
+		        $errori[] = 'la riga ' . ( $num + 1 ) . ' ha la natura N3.5, ma il cliente non ha una dichiarazione d\'intento valida alla data del documento: va registrata nella sua anagrafica';
+		        $erroreIntento = true;
+		    }
+		}
+
 	    // le nature generiche N2, N3 e N6 lo SDI le scarta dal 2021 ( controllo 00445 ): le aliquote che le hanno sono
 	    // archiviate, ma i documenti di prima le citano ancora
 		if( in_array( $row['codice_iva'], array( 'N2', 'N3', 'N6' ) ) ) {

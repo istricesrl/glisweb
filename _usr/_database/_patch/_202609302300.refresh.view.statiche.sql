@@ -24,11 +24,23 @@ DROP TABLE IF EXISTS `refresh_view_statiche`;
 
 -- | 202609302320
 
--- le procedure che la coda chiamava, sui deploy che le hanno ancora
+-- le procedure che la coda chiamava, sui deploy che le hanno ancora ( una per blocco: il task esegue una query per blocco )
 DROP PROCEDURE IF EXISTS `anagrafica_view_static`;
+
+-- | 202609302321
+
 DROP PROCEDURE IF EXISTS `articoli_view_static`;
+
+-- | 202609302322
+
 DROP PROCEDURE IF EXISTS `attivita_view_static`;
+
+-- | 202609302323
+
 DROP PROCEDURE IF EXISTS `offerte_attive_view_static`;
+
+-- | 202609302324
+
 DROP PROCEDURE IF EXISTS `todo_view_static`;
 
 -- | FINE FILE

@@ -142,6 +142,7 @@
 
             {# SUBFORM IBAN #}
             {{ sub.iban( form.table, 'iban', 'IBAN', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
+            {{ sub.dichiarazioni_intento( form.table, 'dichiarazioni_intento', 'dichiarazioni d\'intento', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
 
             {# SUBFORM SETTORI DI ATTIVITÀ #}
             {{ sub.ateco( form.table, 'anagrafica_settori', 'settori di attività', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}

@@ -2012,6 +2012,30 @@ CREATE TABLE IF NOT EXISTS `crediti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000008950
+
+-- dichiarazioni_intento
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene le dichiarazioni d'intento degli esportatori abituali, citate dalla fattura elettronica nelle righe con natura N3.5
+--
+CREATE TABLE IF NOT EXISTS `dichiarazioni_intento` (             --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'esportatore abituale che ha emesso la dichiarazione
+  `protocollo` char(32) DEFAULT NULL,                         -- protocollo di ricezione telematica ( 17 cifre, trattino, 6 cifre )
+  `data_protocollo` date DEFAULT NULL,                        -- data della ricevuta telematica
+  `anno` int(4) DEFAULT NULL,                                 -- anno a cui si riferisce la dichiarazione
+  `data_inizio` date DEFAULT NULL,                            -- inizio del periodo di validita', se la dichiarazione ne indica uno
+  `data_fine` date DEFAULT NULL,                              -- fine del periodo di validita'
+  `importo` decimal(16,2) DEFAULT NULL,                       -- importo fino a concorrenza del quale vale la dichiarazione
+  `note` text DEFAULT NULL,                                   -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la dichiarazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la dichiarazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000009000
 
 -- disponibilita

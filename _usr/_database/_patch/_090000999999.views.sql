@@ -1979,6 +1979,27 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
+-- | 090000008950
+
+-- dichiarazioni_intento_view
+CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
+	SELECT
+		dichiarazioni_intento.id,
+		dichiarazioni_intento.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		dichiarazioni_intento.protocollo,
+		dichiarazioni_intento.data_protocollo,
+		dichiarazioni_intento.anno,
+		dichiarazioni_intento.data_inizio,
+		dichiarazioni_intento.data_fine,
+		dichiarazioni_intento.importo,
+		dichiarazioni_intento.id_account_inserimento,
+		dichiarazioni_intento.id_account_aggiornamento,
+		concat_ws( ' ', dichiarazioni_intento.protocollo, 'del', dichiarazioni_intento.data_protocollo ) AS __label__
+	FROM dichiarazioni_intento
+		LEFT JOIN anagrafica AS a1 ON a1.id = dichiarazioni_intento.id_anagrafica
+;
+
 -- | 090000009001
 
 -- disponibilita_view
