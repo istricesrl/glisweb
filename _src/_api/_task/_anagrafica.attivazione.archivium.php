@@ -26,7 +26,7 @@
 	logWrite( 'invio anagrafica ad Archivium', 'archivium', LOG_NOTICE );
 
     // esportazione azienda in Archivium
-    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'], true ) ) {
+    if( getPrivilege( 'INVIO_ANAGRAFICA_ARCHIVIUM' ) ) {
 
         // verifica se l'anagrafica è presente
         if( isset( $_REQUEST['id'] ) ) {

@@ -41,7 +41,7 @@
 	logWrite( 'creazione account anagrafica', 'account', LOG_NOTICE );
 
     // verifiche formali
-    if( ! in_array( 'GESTIONE_ACCOUNT', $_SESSION['account']['privilegi'], true ) ) {
+    if( ! getPrivilege( 'GESTIONE_ACCOUNT' ) ) {
 
         // status
         $status['err'][] = 'privilegi insufficienti';

@@ -195,6 +195,38 @@
     }
 
     /**
+     * aggiorna alcune colonne della riga di anagrafica_view_static
+     *
+     * Serve alle funzioni updateAnagraficaViewStatic{Categorie,Indirizzi,Telefoni,Mail}() quando sono
+     * chiamate da sole, senza la $riga che costruisce updateAnagraficaViewStatic(): prima inserivano
+     * una riga col solo id, perdendo i dati appena calcolati. Se la riga statica esiste si aggiornano
+     * solo le colonne passate, altrimenti la si ricostruisce per intero.
+     *
+     * @param       integer     $id     id dell'anagrafica
+     * @param       array       $dati   colonne da aggiornare
+     *
+     */
+    function updateAnagraficaViewStaticColonne($id, $dati)
+    {
+
+        global $cf;
+
+        if (empty($id)) {
+            return;
+        }
+
+        if (mysqlSelectValue($cf['mysql']['connection'], 'SELECT id FROM anagrafica_view_static WHERE id = ?', array(array('s' => $id)))) {
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array_merge((is_array($dati) ? $dati : array()), array('id' => $id)),
+                'anagrafica_view_static'
+            );
+        } else {
+            updateAnagraficaViewStatic($id);
+        }
+    }
+
+    /**
      * 
      * 
      * 
@@ -239,13 +271,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $categorie);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
 
         $tCat = mysqlSelectValue(
@@ -320,13 +348,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $indirizzi);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
@@ -361,13 +385,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $telefoni);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
@@ -402,13 +422,9 @@
             );
         } else {
 
-            $riga['id'] = $id;
+            updateAnagraficaViewStaticColonne($id, $mail);
 
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $riga,
-                'anagrafica_view_static'
-            );
+            return;
         }
     }
 
