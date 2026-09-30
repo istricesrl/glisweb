@@ -112,6 +112,19 @@
 	    return str_replace( '&amp;', '&', xmlEntities( $t ) );
 	};
 
+    // testi con una lunghezza massima nello schema ( Denominazione 80, Nome e Cognome 60, Descrizione 1000 ): oltre il
+    // massimo lo SDI scarta la fattura, per cui si troncano e lo si dice fra gli avvisi; dopo $testoFattura() il testo e'
+    // ASCII, per cui substr() non spezza caratteri
+	$troncati = array();
+	$testoLimitato = function( $t, $max, $campo ) use ( $testoFattura, &$troncati ) {
+	    $t = $testoFattura( $t );
+	    if( strlen( $t ) > $max ) {
+		$troncati[] = 'testo troncato a ' . $max . ' caratteri, il massimo dello schema: ' . $campo;
+		$t = substr( $t, 0, $max );
+	    }
+	    return $t;
+	};
+
     // versione PA o privati
 	$versione = ( empty( $dati['dst']['se_pubblica_amministrazione'] ) ) ? 'FPR12' : 'FPA12';
 
@@ -182,7 +195,7 @@
 	        // - - - - Anagrafica
 	        'Anagrafica' => array(
 	            // - - - - - Denominazione / la denominazione del cedente
-	            'Denominazione' => $dati['src']['denominazione_fiscale']
+	            'Denominazione' => $testoLimitato( $dati['src']['denominazione_fiscale'], 80, 'la denominazione del cedente' )
 	        ),
 	        // - - - - RegimeFiscale / il regime fiscale del cedente
 	        'RegimeFiscale' => $dati['srr']['codice']
@@ -227,16 +240,16 @@
 
 		$anagraficaCessionario['Anagrafica'] = array(
 		    // - - - - - Nome / il nome del cliente privato
-		    'Nome' => $testoFattura( $dati['dst']['nome'] ),
+		    'Nome' => $testoLimitato( $dati['dst']['nome'], 60, 'il nome del cliente' ),
 		    // - - - - - Cognome / il cognome del cliente privato
-		    'Cognome' => $testoFattura( $dati['dst']['cognome'] )
+		    'Cognome' => $testoLimitato( $dati['dst']['cognome'], 60, 'il cognome del cliente' )
 		);
 
 	} else {
 
 		$anagraficaCessionario['Anagrafica'] = array(
 		    // - - - - - Denominazione / la denominazione del cliente
-		    'Denominazione' => $testoFattura( $dati['dst']['denominazione_fiscale'] )
+		    'Denominazione' => $testoLimitato( $dati['dst']['denominazione_fiscale'], 80, 'la denominazione del cliente' )
 		);
 
 	}
@@ -270,7 +283,7 @@
     // errori, che fermano l'invio allo SDI, e avvisi, che non fermano niente; oltre alla validazione contro lo schema, i
     // controlli che lo schema non fa ( vedi l'intestazione )
 	$errori = array();
-	$avvisi = array();
+	$avvisi = $troncati;
 
     // - - DatiGeneraliDocumento
 	$generaliDocumento = array(
@@ -361,8 +374,13 @@
     // - - - - ImportoTotaleDocumento / l'importo lordo totale del documento, con i contributi di cassa e la loro IVA
 	$generaliDocumento['ImportoTotaleDocumento'] = xmlFloat( $totaleDocumento );
 
-    // - - - - Causale / la causale del documento
-	$generaliDocumento['Causale'] = $dati['doc']['causale'];
+    // - - - - Causale / la causale del documento, in blocchi da 200 caratteri ( il massimo dello schema; l'elemento e'
+    // ripetibile ) spezzati possibilmente fra una parola e l'altra; vuota non si scrive, perche' lo schema non ammette
+    // un elemento senza testo
+	$causale = trim( $testoFattura( $dati['doc']['causale'] ?? '' ) );
+	if( $causale !== '' ) {
+	    $generaliDocumento['Causale'] = explode( "\n", wordwrap( preg_replace( '/\s+/', ' ', $causale ), 200, "\n", true ) );
+	}
 
     // - - DatiGenerali
 	$generali = array(
@@ -476,7 +494,7 @@
 		    // - - - - NumeroLinea / il numero della riga
 		    'NumeroLinea' => $num + 1,
 		    // - - - - Descrizione / la descrizione della riga
-		    'Descrizione' => $testoFattura( $row['nome'] ),
+		    'Descrizione' => $testoLimitato( $row['nome'], 1000, 'la descrizione della riga ' . ( $num + 1 ) ),
 		    // - - - - Quantita / la quantità della riga
 		    // NOTA lo schema vuole almeno due decimali: la colonna quantita è decimal(9,2), ma a una riga senza quantità
 		    // generaContenutiDocumento() assegna l'intero 1, che scritto com'è rendeva il file non valido

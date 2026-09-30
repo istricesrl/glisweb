@@ -286,7 +286,7 @@ Cosa c'è in ciascuna, in una riga:
 | `_etc/` | configurazione di supporto: dizionari di traduzione, liste di sicurezza, robots, Doxygen, release e version |
 | `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point HTTP), `_cli/` (entry point da riga di comando), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script di shell), `_twig/` e `_tpl/` (template) |
 | `_mod/` | i moduli; un modulo è attivo **solo se esiste** la cartella omonima in `mod/` |
-| `_usr/` | quello che non è codice: `_database/_patch/`, `_docs/`, `_examples/`, `_test/` |
+| `_usr/` | quello che non è codice: `_config/` ( modelli di configurazione ), `_database/_patch/`, `_deploy/` ( modelli per il deploy ), `_docs/`, `_examples/` |
 | `var/` | stato locale: log, cache, spool, sitemap, marcatori. **Gitignored, escluso dal deploy** |
 | `tmp/` | temporanei di lavoro, senza aspettativa di sopravvivenza |
 

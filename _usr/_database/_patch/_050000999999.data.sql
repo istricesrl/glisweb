@@ -199,7 +199,7 @@ INSERT IGNORE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `
 
 -- iva
 -- le righe 35, 57 e 58 sono archiviate dal 2026-09-30: la natura generica N6 lo SDI la scarta dal 2021 ( errore 00445 ), e
--- l'art. 71 verso San Marino ha la natura N3.3 ( riga 60 ); restano per i documenti gia' emessi che le citano, ma le
+-- l'art. 71 ha la natura N3.3 verso San Marino ( riga 60 ) e N3.6 verso il Vaticano ( riga 71 ); restano per i documenti gia' emessi che le citano, ma le
 -- tendine dei documenti non le propongono; le righe da 60 a 70 sono i codici delle specifiche 1.9
 INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
 (1,	22.00,	'IVA 22%',	'IVA 22%',	NULL,	NULL),
@@ -271,7 +271,8 @@ INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `ti
 (67,	0.00,	'rev. charge ex art. 17 c. 6 lett. a ter d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettera a ter del d.P.R. 633/1972 (comparto edile)',	'N6.7',	NULL),
 (68,	0.00,	'rev. charge ex art. 17 c. 6 lett. d bis-quater d.P.R. 633/1972',	'inversione contabile ex art. 17 comma 6 lettere d bis, d ter e d quater del d.P.R. 633/1972',	'N6.8',	NULL),
 (69,	0.00,	'rev. charge, altri casi',	'operazione soggetta a inversione contabile (reverse charge), altri casi',	'N6.9',	NULL),
-(70,	0.00,	'IVA assolta in altro stato UE',	'IVA assolta in altro stato UE ex art. 7 octies e art. 74 sexies del d.P.R. 633/1972',	'N7',	NULL);
+(70,	0.00,	'IVA assolta in altro stato UE',	'IVA assolta in altro stato UE ex art. 7 octies e art. 74 sexies del d.P.R. 633/1972',	'N7',	NULL),
+(71,	0.00,	'non imponibile ex art. 71 d.P.R. 633/1972 (Vaticano)',	'operazione non imponibile ex art. 71 del d.P.R. 633/1972 (cessione verso la Città del Vaticano)',	'N3.6',	NULL);
 
 -- | 050000016800
 

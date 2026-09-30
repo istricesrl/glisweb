@@ -5,27 +5,27 @@
     <DatiTrasmissione>
       <IdTrasmittente>
         <IdPaese>IT</IdPaese>
-        <IdCodice>HRTGPP56M31D158P</IdCodice>
+        <IdCodice>VRDLGU75B02F205A</IdCodice>
       </IdTrasmittente>
       <ProgressivoInvio>00001</ProgressivoInvio>
       <FormatoTrasmissione>FPR12</FormatoTrasmissione>
-      <CodiceDestinatario>P42QY6Q</CodiceDestinatario>
+      <CodiceDestinatario>0000000</CodiceDestinatario>
     </DatiTrasmissione>
     <CedentePrestatore>
       <DatiAnagrafici>
         <IdFiscaleIVA>
           <IdPaese>IT</IdPaese>
-          <IdCodice>00276574202</IdCodice>
+          <IdCodice>01111111116</IdCodice>
         </IdFiscaleIVA>
         <Anagrafica>
-          <Denominazione>PIPPAGNONCO</Denominazione>
+          <Denominazione>Azienda Agricola Esempio srl</Denominazione>
         </Anagrafica>
         <RegimeFiscale>RF01</RegimeFiscale>
       </DatiAnagrafici>
       <Sede>
-        <Indirizzo>via Via Cassola, 10</Indirizzo>
-        <CAP>40053</CAP>
-        <Comune>Valsamoggia</Comune>
+        <Indirizzo>via Roma 1</Indirizzo>
+        <CAP>40100</CAP>
+        <Comune>Bologna</Comune>
         <Provincia>BO</Provincia>
         <Nazione>IT</Nazione>
       </Sede>
@@ -34,15 +34,15 @@
       <DatiAnagrafici>
         <IdFiscaleIVA>
           <IdPaese>IT</IdPaese>
-          <IdCodice>03456768360</IdCodice>
+          <IdCodice>02222222222</IdCodice>
         </IdFiscaleIVA>
         <Anagrafica>
-          <Denominazione>PIPPERO PIPPI</Denominazione>
+          <Denominazione>Cliente di Prova srl</Denominazione>
         </Anagrafica>
       </DatiAnagrafici>
       <Sede>
-        <Indirizzo>via Via per Riolo,8, </Indirizzo>
-        <CAP>41013</CAP>
+        <Indirizzo>via Garibaldi 2</Indirizzo>
+        <CAP>41100</CAP>
         <Comune>Modena</Comune>
         <Provincia>MO</Provincia>
         <Nazione>IT</Nazione>
