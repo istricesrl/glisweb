@@ -806,7 +806,7 @@
         // l'aliquota è a zero la sua natura va nel blocco al posto dell'IVA
         $r['doc']['casse'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_casse_previdenziali.*, casse_previdenziali.codice AS codice_cassa, '.
+            'SELECT documenti_casse_previdenziali.*, casse_previdenziali.codice AS codice_cassa, casse_previdenziali.nome AS nome_cassa, '.
             'iva.aliquota AS aliquota_iva, iva.codice AS codice_iva, iva.nome AS nome_iva, iva.descrizione AS descrizione_iva '.
             'FROM documenti_casse_previdenziali '.
             'INNER JOIN casse_previdenziali ON casse_previdenziali.id = documenti_casse_previdenziali.id_cassa_previdenziale '.
@@ -846,7 +846,7 @@
         // ritenute ( DatiRitenuta )
         $r['doc']['ritenute'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_ritenute.*, ritenute.codice AS codice_ritenuta '.
+            'SELECT documenti_ritenute.*, ritenute.codice AS codice_ritenuta, ritenute.nome AS nome_ritenuta '.
             'FROM documenti_ritenute '.
             'INNER JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta '.
             'WHERE documenti_ritenute.id_documento = ? '.

@@ -460,6 +460,40 @@
         $pdf->Cell( $col * 1, 0,  $dati['doc']['tot']['importo_iva_totale'].' €', 0, 0, 'R', false, '', 0 );			// larghezza, altezza, testo, bordo, newline, allineamento
         $pdf->Cell( $col * 2, 0, $dati['doc']['tot']['importo_lordo_totale'].' €', 0, 1, 'R', false, '', 0 );		// larghezza, altezza, testo, bordo, newline, allineamento
 
+        // contributi alle casse previdenziali e ritenute, come nella fattura elettronica ( _fattura.xml.php ): il contributo
+        // si aggiunge al totale e la sua IVA va nel dettaglio IVA, la ritenuta si toglie dal totale e da' il netto a pagare
+        $totaleDocumento = $dati['doc']['tot']['importo_lordo_totale'];
+        $pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
+        foreach( $dati['doc']['casse'] ?? array() as $cassa ) {
+            $pdf->Cell( $col * 7, 0, 'contributo ' . ( $cassa['nome_cassa'] ?? $cassa['codice_cassa'] ) . ' ' . number_format( $cassa['aliquota'], 2, ',', '.' ) . '% su ' . number_format( $cassa['imponibile'], 2, ',', '.' ) . ' €', 0, 0, 'L', false, '', 1 );
+            $pdf->Cell( $col * 2, 0, $cassa['importo'].' €', 0, 0, 'R', false, '', 0 );
+            $pdf->Cell( $col * 1, 0, $cassa['importo_iva'].' €', 0, 0, 'R', false, '', 0 );
+            $pdf->Cell( $col * 2, 0, sprintf( '%0.2f', $cassa['importo'] + $cassa['importo_iva'] ).' €', 0, 1, 'R', false, '', 0 );
+            if( isset( $dati['doc']['iva'][ $cassa['id_iva'] ] ) ) {
+                $dati['doc']['iva'][ $cassa['id_iva'] ]['tot'] = sprintf( '%0.2f', $dati['doc']['iva'][ $cassa['id_iva'] ]['tot'] + $cassa['importo_iva'] );
+            } elseif( ! empty( $cassa['id_iva'] ) ) {
+                $dati['doc']['iva'][ $cassa['id_iva'] ] = array( 'codice' => $cassa['codice_iva'], 'nome' => $cassa['nome_iva'], 'tot' => $cassa['importo_iva'] );
+            }
+            $totaleDocumento += $cassa['importo'] + $cassa['importo_iva'];
+        }
+        if( ! empty( $dati['doc']['casse'] ) ) {
+            $pdf->SetFont( $fnt, 'B', $fnts );
+            $pdf->Cell( $col * 10, 0, 'totale documento', 0, 0, 'L', false, '', 0 );
+            $pdf->Cell( $col * 2, 0, sprintf( '%0.2f', $totaleDocumento ).' €', 0, 1, 'R', false, '', 0 );
+            $pdf->SetFont( $fnt, '', $fnts );
+        }
+        $totaleRitenute = 0;
+        foreach( $dati['doc']['ritenute'] ?? array() as $ritenuta ) {
+            $pdf->Cell( $col * 10, 0, ( $ritenuta['nome_ritenuta'] ?? $ritenuta['codice_ritenuta'] ) . ' ' . number_format( $ritenuta['aliquota'], 2, ',', '.' ) . '%', 0, 0, 'L', false, '', 1 );
+            $pdf->Cell( $col * 2, 0, '-' . $ritenuta['importo'].' €', 0, 1, 'R', false, '', 0 );
+            $totaleRitenute += $ritenuta['importo'];
+        }
+        if( ! empty( $dati['doc']['ritenute'] ) ) {
+            $pdf->SetFont( $fnt, 'B', $fnts );
+            $pdf->Cell( $col * 10, 0, 'netto a pagare', 0, 0, 'L', false, '', 0 );
+            $pdf->Cell( $col * 2, 0, sprintf( '%0.2f', $totaleDocumento - $totaleRitenute ).' €', 0, 1, 'R', false, '', 0 );
+        }
+
         // spazio sotto la tabella di dettaglio
         $pdf->SetY( $pdf->GetY() + $stdsp );
 
