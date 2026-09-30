@@ -274,15 +274,69 @@
 	);
 
     // - FatturaElettronicaHeader
+    // errori trovati nell'intestazione, che si aggiungono agli altri piu' sotto
+	$erroriIntestazione = array();
+
+    // - - - IscrizioneREA / l'iscrizione del cedente al registro delle imprese, se l'anagrafica la indica
+	if( ! empty( $dati['src']['rea_ufficio'] ) || ! empty( $dati['src']['rea_numero'] ) ) {
+	    if( empty( $dati['src']['rea_ufficio'] ) || empty( $dati['src']['rea_numero'] ) ) {
+	        $erroriIntestazione[] = 'l\'iscrizione al REA del cedente va indicata con l\'ufficio ( la sigla della provincia ) e il numero';
+	    } else {
+	        $rea = array(
+	            'Ufficio' => strtoupper( $dati['src']['rea_ufficio'] ),
+	            'NumeroREA' => $testoLimitato( $dati['src']['rea_numero'], 20, 'il numero REA' )
+	        );
+	        if( is_numeric( $dati['src']['capitale_sociale'] ) ) {
+	            $rea['CapitaleSociale'] = xmlFloat( $dati['src']['capitale_sociale'] );
+	        }
+	        if( ! empty( $dati['src']['socio_unico'] ) ) {
+	            $rea['SocioUnico'] = $dati['src']['socio_unico'];
+	        }
+	        // lo schema vuole sempre lo stato di liquidazione: se non e' indicato, non in liquidazione
+	        $rea['StatoLiquidazione'] = ( ! empty( $dati['src']['stato_liquidazione'] ) ) ? $dati['src']['stato_liquidazione'] : 'LN';
+	        $cedente['IscrizioneREA'] = $rea;
+	    }
+	}
+
+    // - - RappresentanteFiscale / il rappresentante fiscale del cedente, che lo schema vuole con la partita IVA
+	$rappresentante = NULL;
+	if( ! empty( $dati['srf'] ) ) {
+	    $pivaRappresentante = strtoupper( str_replace( ' ', '', (string) $dati['srf']['partita_iva'] ) );
+	    if( $pivaRappresentante === '' ) {
+	        $erroriIntestazione[] = 'il rappresentante fiscale del cedente non ha la partita IVA';
+	    } else {
+	        $paeseRappresentante = ( preg_match( '/^([A-Z]{2})(.+)$/', $pivaRappresentante, $m ) ) ? $m[1] : 'IT';
+	        $datiRappresentante = array( 'IdFiscaleIVA' => array(
+	            'IdPaese' => $paeseRappresentante,
+	            'IdCodice' => ( isset( $m[2] ) ) ? $m[2] : $pivaRappresentante
+	        ) );
+	        if( ! empty( $dati['srf']['codice_fiscale'] ) ) {
+	            $datiRappresentante['CodiceFiscale'] = strtoupper( $dati['srf']['codice_fiscale'] );
+	        }
+	        if( ! empty( $dati['srf']['denominazione'] ) ) {
+	            $datiRappresentante['Anagrafica'] = array( 'Denominazione' => $testoLimitato( $dati['srf']['denominazione'], 80, 'la denominazione del rappresentante fiscale' ) );
+	        } else {
+	            $datiRappresentante['Anagrafica'] = array(
+	                'Nome' => $testoLimitato( $dati['srf']['nome'], 60, 'il nome del rappresentante fiscale' ),
+	                'Cognome' => $testoLimitato( $dati['srf']['cognome'], 60, 'il cognome del rappresentante fiscale' )
+	            );
+	        }
+	        $rappresentante = array( 'DatiAnagrafici' => $datiRappresentante );
+	    }
+	}
+
 	$fattura['p:FatturaElettronica']['FatturaElettronicaHeader'] = array(
 	    'DatiTrasmissione' => $trasmissione,
-	    'CedentePrestatore' => $cedente,
-	    'CessionarioCommittente' => $cessionario
+	    'CedentePrestatore' => $cedente
 	);
+	if( ! empty( $rappresentante ) ) {
+	    $fattura['p:FatturaElettronica']['FatturaElettronicaHeader']['RappresentanteFiscale'] = $rappresentante;
+	}
+	$fattura['p:FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente'] = $cessionario;
 
     // errori, che fermano l'invio allo SDI, e avvisi, che non fermano niente; oltre alla validazione contro lo schema, i
     // controlli che lo schema non fa ( vedi l'intestazione )
-	$errori = array();
+	$errori = $erroriIntestazione;
 	$avvisi = $troncati;
 
     // numero di un documento come va nell'XML: con il sezionale se c'e', vedi numeroDocumentoFattura()

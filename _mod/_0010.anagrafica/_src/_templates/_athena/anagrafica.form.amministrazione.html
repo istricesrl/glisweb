@@ -75,6 +75,39 @@
         </fieldset>
 
 	    <fieldset>
+        <legend>registro imprese e rappresentante fiscale</legend>
+
+        <div class="form-group form-row">
+            <div class="col-12 col-md-2">
+                <span class="label-top">ufficio REA</span>
+                {{ frm.input( table, '', '', 'rea_ufficio', '', '', request, '', '', '', '', '', '', '[A-Z]{2}' ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">numero REA</span>
+                {{ frm.input( table, '', '', 'rea_numero', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">capitale sociale</span>
+                {{ frm.input( table, '', '', 'capitale_sociale', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">soci</span>
+                {{ frm.select( table, '', '', 'socio_unico', '', etc.select.socio_unico, request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">liquidazione</span>
+                {{ frm.select( table, '', '', 'stato_liquidazione', '', etc.select.stato_liquidazione, request ) }}
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col-12">
+                <span class="label-top">rappresentante fiscale in Italia</span>
+                {{ frm.select( table, '', '', 'id_rappresentante_fiscale', '', etc.select.rappresentanti_fiscali, request ) }}
+            </div>
+        </div>
+        </fieldset>
+
+	    <fieldset>
             <legend>fatturazione elettronica</legend>
 
         <div class="form-group form-row">

@@ -212,6 +212,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
   `codice_ipa` char(32) DEFAULT NULL,                         -- codice IPA per la fatturazione elettronica verso la pubblica amministrazione
   `codice_archivium` char(16) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
   `id_regime` bigint(20) DEFAULT NULL,                           -- chiave esterna per il regime fiscale
+  `rea_ufficio` char(2) DEFAULT NULL,                         -- sigla della provincia dell'ufficio del registro imprese ( IscrizioneREA )
+  `rea_numero` char(20) DEFAULT NULL,                         -- numero di iscrizione al REA
+  `capitale_sociale` decimal(16,2) DEFAULT NULL,              -- capitale sociale versato, per le società di capitali
+  `socio_unico` enum('SU','SM') DEFAULT NULL,                 -- società a socio unico ( SU ) o a più soci ( SM )
+  `stato_liquidazione` enum('LS','LN') DEFAULT NULL,          -- in liquidazione ( LS ) o no ( LN )
+  `id_rappresentante_fiscale` bigint(20) DEFAULT NULL,           -- chiave esterna per l'anagrafica del rappresentante fiscale in Italia
   `note_amministrative` text DEFAULT NULL,                    -- note amministrative
   `note_collaborazione` text DEFAULT NULL,                    -- note di collaborazione
   `luogo_nascita` char(128) DEFAULT NULL,                     -- luogo di nascita

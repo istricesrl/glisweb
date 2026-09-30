@@ -176,7 +176,7 @@
      * raccoglie i dati di un documento per le stampe
      *
      * Restituisce un array con il documento ( doc, con le righe, i totali per aliquota in iva, i pagamenti ), l'emittente
-     * ( src, la sua sede sri e il suo regime srr ) e il destinatario ( dst e la sua sede dsi ), usato dalle stampe PDF e
+     * ( src, la sua sede sri, il suo regime srr e il suo rappresentante fiscale srf ) e il destinatario ( dst e la sua sede dsi ), usato dalle stampe PDF e
      * dalla fattura elettronica ( _src/_api/_print/_fattura.xml.php ). Dal 2026-09-30 doc ha anche i dati dei blocchi
      * condizionati della fattura elettronica:
      *
@@ -619,6 +619,16 @@
             'SELECT * FROM anagrafica WHERE id = ?',
             array( array( 's' => $r['doc']['id_emittente'] ) )
         );
+
+        // rappresentante fiscale dell'emittente ( RappresentanteFiscale della fattura elettronica )
+        $r['srf'] = array();
+        if( ! empty( $r['src']['id_rappresentante_fiscale'] ) ) {
+            $r['srf'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, nome, cognome, denominazione, partita_iva, codice_fiscale FROM anagrafica WHERE id = ?',
+                array( array( 's' => $r['src']['id_rappresentante_fiscale'] ) )
+            );
+        }
 
         // verifico la presenza del progressivo di invio
         if( empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }

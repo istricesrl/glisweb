@@ -30,6 +30,22 @@
 	    'SELECT id, __label__ FROM regimi_view'
 	);
 
+	// tendine per l'iscrizione al REA ( IscrizioneREA della fattura elettronica )
+	$ct['etc']['select']['socio_unico'] = array(
+	    array( 'id' => 'SU', '__label__' => 'socio unico' ),
+	    array( 'id' => 'SM', '__label__' => 'più soci' )
+	);
+	$ct['etc']['select']['stato_liquidazione'] = array(
+	    array( 'id' => 'LN', '__label__' => 'non in liquidazione' ),
+	    array( 'id' => 'LS', '__label__' => 'in liquidazione' )
+	);
+
+	// tendina rappresentanti fiscali: anagrafiche con partita IVA
+	$ct['etc']['select']['rappresentanti_fiscali'] = mysqlQuery(
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE partita_iva IS NOT NULL AND partita_iva != "" ORDER BY __label__'
+	);
+
 	// tendina settori e attività
 	$ct['etc']['select']['settori'] = mysqlCachedIndexedQuery(
 		$cf['memcache']['index'],

@@ -76,6 +76,7 @@ ALTER TABLE `anagrafica`
 	ADD KEY `partita_iva` (`partita_iva`),
 	ADD KEY `codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_regime` (`id_regime`),
+	ADD KEY `id_rappresentante_fiscale` (`id_rappresentante_fiscale`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
 	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
 	ADD KEY `id_ranking` (`id_ranking`),	
