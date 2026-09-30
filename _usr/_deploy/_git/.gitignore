@@ -25,11 +25,12 @@ var/
 /.gitignore
 /.htaccess
 /composer.*
-# robots.* e sitemap.* restano NON ancorati di proposito: oltre ai file
-# di root coprono etc/robots/ e etc/sitemap/, che sono generati da
-# _src/_config/_980.sitemap.php e non vanno versionati.
-robots.*
-sitemap.*
+# robots.* e sitemap.* sono ancorati alla root: il robots.txt di progetto
+# sta in etc/robots/robots.txt, e' scritto a mano e lo serve .htaccess,
+# quindi va versionato; le sitemap generate vanno in var/sitemap/, gia'
+# escluso qui sopra.
+/robots.*
+/sitemap.*
 /*.md
 
 # documentazione: il SORGENTE sta in usr/docs/ ed e' scritto a mano, quindi va versionato;
