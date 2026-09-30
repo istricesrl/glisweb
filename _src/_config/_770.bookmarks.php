@@ -62,14 +62,16 @@
         'anagrafica' => array(
             'label' => 'anagrafica'
         ),
-        'documenti' => array(
-            'label' => 'documenti',
-            // 'actions' => array(
-            //     'mailattach' => array(
-            //         'label' => 'vai alla creazione della mail',
-            //         'url' => $cf['contents']['pages']['mail.out.form']['url'][ LINGUA_CORRENTE ]
-            //     )
-            // )
+        // file messi da parte per allegarli a una mail: li scrivono i pulsanti dei campi file delle maschere, li legge
+        // la maschera della mail in uscita, e le macro della mail li tolgono dopo il primo salvataggio
+        'mailattach' => array(
+            'label' => 'allegati mail',
+            'actions' => array(
+                'mail' => array(
+                    'label' => 'vai alla creazione della mail',
+                    'page' => 'mail.out.form'
+                )
+            )
         )
     );
 

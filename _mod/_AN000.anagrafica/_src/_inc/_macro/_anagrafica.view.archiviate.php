@@ -144,12 +144,18 @@
     foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
 
-            $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
-                "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].
-                "&__work__[anagrafica][items][".$row['id']."][label]=".$row['__label__']."', aggiornaBookmarks );";
+            // bookmark: se la riga e' gia' fra i segnalibri il clic la toglie, altrimenti la aggiunge
+            $inBookmark = isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] );
+            if( $inBookmark ) {
+                $onclickBookmark = "$(this).metroWs('/task/bookmark.del?__key__=anagrafica&__item__=" . $row['id'] . "', aggiornaBookmarks );";
+            } else {
+                $onclickBookmark = "$(this).metroWs('/task/bookmark.add?" .
+                    "__work__[anagrafica][items][" . $row['id'] . "][id]=" . $row['id'] .
+                    "&__work__[anagrafica][items][" . $row['id'] . "][label]=" . urlencode( $row['__label__'] ) . "', aggiornaBookmarks );";
+            }
 
             $buttons = '<a href="#" onclick="'.$onclickBookmark.'">'.
-                '<span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
+                '<span class="media-left"><i class="fa fa-bookmark'.( ( $inBookmark ) ? NULL : '-o' ).'"></i></span></a>';
 
 /* TODO reimplementare
             if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {

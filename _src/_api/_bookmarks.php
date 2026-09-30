@@ -13,8 +13,10 @@
      * 
      * test dei bookmarks
      * ------------------
-     * Per visualizzare la situazione corrente dei bookmarks chiamare l'endpoint /api/bookmarks. Per settare un nuovo
-     * bookmark è possibile chiamare l'endpoint /api/bookmarks specificando l'oggetto che si vuole inserire, ad esempio:
+     * Per visualizzare la situazione corrente dei bookmarks chiamare l'endpoint /api/bookmarks. Per aggiungere o togliere
+     * un bookmark dall'interfaccia si usano i task /task/bookmark.add e /task/bookmark.del, che dal 2026-09-30 sono il
+     * canone in tutte le viste. L'aggiunta la fa in realtà il runlevel /_src/_config/_715.session.php per qualunque
+     * richiesta che porti __work__, quindi anche questo endpoint, chiamato con l'oggetto da inserire, lo aggiunge:
      * 
      * ```
      * /api/bookmarks?__work__[anagrafica][items][1][id]=1&__work__[anagrafica][items][1][label]=Mosti%20Zorro
