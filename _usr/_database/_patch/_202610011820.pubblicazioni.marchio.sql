@@ -60,3 +60,5 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		LEFT JOIN tipologie_pubblicazioni AS tp
             ON tp.id = pubblicazioni.id_tipologia
 ;
+
+-- | FINE FILE
