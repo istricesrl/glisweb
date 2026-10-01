@@ -1101,6 +1101,8 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.se_prodotti,
 		caratteristiche.se_articoli,
 		caratteristiche.se_immobili,
+		caratteristiche.se_edifici,
+		caratteristiche.se_indirizzi,
 		caratteristiche.se_categorie_prodotti,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
