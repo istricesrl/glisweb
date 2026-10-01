@@ -103,16 +103,33 @@
     
                         // die( $nome . PHP_EOL );
 
+                        // la riga dell'articolo, senza la spedizione, che va in una riga a parte
                         mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
                                 'id_documento' => $idDocumento,
                                 'id_articolo' => $riga['id_articolo'],
-                                'importo_netto_totale' => $riga['prezzo_netto_finale'],
+                                'importo_netto_totale' => $riga['prezzo_netto_finale'] - ( $riga['costo_spedizione_netto'] ?? 0 ),
                                 'nome' => 'riga automatica da carrello #' . $_SESSION['carrello']['id']
                             ),
                             'documenti_articoli'
                         );
+
+                        // reparto dell'articolo, per l'aliquota della riga di spedizione
+                        $idReparto = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id_reparto FROM articoli WHERE id = ?',
+                            array( array( 's' => $riga['id_articolo'] ) )
+                        );
+
+                        // spedizione della riga ( politica 'articolo' ) e, sul primo documento, quella dell'ordine ( 'ordine' )
+                        $spedizioneNetto = ( $riga['costo_spedizione_netto'] ?? 0 );
+                        $spedizioneLordo = ( $riga['costo_spedizione_lordo'] ?? 0 );
+                        if( empty( $ct['carrello']['documenti'] ) ) {
+                            $spedizioneNetto += ( $_SESSION['carrello']['costo_spedizione_netto'] ?? 0 );
+                            $spedizioneLordo += ( $_SESSION['carrello']['costo_spedizione_lordo'] ?? 0 );
+                        }
+                        aggiungiRigaSpedizioneDocumento( $cf['mysql']['connection'], $idDocumento, $spedizioneNetto, $spedizioneLordo, $idReparto );
 
                         $ct['carrello']['documenti'][] = $idDocumento;
 

@@ -408,3 +408,114 @@
 
     }
 
+    /**
+     * costo di spedizione di un ordine
+     *
+     * Con $cf['ecommerce']['spedizione'] = 'ordine' la spedizione si paga una volta per carrello: vale la riga di
+     * modalita_spedizione della zona senza articolo, prodotto né categoria ( la stessa che in modalità 'articolo' fa da
+     * ripiego per ogni riga ), senza lotti. L'IVA è quella della riga di modalita_spedizione, o $i se non ce l'ha.
+     *
+     * @param  mysqli  $c  connessione
+     * @param  integer $z  id della zona del carrello
+     * @param  integer $i  id dell'IVA di ripiego
+     *
+     * @return array       netto, lordo e id_iva; netto e lordo a zero se per la zona non c'è un costo
+     */
+    function calcolaCostoSpedizioneOrdine( $c, $z, $i = NULL ) {
+
+        // la riga generica della zona
+        $ms = mysqlSelectRow(
+            $c,
+            'SELECT importo_netto, id_iva FROM modalita_spedizione
+            WHERE id_zona = ? AND id_articolo IS NULL AND id_prodotto IS NULL AND id_categoria_prodotti IS NULL
+            ORDER BY id LIMIT 1',
+            array(
+                array( 's' => $z )
+            )
+        );
+
+        // senza costo per la zona la spedizione è gratuita
+        if( empty( $ms ) || ! is_numeric( $ms['importo_netto'] ) ) {
+            return array( 'netto' => 0.0, 'lordo' => 0.0, 'id_iva' => $i );
+        }
+
+        // IVA della spedizione
+        $iva = ( ! empty( $ms['id_iva'] ) ) ? $ms['id_iva'] : $i;
+        $aliquota = ( ! empty( $iva ) ) ? mysqlSelectValue( $c, 'SELECT aliquota FROM iva WHERE id = ?', array( array( 's' => $iva ) ) ) : 0;
+
+        // risultato
+        return array(
+            'netto' => (float) $ms['importo_netto'],
+            'lordo' => round( $ms['importo_netto'] / 100 * ( 100 + (float) $aliquota ), 2 ),
+            'id_iva' => $iva
+        );
+
+    }
+
+    /**
+     * aggiunge a un documento la riga delle spese di spedizione
+     *
+     * I documenti del checkout scrivono le righe degli articoli senza la spedizione, e la spedizione in una riga a parte,
+     * col reparto dell'articolo indicato ( serve per l'aliquota ). Non scrive niente se il lordo è zero.
+     *
+     * @param  mysqli  $c          connessione
+     * @param  integer $d          id del documento
+     * @param  float   $netto      importo netto della spedizione
+     * @param  float   $lordo      importo lordo della spedizione
+     * @param  integer $reparto    id del reparto
+     * @param  string  $nome       descrizione della riga
+     *
+     * @return integer|null        id della riga, NULL se non c'era niente da scrivere
+     */
+    function aggiungiRigaSpedizioneDocumento( $c, $d, $netto, $lordo, $reparto, $nome = 'spese di spedizione' ) {
+
+        // niente da scrivere
+        if( empty( $d ) || empty( $lordo ) || $lordo <= 0 ) {
+            return NULL;
+        }
+
+        // la riga
+        return mysqlInsertRow(
+            $c,
+            array(
+                'id_documento' => $d,
+                'nome' => $nome,
+                'quantita' => 1,
+                'id_udm' => 1,
+                'id_reparto' => $reparto,
+                'importo_netto_totale' => round( $netto, 5 ),
+                'importo_lordo_totale' => round( $lordo, 5 )
+            ),
+            'documenti_articoli'
+        );
+
+    }
+
+    /**
+     * spese di spedizione d'ordine di un carrello
+     *
+     * Legge carrelli.costo_spedizione_netto e costo_spedizione_lordo, che il controller del carrello scrive con la
+     * spedizione per ordine ( $cf['ecommerce']['spedizione'] = 'ordine' ); con la spedizione per articolo valgono zero.
+     *
+     * @param  mysqli  $c  connessione
+     * @param  integer $id id del carrello
+     *
+     * @return array       netto e lordo, a zero se il carrello non ha una spedizione d'ordine
+     */
+    function trovaCostoSpedizioneCarrello( $c, $id ) {
+
+        $r = mysqlSelectRow(
+            $c,
+            'SELECT costo_spedizione_netto, costo_spedizione_lordo FROM carrelli WHERE id = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        return array(
+            'netto' => (float) ( $r['costo_spedizione_netto'] ?? 0 ),
+            'lordo' => (float) ( $r['costo_spedizione_lordo'] ?? 0 )
+        );
+
+    }
+

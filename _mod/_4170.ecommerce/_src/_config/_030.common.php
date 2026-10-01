@@ -40,6 +40,12 @@
 
     // configurazioni di default
     // NOTA i default per i campi del carrello sono in 035 commons
+
+    // politica delle spese di spedizione: 'articolo' le calcola riga per riga ( modalita_spedizione per articolo,
+    // prodotto, categoria o zona, a lotti ) e le somma al prezzo finale di ogni riga; 'ordine' le calcola una volta per
+    // carrello, dalla modalita_spedizione della zona senza articolo, prodotto né categoria, in carrelli.costo_spedizione_*;
+    // in tutti e due i casi i documenti del checkout le scrivono in una riga a parte
+    $cf['ecommerce']['spedizione']                  = 'articolo';
     // $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                         // tipologia di documento da generare di default in cassa
     // $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                 // strategia di generazione dei documenti da usare di default in cassa
 

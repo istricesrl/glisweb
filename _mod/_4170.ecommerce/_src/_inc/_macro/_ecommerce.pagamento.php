@@ -25,7 +25,13 @@ if (isset($_REQUEST['ck_carrello']) && ! empty($_REQUEST['ck_carrello'])) {
     // ...
     $_REQUEST['__pagamenti__']['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
+        // NOTA i rami dei documenti leggono importo_lordo_totale e importo_lordo_finale, che la cassa manda dal form e
+        // che carrelli_articoli non ha ( le sue colonne sono prezzo_* ): fino al 2026-10-01 il checkout diretto
+        // scartava le righe nella fatturazione MULTIPLA e le scriveva a zero nella SINGOLA; l'importo comprende la
+        // spedizione per articolo, che i documenti poi scrivono in una riga a parte
         'SELECT carrelli_articoli.*,
+                carrelli_articoli.prezzo_lordo_finale AS importo_lordo_totale,
+                carrelli_articoli.prezzo_lordo_finale AS importo_lordo_finale,
                 articoli.id_prodotto, articoli.id_reparto, articoli.nome AS nome_articolo, articoli.id_reparto
                 FROM carrelli_articoli 
                 INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
@@ -232,6 +238,13 @@ if (isset($_REQUEST['__pagamenti__'])) {
 
                             // die( print_r( $pagamento, true ) );
 
+                            // la spedizione della riga ( c'è solo nel checkout diretto ) va in una riga a parte del documento;
+                            // i pagamenti restano sull'importo intero
+                            $spedizioneLordo = (float) ( $pagamento['costo_spedizione_lordo'] ?? 0 );
+                            $spedizioneNetto = (float) ( $pagamento['costo_spedizione_netto'] ?? 0 );
+                            $rigaLordo = $pagamento['importo_lordo_totale'] - $spedizioneLordo;
+                            $rigaNetto = $rigaLordo / (100 + $reparto['aliquota']) * 100;
+
                             // aggiungo la riga
                             $idRiga = mysqlInsertRow(
                                 $cf['mysql']['connection'],
@@ -240,8 +253,8 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                     'id_articolo' => $pagamento['id_articolo'],
                                     'id_rinnovo' => ((isset($pagamento['id_rinnovo'])) ? $pagamento['id_rinnovo'] : NULL),
                                     'id_carrelli_articoli' => $pagamento['id'],
-                                    'importo_netto_totale' => $pagamento['importo_netto_totale'],
-                                    'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                    'importo_netto_totale' => $rigaNetto,
+                                    'importo_lordo_totale' => $rigaLordo,
                                     'quantita' => 1,
                                     'id_udm' => 1,
                                     'id_reparto' => $reparto['id'],
@@ -250,6 +263,16 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                 ),
                                 'documenti_articoli'
                             );
+
+                            // la spedizione della riga e, sul primo documento, quella dell'ordine
+                            // NOTA quella dell'ordine solo nel checkout diretto: gli importi che manda la cassa non la comprendono
+                            if (empty($spedizioneOrdineScritta) && ! empty($_REQUEST['ck_carrello'])) {
+                                $spedizioneOrdine = trovaCostoSpedizioneCarrello($cf['mysql']['connection'], $pagamento['id_carrello']);
+                                $spedizioneNetto += $spedizioneOrdine['netto'];
+                                $spedizioneLordo += $spedizioneOrdine['lordo'];
+                                $spedizioneOrdineScritta = true;
+                            }
+                            aggiungiRigaSpedizioneDocumento($cf['mysql']['connection'], $idDocumento, $spedizioneNetto, $spedizioneLordo, $reparto['id']);
 
                             // debug
                             // die( 'segno pagato il pagamento ' . $pagamento['id_pagamento'] );
@@ -429,8 +452,19 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         // debug
                         // die( print_r( $reparto, true ) );
 
+                        // importo della riga: la cassa manda importo_lordo_totale, il checkout diretto anche importo_lordo_finale
+                        // NOTA fino al 2026-10-01 si leggeva solo importo_lordo_finale, che dalla cassa non arriva: righe a zero
+                        $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_finale'] ?? $pagamento['importo_lordo_totale'] ?? 0;
+
+                        // la spedizione della riga ( c'è solo nel checkout diretto ) va in una riga a parte, in fondo al documento
+                        $pagamento['importo_lordo_finale'] -= (float) ($pagamento['costo_spedizione_lordo'] ?? 0);
+                        $spedizioneNettoDocumento = ($spedizioneNettoDocumento ?? 0) + (float) ($pagamento['costo_spedizione_netto'] ?? 0);
+                        $spedizioneLordoDocumento = ($spedizioneLordoDocumento ?? 0) + (float) ($pagamento['costo_spedizione_lordo'] ?? 0);
+                        $repartoSpedizione = $repartoSpedizione ?? ($reparto['id'] ?? NULL);
+                        $carrelloSpedizione = $pagamento['id_carrello'] ?? NULL;
+
                         // calcolo il netto
-                        $pagamento['importo_netto_totale'] = ($pagamento['importo_lordo_finale'] ?? 0) / (100 + ($reparto['aliquota'] ?? 0)) * 100;
+                        $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_finale'] / (100 + ($reparto['aliquota'] ?? 0)) * 100;
 
                         // aggiungo la riga
                         $idRiga = mysqlInsertRow(
@@ -441,7 +475,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                 'id_rinnovo' => ((isset($pagamento['id_rinnovo'])) ? $pagamento['id_rinnovo'] : NULL),
                                 'id_carrelli_articoli' => $pagamento['id'],
                                 'importo_netto_totale' => $pagamento['importo_netto_totale'] ?? 0,
-                                'importo_lordo_totale' => $pagamento['importo_lordo_finale'] ?? 0,
+                                'importo_lordo_totale' => $pagamento['importo_lordo_finale'],
                                 'id_mastro_provenienza' => $pagamento['id_mastro_provenienza'],
                                 'quantita' => $pagamento['quantita'],
                                 'id_udm' => 1,
@@ -477,6 +511,20 @@ if (isset($_REQUEST['__pagamenti__'])) {
 
                     }
                 }
+
+                // le spese di spedizione delle righe e dell'ordine, in una riga a parte in fondo al documento
+                // NOTA solo nel checkout diretto: gli importi che manda la cassa comprendono già la spedizione delle righe
+                if (! empty($carrelloSpedizione) && ! empty($_REQUEST['ck_carrello'])) {
+                    $spedizioneOrdine = trovaCostoSpedizioneCarrello($cf['mysql']['connection'], $carrelloSpedizione);
+                    aggiungiRigaSpedizioneDocumento(
+                        $cf['mysql']['connection'],
+                        $idDocumento,
+                        ($spedizioneNettoDocumento ?? 0) + $spedizioneOrdine['netto'],
+                        ($spedizioneLordoDocumento ?? 0) + $spedizioneOrdine['lordo'],
+                        $repartoSpedizione ?? NULL
+                    );
+                }
+
             }
         }
 

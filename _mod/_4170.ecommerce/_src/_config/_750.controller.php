@@ -315,6 +315,16 @@ ini_set("display_errors", 1);
             $_SESSION['carrello']['sconto_percentuale']         = 0.0;
             $_SESSION['carrello']['sconto_valore']              = 0.0;
 
+            // politica delle spese di spedizione ( vedi $cf['ecommerce']['spedizione'] in _030.common.php )
+            // NOTA le colonne carrelli.costo_spedizione_* ( _202610011840.carrelli.spedizione.sql ) si scrivono solo con la
+            // spedizione per ordine: il carrello si salva chiave per chiave, e con la politica per articolo un deploy che
+            // non ha ancora la patch continua a funzionare
+            $spedizionePerOrdine = ( ( $cf['ecommerce']['spedizione'] ?? 'articolo' ) == 'ordine' );
+            if( $spedizionePerOrdine ) {
+                $_SESSION['carrello']['costo_spedizione_netto'] = 0.0;
+                $_SESSION['carrello']['costo_spedizione_lordo'] = 0.0;
+            }
+
             // TODO aggiungere l'inizializzazione coupon_percentuale e coupon_valore
 
             // inizializzazione calcolatore articoli aggiunti
@@ -804,7 +814,8 @@ ini_set("display_errors", 1);
                             }
 
                             // calcolo e applico le spese di spedizione nette per riga
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = calcolaCostoSpedizioneNettoArticolo(
+                            // NOTA con la spedizione per ordine le righe non ne hanno: il costo si calcola una volta sola, dopo i coupon
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = ( $spedizionePerOrdine ) ? 0.0 : calcolaCostoSpedizioneNettoArticolo(
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
                                 $dati['id_articolo'],
@@ -814,7 +825,7 @@ ini_set("display_errors", 1);
                             );
 
                             // calcolo e applico le spese di spedizione lorde per riga
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = calcolaCostoSpedizioneLordoArticolo(
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = ( $spedizionePerOrdine ) ? 0.0 : calcolaCostoSpedizioneLordoArticolo(
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
                                 $dati['id_articolo'],
@@ -1014,7 +1025,9 @@ ini_set("display_errors", 1);
                     }
 
                     // calcolo il prezzo lordo finale
-                    $_SESSION['carrello']['prezzo_lordo_finale'] = $_SESSION['carrello']['prezzo_lordo_totale'] - $_SESSION['carrello']['sconto_valore_coupon'];
+                    // NOTA il coupon si toglie dal finale delle righe, che comprende sconti e spedizioni per articolo; fino al
+                    // 2026-10-01 il finale si ricalcolava dal totale, e con un coupon le spedizioni per articolo sparivano
+                    $_SESSION['carrello']['prezzo_lordo_finale'] = $_SESSION['carrello']['prezzo_lordo_finale'] - $_SESSION['carrello']['sconto_valore_coupon'];
 
                 } else {
 
@@ -1042,6 +1055,26 @@ ini_set("display_errors", 1);
                 $_SESSION['carrello']['codice_coupon'] =
                 $_SESSION['carrello']['sconto_valore_coupon'] =
                 $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
+
+            }
+
+            // STEP 6.5 - spedizione per ordine
+            // NOTA si somma dopo il coupon, che non si applica alla spedizione
+            if( $spedizionePerOrdine && ! empty( $_SESSION['carrello']['articoli'] ) ) {
+
+                // costo della spedizione per la zona del carrello, con l'IVA della prima riga come ripiego
+                $primaRiga = reset( $_SESSION['carrello']['articoli'] );
+                $spedizione = calcolaCostoSpedizioneOrdine(
+                    $cf['mysql']['connection'],
+                    $_SESSION['carrello']['id_zona'] ?? NULL,
+                    $primaRiga['id_iva'] ?? NULL
+                );
+
+                // la scrivo sul carrello e la sommo ai finali
+                $_SESSION['carrello']['costo_spedizione_netto'] = $spedizione['netto'];
+                $_SESSION['carrello']['costo_spedizione_lordo'] = $spedizione['lordo'];
+                $_SESSION['carrello']['prezzo_netto_finale'] += $spedizione['netto'];
+                $_SESSION['carrello']['prezzo_lordo_finale'] += $spedizione['lordo'];
 
             }
 
