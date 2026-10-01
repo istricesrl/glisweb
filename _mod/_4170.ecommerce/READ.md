@@ -157,6 +157,26 @@ if( carrelloForm.checkValidity() ) {
 
   calcolo dei costi di spedizione
   -------------------------------
+  La politica la sceglie `$cf['ecommerce']['spedizione']` ( _src/_config/_030.common.php del modulo ), perché ogni
+  ecommerce fa pagare la spedizione a modo suo:
+
+  - `'articolo'` ( il default ): il costo si calcola riga per riga con calcolaCostoSpedizioneNettoArticolo() e
+    calcolaCostoSpedizioneLordoArticolo(), dalla riga di *modalita_spedizione* più specifica per la zona del carrello
+    ( articolo, prodotto, categoria del prodotto, o la riga generica della zona ), moltiplicata per i lotti di
+    *lotto_spedizione*; va in *carrelli_articoli.costo_spedizione_netto* e *costo_spedizione_lordo* e nel prezzo finale
+    della riga;
+  - `'ordine'`: le righe non hanno spedizione, e il costo si calcola una volta per carrello con
+    calcolaCostoSpedizioneOrdine(), dalla riga generica della zona ( senza articolo, prodotto né categoria, senza lotti );
+    va in *carrelli.costo_spedizione_netto* e *costo_spedizione_lordo* e si somma al prezzo finale del carrello dopo il
+    coupon, che non si applica alla spedizione.
+
+  Nei documenti che il checkout genera ( `_740.controller.php` e il checkout diretto di `_ecommerce.pagamento.php` ) le
+  righe degli articoli hanno il prezzo senza spedizione, e la spedizione va in una riga a parte "spese di spedizione"
+  ( aggiungiRigaSpedizioneDocumento(), col reparto dell'articolo per l'aliquota ): quella delle righe nel loro documento,
+  quella dell'ordine nel primo documento. Gli importi che manda la cassa non si toccano. Fino al 2026-10-01 la spedizione
+  stava dentro le righe degli articoli, e nel checkout diretto le righe nascevano a importo zero nella fatturazione
+  SINGOLA e si scartavano nella MULTIPLA, perché leggevano colonne *importo_** che *carrelli_articoli* non ha.
+
 
   il checkout
   ===========

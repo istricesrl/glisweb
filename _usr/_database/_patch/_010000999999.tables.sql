@@ -6592,6 +6592,8 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
   `sconto_valore_coupon` decimal(16,5) DEFAULT NULL,
   `sconto_percentuale` decimal(16,5) DEFAULT NULL,
   `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `costo_spedizione_netto` decimal(16,5) DEFAULT NULL,
+  `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,
   `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
   `provider_checkout` char(128) DEFAULT NULL,
