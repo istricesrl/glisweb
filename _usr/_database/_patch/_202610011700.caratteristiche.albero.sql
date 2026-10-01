@@ -51,6 +51,7 @@ BEGIN
     DECLARE tipo_genitore VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE nullabile VARCHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE indice VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE figlie CURSOR FOR
         SELECT t.nome FROM ( SELECT 'articoli_caratteristiche' AS nome UNION ALL SELECT 'prodotti_caratteristiche' ) AS t
         WHERE EXISTS ( SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = t.nome );
@@ -70,6 +71,18 @@ BEGIN
     IF tipo = 'BASE TABLE' THEN
 
         SELECT coalesce( max( id ), 0 ) INTO scostamento FROM caratteristiche;
+
+        -- il vecchio indice unico sul solo nome ( p.es. `unica` ) rifiuterebbe i nodi dell'albero che si chiamano come una
+        -- caratteristica piatta: al suo posto arriva piu' sotto ( nome, id_genitore )
+        SELECT INDEX_NAME INTO indice FROM information_schema.STATISTICS
+            WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'caratteristiche' AND NON_UNIQUE = 0 AND INDEX_NAME != 'PRIMARY'
+            GROUP BY INDEX_NAME HAVING GROUP_CONCAT( COLUMN_NAME ) = 'nome' LIMIT 1;
+        SET fine = 0;
+        IF indice IS NOT NULL THEN
+            SET @sql = CONCAT( 'ALTER TABLE `caratteristiche` DROP INDEX `', indice, '`' );
+            PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+            SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, CONCAT( 'tolto l\'indice unico ', indice, ' ( nome ) di caratteristiche' ) );
+        END IF;
 
         -- i genitori che non esistono piu' diventerebbero chiavi esterne orfane: quei nodi diventano radici
         UPDATE caratteristiche_prodotti AS c LEFT JOIN caratteristiche_prodotti AS g ON g.id = c.id_genitore
