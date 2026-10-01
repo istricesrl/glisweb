@@ -22,10 +22,37 @@ ALTER TABLE `pubblicazioni`
 
 -- | 202610011822
 
-ALTER TABLE `pubblicazioni`
-    ADD CONSTRAINT `pubblicazioni_ibfk_16` FOREIGN KEY IF NOT EXISTS (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+-- la chiave esterna, con id_marchio prima portato al tipo di marchi.id: sui deploy installati prima di marzo marchi.id e'
+-- spesso int( 11 ) e la chiave verso una colonna bigint( 20 ) fallisce con 1005 errno 150
+CREATE OR REPLACE PROCEDURE `__patch_pubblicazioni_marchio__`()
+BEGIN
+
+    DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'marchi' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'pubblicazioni' AND COLUMN_NAME = 'id_marchio';
+
+    IF NOT EXISTS ( SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = database() AND TABLE_NAME = 'pubblicazioni' AND CONSTRAINT_NAME = 'pubblicazioni_ibfk_16' ) THEN
+        IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+            SET @sql = CONCAT( 'ALTER TABLE `pubblicazioni` MODIFY `id_marchio` ', tipo_id, ' DEFAULT NULL' );
+            PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+        END IF;
+        ALTER TABLE `pubblicazioni`
+            ADD CONSTRAINT `pubblicazioni_ibfk_16` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    END IF;
+
+END;
 
 -- | 202610011823
+
+CALL `__patch_pubblicazioni_marchio__`();
+
+-- | 202610011824
+
+DROP PROCEDURE IF EXISTS `__patch_pubblicazioni_marchio__`;
+
+-- | 202610011825
 
 -- pubblicazioni_view, con id_marchio
 CREATE OR REPLACE VIEW `pubblicazioni_view` AS

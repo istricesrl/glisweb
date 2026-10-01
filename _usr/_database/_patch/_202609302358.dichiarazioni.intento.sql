@@ -44,17 +44,53 @@ ALTER TABLE `dichiarazioni_intento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREME
 
 -- | 202610010001
 
-ALTER TABLE `dichiarazioni_intento`
-	DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_01`,
-	DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_98_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_99_nofollow`;
+-- la procedura toglie il vincolo se c'e', porta la colonna al tipo dell'id che cita e rimette il vincolo: sui deploy
+-- installati prima di marzo gli id delle tabelle storiche sono spesso int( 11 ), e la chiave da una colonna bigint( 20 )
+-- fallisce con 1005 errno 150 ( segnalato da utensilerialughese il 01/10/2026 )
+CREATE OR REPLACE PROCEDURE `__patch_dichiarazioni_intento__`()
+BEGIN
+
+    DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+
+    -- dichiarazioni_intento_ibfk_01
+    ALTER TABLE `dichiarazioni_intento` DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_01`;
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'anagrafica' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'dichiarazioni_intento' AND COLUMN_NAME = 'id_anagrafica';
+    IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+        SET @sql = CONCAT( 'ALTER TABLE `dichiarazioni_intento` MODIFY `id_anagrafica` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+    END IF;
+    ALTER TABLE `dichiarazioni_intento`
+        ADD CONSTRAINT `dichiarazioni_intento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+    -- dichiarazioni_intento_ibfk_98_nofollow
+    ALTER TABLE `dichiarazioni_intento` DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_98_nofollow`;
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'account' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'dichiarazioni_intento' AND COLUMN_NAME = 'id_account_inserimento';
+    IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+        SET @sql = CONCAT( 'ALTER TABLE `dichiarazioni_intento` MODIFY `id_account_inserimento` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+    END IF;
+    ALTER TABLE `dichiarazioni_intento`
+        ADD CONSTRAINT `dichiarazioni_intento_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+    -- dichiarazioni_intento_ibfk_99_nofollow
+    ALTER TABLE `dichiarazioni_intento` DROP FOREIGN KEY IF EXISTS `dichiarazioni_intento_ibfk_99_nofollow`;
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'account' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'dichiarazioni_intento' AND COLUMN_NAME = 'id_account_aggiornamento';
+    IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+        SET @sql = CONCAT( 'ALTER TABLE `dichiarazioni_intento` MODIFY `id_account_aggiornamento` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+    END IF;
+    ALTER TABLE `dichiarazioni_intento`
+        ADD CONSTRAINT `dichiarazioni_intento_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+END;
 
 -- | 202610010002
 
-ALTER TABLE `dichiarazioni_intento`
-    ADD CONSTRAINT `dichiarazioni_intento_ibfk_01`            FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `dichiarazioni_intento_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `dichiarazioni_intento_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+CALL `__patch_dichiarazioni_intento__`();
 
 -- | 202610010003
 
@@ -75,5 +111,14 @@ CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
 	FROM dichiarazioni_intento
 		LEFT JOIN anagrafica AS a1 ON a1.id = dichiarazioni_intento.id_anagrafica
 ;
+
+-- | 202610010004
+
+DROP PROCEDURE IF EXISTS `__patch_dichiarazioni_intento__`;
+
+-- | 202610010005
+
+-- quella di _202609302355.anagrafica.rea.rappresentante.sql, che nel suo file non ha un id libero dopo la CALL
+DROP PROCEDURE IF EXISTS `__patch_rappresentante_fiscale__`;
 
 -- | FINE FILE

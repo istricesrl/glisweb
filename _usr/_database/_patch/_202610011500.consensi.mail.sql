@@ -21,12 +21,31 @@ ALTER TABLE `anagrafica_consensi`
 
 -- | 202610011501
 
-ALTER TABLE `anagrafica_consensi` DROP FOREIGN KEY IF EXISTS `anagrafica_consensi_ibfk_04`;
+-- la procedura toglie il vincolo se c'e', porta la colonna al tipo dell'id che cita e rimette il vincolo: sui deploy
+-- installati prima di marzo gli id delle tabelle storiche sono spesso int( 11 ), e la chiave da una colonna bigint( 20 )
+-- fallisce con 1005 errno 150 ( segnalato da utensilerialughese il 01/10/2026 )
+CREATE OR REPLACE PROCEDURE `__patch_consensi_mail__`()
+BEGIN
+
+    DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+
+    -- anagrafica_consensi_ibfk_04
+    ALTER TABLE `anagrafica_consensi` DROP FOREIGN KEY IF EXISTS `anagrafica_consensi_ibfk_04`;
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'mail' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'anagrafica_consensi' AND COLUMN_NAME = 'id_mail';
+    IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+        SET @sql = CONCAT( 'ALTER TABLE `anagrafica_consensi` MODIFY `id_mail` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+    END IF;
+    ALTER TABLE `anagrafica_consensi`
+        ADD CONSTRAINT `anagrafica_consensi_ibfk_04` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+END;
 
 -- | 202610011502
 
-ALTER TABLE `anagrafica_consensi`
-	ADD CONSTRAINT `anagrafica_consensi_ibfk_04` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+CALL `__patch_consensi_mail__`();
 
 -- | 202610011503
 
@@ -48,5 +67,9 @@ CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
 		LEFT JOIN mail ON mail.id = anagrafica_consensi.id_mail
 ;
+
+-- | 202610011504
+
+DROP PROCEDURE IF EXISTS `__patch_consensi_mail__`;
 
 -- | FINE FILE

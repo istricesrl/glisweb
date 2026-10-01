@@ -23,11 +23,31 @@ ALTER TABLE `anagrafica`
 
 -- | 202609302356
 
-ALTER TABLE `anagrafica` DROP FOREIGN KEY IF EXISTS `anagrafica_ibfk_10_nofollow`;
+-- la procedura toglie il vincolo se c'e', porta la colonna al tipo dell'id che cita e rimette il vincolo: sui deploy
+-- installati prima di marzo gli id delle tabelle storiche sono spesso int( 11 ), e la chiave da una colonna bigint( 20 )
+-- fallisce con 1005 errno 150 ( segnalato da utensilerialughese il 01/10/2026 )
+CREATE OR REPLACE PROCEDURE `__patch_rappresentante_fiscale__`()
+BEGIN
+
+    DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+
+    -- anagrafica_ibfk_10_nofollow
+    ALTER TABLE `anagrafica` DROP FOREIGN KEY IF EXISTS `anagrafica_ibfk_10_nofollow`;
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'anagrafica' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_colonna FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'anagrafica' AND COLUMN_NAME = 'id_rappresentante_fiscale';
+    IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+        SET @sql = CONCAT( 'ALTER TABLE `anagrafica` MODIFY `id_rappresentante_fiscale` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+    END IF;
+    ALTER TABLE `anagrafica`
+        ADD CONSTRAINT `anagrafica_ibfk_10_nofollow` FOREIGN KEY (`id_rappresentante_fiscale`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+END;
 
 -- | 202609302357
 
-ALTER TABLE `anagrafica`
-	ADD CONSTRAINT `anagrafica_ibfk_10_nofollow` FOREIGN KEY (`id_rappresentante_fiscale`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+-- la procedura si toglie in _202609302358.dichiarazioni.intento.sql ( blocco 202610010005 ): qui non resta un id libero
+CALL `__patch_rappresentante_fiscale__`();
 
 -- | FINE FILE

@@ -47,6 +47,8 @@ BEGIN
     DECLARE contatore INT;
     DECLARE fine INT DEFAULT 0;
     DECLARE ambigue TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '';
+    DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_genitore VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE figlie CURSOR FOR
         SELECT t.nome FROM ( SELECT 'articoli_caratteristiche' AS nome UNION ALL SELECT 'prodotti_caratteristiche' ) AS t
         WHERE EXISTS ( SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = t.nome );
@@ -143,6 +145,16 @@ BEGIN
         ELSE
             SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, 'caratteristiche ha nomi ripetuti sotto lo stesso genitore: indice unico ( nome, id_genitore ) non aggiunto' );
         END IF;
+    END IF;
+
+    -- id_genitore dello stesso tipo di id, altrimenti la chiave esterna fallisce con 1005 errno 150: sui deploy installati
+    -- prima di marzo id e' spesso int( 11 ), mentre _202609261000.colonne.base.sql aggiunge id_genitore bigint( 20 )
+    SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'caratteristiche' AND COLUMN_NAME = 'id';
+    SELECT COLUMN_TYPE INTO tipo_genitore FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'caratteristiche' AND COLUMN_NAME = 'id_genitore';
+    IF tipo_id IS NOT NULL AND tipo_genitore IS NOT NULL AND tipo_id != tipo_genitore THEN
+        SET @sql = CONCAT( 'ALTER TABLE `caratteristiche` MODIFY `id_genitore` ', tipo_id, ' DEFAULT NULL' );
+        PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+        SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, CONCAT( 'caratteristiche.id_genitore portato da ', tipo_genitore, ' a ', tipo_id, ', il tipo di id' ) );
     END IF;
 
     -- la chiave esterna dell'albero
