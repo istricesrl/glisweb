@@ -978,6 +978,11 @@ ALTER TABLE `consensi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
 
+-- | 030000006201
+
+-- consensi
+ALTER TABLE `consensi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000006300
 
 -- consensi_moduli
