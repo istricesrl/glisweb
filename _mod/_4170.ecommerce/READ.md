@@ -138,11 +138,26 @@ if( carrelloForm.checkValidity() ) {
   all'aliquota applicabile all'utente (ad es. utenti che beneficiano di esenzioni specifiche) oppure dal paese di spedizione degli articoli
   acquistati (ad es. spedizione all'estero).
 
-  [...] il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello, e può dipendere dall'utente collegato, dal paese di
-  destinazione degli articoli acquistati, e da altri fattori custom.
+  Il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello ( *carrelli.id_listino*, default 1, o quello della
+  riga ). Oggi non dipende dall'utente collegato né dalla zona: *listini_clienti* non si legge, e il controllo dei listini per zona
+  in _750.controller.php non scatta mai; la scelta cliente, zona, default è la tappa 2 del progetto del motore prezzi.
 
-  [...] eventuali variazioni di prezzo applicabili agli articoli acquistati sono considerate dalla funzione calcolaPrezzoNettoArticolo() e di
-  conseguenza anche dalla funzione calcolaPrezzoLordoArticolo() che utilizza a sua volta la calcolaPrezzoNettoArticolo().
+  Il prezzo di una riga lo calcola il motore di _mod/_4000.catalogo/_src/_lib/_mysql.tools.add.php. calcolaPrezzoArticolo() raccoglie i
+  candidati sul listino: il prezzo del prodotto dell'articolo ( per la quantità del prodotto nel carrello ), quello dell'articolo ( per
+  la sua quantità ) e, per ogni paniere di cui l'articolo fa parte ( *relazioni_articoli* con ruolo 6, quantità del paniere da
+  contaQuantitaArticoliCarrello() ), il prezzo del paniere, il suo *sconto_articoli* e, se il paniere ha il metadato *conf_rif_sconto*,
+  il prezzo dell'articolo sul listino di riferimento con quel codice; fra più panieri vale quello che dà il netto più basso. Vince il
+  candidato positivo più basso e lo sconto del paniere scelto si applica al prezzo vincente. Ogni riga di *prezzi* vale per la data
+  ( giorno di inizio e di fine compresi ) e per la quantità ( *qta_min* e *qta_max* compresi ), e una riga con il solo sconto non
+  nasconde il prezzo. calcolaPrezzoNettoArticolo() ne restituisce il netto, calcolaPrezzoLordoArticolo() lo stesso netto con l'aliquota
+  della riga vincente ( o dell'IVA della riga del carrello ), calcolaProvvigioneArticolo() la provvigione più bassa fra prodotto,
+  articolo e panieri; le versioni ...Carrello() di _mysql.utils.add.php le chiamano con le quantità del carrello. I risultati stanno in
+  memcache senza scadenza, con una chiave che porta la versione del motore: dopo una correzione dei prezzi va svuotata.
+
+  Fino al 2026-10-01 il giorno di fine di un prezzo era escluso nel netto e ignorato nel lordo, vinceva l'ultimo paniere del ciclo
+  invece del più conveniente, la query del listino di riferimento falliva sempre e il lordo aveva una copia sua del calcolo: netto e
+  lordo potevano non corrispondere. Le correzioni vengono dal progetto berni; *qta_max* prima non si leggeva, e da allora una quantità
+  oltre l'ultima fascia con *qta_max* torna al prezzo senza fascia.
 
   calcolo dei coupon
   ------------------
