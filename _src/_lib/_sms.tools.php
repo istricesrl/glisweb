@@ -191,6 +191,23 @@
 
     }
 
+    /**
+     * converte un array di numeri in una stringa
+     *
+     * Questa funzione converte il mittente ( 'nome' => 'numero' ) o i destinatari ( un array di numeri, o 'nome' =>
+     * 'numero' ) di un SMS in una stringa nella forma "nome <numero>, numero", adatta a essere mostrata o modificata in un
+     * campo di testo; il modulo degli SMS la usa sulle colonne serializzate di sms_out e sms_sent. Un numero senza nome
+     * ( chiave numerica, vuota o uguale al numero ) si scrive da solo. Se $a non è un array viene restituito così com'è
+     * ( convertito in stringa ), quindi un valore NULL diventa una stringa vuota. È l'inversa di smsString2array().
+     *
+     * Fino al 2026-10-01 scriveva sempre la chiave, quindi i destinatari accodati come lista di numeri si vedevano come
+     * "0 <numero>, 1 <numero>".
+     *
+     * @param       array       $a      il mittente o i destinatari
+     *
+     * @return      string              la stringa dei numeri
+     *
+     */
     function array2smsString($a)
     {
 
@@ -199,12 +216,62 @@
         if (is_array($a)) {
             foreach ($a as $k => $m) {
 
-                $ar[] = $k . ' <' . $m . '>';
+                if (is_int($k) || trim((string) $k) === '' || (string) $k === (string) $m) {
+                    $ar[] = (string) $m;
+                } else {
+                    $ar[] = $k . ' <' . $m . '>';
+                }
             }
         } else {
-            $ar[] = $a;
+            $ar[] = (string) $a;
         }
 
         return implode(', ', $ar);
+
+    }
+
+    /**
+     * converte una stringa di numeri in un array
+     *
+     * Questa funzione è l'inversa di array2smsString(): legge una stringa nella forma "nome <numero>, numero; numero" e
+     * restituisce un array nel formato 'nome' => 'numero', dove un numero scritto senza nome ha come chiave sé stesso, come
+     * fa mailString2array() con gli indirizzi. Così il mittente resta nel formato che skebbySend() ed ehiwebSend() si
+     * aspettano ( nome => numero, o numero => numero ), e i destinatari un array i cui valori sono i numeri. I separatori
+     * sono la virgola e il punto e virgola; le voci vuote si saltano. I numeri non si normalizzano: lo fa
+     * string2smsNumber() al momento dell'invio.
+     *
+     * @param       string      $t      la stringa dei numeri
+     *
+     * @return      array               l'array nel formato 'nome' => 'numero'
+     *
+     */
+    function smsString2array($t)
+    {
+
+        $ar = array();
+
+        foreach (preg_split('/[,;]/', (string) $t) as $ds) {
+
+            $ds = trim($ds);
+
+            if ($ds === '') {
+                continue;
+            }
+
+            $m = array();
+
+            if (preg_match('/^(.*?)\s*<([^<>]*)>$/', $ds, $m)) {
+                $nome = trim($m[1]);
+                $numero = trim($m[2]);
+                if ($numero === '') {
+                    continue;
+                }
+                $ar[($nome === '') ? $numero : $nome] = $numero;
+            } else {
+                $ar[$ds] = $ds;
+            }
+        }
+
+        return $ar;
 
     }
