@@ -2167,8 +2167,9 @@
      * Questa funzione legge i file di patch nell'ordine ricevuto e restituisce le patch con id maggiore di $l, ciascuna come
      * array( 'file' => percorso, 'id' => id, 'query' => testo ). Le regole di lettura sono queste:
      *
-     * - un file si salta per intero se il livello ricavato dal nome ( tolti gli underscore, le prime dodici cifre ) non è
-     *   maggiore del livello raggiunto fin lì;
+     * - un file il cui livello ricavato dal nome ( tolti gli underscore, le prime dodici cifre ) non è maggiore del
+     *   livello raggiunto fin lì si legge lo stesso, per riprendere un'applicazione fermata a metà file, ma il suo id
+     *   segnaposto `------------` non si applica;
      * - una riga che, tolti gli spazi, comincia con `-- |` è un marcatore: chiude la patch che si stava leggendo e ne apre
      *   una nuova con l'id scritto dopo il marcatore, dodici caratteri;
      * - l'id `------------` vale la data e l'ora correnti nel formato YmdHi ( dodici cifre come la colonna __patch__.id );
@@ -2207,10 +2208,11 @@
             // livello del file dal nome
             $pFileLevel = substr(str_replace('_', '', basename($pFile)), 0, 12);
 
-            // un file che non supera il livello raggiunto non contiene niente da applicare
-            if ($pFileLevel <= $s) {
-                continue;
-            }
+            // un file che non supera il livello raggiunto si legge lo stesso, perche' un'applicazione fermata a meta'
+            // ( livello 202609301916 dentro _202609301900.id.numerici.sql ) deve riprendere dal blocco dopo: fino al
+            // 01/10/2026 lo si saltava per intero, e il resto del file non veniva applicato mai, senza avviso; vale
+            // solo per gli id espliciti, non per il segnaposto ( vedi sotto )
+            $pFileSotto = ($pFileLevel <= $s);
 
             // patch corrente; $pId false vuol dire nessun marcatore valido aperto
             $pId = false;
@@ -2262,8 +2264,10 @@
                     $pId = substr(trim($row), 5, 12);
 
                     // l'id segnaposto vale la data corrente, nel formato della colonna __patch__.id
+                    // in un file sotto il livello il segnaposto non si applica: vale il livello del database, e il blocco si
+                    // salta in silenzio come quelli gia' applicati ( altrimenti _120000999999.patch.sql ripartirebbe a ogni giro )
                     if ($pId == '------------') {
-                        $pId = date('YmdHi');
+                        $pId = ($pFileSotto) ? $l : date('YmdHi');
                     } elseif (! preg_match('/^[0-9]{12}$/', $pId)) {
                         $pId = false;
                     }
