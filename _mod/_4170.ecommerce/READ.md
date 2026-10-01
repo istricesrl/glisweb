@@ -142,6 +142,13 @@ if( carrelloForm.checkValidity() ) {
   riga ). Oggi non dipende dall'utente collegato né dalla zona: *listini_clienti* non si legge, e il controllo dei listini per zona
   in _750.controller.php non scatta mai; la scelta cliente, zona, default è la tappa 2 del progetto del motore prezzi.
 
+  Chi può cambiare listino, sconti e coupon di riga: filtraRichiestaCarrello() ( _src/_lib/_mysql.utils.add.php ), chiamata in testa
+  alla controller, toglie dalla richiesta il listino del carrello e delle righe, lo sconto ( *sconto_percentuale*, *sconto_valore* ) e i
+  coupon delle righe ( *id_coupon*, *coupon_percentuale*, *coupon_valore* ) quando chi la manda non ha il privilegio GESTIONE_ECOMMERCE,
+  e lo scrive nel log cart. I listini che il sito può scegliere apposta ( per esempio un selettore privati / aziende ) si elencano, per
+  codice o id, in `$cf['ecommerce']['listini']['dal_sito']`. Il codice coupon del carrello ( *codice_coupon* ) resta aperto a tutti:
+  lo verifica verificaValiditaCoupon(). Fino al 2026-10-01 questi campi si accettavano da chiunque.
+
   Il prezzo di una riga lo calcola il motore di _mod/_4000.catalogo/_src/_lib/_mysql.tools.add.php. calcolaPrezzoArticolo() raccoglie i
   candidati sul listino: il prezzo del prodotto dell'articolo ( per la quantità del prodotto nel carrello ), quello dell'articolo ( per
   la sua quantità ) e, per ogni paniere di cui l'articolo fa parte ( *relazioni_articoli* con ruolo 6, quantità del paniere da

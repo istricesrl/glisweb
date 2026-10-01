@@ -46,6 +46,10 @@
     // carrello, dalla modalita_spedizione della zona senza articolo, prodotto né categoria, in carrelli.costo_spedizione_*;
     // in tutti e due i casi i documenti del checkout le scrivono in una riga a parte
     $cf['ecommerce']['spedizione']                  = 'articolo';
+
+    // listini che il sito può scegliere dalla richiesta ( codici o id ); tutti gli altri, come gli sconti e i coupon di
+    // riga, solo chi ha il privilegio GESTIONE_ECOMMERCE ( vedi filtraRichiestaCarrello() )
+    $cf['ecommerce']['listini']['dal_sito']         = array();
     // $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                         // tipologia di documento da generare di default in cassa
     // $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                 // strategia di generazione dei documenti da usare di default in cassa
 

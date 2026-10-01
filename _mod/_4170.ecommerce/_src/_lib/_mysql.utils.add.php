@@ -408,3 +408,89 @@
         return !empty($sconto);
 
     }
+
+    /**
+     * toglie dalla richiesta del carrello i campi che solo un operatore può impostare
+     *
+     * Il listino del carrello, il listino delle righe, lo sconto delle righe e i coupon delle righe si accettano dalla
+     * richiesta solo da chi ha il privilegio GESTIONE_ECOMMERCE ( l'operatore nella scheda carrello del back end o in
+     * cassa ). Da tutti gli altri si tolgono e si registra una riga nel log cart, così nessuno può mettersi da solo un
+     * listino, uno sconto o il coupon di un altro. Fa eccezione il listino del carrello o della riga, se è fra quelli che
+     * $cf['ecommerce']['listini']['dal_sito'] ( codici o id ) lascia scegliere al sito. Fino al 2026-10-01 tutti questi
+     * campi si accettavano da chiunque: sconto_valore di riga, per esempio, restava quello inviato se lo sconto percentuale
+     * era zero, e id_coupon di riga usava il residuo di qualunque coupon.
+     *
+     * @param  array   $r  la richiesta del carrello, $_REQUEST['__carrello__'], modificata sul posto
+     *
+     * @return array       i campi tolti, per il log e per le prove
+     */
+    function filtraRichiestaCarrello( &$r ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // campi tolti
+        $tolti = array();
+
+        // chi ha il privilegio può impostare tutto
+        if( ! is_array( $r ) || getPrivilege( 'GESTIONE_ECOMMERCE' ) === true ) {
+            return $tolti;
+        }
+
+        // listini che il sito può scegliere
+        $ammessi = array();
+        foreach( (array) ( $cf['ecommerce']['listini']['dal_sito'] ?? array() ) as $l ) {
+            $id = risolviListino( $cf['memcache']['connection'] ?? NULL, $cf['mysql']['connection'], $l );
+            if( ! empty( $id ) ) {
+                $ammessi[] = $id;
+            }
+        }
+
+        // un listino dalla richiesta passa solo se è fra quelli ammessi
+        $listinoAmmesso = function( $v ) use ( $ammessi ) {
+            return ( $v === NULL || $v === '' || in_array( (int) $v, $ammessi, true ) );
+        };
+
+        // listino del carrello
+        if( array_key_exists( 'id_listino', $r ) && ! $listinoAmmesso( $r['id_listino'] ) ) {
+            $tolti[] = 'id_listino=' . $r['id_listino'];
+            unset( $r['id_listino'] );
+        }
+
+        // riga aggiunta da una scheda prodotto
+        if( isset( $r['__articolo__'] ) && is_array( $r['__articolo__'] ) ) {
+            if( array_key_exists( 'id_listino', $r['__articolo__'] ) && ! $listinoAmmesso( $r['__articolo__']['id_listino'] ) ) {
+                $tolti[] = '__articolo__[id_listino]=' . $r['__articolo__']['id_listino'];
+                unset( $r['__articolo__']['id_listino'] );
+            }
+        }
+
+        // righe
+        if( isset( $r['__articoli__'] ) && is_array( $r['__articoli__'] ) ) {
+            foreach( $r['__articoli__'] as $k => &$riga ) {
+                if( ! is_array( $riga ) ) {
+                    continue;
+                }
+                if( array_key_exists( 'id_listino', $riga ) && ! $listinoAmmesso( $riga['id_listino'] ) ) {
+                    $tolti[] = '__articoli__[' . $k . '][id_listino]=' . $riga['id_listino'];
+                    unset( $riga['id_listino'] );
+                }
+                foreach( array( 'sconto_percentuale', 'sconto_valore', 'id_coupon', 'coupon_percentuale', 'coupon_valore' ) as $campo ) {
+                    if( array_key_exists( $campo, $riga ) ) {
+                        $tolti[] = '__articoli__[' . $k . '][' . $campo . ']=' . ( is_scalar( $riga[ $campo ] ) ? $riga[ $campo ] : '...' );
+                        unset( $riga[ $campo ] );
+                    }
+                }
+            }
+            unset( $riga );
+        }
+
+        // log
+        if( ! empty( $tolti ) ) {
+            logWrite( 'campi riservati agli operatori tolti dalla richiesta del carrello ' . ( $_SESSION['carrello']['id'] ?? 'nuovo' ) . ': ' . implode( ', ', $tolti ), 'cart', LOG_WARNING );
+        }
+
+        return $tolti;
+
+    }
+

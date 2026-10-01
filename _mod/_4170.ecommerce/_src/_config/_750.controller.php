@@ -26,6 +26,9 @@ ini_set("display_errors", 1);
         // log
         logWrite( 'attivata la controller del carrello', 'cart' );
 
+        // listino, sconti e coupon di riga solo dagli operatori ( vedi filtraRichiestaCarrello() )
+        filtraRichiestaCarrello( $_REQUEST['__carrello__'] );
+
         // debug
         // die( print_r( $_REQUEST['__carrello__'], true ) );
 
@@ -531,7 +534,7 @@ ini_set("display_errors", 1);
                                     $item[ $field ] = $model['default'];
                                 }
                             }
-                            // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
+                            // NOTA listino, sconto e coupon di riga arrivano qui solo dagli operatori: filtraRichiestaCarrello(), in testa alla controller, li toglie dalle richieste degli altri
                             // echo '<pre>' . print_r( $item, true ) . '</pre>';
 
                             if( isset( $_SESSION['carrello']['articoli'][ $key ] ) ) {
