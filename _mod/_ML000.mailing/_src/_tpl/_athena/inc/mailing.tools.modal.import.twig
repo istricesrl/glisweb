@@ -1,0 +1,41 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function importa_iscritti() {
+        var file = $( '#__upload_____iscritti__' ).val();
+        getws( '/task/ML000.mailing/importazione.iscritti.start?file=' + encodeURIComponent( file ), [], function( data ) {
+            console.log( data );
+            bootstrap.Modal.getOrCreateInstance( document.getElementById( 'importa_iscritti' ) ).hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="importa_iscritti">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">importa CSV iscritti</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            {{ frm.uploader({ 'field': { 'name': '__iscritti__' }, 'form': { 'table': '__upload__' }, 'destination': { 'folder': 'var/contenuti/upload/' }, 'page': page, 'pages': pages, 'site': site }) }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            scarica il <a href="/_usr/_examples/_csv/iscritti.import.csv">modello CSV da compilare</a>; le colonne del file sono nome, cognome, denominazione, codice, codice_fiscale, sesso, mail, categorie e liste; categorie e liste si separano con la barra verticale
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="importa_iscritti();">importa</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

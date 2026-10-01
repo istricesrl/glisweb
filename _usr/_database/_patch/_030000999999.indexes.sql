@@ -166,8 +166,10 @@ ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` bigint(20) NOT NULL AUTO_INCRE
 ALTER TABLE `anagrafica_consensi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`, `id_consenso`), 
+	ADD UNIQUE KEY `unica_mail` (`id_mail`, `id_consenso`), 
 	ADD KEY `id_account` (`id_account`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `se_prestato` (`se_prestato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),

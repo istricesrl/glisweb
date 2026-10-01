@@ -1,0 +1,52 @@
+-- 2026-10-01 — il consenso alle comunicazioni anche sul singolo indirizzo mail
+--
+-- COSA SI VEDEVA. La newsletter ( _mod/_ML000.mailing ) iscrive dal sito pubblico indirizzi che non hanno
+-- un'anagrafica, e il link di disiscrizione arriva a un indirizzo, non a una persona: anagrafica_consensi poteva
+-- tenere il consenso solo sull'anagrafica, quindi un iscritto senza anagrafica non aveva dove registrare ne' il
+-- consenso ne' la revoca, e chi si toglieva rientrava alla prima lista ripopolata.
+--
+-- COSA FA. Aggiunge anagrafica_consensi.id_mail, facoltativo: una riga di consenso sta sull'anagrafica oppure sul
+-- singolo indirizzo. Chiave unica ( id_mail, id_consenso ) gemella di quella su ( id_anagrafica, id_consenso ),
+-- vincolo verso mail ( CASCADE, come quello verso anagrafica ), e la colonna nella vista.
+--
+-- IDEMPOTENTE. ADD COLUMN IF NOT EXISTS e ADD KEY IF NOT EXISTS; il vincolo si toglie con DROP FOREIGN KEY IF EXISTS e
+-- si rimette uguale; la vista e' CREATE OR REPLACE.
+
+-- | 202610011500
+
+ALTER TABLE `anagrafica_consensi`
+	ADD COLUMN IF NOT EXISTS `id_mail` bigint(20) DEFAULT NULL AFTER `id_anagrafica`,
+	ADD UNIQUE KEY IF NOT EXISTS `unica_mail` (`id_mail`, `id_consenso`),
+	ADD KEY IF NOT EXISTS `id_mail` (`id_mail`);
+
+-- | 202610011501
+
+ALTER TABLE `anagrafica_consensi` DROP FOREIGN KEY IF EXISTS `anagrafica_consensi_ibfk_04`;
+
+-- | 202610011502
+
+ALTER TABLE `anagrafica_consensi`
+	ADD CONSTRAINT `anagrafica_consensi_ibfk_04` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- | 202610011503
+
+CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
+	SELECT
+		anagrafica_consensi.id,
+		anagrafica_consensi.id_account,
+		anagrafica_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_mail,
+		mail.indirizzo AS mail,
+		anagrafica_consensi.id_consenso,
+		anagrafica_consensi.se_prestato,
+		anagrafica_consensi.timestamp_consenso,
+		anagrafica_consensi.id_account_inserimento,
+		anagrafica_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), mail.indirizzo, '' ) ) AS __label__
+	FROM anagrafica_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+		LEFT JOIN mail ON mail.id = anagrafica_consensi.id_mail
+;
+
+-- | FINE FILE

@@ -221,14 +221,17 @@ CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
 		anagrafica_consensi.id_account,
 		anagrafica_consensi.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_mail,
+		mail.indirizzo AS mail,
 		anagrafica_consensi.id_consenso,
 		anagrafica_consensi.se_prestato,
 		anagrafica_consensi.timestamp_consenso,
 		anagrafica_consensi.id_account_inserimento,
 		anagrafica_consensi.id_account_aggiornamento,
-		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS __label__
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), mail.indirizzo, '' ) ) AS __label__
 	FROM anagrafica_consensi
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+		LEFT JOIN mail ON mail.id = anagrafica_consensi.id_mail
 ;
 
 -- | 090000000900

@@ -325,6 +325,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_consensi` (
   `id` bigint(20) NOT NULL,
   `id_account` bigint(20) DEFAULT NULL,
   `id_anagrafica` bigint(20) DEFAULT NULL,
+  `id_mail` bigint(20) DEFAULT NULL,
   `id_consenso` bigint(20) DEFAULT NULL,
   `se_prestato` tinyint(1) DEFAULT NULL,
   `note` text DEFAULT NULL,

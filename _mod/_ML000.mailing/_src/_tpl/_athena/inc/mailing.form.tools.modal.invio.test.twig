@@ -1,0 +1,42 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function invia() {
+        var mt = $( '#__test_____mt__' ).val();
+        getws( '/task/ML000.mailing/genera.mail?mid={{ request[ form.table ].id }}&mt=' + encodeURIComponent( mt ), [], function( data ) {
+            console.log( data );
+            bootstrap.Modal.getOrCreateInstance( document.getElementById( 'invia' ) ).hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="invia">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">invio di prova</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="__test_____mt__">indirizzo a cui inviare la prova</label>
+                            <input type="email" class="form-control form-control-sm" id="__test_____mt__" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            questa operazione invierà una mail di prova; per verificare il livello di spam utilizzare <a href="https://www.mail-tester.com/" target="_blank">Mail Tester</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="invia();">invia</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>
