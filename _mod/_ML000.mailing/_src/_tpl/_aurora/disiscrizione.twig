@@ -1,0 +1,22 @@
+{% extends 'ext/main.twig' %}
+
+{#
+    pagina di disiscrizione dalla newsletter
+
+    Titolo e testo li prepara la macro _disiscrizione.php secondo lo stato in etc.disiscrizione.stato; in stato
+    conferma la pagina mostra il bottone che spedisce la POST, l'unica richiesta che revoca davvero il consenso.
+#}
+
+{% block main %}
+<section class="container py-5">
+    <h1>{{ page.h1[ localization.language.ietf ] }}</h1>
+    <p>{{ page.content[ localization.language.ietf ] }}</p>
+    {% if etc.disiscrizione.stato == 'conferma' %}
+    <form action="{{ page.path[ localization.language.ietf ] }}" method="post">
+        <input type="hidden" name="mtk" value="{{ etc.disiscrizione.mtk }}">
+        <input type="hidden" name="isc" value="{{ etc.disiscrizione.isc }}">
+        <button type="submit" class="btn btn-primary">conferma la disiscrizione</button>
+    </form>
+    {% endif %}
+</section>
+{% endblock %}

@@ -65,8 +65,9 @@ Questi campi vengono elaborati sempre nella controller /_mod/_CT000.contatti/_sr
 automatico tramite la funzione associazioneConsensiContatto() che si occupa di registrare sul database i consensi prestati
 dall'utente.
 
-Le tabelle coinvolte nel processo sono la consensi_anagrafica e la consensi_contatti, che registrano rispettivamente
-i consensi prestati da una specifica anagrafica e quelli prestati tramite un dato modulo contatti. La legenda dei consensi
+Le tabelle coinvolte nel processo sono la anagrafica_consensi e la consensi_contatti, che registrano rispettivamente
+i consensi prestati da una specifica anagrafica ( una riga per consenso, aggiornata a ogni nuovo modulo ) e quelli
+prestati tramite un dato modulo contatti. La legenda dei consensi
 si trova nella tabella consensi.
 
 ## integrazione con reCAPTCHA

@@ -221,14 +221,17 @@ CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
 		anagrafica_consensi.id_account,
 		anagrafica_consensi.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_mail,
+		mail.indirizzo AS mail,
 		anagrafica_consensi.id_consenso,
 		anagrafica_consensi.se_prestato,
 		anagrafica_consensi.timestamp_consenso,
 		anagrafica_consensi.id_account_inserimento,
 		anagrafica_consensi.id_account_aggiornamento,
-		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS __label__
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), mail.indirizzo, '' ) ) AS __label__
 	FROM anagrafica_consensi
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+		LEFT JOIN mail ON mail.id = anagrafica_consensi.id_mail
 ;
 
 -- | 090000000900
@@ -1503,38 +1506,6 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
       consensi_moduli.modulo                                  --
     ) AS __label__                                            -- etichetta per le tendine e le liste
   FROM consensi_moduli                                        --
-;                                                             --
-
--- | 090000006400
-
--- consensi_anagrafica_view
-CREATE OR REPLACE VIEW `consensi_anagrafica_view` AS            --
-  SELECT                                                      --
-	consensi_anagrafica.id,                                       --
-    consensi_anagrafica.id_consenso,                              --
-	consensi.nome AS consenso,                                            --
-	consensi_anagrafica.id_anagrafica,                              --
-	concat_ws(
-		' ',
-		anagrafica.nome,
-		anagrafica.cognome,
-		anagrafica.denominazione
-	) AS anagrafica,                              --
-    consensi_anagrafica.modulo,                                   --
-    consensi_anagrafica.valore,                                   --
-    consensi_anagrafica.id_account_inserimento,                   --
-	consensi_anagrafica.timestamp_inserimento,
-	from_unixtime( consensi_anagrafica.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
-	consensi_anagrafica.id_account_aggiornamento,                 --
-    concat(                                                   --
-      'consenso ',                                            --
-      consensi.nome,                            --
-      ' per modulo ',                                         --
-      consensi_anagrafica.modulo                                  --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM consensi_anagrafica                                        --
-    INNER JOIN consensi ON consensi.id = consensi_anagrafica.id_consenso	--
-	INNER JOIN anagrafica ON anagrafica.id = consensi_anagrafica.id_anagrafica	--
 ;                                                             --
 
 -- | 090000006500

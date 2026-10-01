@@ -166,8 +166,10 @@ ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` bigint(20) NOT NULL AUTO_INCRE
 ALTER TABLE `anagrafica_consensi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`, `id_consenso`), 
+	ADD UNIQUE KEY `unica_mail` (`id_mail`, `id_consenso`), 
 	ADD KEY `id_account` (`id_account`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `se_prestato` (`se_prestato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -1016,24 +1018,6 @@ ALTER TABLE `consensi_moduli`
 
 -- consensi_moduli
 ALTER TABLE `consensi_moduli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000006400
-
--- consensi_anagrafica
-ALTER TABLE `consensi_anagrafica`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_consenso`, `id_anagrafica`, `modulo`), 
-	ADD KEY `id_consenso` (`id_consenso`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `modulo` (`modulo`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_consenso`, `id_anagrafica`, `modulo`);
-
--- | 030000006401
-
--- consensi_anagrafica
-ALTER TABLE `consensi_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006500
 

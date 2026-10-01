@@ -1,0 +1,42 @@
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_privacy.twig' as prv %}
+{% import '_lib/_translation.twig' as trn %}
+
+{# FORM DI ISCRIZIONE ALLA NEWSLETTER #}
+
+{#
+    Il form pubblico di iscrizione, da includere nel template del deploy dove lo si vuole mostrare:
+
+        {% include '_inc/_mailing.iscrizione.twig' %}
+
+    Spedisce __ct__[newsletter][...] alla pagina corrente; la riceve il modulo contatti, che dopo il controllo
+    antispam passa i dati alla controller _mod/_ML000.mailing/_src/_inc/_controllers/_form/_newsletter.php.
+    I consensi sono quelli del modulo privacy newsletter ( _mod/_ML000.mailing/_src/_config/_060.privacy.php ),
+    e le liste a cui si viene iscritti quelle di contatti.newsletter.liste.
+
+    Dopo l'invio la controller lascia l'esito in request.__ct__.newsletter.__status__ ( OK o ERR ), e il form
+    lo mostra al posto dei campi.
+#}
+
+{% set esito = request.__ct__.newsletter.__status__ ?? null %}
+
+<div class="mailing-iscrizione">
+{% if esito == 'OK' %}
+    <p class="alert alert-success">{{ trn.trw({ 'w': 'iscrizione_newsletter_ok', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'grazie, l\'indirizzo è stato iscritto alla newsletter' }) }}</p>
+{% else %}
+    {% if esito %}
+    <p class="alert alert-danger">{{ trn.trw({ 'w': 'iscrizione_newsletter_errore', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'non è stato possibile iscrivere l\'indirizzo, controllare i dati e riprovare' }) }}</p>
+    {% endif %}
+    <form action="{{ page.path[ localization.language.ietf ] }}" id="formNewsletter" method="post">
+        <div class="form-group form-row">
+            <div class="col-12">
+                <input type="email" class="form-control" name="__ct__[newsletter][mail]" value="{{ request.__ct__.newsletter.mail }}" placeholder="{{ trn.trw({ 'w': 'la_tua_mail', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'la tua e-mail' }) }}" required>
+            </div>
+        </div>
+        {{ prv.checkConsensi( '__ct__', 'newsletter', privacy.moduli.newsletter, localization.language.ietf, tr, pages, 'col-12' ) }}
+        <div class="form-group form-row">
+            <div class="col-12">{{ cms.formButton( { 'field': { 'text': trn.trw({ 'w': 'iscriviti', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'iscriviti' }) }, 'form': { 'id': 'formNewsletter', 'table': '__ct__' }, 'recaptcha': google.profile.recaptcha } ) }}</div>
+        </div>
+    </form>
+{% endif %}
+</div>

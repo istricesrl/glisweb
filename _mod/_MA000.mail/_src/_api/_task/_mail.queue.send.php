@@ -322,7 +322,7 @@
 		if( $r !== false ) {
 
 			// RELAZIONI CON IL MODULO MAILING
-			if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) ) {
+			if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) || in_array( "ML000.mailing", $cf['mods']['active']['array'] ) ) {
 
 				// aggiorno la riga
 				$ml = mysqlQuery(

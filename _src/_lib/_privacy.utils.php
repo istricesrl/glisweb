@@ -12,7 +12,7 @@
      * generate dalla macro Twig checkConsensi() di _src/_twig/_lib/_privacy.twig, i cui campi hanno il nome nella forma
      * __ct__[nomemodulo][__privacy__][CODICECONSENSO]. La controller _mod/_CT000.contatti/_src/_config/_750.controller.php,
      * dopo aver salvato il contatto nella tabella contatti, passa il blocco dati del modulo a associazioneConsensiContatto()
-     * che registra i consensi prestati nelle tabelle consensi_contatti e, se l'utente è loggato, consensi_anagrafica. La
+     * che registra i consensi prestati nelle tabelle consensi_contatti e, se l'utente è loggato, anagrafica_consensi. La
      * legenda dei consensi si trova nella tabella consensi. Per ulteriori dettagli si vedano _mod/_CT000.contatti/READ.md
      * e _usr/_docs/_read/406.howto.privacy.md.
      * 
@@ -41,6 +41,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * mysqlSelectValue()               | _src/_lib/_mysql.tools.php
      * mysqlInsertRow()                 | _src/_lib/_mysql.tools.php
+     * mysqlQuery()                     | _src/_lib/_mysql.tools.php
      * 
      * changelog
      * =========
@@ -49,6 +50,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-10-01       | Fabio Mosti          | consensi dell'anagrafica in anagrafica_consensi, consensi_anagrafica tolta
      * 
      * licenza
      * =======
@@ -69,8 +71,9 @@
      * 
      * Questa funzione riceve il blocco dati di un modulo di contatto già salvato e, per ogni consenso presente nella
      * chiave __privacy__ con valore vero, cerca nella tabella consensi l'id corrispondente al codice e inserisce una
-     * riga in consensi_contatti (legata al contatto) e, se è valorizzato __id_anagrafica__, una seconda riga in
-     * consensi_anagrafica (legata all'anagrafica dell'utente loggato). I consensi non prestati (valore falso o vuoto)
+     * riga in consensi_contatti (legata al contatto) e, se è valorizzato __id_anagrafica__, registra il consenso in
+     * anagrafica_consensi (legata all'anagrafica dell'utente loggato), dove c'è una riga sola per anagrafica e consenso
+     * che si aggiorna a ogni nuovo consenso. I consensi non prestati (valore falso o vuoto)
      * non vengono registrati, così come quelli il cui codice non esiste nella tabella consensi. Se mancano le chiavi
      * __id_contatto__ o __privacy__, o se __privacy__ non è un array, la funzione non fa niente.
      * 
@@ -116,16 +119,20 @@
 
                         if( ! empty( $v['__id_anagrafica__'] ) ) {
 
-                            mysqlInsertRow(
+                            // una riga per anagrafica e consenso, che si aggiorna: vale il consenso più recente
+                            mysqlQuery(
                                 $cf['mysql']['connection'],
+                                'INSERT INTO anagrafica_consensi ( id_anagrafica, id_consenso, se_prestato, note, timestamp_consenso, timestamp_inserimento ) '.
+                                'VALUES ( ?, ?, 1, ?, ?, ? ) '.
+                                'ON DUPLICATE KEY UPDATE se_prestato = 1, note = VALUES( note ), '.
+                                'timestamp_consenso = VALUES( timestamp_consenso ), timestamp_aggiornamento = VALUES( timestamp_inserimento )',
                                 array(
-                                    'modulo' => $v['__modulo__'],
-                                    'id_anagrafica' => $v['__id_anagrafica__'],
-                                    'id_consenso' => $idConsenso,
-                                    'valore' => $valoreConsenso,
-                                    'timestamp_inserimento' => time(),
-                                ),
-                                'consensi_anagrafica'
+                                    array( 's' => $v['__id_anagrafica__'] ),
+                                    array( 's' => $idConsenso ),
+                                    array( 's' => 'consenso prestato col modulo ' . $v['__modulo__'] . ', contatto #' . $v['__id_contatto__'] ),
+                                    array( 's' => time() ),
+                                    array( 's' => time() )
+                                )
                             );
 
                         }

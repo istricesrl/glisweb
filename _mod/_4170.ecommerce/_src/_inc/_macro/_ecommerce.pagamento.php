@@ -549,9 +549,10 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         $cf['mysql']['connection'],
                         'SELECT 
                                 documenti.numero AS numero_documento, documenti.sezionale AS sezionale_documento, documenti.id_tipologia AS id_tipologia_documento,
-                                coalesce( metadati.testo, documenti_articoli.id_articolo ) AS id_articolo, documenti_articoli.quantita 
+                                coalesce( metadati.testo, articoli.codice, documenti_articoli.id_articolo ) AS id_articolo, documenti_articoli.quantita 
                                 FROM documenti_articoli 
                                 INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
+                                LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
                                 LEFT JOIN metadati ON metadati.id_articolo = documenti_articoli.id_articolo AND metadati.nome = "codice_relax"
                                 WHERE documenti_articoli.id_documento = ?',
                         array(array('s' => $idDocumento))
