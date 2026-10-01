@@ -46,31 +46,13 @@ scompaiono quando si va altrove, così l'elenco resta corto anche su un'installa
 ![l'elenco delle anagrafiche](shot/athena.elenco.png)
 <!-- @shot: athena.elenco | /anagrafica.it-IT.html?__view__[a47172af8b050311d71a4c6cf62ea1df][__search__]=DEMO | 1200x760 | #form-filtro | 9000 -->
 
-Un elenco ha **una riga di comandi in alto e una barra in fondo**, e sono sempre quelle.
+In Athena la **ricerca** e il **più** stanno in alto a destra, e gli eventuali **filtri** alla
+loro sinistra; le **tendine di ordinamento** sono la riga subito sopra la tabella, al posto delle
+intestazioni; le **frecce**, il conteggio *da – a di totale* e l'icona del **foglio di calcolo** sono
+in fondo, a sinistra e a destra. Le icone in fondo a ogni riga sono la colonna delle **azioni**.
 
-In alto:
-
-| comando | cosa fa |
-|---|---|
-| ricerca per parola chiave | filtra l'elenco; la lente accanto, o l'invio, conferma |
-| le tendine sopra le colonne | **ordinano** per quella colonna, crescente o decrescente |
-| il **più** | apre la scheda di un oggetto nuovo |
-| gli inserimenti rapidi | aprono un riquadro per aggiungere una riga senza lasciare l'elenco |
-
-In fondo:
-
-| comando | cosa fa |
-|---|---|
-| *da – a di totale* | a che punto dell'elenco si è |
-| le frecce | la pagina precedente e la successiva |
-| il foglio di calcolo | **scarica quello che si sta vedendo**, coi filtri e l'ordinamento correnti |
-| il **più** | lo stesso di sopra, a portata di mano quando l'elenco è lungo |
-
-Ricerca, ordinamento e pagina **restano** quando si esce dall'elenco e ci si torna: sono ricordati
-per quell'elenco, non per la sessione intera, quindi due elenchi diversi non si disturbano.
-
-> **nota** — *nessun dato trovato* non è un errore: vuol dire che con quella ricerca non c'è niente.
-> Si svuota il campo e si riprova.
+Cosa fa ciascun comando, e come cerca la ricerca, lo dice il capitolo *elenchi e ricerche*: vale
+per tutti gli elenchi, in qualsiasi template.
 
 ## le schede
 <!-- @pubblico: operatore, amministratore -->
@@ -78,27 +60,14 @@ per quell'elenco, non per la sessione intera, quindi due elenchi diversi non si 
 ![la scheda di un contatto](shot/athena.scheda.png)
 <!-- @shot: athena.scheda | /anagrafica/gestione.it-IT.html?anagrafica[id]=650 | 1200x760 | #form-anagrafica | 9000 -->
 
-Una scheda è **un oggetto per volta**, e i suoi dati sono divisi in **linguette**: i dati generali
-nella prima, il resto raggruppato per argomento. Cambiare linguetta non fa perdere quello che si è
-scritto — si perde solo uscendo dalla scheda senza salvare.
+In Athena le **linguette** della scheda occupano le prime due righe in alto: a parole quelle con
+i dati, a icone quelle con le immagini, i file, l'archivio, le stampe e le azioni. I **pulsanti per
+salvare** sono in fondo alla scheda, a destra; il cestino sta in mezzo, e a sinistra la freccia per
+tornare indietro senza salvare.
 
-In fondo, al posto delle frecce, ci sono i **dischetti**:
-
-| pulsante | cosa fa |
-|---|---|
-| dischetto | **salva e resta** nella scheda |
-| freccia + dischetto | **salva e torna** da dove si era entrati |
-| freccia tonda a sinistra | **torna indietro senza salvare** |
-| freccia tonda in giù | salva, quando si sta lavorando dentro un oggetto più grande |
-| il giù della nuvola | scarica il documento allegato alla scheda, dove c'è |
-| cestino | **cancella** l'oggetto, previa conferma |
-
-> **attenzione** — *salva e torna* riporta **alla pagina da cui si è entrati**, che non è sempre
-> l'elenco: entrando in una riga da un documento, si torna a quel documento.
-
-Dentro una scheda ci sono spesso dei **sotto-elenchi**: sono elenchi a tutti gli effetti, con le
-stesse regole di sopra, ma legati all'oggetto che si sta guardando. Si aggiunge una riga col più e la
-si toglie col cestino; tutto diventa definitivo **al salvataggio della scheda**, non prima.
+Le linguette che contengono un **sotto-elenco** si riconoscono perché sotto c'è una tabella con la
+sua ricerca, come un elenco. Cosa fa ogni pulsante, e come si salvano sotto-elenchi e campi
+ripetuti, lo dice il capitolo *le schede*.
 
 ## le pagine di strumenti
 <!-- @pubblico: operatore, amministratore -->
@@ -116,12 +85,5 @@ suo, che entra nel merito di ogni riquadro.
 
 ## quello che questo capitolo non dice ancora
 
-- le **azioni rapide** che compaiono nell'ultima colonna di certi elenchi, una per una: nello scatto
-  si vedono quattro icone e il capitolo non dice cosa fanno;
-- i **filtri** sopra l'elenco — *stato* e *categoria* nella figura — che sono diversi dalla ricerca
-  per parola chiave e cambiano da un elenco all'altro;
-- la **riga di icone** in cima a una scheda, che sono le azioni e le stampe di quell'oggetto;
-- i **campi** di una scheda visti da vicino: le tendine che cercano mentre si scrive, gli allegati,
-  le date, l'editor di testo;
+- i **campi** di una scheda visti da vicino: gli allegati e l'editor di testo;
 - come si comporta la stessa maschera **su schermo stretto**, dove il menu diventa una tendina;
-- la **stampa** di un elenco e di una scheda, che non è l'esportazione in foglio di calcolo.
