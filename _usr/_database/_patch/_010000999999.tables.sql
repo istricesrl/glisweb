@@ -853,6 +853,8 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_edifici` tinyint(1) DEFAULT NULL,
+  `se_indirizzi` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

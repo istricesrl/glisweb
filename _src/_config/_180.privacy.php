@@ -35,7 +35,8 @@
         $cf['mysql']['connection'],
         'SELECT consensi_moduli.*, consensi.codice FROM consensi_moduli '.
         'INNER JOIN consensi ON consensi.id = consensi_moduli.id_consenso '.
-        'WHERE consensi_moduli.id_lingua = ?',
+        'WHERE consensi_moduli.id_lingua = ? '.
+        'ORDER BY consensi_moduli.ordine, consensi_moduli.id',
         array( array( 's' => $cf['localization']['language']['id'] ) )
     );
 
@@ -55,7 +56,8 @@
                 'label' => array( $cf['localization']['language']['ietf'] => $consenso['nome'] ),
                 'action' => $consenso['azione'],
                 'page' => $consenso['pagina'],
-                'required' => $consenso['se_richiesto']
+                'required' => $consenso['se_richiesto'],
+                'ordine' => $consenso['ordine']
             );
     
         }
