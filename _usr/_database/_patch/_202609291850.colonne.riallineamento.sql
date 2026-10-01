@@ -35,7 +35,7 @@ TRUNCATE TABLE `__patch_colonne_riallineamento__`;
 
 -- | 202609291852
 
-INSERT INTO `__patch_colonne_riallineamento__` ( `tabella`, `colonna`, `definizione` ) VALUES
+REPLACE INTO `__patch_colonne_riallineamento__` ( `tabella`, `colonna`, `definizione` ) VALUES
 	( 'anagrafica_certificazioni', 'id', 'bigint(20) NOT NULL AUTO_INCREMENT' ),
 	( 'anagrafica_certificazioni', 'id_anagrafica', 'bigint(20) DEFAULT NULL' ),
 	( 'anagrafica_certificazioni', 'id_certificazione', 'bigint(20) DEFAULT NULL' ),

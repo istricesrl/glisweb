@@ -48,7 +48,7 @@ TRUNCATE TABLE `__patch_colonne_base__`;
 
 -- | 202609261002
 
-INSERT INTO `__patch_colonne_base__` ( `tabella`, `colonna`, `definizione` ) VALUES
+REPLACE INTO `__patch_colonne_base__` ( `tabella`, `colonna`, `definizione` ) VALUES
 	( 'account', 'id_anagrafica', 'bigint(20) DEFAULT NULL' ),
 	( 'account', 'id_mail', 'bigint(20) DEFAULT NULL' ),
 	( 'account', 'id_affiliazione', 'bigint(20) DEFAULT NULL' ),
