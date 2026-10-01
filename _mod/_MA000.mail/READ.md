@@ -60,7 +60,9 @@ Questa controller viene eseguita prima di ogni elaborazione della coda delle mai
 Questa controller viene eseguita alla fine delle elaborazioni di ogni oggetto della coda delle mail inviate.
 
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.php
-Questa è la macro del modulo di gestione delle mail in uscita. Il campo *invio* della scheda è un input
+Questa è la macro del modulo di gestione delle mail in uscita. Su una mail nuova la scheda aggiunge come allegati i file
+messi da parte col segnalibro ( gruppo `mailattach` dei bookmarks, `_src/_config/_770.bookmarks.php` ), e la macro svuota
+la memoria di lavoro quando la mail è salvata con i suoi file, come fa la linea `.html` ( dal 01/10/2026 ). Il campo *invio* della scheda è un input
 `datetime-local` sulla colonna `timestamp_invio`: la conversione fra timestamp e data la fanno, in lettura e in
 scrittura, le controller di default `/_src/_inc/_controllers/_default.after.php` e `_default.before.php`, come per
 tutte le colonne `timestamp_*` dei form.
