@@ -5845,6 +5845,19 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
 ;
 
+-- | 090000063000
+
+-- valute_view
+CREATE OR REPLACE VIEW `valute_view` AS
+	SELECT
+		valute.id,
+		valute.iso4217,
+		valute.html_entity,
+		valute.utf8,
+		valute.iso4217 AS __label__
+	FROM valute
+;
+
 -- | 090000063500
 
 -- taglie_view

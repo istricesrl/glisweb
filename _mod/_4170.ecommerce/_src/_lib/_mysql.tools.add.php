@@ -124,6 +124,47 @@
      */
 
     /**
+     * trova la modalità di spedizione che vale per un articolo in una zona
+     *
+     * Una riga di modalita_spedizione può riguardare un articolo, un prodotto, una categoria di prodotti o tutta la zona
+     * ( nessuno dei tre ): vale la più specifica che c'è, nell'ordine articolo, prodotto, categoria del prodotto, zona.
+     * Fino al 2026-10-01 si leggevano solo le righe per articolo, e le altre che la maschera permette di scrivere non
+     * davano nessun costo.
+     *
+     * @param  mysqli  $c  connessione
+     * @param  integer $a  id dell'articolo
+     * @param  integer $z  id della zona
+     *
+     * @return array       importo_netto, lotto_spedizione e id_iva della riga, o un array vuoto
+     */
+    function trovaModalitaSpedizioneArticolo( $c, $a, $z ) {
+
+        $r = mysqlSelectRow(
+            $c,
+            'SELECT modalita_spedizione.importo_netto, modalita_spedizione.lotto_spedizione, modalita_spedizione.id_iva
+            FROM modalita_spedizione
+            LEFT JOIN articoli ON articoli.id = ?
+            WHERE modalita_spedizione.id_zona = ? AND (
+                modalita_spedizione.id_articolo = articoli.id
+                OR ( modalita_spedizione.id_articolo IS NULL AND modalita_spedizione.id_prodotto = articoli.id_prodotto )
+                OR ( modalita_spedizione.id_articolo IS NULL AND modalita_spedizione.id_prodotto IS NULL
+                    AND modalita_spedizione.id_categoria_prodotti IN ( SELECT id_categoria FROM prodotti_categorie WHERE id_prodotto = articoli.id_prodotto ) )
+                OR ( modalita_spedizione.id_articolo IS NULL AND modalita_spedizione.id_prodotto IS NULL AND modalita_spedizione.id_categoria_prodotti IS NULL )
+            )
+            ORDER BY ( modalita_spedizione.id_articolo IS NULL ), ( modalita_spedizione.id_prodotto IS NULL ),
+                ( modalita_spedizione.id_categoria_prodotti IS NULL ), modalita_spedizione.id
+            LIMIT 1',
+            array(
+                array( 's' => $a ),
+                array( 's' => $z )
+            )
+        );
+
+        return ( is_array( $r ) ) ? $r : array();
+
+    }
+
+    /**
      *
      * @todo documentare
      *
@@ -143,24 +184,14 @@
         // se il valore non è stato trovato
         if( empty( $r ) || $t === false ) {
 
-            // recupero il prezzo
-            $r = mysqlSelectValue(
-                $c,
-                'SELECT coalesce( modalita_spedizione.importo_netto * ceil( ? / modalita_spedizione.lotto_spedizione ), 0.0 )
-                FROM modalita_spedizione
-                WHERE modalita_spedizione.id_articolo = ? AND modalita_spedizione.id_zona = ?',
-                array(
-                    array( 's' => $q ),
-                    array( 's' => $a ),
-                    array( 's' => $z )
-                )
-            );
-
-            if( ! is_numeric( $r ) ) {
-
-                // imposto a zero
+            // recupero il costo: l'importo per ogni lotto di pezzi, e senza lotto una volta sola per la spedizione
+            // ( prima un lotto vuoto dava costo zero anche con l'importo indicato )
+            $ms = trovaModalitaSpedizioneArticolo( $c, $a, $z );
+            if( ! empty( $ms ) && is_numeric( $ms['importo_netto'] ) ) {
+                $lotti = ( ! empty( $ms['lotto_spedizione'] ) && $ms['lotto_spedizione'] > 0 ) ? ceil( $q / $ms['lotto_spedizione'] ) : 1;
+                $r = $ms['importo_netto'] * $lotti;
+            } else {
                 $r = 0.0;
-
             }
 
             // calcolo le variazioni
@@ -206,11 +237,9 @@
             // se $n è un numero
             if( is_numeric( $n ) ) {
 
-                // recupero l'eventuale esenzione
-                $ie = mysqlSelectCachedValue( $m, $c,
-                    'SELECT id_iva FROM modalita_spedizione WHERE id_articolo = ? AND id_zona = ?',
-                    array( array( 's' => $a ), array( 's' => $z ) )
-                );
+                // recupero l'eventuale aliquota della modalità di spedizione, la stessa riga che ha dato il costo
+                $ms = trovaModalitaSpedizioneArticolo( $c, $a, $z );
+                $ie = $ms['id_iva'] ?? NULL;
 
                 // ...
                 $i = ( ! empty( $ie ) ) ? $ie : $i;
