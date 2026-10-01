@@ -16,7 +16,7 @@
 --
 -- IDEMPOTENTE: CREATE FUNCTION IF NOT EXISTS.
 
--- | 202609261200
+-- | 202609261300
 
 -- caratteristiche_path
 CREATE
@@ -61,7 +61,7 @@ CREATE
 
 END;
 
--- | 202609261201
+-- | 202609261301
 
 -- caratteristiche_path_check
 CREATE
@@ -100,7 +100,7 @@ CREATE
 
 END;
 
--- | 202609261202
+-- | 202609261302
 
 -- caratteristiche_path_find_ancestor
 CREATE
@@ -137,7 +137,7 @@ CREATE
 
 END;
 
--- | 202609261203
+-- | 202609261303
 
 -- categorie_anagrafica_path
 CREATE
@@ -182,7 +182,7 @@ CREATE
 
 END;
 
--- | 202609261204
+-- | 202609261304
 
 -- categorie_anagrafica_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -222,7 +222,7 @@ CREATE
 
 END;
 
--- | 202609261205
+-- | 202609261305
 
 -- categorie_anagrafica_path_find_ancestor
 CREATE
@@ -259,7 +259,7 @@ CREATE
 
 END;
 
--- | 202609261206
+-- | 202609261306
 
 -- categorie_notizie_path
 -- verifica: 2021-06-01 18:34 Fabio Mosti
@@ -305,7 +305,7 @@ CREATE
 
 END;
 
--- | 202609261207
+-- | 202609261307
 
 -- categorie_notizie_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -345,7 +345,7 @@ CREATE
 
 END;
 
--- | 202609261208
+-- | 202609261308
 
 -- categorie_notizie_path_find_ancestor
 -- verifica: 2021-05-23 18:35 Fabio Mosti
@@ -383,7 +383,7 @@ CREATE
 
 END;
 
--- | 202609261209
+-- | 202609261309
 
 -- categorie_prodotti_path
 CREATE
@@ -428,7 +428,7 @@ CREATE
 
 END;
 
--- | 202609261210
+-- | 202609261310
 
 -- categorie_prodotti_path_check
 CREATE
@@ -467,7 +467,7 @@ CREATE
 
 END;
 
--- | 202609261211
+-- | 202609261311
 
 -- categorie_prodotti_path_find_ancestor
 CREATE
@@ -504,7 +504,7 @@ CREATE
 
 END;
 
--- | 202609261212
+-- | 202609261312
 
 -- categorie_progetti_path
 CREATE
@@ -549,7 +549,7 @@ CREATE
 
 END;
 
--- | 202609261213
+-- | 202609261313
 
 -- categorie_progetti_path_check
 CREATE
@@ -588,7 +588,7 @@ CREATE
 
 END;
 
--- | 202609261214
+-- | 202609261314
 
 -- categorie_progetti_path_find_ancestor
 CREATE
@@ -625,7 +625,7 @@ CREATE
 
 END;
 
--- | 202609261215
+-- | 202609261315
 
 -- gruppi_path
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -671,7 +671,7 @@ CREATE
 
 END;
 
--- | 202609261216
+-- | 202609261316
 
 -- gruppi_path_check
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -711,7 +711,7 @@ CREATE
 
 END;
 
--- | 202609261217
+-- | 202609261317
 
 -- gruppi_path_find_ancestor
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -749,7 +749,7 @@ CREATE
 
 END;
 
--- | 202609261218
+-- | 202609261318
 
 -- luoghi_path
 CREATE
@@ -794,7 +794,7 @@ CREATE
 
 END;
 
--- | 202609261219
+-- | 202609261319
 
 -- luoghi_path_check
 CREATE
@@ -833,7 +833,7 @@ CREATE
 
 END;
 
--- | 202609261220
+-- | 202609261320
 
 -- luoghi_path_find_ancestor
 CREATE
@@ -870,7 +870,7 @@ CREATE
 
 END;
 
--- | 202609261221
+-- | 202609261321
 
 -- mastri_path
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -916,7 +916,7 @@ CREATE
 
 END;
 
--- | 202609261222
+-- | 202609261322
 
 -- mastri_path_check
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -956,7 +956,7 @@ CREATE
 
 END;
 
--- | 202609261223
+-- | 202609261323
 
 -- mastri_path_find_ancestor
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -994,7 +994,7 @@ CREATE
 
 END;
 
--- | 202609261224
+-- | 202609261324
 
 -- organizzazioni_path
 CREATE
@@ -1045,7 +1045,7 @@ CREATE
 
 END;
 
--- | 202609261225
+-- | 202609261325
 
 -- organizzazioni_path_check
 CREATE
@@ -1084,7 +1084,7 @@ CREATE
 
 END;
 
--- | 202609261226
+-- | 202609261326
 
 -- organizzazioni_path_find_ancestor
 CREATE
@@ -1121,7 +1121,7 @@ CREATE
 
 END;
 
--- | 202609261227
+-- | 202609261327
 
 -- pagine_path
 CREATE
@@ -1166,7 +1166,7 @@ CREATE
 
 END;
 
--- | 202609261228
+-- | 202609261328
 
 -- pagine_path_check
 CREATE
@@ -1205,7 +1205,7 @@ CREATE
 
 END;
 
--- | 202609261229
+-- | 202609261329
 
 -- pagine_path_find_ancestor
 CREATE
@@ -1242,7 +1242,7 @@ CREATE
 
 END;
 
--- | 202609261230
+-- | 202609261330
 
 -- ruoli_anagrafica_path
 CREATE
@@ -1287,7 +1287,7 @@ CREATE
 
 END;
 
--- | 202609261231
+-- | 202609261331
 
 -- ruoli_anagrafica_path_check
 CREATE
@@ -1326,7 +1326,7 @@ CREATE
 
 END;
 
--- | 202609261232
+-- | 202609261332
 
 -- ruoli_anagrafica_path_find_ancestor
 CREATE
@@ -1363,7 +1363,7 @@ CREATE
 
 END;
 
--- | 202609261233
+-- | 202609261333
 
 -- ruoli_documenti_path
 CREATE
@@ -1408,7 +1408,7 @@ CREATE
 
 END;
 
--- | 202609261234
+-- | 202609261334
 
 -- ruoli_documenti_path_check
 CREATE
@@ -1447,7 +1447,7 @@ CREATE
 
 END;
 
--- | 202609261235
+-- | 202609261335
 
 -- ruoli_documenti_path_find_ancestor
 CREATE
@@ -1484,7 +1484,7 @@ CREATE
 
 END;
 
--- | 202609261236
+-- | 202609261336
 
 -- ruoli_file_path
 CREATE
@@ -1529,7 +1529,7 @@ CREATE
 
 END;
 
--- | 202609261237
+-- | 202609261337
 
 -- ruoli_file_path_check
 CREATE
@@ -1568,7 +1568,7 @@ CREATE
 
 END;
 
--- | 202609261238
+-- | 202609261338
 
 -- ruoli_file_path_find_ancestor
 CREATE
@@ -1605,7 +1605,7 @@ CREATE
 
 END;
 
--- | 202609261239
+-- | 202609261339
 
 -- ruoli_immagini_path
 CREATE
@@ -1650,7 +1650,7 @@ CREATE
 
 END;
 
--- | 202609261240
+-- | 202609261340
 
 -- ruoli_immagini_path_check
 CREATE
@@ -1689,7 +1689,7 @@ CREATE
 
 END;
 
--- | 202609261241
+-- | 202609261341
 
 -- ruoli_immagini_path_find_ancestor
 CREATE
@@ -1726,7 +1726,7 @@ CREATE
 
 END;
 
--- | 202609261242
+-- | 202609261342
 
 -- ruoli_indirizzi_path
 CREATE
@@ -1771,7 +1771,7 @@ CREATE
 
 END;
 
--- | 202609261243
+-- | 202609261343
 
 -- ruoli_indirizzi_path_check
 CREATE
@@ -1810,7 +1810,7 @@ CREATE
 
 END;
 
--- | 202609261244
+-- | 202609261344
 
 -- ruoli_indirizzi_path_find_ancestor
 CREATE
@@ -1847,7 +1847,7 @@ CREATE
 
 END;
 
--- | 202609261245
+-- | 202609261345
 
 -- ruoli_prodotti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1893,7 +1893,7 @@ CREATE
 
 END;
 
--- | 202609261246
+-- | 202609261346
 
 -- ruoli_prodotti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1933,7 +1933,7 @@ CREATE
 
 END;
 
--- | 202609261247
+-- | 202609261347
 
 -- ruoli_prodotti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1971,7 +1971,7 @@ CREATE
 
 END;
 
--- | 202609261248
+-- | 202609261348
 
 -- ruoli_video_path
 CREATE
@@ -2016,7 +2016,7 @@ CREATE
 
 END;
 
--- | 202609261249
+-- | 202609261349
 
 -- ruoli_video_path_check
 CREATE
@@ -2055,7 +2055,7 @@ CREATE
 
 END;
 
--- | 202609261250
+-- | 202609261350
 
 -- ruoli_video_path_find_ancestor
 CREATE
@@ -2092,7 +2092,7 @@ CREATE
 
 END;
 
--- | 202609261251
+-- | 202609261351
 
 -- settori_path
 CREATE
@@ -2137,7 +2137,7 @@ CREATE
 
 END;
 
--- | 202609261252
+-- | 202609261352
 
 -- settori_path_check
 CREATE
@@ -2176,7 +2176,7 @@ CREATE
 
 END;
 
--- | 202609261253
+-- | 202609261353
 
 -- settori_path_find_ancestor
 CREATE
@@ -2213,7 +2213,7 @@ CREATE
 
 END;
 
--- | 202609261254
+-- | 202609261354
 
 -- tipologie_anagrafica_path
 CREATE
@@ -2258,7 +2258,7 @@ CREATE
 
 END;
 
--- | 202609261255
+-- | 202609261355
 
 -- tipologie_anagrafica_path_sigla
 CREATE
@@ -2303,7 +2303,7 @@ CREATE
 
 END;
 
--- | 202609261256
+-- | 202609261356
 
 -- tipologie_anagrafica_path_check
 CREATE
@@ -2342,7 +2342,7 @@ CREATE
 
 END;
 
--- | 202609261257
+-- | 202609261357
 
 -- tipologie_anagrafica_path_find_ancestor
 CREATE
@@ -2379,7 +2379,7 @@ CREATE
 
 END;
 
--- | 202609261258
+-- | 202609261358
 
 -- tipologie_attivita_path
 CREATE
@@ -2424,7 +2424,7 @@ CREATE
 
 END;
 
--- | 202609261259
+-- | 202609261359
 
 -- tipologie_attivita_path_check
 CREATE
@@ -2463,7 +2463,7 @@ CREATE
 
 END;
 
--- | 202609261260
+-- | 202609261360
 
 -- tipologie_attivita_path_find_ancestor
 CREATE
@@ -2500,7 +2500,7 @@ CREATE
 
 END;
 
--- | 202609261261
+-- | 202609261361
 
 -- tipologie_colli_path
 CREATE
@@ -2545,7 +2545,7 @@ CREATE
 
 END;
 
--- | 202609261262
+-- | 202609261362
 
 -- tipologie_colli_path_check
 CREATE
@@ -2584,7 +2584,7 @@ CREATE
 
 END;
 
--- | 202609261263
+-- | 202609261363
 
 -- tipologie_colli_path_find_ancestor
 CREATE
@@ -2621,7 +2621,7 @@ CREATE
 
 END;
 
--- | 202609261264
+-- | 202609261364
 
 -- tipologie_contatti_path
 CREATE
@@ -2666,7 +2666,7 @@ CREATE
 
 END;
 
--- | 202609261265
+-- | 202609261365
 
 -- tipologie_contatti_path_check
 CREATE
@@ -2705,7 +2705,7 @@ CREATE
 
 END;
 
--- | 202609261266
+-- | 202609261366
 
 -- tipologie_contatti_path_find_ancestor
 CREATE
@@ -2742,7 +2742,7 @@ CREATE
 
 END;
 
--- | 202609261267
+-- | 202609261367
 
 -- tipologie_corrispondenza_path
 CREATE
@@ -2787,7 +2787,7 @@ CREATE
 
 END;
 
--- | 202609261268
+-- | 202609261368
 
 -- tipologie_corrispondenza_path_check
 CREATE
@@ -2826,7 +2826,7 @@ CREATE
 
 END;
 
--- | 202609261269
+-- | 202609261369
 
 -- tipologie_corrispondenza_path_find_ancestor
 CREATE
@@ -2863,7 +2863,7 @@ CREATE
 
 END;
 
--- | 202609261270
+-- | 202609261370
 
 -- tipologie_documenti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2909,7 +2909,7 @@ CREATE
 
 END;
 
--- | 202609261271
+-- | 202609261371
 
 -- tipologie_documenti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2949,7 +2949,7 @@ CREATE
 
 END;
 
--- | 202609261272
+-- | 202609261372
 
 -- tipologie_documenti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2987,7 +2987,7 @@ CREATE
 
 END;
 
--- | 202609261273
+-- | 202609261373
 
 -- tipologie_indirizzi_path
 CREATE
@@ -3032,7 +3032,7 @@ CREATE
 
 END;
 
--- | 202609261274
+-- | 202609261374
 
 -- tipologie_indirizzi_path_check
 CREATE
@@ -3071,7 +3071,7 @@ CREATE
 
 END;
 
--- | 202609261275
+-- | 202609261375
 
 -- tipologie_indirizzi_path_find_ancestor
 CREATE
@@ -3108,7 +3108,7 @@ CREATE
 
 END;
 
--- | 202609261276
+-- | 202609261376
 
 -- tipologie_listini_path
 CREATE
@@ -3153,7 +3153,7 @@ CREATE
 
 END;
 
--- | 202609261277
+-- | 202609261377
 
 -- tipologie_listini_path_check
 CREATE
@@ -3192,7 +3192,7 @@ CREATE
 
 END;
 
--- | 202609261278
+-- | 202609261378
 
 -- tipologie_listini_path_find_ancestor
 CREATE
@@ -3229,7 +3229,7 @@ CREATE
 
 END;
 
--- | 202609261279
+-- | 202609261379
 
 -- tipologie_notizie_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3275,7 +3275,7 @@ CREATE
 
 END;
 
--- | 202609261280
+-- | 202609261380
 
 -- tipologie_notizie_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3315,7 +3315,7 @@ CREATE
 
 END;
 
--- | 202609261281
+-- | 202609261381
 
 -- tipologie_notizie_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3353,7 +3353,7 @@ CREATE
 
 END;
 
--- | 202609261282
+-- | 202609261382
 
 -- tipologie_prodotti_path
 CREATE
@@ -3398,7 +3398,7 @@ CREATE
 
 END;
 
--- | 202609261283
+-- | 202609261383
 
 -- tipologie_prodotti_path_check
 CREATE
@@ -3437,7 +3437,7 @@ CREATE
 
 END;
 
--- | 202609261284
+-- | 202609261384
 
 -- tipologie_prodotti_path_find_ancestor
 CREATE
@@ -3474,7 +3474,7 @@ CREATE
 
 END;
 
--- | 202609261285
+-- | 202609261385
 
 -- tipologie_progetti_path
 CREATE
@@ -3519,7 +3519,7 @@ CREATE
 
 END;
 
--- | 202609261286
+-- | 202609261386
 
 -- tipologie_progetti_path_check
 CREATE
@@ -3558,7 +3558,7 @@ CREATE
 
 END;
 
--- | 202609261287
+-- | 202609261387
 
 -- tipologie_progetti_path_find_ancestor
 CREATE
@@ -3595,7 +3595,7 @@ CREATE
 
 END;
 
--- | 202609261288
+-- | 202609261388
 
 -- tipologie_pubblicazioni_path
 CREATE
@@ -3640,7 +3640,7 @@ CREATE
 
 END;
 
--- | 202609261289
+-- | 202609261389
 
 -- tipologie_pubblicazioni_path_check
 CREATE
@@ -3679,7 +3679,7 @@ CREATE
 
 END;
 
--- | 202609261290
+-- | 202609261390
 
 -- tipologie_pubblicazioni_path_find_ancestor
 CREATE
@@ -3716,7 +3716,7 @@ CREATE
 
 END;
 
--- | 202609261291
+-- | 202609261391
 
 -- tipologie_telefoni_path
 CREATE
@@ -3761,7 +3761,7 @@ CREATE
 
 END;
 
--- | 202609261292
+-- | 202609261392
 
 -- tipologie_telefoni_path_check
 CREATE
@@ -3800,7 +3800,7 @@ CREATE
 
 END;
 
--- | 202609261293
+-- | 202609261393
 
 -- tipologie_telefoni_path_find_ancestor
 CREATE
@@ -3837,7 +3837,7 @@ CREATE
 
 END;
 
--- | 202609261294
+-- | 202609261394
 
 -- tipologie_url_path
 CREATE
@@ -3882,7 +3882,7 @@ CREATE
 
 END;
 
--- | 202609261295
+-- | 202609261395
 
 -- tipologie_url_path_check
 CREATE
@@ -3921,7 +3921,7 @@ CREATE
 
 END;
 
--- | 202609261296
+-- | 202609261396
 
 -- tipologie_url_path_find_ancestor
 CREATE
@@ -3958,7 +3958,7 @@ CREATE
 
 END;
 
--- | 202609261297
+-- | 202609261397
 
 -- tipologie_veicoli_path
 CREATE
@@ -4003,7 +4003,7 @@ CREATE
 
 END;
 
--- | 202609261298
+-- | 202609261398
 
 -- tipologie_veicoli_path_check
 CREATE
@@ -4042,7 +4042,7 @@ CREATE
 
 END;
 
--- | 202609261299
+-- | 202609261399
 
 -- tipologie_veicoli_path_find_ancestor
 CREATE
@@ -4079,7 +4079,7 @@ CREATE
 
 END;
 
--- | 202609261300
+-- | 202609261400
 
 -- attivita_path
 CREATE
@@ -4124,7 +4124,7 @@ CREATE
 
 END;
 
--- | 202609261301
+-- | 202609261401
 
 -- attivita_path_check
 CREATE
@@ -4163,7 +4163,7 @@ CREATE
 
 END;
 
--- | 202609261302
+-- | 202609261402
 
 -- attivita_path_find_ancestor
 CREATE
@@ -4200,7 +4200,7 @@ CREATE
 
 END;
 
--- | 202609261303
+-- | 202609261403
 
 -- listini_path
 CREATE
@@ -4245,7 +4245,7 @@ CREATE
 
 END;
 
--- | 202609261304
+-- | 202609261404
 
 -- listini_path_check
 CREATE
@@ -4284,7 +4284,7 @@ CREATE
 
 END;
 
--- | 202609261305
+-- | 202609261405
 
 -- listini_path_find_ancestor
 CREATE
@@ -4321,7 +4321,7 @@ CREATE
 
 END;
 
--- | 202609261306
+-- | 202609261406
 
 -- ruoli_mail_path
 CREATE
@@ -4366,7 +4366,7 @@ CREATE
 
 END;
 
--- | 202609261307
+-- | 202609261407
 
 -- ruoli_mail_path_check
 CREATE
@@ -4405,7 +4405,7 @@ CREATE
 
 END;
 
--- | 202609261308
+-- | 202609261408
 
 -- ruoli_mail_path_find_ancestor
 CREATE
@@ -4442,7 +4442,7 @@ CREATE
 
 END;
 
--- | 202609261309
+-- | 202609261409
 
 -- asset_path
 CREATE
@@ -4487,7 +4487,7 @@ CREATE
 
 END;
 
--- | 202609261310
+-- | 202609261410
 
 -- asset_path_check
 CREATE
@@ -4526,7 +4526,7 @@ CREATE
 
 END;
 
--- | 202609261311
+-- | 202609261411
 
 -- asset_path_find_ancestor
 CREATE
@@ -4563,7 +4563,7 @@ CREATE
 
 END;
 
--- | 202609261312
+-- | 202609261412
 
 -- caratteristiche_prodotti_path
 CREATE
@@ -4608,7 +4608,7 @@ CREATE
 
 END;
 
--- | 202609261313
+-- | 202609261413
 
 -- caratteristiche_prodotti_path_check
 CREATE
@@ -4647,7 +4647,7 @@ CREATE
 
 END;
 
--- | 202609261314
+-- | 202609261414
 
 -- caratteristiche_prodotti_path_find_ancestor
 CREATE
@@ -4684,7 +4684,7 @@ CREATE
 
 END;
 
--- | 202609261315
+-- | 202609261415
 
 -- colli_path
 CREATE
@@ -4729,7 +4729,7 @@ CREATE
 
 END;
 
--- | 202609261316
+-- | 202609261416
 
 -- colli_path_check
 CREATE
@@ -4768,7 +4768,7 @@ CREATE
 
 END;
 
--- | 202609261317
+-- | 202609261417
 
 -- colli_path_find_ancestor
 CREATE
@@ -4805,7 +4805,7 @@ CREATE
 
 END;
 
--- | 202609261318
+-- | 202609261418
 
 -- documenti_articoli_path
 CREATE
@@ -4850,7 +4850,7 @@ CREATE
 
 END;
 
--- | 202609261319
+-- | 202609261419
 
 -- documenti_articoli_path_check
 CREATE
@@ -4889,7 +4889,7 @@ CREATE
 
 END;
 
--- | 202609261320
+-- | 202609261420
 
 -- documenti_articoli_path_find_ancestor
 CREATE
@@ -4926,7 +4926,7 @@ CREATE
 
 END;
 
--- | 202609261321
+-- | 202609261421
 
 -- tipologie_contratti_path
 CREATE
@@ -4971,7 +4971,7 @@ CREATE
 
 END;
 
--- | 202609261322
+-- | 202609261422
 
 -- tipologie_contratti_path_check
 CREATE
@@ -5010,7 +5010,7 @@ CREATE
 
 END;
 
--- | 202609261323
+-- | 202609261423
 
 -- tipologie_contratti_path_find_ancestor
 CREATE
@@ -5047,7 +5047,7 @@ CREATE
 
 END;
 
--- | 202609261324
+-- | 202609261424
 
 -- tipologie_pagamenti_path
 CREATE
@@ -5092,7 +5092,7 @@ CREATE
 
 END;
 
--- | 202609261325
+-- | 202609261425
 
 -- tipologie_pagamenti_path_check
 CREATE
@@ -5131,7 +5131,7 @@ CREATE
 
 END;
 
--- | 202609261326
+-- | 202609261426
 
 -- tipologie_pagamenti_path_find_ancestor
 CREATE
@@ -5168,7 +5168,7 @@ CREATE
 
 END;
 
--- | 202609261327
+-- | 202609261427
 
 -- tipologie_rinnovi_path
 CREATE
@@ -5213,7 +5213,7 @@ CREATE
 
 END;
 
--- | 202609261328
+-- | 202609261428
 
 -- tipologie_rinnovi_path_check
 CREATE
@@ -5252,7 +5252,7 @@ CREATE
 
 END;
 
--- | 202609261329
+-- | 202609261429
 
 -- tipologie_rinnovi_path_find_ancestor
 CREATE
@@ -5289,7 +5289,7 @@ CREATE
 
 END;
 
--- | 202609261330
+-- | 202609261430
 
 -- tipologie_todo_path
 CREATE
@@ -5334,7 +5334,7 @@ CREATE
 
 END;
 
--- | 202609261331
+-- | 202609261431
 
 -- tipologie_todo_path_check
 CREATE
@@ -5373,7 +5373,7 @@ CREATE
 
 END;
 
--- | 202609261332
+-- | 202609261432
 
 -- tipologie_todo_path_find_ancestor
 CREATE
