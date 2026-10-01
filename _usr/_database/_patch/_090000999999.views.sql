@@ -435,6 +435,31 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 	GROUP BY annunci.id
 ;
 
+-- | 090000001255
+
+-- caratteristiche_prodotti
+--
+-- vista di compatibilita': fino al 01/10/2026 caratteristiche_prodotti era la tabella dell'albero dei prodotti, ora
+-- l'albero sta in caratteristiche e questa vista lo espone con i nomi di colonna di allora, cosi' il codice dei
+-- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare. Sta qui e
+-- non accanto a caratteristiche_view perche' articoli_view, subito sotto, la usa
+CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
+	SELECT
+		caratteristiche.id,
+		caratteristiche.id_genitore,
+		caratteristiche.nome,
+		caratteristiche.font_awesome,
+		caratteristiche.html_entity,
+		caratteristiche.se_categorie_prodotti AS se_categoria,
+		caratteristiche.se_prodotti AS se_prodotto,
+		caratteristiche.se_articoli AS se_articolo,
+		caratteristiche.id_account_inserimento,
+		caratteristiche.timestamp_inserimento,
+		caratteristiche.id_account_aggiornamento,
+		caratteristiche.timestamp_aggiornamento
+	FROM caratteristiche
+;
+
 -- | 090000001261
 
 -- annunci_categorie_view
@@ -1085,30 +1110,29 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 	FROM caratteristiche
 ;
 
--- | 090000003000
+-- | 090000003001
 
 -- caratteristiche_prodotti_view
 --
--- e' l'albero delle caratteristiche usato dal modulo prodotti; caratteristiche_view qui sopra e'
--- la tabella piatta del framework, che i moduli non usano. L'etichetta e' il PERCORSO e non il
--- solo nome, come per tutte le altre viste ad albero: senza il gruppo davanti, in un elenco
--- "Attacco mandrino" compare quattro volte identico e non si sa quale scegliere.
+-- l'albero delle caratteristiche con i nomi di colonna di caratteristiche_prodotti; l'etichetta e' il PERCORSO, come
+-- per tutte le viste ad albero: senza il gruppo davanti, in un elenco "Attacco mandrino" compare quattro volte
+-- identico e non si sa quale scegliere
 CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 	SELECT
-		caratteristiche_prodotti.id,
-		caratteristiche_prodotti.id_genitore,
-		caratteristiche_prodotti.nome,
-		caratteristiche_prodotti.html_entity,
-		caratteristiche_prodotti.font_awesome,
-		caratteristiche_prodotti.se_categoria,
-		caratteristiche_prodotti.se_prodotto,
-		caratteristiche_prodotti.se_articolo,
-		caratteristiche_prodotti.id_account_inserimento,
-		caratteristiche_prodotti.id_account_aggiornamento,
-		caratteristiche_prodotti_path(
-            caratteristiche_prodotti.id
+		caratteristiche.id,
+		caratteristiche.id_genitore,
+		caratteristiche.nome,
+		caratteristiche.html_entity,
+		caratteristiche.font_awesome,
+		caratteristiche.se_categorie_prodotti AS se_categoria,
+		caratteristiche.se_prodotti AS se_prodotto,
+		caratteristiche.se_articoli AS se_articolo,
+		caratteristiche.id_account_inserimento,
+		caratteristiche.id_account_aggiornamento,
+		caratteristiche_path(
+            caratteristiche.id
         ) AS __label__
-	FROM caratteristiche_prodotti
+	FROM caratteristiche
 ;
 
 -- | 090000003061

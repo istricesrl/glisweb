@@ -532,6 +532,8 @@ ALTER TABLE `campagne` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- caratteristiche
 ALTER TABLE `caratteristiche`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome_id_genitore` (`nome`,`id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -539,25 +541,6 @@ ALTER TABLE `caratteristiche`
 
 -- caratteristiche
 ALTER TABLE `caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
--- | 030000002910
-
--- caratteristiche_prodotti
---
--- l'indice unico ( nome, id_genitore ) NON protegge le radici: in MySQL i NULL non fanno mai
--- conflitto su un indice unico, e le radici hanno id_genitore NULL. Chi scrive deve passare la
--- chiave di ricerca esplicita a mysqlInsertRow().
-ALTER TABLE `caratteristiche_prodotti`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome_id_genitore` (`nome`,`id_genitore`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
-
--- | 030000002911
-
--- caratteristiche_prodotti
-ALTER TABLE `caratteristiche_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002920
 

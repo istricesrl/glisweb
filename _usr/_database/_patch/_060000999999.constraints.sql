@@ -293,6 +293,7 @@ ALTER TABLE `campagne`
 
 -- caratteristiche
 ALTER TABLE `caratteristiche`
+    ADD CONSTRAINT `caratteristiche_ibfk_01_nofollow`         FOREIGN KEY (`id_genitore`) REFERENCES `caratteristiche` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `caratteristiche_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `caratteristiche_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
