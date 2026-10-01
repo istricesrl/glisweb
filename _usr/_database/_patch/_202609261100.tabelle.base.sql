@@ -7,7 +7,8 @@
 --
 -- COSA FA. Per ognuna delle 116 tabelle di _010000999999.tables.sql che nessuna patch _2026* crea, una CREATE TABLE IF
 -- NOT EXISTS con le colonne del file di base, le chiavi e gli indici di _030000999999.indexes.sql e l'AUTO_INCREMENT
--- dell'id, come erano il 01/10/2026. Dove la tabella c'e' non fa niente: le colonne che le mancano le aggiunge
+-- dell'id, come erano il 01/10/2026; in fondo caratteristiche_prodotti, che il base non ha piu' ma che le patch
+-- fino a _202610011700.caratteristiche.albero.sql si aspettano. Dove la tabella c'e' non fa niente: le colonne che le mancano le aggiunge
 -- _202609261000.colonne.base.sql.
 --
 -- COSA NON FA, E PERCHE'.
@@ -3936,6 +3937,30 @@ CREATE TABLE IF NOT EXISTS `licenze` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`),
   KEY `id_rivenditore` (`id_rivenditore`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 202609261216
+
+-- caratteristiche_prodotti, con la definizione che aveva il file di base fino a 794a9cff0: le viste di
+-- _202609281000.articoli.nome.doppio.sql la leggono, e _202610011700.caratteristiche.albero.sql la trasforma poi in vista
+CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_categoria` tinyint(1) DEFAULT NULL,
+  `se_prodotto` tinyint(1) DEFAULT NULL,
+  `se_articolo` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome_id_genitore` (`nome`,`id_genitore`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE
