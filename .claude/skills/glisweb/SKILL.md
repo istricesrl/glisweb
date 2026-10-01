@@ -471,6 +471,38 @@ Riferimenti tipici a `_claude.framework.md`:
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
 
+### ⚠ Le prove sull'applicazione le fa Claude, loggato, e non le gira a Fabio
+
+Regola stabilita da Fabio il 01/10/2026. Quando un lavoro va verificato **dentro l'applicazione** — una
+scheda dopo una patch del database, una form dopo una modifica, una pagina dietro login — **la prova la fa
+Claude**, e non chiude con "aprila tu dal browser".
+
+- **Le credenziali si leggono dal `READ.md` della root del deploy**, sezione *Accessi e credenziali*
+  ( di solito `### Applicazione` ). Fabio le ha messe lì perché si usino: leggerle per fare il login è
+  autorizzato. Non si ripetono in conversazione e non si scrivono in file versionati: si estraggono
+  dentro lo script che le usa. Gli account in `$cf['auth']['accounts']` del config possono essere
+  vecchi: fa fede il `READ.md`.
+- **Il browser è chromium headless** ( `/usr/bin/chromium`, sui server Debian non c'è playwright ). Il
+  login di glisweb non vuole token CSRF e funziona su **qualunque** pagina, quindi si apre una pagina
+  locale che fa la POST di `__login__[user]` e `__login__[pasw]` direttamente sull'URL da provare.
+  Così ogni prova è un comando solo, e il cookie di sessione non deve sopravvivere fra un avvio e l'altro:
+
+  ```bash
+  timeout 60 chromium --headless --no-sandbox --disable-gpu --virtual-time-budget=15000 \
+      --dump-dom "file://<scratchpad>/login.html" > pagina.dom
+  ```
+
+  La pagina locale va nella scratchpad ( contiene la password ) e si cancella subito dopo. Per una
+  raccolta veloce di status e link basta `curl` con cookie jar, sempre col login sulla POST.
+- **Gli URL non sono `<id-pagina>.it-IT.html`**, ma il percorso dell'albero ( `catalogo/prodotti/gestione.it-IT.html?prodotti[id]=1` ):
+  si ricavano dai link delle pagine di elenco, non si costruiscono dall'id.
+- **Cosa si guarda**: niente form di login nella risposta ( `__login__` assente ), niente *pagina non
+  trovata*, niente `Fatal`/`Warning`/`Notice`/errore Twig, e il contenuto atteso nel testo. Si leggono il
+  testo e i conteggi, non lo screenshot ( vedi *testo prima dello screenshot* ). **Pagine tutte della stessa
+  dimensione vogliono dire che sono tutte la stessa pagina d'errore**.
+- **Si prova in DEV.** In PROD si apre in sola lettura, e una prova che scrive dati si fa solo se Fabio
+  la chiede.
+
 ### 3.1 Come aggiornare il framework in un progetto cliente
 
 Il framework di un deploy cliente si aggiorna **solo** con lo script che il framework stesso spedisce:

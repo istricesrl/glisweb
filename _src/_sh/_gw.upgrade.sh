@@ -149,6 +149,10 @@ else
         # branch da scaricare
         BRANCH=$1
 
+        # profilo del database a cui applicare le patch: in cron non c'e' HTTP_HOST da cui
+        # ricavarlo, quindi si dice; DEV se non lo si dice, come fa il cron del backup notturno
+        STATO=${2:-DEV}
+
         # pulisco il nome del file zip dai prefissi
         BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
         BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
@@ -236,6 +240,29 @@ else
         # verifica che l'autoload sia presente: se manca il framework non parte
         if [ ! -f ./_src/_lib/_ext/autoload.php ]; then
             echo "ERRORE: ./_src/_lib/_ext/autoload.php mancante dopo l'aggiornamento"
+        fi
+
+        ## patch del database
+        #
+        # il codice nuovo si aspetta il database delle sue patch: fino al 01/10/2026 questo script
+        # aggiornava il codice ogni notte e le patch restavano da lanciare a mano, quindi per un
+        # tempo indefinito il codice girava su un database che non aveva le sue colonne
+        #
+        # _mysql.upgrade.sh applica solo le patch sopra il livello di __patch__, fa il dump prima
+        # di applicare ( e non applica niente se il dump non riesce ), si ferma al primo errore; se
+        # non c'e' niente da applicare esce subito, senza dump. Un fallimento non ferma
+        # l'aggiornamento: lo si dice qui, e la pagina di stato del framework lo segnala finche'
+        # qualcuno non applica la patch
+        #
+        # va PRIMA dei permessi, perche' quello che scrive ( log, dump ) nasca gia' coi permessi giusti
+        if [ -x ./_src/_sh/_mysql.upgrade.sh ]; then
+
+            if ./_src/_sh/_mysql.upgrade.sh $STATO --si; then
+                echo "patch del database applicate"
+            else
+                echo "ATTENZIONE: patch del database non applicate, lanciare a mano _src/_sh/_mysql.upgrade.sh $STATO"
+            fi
+
         fi
 
         ## permessi
@@ -329,7 +356,7 @@ else
     else
 
         # sinossi
-        echo "utilizzo: $0 <branch>"
+        echo "utilizzo: $0 <branch> [ DEV | TEST | PROD ]"
 
     fi
 

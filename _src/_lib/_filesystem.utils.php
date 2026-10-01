@@ -88,7 +88,15 @@
 
         // } else {
 
-            $output = $dom->saveXML();
+            // salvo i nodi del documento uno per uno, saltando le istruzioni di elaborazione: la dichiarazione
+            // XML anteposta al testo per forzare la codifica in loadHTML() resterebbe nel documento come nodo,
+            // e saveXML() del documento intero ne aggiungerebbe un'altra in testa, una in più a ogni passaggio
+            $output = '';
+            foreach( $dom->childNodes as $node ) {
+                if( $node->nodeType != XML_PI_NODE ) {
+                    $output .= $dom->saveXML( $node ) . PHP_EOL;
+                }
+            }
 
             // logWrite( 'proprietà documentElement non trovata', 'details/domdocument', LOG_ERR );
 

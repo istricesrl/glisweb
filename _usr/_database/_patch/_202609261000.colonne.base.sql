@@ -27,6 +27,11 @@
 --   righe, o che riceve righe da un altro database con INSERT che non le nominano, fallirebbe in strict mode. Il
 --   vincolo lo mette, dove serve, la patch che riempie la colonna.
 --
+-- UNA COLONNA CHE NEI FILE DI BASE NON C'E'. caratteristiche_prodotti.id_genitore: nel file di base di oggi
+-- caratteristiche_prodotti e' una vista su caratteristiche, ma chi ha ancora la tabella vecchia non ha la colonna e
+-- _202609281000.articoli.nome.doppio.sql si ferma con 1054. Aggiunta il 01/10/2026 dopo la PROD di gimbe, dove e'
+-- stata messa a mano; dove caratteristiche_prodotti e' la vista la procedura la salta ( solo BASE TABLE ).
+--
 -- Il numero e' prima di _202609281000.articoli.nome.doppio.sql, la prima patch che ne ha bisogno, e dopo il livello
 -- dei deploy che il 01/10/2026 erano fermi a 202609251600.
 --
@@ -460,6 +465,7 @@ REPLACE INTO `__patch_colonne_base__` ( `tabella`, `colonna`, `definizione` ) VA
 	( 'caratteristiche', 'timestamp_inserimento', 'int(11) DEFAULT NULL' ),
 	( 'caratteristiche', 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL' ),
 	( 'caratteristiche', 'timestamp_aggiornamento', 'int(11) DEFAULT NULL' ),
+	( 'caratteristiche_prodotti', 'id_genitore', 'bigint(20) DEFAULT NULL' ),
 	( 'prodotti_caratteristiche', 'id_prodotto', 'bigint(20) DEFAULT NULL' ),
 	( 'prodotti_caratteristiche', 'id_caratteristica', 'bigint(20) DEFAULT NULL' ),
 	( 'prodotti_caratteristiche', 'id_lingua', 'bigint(20) DEFAULT NULL' ),
