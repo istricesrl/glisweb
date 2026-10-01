@@ -66,6 +66,7 @@
                         $cf['mysql']['connection'],
                         array(
                             'id_tipologia' => 4,
+                            'id_anagrafica' => $v['__id_anagrafica__'],
                             'id_sito' => $v['__sito__']['id'],
                             'utm_id' => $cf['session']['utm']['utm_id'] ?? NULL,
                             'utm_source' => $cf['session']['utm']['utm_source'] ?? NULL,
@@ -114,11 +115,13 @@
 
                         }
 
-                        // salvo la riga sulla tabella contatti
-                        // TODO non è ridondante questa cosa? serve davvero sia prima che dopo l'inclusione della controller?
-                        $v['__id_contatto__'] = mysqlInsertRow(
+                        // aggiorno la riga sulla tabella contatti con quello che le controller hanno aggiunto a $v
+                        // NOTA la riga è la stessa inserita prima delle controller: senza l'id ne veniva scritta una
+                        // seconda, e quello che una controller agganciava a $v['__id_contatto__'] restava sulla prima
+                        mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
+                                'id' => $v['__id_contatto__'],
                                 'id_tipologia' => 4,
                                 'id_anagrafica' => $v['__id_anagrafica__'],
                                 'id_sito' => $v['__sito__']['id'],
