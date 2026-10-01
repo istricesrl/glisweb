@@ -7,8 +7,8 @@
 -- mancavano 255, in tabelle che c'erano.
 --
 -- COSA FA. Per ogni colonna delle CREATE TABLE di _010000999999.tables.sql, come erano il 01/10/2026: se la tabella
--- c'e' e la colonna no, la aggiunge con la definizione del file di base. Le tabelle che mancano le creano le patch
--- che le riguardano. Ogni colonna aggiunta, e ogni colonna che non si e' potuta aggiungere, si scrive in
+-- c'e' e la colonna no, la aggiunge con la definizione del file di base. Le tabelle che mancano le crea
+-- _202609261100.tabelle.base.sql, o la patch che le riguarda. Ogni colonna aggiunta, e ogni colonna che non si e' potuta aggiungere, si scrive in
 -- @colonne_base_note, che il blocco dopo la CALL restituisce a chi applica la patch a mano. Stessa procedura di
 -- _202609291850.colonne.riallineamento.sql, che resta per i deploy che l'hanno gia' passata.
 --
