@@ -50,6 +50,11 @@
 -- restituisce righe. Le tabelle di lavoro sono vere, non temporanee, perche' il task puo' riprendere su un'altra
 -- connessione; si tolgono alla fine, tranne le due __mappatura_id*__.
 --
+-- COLLATION. Le tabelle di lavoro sono utf8_general_ci, i deploy spesso utf8_unicode_ci: ogni confronto fra
+-- __mappatura_id__.vecchio_id e una colonna del deploy porta quest'ultima a utf8_general_ci ( CONVERT ... COLLATE ),
+-- altrimenti il confronto si ferma con 1267 Illegal mix of collations. Corretto il 2026-10-01: un deploy che si e'
+-- fermato qui deve rifare i blocchi di questo file da 202609301900, perche' le procedure si ricreino corrette.
+--
 -- IDEMPOTENTE: una seconda esecuzione trova le madri numeriche, le colonne dello stesso tipo e le chiavi presenti, e
 -- non fa niente.
 
@@ -282,7 +287,7 @@ BEGIN
             'INSERT INTO `__mappatura_id__` ( `tabella`, `vecchio_id`, `nuovo_id`, `timestamp_conversione` ) ',
             'SELECT ''', p_tabella, ''', t.`id`, @id_numerici_base + ROW_NUMBER() OVER ( ORDER BY t.`id` ), unix_timestamp() ',
             'FROM `', p_tabella, '` AS t ',
-            'WHERE NOT EXISTS ( SELECT 1 FROM `__mappatura_id__` AS m WHERE m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = t.`id` )'
+            'WHERE NOT EXISTS ( SELECT 1 FROM `__mappatura_id__` AS m WHERE m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONVERT( t.`id` USING utf8 ) COLLATE utf8_general_ci )'
         ) );
         IF @id_numerici_errore IS NOT NULL THEN
             SET @id_numerici_note = CONCAT_WS( '\n', @id_numerici_note, CONCAT( p_tabella, ' mappatura: ', @id_numerici_errore ) );
@@ -376,7 +381,7 @@ converti: BEGIN
     -- quando un valore della colonna t.c cita una riga della madre: il vecchio id nella mappatura, dove la madre e'
     -- testuale; un id che esiste o un codice, dove e' numerica
     IF v_testuale = 1 THEN
-        SET v_traducibile = CONCAT( 'EXISTS ( SELECT 1 FROM `__mappatura_id__` AS m WHERE m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONCAT( t.`@@` ) )' );
+        SET v_traducibile = CONCAT( 'EXISTS ( SELECT 1 FROM `__mappatura_id__` AS m WHERE m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONVERT( t.`@@` USING utf8 ) COLLATE utf8_general_ci )' );
     ELSE
         SET v_traducibile = CONCAT(
             '( ( CONCAT( t.`@@` ) REGEXP ''^[0-9]+$'' AND EXISTS ( SELECT 1 FROM `', p_tabella, '` AS padri WHERE padri.`id` = t.`@@` ) ) ',
@@ -464,7 +469,7 @@ converti: BEGIN
 
     IF v_testuale = 1 THEN
         CALL `__patch_id_numerici_esegui__`( CONCAT(
-            'UPDATE `', p_tabella, '` AS t INNER JOIN `__mappatura_id__` AS m ON m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = t.`id` ',
+            'UPDATE `', p_tabella, '` AS t INNER JOIN `__mappatura_id__` AS m ON m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONVERT( t.`id` USING utf8 ) COLLATE utf8_general_ci ',
             'SET t.`id` = m.`nuovo_id`'
         ) );
         IF @id_numerici_errore IS NOT NULL THEN
@@ -520,7 +525,7 @@ converti: BEGIN
             IF v_errori = 0 AND v_testuale = 1 THEN
                 CALL `__patch_id_numerici_esegui__`( CONCAT(
                     'UPDATE `', v_tabella, '` AS t INNER JOIN `__mappatura_id__` AS m ',
-                    'ON m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONCAT( t.`', v_colonna, '` ) ',
+                    'ON m.`tabella` = ''', p_tabella, ''' AND m.`vecchio_id` = CONVERT( t.`', v_colonna, '` USING utf8 ) COLLATE utf8_general_ci ',
                     'SET t.`', v_colonna, '` = m.`nuovo_id`'
                 ) );
             ELSEIF v_errori = 0 THEN

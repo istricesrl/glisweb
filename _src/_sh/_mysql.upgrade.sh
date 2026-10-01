@@ -23,13 +23,16 @@
 # si ferma al primo errore. Fino al 29/09/2026 queste regole erano copiate qui, nel task e in
 # _database.rebuild.check.sh, e le tre copie si comportavano in modo diverso.
 #
-# uso: _mysql.upgrade.sh <STATO> [ --server <nome> ] [ --si ] [ --senza-backup ]
+# uso: _mysql.upgrade.sh <STATO> [ --server <nome> ] [ --si ] [ --senza-backup ] [ --fino <livello> ]
 #
 #   STATO           DEV | TEST | PROD
 #   --server        il server del profilo su cui lavorare, se non e' il primo
 #   --si            applica davvero; senza, elenca le patch che applicherebbe e non tocca niente
 #   --senza-backup  salta il dump preventivo ( sconsigliato: serve dove il dump lo ha appena fatto
 #                   qualcun altro, ad esempio _backup.nightly.sh )
+#   --fino          applica le patch fino a questo livello compreso, e non oltre: per smaltire un
+#                   arretrato fermandosi prima di una patch che chiede di guardare il deploy, come la
+#                   conversione degli id ( _202609301900.id.numerici.sql: --fino 202609301859 )
 #
 # PRIMA DI APPLICARE fa un dump del database nella cartella dei backup del progetto, un livello
 # sopra la document root, con lo stesso nome e la stessa rotazione dei dump di _backup.nightly.sh.
@@ -68,18 +71,20 @@ STATO=""
 SERVER=""
 ESEGUI=0
 BACKUP=1
+FINO=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --server)       SERVER="$2"; shift 2 ;;
         --si)           ESEGUI=1; shift ;;
         --senza-backup) BACKUP=0; shift ;;
+        --fino)         FINO="$2"; shift 2 ;;
         *)              [ -z "$STATO" ] && STATO="$1"; shift ;;
     esac
 done
 
 if [ -z "$STATO" ]; then
-    echo "uso: $( basename $0 ) <DEV|TEST|PROD> [ --server <nome> ] [ --si ] [ --senza-backup ]"
+    echo "uso: $( basename $0 ) <DEV|TEST|PROD> [ --server <nome> ] [ --si ] [ --senza-backup ] [ --fino <livello> ]"
     exit 1
 fi
 
@@ -90,10 +95,10 @@ echo "patch del database in $DOCROOT ( stato $STATO )"
 [ "$ESEGUI" = "1" ] && echo "  MODO: esecuzione" || echo "  MODO: solo elenco ( aggiungi --si per applicare )"
 echo
 
-php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP" "$DEST" <<'PHP'
+php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP" "$DEST" "$FINO" <<'PHP'
 <?php
 
-    list( , $docroot, $stato, $server, $esegui, $backup, $dest ) = $argv;
+    list( , $docroot, $stato, $server, $esegui, $backup, $dest, $fino ) = $argv;
 
     // le regole delle patch: lettura, livello, esecuzione
     require_once $docroot . '/_src/_lib/_mysql.tools.php';
@@ -169,6 +174,16 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     $segnalazioni = array();
     $daApplicare = mysqlPatchRead( mysqlPatchFiles( $docroot . '/' ), $patchLevel, $segnalazioni );
 
+    // con --fino ci si ferma a quel livello: le patch dopo restano da applicare
+    if( ! empty( $fino ) ) {
+        $oltre = count( $daApplicare );
+        $daApplicare = array_values( array_filter( $daApplicare, function( $p ) use ( $fino ) { return $p['id'] <= $fino; } ) );
+        $oltre -= count( $daApplicare );
+        if( $oltre ) {
+            echo '  --fino ' . $fino . ': ' . $oltre . ' patch oltre questo livello restano da applicare' . PHP_EOL;
+        }
+    }
+
     // SQL fuori dalle patch e id non crescenti: non si applicano, ma si dice
     foreach( $segnalazioni as $w ) {
         echo '  ATTENZIONE: ' . $w . PHP_EOL;
@@ -215,6 +230,9 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
                 array( $s['db'] )
             );
             $env = array_merge( getenv(), array( 'MYSQL_PWD' => $pasw ) );
+            // NOTA il comando come stringa e non come array: l'array lo accetta solo PHP 7.4, e su una macchina
+            // con PHP 7.3 proc_open() falliva, il dump risultava fallito e nessuna patch veniva applicata
+            $cmd = implode( ' ', array_map( 'escapeshellarg', $cmd ) );
             $p = proc_open( $cmd, array( 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, NULL, $env );
             if( ! is_resource( $p ) ) { break; }
             $gz = gzopen( $out, 'wb' );
