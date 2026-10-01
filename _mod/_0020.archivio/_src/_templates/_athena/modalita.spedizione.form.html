@@ -42,29 +42,65 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
         {# MODULO PRINCIPALE #}
-<!--
+        {# NOTA fino al 2026-10-01 qui c'era una copia commentata della maschera delle zone, e la scheda non aveva campi #}
+        <fieldset>
+        <legend>a cosa si applica</legend>
         <div class="form-group form-row">
-            <div class="col-auto">
+            <div class="col-12 col-md-4">
                 <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_zone, request ) }}
+                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_spedizioni, request ) }}
             </div>
-            <div class="col-auto">
-                <span class="label-top">genitore</span>
-                {{ frm.select( table, '', '', 'id_genitore	', '', etc.select.zone, request ) }}
-            </div>
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-			    {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+            <div class="col-12 col-md-8">
+                <span class="label-top">zona</span>
+                {{ frm.select( table, '', '', 'id_zona', '', etc.select.zone, request ) }}
             </div>
         </div>
+        <div class="form-group form-row">
+            <div class="col-12 col-md-4">
+                <span class="label-top">categoria di prodotti</span>
+                {{ frm.select( table, '', '', 'id_categoria_prodotti', '', etc.select.categorie_prodotti, request ) }}
+            </div>
+            <div class="col-12 col-md-4">
+                <span class="label-top">prodotto</span>
+                {{ frm.select( table, '', '', 'id_prodotto', '', etc.select.prodotti, request ) }}
+            </div>
+            <div class="col-12 col-md-4">
+                <span class="label-top">articolo</span>
+                {{ frm.select( table, '', '', 'id_articolo', '', etc.select.articoli, request ) }}
+            </div>
+        </div>
+        </fieldset>
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">note</span>
-			    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-		    </div>
-		</div>
--->
+        <fieldset>
+        <legend>costo e tempi</legend>
+        <div class="form-group form-row">
+            <div class="col-12 col-md-2">
+                <span class="label-top">pezzi per spedizione</span>
+                {{ frm.input( table, '', '', 'lotto_spedizione', '', '', request, '', 'number' ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">importo netto</span>
+                {{ frm.input( table, '', '', 'importo_netto', '', '', request, '', 'number', '', '', '', '0.01' ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">valuta</span>
+                {{ frm.select( table, '', '', 'id_valuta', '', etc.select.valute, request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">IVA</span>
+                {{ frm.select( table, '', '', 'id_iva', '', etc.select.iva, request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">giorni per la spedizione</span>
+                {{ frm.input( table, '', '', 'giorni_spedizione', '', '', request, '', 'number' ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">giorni per la consegna</span>
+                {{ frm.input( table, '', '', 'giorni_consegna', '', '', request, '', 'number' ) }}
+            </div>
+        </div>
+        </fieldset>
+
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}

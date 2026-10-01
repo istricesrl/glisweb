@@ -163,7 +163,7 @@ ini_set("display_errors", 1);
                     $cf['memcache']['connection'],
                     'id',
                     $cf['mysql']['connection'],
-                    'SELECT listini.id FROM listini LEFT JOIN listini_zone ON listini_zone.id_listino = listini.id WHERE ( listini_zone.id_zona = ? OR listini_zone IS NULL )',
+                    'SELECT listini.id FROM listini LEFT JOIN listini_zone ON listini_zone.id_listino = listini.id WHERE ( listini_zone.id_zona = ? OR listini_zone.id IS NULL )',
                     array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
                 );
 
