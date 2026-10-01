@@ -532,7 +532,7 @@ CREATE TABLE `articoli` (
 -- struttura: tabella base
 -- funzione: collega un articolo alle sue caratteristiche
 --
--- questa tabella collega un articolo all'albero delle caratteristiche ( caratteristiche_prodotti )
+-- questa tabella collega un articolo all'albero delle caratteristiche ( caratteristiche )
 -- e ne porta il valore. E' la gemella di prodotti_caratteristiche, con in piu' la colonna
 -- se_assente, che serve alle voci di listino per dire che una caratteristica su quella voce non
 -- c'e' invece di non dire niente.
@@ -835,6 +835,15 @@ CREATE TABLE IF NOT EXISTS `campagne` (
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
 -- funzione: contiene l albero delle caratteristiche di prodotti, articoli, immobili e categorie
+--
+-- i nodi di primo livello sono i gruppi ( "Linea mandrino", "Capacita'" ) e i figli le caratteristiche; i flag se_*
+-- dicono a cosa si applica un nodo. Fino al 01/10/2026 l'albero dei prodotti stava in una tabella a parte,
+-- caratteristiche_prodotti, che ora e' una vista su questa con i nomi di colonna di allora ( vedi la patch
+-- _202610011700.caratteristiche.albero.sql ).
+--
+-- ATTENZIONE all'indice unico ( nome, id_genitore ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge i nodi di radice, che id_genitore ce l'hanno NULL. Chi scrive qui deve passare la chiave di ricerca
+-- esplicita a mysqlInsertRow(), altrimenti a ogni importazione nasce una radice nuova.
 CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
@@ -845,38 +854,6 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- | 010000002910
-
--- caratteristiche_prodotti
--- tipologia: tabella gestita
--- rango: tabella principale
--- struttura: tabella ricorsiva
--- funzione: l'albero delle caratteristiche di prodotti e articoli
---
--- e' l'albero vero usato dal modulo prodotti: i nodi di primo livello sono i gruppi ( "Linea
--- mandrino", "Capacita'" ) e le foglie sono le caratteristiche. La tabella caratteristiche qui
--- sopra e' la versione piatta del framework, che i moduli non usano.
---
--- ATTENZIONE all'indice unico ( nome, id_genitore ): in MySQL i NULL non fanno mai conflitto su un
--- indice unico, quindi NON protegge i nodi di radice, che id_genitore ce l'hanno NULL. Chi scrive
--- qui deve passare la chiave di ricerca esplicita a mysqlInsertRow(), altrimenti a ogni
--- importazione nasce una radice nuova. E' successo davvero, due volte.
---
-CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
-  `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il nodo genitore
-  `nome` char(64) DEFAULT NULL,                                 -- nome della caratteristica o del gruppo
-  `font_awesome` char(24) DEFAULT NULL,                         -- icona Font Awesome
-  `html_entity` char(8) DEFAULT NULL,                           -- entity HTML
-  `se_categoria` tinyint(1) DEFAULT NULL,                       -- vale per le categorie di prodotti
-  `se_prodotto` tinyint(1) DEFAULT NULL,                        -- vale per i prodotti
-  `se_articolo` tinyint(1) DEFAULT NULL,                        -- vale per gli articoli
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,

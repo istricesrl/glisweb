@@ -33,10 +33,11 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ));
     }
 
-    // tendina caratteristiche
+    // tendina caratteristiche: l'albero, con il percorso come etichetta ( dal 01/10/2026 e' caratteristiche, e
+    // caratteristiche_prodotti e' una vista su di essa )
 	$ct['etc']['select']['caratteristiche'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM caratteristiche_prodotti_view'
+        'SELECT id, __label__ FROM caratteristiche_view'
     );
 /*
     // tendina stagioni

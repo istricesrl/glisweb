@@ -293,6 +293,7 @@ ALTER TABLE `campagne`
 
 -- caratteristiche
 ALTER TABLE `caratteristiche`
+    ADD CONSTRAINT `caratteristiche_ibfk_01_nofollow`         FOREIGN KEY (`id_genitore`) REFERENCES `caratteristiche` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `caratteristiche_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `caratteristiche_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1222,7 +1223,7 @@ ALTER TABLE `notizie_categorie`
 
 -- orari
 ALTER TABLE `orari`
-    ADD CONSTRAINT `orari_ibfk_01`              FOREIGN KEY (`id_tipologia_contratti`) REFERENCES `tipologie_contratti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `orari_ibfk_01`              FOREIGN KEY (`id_tipologia_contratti`) REFERENCES `tipologie_contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `orari_ibfk_02`              FOREIGN KEY (`id_periodicita`) REFERENCES `periodicita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `orari_ibfk_03_nofollow`     FOREIGN KEY (`id_giorno`) REFERENCES `giorni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `orari_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1499,7 +1500,7 @@ ALTER TABLE `relazioni_anagrafica`
 -- relazioni_articoli
 ALTER TABLE `relazioni_articoli`
     ADD CONSTRAINT `relazioni_articoli_ibfk_01`             FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `relazioni_articoli_ibfk_02`             FOREIGN KEY (`id_articolo_collegato`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_articoli_ibfk_02_nofollow`    FOREIGN KEY (`id_articolo_collegato`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_articoli_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_articoli` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_articoli_ibfk_04`             FOREIGN KEY (`id_prodotto_collegato`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_articoli_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,

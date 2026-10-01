@@ -333,10 +333,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-        // caratteristiche_prodotti e' l'albero vero usato dal modulo prodotti; 'caratteristiche'
-        // qui sopra e' la tabella piatta del framework, che i moduli non usano. Senza questo
-        // permesso l'API REST /api/caratteristiche_prodotti risponde 401 e i campi che si popolano
-        // per ricerca non funzionano
+        // caratteristiche_prodotti e' dal 01/10/2026 una vista sull'albero di 'caratteristiche', con i
+        // nomi di colonna di prima; resta qui perche' i progetti la usano ancora: senza questo permesso
+        // l'API REST /api/caratteristiche_prodotti risponde 401 e i campi che si popolano per ricerca
+        // non funzionano
         'caratteristiche_prodotti' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
