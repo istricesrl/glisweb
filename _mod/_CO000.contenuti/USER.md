@@ -83,9 +83,8 @@ notizia che deve uscire lunedì mattina, o un prodotto che deve sparire a fine s
 > **nota** — le tendine *schema* e *tema* dipendono dal template scelto, e si riempiono **dopo aver
 > salvato** la scheda col template impostato.
 
-> **nota** — la linguetta *web* dei **marchi** non ha il sotto-elenco delle pubblicazioni: un
-> marchio non ha periodi di pubblicazione suoi, e resta online secondo il sito e i flag della
-> linguetta.
+> **nota** — anche la linguetta *web* dei **marchi** ha il sotto-elenco delle pubblicazioni, come
+> prodotti, categorie e notizie.
 
 ## voci di menu, metadati, macro
 <!-- @pubblico: operatore, amministratore -->

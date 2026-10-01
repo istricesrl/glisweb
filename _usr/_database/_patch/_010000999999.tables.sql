@@ -4037,6 +4037,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
   `id_progetto` bigint(20) DEFAULT NULL,                          -- ID del progetto
   `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- ID della categoria progetti
   `id_banner` bigint(20) DEFAULT NULL,                           -- ID del banner
+  `id_marchio` bigint(20) DEFAULT NULL,                          -- ID del marchio
   `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
   `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio pubblicazione
   `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine pubblicazione

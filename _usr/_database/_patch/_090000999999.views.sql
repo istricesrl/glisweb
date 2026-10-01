@@ -4139,6 +4139,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
 		pubblicazioni.id_progetto,                              --
 		pubblicazioni.id_categoria_progetti,                    --
 		pubblicazioni.id_banner,                                --
+		pubblicazioni.id_marchio,                               --
 		pubblicazioni.timestamp_inizio,                         --
 		pubblicazioni.timestamp_fine,                           --
 		concat_ws(                                              --

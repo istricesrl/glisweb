@@ -2953,6 +2953,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_banner` (`id_banner`),
+	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 	

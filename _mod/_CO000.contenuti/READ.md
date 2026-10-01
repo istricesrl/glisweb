@@ -33,9 +33,10 @@ Questa è la macro della scheda contenuti del form di gestione dei marchi.
 Questa è la macro della scheda SEM/SMM del form di gestione dei marchi.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.web.php
-Questa è la macro della scheda web del form di gestione dei marchi. A differenza delle schede web di prodotti, categorie
-e notizie non ha il sotto-elenco delle pubblicazioni: la tabella pubblicazioni non ha una colonna id_marchio, e il
-sotto-elenco che c'era scriveva l'id del marchio in id_notizia.
+Questa è la macro della scheda web del form di gestione dei marchi. Come le schede web di prodotti, categorie e notizie
+ha il sotto-elenco delle pubblicazioni, sulla colonna pubblicazioni.id_marchio ( dal 01/10/2026,
+_202610011820.pubblicazioni.marchio.sql; prima il sotto-elenco scriveva l'id del marchio in id_notizia ed era stato
+tolto ).
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.contenuti.php
 Questa è la macro della scheda di gestione contenuti della pagina di gestione prodotti.
