@@ -119,3 +119,5 @@ DROP PROCEDURE IF EXISTS `__patch_consensi_colonne__`;
 -- | 202610011813
 
 SELECT @consensi_note AS nota;
+
+-- | FINE FILE

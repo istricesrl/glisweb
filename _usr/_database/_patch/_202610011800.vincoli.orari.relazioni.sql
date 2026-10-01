@@ -124,3 +124,5 @@ DROP PROCEDURE IF EXISTS `__patch_vincolo__`;
 -- | 202610011804
 
 SELECT @vincoli_note AS nota;
+
+-- | FINE FILE
