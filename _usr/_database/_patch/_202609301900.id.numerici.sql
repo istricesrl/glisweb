@@ -52,7 +52,8 @@
 --
 -- COLLATION. Le tabelle di lavoro sono utf8_general_ci, i deploy spesso utf8_unicode_ci: ogni confronto fra
 -- __mappatura_id__.vecchio_id e una colonna del deploy porta quest'ultima a utf8_general_ci ( CONVERT ... COLLATE ),
--- altrimenti il confronto si ferma con 1267 Illegal mix of collations. Corretto il 2026-10-01: un deploy che si e'
+-- altrimenti il confronto si ferma con 1267 Illegal mix of collations; per la stessa ragione i parametri e le
+-- variabili di testo delle procedure dichiarano utf8_general_ci, invece di prendere quella del database. Corretto il 2026-10-01: un deploy che si e'
 -- fermato qui deve rifare i blocchi di questo file da 202609301900, perche' le procedure si ricreino corrette.
 --
 -- IDEMPOTENTE: una seconda esecuzione trova le madri numeriche, le colonne dello stesso tipo e le chiavi presenti, e
@@ -240,10 +241,10 @@ END;
 -- | 202609301907
 
 -- la procedura della mappatura: codice e __mappatura_id__, solo dove l'id della madre e' ancora testuale
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_mappa__`( IN p_tabella VARCHAR(64) )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_mappa__`( IN p_tabella VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci )
 BEGIN
 
-    DECLARE v_dato_id VARCHAR(64) DEFAULT NULL;
+    DECLARE v_dato_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
 
     SET v_dato_id = ( SELECT DATA_TYPE FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = database() AND TABLE_NAME = p_tabella AND COLUMN_NAME = 'id' LIMIT 1 );
@@ -300,7 +301,7 @@ END;
 -- | 202609301908
 
 -- la procedura che trova le colonne che citano una madre: per nome in tutte le tabelle, e per chiave esterna
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_elenco__`( IN p_tabella VARCHAR(64), IN p_nomi VARCHAR(255) )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_elenco__`( IN p_tabella VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci, IN p_nomi VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci )
 BEGIN
 
     INSERT IGNORE INTO `__patch_id_numerici_colonne__` ( `riferimento`, `tabella`, `colonna` )
@@ -333,16 +334,16 @@ END;
 -- | 202609301909
 
 -- la procedura che converte: controlli, chiavi esterne tolte, traduzione in una transazione, tipi
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_converti__`( IN p_tabella VARCHAR(64), IN p_autoincremento TINYINT )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_converti__`( IN p_tabella VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci, IN p_autoincremento TINYINT )
 converti: BEGIN
 
     DECLARE fine INT DEFAULT 0;
     DECLARE v_tabella, v_colonna, v_vincolo, v_riferimento VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_cancellazione, v_aggiornamento VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_azione VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci;
-    DECLARE v_dato_id, v_tipo_id, v_tipo_finale, v_dato, v_tipo, v_nullabile VARCHAR(64) DEFAULT NULL;
+    DECLARE v_dato_id, v_tipo_id, v_tipo_finale, v_dato, v_tipo, v_nullabile VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE v_testuale, v_copia, v_ha_id, v_blocchi, v_errori INT DEFAULT 0;
-    DECLARE v_traducibile, v_riga TEXT DEFAULT NULL;
+    DECLARE v_traducibile, v_riga TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
 
     DECLARE colonne CURSOR FOR
         SELECT `tabella`, `colonna`, `azione`, `nullabile`, `copia`
@@ -595,16 +596,16 @@ END;
 -- | 202609301910
 
 -- la procedura che rimette le chiavi esterne del deploy e aggiunge quelle dei file di base che mancano
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_chiavi__`( IN p_tabella VARCHAR(64) )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_chiavi__`( IN p_tabella VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci )
 BEGIN
 
     DECLARE fine INT DEFAULT 0;
     DECLARE v_tabella, v_vincolo, v_colonna, v_riferimento VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_cancellazione, v_aggiornamento VARCHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_origine VARCHAR(8) CHARACTER SET utf8 COLLATE utf8_general_ci;
-    DECLARE v_tipo_figlia, v_tipo_padre, v_nullabile VARCHAR(64) DEFAULT NULL;
-    DECLARE v_esito VARCHAR(255) DEFAULT NULL;
-    DECLARE v_indice TEXT DEFAULT NULL;
+    DECLARE v_tipo_figlia, v_tipo_padre, v_nullabile VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE v_esito VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE v_indice TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
 
     DECLARE lista CURSOR FOR
         SELECT `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento`, `origine`
@@ -710,12 +711,12 @@ END;
 -- | 202609301911
 
 -- la procedura dei controlli dopo: tipi, righe orfane, e la chiave UNIQUE su codice
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_controllo__`( IN p_tabella VARCHAR(64) )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_controllo__`( IN p_tabella VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci )
 BEGIN
 
     DECLARE fine INT DEFAULT 0;
     DECLARE v_tabella, v_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
-    DECLARE v_tipo_id, v_dato_id, v_tipo VARCHAR(64) DEFAULT NULL;
+    DECLARE v_tipo_id, v_dato_id, v_tipo VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
 
     DECLARE colonne CURSOR FOR
         SELECT `tabella`, `colonna` FROM `__patch_id_numerici_colonne__`
@@ -791,7 +792,7 @@ END;
 
 -- la procedura delle viste
 -- la procedura che rifa una vista che mostra l'id come codice, se sul deploy non legge ancora codice
-CREATE OR REPLACE PROCEDURE `__patch_id_numerici_vista__`( IN istruzione LONGTEXT, IN oggetto VARCHAR(64) )
+CREATE OR REPLACE PROCEDURE `__patch_id_numerici_vista__`( IN istruzione LONGTEXT, IN oggetto VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci )
 BEGIN
 
     IF NOT EXISTS ( SELECT 1 FROM information_schema.VIEWS
