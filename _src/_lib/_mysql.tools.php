@@ -2296,12 +2296,586 @@
     }
 
     /**
+     * dice se il server della connessione è MariaDB, e prepara la sessione MySQL alle patch
+     *
+     * Le patch del framework sono scritte per MariaDB; su MySQL ( la PROD di gimbe su Azure, 8.4 ) vanno tradotte da
+     * mysqlPatchTranslate(). Questa funzione legge VERSION() una volta per connessione e, la prima volta che trova MySQL,
+     * spegne in sessione sql_generate_invisible_primary_key: con la chiave primaria invisibile ( my_row_id ) che Azure
+     * aggiunge alle tabelle create senza, un ADD PRIMARY KEY successivo fallisce. Se la variabile non esiste ( MySQL prima
+     * della 8.0.30 ) l'errore si ignora.
+     *
+     * @param       object      $c      la connessione mysqli
+     *
+     * @return      bool                true se il server è MariaDB, false se è MySQL
+     *
+     */
+    function mysqlPatchMariaDB($c)
+    {
+
+        // risultato per connessione
+        static $m = array();
+
+        // chiave della connessione
+        $k = spl_object_hash($c);
+
+        // leggo la versione la prima volta
+        if (! isset($m[$k])) {
+            $r = mysqli_query($c, 'SELECT VERSION()');
+            $v = ($r) ? mysqli_fetch_row($r) : array('');
+            $m[$k] = (stripos($v[0], 'mariadb') !== false);
+            if (! $m[$k]) {
+                try {
+                    @mysqli_query($c, 'SET SESSION sql_generate_invisible_primary_key = 0');
+                } catch (mysqli_sql_exception $x) {
+                }
+            }
+        }
+
+        // restituisco il risultato
+        return $m[$k];
+    }
+
+    /**
+     * dice se nello schema corrente esiste un oggetto, per mysqlPatchTranslate()
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $o      il tipo di oggetto: 'colonna', 'indice', 'fk', 'vista', 'pk_invisibile'
+     * @param       string      $t      la tabella ( o la vista )
+     * @param       string      $x      la colonna, l'indice o la chiave esterna; per vista e pk_invisibile non serve
+     *
+     * @return      bool                true se l'oggetto esiste
+     *
+     */
+    function mysqlPatchSchemaHas($c, $o, $t, $x = NULL)
+    {
+
+        // valori della query
+        $t = mysqli_real_escape_string($c, $t);
+        $x = mysqli_real_escape_string($c, (string) $x);
+
+        // query per tipo di oggetto
+        switch ($o) {
+            case 'colonna':
+                $q = "SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = '$t' AND column_name = '$x'";
+                break;
+            case 'indice':
+                $q = "SELECT 1 FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = '$t' AND index_name = '$x' LIMIT 1";
+                break;
+            case 'fk':
+                $q = "SELECT 1 FROM information_schema.table_constraints WHERE table_schema = DATABASE() AND table_name = '$t' AND constraint_name = '$x' AND constraint_type = 'FOREIGN KEY'";
+                break;
+            case 'vista':
+                $q = "SELECT 1 FROM information_schema.views WHERE table_schema = DATABASE() AND table_name = '$t'";
+                break;
+            case 'pk_invisibile':
+                $q = "SELECT 1 FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = '$t' AND index_name = 'PRIMARY' AND column_name = 'my_row_id'";
+                break;
+            default:
+                return false;
+        }
+
+        // eseguo la query
+        $r = mysqli_query($c, $q);
+
+        // restituisco il risultato
+        return ($r && mysqli_fetch_row($r));
+    }
+
+    /**
+     * restituisce tipo e nullabilità di una colonna nello schema corrente, per mysqlPatchTranslate()
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $t      la tabella
+     * @param       string      $x      la colonna
+     *
+     * @return      mixed               array( COLUMN_TYPE, IS_NULLABLE ), o false se la colonna non c'è
+     *
+     */
+    function mysqlPatchColumnType($c, $t, $x)
+    {
+
+        // leggo la colonna
+        $r = mysqli_query($c, "SELECT COLUMN_TYPE, IS_NULLABLE FROM information_schema.columns WHERE table_schema = DATABASE() "
+            . "AND table_name = '" . mysqli_real_escape_string($c, $t) . "' AND column_name = '" . mysqli_real_escape_string($c, $x) . "'");
+
+        // restituisco il risultato
+        return ($r) ? (mysqli_fetch_row($r) ?: false) : false;
+    }
+
+    /**
+     * divide le clausole di un ALTER TABLE al primo livello, fuori da parentesi e apici, per mysqlPatchTranslate()
+     *
+     * @param       string      $s      il testo dopo ALTER TABLE <tabella>
+     *
+     * @return      array               le clausole, senza spazi attorno
+     *
+     */
+    function mysqlPatchAlterClauses($s)
+    {
+
+        // clausole, clausola corrente, livello di parentesi, apice aperto
+        $o = array();
+        $b = '';
+        $l = 0;
+        $a = NULL;
+
+        // scorro un carattere alla volta
+        for ($i = 0; $i < strlen($s); $i++) {
+            $h = $s[$i];
+            if ($a !== NULL) {
+                $b .= $h;
+                if ($h === '\\' && $a !== '`') {
+                    $b .= $s[++$i] ?? '';
+                    continue;
+                }
+                if ($h === $a) {
+                    $a = NULL;
+                }
+                continue;
+            }
+            if ($h === "'" || $h === '"' || $h === '`') {
+                $a = $h;
+                $b .= $h;
+                continue;
+            }
+            if ($h === '(') {
+                $l++;
+            }
+            if ($h === ')') {
+                $l--;
+            }
+            if ($h === ',' && $l === 0) {
+                $o[] = trim($b);
+                $b = '';
+                continue;
+            }
+            $b .= $h;
+        }
+
+        // ultima clausola
+        if (trim($b) !== '') {
+            $o[] = trim($b);
+        }
+
+        // restituisco le clausole
+        return $o;
+    }
+
+    /**
+     * traduce per MySQL un ALTER TABLE scritto per MariaDB, per mysqlPatchTranslate()
+     *
+     * Le clausole condizionali ( ADD COLUMN / KEY / UNIQUE KEY / PRIMARY KEY / CONSTRAINT FOREIGN KEY IF NOT EXISTS, DROP
+     * FOREIGN KEY / INDEX / KEY IF EXISTS ), che MySQL non conosce, si risolvono leggendo lo schema: la clausola si toglie
+     * se l'oggetto c'è già ( o non c'è, per le DROP ), altrimenti si toglie solo l'IF. Poi due casi che su MySQL fallirebbero
+     * anche con la sintassi giusta:
+     *
+     * - una chiave esterna fra colonne di tipo diverso ( 3780 ): sui deploy vecchi gli id sono int e le colonne nuove delle
+     *   patch nascono bigint, su MariaDB passa e su MySQL no; la colonna che fa riferimento prende il tipo della colonna
+     *   referenziata, cambiando la definizione se la aggiunge lo stesso ALTER o con un MODIFY prima, se c'è già;
+     * - un ADD PRIMARY KEY su una tabella con la chiave primaria invisibile di Azure ( my_row_id ): prima la si toglie,
+     *   colonna compresa.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      l'ALTER TABLE, senza commenti
+     * @param       array       $n      l'array in cui accumulare le note, modificato sul posto
+     *
+     * @return      mixed               le query da eseguire ( vuoto se non resta niente da fare ), o false se non traducibile
+     *
+     */
+    function mysqlPatchTranslateAlter($c, $q, &$n = array())
+    {
+
+        // tabella e clausole
+        if (! preg_match('/^ALTER\s+TABLE\s+`?([a-z0-9_]+)`?\s+(.*?);?\s*$/is', $q, $m)) {
+            return array($q);
+        }
+        $t = $m[1];
+
+        // clausole tenute, colonne aggiunte dallo stesso ALTER, ADD PRIMARY KEY presente
+        $k = array();
+        $a = array();
+        $p = false;
+
+        // risolvo le clausole condizionali
+        foreach (mysqlPatchAlterClauses($m[2]) as $x) {
+
+            if (preg_match('/^ADD\s+COLUMN\s+IF\s+NOT\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                if (mysqlPatchSchemaHas($c, 'colonna', $t, $y[1])) {
+                    $n[] = $t . '.' . $y[1] . ' c\'è già';
+                    continue;
+                }
+                $x = 'ADD COLUMN `' . $y[1] . '`' . $y[2];
+            } elseif (preg_match('/^ADD\s+(UNIQUE\s+)?(KEY|INDEX)\s+IF\s+NOT\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                if (mysqlPatchSchemaHas($c, 'indice', $t, $y[3])) {
+                    $n[] = $t . ' indice ' . $y[3] . ' c\'è già';
+                    continue;
+                }
+                $x = 'ADD ' . $y[1] . $y[2] . ' `' . $y[3] . '`' . $y[4];
+            } elseif (preg_match('/^ADD\s+CONSTRAINT\s+`?([a-z0-9_]+)`?\s+FOREIGN\s+KEY\s+IF\s+NOT\s+EXISTS\s*(.*)$/is', $x, $y)) {
+                if (mysqlPatchSchemaHas($c, 'fk', $t, $y[1])) {
+                    $n[] = $t . ' fk ' . $y[1] . ' c\'è già';
+                    continue;
+                }
+                $x = 'ADD CONSTRAINT `' . $y[1] . '` FOREIGN KEY ' . $y[2];
+            } elseif (preg_match('/^DROP\s+FOREIGN\s+KEY\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                if (! mysqlPatchSchemaHas($c, 'fk', $t, $y[1])) {
+                    $n[] = $t . ' fk ' . $y[1] . ' non c\'è';
+                    continue;
+                }
+                $x = 'DROP FOREIGN KEY `' . $y[1] . '`';
+            } elseif (preg_match('/^DROP\s+(INDEX|KEY)\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                if (! mysqlPatchSchemaHas($c, 'indice', $t, $y[2])) {
+                    $n[] = $t . ' indice ' . $y[2] . ' non c\'è';
+                    continue;
+                }
+                $x = 'DROP INDEX `' . $y[2] . '`';
+            } elseif (preg_match('/^DROP\s+COLUMN\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                if (! mysqlPatchSchemaHas($c, 'colonna', $t, $y[1])) {
+                    $n[] = $t . '.' . $y[1] . ' non c\'è';
+                    continue;
+                }
+                $x = 'DROP COLUMN `' . $y[1] . '`';
+            } elseif (preg_match('/^ADD\s+PRIMARY\s+KEY\s+IF\s+NOT\s+EXISTS\s*(.*)$/is', $x, $y)) {
+                if (mysqlPatchSchemaHas($c, 'indice', $t, 'PRIMARY') && ! mysqlPatchSchemaHas($c, 'pk_invisibile', $t)) {
+                    $n[] = $t . ' chiave primaria c\'è già';
+                    continue;
+                }
+                $x = 'ADD PRIMARY KEY ' . $y[1];
+                $p = true;
+            } elseif (preg_match('/^ADD\s+PRIMARY\s+KEY/is', $x)) {
+                $p = true;
+            } elseif (preg_match('/\bIF\s+(NOT\s+)?EXISTS\b/i', $x)) {
+                $n[] = 'clausola non tradotta: ' . $x;
+                return false;
+            }
+
+            // colonna aggiunta da questo ALTER
+            if (preg_match('/^ADD\s+COLUMN\s+`?([a-z0-9_]+)`?/is', $x, $y)) {
+                $a[$y[1]] = count($k);
+            }
+
+            $k[] = $x;
+        }
+
+        // non resta niente da fare
+        if (empty($k)) {
+            return array();
+        }
+
+        // query da eseguire prima dell'ALTER
+        $prima = array();
+
+        // chiavi esterne fra colonne di tipo diverso
+        foreach ($k as $x) {
+            if (preg_match('/^ADD\s+CONSTRAINT\s+`?[a-z0-9_]+`?\s+FOREIGN\s+KEY\s*\(\s*`?([a-z0-9_]+)`?\s*\)\s*REFERENCES\s+`?([a-z0-9_]+)`?\s*\(\s*`?([a-z0-9_]+)`?\s*\)/is', $x, $y)) {
+                $r = mysqlPatchColumnType($c, $y[2], $y[3]);
+                if (! $r) {
+                    continue;
+                }
+                if (isset($a[$y[1]])) {
+                    // la colonna la aggiunge questo stesso ALTER: cambio il tipo nella definizione
+                    $i = $a[$y[1]];
+                    $z = preg_replace('/^(ADD\s+COLUMN\s+`?' . $y[1] . '`?\s+)(tiny|small|medium|big)?int(\(\d+\))?(\s+unsigned)?/is', '${1}' . $r[0], $k[$i], 1);
+                    if ($z !== $k[$i]) {
+                        $k[$i] = $z;
+                        $n[] = $t . '.' . $y[1] . ' aggiunta come ' . $r[0] . ', il tipo di ' . $y[2] . '.' . $y[3];
+                    }
+                } else {
+                    // la colonna c'è già: se il tipo è diverso la porto a quello della colonna referenziata
+                    $f = mysqlPatchColumnType($c, $t, $y[1]);
+                    if ($f && strtolower($f[0]) !== strtolower($r[0])) {
+                        $prima[] = 'ALTER TABLE `' . $t . '` MODIFY `' . $y[1] . '` ' . $r[0] . (($f[1] === 'NO') ? ' NOT NULL' : ' DEFAULT NULL');
+                        $n[] = $t . '.' . $y[1] . ' da ' . $f[0] . ' a ' . $r[0] . ', il tipo di ' . $y[2] . '.' . $y[3];
+                    }
+                }
+            }
+        }
+
+        // chiave primaria invisibile di Azure da togliere, colonna compresa, nello stesso ALTER che aggiunge quella vera
+        if ($p && mysqlPatchSchemaHas($c, 'pk_invisibile', $t)) {
+            array_unshift($k, 'DROP PRIMARY KEY', 'DROP COLUMN `my_row_id`');
+            $n[] = $t . ': tolta la chiave primaria invisibile';
+        }
+
+        // restituisco le query
+        return array_merge($prima, array('ALTER TABLE `' . $t . '` ' . implode(', ', $k)));
+    }
+
+    /**
+     * traduce per MySQL gli ALTER TABLE con IF [NOT] EXISTS scritti nel corpo di una procedura, per mysqlPatchTranslate()
+     *
+     * Nel corpo di una procedura lo schema non si può leggere prima: la procedura gira dopo, e le sue istruzioni precedenti
+     * possono averlo cambiato. Ogni clausola condizionale diventa quindi un ALTER a sé dentro un blocco IF [NOT] EXISTS(
+     * SELECT 1 FROM information_schema … ) THEN … END IF, che decide quando la procedura gira; le clausole senza IF restano
+     * ALTER a sé, nello stesso ordine. Le stringhe letterali del corpo non si toccano: si mascherano prima e si rimettono
+     * dopo, così un messaggio che cita un ALTER resta com'è.
+     *
+     * @param       string      $b      il corpo della procedura
+     * @param       array       $n      l'array in cui accumulare le note, modificato sul posto
+     *
+     * @return      string              il corpo tradotto
+     *
+     */
+    function mysqlPatchTranslateRoutine($b, &$n = array())
+    {
+
+        // maschero le stringhe letterali
+        $s = array();
+        $b = preg_replace_callback("/'(?:[^'\\\\]|\\\\.|'')*'/s", function ($m) use (&$s) {
+            $s[] = $m[0];
+            return "\x01" . (count($s) - 1) . "\x01";
+        }, $b);
+
+        // condizioni sullo schema, per tipo di clausola
+        $w = function ($o, $t, $x) {
+            $t = "table_schema = DATABASE() AND table_name = '" . $t . "'";
+            switch ($o) {
+                case 'colonna':
+                    return "SELECT 1 FROM information_schema.columns WHERE " . $t . " AND column_name = '" . $x . "'";
+                case 'indice':
+                    return "SELECT 1 FROM information_schema.statistics WHERE " . $t . " AND index_name = '" . $x . "'";
+                default:
+                    return "SELECT 1 FROM information_schema.table_constraints WHERE " . $t . " AND constraint_name = '" . $x . "' AND constraint_type = 'FOREIGN KEY'";
+            }
+        };
+
+        // riscrivo gli ALTER con clausole condizionali
+        $b = preg_replace_callback('/ALTER\s+TABLE\s+`?([a-z0-9_]+)`?\s+([^;]*?\bIF\s+(?:NOT\s+)?EXISTS\b[^;]*);/is', function ($m) use ($w, &$n) {
+            $t = $m[1];
+            $o = array();
+            foreach (mysqlPatchAlterClauses($m[2]) as $x) {
+                if (preg_match('/^ADD\s+COLUMN\s+IF\s+NOT\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                    $o[] = 'IF NOT EXISTS( ' . $w('colonna', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` ADD COLUMN `' . $y[1] . '`' . $y[2] . '; END IF;';
+                } elseif (preg_match('/^ADD\s+(UNIQUE\s+)?(KEY|INDEX)\s+IF\s+NOT\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                    $o[] = 'IF NOT EXISTS( ' . $w('indice', $t, $y[3]) . ' ) THEN ALTER TABLE `' . $t . '` ADD ' . $y[1] . $y[2] . ' `' . $y[3] . '`' . $y[4] . '; END IF;';
+                } elseif (preg_match('/^ADD\s+CONSTRAINT\s+`?([a-z0-9_]+)`?\s+FOREIGN\s+KEY\s+IF\s+NOT\s+EXISTS\s*(.*)$/is', $x, $y)) {
+                    $o[] = 'IF NOT EXISTS( ' . $w('fk', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` ADD CONSTRAINT `' . $y[1] . '` FOREIGN KEY ' . $y[2] . '; END IF;';
+                } elseif (preg_match('/^DROP\s+FOREIGN\s+KEY\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                    $o[] = 'IF EXISTS( ' . $w('fk', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` DROP FOREIGN KEY `' . $y[1] . '`; END IF;';
+                } elseif (preg_match('/^DROP\s+(INDEX|KEY)\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                    $o[] = 'IF EXISTS( ' . $w('indice', $t, $y[2]) . ' ) THEN ALTER TABLE `' . $t . '` DROP INDEX `' . $y[2] . '`; END IF;';
+                } elseif (preg_match('/^DROP\s+COLUMN\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
+                    $o[] = 'IF EXISTS( ' . $w('colonna', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` DROP COLUMN `' . $y[1] . '`; END IF;';
+                } else {
+                    $o[] = 'ALTER TABLE `' . $t . '` ' . $x . ';';
+                }
+            }
+            $n[] = 'procedura: ALTER su ' . $t . ' in ' . count($o) . ' passi condizionali';
+            return implode(PHP_EOL, $o);
+        }, $b);
+
+        // rimetto le stringhe letterali
+        return preg_replace_callback("/\x01(\d+)\x01/", function ($m) use ($s) {
+            return $s[$m[1]];
+        }, $b);
+    }
+
+    /**
+     * traduce una patch per il server della connessione: su MariaDB la lascia com'è, su MySQL la riscrive
+     *
+     * Le patch del framework sono scritte per MariaDB. Su MySQL ( 8.4 sulla PROD di gimbe, su Azure ) alcune forme non
+     * esistono o si comportano diversamente, e questa funzione le riscrive prima che mysqlPatchApply() le esegua:
+     *
+     * - ALTER TABLE con clausole IF [NOT] EXISTS, anche dentro una stringa poi eseguita con PREPARE: vedi
+     *   mysqlPatchTranslateAlter();
+     * - CREATE OR REPLACE PROCEDURE / FUNCTION: diventa DROP ... IF EXISTS più CREATE;
+     * - CREATE VIEW IF NOT EXISTS: se la vista c'è già non resta niente da fare, altrimenti si toglie l'IF;
+     * - CALL di una procedura con ALTER in stringa ( colonne.tabelle.viste ): si decide prima, leggendo lo schema;
+     * - i confronti con information_schema: su MySQL 8 i nomi lì sono utf8mb3_tolower_ci, e un COLLATE utf8_general_ci
+     *   dall'altra parte dà 1267 ( Illegal mix of collations ). Contro REFERENCED_TABLE_NAME e
+     *   REFERENTIAL_CONSTRAINTS.TABLE_NAME lo dà anche una variabile senza COLLATE, quindi il lato che non è
+     *   information_schema si converte con CONVERT( ... USING utf8mb3 ) COLLATE utf8mb3_tolower_ci, che su MariaDB non
+     *   esiste ed è per questo che si fa qui e non nelle patch.
+     *
+     * Una forma IF [NOT] EXISTS che non sa tradurre la segnala in $n e restituisce false: la patch non va eseguita.
+     * La logica viene dall'esecutore con cui il 01/10/2026 la PROD di gimbe è stata portata da 202609261003 a 202610011822.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $q      la patch, come la restituisce mysqlPatchRead()
+     * @param       array       $n      l'array in cui accumulare le note sulla traduzione, modificato sul posto
+     *
+     * @return      mixed               le query da eseguire nell'ordine ( vuoto se non resta niente da fare ), o false
+     *
+     */
+    function mysqlPatchTranslate($c, $q, &$n = array())
+    {
+
+        // su MariaDB la patch resta com'è
+        if (mysqlPatchMariaDB($c)) {
+            return array($q);
+        }
+
+        // testo senza i commenti di riga, e com'era prima di tradurlo
+        $s = trim(preg_replace('/^\s*--.*$/m', '', $q));
+        $o = $s;
+
+        // COLLATE utf8_general_ci nei confronti fra colonne di information_schema e colonne di una tabella
+        $s = preg_replace('/(\b[a-z_]+\.(?:table_name|column_name|table_schema|constraint_name|index_name)\s*=\s*[a-z_]+\.`?[a-z_]+`?)\s+COLLATE\s+utf8_general_ci/i', '$1', $s, -1, $i);
+        if ($i) {
+            $n[] = $i . ' COLLATE tolti nei confronti con information_schema';
+        }
+
+        // il lato che non è information_schema dei confronti sui nomi, in utf8mb3_tolower_ci
+        $s = preg_replace(
+            '/(?<!BINARY )(\b(?:[a-z_]+\.)?(?:TABLE_NAME|COLUMN_NAME|REFERENCED_TABLE_NAME|REFERENCED_COLUMN_NAME|CONSTRAINT_NAME|INDEX_NAME))(\s*=\s*)(?!BINARY\b)((?:[a-z_]+\.)?`?[a-z_][a-z0-9_]*`?)(?!\s*\(|[a-z0-9_.`]|\s+COLLATE)/i',
+            '$1$2CONVERT( $3 USING utf8mb3 ) COLLATE utf8mb3_tolower_ci', $s, -1, $i);
+        if ($i) {
+            $n[] = $i . ' confronti con information_schema in utf8mb3_tolower_ci';
+        }
+
+        // "la tabella ha la chiave primaria?": quella invisibile di Azure ( my_row_id ) non conta, altrimenti la patch salta
+        // l'ADD PRIMARY KEY della chiave vera, e con lei gli indici e la conversione degli id che le vengono dietro
+        $s = preg_replace(
+            "/(TABLE_NAME\s*=\s*'([a-z0-9_]+)'\s+AND\s+CONSTRAINT_TYPE\s*=\s*'PRIMARY KEY')/i",
+            "\$1 AND NOT EXISTS ( SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = '\$2' AND COLUMN_NAME = 'my_row_id' )",
+            $s, -1, $i);
+        if ($i) {
+            $n[] = $i . ' controlli sulla chiave primaria senza quella invisibile';
+        }
+
+        // CREATE VIEW IF NOT EXISTS, da sola o in una stringa passata a una procedura
+        if (preg_match('/CREATE\s+VIEW\s+IF\s+NOT\s+EXISTS\s+`?([a-z0-9_]+)`?/i', $s, $m)) {
+            if (preg_match_all('/CREATE\s+VIEW\s+IF\s+NOT\s+EXISTS/i', $s) > 1) {
+                $n[] = 'più di un CREATE VIEW IF NOT EXISTS nella stessa patch';
+                return false;
+            }
+            if (mysqlPatchSchemaHas($c, 'vista', $m[1])) {
+                $n[] = 'vista ' . $m[1] . ' c\'è già';
+                return array();
+            }
+            $s = preg_replace('/CREATE\s+VIEW\s+IF\s+NOT\s+EXISTS/i', 'CREATE VIEW', $s);
+            $n[] = 'vista ' . $m[1] . ': tolto IF NOT EXISTS';
+        }
+
+        // CREATE OR REPLACE PROCEDURE / FUNCTION
+        if (preg_match('/^CREATE\s+OR\s+REPLACE\s+(PROCEDURE|FUNCTION)\s+(`?[a-z0-9_]+`?)/is', $s, $m)) {
+            $b = preg_replace('/^CREATE\s+OR\s+REPLACE\s+/is', 'CREATE ', $s);
+            // l'ALTER dinamico delle procedure di colonne.base e colonne.riallineamento parte solo per le colonne che
+            // information_schema dice mancanti: l'IF NOT EXISTS è ridondante
+            $b = preg_replace('/ADD COLUMN IF NOT EXISTS/i', 'ADD COLUMN', $b, -1, $i);
+            if ($i) {
+                $n[] = $i . ' ADD COLUMN IF NOT EXISTS dinamici resi ADD COLUMN';
+            }
+            // gli ALTER condizionali scritti nel corpo
+            $b = mysqlPatchTranslateRoutine($b, $n);
+            // quello che resta, fuori dalle stringhe letterali, non lo so tradurre
+            $r = preg_replace("/'(?:[^'\\\\]|\\\\.|'')*'/s", "''", $b);
+            if (preg_match('/\bIF\s+(NOT\s+)?EXISTS\b(?!\s*\()/i', preg_replace('/(DROP|CREATE)\s+(TABLE|TEMPORARY TABLE|VIEW|PROCEDURE|FUNCTION|TRIGGER)\s+IF\s+(NOT\s+)?EXISTS/i', '', $r))) {
+                $n[] = 'IF EXISTS rimasto nel corpo della procedura';
+                return false;
+            }
+            return array('DROP ' . strtoupper($m[1]) . ' IF EXISTS ' . $m[2], $b);
+        }
+
+        // ALTER TABLE al primo livello
+        if (preg_match('/^ALTER\s+TABLE\b/i', $s)) {
+            $r = mysqlPatchTranslateAlter($c, $s, $n);
+            if (is_array($r) && empty($n) && $r !== array($s)) {
+                $n[] = 'tolti gli IF [NOT] EXISTS';
+            }
+            return $r;
+        }
+
+        // ALTER passati come stringa a una procedura ( colonne.tabelle.viste ): si decide prima, leggendo lo schema
+        if (preg_match('/^CALL\b/i', $s) && preg_match('/\bIF\s+(NOT\s+)?EXISTS\b/i', $s)) {
+            if (! preg_match("/'\\s*ALTER TABLE `([a-z0-9_]+)`/i", $s, $m)) {
+                $n[] = 'CALL con IF EXISTS senza tabella riconoscibile';
+                return false;
+            }
+            $t = $m[1];
+            preg_match_all('/ADD COLUMN IF NOT EXISTS `([a-z0-9_]+)`/i', $s, $cc);
+            preg_match_all('/ADD (?:UNIQUE )?KEY IF NOT EXISTS `([a-z0-9_]+)`/i', $s, $kk);
+            $e = array();
+            $f = array();
+            foreach ($cc[1] as $x) {
+                if (mysqlPatchSchemaHas($c, 'colonna', $t, $x)) {
+                    $e[] = 'colonna ' . $x;
+                } else {
+                    $f[] = 'colonna ' . $x;
+                }
+            }
+            foreach ($kk[1] as $x) {
+                if (mysqlPatchSchemaHas($c, 'indice', $t, $x)) {
+                    $e[] = 'indice ' . $x;
+                } else {
+                    $f[] = 'indice ' . $x;
+                }
+            }
+            if (preg_match('/\bIF\s+(NOT\s+)?EXISTS\b(?!\s*\()/i', preg_replace('/ADD (COLUMN|(UNIQUE )?KEY) IF NOT EXISTS/i', '', $s))) {
+                $n[] = 'CALL con forme IF EXISTS non previste';
+                return false;
+            }
+            if (empty($f)) {
+                $n[] = $t . ': ' . implode(', ', $e) . ' già presenti';
+                return array();
+            }
+            // colonne già presenti e mancano solo indici: aggiungo gli indici con un ALTER diretto
+            if (! empty($e) && ! preg_grep('/^colonna /', $f)) {
+                $d = array();
+                foreach ($f as $x) {
+                    $x = substr($x, 7);
+                    if (! preg_match('/ADD ((?:UNIQUE )?KEY) IF NOT EXISTS `' . preg_quote($x, '/') . '` (\([^)]*\))/i', $s, $y)) {
+                        $n[] = $t . ': definizione dell\'indice ' . $x . ' non trovata';
+                        return false;
+                    }
+                    $d[] = 'ADD ' . $y[1] . ' `' . $x . '` ' . $y[2];
+                }
+                $n[] = $t . ': ' . implode(', ', $e) . ' già presenti, aggiunti ' . implode(', ', $f);
+                return array('ALTER TABLE `' . $t . '` ' . implode(', ', $d));
+            }
+            if (! empty($e)) {
+                $n[] = $t . ': in parte presenti ( ' . implode(', ', $e) . ' ), in parte no';
+                return false;
+            }
+            $n[] = $t . ': tolti gli IF NOT EXISTS';
+            return array(preg_replace('/(ADD (?:COLUMN|(?:UNIQUE )?KEY)) IF NOT EXISTS/i', '$1', $s));
+        }
+
+        // ALTER scritti in una stringa letterale ed eseguiti con PREPARE ( report.sottoscorta e simili )
+        if (preg_match('/(["\'])\s*ALTER\s+TABLE\s+`[a-z0-9_]+`[^"\']*\bIF\s+(NOT\s+)?EXISTS\b[^"\']*\1/is', $s)) {
+            $e = NULL;
+            $s = preg_replace_callback('/(["\'])(\s*ALTER\s+TABLE\s+`[a-z0-9_]+`[^"\']*)\1/is', function ($m) use ($c, &$e, &$n) {
+                if (! preg_match('/\bIF\s+(NOT\s+)?EXISTS\b/i', $m[2])) {
+                    return $m[0];
+                }
+                $o = mysqlPatchTranslateAlter($c, trim($m[2]), $n);
+                if ($o === false || count($o) > 1) {
+                    $e = 'ALTER in stringa non traducibile';
+                    return $m[0];
+                }
+                if (empty($o)) {
+                    return $m[1] . 'SELECT \'già presente\' AS nota' . $m[1];
+                }
+                return $m[1] . $o[0] . $m[1];
+            }, $s);
+            if ($e) {
+                $n[] = $e;
+                return false;
+            }
+            $n[] = 'ALTER in stringa: risolti gli IF [NOT] EXISTS';
+        }
+
+        // qualunque altro IF [NOT] EXISTS che non sia su CREATE / DROP di tabelle, viste, procedure
+        if (preg_match('/\b(ADD|DROP|MODIFY|CHANGE)\b[^;]{0,40}\bIF\s+(NOT\s+)?EXISTS\b(?!\s*\()/i', preg_replace('/(DROP|CREATE)\s+(TABLE|TEMPORARY TABLE|VIEW|PROCEDURE|FUNCTION|TRIGGER)\s+IF\s+(NOT\s+)?EXISTS/i', '', $s))) {
+            $n[] = 'forma IF EXISTS non prevista';
+            return false;
+        }
+
+        // restituisco la patch, tradotta o no
+        return array(($s === $o) ? $q : $s);
+    }
+
+    /**
      * applica le patch e le registra in __patch__, fermandosi al primo errore
      *
      * Questa funzione crea la tabella __patch__ se non esiste, poi esegue le patch ricevute da mysqlPatchRead() una alla
      * volta con mysqli_query(), ciascuna come una sola query, e registra ognuna in __patch__ con l'ora di esecuzione e la
      * nota 'OK'. Al primo errore, della patch o della sua registrazione, si ferma: le patch successive non si applicano e
      * $e riceve array( 'file', 'id', 'errno', 'error', 'query' ) della patch fallita. Restituisce le patch applicate.
+     *
+     * Su MySQL ogni patch passa prima da mysqlPatchTranslate(), che può farne più query o nessuna: si eseguono nell'ordine,
+     * in __patch__ si registra il testo originale e la nota dice cosa è stato tradotto. Una patch che non si sa tradurre
+     * ferma tutto come un errore, con errno -1. Su MariaDB la patch passa così com'è.
      *
      * NOTA le patch passano da mysqli e non da mysqlQuery() di proposito: mysqlQuery() sceglie cosa fare dalla prima parola
      * della query e un comando che non conosce lo scarta senza errore, e fino al 29/09/2026 il task registrava così come
@@ -2343,35 +2917,47 @@
             // esecuzione della patch e registrazione
             try {
 
-                // eseguo la patch
-                $x = mysqli_query($c, $patch['query']);
+                // traduco la patch per il server: su MariaDB resta com'è, su MySQL può diventare più query o nessuna
+                $d = array();
+                $q = mysqlPatchTranslate($c, $patch['query'], $d);
 
-                // una patch che restituisce righe ( SELECT, o CALL di una procedura che ne restituisce ) va letta fino in
-                // fondo, altrimenti la query successiva fallisce con "Commands out of sync"
-                if ($x instanceof mysqli_result) {
-                    mysqli_free_result($x);
-                }
-                while (mysqli_more_results($c) && mysqli_next_result($c)) {
-                    if ($x = mysqli_store_result($c)) {
+                // eseguo la patch, una query alla volta, fermandomi al primo errore
+                foreach (($q === false) ? array() : $q as $y) {
+
+                    $x = mysqli_query($c, $y);
+
+                    // una patch che restituisce righe ( SELECT, o CALL di una procedura che ne restituisce ) va letta fino in
+                    // fondo, altrimenti la query successiva fallisce con "Commands out of sync"
+                    if ($x instanceof mysqli_result) {
                         mysqli_free_result($x);
+                    }
+                    while (mysqli_more_results($c) && mysqli_next_result($c)) {
+                        if ($x = mysqli_store_result($c)) {
+                            mysqli_free_result($x);
+                        }
+                    }
+
+                    if (mysqli_errno($c)) {
+                        break;
                     }
                 }
 
-                // registro la patch, salvo la creazione della tabella
-                if (! mysqli_errno($c) && $patch['id'] !== NULL) {
+                // registro la patch, col testo originale, salvo la creazione della tabella
+                if ($q !== false && ! mysqli_errno($c) && $patch['id'] !== NULL) {
                     $t = time();
-                    $s = mysqli_prepare($c, 'INSERT INTO `__patch__` ( id, patch, timestamp_esecuzione, note_esecuzione ) VALUES ( ?, ?, ?, \'OK\' )');
+                    $s = mysqli_prepare($c, 'INSERT INTO `__patch__` ( id, patch, timestamp_esecuzione, note_esecuzione ) VALUES ( ?, ?, ?, ? )');
                     if ($s) {
                         $v = trim($patch['query']);
-                        mysqli_stmt_bind_param($s, 'ssi', $patch['id'], $v, $t);
+                        $o = (empty($d)) ? 'OK' : 'OK tradotta per MySQL: ' . implode('; ', $d);
+                        mysqli_stmt_bind_param($s, 'ssis', $patch['id'], $v, $t, $o);
                         mysqli_stmt_execute($s);
                         mysqli_stmt_close($s);
                     }
                 }
 
-                // codice e testo dell'errore, se c'è
-                $n = mysqli_errno($c);
-                $m = mysqli_error($c);
+                // codice e testo dell'errore, se c'è; una patch che non si sa tradurre è un errore
+                $n = ($q === false) ? -1 : mysqli_errno($c);
+                $m = ($q === false) ? 'patch non traducibile per MySQL: ' . implode('; ', $d) : mysqli_error($c);
 
             } catch (mysqli_sql_exception $x) {
 
