@@ -67,7 +67,9 @@
 
 {% macro image( page, lang, site, role, num, set, pictureclass, imgclass ) %}
 {% import _self as cms %}
-{{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
+{# NOTA fino al 2026-10-01 pictureclass finiva nel posto di alt e imgclass in quello di pictureclass: l'alt lo
+   ricava picture() dall'immagine, qui si passa vuoto #}
+{{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, NULL, pictureclass, imgclass ) }}
 {% endmacro %}
 
 {% macro video( page, lang, site, role, num, autoplay, loop, privacy, pages ) %}
