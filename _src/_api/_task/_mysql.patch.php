@@ -113,6 +113,10 @@
     // verifico la connessione
     if( ! empty( $cf['mysql']['connection'] ) ) {
 
+        // l'uscita si trattiene fino alla fine, cosi' in caso di errore si puo' ancora rispondere 500 dopo aver
+        // scritto le patch applicate: un cron o un monitor che guardano solo il codice HTTP se ne accorgono
+        ob_start();
+
         // ...
         header( 'Content-type: text/plain' );
 
@@ -122,6 +126,7 @@
         // senza livello non si applica niente: rieseguire tutto su un database in esercizio sarebbe il danno peggiore
         if( $patchLevel === false ) {
             logger( 'impossibile leggere il livello di patch: ' . mysqli_error( $cf['mysql']['connection'] ), 'mysql', LOG_ERR );
+            http_response_code( 500 );
             die( 'impossibile leggere il livello di patch del database' );
         }
 
@@ -153,6 +158,7 @@
             $pStatus = 'errore nella patch ' . $pError['id'] . ( ( empty( $pError['file'] ) ) ? '' : ' di ' . basename( $pError['file'] ) ) . ': ' . $pError['errno'] . ' ' . $pError['error'];
             logger( $pStatus . '§query -> ' . $pError['query'], 'mysql', LOG_ERR );
             echo $pError['query'] . PHP_EOL;
+            http_response_code( 500 );
             die( $pStatus . PHP_EOL . 'le patch successive non sono state applicate' );
         }
 
@@ -162,21 +168,7 @@
     } else {
 
         // ...
+        http_response_code( 500 );
         die( 'connessione al database non disponibile' );
 
-    }
-
-    // output
-    if( ! defined( 'CRON_RUNNING' ) ) {
-        buildJson(
-            $status, 
-            ENCODING_UTF8,
-            array(
-                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
-                'Pragma' => 'no-cache',
-                'Expires' => '0',
-                'X-Cache-Lifetime' => '0',
-                'X-Proxy-Cache' => 'BYPASS',
-            )
-        );
     }
