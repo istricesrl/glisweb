@@ -17,6 +17,11 @@ Options -Indexes
 # disabilito le MultiViews
 Options -MultiViews
 
+# pagina dell'accesso sospeso per gli IP banditi dal firewall applicativo ( vedi sotto, BANDO DEL FIREWALL APPLICATIVO );
+# è una stringa e non una pagina, così un IP bandito non fa partire PHP a ogni richiesta; rimanda alla pagina di
+# sblocco ( security.sblocco, _src/_inc/_pages/_security.*.php )
+ErrorDocument 429 "<!doctype html><meta charset='utf-8'><title>accesso sospeso</title><p>Dal tuo indirizzo sono arrivate richieste che il sito considera un attacco, e l'accesso è sospeso per un po'. Se sei una persona, <a href='/sblocco-accesso.it-IT.html'>sblocca l'accesso</a>.</p><p>Requests from your address look like an attack, so access is suspended for a while. If you are a person, <a href='/unlock-access.en-GB.html'>unlock access</a>.</p>"
+
 # dichiaro il tipo MIME del webp
 # il webp non e' in /etc/mime.types, quindi senza questa riga Apache serve i .webp senza
 # Content-Type e i browser non li trattano come immagini. Sta qui, fuori dal blocco
@@ -58,6 +63,24 @@ AddType image/webp .webp
 
     # attivazione motore di rewriting
     RewriteEngine on
+
+    ## BANDO DEL FIREWALL APPLICATIVO
+    #
+    # Il firewall applicativo ( _src/_inc/_macro/_security.php ) scrive un file per ogni IP bandito in var/spool/security/ban/,
+    # e qui Apache lo respinge con un 429 prima di far partire PHP: è quello che altrimenti farebbe fail2ban, che non è detto ci
+    # sia. Resta raggiungibile solo la pagina che toglie il bando con la verifica umana. Il bando scaduto lo cancella il
+    # firewall stesso a ogni nuovo bando, e il task _src/_api/_task/_security.clean.php ogni notte. Dietro un proxy o un CDN
+    # REMOTE_ADDR è il proxy: va attivato mod_remoteip.
+    #
+
+    # IP banditi dal firewall applicativo
+    # ( solo alla prima passata, prima delle riscritture; passano la pagina di sblocco e i file statici che esistono, che
+    # le servono e non costano niente: uno script chiamato direttamente lo ferma comunque _security.php )
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteCond %{REQUEST_URI} !^/(sblocco-accesso\.it-IT|unlock-access\.en-GB)\.html$
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/var/spool/security/ban/%{REMOTE_ADDR} -f
+    RewriteRule ^ - [R=429,L]
 
     ## REDIRECT DI SICUREZZA
     # 

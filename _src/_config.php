@@ -303,11 +303,12 @@
      * @param   string  $c          il nome del canale (lettere, cifre, punto, trattino e underscore)
      * @param   int     $n          il numero massimo di richieste accettate nella finestra
      * @param   int     $t          la durata della finestra in secondi
+     * @param   int     $p          quante richieste vale questa (default 1); il firewall lo usa per sommare i punti
      *
      * @return  bool                true se la richiesta rientra nel limite, false altrimenti
      *
      */
-    function rateLimitCheck( $c, $n, $t ) {
+    function rateLimitCheck( $c, $n, $t, $p = 1 ) {
 
         // sorgente della richiesta
         $ip = ( isset( $_SERVER['REMOTE_ADDR'] ) ) ? $_SERVER['REMOTE_ADDR'] : 'cli';
@@ -336,9 +337,9 @@
         }
 
         // verifica del limite
-        $ok = ( count( $richieste ) < $n );
+        $ok = ( count( $richieste ) + $p <= $n );
         if( $ok ) {
-            $richieste[] = $adesso;
+            $richieste = array_merge( $richieste, array_fill( 0, $p, $adesso ) );
         }
 
         // riscrittura del registro, senza le richieste uscite dalla finestra
@@ -360,6 +361,281 @@
         }
 
         return $ok;
+
+    }
+
+    /**
+     * questa funzione legge le regole del firewall applicativo
+     *
+     * Legge prima il vecchio elenco FILE_BANNED_WORDS, poi FILE_FIREWALL_RULES e FILE_FIREWALL_RULES_CUSTOM; una regola
+     * con la stessa zona, lo stesso tipo e lo stesso valore di una letta prima la sostituisce. Il formato delle regole
+     * è descritto in _src/_inc/_macro/_security.php.
+     *
+     * @return  array               le regole, ognuna con stato, zona, tipo, peso e valore
+     *
+     */
+    function securityRules() {
+
+        // regole lette
+        $r = array();
+
+        // righe dei tre file, saltando vuote e commenti
+        foreach( array( FILE_BANNED_WORDS, FILE_FIREWALL_RULES, FILE_FIREWALL_RULES_CUSTOM ) as $f ) {
+            foreach( ( file_exists( $f ) ) ? file( $f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) : array() as $row ) {
+                $row = trim( $row );
+                if( ! strlen( $row ) || substr( $row, 0, 1 ) == '#' ) {
+                    continue;
+                } elseif( $f != FILE_BANNED_WORDS ) {
+                    $rows = array( preg_split( '/\s+/', $row, 5 ) );
+                } elseif( preg_match( '/^[A-Za-z0-9_]+$/', $row ) ) {
+                    // una parola semplice pesa da sola nel percorso, poco come parola intera nella querystring
+                    $rows = array( array( 'on', 'path', 'str', 10, $row ), array( 'on', 'query', 'word', 2, $row ) );
+                } else {
+                    $rows = array( array( 'on', 'uri', 'str', 10, urldecode( $row ) ), array( 'on', 'valore', 'eq', 10, $row ) );
+                }
+                foreach( $rows as $x ) {
+                    if( count( $x ) == 5 && in_array( $x[0], array( 'on', 'obs', 'off' ) ) ) {
+                        $r[ $x[1] . ' ' . $x[2] . ' ' . strtolower( $x[4] ) ] = array( 'stato' => $x[0], 'zona' => $x[1], 'tipo' => $x[2], 'peso' => (int) $x[3], 'valore' => $x[4] );
+                    }
+                }
+            }
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * questa funzione applica le regole del firewall applicativo a una richiesta
+     *
+     * La richiesta viene scomposta nelle zone su cui lavorano le regole; nella querystring le parole intere non si
+     * cercano dentro i token opachi ( gclid, fbclid, JWT: almeno 16 caratteri base64 con maiuscole, minuscole e cifre ),
+     * dove una parola corta prima o poi compare per caso.
+     *
+     * @param   array   $r          le regole lette da securityRules()
+     * @param   string  $u          l'URI richiesto, con la querystring
+     * @param   array   $p          la $_POST
+     * @param   string  $a          lo User-Agent
+     * @param   array   $q          la $_REQUEST
+     * @param   string  $b          il corpo della richiesta, se non è un form
+     *
+     * @return  array               le regole che corrispondono, spente escluse
+     *
+     */
+    function securityCheck( $r, $u, $p = array(), $a = '', $q = array(), $b = '' ) {
+
+        // percorso e querystring
+        $parts = explode( '?', $u, 2 );
+        $qs = ( isset( $parts[1] ) ) ? $parts[1] : '';
+
+        // querystring senza i token opachi
+        $qword = '';
+        foreach( explode( '&', $qs ) as $pair ) {
+            $pair = explode( '=', $pair, 2 );
+            $qword .= ' ' . urldecode( $pair[0] );
+            if( isset( $pair[1] ) ) {
+                $v = urldecode( $pair[1] );
+                if( ! ( strlen( $v ) >= 16 && preg_match( '/^[A-Za-z0-9+\/=_\-\*\.~ ]+$/', $v ) && preg_match( '/[A-Z]/', $v ) && preg_match( '/[a-z]/', $v ) && preg_match( '/[0-9]/', $v ) ) ) {
+                    $qword .= ' ' . $v;
+                }
+            }
+        }
+
+        // valori della POST a qualsiasi profondità e corpo grezzo, fino a 64 kB
+        $body = array();
+        array_walk_recursive( $p, function( $v ) use ( &$body ) { $body[] = (string) $v; } );
+
+        // zone
+        $z = array(
+            'path'      => urldecode( $parts[0] ),
+            'query'     => urldecode( $qs ),
+            'uri'       => urldecode( $u ),
+            'body'      => substr( implode( ' ', $body ) . ' ' . $b, 0, 65536 ),
+            'ua'        => $a,
+            'valore'    => array_values( array_filter( $q, 'is_scalar' ) )
+        );
+
+        // regole che corrispondono
+        $m = array();
+        foreach( $r as $x ) {
+            if( $x['stato'] == 'off' || ! isset( $z[ $x['zona'] ] ) ) {
+                continue;
+            }
+            $s = ( $x['tipo'] == 'word' && $x['zona'] == 'query' ) ? $qword : $z[ $x['zona'] ];
+            if( $x['tipo'] == 'eq' ) {
+                // il confronto è STRETTO: con quello largo '150.php' == 150 è vero
+                $hit = ( is_array( $s ) && in_array( $x['valore'], $s, true ) );
+            } elseif( ! is_string( $s ) ) {
+                $hit = false;
+            } elseif( $x['tipo'] == 'word' ) {
+                // una parola intera non ha un'altra lettera o cifra attaccata ai suoi bordi alfanumerici
+                $hit = preg_match( '/' . ( preg_match( '/^[A-Za-z0-9]/', $x['valore'] ) ? '(?<![A-Za-z0-9])' : '' ) . preg_quote( $x['valore'], '/' ) . ( preg_match( '/[A-Za-z0-9]$/', $x['valore'] ) ? '(?![A-Za-z0-9])' : '' ) . '/i', $s );
+            } elseif( $x['tipo'] == 're' ) {
+                $hit = @preg_match( $x['valore'], $s );
+            } else {
+                $hit = ( stripos( $s, $x['valore'] ) !== false );
+            }
+            if( $hit ) {
+                $m[] = $x;
+            }
+        }
+
+        return $m;
+
+    }
+
+    /**
+     * questa funzione scrive un evento del firewall nel registro degli attacchi dell'IP corrente
+     *
+     * È lo stesso registro in cui annota rateLimitCheck(); gli indizi dicono se la richiesta aveva l'aria di venire da
+     * un utente vero ( un cookie, un referer dello stesso sito ), e sono quello che il resoconto notturno guarda.
+     *
+     * @param   string  $m          il testo dell'evento
+     *
+     * @return  void
+     *
+     */
+    function securityLog( $m ) {
+
+        // indizi di un utente vero
+        $h = array();
+        if( ! empty( $_COOKIE ) ) {
+            $h[] = 'cookie';
+        }
+        if( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 ) {
+            $h[] = 'referer interno';
+        }
+
+        @file_put_contents(
+            DIR_VAR_SPOOL_SECURITY . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $_SERVER['REMOTE_ADDR'] ) . '.log',
+            date( 'Y-m-d H:i:s' ) . ' ' . $m . PHP_EOL .
+            'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+            'url: ' . ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ) . PHP_EOL .
+            'indizi: ' . implode( ',', $h ) . PHP_EOL . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
+
+    }
+
+    /**
+     * questa funzione dice perché l'IP corrente non va bandito
+     *
+     * Non si bandiscono la macchina stessa, gli indirizzi e le reti di FILE_ALLOWED_HOSTS ( v4 o v6, anche CIDR ) e i
+     * crawler dei motori di ricerca verificati col DNS inverso e poi diretto. googleusercontent.com NON va fra i
+     * crawler: è il DNS inverso di qualsiasi macchina su Google Cloud.
+     *
+     * @return  string              il motivo, vuota se l'IP va bandito
+     *
+     */
+    function securitySpared() {
+
+        // sorgente
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $a = @inet_pton( $ip );
+
+        // la macchina stessa e gli indirizzi ammessi dal deploy
+        $allowed = array( '127.0.0.1', '::1', ( ( isset( $_SERVER['SERVER_ADDR'] ) ) ? $_SERVER['SERVER_ADDR'] : '::1' ) );
+        if( file_exists( FILE_ALLOWED_HOSTS ) ) {
+            $allowed = array_merge( $allowed, file( FILE_ALLOWED_HOSTS, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
+        }
+        foreach( $allowed as $net ) {
+            $net = explode( '/', trim( $net ) );
+            $b = @inet_pton( $net[0] );
+            if( $a !== false && $b !== false && strlen( $a ) == strlen( $b ) ) {
+                $bits = ( isset( $net[1] ) ) ? (int) $net[1] : strlen( $a ) * 8;
+                $mask = str_pad( str_repeat( chr( 255 ), intdiv( $bits, 8 ) ) . ( ( $bits % 8 ) ? chr( 256 - ( 1 << ( 8 - $bits % 8 ) ) ) : '' ), strlen( $a ), chr( 0 ) );
+                if( ( $a & $mask ) === ( $b & $mask ) ) {
+                    return 'indirizzo ammesso ' . implode( '/', $net );
+                }
+            }
+        }
+
+        // crawler dei motori di ricerca
+        $host = @gethostbyaddr( $ip );
+        if( $host && $host != $ip && preg_match( '/\.(googlebot\.com|google\.com|search\.msn\.com|applebot\.apple\.com|yandex\.(ru|net|com))$/i', $host ) ) {
+            $resolved = @gethostbynamel( $host );
+            if( is_array( $resolved ) && in_array( $ip, $resolved ) ) {
+                return 'crawler ' . $host;
+            }
+        }
+
+        return '';
+
+    }
+
+    /**
+     * questa funzione dà punti all'IP corrente e lo bandisce quando arriva alla soglia
+     *
+     * I punti sono le richieste del canale firewall di rateLimitCheck(), pesate: l'IP viene bandito quando nella
+     * finestra di SECURITY_SCORE_WINDOW secondi arriva a SECURITY_SCORE_LIMIT punti. La durata del bando sale coi
+     * gradini di SECURITY_BAN_STEPS se l'IP è già stato bandito negli ultimi SECURITY_RECIDIVE_TTL secondi: ogni
+     * gradino è un canale di rateLimitCheck() che accetta un solo bando nella finestra.
+     *
+     * Il bando è il file DIR_VAR_SPOOL_SECURITY_BAN/\<ip\>, con la scadenza come data di ultima modifica, perché lo possa
+     * controllare anche Apache ( .htaccess ); Apache non guarda la data, quindi i bandi scaduti si tolgono qui a ogni
+     * nuovo bando, oltre che nel task notturno _src/_api/_task/_security.clean.php.
+     *
+     * @param   int     $p          i punti da dare
+     * @param   string  $m          il motivo, scritto nel file del bando
+     *
+     * @return  string              l'esito, vuota se l'IP è ancora sotto la soglia
+     *
+     */
+    function securityBan( $p, $m ) {
+
+        // sotto la soglia
+        if( rateLimitCheck( 'firewall', SECURITY_SCORE_LIMIT - 1, SECURITY_SCORE_WINDOW, $p ) ) {
+            return '';
+        }
+
+        // indirizzi da non bandire
+        $spared = securitySpared();
+        if( ! empty( $spared ) ) {
+            return 'non bandito: ' . $spared;
+        }
+
+        // gradino del bando
+        foreach( SECURITY_BAN_STEPS as $i => $d ) {
+            if( rateLimitCheck( 'firewall.bandi.' . $i, 1, SECURITY_RECIDIVE_TTL ) ) {
+                break;
+            }
+        }
+
+        // file del bando, e pulizia dei bandi scaduti
+        if( checkPath( DIR_VAR_SPOOL_SECURITY_BAN ) ) {
+            file_put_contents( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'], $m . PHP_EOL, LOCK_EX );
+            touch( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'], time() + $d );
+            foreach( scandir2array( DIR_VAR_SPOOL_SECURITY_BAN ) as $f ) {
+                if( @filemtime( DIR_VAR_SPOOL_SECURITY_BAN . $f ) < time() ) {
+                    @unlink( DIR_VAR_SPOOL_SECURITY_BAN . $f );
+                }
+            }
+        }
+
+        return 'bandito per ' . $d . ' secondi';
+
+    }
+
+    /**
+     * questa funzione, registrata dal firewall applicativo come funzione di shutdown, dà punti all'IP per i 404
+     *
+     * Conta solo il 404 su un percorso che cerca uno scanner ( SECURITY_PROBE_PATHS ) e senza referer interno, che
+     * sarebbe un collegamento rotto del sito: un 404 qualsiasi no, perché favicon, immagini e librerie vecchie chieste
+     * senza referer bandivano migliaia di utenti veri ( simulazione sui log di PROD, 30/09/2026 ).
+     *
+     * @return  void
+     *
+     */
+    function securityOutcome() {
+
+        if( http_response_code() == 404
+            && ! ( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 )
+            && preg_match( SECURITY_PROBE_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) ) {
+            $e = securityBan( 3, '404 su percorsi da scanner' );
+            if( ! empty( $e ) ) {
+                securityLog( '404 su percorsi da scanner, ' . $e );
+            }
+        }
 
     }
 
@@ -643,6 +919,7 @@
     define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
     define( 'DIR_VAR_SPOOL_SIGNUP'                      , DIR_BASE . 'var/spool/signup/' );
 
     // file autoload per caricare le librerie con composer
@@ -652,6 +929,11 @@
     define( 'FILE_BANNED_WORDS'                         , DIR_ETC_SECURITY . '_banned.words.conf' );
     define( 'FILE_COMMON_PASSWORDS'                     , DIR_ETC_SECURITY . '_common.passwords.conf' );
     define( 'FILE_BANNED_HOSTS'                         , DIR_VAR_SPOOL_SECURITY . 'banned.hosts.conf' );
+
+    // file delle regole del firewall applicativo, standard e del deploy, e degli indirizzi mai banditi
+    define( 'FILE_FIREWALL_RULES'                       , DIR_ETC_SECURITY . '_firewall.rules.conf' );
+    define( 'FILE_FIREWALL_RULES_CUSTOM'                , DIR_BASE . 'etc/security/firewall.rules.conf' );
+    define( 'FILE_ALLOWED_HOSTS'                        , DIR_BASE . 'etc/security/allowed.hosts.conf' );
 
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
