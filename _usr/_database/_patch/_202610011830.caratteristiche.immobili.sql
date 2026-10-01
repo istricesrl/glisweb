@@ -38,3 +38,5 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
         ) AS __label__
 	FROM caratteristiche
 ;
+
+-- | FINE FILE
