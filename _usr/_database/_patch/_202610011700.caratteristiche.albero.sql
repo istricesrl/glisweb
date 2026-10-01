@@ -49,6 +49,8 @@ BEGIN
     DECLARE ambigue TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '';
     DECLARE tipo_id VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE tipo_genitore VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE tipo_colonna VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
+    DECLARE nullabile VARCHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL;
     DECLARE figlie CURSOR FOR
         SELECT t.nome FROM ( SELECT 'articoli_caratteristiche' AS nome UNION ALL SELECT 'prodotti_caratteristiche' ) AS t
         WHERE EXISTS ( SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = t.nome );
@@ -107,6 +109,14 @@ BEGIN
                 SET @sql = CONCAT( 'UPDATE `', tabella, '` SET id_caratteristica = id_caratteristica + ', scostamento, ' WHERE id_caratteristica IS NOT NULL ORDER BY id_caratteristica DESC' );
                 PREPARE istruzione FROM @sql; EXECUTE istruzione; SET contatore = ROW_COUNT(); DEALLOCATE PREPARE istruzione;
                 SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, CONCAT( tabella, ': ', contatore, ' riferimenti spostati sull\'albero nuovo' ) );
+                -- la colonna prende il tipo di caratteristiche.id: fra int( 11 ) e bigint( 20 ) la chiave fallisce con errno 150
+                SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'caratteristiche' AND COLUMN_NAME = 'id';
+                SELECT COLUMN_TYPE, IS_NULLABLE INTO tipo_colonna, nullabile FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = tabella AND COLUMN_NAME = 'id_caratteristica';
+                IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+                    SET @sql = CONCAT( 'ALTER TABLE `', tabella, '` MODIFY `id_caratteristica` ', tipo_id, IF( nullabile = 'NO', ' NOT NULL', ' DEFAULT NULL' ) );
+                    PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+                    SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, CONCAT( tabella, '.id_caratteristica portato da ', tipo_colonna, ' a ', tipo_id, ', il tipo di caratteristiche.id' ) );
+                END IF;
                 SET @sql = CONCAT( 'ALTER TABLE `', tabella, '` ADD CONSTRAINT `', tabella, '_ibfk_02_nofollow` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE' );
                 PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
             ELSEIF puntava IS NULL THEN
@@ -191,6 +201,14 @@ BEGIN
             SET @sql = CONCAT( 'SELECT count(*) INTO @orfani FROM `', tabella, '` AS t LEFT JOIN caratteristiche AS c ON c.id = t.id_caratteristica WHERE t.id_caratteristica IS NOT NULL AND c.id IS NULL' );
             PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
             IF @orfani = 0 THEN
+                -- la colonna prende il tipo di caratteristiche.id: fra int( 11 ) e bigint( 20 ) la chiave fallisce con errno 150
+                SELECT COLUMN_TYPE INTO tipo_id FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'caratteristiche' AND COLUMN_NAME = 'id';
+                SELECT COLUMN_TYPE, IS_NULLABLE INTO tipo_colonna, nullabile FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = tabella AND COLUMN_NAME = 'id_caratteristica';
+                IF tipo_id IS NOT NULL AND tipo_colonna IS NOT NULL AND tipo_id != tipo_colonna THEN
+                    SET @sql = CONCAT( 'ALTER TABLE `', tabella, '` MODIFY `id_caratteristica` ', tipo_id, IF( nullabile = 'NO', ' NOT NULL', ' DEFAULT NULL' ) );
+                    PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
+                    SET @caratteristiche_note = CONCAT_WS( '\n', @caratteristiche_note, CONCAT( tabella, '.id_caratteristica portato da ', tipo_colonna, ' a ', tipo_id, ', il tipo di caratteristiche.id' ) );
+                END IF;
                 SET @sql = CONCAT( 'ALTER TABLE `', tabella, '` ADD CONSTRAINT `', chiave, '` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE' );
                 PREPARE istruzione FROM @sql; EXECUTE istruzione; DEALLOCATE PREPARE istruzione;
             ELSE
