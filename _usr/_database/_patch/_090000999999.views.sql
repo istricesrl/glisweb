@@ -1508,38 +1508,6 @@ CREATE OR REPLACE VIEW `consensi_moduli_view` AS              --
   FROM consensi_moduli                                        --
 ;                                                             --
 
--- | 090000006400
-
--- consensi_anagrafica_view
-CREATE OR REPLACE VIEW `consensi_anagrafica_view` AS            --
-  SELECT                                                      --
-	consensi_anagrafica.id,                                       --
-    consensi_anagrafica.id_consenso,                              --
-	consensi.nome AS consenso,                                            --
-	consensi_anagrafica.id_anagrafica,                              --
-	concat_ws(
-		' ',
-		anagrafica.nome,
-		anagrafica.cognome,
-		anagrafica.denominazione
-	) AS anagrafica,                              --
-    consensi_anagrafica.modulo,                                   --
-    consensi_anagrafica.valore,                                   --
-    consensi_anagrafica.id_account_inserimento,                   --
-	consensi_anagrafica.timestamp_inserimento,
-	from_unixtime( consensi_anagrafica.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
-	consensi_anagrafica.id_account_aggiornamento,                 --
-    concat(                                                   --
-      'consenso ',                                            --
-      consensi.nome,                            --
-      ' per modulo ',                                         --
-      consensi_anagrafica.modulo                                  --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM consensi_anagrafica                                        --
-    INNER JOIN consensi ON consensi.id = consensi_anagrafica.id_consenso	--
-	INNER JOIN anagrafica ON anagrafica.id = consensi_anagrafica.id_anagrafica	--
-;                                                             --
-
 -- | 090000006500
 
 -- consensi_contatti_view

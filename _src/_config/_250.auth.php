@@ -1184,7 +1184,7 @@
         'mastri_articoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
-        'consensi_anagrafica' => array(
+        'anagrafica_consensi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'consensi_contatti' => array(

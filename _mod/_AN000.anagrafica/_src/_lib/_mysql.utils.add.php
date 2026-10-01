@@ -483,6 +483,25 @@
     }
 
     /**
+     * tendina dello stato di un consenso
+     *
+     * Restituisce le due voci per il campo `se_prestato` di `anagrafica_consensi`. NOTA il salvataggio passa da
+     * empty2null(), quindi una revoca finisce sul database come NULL e non come zero: chi legge la tabella deve
+     * contare NULL come revoca, e la macro della linguetta privacy riporta il NULL a zero per mostrarlo.
+     *
+     * @return  array   le voci della tendina
+     *
+     */
+    function tendinaSePrestato() {
+
+        return array(
+            array( 'id' => 1, '__label__' => 'prestato' ),
+            array( 'id' => 0, '__label__' => 'revocato' )
+        );
+
+    }
+
+    /**
      * 
      * TODO documentare
      * 

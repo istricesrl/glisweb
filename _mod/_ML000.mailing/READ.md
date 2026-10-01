@@ -16,9 +16,6 @@ Rispetto a `_7000.mailing` cambiano cinque cose, tutte correzioni:
   **consenso**;
 - rigenerare i destinatari non manda **due volte** la stessa mail allo stesso indirizzo.
 
-E ne toglie una: **non traccia le aperture**. I percorsi del testo vengono resi assoluti senza l'id del
-mailing e del destinatario, quindi `_src/_api/_download.php` non registra la lettura.
-
 ## dipendenze
 
 | modulo | a cosa serve |
@@ -65,12 +62,9 @@ link di disiscrizione arriva a un indirizzo, non a una persona.
 | `mailingSeConsenso( $idMail )` | la stessa regola per un indirizzo solo |
 | `mailingRegistraConsenso( $idMail, $prestato, $nota )` | scrive il consenso o la revoca sull'indirizzo, una riga per indirizzo che si aggiorna; la storia va nel log `mailing` |
 
-La revoca per una **persona** ( tutti i suoi indirizzi ) è una riga sull'anagrafica in `anagrafica_consensi`.
-
-> **attenzione** — la scheda privacy dell'anagrafica di `_AN000.anagrafica` mostra un'altra tabella,
-> `consensi_anagrafica`, che questo modulo non legge: un consenso tolto da lì non ferma la newsletter. Finché
-> le due tabelle non convergono, la revoca per persona si scrive in `anagrafica_consensi`, e da interfaccia si
-> toglie l'indirizzo dalle liste.
+La revoca per una **persona** ( tutti i suoi indirizzi ) è una riga sull'anagrafica in `anagrafica_consensi`, e
+da interfaccia si scrive nella linguetta *privacy* della scheda anagrafica di `_AN000.anagrafica`, che mostra in
+sola lettura anche i consensi registrati sui singoli indirizzi della persona.
 
 ## il giro di un mailing
 
@@ -182,9 +176,7 @@ Il form pubblico di iscrizione.
 ## da `_7000.mailing` a `_ML000.mailing`
 
 - si attiva `mod/ML000.mailing` e si toglie `mod/7000.mailing`: le tabelle sono le stesse, i dati restano;
-- si applica la patch `_202610011500.consensi.mail.sql`;
+- si applicano le patch `_202610011500.consensi.mail.sql` e `_202610011600.consensi.anagrafica.sql`;
 - si aggiorna il percorso della riga di `task` che genera le mail;
 - le pagine `template.mailing.*` di `_7000.mailing` non ci sono più: i template mail sono quelli di
   `_TE000.template`, e si applicano al mailing con l'azione *applica template*;
-- i link del tracciamento delle aperture nelle mail già spedite continuano a funzionare, ma le mail nuove non
-  ne hanno.

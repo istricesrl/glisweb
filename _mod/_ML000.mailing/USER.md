@@ -39,8 +39,12 @@ Si smette di ricevere la newsletter in due modi:
 
 - cliccando il link **in fondo a ogni mail**, che porta a una pagina dove si conferma la richiesta; molti
   programmi di posta mostrano anche un pulsante *annulla iscrizione* che fa la stessa cosa;
-- su richiesta, togliendo l'indirizzo dalle liste: dalla linguetta *iscritti* della lista, o dalla linguetta
-  *liste* della scheda dell'indirizzo in anagrafica.
+- su richiesta, dalla linguetta **privacy** della scheda anagrafica della persona, mettendo il consenso alle
+  comunicazioni su *revocato*: vale per tutti i suoi indirizzi.
+
+Togliere l'indirizzo dalle liste ( dalla linguetta *iscritti* della lista, o dalla linguetta *liste* della scheda
+dell'indirizzo ) ferma i prossimi invii a quelle liste, ma l'indirizzo rientra se la lista viene ripopolata da una
+categoria: per una richiesta di non ricevere più la newsletter si usa la linguetta *privacy*.
 
 Chi si è tolto e poi si iscrive di nuovo dal sito torna a riceverla.
 

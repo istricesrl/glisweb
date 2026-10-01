@@ -15,8 +15,8 @@
      * - in fondo al testo si aggiunge il link di disiscrizione, se il testo non ne ha già uno ( se contiene `mtk=` );
      * - l'header `List-Unsubscribe` ha il mittente vero nel `mailto:` ( prima ci finiva l'array serializzato ) e
      *   l'URL della pagina `disiscrizione` nella lingua del sito;
-     * - **nessun tracciamento delle aperture**: path2url() rende assoluti i percorsi del testo ma non ci mette più
-     *   mailing e destinatario, quindi `_download.php` non registra la lettura.
+     * - il **tracciamento delle aperture** resta: path2url() rende assoluti i percorsi del testo mettendoci
+     *   l'id del mailing e quello dell'indirizzo, così `_download.php`, servendo le immagini, registra la lettura.
      *
      * @file
      *
@@ -194,8 +194,8 @@
         // ciclo sui contenuti
         foreach( $cnts as $cnt ) {
 
-            // percorsi assoluti, senza mailing e destinatario: niente tracciamento delle aperture
-            $cnt['testo'] = path2url( $cnt['testo'], 1 );
+            // percorsi assoluti, con mailing e destinatario per il tracciamento delle aperture
+            $cnt['testo'] = path2url( $cnt['testo'], 1, $row['id'], $row['id_mail'] );
 
             // link di disiscrizione, se il testo non ne ha già uno
             if( strpos( $cnt['testo'], 'mtk=' ) === false ) {

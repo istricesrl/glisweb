@@ -1501,31 +1501,6 @@ CREATE TABLE `consensi_moduli` (                              --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
--- | 010000006400
-
--- consensi_anagrafica
--- tipologia: tabella gestita
--- rango: tabella secondaria
--- struttura: tabella base
--- funzione: specifica quali consensi sono stati acquisiti per ogni anagrafica presente nel sistema
--- 
--- questa tabella contiene i consensi che vanno chiesti per ogni anagrafica acquisita, e va a integrare le informazioni già
--- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
--- ulteriori approfondimenti
---
-CREATE TABLE `consensi_anagrafica` (                              --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_consenso` bigint(20) DEFAULT NULL,                         -- chiave esterna per il consenso
-  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
-  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
-  `valore` int(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,                                   -- note sul consenso
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
-
 -- | 010000006500
 
 -- consensi_contatti
