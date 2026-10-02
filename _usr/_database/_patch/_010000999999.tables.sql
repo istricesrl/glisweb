@@ -542,7 +542,7 @@ CREATE TABLE IF NOT EXISTS `articoli` (
 --
 CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_articolo` bigint(20) NOT NULL,                           -- chiave esterna per l'articolo
+  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
   `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
   `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
@@ -1833,8 +1833,8 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
 --
 CREATE TABLE IF NOT EXISTS `costi_contratti` (
   `id` bigint(20) NOT NULL,
-  `id_contratto` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) NOT NULL,
+  `id_contratto` bigint(20) DEFAULT NULL,
+  `id_tipologia` bigint(20) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `costo_orario` decimal(16,5) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -1886,8 +1886,8 @@ CREATE TABLE IF NOT EXISTS `coupon` (
 --
 CREATE TABLE IF NOT EXISTS `coupon_articoli` (
   `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) NOT NULL,
-  `id_articolo` bigint(20) NOT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `gruppo_alternative` char(32) NOT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -1906,7 +1906,7 @@ CREATE TABLE IF NOT EXISTS `coupon_articoli` (
 --
 CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
   `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) NOT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `id_categoria` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -1925,7 +1925,7 @@ CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
 --
 CREATE TABLE IF NOT EXISTS `coupon_listini` (
   `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) NOT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `id_listino` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -1944,7 +1944,7 @@ CREATE TABLE IF NOT EXISTS `coupon_listini` (
 --
 CREATE TABLE IF NOT EXISTS `coupon_marchi` (
   `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) NOT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
   `id_marchio` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -1963,8 +1963,8 @@ CREATE TABLE IF NOT EXISTS `coupon_marchi` (
 --
 CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) NOT NULL,
-  `id_prodotto` bigint(20) NOT NULL,
+  `id_coupon` bigint(20) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -3033,7 +3033,7 @@ CREATE TABLE IF NOT EXISTS `mailing_mail` (
 -- funzione: contiene i marchi dei prodotti
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` bigint(20) NOT NULL,
-  `id_produttore` bigint(20) NOT NULL,
+  `id_produttore` bigint(20) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
@@ -3462,12 +3462,12 @@ CREATE TABLE IF NOT EXISTS `orari` (
 --
 CREATE TABLE IF NOT EXISTS `orari_contratti` (
   `id` bigint(20) NOT NULL,
-  `id_contratto` bigint(20) NOT NULL,
+  `id_contratto` bigint(20) DEFAULT NULL,
   `turno` int(11) DEFAULT '1',
-  `id_giorno` bigint(20) NOT NULL,
+  `id_giorno` bigint(20) DEFAULT NULL,
   `ora_inizio` time DEFAULT NULL,
   `ora_fine` time DEFAULT NULL,
-  `id_costo` bigint(20) NOT NULL,
+  `id_costo` bigint(20) DEFAULT NULL,
   `se_lavoro` tinyint(1) DEFAULT '1',
   `se_disponibile` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
@@ -4949,7 +4949,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
 --
 CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
