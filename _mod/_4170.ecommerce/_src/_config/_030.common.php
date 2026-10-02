@@ -334,7 +334,7 @@
         'id_rinnovo'                    => array( 'type' => 'int',      'default' => NULL ),
         'id_progetto'                   => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
-        'id_coupon'                     => array( 'type' => 'string',   'default' => NULL ),
+        'id_coupon'                     => array( 'type' => 'int',      'default' => NULL ),
         'coupon_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
         'coupon_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
