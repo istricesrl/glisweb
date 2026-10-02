@@ -1974,8 +1974,8 @@ ALTER TABLE `licenze_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `lingue`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_nome` (`nome`),
-	ADD UNIQUE KEY `unica_iso6391alpha2` (`iso6391alpha2`),
-	ADD UNIQUE KEY `unica_iso6393alpha3` (`iso6393alpha3`),
+	ADD KEY `iso6391alpha2` (`iso6391alpha2`),
+	ADD KEY `iso6393alpha3` (`iso6393alpha3`),
 	ADD UNIQUE KEY `unica_ietf` (`ietf`),
 	ADD KEY `indice` (`id`,`nome`,`iso6391alpha2`,`iso6393alpha3`,`ietf`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
