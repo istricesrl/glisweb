@@ -2904,12 +2904,21 @@
             'id' => NULL,
             'query' => 'CREATE TABLE IF NOT EXISTS `__patch__` (
                 `id` char(12) NOT NULL PRIMARY KEY,
-                `patch` text COLLATE utf8_unicode_ci,
+                `patch` mediumtext COLLATE utf8_unicode_ci,
                 `timestamp_esecuzione` int(11) DEFAULT NULL,
                 `token` char(128) DEFAULT NULL,
                 `note_esecuzione` text
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8'
         ));
+
+        // il testo di una patch puo' superare i 64 KB di text ( _202609261002 ne ha 215 ): sui database dove __patch__
+        // c'era gia' la colonna si allarga, se no la registrazione fallisce con 1406 Data too long e la patch,
+        // eseguita ma non registrata, si ripete al giro dopo; anche questa non si registra ( id NULL )
+        array_splice($p, 1, 0, array(array(
+            'file' => NULL,
+            'id' => NULL,
+            'query' => 'ALTER TABLE `__patch__` MODIFY `patch` mediumtext COLLATE utf8_unicode_ci'
+        )));
 
         // applico una patch alla volta
         foreach ($p as $patch) {
