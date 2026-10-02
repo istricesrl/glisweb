@@ -195,7 +195,8 @@ ALTER TABLE `anagrafica_indirizzi`
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_indirizzo`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_indirizzo`,`id_ruolo`),
+	ADD KEY `id_tipologia` (`id_tipologia`);
 
 -- | 030000000901
 
@@ -215,7 +216,9 @@ ALTER TABLE `anagrafica_progetti`
 	ADD KEY `se_attesa` (`se_attesa`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_progetto`,`id_ruolo`,`ordine`);
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_progetto`,`id_ruolo`,`ordine`),
+	ADD KEY `id_todo` (`id_todo`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`);
 
 -- | 030000000941
 
@@ -361,7 +364,11 @@ ALTER TABLE `attivita`
 	ADD KEY `indice_attivita` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_attivita`,`ora_inizio`,`ora_fine`),
 	ADD KEY `indice_mastri` (`id`,`id_tipologia`,`id_mastro_provenienza`,`id_mastro_destinazione`),
 	ADD KEY `indice_sostituti` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`timestamp_calcolo_sostituti`),
-	ADD KEY `indice_token` (`id`,`token`);
+	ADD KEY `indice_token` (`id`,`token`),
+	ADD KEY `id_messaggio` (`id_messaggio`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_step` (`id_step`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`);
 
 -- | 030000001801
 
@@ -667,7 +674,9 @@ ALTER TABLE `carrelli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella standard
 ALTER TABLE `casse_previdenziali`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `codice` (`codice`);
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000003081
 
@@ -872,7 +881,9 @@ ALTER TABLE `chiavi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-28 22:22 Chiara GDL
 ALTER TABLE `classi_energetiche`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000005001
 
@@ -890,7 +901,13 @@ ALTER TABLE `colli`
     ADD KEY `id_udm_peso` (`id_udm_peso`),	
     ADD KEY `id_udm_volume` (`id_udm_volume`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_mittente` (`id_mittente`),
+	ADD KEY `id_destinatario` (`id_destinatario`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_mastro` (`id_mastro`);
 
 -- | 030000005051
 
@@ -914,7 +931,9 @@ ALTER TABLE `colori`
 	ADD KEY `indice` (`id`, `nome`,`id_genitore`,`hex`,`r`,`g`,`b`),
 	ADD KEY `indice_ral` (`id`, `nome`,`id_genitore`,`ral`),
 	ADD KEY `indice_pantone` (`id`, `nome`,`id_genitore`,`pantone`),
-	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`);
+	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000005101
 
@@ -930,7 +949,9 @@ ALTER TABLE `comuni`
 	ADD UNIQUE KEY `unica_istat` (`codice_istat`),
 	ADD UNIQUE KEY `unica_catasto` (`codice_catasto`),
 	ADD KEY `id_provincia` (`id_provincia`),
-	ADD KEY `indice` (`id`,`id_provincia`, `nome`,`codice_istat`,`codice_catasto`);
+	ADD KEY `indice` (`id`,`id_provincia`, `nome`,`codice_istat`,`codice_catasto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000005301
 
@@ -941,7 +962,9 @@ ALTER TABLE `comuni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- condizioni_pagamento
 ALTER TABLE `condizioni_pagamento`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000006001
 
@@ -958,7 +981,9 @@ ALTER TABLE `condizioni`
 	ADD UNIQUE KEY `unico` (`nome`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_catalogo` (`se_catalogo`),
-	ADD KEY `se_immobili` (`se_immobili`);
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 	
 
 -- | 030000006051
@@ -1100,7 +1125,9 @@ ALTER TABLE `contenuti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `continenti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `indice` (`id`,`codice`,`nome`);
+	ADD KEY `indice` (`id`,`codice`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000007101
 
@@ -1160,7 +1187,9 @@ ALTER TABLE `conversazioni`
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
 	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
-	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
+	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000007501
 
@@ -1181,7 +1210,9 @@ ALTER TABLE `conversazioni_account`
  	ADD KEY `timestamp_lettura` (`timestamp_lettura`), 
 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
  	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
-	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_lettura`,`timestamp_entrata`, `timestamp_uscita`);
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_lettura`,`timestamp_entrata`, `timestamp_uscita`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 	
 
 -- | 030000007601
@@ -1205,7 +1236,8 @@ ALTER TABLE `corrispondenza`
 	ADD KEY `id_commesso` (`id_commesso`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_distinta` (`id_distinta`);
 
 -- | 030000007801
 
@@ -1219,7 +1251,9 @@ ALTER TABLE `costi_contratti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`),
 	ADD KEY `id_contratto` (`id_contratto`),
-	ADD KEY `id_tipologia` (`id_tipologia`);
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000007901
 
@@ -1394,7 +1428,9 @@ ALTER TABLE `disponibilita`
 	ADD UNIQUE KEY `unico` (`nome`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_catalogo` (`se_catalogo`),
-	ADD KEY `se_immobili` (`se_immobili`);
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 	
 
 -- | 030000009001
@@ -1431,7 +1467,12 @@ ALTER TABLE `documenti`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `tipologia_data` (`id_tipologia`,`data`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`),
+	ADD KEY `id_referente_emittente` (`id_referente_emittente`),
+	ADD KEY `id_destinatario_spedizione` (`id_destinatario_spedizione`),
+	ADD KEY `id_sede_destinatario_spedizione` (`id_sede_destinatario_spedizione`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_progetto` (`id_progetto`);
 
 -- | 030000009801
 
@@ -1480,7 +1521,8 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `indice_todo_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
 	ADD KEY `indice_todo_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_todo`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
 	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
-	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
+	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
+	ADD KEY `id_carrelli_articoli` (`id_carrelli_articoli`);
 
 -- | 030000010001
 
@@ -1648,7 +1690,9 @@ ALTER TABLE `giorni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`), 
 	ADD KEY `nome` (`nome`), 
-	ADD KEY `indice` (`id`,`nome`);
+	ADD KEY `indice` (`id`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000015151
 
@@ -1745,7 +1789,8 @@ ALTER TABLE `immagini`
 	ADD KEY `indice_categorie_risorse` (`id`,`id_categoria_risorse`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`),
 	ADD KEY `indice_notizie` (`id`,`id_notizia`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`),
 	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`),
-	ADD KEY `indice_indirizzi` (`id`,`id_indirizzo`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`);
+	ADD KEY `indice_indirizzi` (`id`,`id_indirizzo`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`),
+	ADD KEY `id_contatto` (`id_contatto`);
 
 -- | 030000015601
 
@@ -1876,7 +1921,9 @@ ALTER TABLE `iva`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `aliquota` (`aliquota`),
 	ADD KEY `timestamp_archiviazione` (`timestamp_archiviazione`),
-	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`);
+	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000016001
 
@@ -1930,7 +1977,9 @@ ALTER TABLE `lingue`
 	ADD UNIQUE KEY `unica_iso6391alpha2` (`iso6391alpha2`),
 	ADD UNIQUE KEY `unica_iso6393alpha3` (`iso6393alpha3`),
 	ADD UNIQUE KEY `unica_ietf` (`ietf`),
-	ADD KEY `indice` (`id`,`nome`,`iso6391alpha2`,`iso6393alpha3`,`ietf`);
+	ADD KEY `indice` (`id`,`nome`,`iso6391alpha2`,`iso6393alpha3`,`ietf`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000016801
 
@@ -1985,7 +2034,8 @@ ALTER TABLE `listini`
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_valuta` (`id_valuta`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_emittente` (`id_emittente`); 
 
 -- | 030000017201
 
@@ -2402,7 +2452,9 @@ ALTER TABLE `metadati_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento`
- 	ADD PRIMARY KEY (`id`);
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000021901
 
@@ -2496,7 +2548,9 @@ ALTER TABLE `orari_contratti`
 	ADD KEY `id_costo` (`id_costo`),
 	ADD KEY `se_lavoro` (`se_lavoro`),
 	ADD KEY `se_disponibile` (`se_disponibile`),
-	ADD KEY `turno` (`turno`);
+	ADD KEY `turno` (`turno`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000022401
 
@@ -2541,7 +2595,8 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_carrello` (`id_carrello`);
 
 -- | 030000023101
 
@@ -2579,7 +2634,8 @@ ALTER TABLE `periodi`
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` ( `id`, `id_genitore`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`);
+	ADD KEY `indice` ( `id`, `id_genitore`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
+	ADD KEY `id_contratto` (`id_contratto`);
 
 -- | 030000023501
 
@@ -2591,7 +2647,9 @@ ALTER TABLE `periodi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- periodicita
 ALTER TABLE `periodicita`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000023601
 
@@ -2603,7 +2661,9 @@ ALTER TABLE `periodicita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- pesi_tipologie_corrispondenza
 ALTER TABLE `pesi_tipologie_corrispondenza`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia` (`id_tipologia`);
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000023701
 
@@ -2800,7 +2860,10 @@ ALTER TABLE `progetti`
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_periodicita_prevista` (`id_periodicita_prevista`),
+	ADD KEY `id_periodicita_accettazione` (`id_periodicita_accettazione`);
 
 -- | 030000027001
 
@@ -2926,7 +2989,9 @@ ALTER TABLE `provincie`
 	ADD KEY `id_regione` (`id_regione`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `codice_istat` (`codice_istat`),
-	ADD KEY `indice` (`id`,`id_regione`,`nome`,`sigla`,`codice_istat`);
+	ADD KEY `indice` (`id`,`id_regione`,`nome`,`sigla`,`codice_istat`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000028001
 
@@ -3039,7 +3104,9 @@ ALTER TABLE `redirect_azioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- regimi
 ALTER TABLE `regimi`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000029801
 
@@ -3054,7 +3121,9 @@ ALTER TABLE `regioni`
 	ADD UNIQUE KEY `unica` (`codice_istat`),
 	ADD UNIQUE KEY `unica_nome` (`id_stato`,`nome`),
 	ADD KEY `id_stato` (`id_stato`),
-	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
+	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000030201
 
@@ -3364,7 +3433,9 @@ ALTER TABLE `risorse_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella standard
 ALTER TABLE `ritenute`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `codice` (`codice`);
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000033001
 
@@ -3385,7 +3456,9 @@ ALTER TABLE `ruoli_articoli`
 	ADD KEY `se_risorse` (`se_risorse`),
 	ADD KEY `se_acquisto` (`se_acquisto`),
 	ADD KEY `se_rinnovo` (`se_rinnovo`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034101
 
@@ -3398,7 +3471,9 @@ ALTER TABLE `ruoli_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_audio
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034201
 
@@ -3415,7 +3490,9 @@ ALTER TABLE `ruoli_categorie_progetti`
 	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_recuperi` (`se_recuperi`), 
-	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`);
+	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034251
 
@@ -3428,7 +3505,9 @@ ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- ruoli_documenti
 ALTER TABLE `ruoli_documenti`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034301
 
@@ -3440,7 +3519,9 @@ ALTER TABLE `ruoli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_file
 ALTER TABLE `ruoli_file`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034401
 
@@ -3452,7 +3533,9 @@ ALTER TABLE `ruoli_file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_immagini
 ALTER TABLE `ruoli_immagini`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034601
 
@@ -3470,7 +3553,9 @@ ALTER TABLE `ruoli_indirizzi`
 	ADD KEY `se_sede_operativa` (`se_sede_operativa`), 
 	ADD KEY `se_residenza` (`se_residenza`), 
 	ADD KEY `se_domicilio` (`se_domicilio`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034801
 
@@ -3484,7 +3569,9 @@ ALTER TABLE `ruoli_mail`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034851
 
@@ -3498,7 +3585,9 @@ ALTER TABLE `ruoli_mastri`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034871
 
@@ -3514,7 +3603,9 @@ ALTER TABLE `ruoli_matricole`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000034901
 
@@ -3529,7 +3620,9 @@ ALTER TABLE `ruoli_prodotti`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000035001
 
@@ -3548,7 +3641,10 @@ ALTER TABLE `ruoli_progetti`
 	ADD KEY `se_proseguimento` (`se_proseguimento`),
 	ADD KEY `se_sostituto` (`se_sostituto`), 
 	ADD KEY `se_attesa` (`se_attesa`), 
-	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`,`se_attesa`);
+	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`,`se_attesa`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000035101
 
@@ -3561,7 +3657,9 @@ ALTER TABLE `ruoli_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_video
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000035201
 
@@ -3625,7 +3723,9 @@ ALTER TABLE `sconti_listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- settori
 ALTER TABLE `settori`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000037001
 
@@ -3691,7 +3791,9 @@ ALTER TABLE `stati`
 	ADD UNIQUE KEY `unica_iso31661alpha2` (`iso31661alpha2`),
 	ADD UNIQUE KEY `unica_iso31661alpha3` (`iso31661alpha3`),
 	ADD KEY `id_continente` (`id_continente`),
-	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
+	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000042001
 
@@ -3709,7 +3811,9 @@ ALTER TABLE `stati_lingue`
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`);
+	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000042201
 
@@ -3725,7 +3829,9 @@ ALTER TABLE `step`
 	ADD UNIQUE KEY `unica` (`id_funnel`,`nome`),
 	ADD KEY `id_funnel` (`id_funnel`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
+	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000042501
 
@@ -3881,7 +3987,9 @@ ALTER TABLE `tipologie_attivita_inps`
 	ADD UNIQUE KEY `unico` (`id_genitore`,`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `se_quadratura` (`se_quadratura`);
+	ADD KEY `se_quadratura` (`se_quadratura`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000050431
 
@@ -4580,7 +4688,9 @@ ALTER TABLE `todo_matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- udm
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_base` (`id_base`); 
+	ADD KEY `id_base` (`id_base`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
 
 -- | 030000062001
 
@@ -4658,7 +4768,9 @@ ALTER TABLE `valutazioni_certificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_IN
 
 -- valute
 ALTER TABLE `valute`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000063001
 
@@ -4670,7 +4782,9 @@ ALTER TABLE `valute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- taglie
 ALTER TABLE `taglie`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`);
+	ADD KEY `id_tipologia_prodotti` (`id_tipologia_prodotti`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000063501
 
@@ -4782,7 +4896,8 @@ ALTER TABLE `zone_indirizzi`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `ordine` (`ordine`),	
-	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_indirizzo`);
+	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_indirizzo`),
+	ADD KEY `id_zona` (`id_zona`);
 
 -- | 030000100201
 
@@ -4802,7 +4917,8 @@ ALTER TABLE `zone_stati`
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
-	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`);
+	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`),
+	ADD KEY `id_zona` (`id_zona`);
 
 -- | 030000100401
 
@@ -4814,7 +4930,9 @@ ALTER TABLE `zone_stati` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- test
 ALTER TABLE `test`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000999001
 
@@ -4856,7 +4974,9 @@ ALTER TABLE `carrelli`
 	ADD KEY `id_campagna` (`id_campagna`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
+	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_account_evasione` (`id_account_evasione`);
 
 -- | 030000999003
 
@@ -4918,7 +5038,9 @@ ALTER TABLE `contratti_anagrafica`
 -- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000999011
 
