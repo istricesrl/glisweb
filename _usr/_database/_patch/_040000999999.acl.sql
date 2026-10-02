@@ -8,7 +8,7 @@
 -- __acl_anagrafica__
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 17:39 Fabio Mosti
-CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
+CREATE TABLE IF NOT EXISTS `__acl_anagrafica__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
   `id_gruppo` bigint(20) DEFAULT NULL,

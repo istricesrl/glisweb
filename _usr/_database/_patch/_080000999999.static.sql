@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
 -- rango: tabella principale
 -- struttura: tabella base
 -- funzione: materializza attivita_view per le ricerche e le tendine
-CREATE TABLE `attivita_view_static` (                         --
+CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
   `id_tipologia` bigint(20) DEFAULT NULL,                        --
   `tipologia` char(64) DEFAULT NULL,                          --

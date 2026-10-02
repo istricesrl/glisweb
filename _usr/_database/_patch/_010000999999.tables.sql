@@ -487,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `annunci_categorie` (
 --
 -- questa tabella contiene gli articoli di magazzino, che possono essere collegati a prodotti
 --
-CREATE TABLE `articoli` (
+CREATE TABLE IF NOT EXISTS `articoli` (
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `codice` char(32) DEFAULT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
@@ -578,7 +578,7 @@ CREATE TABLE IF NOT EXISTS `asset` (                            --
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'asset
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-)  ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
 -- | 010000001800
 
@@ -897,7 +897,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
 -- questa tabella contiene gli articoli dei carrelli, con tutte le informazioni necessarie per la gestione e l'evasione
 -- degli ordini
 --
-CREATE TABLE `carrelli_articoli` (
+CREATE TABLE IF NOT EXISTS `carrelli_articoli` (
   `id` bigint(20) NOT NULL,
   `id_carrello` bigint(20) DEFAULT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
@@ -1485,7 +1485,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
 -- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
 -- ulteriori approfondimenti
 --
-CREATE TABLE `consensi_moduli` (                              --
+CREATE TABLE IF NOT EXISTS `consensi_moduli` (                              --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_lingua` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lingua
   `id_consenso` bigint(20) DEFAULT NULL,                       -- chiave esterna per il consenso
@@ -1515,7 +1515,7 @@ CREATE TABLE `consensi_moduli` (                              --
 -- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
 -- ulteriori approfondimenti
 --
-CREATE TABLE `consensi_contatti` (                              --
+CREATE TABLE IF NOT EXISTS `consensi_contatti` (                              --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_consenso` bigint(20) DEFAULT NULL,                         -- chiave esterna per il consenso
   `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto
@@ -1676,7 +1676,7 @@ CREATE TABLE IF NOT EXISTS `continenti` (                     --
 --
 -- questa tabella contiene i contratti di affiliazione, con le informazioni principali
 --
-CREATE TABLE `contratti` (                                    --
+CREATE TABLE IF NOT EXISTS `contratti` (                                    --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di contratto
   `codice` char(32) DEFAULT NULL,                             -- codice del contratto
@@ -1741,7 +1741,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000007600
 
@@ -3137,7 +3137,7 @@ CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (                         
 --
 -- questa tabella contiene le matricole degli articoli, con le informazioni principali
 --
-CREATE TABLE `matricole` (
+CREATE TABLE IF NOT EXISTS `matricole` (
   `id` bigint(20) NOT NULL,
   `id_marchio` bigint(20) DEFAULT NULL,
   `id_produttore` bigint(20) DEFAULT NULL,
@@ -3638,7 +3638,7 @@ CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000023800
 
@@ -4152,7 +4152,7 @@ CREATE TABLE IF NOT EXISTS `ranking` (                        --
 --
 -- questa tabella contiene le recensioni per prodotti, articoli, notizie e pagine
 --
-CREATE TABLE `recensioni` (
+CREATE TABLE IF NOT EXISTS `recensioni` (
   `id` bigint(20) NOT NULL,
   `id_lingua` bigint(20) DEFAULT NULL,
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,
@@ -4300,7 +4300,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_articoli` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030350
 
@@ -4401,7 +4401,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030490
 
@@ -4699,7 +4699,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300
 
@@ -5240,7 +5240,7 @@ CREATE TABLE IF NOT EXISTS `stati_lingue` (
 -- questa tabella contiene gli step dei funnel, con le informazioni relative al funnel di appartenenza, all'ordine,
 -- al nome e alle note
 --
-CREATE TABLE `step` (                                         --
+CREATE TABLE IF NOT EXISTS `step` (                                         --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_funnel` bigint(20) DEFAULT NULL,                           -- chiave esterna per il funnel di appartenenza
   `ordine` char(32) DEFAULT NULL,                             -- ordine dello step nel funnel
@@ -5293,7 +5293,7 @@ CREATE TABLE IF NOT EXISTS `task` (                           --
 -- questa tabella contiene i numeri di telefono delle anagrafiche, con le informazioni relative alla tipologia,
 -- al numero, alle notifiche e alle anagrafiche a cui sono associati
 --
-CREATE TABLE `telefoni` (                                     --
+CREATE TABLE IF NOT EXISTS `telefoni` (                                     --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il numero di telefono
   `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia del numero di telefono
@@ -5580,7 +5580,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
 -- e alle funzionalità associate (tesseramento, abbonamento, iscrizione, immobili, acquisto, locazione, libero, prenotazione, scalare,
 -- affiliazione, online)
 --
-CREATE TABLE `tipologie_contratti` (                          --
+CREATE TABLE IF NOT EXISTS `tipologie_contratti` (                          --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
@@ -6160,7 +6160,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_spedizioni` (
 -- 
 -- questa tabella contiene le tipologie di telefoni, con le informazioni relative al nome e alle icone associate
 --
-CREATE TABLE `tipologie_telefoni` (                           --
+CREATE TABLE IF NOT EXISTS `tipologie_telefoni` (                           --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
