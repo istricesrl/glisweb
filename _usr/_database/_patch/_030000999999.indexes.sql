@@ -399,6 +399,8 @@ ALTER TABLE `attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- audio
 ALTER TABLE `audio`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`path`),
+	ADD UNIQUE KEY `unica_codice_embed` (`codice_embed`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_file` (`id_file`),
@@ -610,6 +612,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- carrelli_articoli
 ALTER TABLE `carrelli_articoli`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_carrello`,`id_articolo`,`destinatario_id_anagrafica`),
 	ADD KEY `id_carrello` (`id_carrello`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_listino` (`id_listino`),
@@ -758,6 +761,8 @@ ALTER TABLE `categorie_annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- categorie-notizie
 ALTER TABLE `categorie_notizie`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
@@ -774,6 +779,8 @@ ALTER TABLE `categorie_notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- categorie_prodotti
 ALTER TABLE `categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
@@ -982,6 +989,7 @@ ALTER TABLE `comuni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- condizioni_pagamento
 ALTER TABLE `condizioni_pagamento`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unico` (`codice`,`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -1101,6 +1109,26 @@ ALTER TABLE `contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- contenuti
 ALTER TABLE `contenuti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_lingua`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_lingua`),
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`),
+	ADD UNIQUE KEY `unica_caratteristica` (`id_caratteristica`,`id_lingua`),
+	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_lingua`),
+	ADD UNIQUE KEY `unica_file` (`id_file`,`id_lingua`),
+	ADD UNIQUE KEY `unica_immagine` (`id_immagine`,`id_lingua`),
+	ADD UNIQUE KEY `unica_video` (`id_video`,`id_lingua`),
+	ADD UNIQUE KEY `unica_audio` (`id_audio`,`id_lingua`),
+	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_lingua`),
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_lingua`),
+	ADD UNIQUE KEY `unica_popup` (`id_popup`,`id_lingua`),
+	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_lingua`),
+	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`),
+	ADD UNIQUE KEY `unica_template` (`id_template`,`id_lingua`),
+	ADD UNIQUE KEY `unica_colore` (`id_colore`,`id_lingua`),
+	ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_lingua`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
@@ -2049,6 +2077,7 @@ ALTER TABLE `liste_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- listini
 ALTER TABLE `listini`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_valuta`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_valuta` (`id_valuta`),
@@ -2124,6 +2153,16 @@ ALTER TABLE `luoghi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- macro
 ALTER TABLE `macro`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`macro`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`macro`),
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`macro`),
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`macro`),
+	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`macro`),
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`macro`),
+	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`macro`),
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`macro`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`macro`),
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`macro`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
@@ -2167,6 +2206,7 @@ ALTER TABLE `mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mail_out
 ALTER TABLE `mail_out`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2182,6 +2222,7 @@ ALTER TABLE `mail_out` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mail_sent
 ALTER TABLE `mail_sent`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2266,6 +2307,7 @@ ALTER TABLE `mailing_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- marchi
 ALTER TABLE `marchi`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -2336,6 +2378,7 @@ ALTER TABLE `mastri_tipologie_veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- matricole
 ALTER TABLE `matricole`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_scadenza` (`id_articolo`,`data_scadenza`),
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_articolo` (`id_articolo`),
@@ -2352,6 +2395,11 @@ ALTER TABLE `matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- menu
 ALTER TABLE `menu`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_pagina`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
@@ -2387,41 +2435,41 @@ ALTER TABLE `messaggi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- metadati
 ALTER TABLE `metadati`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_account` (`id_account`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_immagine` (`id_immagine`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_video` (`id_video`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_audio` (`id_audio`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_file` (`id_file`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_categoria_progetto` (`id_categoria_progetti`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_rinnovo` (`id_rinnovo`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_tipologia_attivita` (`id_tipologia_attivita`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_pianificazione` (`id_pianificazione`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_tipologia_todo` (`id_tipologia_todo`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_tipologia_contratti` (`id_tipologia_contratti`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_carrello` (`id_carrello`,`id_lingua`,`nome`),
 	ADD KEY `id_lingua` (`id_lingua`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_account` (`id_account`),
-	ADD KEY `id_pagina` (`id_pagina`),
-	ADD KEY `id_prodotto` (`id_prodotto`),
-	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_annuncio` (`id_annuncio`),
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
-	ADD KEY `id_risorsa` (`id_risorsa`),
-	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
-	ADD KEY `id_immagine` (`id_immagine`),
-	ADD KEY `id_video` (`id_video`),
-	ADD KEY `id_audio` (`id_audio`),
-	ADD KEY `id_file` (`id_file`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`),
-	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
-	ADD KEY `id_indirizzo` (`id_indirizzo`),
-	ADD KEY `id_edificio` (`id_edificio`), 
-	ADD KEY `id_immobile` (`id_immobile`),
-	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `id_valutazione` (`id_valutazione`), 
-	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_attivita` (`id_attivita`),
-	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`),
-	ADD KEY `id_banner` (`id_banner`),
-	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_todo` (`id_todo`),
-	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
-	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`),
-	ADD KEY `id_carrello` (`id_carrello`),
 	ADD KEY `id_tipologia_corrispondenza` (`id_tipologia_corrispondenza`),
 	ADD KEY `id_peso_tipologie_corrispondenza` (`id_peso_tipologie_corrispondenza`),
 	ADD KEY `id_stato` (`id_stato`),
@@ -2472,6 +2520,7 @@ ALTER TABLE `metadati_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`,`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -2525,6 +2574,7 @@ ALTER TABLE `notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- notizie_categorie
 ALTER TABLE `notizie_categorie`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_notizia`,`id_categoria`),
 	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria` (`id_categoria`),
@@ -2600,6 +2650,7 @@ ALTER TABLE `organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- pagamenti
 ALTER TABLE `pagamenti`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_documento`,`data_scadenza`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `id_documento` (`id_documento`),
@@ -2667,6 +2718,7 @@ ALTER TABLE `periodi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- periodicita
 ALTER TABLE `periodicita`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -2844,6 +2896,7 @@ ALTER TABLE `prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- prodotti_categorie
 ALTER TABLE `prodotti_categorie`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_categoria`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_categoria` (`id_categoria`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -3124,6 +3177,7 @@ ALTER TABLE `redirect_azioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- regimi
 ALTER TABLE `regimi`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -3490,6 +3544,7 @@ ALTER TABLE `ruoli_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_audio
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3524,6 +3579,7 @@ ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- ruoli_documenti
 ALTER TABLE `ruoli_documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3538,6 +3594,7 @@ ALTER TABLE `ruoli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_file
 ALTER TABLE `ruoli_file`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3552,6 +3609,7 @@ ALTER TABLE `ruoli_file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_immagini
 ALTER TABLE `ruoli_immagini`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3676,6 +3734,7 @@ ALTER TABLE `ruoli_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- ruoli_video
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3742,6 +3801,7 @@ ALTER TABLE `sconti_listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- settori
 ALTER TABLE `settori`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`ateco`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4103,6 +4163,7 @@ ALTER TABLE `tipologie_colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_contatti
 ALTER TABLE `tipologie_contatti`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4375,6 +4436,7 @@ ALTER TABLE `tipologie_mail_status` MODIFY `id` bigint(20) NOT NULL AUTO_INCREME
 -- tipologie_notizie
 ALTER TABLE `tipologie_notizie`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4389,6 +4451,7 @@ ALTER TABLE `tipologie_notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_pagamenti
 ALTER TABLE `tipologie_pagamenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4445,6 +4508,7 @@ ALTER TABLE `tipologie_popup` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_prodotti
 ALTER TABLE `tipologie_prodotti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4459,6 +4523,7 @@ ALTER TABLE `tipologie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_progetti
 ALTER TABLE `tipologie_progetti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4473,6 +4538,7 @@ ALTER TABLE `tipologie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_pubblicazioni
 ALTER TABLE `tipologie_pubblicazioni`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4487,6 +4553,7 @@ ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCRE
 -- tipologie_rinnovi
 ALTER TABLE `tipologie_rinnovi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -4707,6 +4774,7 @@ ALTER TABLE `todo_matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- udm
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
 	ADD KEY `id_base` (`id_base`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
@@ -4788,6 +4856,7 @@ ALTER TABLE `valutazioni_certificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_IN
 -- valute
 ALTER TABLE `valute`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`iso4217`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -4833,6 +4902,16 @@ ALTER TABLE `veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- video
 ALTER TABLE `video`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_risorse` (`id_risorsa`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_notizie` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`id_lingua`,`path`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_file` (`id_file`),
@@ -5057,6 +5136,7 @@ ALTER TABLE `contratti_anagrafica`
 -- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -5071,6 +5151,7 @@ ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- notizie_anagrafica
 ALTER TABLE `notizie_anagrafica`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_notizia`,`id_anagrafica`,`id_ruolo`),
 	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -5087,6 +5168,7 @@ ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- istruzioni
 ALTER TABLE `istruzioni`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id`,`id_tipologia`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
