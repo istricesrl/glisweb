@@ -946,7 +946,7 @@ CREATE TABLE IF NOT EXISTS `carrelli_articoli` (
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
   `destinatario_denominazione` char(255) DEFAULT NULL,
-  `destinatario_id_tipologia_anagrafica` INT(11) DEFAULT NULL,
+  `destinatario_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,
   `destinatario_id_anagrafica` bigint(20) DEFAULT NULL,
   `destinatario_id_account` bigint(20) DEFAULT NULL,
   `destinatario_indirizzo` char(255) DEFAULT NULL,

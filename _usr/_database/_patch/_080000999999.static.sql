@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `nome` char(128) DEFAULT NULL,
   `id_categorie` char(255) DEFAULT NULL,
   `categorie` char(255) DEFAULT NULL,
-  `prezzi` char(255) DEFAULT NULL,
+  `prezzi` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
