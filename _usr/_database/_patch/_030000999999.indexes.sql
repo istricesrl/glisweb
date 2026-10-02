@@ -5,6 +5,25 @@
 -- TODO documentare
 --
 
+-- | 030000000010
+
+-- __mappatura_id__
+ALTER TABLE `__mappatura_id__`
+	ADD PRIMARY KEY (`tabella`, `vecchio_id`),
+	ADD UNIQUE KEY `nuovo_id` (`tabella`, `nuovo_id`);
+
+-- | 030000000020
+
+-- __mappatura_id_orfani__
+ALTER TABLE `__mappatura_id_orfani__`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `tabella` (`tabella`, `colonna`);
+
+-- | 030000000021
+
+-- __mappatura_id_orfani__
+ALTER TABLE `__mappatura_id_orfani__` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000000100
 
 -- account

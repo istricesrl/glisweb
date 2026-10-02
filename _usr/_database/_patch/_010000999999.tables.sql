@@ -95,6 +95,42 @@
 -- inserito o aggiornato la riga e anche per implementare un sistema di permessi più stile Linux rispetto a quello attuale delle ACL
 -- 
 
+-- | 010000000010
+
+-- __mappatura_id__
+-- tipologia: tabella di sistema
+-- funzione: la corrispondenza fra un vecchio id testuale e il suo id numerico
+--
+-- la scrive _202609301900.id.numerici.sql quando porta articoli, prodotti, progetti, coupon e consensi all'id numerico,
+-- e il framework non la legge: serve per tradurre i riferimenti fuori dal database ( URL, nomi di file, log, sistemi
+-- esterni ) o per tornare indietro; la chiave e' naturale, ( tabella, vecchio_id ), e non c'e' la colonna id
+--
+CREATE TABLE IF NOT EXISTS `__mappatura_id__` (
+  `tabella` char(64) NOT NULL,                                 -- la tabella convertita
+  `vecchio_id` char(64) NOT NULL,                              -- l'id testuale di prima
+  `nuovo_id` bigint(20) NOT NULL,                              -- l'id numerico assegnato
+  `timestamp_conversione` int(11) DEFAULT NULL                 -- quando
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000000020
+
+-- __mappatura_id_orfani__
+-- tipologia: tabella di sistema
+-- funzione: i valori che durante la conversione all'id numerico non citavano nessuna riga della tabella madre
+--
+-- id_riga e' l'id della riga che conteneva il valore, in una tabella qualsiasi e scritto come testo: non e' una chiave
+--
+CREATE TABLE IF NOT EXISTS `__mappatura_id_orfani__` (
+  `id` bigint(20) NOT NULL,                                    -- id della riga
+  `tabella` char(64) NOT NULL,                                 -- la tabella che conteneva il valore
+  `colonna` char(64) NOT NULL,                                 -- la colonna che conteneva il valore
+  `riferimento` char(64) NOT NULL,                             -- la tabella madre che il valore avrebbe dovuto citare
+  `id_riga` char(64) DEFAULT NULL,                             -- l'id della riga che conteneva il valore
+  `valore` char(64) DEFAULT NULL,                              -- il valore orfano
+  `azione` char(16) DEFAULT NULL,                              -- annullata ( la colonna e' diventata NULL ) o cancellata
+  `timestamp_conversione` int(11) DEFAULT NULL                 -- quando
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000000100
 
 -- account

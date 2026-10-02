@@ -120,4 +120,66 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
         contratti.id, contratti_anagrafica.id_anagrafica, rinnovi.id, progetti.id
 ;
 
+-- | 100000020605
+
+-- __report_sottoscorta__
+-- tabella, non vista: la riscrive per intero il task _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php
+-- e la legge la scheda del sottoscorta del modulo _5000.logistica; dove il progetto non dichiara l'automazione
+-- ( $cf['automazioni']['profile']['sottoscorta'] ) resta vuota. id e' la chiave sintetica <id_mastro>|<id_articolo>,
+-- come __report_giacenza_magazzini__; le colonne id_* sono copie, senza chiave esterna
+CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
+  `id` varchar(56) NOT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
+  `articolo` varchar(331) DEFAULT NULL,
+  `id_mastro` bigint(20) DEFAULT NULL,
+  `collocazione` char(64) DEFAULT NULL,
+  `giacenza` decimal(21,2) DEFAULT NULL,
+  `scorta_minima` decimal(21,2) DEFAULT NULL,
+  `scorta_minima_dichiarata` decimal(21,2) DEFAULT NULL COMMENT 'la soglia come l''ha scritta il magazzino, nell''unita'' di udm',
+  `scorta_massima` decimal(21,2) DEFAULT NULL,
+  `scorta_massima_dichiarata` decimal(21,2) DEFAULT NULL,
+  `udm` char(32) DEFAULT NULL COMMENT 'nome dell''unita'' in cui e'' dichiarata la soglia; NULL = unita'' inventariale',
+  `mancante` decimal(21,2) DEFAULT NULL COMMENT 'quanto serve per tornare a scorta massima',
+  `id_mastro_bulk` bigint(20) DEFAULT NULL,
+  `bulk` char(64) DEFAULT NULL,
+  `giacenza_bulk` decimal(21,2) DEFAULT NULL,
+  `quantita_richiesta` decimal(21,2) DEFAULT NULL COMMENT 'il mancante, limitato a quello che il bulk ha davvero',
+  `id_missione` bigint(20) DEFAULT NULL,
+  `missione` char(32) DEFAULT NULL,
+  `esito` char(32) DEFAULT NULL COMMENT 'rifornita | non rifornibile',
+  `se_allarme` tinyint(1) DEFAULT NULL COMMENT '1 = giacenza sotto la soglia adesso; 0 = ubicazione sorvegliata e a posto',
+  `motivo` text DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` mediumtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_articolo` (`id_articolo`),
+  KEY `id_mastro` (`id_mastro`),
+  KEY `esito` (`esito`),
+  KEY `se_allarme` (`se_allarme`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000020606
+
+-- __report_scorte_non_valutabili__
+-- tabella, non vista: la riscrive lo stesso task di __report_sottoscorta__ con le ubicazioni la cui soglia non si puo'
+-- confrontare con la giacenza; motivo dice perche'
+CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
+  `id` varchar(56) NOT NULL,
+  `id_articolo` bigint(20) DEFAULT NULL,
+  `articolo` varchar(331) DEFAULT NULL,
+  `id_mastro` bigint(20) DEFAULT NULL,
+  `collocazione` char(64) DEFAULT NULL,
+  `scorta_minima` decimal(21,2) DEFAULT NULL COMMENT 'come dichiarata: qui non c''e'' niente da convertire',
+  `scorta_massima` decimal(21,2) DEFAULT NULL,
+  `udm` char(32) DEFAULT NULL,
+  `motivo` text DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` mediumtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_articolo` (`id_articolo`),
+  KEY `id_mastro` (`id_mastro`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | FINE FILE
