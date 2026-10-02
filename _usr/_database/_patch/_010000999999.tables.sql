@@ -611,7 +611,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                       --
   `id_anagrafica_programmazione` bigint(20) DEFAULT NULL,        -- chiave esterna per l'anagrafica di programmazione
   `note_programmazione` text DEFAULT NULL,                    -- note sulla programmazione
   `ore_programmazione` decimal(5,2) DEFAULT NULL,             -- ore di programmazione
-  `se_confermata` int(1) DEFAULT NULL,                        -- flag che indica se l'attività è confermata
+  `se_confermata` tinyint(1) DEFAULT NULL,                        -- flag che indica se l'attività è confermata
   `data_attivita` date DEFAULT NULL,                          -- data dell'attività
   `ora_inizio` time DEFAULT NULL,                             -- ora di inizio dell'attività
   `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,         -- latitudine al momento dell'inizio dell'attività
@@ -3416,8 +3416,8 @@ CREATE TABLE IF NOT EXISTS `orari_contratti` (
   `ora_inizio` time DEFAULT NULL,
   `ora_fine` time DEFAULT NULL,
   `id_costo` bigint(20) NOT NULL,
-  `se_lavoro` int(1) DEFAULT '1',
-  `se_disponibile` int(1) DEFAULT NULL
+  `se_lavoro` tinyint(1) DEFAULT '1',
+  `se_disponibile` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022800
@@ -4087,12 +4087,12 @@ CREATE TABLE IF NOT EXISTS `ranking` (                        --
 CREATE TABLE `recensioni` (
   `id` bigint(20) NOT NULL,
   `id_lingua` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
   `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` char(32) DEFAULT NULL,
-  `id_notizia` char(32) DEFAULT NULL,
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,
+  `id_notizia` bigint(20) DEFAULT NULL,
   `id_pagina` bigint(20) DEFAULT NULL,
   `data` date DEFAULT NULL,
   `autore` char(128) DEFAULT NULL,
@@ -4535,9 +4535,9 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_contraente` tinyint(1) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
-  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` bigint(20) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
-  `id_account_aggiornamento` int(11) DEFAULT NULL
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034100
@@ -4606,7 +4606,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
-  `se_recuperi` int(1) DEFAULT NULL
+  `se_recuperi` tinyint(1) DEFAULT NULL
 ) 
 
 -- | 010000034300
@@ -5300,7 +5300,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita_inps` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `codice` char(32) DEFAULT NULL,
-  `se_quadratura` int(1) DEFAULT NULL
+  `se_quadratura` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000050450
@@ -5968,7 +5968,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
 -- questa tabella contiene le tipologie di sconti
 --
 CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
-  `id` int NOT NULL,
+  `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
