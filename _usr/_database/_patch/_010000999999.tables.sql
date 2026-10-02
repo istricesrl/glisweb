@@ -547,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `articoli` (
   `id_udm_capacita` bigint(20) DEFAULT NULL,
   `durata` decimal(12,5) DEFAULT NULL,
   `id_udm_durata` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_codifica` text DEFAULT NULL,
   `codice_produttore` char(64) DEFAULT NULL,	
@@ -1662,7 +1662,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `h2` char(255) DEFAULT NULL,                                  -- intestazione H2
   `h3` char(255) DEFAULT NULL,                                  -- intestazione H3
   `abstract` text DEFAULT NULL,                                 -- abstract
-  `testo` text DEFAULT NULL,                                    -- testo
+  `testo` mediumtext DEFAULT NULL,                                 -- testo
   `applicazioni` text DEFAULT NULL,                             -- applicazioni
   `specifiche` text DEFAULT NULL,                               -- specifiche
   `label_menu` char(255) DEFAULT NULL,                          -- label menu
