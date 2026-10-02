@@ -20,7 +20,12 @@
 -- id int( 11 ), non si toccano. contatti.id_campagna e indirizzi.id_zona nascono dello stesso tipo dell'id della
 -- tabella a cui puntano ( int( 11 ) sui deploy di prima di marzo ), perche' la chiave esterna si possa mettere. Le viste si rifanno con CREATE OR REPLACE dentro una procedura che, se la vista
 -- non si puo' creare perche' sul deploy manca qualcosa da cui dipende, lascia com'e' quella che c'era e lo scrive
--- in @colonne_tabelle_viste_note, che il blocco dopo l'ultima vista restituisce a chi applica la patch a mano. La
+-- in @colonne_tabelle_viste_note, che il blocco dopo l'ultima vista restituisce a chi applica la patch a mano.
+-- ⚠ Le viste che si ripristinano perche' mancano ( attesa_view, costi_contratti_view, orari_contratti_view,
+-- tipologie_attivita_inps_view ) si creano SOLO se non ci sono: un deploy che le ha gia', magari estese con colonne
+-- sue, le tiene com'erano. Fix 2026-10-02: la prima versione le rifaceva sempre, e su polmasi ha tolto da attesa_view
+-- le colonne del progetto ( note, disciplina, mail, telefoni ): la griglia della lista di attesa e' rimasta vuota.
+-- campagne_view e contatti_view invece si rifanno sempre, perche' lo scopo e' proprio aggiungere loro colonne. La
 -- procedura, e non un PREPARE, perche' il task delle patch esegue i blocchi con mysqlQuery(), che non conosce
 -- PREPARE ed EXECUTE ( vedi _202609301100.chiavi.esterne.sql ); non restituisce righe, perche' una CALL che
 -- restituisce un risultato lascerebbe la connessione fuori sincrono per la scrittura su __patch__.
@@ -199,7 +204,10 @@ CREATE OR REPLACE VIEW contatti_view AS
 -- | 202609300909
 
 -- attesa_view
-CALL `__patch_colonne_tabelle_viste__`( '
+CALL `__patch_colonne_tabelle_viste__`( IF(
+    EXISTS( SELECT 1 FROM information_schema.VIEWS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'attesa_view' ),
+    'DO 0',
+'
 CREATE OR REPLACE VIEW attesa_view AS
 	SELECT
 		anagrafica_progetti.id,
@@ -228,12 +236,15 @@ CREATE OR REPLACE VIEW attesa_view AS
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
 		LEFT JOIN todo ON todo.id = anagrafica_progetti.id_todo
 	WHERE anagrafica_progetti.se_attesa IS NOT NULL
-', 'attesa_view' );
+' ), 'attesa_view' );
 
 -- | 202609300910
 
 -- costi_contratti_view
-CALL `__patch_colonne_tabelle_viste__`( '
+CALL `__patch_colonne_tabelle_viste__`( IF(
+    EXISTS( SELECT 1 FROM information_schema.VIEWS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'costi_contratti_view' ),
+    'DO 0',
+'
 CREATE OR REPLACE VIEW `costi_contratti_view` AS
 	SELECT
 		costi_contratti.id,
@@ -247,12 +258,15 @@ CREATE OR REPLACE VIEW `costi_contratti_view` AS
 		) AS __label__
 	FROM costi_contratti
 		LEFT JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = costi_contratti.id_tipologia
-', 'costi_contratti_view' );
+' ), 'costi_contratti_view' );
 
 -- | 202609300911
 
 -- orari_contratti_view
-CALL `__patch_colonne_tabelle_viste__`( '
+CALL `__patch_colonne_tabelle_viste__`( IF(
+    EXISTS( SELECT 1 FROM information_schema.VIEWS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'orari_contratti_view' ),
+    'DO 0',
+'
 CREATE OR REPLACE VIEW `orari_contratti_view` AS
 	SELECT
 		orari_contratti.id,
@@ -271,12 +285,15 @@ CREATE OR REPLACE VIEW `orari_contratti_view` AS
 			orari_contratti.ora_fine
 		) AS __label__
 	FROM orari_contratti
-', 'orari_contratti_view' );
+' ), 'orari_contratti_view' );
 
 -- | 202609300912
 
 -- tipologie_attivita_inps_view
-CALL `__patch_colonne_tabelle_viste__`( '
+CALL `__patch_colonne_tabelle_viste__`( IF(
+    EXISTS( SELECT 1 FROM information_schema.VIEWS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = 'tipologie_attivita_inps_view' ),
+    'DO 0',
+'
 CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
 	SELECT
 		tipologie_attivita_inps.id,
@@ -289,7 +306,7 @@ CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
 			tipologie_attivita_inps.nome
 		) AS __label__
 	FROM tipologie_attivita_inps
-', 'tipologie_attivita_inps_view' );
+' ), 'tipologie_attivita_inps_view' );
 
 -- | 202609300913
 
