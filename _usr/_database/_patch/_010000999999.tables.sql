@@ -13,19 +13,18 @@
 -- ogni tabella ha un ID univoco di 12 caratteri che la identifica e la posiziona all'interno del sistema di patch del
 -- database del framework; le prime due cifre indicano la tipologia di patch:
 --
--- 01xxxxxxxxxx -> tabelle
--- 02xxxxxxxxxx -> placeholder
--- 03xxxxxxxxxx -> indici
--- 04xxxxxxxxxx -> acl
--- 05xxxxxxxxxx -> dati
--- 06xxxxxxxxxx -> limiti
--- 07xxxxxxxxxx -> procedure
--- 08xxxxxxxxxx -> viste
--- 09xxxxxxxxxx -> report
--- 10xxxxxxxxxx -> statiche
--- 11xxxxxxxxxx -> trigger
+-- 01xxxxxxxxxx -> tabelle                _010000999999.tables.sql
+-- 03xxxxxxxxxx -> indici                 _030000999999.indexes.sql
+-- 04xxxxxxxxxx -> acl                    _040000999999.acl.sql
+-- 05xxxxxxxxxx -> dati                   _050000999999.data.sql
+-- 06xxxxxxxxxx -> chiavi esterne         _060000999999.constraints.sql
+-- 07xxxxxxxxxx -> procedure e funzioni   _070000999999.procedures.sql
+-- 08xxxxxxxxxx -> viste statiche         _080000999999.static.sql
+-- 09xxxxxxxxxx -> viste                  _090000999999.views.sql
+-- 10xxxxxxxxxx -> report                 _100000999999.reports.sql
 --
--- per maggiori informazioni sul funzionamento del sistema di patch si vedano i commenti al file /_src/_api/_task/_mysql.patch.php.
+-- le regole dello schema ( tipi, coda standard, chiavi esterne, indici, viste ) sono in _usr/_docs/_read/300.database.md,
+-- quelle del motore che applica le patch in _src/_lib/_mysql.tools.php ( funzioni mysqlPatch...() ).
 -- 
 -- classificazione in base all'utilizzo da parte dell'utente
 -- ---------------------------------------------------------
