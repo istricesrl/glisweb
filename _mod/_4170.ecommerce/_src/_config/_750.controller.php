@@ -108,9 +108,6 @@ ini_set("display_errors", 1);
             // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
             // TODO alcune di queste modifiche dovrebbero essere limitate se l'utente non è root o se non ha i diritti di modifica sulla tabella carrelli
 
-            // controlli da fare
-            $controlloListino = false;
-
             // intestazione del carrello
             if( isset( $_REQUEST['__carrello__']['intestazione_id_anagrafica'] ) ) {
 
@@ -134,9 +131,6 @@ ini_set("display_errors", 1);
                 // ...
                 if( $zona != $_SESSION['carrello']['id_zona'] ) {
 
-                    // controlli da fare
-                    $controlloListino = false;
-
                     // log
                     logWrite( 'cambio zona carrello da ' . $_SESSION['carrello']['id_zona'] . ' a ' . $zona, 'cart' );
 
@@ -148,39 +142,10 @@ ini_set("display_errors", 1);
             }
 
             // listino del carrello
+            // NOTA arriva dalla richiesta solo da un operatore o se è fra quelli che il sito può scegliere
+            // ( filtraRichiestaCarrello() ); la scelta automatica per cliente e zona è dopo lo STEP 3
             if( isset( $_REQUEST['__carrello__']['id_listino'] ) ) {
-
-                // ...
                 $_SESSION['carrello']['id_listino'] = $_REQUEST['__carrello__']['id_listino'];
-
-                // controlli da fare
-                $controlloListino = false;
-
-            }
-
-            // controllo listino
-            if( $controlloListino === true ) {
-
-                // listino del carrello
-                $listiniZona = mysqlSelectCachedColumn(
-                    $cf['memcache']['connection'],
-                    'id',
-                    $cf['mysql']['connection'],
-                    'SELECT listini.id FROM listini LEFT JOIN listini_zone ON listini_zone.id_listino = listini.id WHERE ( listini_zone.id_zona = ? OR listini_zone.id IS NULL )',
-                    array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
-                );
-
-                // ...
-                if( ! in_array( $_SESSION['carrello']['id_listino'], $listiniZona ) ) {
-
-                    // log
-                    logWrite( 'cambio listino carrello da ' . $_SESSION['carrello']['id_listino'] . ' a ' . $listiniZona[0], 'cart' );
-
-                    // cambio listino
-                    $_SESSION['carrello']['id_listino'] = $listiniZona[0];
-
-                }
-
             }
 
             // id_sito del carrello. Tre casi, distinti dal campo __carrello__[id_sito]:
@@ -303,6 +268,24 @@ ini_set("display_errors", 1);
                     }
                 }
 
+            }
+
+            // STEP 3.1 - scelta automatica del listino ( cliente, zona, default )
+            // NOTA solo se è accesa e la richiesta non porta un listino scelto apposta ( da un operatore, o fra quelli
+            // ammessi dal sito ): così il listino forzato dal back end resta; fino al 2026-10-01 qui c'era un controllo
+            // per zona che non scattava mai
+            if( ! empty( $cf['ecommerce']['listini']['automatico'] ) && ! isset( $_REQUEST['__carrello__']['id_listino'] ) ) {
+                $listino = trovaListinoCarrello( $cf['mysql']['connection'], $_SESSION['carrello'] );
+                if( $listino['id'] != ( $_SESSION['carrello']['id_listino'] ?? NULL ) ) {
+                    logWrite( 'listino del carrello ' . ( $_SESSION['carrello']['id'] ?? 'nuovo' ) . ' da ' . ( $_SESSION['carrello']['id_listino'] ?? '-' ) . ' a ' . $listino['id'] . ' ( ' . $listino['motivo'] . ' )', 'cart' );
+                    $_SESSION['carrello']['id_listino'] = $listino['id'];
+                    $_SESSION['carrello']['valuta_utf8'] = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT utf8 FROM valute INNER JOIN listini ON valute.id = listini.id_valuta WHERE listini.id = ?',
+                        array( array( 's' => $_SESSION['carrello']['id_listino'] ) )
+                    );
+                }
             }
 
             // debug
