@@ -5081,7 +5081,7 @@ CREATE TABLE IF NOT EXISTS `sconti_listini` (
 CREATE TABLE IF NOT EXISTS `settori` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `soprannome` char(64) DEFAULT NULL,
   `ateco` char(32) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
