@@ -139,8 +139,12 @@ if( carrelloForm.checkValidity() ) {
   acquistati (ad es. spedizione all'estero).
 
   Il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello ( *carrelli.id_listino*, default 1, o quello della
-  riga ). Oggi non dipende dall'utente collegato né dalla zona: *listini_clienti* non si legge, e il controllo dei listini per zona
-  in _750.controller.php non scatta mai; la scelta cliente, zona, default è la tappa 2 del progetto del motore prezzi.
+  riga ). Con `$cf['ecommerce']['listini']['automatico']` acceso ( spento di default ) la controller lo sceglie a ogni richiesta che
+  non ne porta uno scelto apposta, con trovaListinoCarrello(): il primo listino del cliente ( *listini_clienti*, per *ordine*,
+  dell'anagrafica intestataria o di quella dell'account collegato ), poi il primo della zona del carrello ( *listini_zone* ), poi il
+  default; i listini archiviati non si scelgono, e il cambio va nel log cart. Un listino scelto da un operatore nella scheda del
+  carrello resta, perché la scheda lo manda a ogni salvataggio. Prima di accenderla su un deploy si controlla quali clienti hanno un
+  listino assegnato. Fino al 2026-10-01 *listini_clienti* non si leggeva e il controllo per zona non scattava mai.
 
   Chi può cambiare listino, sconti e coupon di riga: filtraRichiestaCarrello() ( _src/_lib/_mysql.utils.add.php ), chiamata in testa
   alla controller, toglie dalla richiesta il listino del carrello e delle righe, lo sconto ( *sconto_percentuale*, *sconto_valore* ) e i

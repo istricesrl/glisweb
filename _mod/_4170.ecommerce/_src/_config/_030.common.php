@@ -50,6 +50,11 @@
     // listini che il sito può scegliere dalla richiesta ( codici o id ); tutti gli altri, come gli sconti e i coupon di
     // riga, solo chi ha il privilegio GESTIONE_ECOMMERCE ( vedi filtraRichiestaCarrello() )
     $cf['ecommerce']['listini']['dal_sito']         = array();
+
+    // scelta automatica del listino per i carrelli del sito: il listino del cliente ( listini_clienti ), poi quello della
+    // zona ( listini_zone ), poi il default ( vedi trovaListinoCarrello() ); spenta di default, prima di accenderla su un
+    // deploy si controlla quali clienti hanno un listino assegnato
+    $cf['ecommerce']['listini']['automatico']       = false;
     // $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                         // tipologia di documento da generare di default in cassa
     // $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                 // strategia di generazione dei documenti da usare di default in cassa
 

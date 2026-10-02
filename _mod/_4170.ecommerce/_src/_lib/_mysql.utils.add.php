@@ -494,3 +494,60 @@
 
     }
 
+    /**
+     * sceglie il listino di un carrello: cliente, zona, default
+     *
+     * Con $cf['ecommerce']['listini']['automatico'] acceso la controller del carrello usa questa funzione per i carrelli
+     * del sito: il primo listino assegnato al cliente ( listini_clienti, per ordine, dell'anagrafica intestataria del
+     * carrello o di quella dell'account collegato ), poi il primo assegnato alla zona del carrello ( listini_zone, per
+     * ordine ), poi il default del campo id_listino ( $cf['ecommerce']['fields']['carrello'] ). I listini archiviati
+     * non si scelgono.
+     *
+     * @param  object  $c         la connessione al database
+     * @param  array   $carrello  il carrello
+     *
+     * @return array              id del listino e motivo della scelta ( cliente, zona, default )
+     */
+    function trovaListinoCarrello( $c, $carrello ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // il cliente: l'intestatario del carrello o l'anagrafica dell'account collegato
+        $cliente = ( ! empty( $carrello['intestazione_id_anagrafica'] ) ) ? $carrello['intestazione_id_anagrafica'] : ( $_SESSION['account']['id_anagrafica'] ?? NULL );
+
+        // listino del cliente
+        if( ! empty( $cliente ) ) {
+            $l = mysqlSelectValue( $c,
+                'SELECT listini_clienti.id_listino FROM listini_clienti
+                INNER JOIN listini ON listini.id = listini_clienti.id_listino AND listini.data_archiviazione IS NULL
+                WHERE listini_clienti.id_cliente = ?
+                ORDER BY listini_clienti.ordine IS NULL, listini_clienti.ordine, listini_clienti.id
+                LIMIT 1',
+                array( array( 's' => $cliente ) )
+            );
+            if( ! empty( $l ) ) {
+                return array( 'id' => (int) $l, 'motivo' => 'cliente' );
+            }
+        }
+
+        // listino della zona
+        if( ! empty( $carrello['id_zona'] ) ) {
+            $l = mysqlSelectValue( $c,
+                'SELECT listini_zone.id_listino FROM listini_zone
+                INNER JOIN listini ON listini.id = listini_zone.id_listino AND listini.data_archiviazione IS NULL
+                WHERE listini_zone.id_zona = ?
+                ORDER BY listini_zone.ordine IS NULL, listini_zone.ordine, listini_zone.id
+                LIMIT 1',
+                array( array( 's' => $carrello['id_zona'] ) )
+            );
+            if( ! empty( $l ) ) {
+                return array( 'id' => (int) $l, 'motivo' => 'zona' );
+            }
+        }
+
+        // default
+        return array( 'id' => $cf['ecommerce']['fields']['carrello']['id_listino']['default'] ?? 1, 'motivo' => 'default' );
+
+    }
+
