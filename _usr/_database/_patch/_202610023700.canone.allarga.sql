@@ -1578,7 +1578,7 @@ INSERT INTO `__patch_canone2_indici__` ( `tabella`, `indice`, `unica`, `colonne`
 ( 'anagrafica_consensi', 'indice', 0, 'id,id_account,id_anagrafica,id_consenso,se_prestato', '`id`,`id_account`,`id_anagrafica`,`id_consenso`,`se_prestato`', 5 ),
 ( 'anagrafica_indirizzi', 'codice', 1, 'codice', '`codice`', 1 ),
 ( 'anagrafica_indirizzi', 'unica', 1, 'id_anagrafica,id_indirizzo', '`id_anagrafica`,`id_indirizzo`', 2 ),
-( 'anagrafica_indirizzi', 'id_anagrafica_indirizzo', 1, 'id_anagrafica,indirizzo', '`id_anagrafica`,`indirizzo`', 2 ),
+( 'anagrafica_indirizzi', 'id_anagrafica_indirizzo', 1, 'id_anagrafica,indirizzo,civico,cap,id_comune', '`id_anagrafica`,`indirizzo`,`civico`,`cap`,`id_comune`', 5 ),
 ( 'anagrafica_indirizzi', 'id_anagrafica', 0, 'id_anagrafica', '`id_anagrafica`', 1 ),
 ( 'anagrafica_indirizzi', 'id_indirizzo', 0, 'id_indirizzo', '`id_indirizzo`', 1 ),
 ( 'anagrafica_indirizzi', 'id_ruolo', 0, 'id_ruolo', '`id_ruolo`', 1 ),

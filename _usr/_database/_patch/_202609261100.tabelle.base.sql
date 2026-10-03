@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `codice` (`codice`),
   UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`),
-  UNIQUE KEY `id_anagrafica_indirizzo` (`id_anagrafica`, `indirizzo`),
+  UNIQUE KEY `id_anagrafica_indirizzo` (`id_anagrafica`,`indirizzo`,`civico`,`cap`,`id_comune`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_indirizzo` (`id_indirizzo`),
   KEY `id_ruolo` (`id_ruolo`),

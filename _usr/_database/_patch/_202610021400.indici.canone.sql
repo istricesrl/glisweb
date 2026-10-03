@@ -142,7 +142,7 @@ INSERT IGNORE INTO `__patch_indici_canone__` ( `tabella`, `indice`, `tipo`, `col
 ( 'anagrafica_indirizzi', 'PRIMARY', 'PRIMARY', 'id', 1 ),
 ( 'anagrafica_indirizzi', 'codice', 'UNIQUE', 'codice', 0 ),
 ( 'anagrafica_indirizzi', 'unica', 'UNIQUE', 'id_anagrafica,id_indirizzo', 0 ),
-( 'anagrafica_indirizzi', 'id_anagrafica_indirizzo', 'UNIQUE', 'id_anagrafica,indirizzo', 0 ),
+( 'anagrafica_indirizzi', 'id_anagrafica_indirizzo', 'UNIQUE', 'id_anagrafica,indirizzo,civico,cap,id_comune', 0 ),
 ( 'anagrafica_indirizzi', 'id_anagrafica', 'KEY', 'id_anagrafica', 0 ),
 ( 'anagrafica_indirizzi', 'id_indirizzo', 'KEY', 'id_indirizzo', 0 ),
 ( 'anagrafica_indirizzi', 'id_ruolo', 'KEY', 'id_ruolo', 0 ),
