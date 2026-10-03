@@ -6824,7 +6824,8 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_sito` bigint(20) DEFAULT NULL                               -- sito di provenienza del carrello ( id dei config.siti )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999002

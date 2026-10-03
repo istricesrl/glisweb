@@ -1063,6 +1063,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 28, 'carrelli_view', 'CREATE VIEW `carrelli_view` AS SELECT
 	carrelli.id,
 	carrelli.session,
+	carrelli.id_sito,
 	coalesce( carrelli.intestazione_nome, carrelli.destinatario_nome ) AS cliente_nome,
 	coalesce( carrelli.intestazione_cognome, carrelli.destinatario_cognome ) AS cliente_cognome,
 	coalesce( carrelli.intestazione_denominazione, carrelli.destinatario_denominazione ) AS cliente_denominazione,

@@ -5044,6 +5044,7 @@ ALTER TABLE `carrelli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `session` (`session`),
+	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
 	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`),
