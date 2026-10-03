@@ -112,6 +112,10 @@ BEGIN
         WHERE c.TABLE_SCHEMA = database() AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' )
           AND ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' OR c.COLUMN_NAME LIKE '%\_id\_%' );
 
+    -- MySQL non apre due volte la stessa tabella TEMPORARY in una query ( errore 1137 ): copia per il lato madre
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int_madri__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_int_madri__` LIKE `__tipi_canonici_int__`;
+    INSERT INTO `__tipi_canonici_int_madri__` SELECT * FROM `__tipi_canonici_int__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_kcu__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_kcu__` (
         `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL, `posizione` INT NOT NULL,
@@ -148,7 +152,7 @@ BEGIN
         FROM `__tipi_canonici_kcu__` AS k
         INNER JOIN `__tipi_canonici_regole__` AS r ON r.`tabella` = k.`tabella` AND r.`vincolo` = k.`vincolo`
         LEFT JOIN `__tipi_canonici_int__` AS f ON f.`tabella` = k.`tabella` AND f.`colonna` = k.`colonna`
-        LEFT JOIN `__tipi_canonici_int__` AS m ON m.`tabella` = k.`madre` AND m.`colonna` = k.`colonna_madre`
+        LEFT JOIN `__tipi_canonici_int_madri__` AS m ON m.`tabella` = k.`madre` AND m.`colonna` = k.`colonna_madre`
         GROUP BY k.`tabella`, k.`vincolo`
         HAVING count( f.`colonna` ) + count( m.`colonna` ) > 0;
 
@@ -284,6 +288,7 @@ BEGIN
 
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_salta__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int_madri__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_kcu__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_regole__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_chiave__`;
