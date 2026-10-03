@@ -97,8 +97,9 @@ costa"*.
 In tre righe: **i file di istruzioni restano snelli** ( il `CLAUDE.md` di progetto tiene regole e
 trappole, le trattazioni vanno in `var/personalizzazioni/<area>.md` rimandate dal `READ.md` ); **un
 turno vale il contesto intero** ( comandi raggruppati, script che stampano il risultato, letture
-strette ); **il punto fermo lo dichiara Claude** ( ramo annotato nel TODO e non seguito, `/clear` e
-`/compact` proposti alle soglie ).
+strette ); **il punto fermo lo dichiara Claude, ed è una garanzia** ( `/clear` solo con commit pushati e PROD
+allineata, tutto l'aperto — anche migliorie e osservazioni — già nel TODO, il filo del lavoro a metà in un
+file, niente solo in conversazione; `/compact` alle soglie ).
 
 ## I cinque file di un progetto
 

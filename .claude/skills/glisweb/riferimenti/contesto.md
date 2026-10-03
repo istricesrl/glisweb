@@ -96,26 +96,50 @@ conteggio**. Il triage dei rami non si fa nella sessione che li ha generati.
 
 *"Tutti i claude con cui interagisco mi rendono DIFFICILE fare clear"* ( Fabio, 15/09/2026 ).
 
-- **quando un pezzo di lavoro si chiude, lo si dice** in una riga col posto dove è scritto: *"chiuso, è
-  in `DONE.md` — qui puoi fare `/clear`"*;
+⚠ **Dal 03/10/2026 "puoi fare `/clear`" è una garanzia, non un'impressione**: si dice solo se un
+Claude nuovo può riprendere il lavoro **senza perdere dati né contesto**. Fabio deve poter azzerare
+spesso senza incasinarsi. Prima di dirlo si controllano quattro cose; se ne manca una il `/clear` non
+si propone: si dice cosa manca **e lo si sistema**, senza ripassarlo all'utente.
+
+1. **niente in sospeso sul sistema**: commit fatti e pushati, nessun agente o processo in background
+   che stia ancora lavorando, e ⚠ **niente da caricare in PROD** — un lavoro fatto in DEV e non
+   caricato **non è un fronte chiuso**. Fabio, 02/10/2026: *"NON MI PROPORRE IL CLEAR SE C'È DA
+   CARICARE SU PROD"*. Il `/clear` butterebbe via proprio il contesto che serve per caricare: quali
+   file, quali righe di DB, con quali id su DEV. Il carico si prepara e si propone **nella stessa
+   risposta**, il `/clear` viene dopo. Vale lo stesso per ogni passo ancora in mano nostra ( la
+   notifica a chi ha chiesto la cosa, un collaudo );
+2. **tutto ciò che resta aperto sta nel `TODO.md`**, coi tre flag di urgenza, rilevanza e impatto —
+   **compreso il lavoro in più** fatto di propria iniziativa: migliorie, osservazioni, rischi,
+   sviluppi consigliati. Farlo va bene, ma **si segnala in una riga e nello stesso turno si scrive nel
+   `TODO.md`**: non si chiede "lo metto nel todo?", si mette. Quello che va detto o chiesto al cliente
+   va nel `CHAT.md`;
+3. **il lavoro grosso a metà ha un file che tiene il filo** — la voce del `TODO.md`, o una trattazione
+   in `var/personalizzazioni/<area>.md` rimandata dal `READ.md` — con dove siamo, il prossimo passo
+   preciso, le decisioni prese e perché, cosa si è provato e scartato. Deve bastare a un Claude nuovo
+   per ripartire **senza fare domande**;
+4. **niente vive solo in conversazione**: una decisione presa a voce va nei file di progetto, una
+   domanda all'utente ancora senza risposta va nel `TODO.md`.
+
+**La convergenza è un obiettivo di ogni turno, non un controllo finale**: ogni cosa che si apre si
+deposita subito, così la sessione resta sempre a un passo dal `/clear`. La riga di chiusura è una delle
+due:
+
+- `clear sicuro: commit ok, PROD allineata, 3 voci nel TODO (1 urgente), filo in <file> — /clear`
+- `clear non ancora: manca <cosa>, lo sistemo`
+
+Il resto:
+
 - **cosa si è chiuso e cosa viene dopo stanno separati**: il secondo blocco quasi sempre può aspettare;
-- **una domanda o un'offerta in fondo va bene, ma mai da sola**: va insieme alla proposta di metterla
-  nel `TODO.md`, ed è **pesata** — urgenza, rilevanza ( chi l'aspetta ), impatto ( cosa si blocca );
-- **quando cambia argomento si propone la pausa**, e prima di proporre il `/clear` si verifica che sia
-  vero: quello che esiste solo nella conversazione va scritto nei file di progetto;
+- **una domanda in fondo va bene solo se è già anche nel `TODO.md`**, ed è **pesata** — urgenza,
+  rilevanza ( chi l'aspetta ), impatto ( cosa si blocca ): *"vuoi che faccia X?"* da sola obbliga a
+  restare lì;
 - **è un obbligo, non una cortesia**: *"voglio SEMPRE essere avvisato quando posso fare /clear e quando
   devo fare /compact"* ( Fabio, 23/09/2026 ), e vale su ogni deploy;
-- **fronte chiuso**: quando il lavoro appena finito è chiuso e quello che viene dopo non c'entra, **si
-  propone il `/clear` di propria iniziativa**, nella stessa risposta che chiude il lavoro, a qualunque
-  livello di contesto. Non si aspetta che sia l'utente a chiedere "posso fare clear?": il 23/09/2026 è
-  successo esattamente questo, a fine giro della posta, ed è il caso che la regola voleva evitare;
-- ⚠ **un lavoro fatto in DEV e non ancora caricato in PROD NON è un fronte chiuso**: niente `/clear`
-  finché manca il carico. Il carico si prepara e si propone **nella stessa risposta**, il `/clear`
-  viene dopo. Fabio, 02/10/2026, quando è successo: *"NON MI PROPORRE IL CLEAR SE C'È DA CARICARE SU
-  PROD"*. Il `/clear` butterebbe via proprio il contesto che serve per caricare: quali file, quali righe
-  di DB, con quali id su DEV. Vale lo stesso per ogni passo ancora in mano nostra ( la notifica a chi
-  ha chiesto la cosa, un collaudo ). Il `/clear` si propone solo quando non resta niente da fare **su
-  quel fronte**;
+- **fronte chiuso**: quando il lavoro appena finito passa i quattro controlli e quello che viene dopo
+  non c'entra, **si propone il `/clear` di propria iniziativa**, nella stessa risposta che chiude il
+  lavoro, a qualunque livello di contesto. Non si aspetta che sia l'utente a chiedere "posso fare
+  clear?": il 23/09/2026 è successo esattamente questo, ed è il caso che la regola voleva evitare;
+  quando cambia argomento si propone la pausa;
 - **soglie**: sopra **120k** di contesto ( la statusline stampa `ctx <n>k` ) si **può** chiudere — se il
   fronte è finito si propone `/clear`, se è a metà si tira avanti tenendo d'occhio la statusline; sopra
   **180k** si **deve** intervenire e si dice quale dei due — `/clear` se il fronte è chiuso, `/compact`
