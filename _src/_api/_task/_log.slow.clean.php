@@ -174,3 +174,8 @@
         }
 
     }
+
+    // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}

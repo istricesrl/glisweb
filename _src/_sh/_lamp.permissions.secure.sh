@@ -149,9 +149,25 @@ find ./$SUB/tmp                 -type f                                         
 find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type f                                  -exec chmod 660 {} +
 
 # var/log è pruned dai find sopra per non resettare i ~90% dei file del deploy
-# che vivono lì; ma la dir radice stessa deve comunque essere scrivibile dal
+# che vivono lì; ma le sue cartelle devono comunque essere scrivibili dal
 # framework runtime (Apache/PHP-FPM) altrimenti non può creare nuovi log file.
-[ -d "./$SUB/var/log" ] && chmod 770 ./$SUB/var/log
+#
+# NON BASTA LA RADICE, e serve proprio a causa del chown -R su var/ piu' sopra.
+# Le sottocartelle ( slow/, task/, cron/, mysql/, job/... ) le crea www-data a
+# runtime con umask 0022, quindi nascono 755 di www-data. Il chown le passa a
+# $FTPUSER e da quel momento www-data e' solo nel gruppo, che non scrive: ogni
+# log che va in una sottocartella smette di essere scritto, in silenzio, e i task
+# di potatura non riescono piu' a cancellare. Dove $FTPUSER e' www-data non
+# succede niente, ed e' per questo che non si vede su DEV.
+#
+# Osservato il 2026-10-01 su un deploy in produzione con FTPUSER dedicato: dopo
+# un giro di questo script var/log/slow, var/log/task e var/log/cron sono rimaste
+# 755 e non vi si e' piu' scritto un file.
+#
+# Si cercano solo le directory, che sono poche: find non fa stat sui file per
+# riconoscerle ( usa il tipo restituito da readdir ), quindi il costo resta basso
+# anche con centinaia di migliaia di log.
+[ -d "./$SUB/var/log" ] && find ./$SUB/var/log -type d -exec chmod 2770 {} +
 
 # informazioni
 echo "permessi modificati"

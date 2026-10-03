@@ -109,6 +109,13 @@ conteggio**. Il triage dei rami non si fa nella sessione che li ha generati.
   propone il `/clear` di propria iniziativa**, nella stessa risposta che chiude il lavoro, a qualunque
   livello di contesto. Non si aspetta che sia l'utente a chiedere "posso fare clear?": il 23/09/2026 è
   successo esattamente questo, a fine giro della posta, ed è il caso che la regola voleva evitare;
+- ⚠ **un lavoro fatto in DEV e non ancora caricato in PROD NON è un fronte chiuso**: niente `/clear`
+  finché manca il carico. Il carico si prepara e si propone **nella stessa risposta**, il `/clear`
+  viene dopo. Fabio, 02/10/2026, quando è successo: *"NON MI PROPORRE IL CLEAR SE C'È DA CARICARE SU
+  PROD"*. Il `/clear` butterebbe via proprio il contesto che serve per caricare: quali file, quali righe
+  di DB, con quali id su DEV. Vale lo stesso per ogni passo ancora in mano nostra ( la notifica a chi
+  ha chiesto la cosa, un collaudo ). Il `/clear` si propone solo quando non resta niente da fare **su
+  quel fronte**;
 - **soglie**: sopra **120k** di contesto ( la statusline stampa `ctx <n>k` ) si **può** chiudere — se il
   fronte è finito si propone `/clear`, se è a metà si tira avanti tenendo d'occhio la statusline; sopra
   **180k** si **deve** intervenire e si dice quale dei due — `/clear` se il fronte è chiuso, `/compact`
