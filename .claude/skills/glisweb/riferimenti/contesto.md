@@ -107,7 +107,11 @@ si propone: si dice cosa manca **e lo si sistema**, senza ripassarlo all'utente.
    CARICARE SU PROD"*. Il `/clear` butterebbe via proprio il contesto che serve per caricare: quali
    file, quali righe di DB, con quali id su DEV. Il carico si prepara e si propone **nella stessa
    risposta**, il `/clear` viene dopo. Vale lo stesso per ogni passo ancora in mano nostra ( la
-   notifica a chi ha chiesto la cosa, un collaudo );
+   notifica a chi ha chiesto la cosa, un collaudo ). ⚠ **Su `glisweb` e `glisdev` il commit va fatto
+   su tutti e due**: l'hard link porta il contenuto ma non lo stato git, e una modifica fatta da una
+   parte resta `M` dall'altra senza che nessuno la veda. Il fronte è chiuso solo quando tutti e due
+   sono puliti e pushati e `sync-glisweb.sh` non elenca file non sincronizzati ( il 03/10/2026 un
+   `/clear` è stato proposto con glisdev indietro di due commit );
 2. **tutto ciò che resta aperto sta nel `TODO.md`**, coi tre flag di urgenza, rilevanza e impatto —
    **compreso il lavoro in più** fatto di propria iniziativa: migliorie, osservazioni, rischi,
    sviluppi consigliati. Farlo va bene, ma **si segnala in una riga e nello stesso turno si scrive nel
