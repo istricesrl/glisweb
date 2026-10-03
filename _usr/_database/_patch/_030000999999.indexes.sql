@@ -435,7 +435,8 @@ ALTER TABLE `audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- badge
 -- tipologia: tabella gestita
 ALTER TABLE `badge`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice_codice` (`codice`), 
 	ADD UNIQUE KEY `unica` (`rfid`), 
 	ADD UNIQUE KEY `codice` (`id_tipologia`, `codice`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
@@ -922,6 +923,7 @@ ALTER TABLE `classi_energetiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- colli
 ALTER TABLE `colli`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
     ADD KEY `id_documento` (`id_documento`),	
     ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),	
     ADD KEY `id_udm_peso` (`id_udm_peso`),	
@@ -1171,6 +1173,7 @@ ALTER TABLE `contenuti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- continenti
 ALTER TABLE `continenti`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `indice` (`id`,`codice`,`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -1229,6 +1232,7 @@ ALTER TABLE `contratti_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-08-31 11:50 Chiara GDL
 ALTER TABLE `conversazioni`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_articolo` (`id_articolo`),
@@ -1966,6 +1970,7 @@ ALTER TABLE `indirizzi_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INC
 -- iva
 ALTER TABLE `iva`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `aliquota` (`aliquota`),
 	ADD KEY `timestamp_archiviazione` (`timestamp_archiviazione`),
 	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`),
@@ -2077,6 +2082,7 @@ ALTER TABLE `liste_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- listini
 ALTER TABLE `listini`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_valuta`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
@@ -2321,7 +2327,8 @@ ALTER TABLE `marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- mastri
 ALTER TABLE `mastri`
- 	ADD PRIMARY KEY (`id`), 
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`), 
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
  	ADD KEY `id_tipologia` (`id_tipologia`),
@@ -2343,6 +2350,7 @@ ALTER TABLE `mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mastri_articoli
 ALTER TABLE `mastri_articoli`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `id_mastro` (`id_mastro`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -2520,6 +2528,7 @@ ALTER TABLE `metadati_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento`
  	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `nome` (`nome`,`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -2650,6 +2659,7 @@ ALTER TABLE `organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- pagamenti
 ALTER TABLE `pagamenti`
  	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_documento`,`data_scadenza`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
@@ -3177,6 +3187,7 @@ ALTER TABLE `redirect_azioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- regimi
 ALTER TABLE `regimi`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3417,6 +3428,7 @@ ALTER TABLE `rinnovi_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_IN
 -- verifica: 2021-10-09 16:08 Fabio Mosti
 ALTER TABLE `risorse`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_testata` (`id_testata`),
 	ADD KEY `id_articolo` (`id_articolo`), 
@@ -4227,6 +4239,7 @@ ALTER TABLE `tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- tipologie_documenti
 ALTER TABLE `tipologie_documenti`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
   	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
@@ -4468,6 +4481,7 @@ ALTER TABLE `tipologie_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- verifica: 2022-05-24 11:00 Chiara GDL
 ALTER TABLE `tipologie_periodi`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
   	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
@@ -5029,6 +5043,7 @@ ALTER TABLE `zone_stati` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- test
 ALTER TABLE `test`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 

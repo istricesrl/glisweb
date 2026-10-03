@@ -328,7 +328,8 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `data_archiviazione` char(32) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `__label__` text DEFAULT NULL
+  `__label__` text DEFAULT NULL,
+  KEY `codice` (`codice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE
