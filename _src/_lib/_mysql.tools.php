@@ -2715,9 +2715,11 @@
             $n[] = $i . ' COLLATE tolti nei confronti con information_schema';
         }
 
-        // il lato che non è information_schema dei confronti sui nomi, in utf8mb3_tolower_ci
+        // il lato che non è information_schema dei confronti sui nomi ( = e LIKE ), in utf8mb3_tolower_ci: con
+        // lower_case_table_names=1 ( Azure ) le colonne di information_schema sono utf8mb3_tolower_ci e il LIKE con una
+        // variabile nella collation del DB da' 1267
         $s = preg_replace(
-            '/(?<!BINARY )(\b(?:[a-z_]+\.)?(?:TABLE_NAME|COLUMN_NAME|REFERENCED_TABLE_NAME|REFERENCED_COLUMN_NAME|CONSTRAINT_NAME|INDEX_NAME))(\s*=\s*)(?!BINARY\b)((?:[a-z_]+\.)?`?[a-z_][a-z0-9_]*`?)(?!\s*\(|[a-z0-9_.`]|\s+COLLATE)/i',
+            '/(?<!BINARY )(\b(?:[a-z_]+\.)?(?:TABLE_NAME|COLUMN_NAME|REFERENCED_TABLE_NAME|REFERENCED_COLUMN_NAME|CONSTRAINT_NAME|INDEX_NAME))(\s*=\s*|\s+(?:NOT\s+)?LIKE\s+)(?!BINARY\b)((?:[a-z_]+\.)?`?[a-z_][a-z0-9_]*`?)(?!\s*\(|[a-z0-9_.`]|\s+COLLATE)/i',
             '$1$2CONVERT( $3 USING utf8mb3 ) COLLATE utf8mb3_tolower_ci', $s, -1, $i);
         if ($i) {
             $n[] = $i . ' confronti con information_schema in utf8mb3_tolower_ci';
