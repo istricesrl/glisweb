@@ -4289,7 +4289,7 @@ CREATE TABLE IF NOT EXISTS `__acl_anagrafica__` (
   CONSTRAINT `__acl_anagrafica___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_anagrafica___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_anagrafica___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023041
 
@@ -4308,7 +4308,7 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   CONSTRAINT `__acl_attivita___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_attivita___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_attivita___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023042
 
@@ -4327,7 +4327,7 @@ CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   CONSTRAINT `__acl_pagine___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_pagine___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_pagine___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023043
 
@@ -4378,7 +4378,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023044
 
@@ -4426,7 +4426,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023045
 
@@ -4510,7 +4510,7 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `data_archiviazione` date DEFAULT NULL,                     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023046
 
@@ -4542,7 +4542,7 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`),                             --
   KEY `data` (`data`)                                         --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023047
 
@@ -4588,7 +4588,7 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `__label__` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023048
 
@@ -4609,7 +4609,7 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   KEY `id_articolo` (`id_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023049
 
@@ -4644,7 +4644,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   KEY `esito` (`esito`),
   KEY `se_allarme` (`se_allarme`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023060
 

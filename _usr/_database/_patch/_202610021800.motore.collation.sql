@@ -31,7 +31,7 @@ BEGIN
     DECLARE fine INT DEFAULT 0;
     DECLARE errore INT DEFAULT 0;
     DECLARE messaggio TEXT DEFAULT NULL;
-    DECLARE v_tabella CHAR(64) CHARACTER SET utf8;
+    DECLARE v_tabella CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
     DECLARE lista CURSOR FOR
         SELECT TABLE_NAME FROM information_schema.TABLES

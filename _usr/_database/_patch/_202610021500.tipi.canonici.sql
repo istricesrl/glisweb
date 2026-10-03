@@ -47,7 +47,7 @@ BEGIN
     DECLARE fine INT DEFAULT 0;
     DECLARE errore INT DEFAULT 0;
     DECLARE messaggio TEXT DEFAULT NULL;
-    DECLARE v_tabella CHAR(64) CHARACTER SET utf8;
+    DECLARE v_tabella CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_modifiche, v_numero, v_i, v_chiavi_tabelle INT DEFAULT 0;
 
     DECLARE lista CURSOR FOR
@@ -71,12 +71,12 @@ BEGIN
 
     -- le colonne di recensioni da lasciare char, perché hanno valori non numerici
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_salta__`;
-    CREATE TEMPORARY TABLE `__tipi_canonici_salta__` ( `colonna` CHAR(64) CHARACTER SET utf8 PRIMARY KEY );
+    CREATE TEMPORARY TABLE `__tipi_canonici_salta__` ( `colonna` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci PRIMARY KEY );
 
     -- recensioni: le colonne char diventano numeriche solo se i valori lo sono già
     IF 'recensioni' LIKE filtro THEN
         BEGIN
-            DECLARE v_colonna CHAR(64) CHARACTER SET utf8;
+            DECLARE v_colonna CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
             DECLARE fine_r INT DEFAULT 0;
             DECLARE colonne_r CURSOR FOR
                 SELECT COLUMN_NAME FROM information_schema.COLUMNS
@@ -106,7 +106,7 @@ BEGIN
     -- le chiavi esterne che toccano una colonna da convertire ( figlia o madre ): si tolgono prima, si rimettono dopo
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_int__` (
-        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `colonna` CHAR(64) CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `colonna` ) );
+        `tabella` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `colonna` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, PRIMARY KEY ( `tabella`, `colonna` ) );
     INSERT INTO `__tipi_canonici_int__`
         SELECT c.TABLE_NAME, c.COLUMN_NAME FROM information_schema.COLUMNS AS c
         WHERE c.TABLE_SCHEMA = database() AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' )
@@ -118,9 +118,9 @@ BEGIN
     INSERT INTO `__tipi_canonici_int_madri__` SELECT * FROM `__tipi_canonici_int__`;
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_kcu__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_kcu__` (
-        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL, `posizione` INT NOT NULL,
-        `colonna` CHAR(64) CHARACTER SET utf8 NOT NULL, `madre` CHAR(64) CHARACTER SET utf8 NOT NULL,
-        `colonna_madre` CHAR(64) CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `vincolo`, `posizione` ) );
+        `tabella` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `posizione` INT NOT NULL,
+        `colonna` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `madre` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        `colonna_madre` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, PRIMARY KEY ( `tabella`, `vincolo`, `posizione` ) );
     INSERT INTO `__tipi_canonici_kcu__`
         SELECT k.TABLE_NAME, k.CONSTRAINT_NAME, k.ORDINAL_POSITION, k.COLUMN_NAME, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME
         FROM information_schema.KEY_COLUMN_USAGE AS k
@@ -129,8 +129,8 @@ BEGIN
 
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_regole__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_regole__` (
-        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL,
-        `cancellazione` CHAR(16) CHARACTER SET utf8 NOT NULL, `aggiornamento` CHAR(16) CHARACTER SET utf8 NOT NULL,
+        `tabella` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        `cancellazione` CHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `aggiornamento` CHAR(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
         PRIMARY KEY ( `tabella`, `vincolo` ) );
     INSERT INTO `__tipi_canonici_regole__`
         SELECT r.TABLE_NAME, r.CONSTRAINT_NAME, r.DELETE_RULE, r.UPDATE_RULE
@@ -140,8 +140,8 @@ BEGIN
     -- una riga per chiave: la clausola che la toglie e quella che la rimette uguale
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_chiave__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_chiave__` (
-        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL,
-        `togli` TEXT CHARACTER SET utf8 NOT NULL, `metti` TEXT CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `vincolo` ) );
+        `tabella` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        `togli` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `metti` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, PRIMARY KEY ( `tabella`, `vincolo` ) );
     INSERT INTO `__tipi_canonici_chiave__`
         SELECT k.`tabella`, k.`vincolo`,
             CONCAT( 'DROP FOREIGN KEY `', k.`vincolo`, '`' ),
@@ -159,8 +159,8 @@ BEGIN
     -- una riga per tabella, con tutte le sue chiavi in una ALTER
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_fk__`;
     CREATE TEMPORARY TABLE `__tipi_canonici_fk__` (
-        `numero` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL,
-        `togli` MEDIUMTEXT CHARACTER SET utf8 NOT NULL, `metti` MEDIUMTEXT CHARACTER SET utf8 NOT NULL,
+        `numero` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `tabella` CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+        `togli` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `metti` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
         `chiavi` INT NOT NULL, `tolte` INT NOT NULL DEFAULT 0 );
     INSERT INTO `__tipi_canonici_fk__` ( `tabella`, `togli`, `metti`, `chiavi` )
         SELECT `tabella`, CONCAT( 'ALTER TABLE `', `tabella`, '` ', GROUP_CONCAT( `togli` ORDER BY `vincolo` SEPARATOR ', ' ) ),

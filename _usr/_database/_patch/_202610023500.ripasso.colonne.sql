@@ -4251,7 +4251,7 @@ CREATE TABLE IF NOT EXISTS `__acl_anagrafica__` (
   CONSTRAINT `__acl_anagrafica___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_anagrafica___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_anagrafica___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023541
 -- __acl_attivita__, da _040000999999.acl.sql, solo se manca
@@ -4269,7 +4269,7 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   CONSTRAINT `__acl_attivita___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_attivita___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_attivita___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023542
 -- __acl_pagine__, da _040000999999.acl.sql, solo se manca
@@ -4287,7 +4287,7 @@ CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   CONSTRAINT `__acl_pagine___ibfk_01_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_pagine___ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_pagine___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023543
 -- anagrafica_view_static, da _080000999999.static.sql, solo se manca
@@ -4337,7 +4337,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023544
 -- articoli_view_static, da _080000999999.static.sql, solo se manca
@@ -4384,7 +4384,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023545
 -- attivita_view_static, da _080000999999.static.sql, solo se manca
@@ -4467,7 +4467,7 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `data_archiviazione` date DEFAULT NULL,                     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023546
 -- offerte_attive_view_static, da _080000999999.static.sql, solo se manca
@@ -4498,7 +4498,7 @@ CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`),                             --
   KEY `data` (`data`)                                         --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;                         --
 
 -- | 202610023547
 -- todo_view_static, da _080000999999.static.sql, solo se manca
@@ -4543,7 +4543,7 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `__label__` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023548
 -- __report_scorte_non_valutabili__, da _100000999999.reports.sql, solo se manca
@@ -4563,7 +4563,7 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   KEY `id_articolo` (`id_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023549
 -- __report_sottoscorta__, da _100000999999.reports.sql, solo se manca
@@ -4597,7 +4597,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   KEY `esito` (`esito`),
   KEY `se_allarme` (`se_allarme`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610023560
 -- si esegue: tipi, NULL e colonne mancanti

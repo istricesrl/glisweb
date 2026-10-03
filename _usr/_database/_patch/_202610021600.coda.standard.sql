@@ -27,13 +27,13 @@ BEGIN
     DECLARE fine INT DEFAULT 0;
     DECLARE errore INT DEFAULT 0;
     DECLARE messaggio TEXT DEFAULT NULL;
-    DECLARE v_tabella CHAR(64) CHARACTER SET utf8;
-    DECLARE v_ultima CHAR(64) CHARACTER SET utf8;
-    DECLARE v_attuale TEXT CHARACTER SET utf8;
-    DECLARE v_alter TEXT CHARACTER SET utf8;
-    DECLARE v_dopo CHAR(64) CHARACTER SET utf8;
-    DECLARE v_colonna CHAR(64) CHARACTER SET utf8;
-    DECLARE v_definizione TEXT CHARACTER SET utf8;
+    DECLARE v_tabella CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_ultima CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_attuale TEXT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_alter TEXT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_dopo CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_colonna CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
+    DECLARE v_definizione TEXT CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_i INT;
 
     DECLARE lista CURSOR FOR

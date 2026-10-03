@@ -1606,7 +1606,7 @@ SELECT @chiavi_canone_aggiunte AS aggiunte, @chiavi_canone_corrette AS corrette,
 CREATE OR REPLACE PROCEDURE `__patch_chiavi_canone_ritocchi__`()
 BEGIN
 
-    DECLARE v_tabella CHAR(64) CHARACTER SET utf8;
+    DECLARE v_tabella CHAR(64) CHARACTER SET utf8 COLLATE utf8_general_ci;
     DECLARE v_i INT DEFAULT 1;
 
     SET @chiavi_canone_controlli = @@foreign_key_checks;
