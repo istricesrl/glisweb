@@ -29,6 +29,9 @@
 -- | 202610023000
 
 DROP TABLE IF EXISTS `__patch_residui_colonne__`;
+
+-- | 202610023001
+
 CREATE TABLE `__patch_residui_colonne__` (
   `tabella` char(64) NOT NULL,
   `posizione` int(11) NOT NULL,
@@ -44,7 +47,7 @@ CREATE TABLE `__patch_residui_colonne__` (
   KEY `posizione` (`tabella`, `posizione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 202610023001
+-- | 202610023002
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('__acl_anagrafica__', 1, 'id', 'bigint(20) NOT NULL AUTO_INCREMENT', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
@@ -348,7 +351,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('annunci', 15, 'note_fine_validita', 'text DEFAULT NULL', 'text', 'text', 65535, NULL, NULL, 'YES'),
 ('annunci', 16, 'note', 'text DEFAULT NULL', 'text', 'text', 65535, NULL, NULL, 'YES');
 
--- | 202610023002
+-- | 202610023003
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('annunci', 17, 'template', 'char(255) DEFAULT NULL', 'char(255)', 'char', 255, NULL, NULL, 'YES'),
@@ -652,7 +655,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('banner', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('banner', 2, 'id_tipologia', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023003
+-- | 202610023004
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('banner', 3, 'id_sito', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -956,7 +959,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('categorie_notizie', 14, 'data_archiviazione', 'date DEFAULT NULL', 'date', 'date', NULL, NULL, NULL, 'YES'),
 ('categorie_notizie', 15, 'note_archiviazione', 'text NULL', 'text', 'text', 65535, NULL, NULL, 'YES');
 
--- | 202610023004
+-- | 202610023005
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('categorie_notizie', 16, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -1260,7 +1263,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('contenuti', 66, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('contenuti', 67, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023005
+-- | 202610023006
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('continenti', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
@@ -1564,7 +1567,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('documenti_articoli', 24, 'id_rinnovo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('documenti_articoli', 25, 'id_carrelli_articoli', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023006
+-- | 202610023007
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('documenti_articoli', 26, 'quantita_prevista', 'decimal(9,2) DEFAULT NULL', 'decimal(9,2)', 'decimal', NULL, 9, 2, 'YES'),
@@ -1868,7 +1871,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('licenze_software', 4, 'ordine', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('licenze_software', 5, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023007
+-- | 202610023008
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('licenze_software', 6, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
@@ -2172,7 +2175,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('metadati', 7, 'id_articolo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('metadati', 8, 'id_categoria_prodotti', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023008
+-- | 202610023009
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('metadati', 9, 'id_notizia', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -2476,7 +2479,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('pianificazioni', 44, 'model_id_indirizzo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('pianificazioni', 45, 'model_id_immobile', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023009
+-- | 202610023010
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('pianificazioni', 46, 'model_id_licenza', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -2780,7 +2783,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('recensioni', 18, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('recensioni', 19, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023010
+-- | 202610023011
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('redirect', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
@@ -3084,7 +3087,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('ruoli_file', 21, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('ruoli_file', 22, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023011
+-- | 202610023012
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('ruoli_file', 23, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
@@ -3388,7 +3391,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('testate', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('testate', 2, 'nome', 'char(128) DEFAULT NULL', 'char(128)', 'char', 128, NULL, NULL, 'YES');
 
--- | 202610023012
+-- | 202610023013
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('testate', 3, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -3692,7 +3695,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('tipologie_periodi', 2, 'id_genitore', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('tipologie_periodi', 3, 'ordine', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023013
+-- | 202610023014
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('tipologie_periodi', 4, 'codice', 'char(32) DEFAULT NULL', 'char(32)', 'char', 32, NULL, NULL, 'YES'),
@@ -3996,7 +3999,7 @@ INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('valutazioni', 7, 'id_condizione', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('valutazioni', 8, 'id_disponibilita', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023014
+-- | 202610023015
 
 INSERT INTO `__patch_residui_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('valutazioni', 9, 'id_classe_energetica', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),

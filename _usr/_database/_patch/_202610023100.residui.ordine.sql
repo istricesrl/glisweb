@@ -13,6 +13,9 @@
 -- | 202610023100
 
 DROP TABLE IF EXISTS `__patch_residui_ordine__`;
+
+-- | 202610023101
+
 CREATE TABLE `__patch_residui_ordine__` (
   `tabella` char(64) NOT NULL,
   `posizione` int(11) NOT NULL,
@@ -21,7 +24,7 @@ CREATE TABLE `__patch_residui_ordine__` (
   KEY `posizione` (`tabella`, `posizione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 202610023101
+-- | 202610023102
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('__acl_anagrafica__', 1, 'id'),
@@ -625,7 +628,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('banner', 1, 'id'),
 ('banner', 2, 'id_tipologia');
 
--- | 202610023102
+-- | 202610023103
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('banner', 3, 'id_sito'),
@@ -1229,7 +1232,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('contenuti', 66, 'id_account_aggiornamento'),
 ('contenuti', 67, 'timestamp_aggiornamento');
 
--- | 202610023103
+-- | 202610023104
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('continenti', 1, 'id'),
@@ -1833,7 +1836,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('licenze_software', 4, 'ordine'),
 ('licenze_software', 5, 'id_account_inserimento');
 
--- | 202610023104
+-- | 202610023105
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('licenze_software', 6, 'timestamp_inserimento'),
@@ -2437,7 +2440,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('pianificazioni', 44, 'model_id_indirizzo'),
 ('pianificazioni', 45, 'model_id_immobile');
 
--- | 202610023105
+-- | 202610023106
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('pianificazioni', 46, 'model_id_licenza'),
@@ -3041,7 +3044,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('ruoli_file', 21, 'timestamp_inserimento'),
 ('ruoli_file', 22, 'id_account_aggiornamento');
 
--- | 202610023106
+-- | 202610023107
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('ruoli_file', 23, 'timestamp_aggiornamento'),
@@ -3645,7 +3648,7 @@ INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VAL
 ('tipologie_periodi', 2, 'id_genitore'),
 ('tipologie_periodi', 3, 'ordine');
 
--- | 202610023107
+-- | 202610023108
 
 INSERT INTO `__patch_residui_ordine__` ( `tabella`, `posizione`, `colonna` ) VALUES
 ('tipologie_periodi', 4, 'codice'),

@@ -10,6 +10,9 @@
 -- | 202610023600
 
 DROP TABLE IF EXISTS `__patch_canone_viste__`;
+
+-- | 202610023601
+
 CREATE TABLE `__patch_canone_viste__` (
   `ordine` int NOT NULL,
   `vista` char(64) NOT NULL,
@@ -18,7 +21,7 @@ CREATE TABLE `__patch_canone_viste__` (
   PRIMARY KEY (`vista`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 202610023601
+-- | 202610023602
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 0, 'account_view', 'CREATE VIEW `account_view` AS SELECT                                                   
@@ -1012,7 +1015,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 	FROM banner_zone
 		LEFT JOIN banner ON banner.id = banner_zone.id_banner' );
 
--- | 202610023602
+-- | 202610023603
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 25, 'campagne_view', 'CREATE VIEW `campagne_view` AS SELECT
@@ -1527,7 +1530,7 @@ FROM carrelli' ),
   FROM consensi_contatti                                       
     INNER JOIN consensi ON consensi.id = consensi_contatti.id_consenso' );
 
--- | 202610023603
+-- | 202610023604
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 50, 'contatti_view', 'CREATE VIEW `contatti_view` AS SELECT
@@ -2398,7 +2401,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 	FROM documenti_ritenute
 		LEFT JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta' );
 
--- | 202610023604
+-- | 202610023605
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 75, 'edifici_view', 'CREATE VIEW `edifici_view` AS SELECT
@@ -3017,7 +3020,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 		LEFT JOIN anagrafica AS a1                           
             ON a1.id = mail.id_anagrafica' );
 
--- | 202610023605
+-- | 202610023606
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 100, 'mail_out_view', 'CREATE VIEW `mail_out_view` AS SELECT
@@ -3665,7 +3668,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 
 	GROUP BY pagamenti.id' );
 
--- | 202610023606
+-- | 202610023607
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 125, 'pagine_view', 'CREATE VIEW `pagine_view` AS SELECT													 
@@ -4278,7 +4281,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 	FROM regioni
 		LEFT JOIN stati ON stati.id = regioni.id_stato' );
 
--- | 202610023607
+-- | 202610023608
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 150, 'relazioni_anagrafica_view', 'CREATE VIEW `relazioni_anagrafica_view` AS SELECT
@@ -4637,7 +4640,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 			ruoli_indirizzi.id ) AS __label__			  	 
 	FROM ruoli_indirizzi' );
 
--- | 202610023608
+-- | 202610023609
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 175, 'ruoli_mail_view', 'CREATE VIEW `ruoli_mail_view` AS SELECT
@@ -5014,7 +5017,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 		tipologie_badge.nome AS __label__
 	FROM tipologie_badge' );
 
--- | 202610023609
+-- | 202610023610
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 200, 'tipologie_banner_view', 'CREATE VIEW `tipologie_banner_view` AS SELECT
@@ -5363,7 +5366,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 		tipologie_risorse_path( tipologie_risorse.id ) AS __label__
 	FROM tipologie_risorse' );
 
--- | 202610023610
+-- | 202610023611
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 225, 'tipologie_sconti_view', 'CREATE VIEW `tipologie_sconti_view` AS SELECT
@@ -5751,7 +5754,7 @@ INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 248, '__report_evasione_righe_ordini__', 'CREATE VIEW `__report_evasione_righe_ordini__` AS select `ordine`.`id_documento` AS `id_documento`,`ordine`.`id_ordine` AS `id_ordine`,`ordine`.`codice_prodotto` AS `codice_prodotto`,`ordine`.`prodotto` AS `prodotto`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) AS `quantita_ordinata`,sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_evasa`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) - sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_da_evadere`,`udm`.`sigla` AS `udm` from ((select `relazioni_documenti`.`id_documento` AS `id_documento`,`documenti`.`id` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,coalesce(`documenti_articoli`.`quantita` * `udm`.`conversione`,0) AS `quantita_ordinata`,0 AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` left join `relazioni_documenti` on(`relazioni_documenti`.`id_documento_collegato` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `documenti_articoli`.`id_udm`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_ordine` is not null having `codice_prodotto` is not null union select `relazioni_documenti`.`id_documento` AS `id_documento`,`relazioni_documenti`.`id_documento_collegato` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,0 AS `quantita_ordinata`,coalesce(`articoli`.`peso` * `udm`.`conversione` * `documenti_articoli`.`quantita`,0) AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` join `relazioni_documenti` on(`relazioni_documenti`.`id_documento` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `articoli`.`id_udm_peso`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_trasporto` is not null having `codice_prodotto` is not null) `ordine` left join `udm` on(`udm`.`id` = (select coalesce(max(`documenti_articoli`.`id_udm`),max(`articoli`.`id_udm_peso`)) from (`documenti_articoli` left join `articoli` on(`articoli`.`id` = `ordine`.`codice_articolo`)) where `documenti_articoli`.`id_documento` in (`ordine`.`id_documento`,`ordine`.`id_ordine`) and (`documenti_articoli`.`id_prodotto` = `ordine`.`codice_prodotto` or `articoli`.`id` = `ordine`.`codice_articolo`)))) group by `ordine`.`id_documento`,`ordine`.`id_ordine`,`ordine`.`codice_prodotto`,`ordine`.`prodotto`,`udm`.`conversione`,`udm`.`sigla`' ),
 ( 249, 'todo_view', 'CREATE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`todo`.`codice` AS `codice`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,'' '',`a1`.`nome`),'''') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,'' '',`a2`.`nome`),'''') AS `cliente`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws('' '',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`nome` AS `nome`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator '' | '') AS `discipline`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,'' '',concat_ws(''/'',`documenti`.`numero`,`documenti`.`sezionale`),'' del '',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,concat(`documenti_articoli`.`data`,'' / '',`tipologie_documenti`.`sigla`,'' / '',`documenti_articoli`.`quantita`,'' x '',`documenti_articoli`.`id_articolo`) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,concat(`todo`.`nome`,coalesce(concat('' per '',`a2`.`denominazione`,concat(`a2`.`cognome`,'' '',`a2`.`nome`)),''''),coalesce(concat('' su '',`todo`.`id_progetto`,'' '',`progetti`.`nome`),'''')) AS `__label__` from ((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = `documenti_articoli`.`id_tipologia_documento`)) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) group by `todo`.`id`' );
 
--- | 202610023611
+-- | 202610023612
 
 INSERT INTO `__patch_canone_viste__` ( `ordine`, `vista`, `istruzione` ) VALUES
 ( 250, '__report_utilizzi_coupon__', 'CREATE VIEW `__report_utilizzi_coupon__` AS SELECT

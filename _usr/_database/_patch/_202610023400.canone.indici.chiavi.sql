@@ -24,6 +24,9 @@
 -- | 202610023400
 
 DROP TABLE IF EXISTS `__patch_canone_chiavi__`;
+
+-- | 202610023401
+
 CREATE TABLE `__patch_canone_chiavi__` (
   `tabella` char(64) NOT NULL,
   `vincolo` char(64) NOT NULL,
@@ -35,7 +38,12 @@ CREATE TABLE `__patch_canone_chiavi__` (
   PRIMARY KEY (`tabella`, `vincolo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 202610023402
+
 DROP TABLE IF EXISTS `__patch_canone_indici__`;
+
+-- | 202610023403
+
 CREATE TABLE `__patch_canone_indici__` (
   `tabella` char(64) NOT NULL,
   `indice` char(64) NOT NULL,
@@ -46,7 +54,12 @@ CREATE TABLE `__patch_canone_indici__` (
   PRIMARY KEY (`tabella`, `indice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 202610023404
+
 DROP TABLE IF EXISTS `__patch_canone_indici_vivi__`;
+
+-- | 202610023405
+
 CREATE TABLE `__patch_canone_indici_vivi__` (
   `tabella` char(64) NOT NULL,
   `indice` char(64) NOT NULL,
@@ -55,7 +68,12 @@ CREATE TABLE `__patch_canone_indici_vivi__` (
   PRIMARY KEY (`tabella`, `indice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 202610023406
+
 DROP TABLE IF EXISTS `__patch_canone_indici_azioni__`;
+
+-- | 202610023407
+
 CREATE TABLE `__patch_canone_indici_azioni__` (
   `ordine` int NOT NULL,
   `tabella` char(64) NOT NULL,
@@ -66,7 +84,12 @@ CREATE TABLE `__patch_canone_indici_azioni__` (
   PRIMARY KEY (`tabella`, `indice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 202610023408
+
 DROP TABLE IF EXISTS `__patch_canone_sgombero__`;
+
+-- | 202610023409
+
 CREATE TABLE `__patch_canone_sgombero__` (
   `tabella` char(64) NOT NULL,
   `vincolo` char(64) NOT NULL,
@@ -76,7 +99,7 @@ CREATE TABLE `__patch_canone_sgombero__` (
   PRIMARY KEY (`tabella`, `vincolo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 202610023401
+-- | 202610023410
 
 INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento` ) VALUES
 ('__acl_anagrafica__', '__acl_anagrafica___ibfk_01_nofollow', 'id_entita', 'anagrafica', 'CASCADE', 'CASCADE'),
@@ -380,7 +403,7 @@ INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferi
 ('contenuti', 'contenuti_ibfk_09', 'id_immagine', 'immagini', 'SET NULL', 'SET NULL'),
 ('contenuti', 'contenuti_ibfk_10', 'id_video', 'video', 'SET NULL', 'SET NULL');
 
--- | 202610023402
+-- | 202610023411
 
 INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento` ) VALUES
 ('contenuti', 'contenuti_ibfk_11', 'id_audio', 'audio', 'SET NULL', 'SET NULL'),
@@ -684,7 +707,7 @@ INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferi
 ('macro', 'macro_ibfk_01', 'id_pagina', 'pagine', 'SET NULL', 'SET NULL'),
 ('macro', 'macro_ibfk_02', 'id_prodotto', 'prodotti', 'SET NULL', 'SET NULL');
 
--- | 202610023403
+-- | 202610023412
 
 INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento` ) VALUES
 ('macro', 'macro_ibfk_03', 'id_articolo', 'articoli', 'SET NULL', 'SET NULL'),
@@ -988,7 +1011,7 @@ INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferi
 ('recensioni', 'recensioni_ibfk_99_nofollow', 'id_account_aggiornamento', 'account', 'SET NULL', 'SET NULL'),
 ('redirect_azioni', 'redirect_azioni_ibfk_01_nofollow', 'id_redirect', 'redirect', 'CASCADE', 'CASCADE');
 
--- | 202610023404
+-- | 202610023413
 
 INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento` ) VALUES
 ('redirect_azioni', 'redirect_azioni_ibfk_98_nofollow', 'id_account_inserimento', 'account', 'SET NULL', 'SET NULL'),
@@ -1292,7 +1315,7 @@ INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferi
 ('todo', 'todo_ibfk_04_nofollow', 'id_indirizzo', 'indirizzi', 'SET NULL', 'SET NULL'),
 ('todo', 'todo_ibfk_05_nofollow', 'id_luogo', 'luoghi', 'SET NULL', 'SET NULL');
 
--- | 202610023405
+-- | 202610023414
 
 INSERT INTO `__patch_canone_chiavi__` ( `tabella`, `vincolo`, `colonna`, `riferimento`, `cancellazione`, `aggiornamento` ) VALUES
 ('todo', 'todo_ibfk_06_nofollow', 'id_contatto', 'contatti', 'SET NULL', 'SET NULL'),

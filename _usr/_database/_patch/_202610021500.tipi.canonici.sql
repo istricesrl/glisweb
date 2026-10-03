@@ -10,8 +10,11 @@
 --
 -- COSA FA. Per ogni tabella vera ( non le viste ) del database:
 --
--- -# id e id_* int, mediumint o smallint diventano bigint(20), tenendo NULL / NOT NULL, default, AUTO_INCREMENT e
---    commento; vale per tutte le tabelle, anche quelle dei moduli e dei progetti, perché lo schema è uno;
+-- -# id, id_* e le colonne che citano un id ( *_id_*: destinatario_id_comune, fatturazione_id_modalita_pagamento )
+--    int, mediumint o smallint diventano bigint(20), tenendo NULL / NOT NULL, default, AUTO_INCREMENT e commento; vale
+--    per tutte le tabelle, anche quelle dei moduli e dei progetti, perché lo schema è uno; le *_id_* sono entrate il
+--    03/10/2026: lasciate int, restavano legate da una chiave esterna a una madre bigint, e InnoDB con una chiave così
+--    smette di caricare tutte le chiavi della tabella ( carrelli di polmasi );
 -- -# se_* int diventano tinyint(1), con lo stesso default;
 -- -# recensioni.id_categoria_prodotti, id_categoria_notizie e id_notizia, che i file di base dichiaravano char(32)
 --    per errore, diventano bigint(20) solo se contengono soltanto numeri: '' diventa NULL, e se c'è anche un solo
@@ -22,6 +25,13 @@
 -- foreign_key_checks a 0, che permette di cambiare il tipo di una colonna referenziata: madre e figlie cambiano
 -- tutte, e alla fine i vincoli collegano di nuovo colonne dello stesso tipo ( provato il 02/10/2026 su MariaDB
 -- 10.3.39: il vincolo resta e continua a impedire la cancellazione della madre ).
+--
+-- MySQL 8 invece rifiuta di cambiare il tipo di una colonna che sta in una chiave esterna anche con foreign_key_checks
+-- a 0 ( errore 3780, visto il 03/10/2026 sulla copia della PROD di gimbe su Azure: la patch convertiva quasi niente ).
+-- Dal 03/10/2026 quindi, su entrambi i server, le chiavi esterne che toccano una colonna da convertire si tolgono prima del giro
+-- e si rimettono identiche dopo ( nome, colonne, madre, regole ), una ALTER per tabella; quelle che non rientrano
+-- finiscono nella nota. Le si legge da information_schema una volta sola, in tabelle temporanee, perché interrogarlo
+-- tabella per tabella su un server con molti database costa troppo.
 --
 -- La procedura riceve un filtro LIKE sui nomi delle tabelle ( '%' per tutte ), che serve a provarla su tabelle
 -- usa-e-getta. Non restituisce righe dalla CALL ( vedi _202609301100.chiavi.esterne.sql ): l'esito è in
@@ -38,7 +48,7 @@ BEGIN
     DECLARE errore INT DEFAULT 0;
     DECLARE messaggio TEXT DEFAULT NULL;
     DECLARE v_tabella CHAR(64) CHARACTER SET utf8;
-    DECLARE v_modifiche, v_numero INT DEFAULT 0;
+    DECLARE v_modifiche, v_numero, v_i, v_chiavi_tabelle INT DEFAULT 0;
 
     DECLARE lista CURSOR FOR
         SELECT DISTINCT c.TABLE_NAME
@@ -47,7 +57,7 @@ BEGIN
             ON t.TABLE_SCHEMA = c.TABLE_SCHEMA AND t.TABLE_NAME = c.TABLE_NAME AND t.TABLE_TYPE = 'BASE TABLE'
         WHERE c.TABLE_SCHEMA = database() AND c.TABLE_NAME LIKE filtro AND c.EXTRA NOT LIKE '%GENERATED%'
           AND (
-                ( ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' ) AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' ) )
+                ( ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' OR c.COLUMN_NAME LIKE '%\_id\_%' ) AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' ) )
              OR ( c.COLUMN_NAME LIKE 'se\_%' AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint', 'bigint' ) )
              OR ( c.TABLE_NAME = 'recensioni' AND c.COLUMN_NAME IN ( 'id_categoria_prodotti', 'id_categoria_notizie', 'id_notizia' ) AND c.DATA_TYPE = 'char' )
           )
@@ -93,6 +103,97 @@ BEGIN
         END;
     END IF;
 
+    -- le chiavi esterne che toccano una colonna da convertire ( figlia o madre ): si tolgono prima, si rimettono dopo
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_int__` (
+        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `colonna` CHAR(64) CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `colonna` ) );
+    INSERT INTO `__tipi_canonici_int__`
+        SELECT c.TABLE_NAME, c.COLUMN_NAME FROM information_schema.COLUMNS AS c
+        WHERE c.TABLE_SCHEMA = database() AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' )
+          AND ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' OR c.COLUMN_NAME LIKE '%\_id\_%' );
+
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_kcu__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_kcu__` (
+        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL, `posizione` INT NOT NULL,
+        `colonna` CHAR(64) CHARACTER SET utf8 NOT NULL, `madre` CHAR(64) CHARACTER SET utf8 NOT NULL,
+        `colonna_madre` CHAR(64) CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `vincolo`, `posizione` ) );
+    INSERT INTO `__tipi_canonici_kcu__`
+        SELECT k.TABLE_NAME, k.CONSTRAINT_NAME, k.ORDINAL_POSITION, k.COLUMN_NAME, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME
+        FROM information_schema.KEY_COLUMN_USAGE AS k
+        WHERE k.TABLE_SCHEMA = database() AND k.REFERENCED_TABLE_NAME IS NOT NULL
+          AND ( k.TABLE_NAME LIKE filtro OR k.REFERENCED_TABLE_NAME LIKE filtro );
+
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_regole__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_regole__` (
+        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL,
+        `cancellazione` CHAR(16) CHARACTER SET utf8 NOT NULL, `aggiornamento` CHAR(16) CHARACTER SET utf8 NOT NULL,
+        PRIMARY KEY ( `tabella`, `vincolo` ) );
+    INSERT INTO `__tipi_canonici_regole__`
+        SELECT r.TABLE_NAME, r.CONSTRAINT_NAME, r.DELETE_RULE, r.UPDATE_RULE
+        FROM information_schema.REFERENTIAL_CONSTRAINTS AS r
+        WHERE r.CONSTRAINT_SCHEMA = database();
+
+    -- una riga per chiave: la clausola che la toglie e quella che la rimette uguale
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_chiave__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_chiave__` (
+        `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL, `vincolo` CHAR(64) CHARACTER SET utf8 NOT NULL,
+        `togli` TEXT CHARACTER SET utf8 NOT NULL, `metti` TEXT CHARACTER SET utf8 NOT NULL, PRIMARY KEY ( `tabella`, `vincolo` ) );
+    INSERT INTO `__tipi_canonici_chiave__`
+        SELECT k.`tabella`, k.`vincolo`,
+            CONCAT( 'DROP FOREIGN KEY `', k.`vincolo`, '`' ),
+            CONCAT( 'ADD CONSTRAINT `', k.`vincolo`, '` FOREIGN KEY ( ',
+                GROUP_CONCAT( CONCAT( '`', k.`colonna`, '`' ) ORDER BY k.`posizione` SEPARATOR ', ' ), ' ) REFERENCES `', MAX( k.`madre` ), '` ( ',
+                GROUP_CONCAT( CONCAT( '`', k.`colonna_madre`, '`' ) ORDER BY k.`posizione` SEPARATOR ', ' ), ' ) ON DELETE ',
+                MAX( r.`cancellazione` ), ' ON UPDATE ', MAX( r.`aggiornamento` ) )
+        FROM `__tipi_canonici_kcu__` AS k
+        INNER JOIN `__tipi_canonici_regole__` AS r ON r.`tabella` = k.`tabella` AND r.`vincolo` = k.`vincolo`
+        LEFT JOIN `__tipi_canonici_int__` AS f ON f.`tabella` = k.`tabella` AND f.`colonna` = k.`colonna`
+        LEFT JOIN `__tipi_canonici_int__` AS m ON m.`tabella` = k.`madre` AND m.`colonna` = k.`colonna_madre`
+        GROUP BY k.`tabella`, k.`vincolo`
+        HAVING count( f.`colonna` ) + count( m.`colonna` ) > 0;
+
+    -- una riga per tabella, con tutte le sue chiavi in una ALTER
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_fk__`;
+    CREATE TEMPORARY TABLE `__tipi_canonici_fk__` (
+        `numero` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `tabella` CHAR(64) CHARACTER SET utf8 NOT NULL,
+        `togli` MEDIUMTEXT CHARACTER SET utf8 NOT NULL, `metti` MEDIUMTEXT CHARACTER SET utf8 NOT NULL,
+        `chiavi` INT NOT NULL, `tolte` INT NOT NULL DEFAULT 0 );
+    INSERT INTO `__tipi_canonici_fk__` ( `tabella`, `togli`, `metti`, `chiavi` )
+        SELECT `tabella`, CONCAT( 'ALTER TABLE `', `tabella`, '` ', GROUP_CONCAT( `togli` ORDER BY `vincolo` SEPARATOR ', ' ) ),
+            CONCAT( 'ALTER TABLE `', `tabella`, '` ', GROUP_CONCAT( `metti` ORDER BY `vincolo` SEPARATOR ', ' ) ), count(*)
+        FROM `__tipi_canonici_chiave__`
+        GROUP BY `tabella`
+        ORDER BY `tabella`;
+
+    SET v_chiavi_tabelle = ( SELECT count(*) FROM `__tipi_canonici_fk__` );
+    SET @tipi_canonici_chiavi_tolte = 0, @tipi_canonici_chiavi_rimesse = 0;
+
+    -- tolgo le chiavi, tabella per tabella
+    SET v_i = 1;
+    WHILE v_i <= v_chiavi_tabelle DO
+        BEGIN
+            DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+                BEGIN
+                    GET DIAGNOSTICS CONDITION 1 messaggio = MESSAGE_TEXT;
+                    SET errore = 1;
+                END;
+            SET errore = 0;
+            SELECT `togli`, `tabella` INTO @tipi_canonici_sql, v_tabella FROM `__tipi_canonici_fk__` WHERE `numero` = v_i;
+            SET foreign_key_checks = 0;
+            PREPARE togli FROM @tipi_canonici_sql;
+            EXECUTE togli;
+            DEALLOCATE PREPARE togli;
+            SET foreign_key_checks = @tipi_canonici_controlli;
+            IF errore = 1 THEN
+                SET @tipi_canonici_note = CONCAT_WS( '\n', @tipi_canonici_note, LEFT( CONCAT( v_tabella, ', chiavi non tolte: ', messaggio ), 255 ) );
+            ELSE
+                UPDATE `__tipi_canonici_fk__` SET `tolte` = 1 WHERE `numero` = v_i;
+                SET @tipi_canonici_chiavi_tolte = @tipi_canonici_chiavi_tolte + ( SELECT `chiavi` FROM `__tipi_canonici_fk__` WHERE `numero` = v_i );
+            END IF;
+        END;
+        SET v_i = v_i + 1;
+    END WHILE;
+
     OPEN lista;
 
     ciclo: LOOP
@@ -119,7 +220,7 @@ BEGIN
         FROM information_schema.COLUMNS AS c
         WHERE c.TABLE_SCHEMA = database() AND c.TABLE_NAME = v_tabella AND c.EXTRA NOT LIKE '%GENERATED%'
           AND (
-                ( ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' ) AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' ) )
+                ( ( c.COLUMN_NAME = 'id' OR c.COLUMN_NAME LIKE 'id\_%' OR c.COLUMN_NAME LIKE '%\_id\_%' ) AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint' ) )
              OR ( c.COLUMN_NAME LIKE 'se\_%' AND c.DATA_TYPE IN ( 'int', 'mediumint', 'smallint', 'bigint' ) )
              OR ( c.TABLE_NAME = 'recensioni' AND c.DATA_TYPE = 'char'
                   AND c.COLUMN_NAME IN ( 'id_categoria_prodotti', 'id_categoria_notizie', 'id_notizia' )
@@ -154,7 +255,39 @@ BEGIN
 
     CLOSE lista;
 
+    -- rimetto le chiavi tolte, identiche; quelle che non rientrano vanno nella nota
+    SET v_i = 1;
+    WHILE v_i <= v_chiavi_tabelle DO
+        IF ( SELECT `tolte` FROM `__tipi_canonici_fk__` WHERE `numero` = v_i ) = 1 THEN
+            BEGIN
+                DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+                    BEGIN
+                        GET DIAGNOSTICS CONDITION 1 messaggio = MESSAGE_TEXT;
+                        SET errore = 1;
+                    END;
+                SET errore = 0;
+                SELECT `metti`, `tabella` INTO @tipi_canonici_sql, v_tabella FROM `__tipi_canonici_fk__` WHERE `numero` = v_i;
+                SET foreign_key_checks = 0;
+                PREPARE metti FROM @tipi_canonici_sql;
+                EXECUTE metti;
+                DEALLOCATE PREPARE metti;
+                SET foreign_key_checks = @tipi_canonici_controlli;
+                IF errore = 1 THEN
+                    SET @tipi_canonici_note = CONCAT_WS( '\n', @tipi_canonici_note, LEFT( CONCAT( v_tabella, ', chiavi NON rimesse: ', messaggio, ' | ', @tipi_canonici_sql ), 1000 ) );
+                ELSE
+                    SET @tipi_canonici_chiavi_rimesse = @tipi_canonici_chiavi_rimesse + ( SELECT `chiavi` FROM `__tipi_canonici_fk__` WHERE `numero` = v_i );
+                END IF;
+            END;
+        END IF;
+        SET v_i = v_i + 1;
+    END WHILE;
+
     DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_salta__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_int__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_kcu__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_regole__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_chiave__`;
+    DROP TEMPORARY TABLE IF EXISTS `__tipi_canonici_fk__`;
     SET foreign_key_checks = @tipi_canonici_controlli;
 
 END;
@@ -167,7 +300,8 @@ CALL `__patch_tipi_canonici__`( '%' );
 -- | 202610021502
 
 -- cosa è stato convertito, e cosa no: lo legge chi applica la patch a mano
-SELECT @tipi_canonici_tabelle AS tabelle, @tipi_canonici_colonne AS colonne, @tipi_canonici_note AS nota;
+SELECT @tipi_canonici_tabelle AS tabelle, @tipi_canonici_colonne AS colonne,
+    @tipi_canonici_chiavi_tolte AS chiavi_tolte, @tipi_canonici_chiavi_rimesse AS chiavi_rimesse, @tipi_canonici_note AS nota;
 
 -- | 202610021503
 

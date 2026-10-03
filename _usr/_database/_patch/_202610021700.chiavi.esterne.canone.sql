@@ -1639,11 +1639,16 @@ BEGIN
     SET v_i = 1;
     WHILE v_i <= 2 DO
         SET v_tabella = ELT( v_i, 'zone_indirizzi', 'zone_stati' );
+        -- la guardia sull'indice sta qui e non nell'ALTER: MySQL non conosce ADD KEY IF NOT EXISTS, e in una stringa passata
+        -- a PREPARE il traduttore non la vede ( 1064 sulla copia della PROD di gimbe, 03/10/2026 )
         IF EXISTS (
             SELECT 1 FROM information_schema.COLUMNS
             WHERE TABLE_SCHEMA = database() AND TABLE_NAME = v_tabella AND COLUMN_NAME = 'id_zona'
+        ) AND NOT EXISTS (
+            SELECT 1 FROM information_schema.STATISTICS
+            WHERE TABLE_SCHEMA = database() AND TABLE_NAME = v_tabella AND INDEX_NAME = 'id_zona'
         ) THEN
-            SET @chiavi_canone_sql = CONCAT( 'ALTER TABLE `', v_tabella, '` ADD KEY IF NOT EXISTS `id_zona` (`id_zona`)' );
+            SET @chiavi_canone_sql = CONCAT( 'ALTER TABLE `', v_tabella, '` ADD KEY `id_zona` (`id_zona`)' );
             PREPARE indice FROM @chiavi_canone_sql; EXECUTE indice; DEALLOCATE PREPARE indice;
         END IF;
         SET v_i = v_i + 1;

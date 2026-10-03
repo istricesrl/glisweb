@@ -7,7 +7,11 @@
 -- andato bene non trova niente da fare. IDEMPOTENTE.
 
 -- | 202610023500
+
 DROP TABLE IF EXISTS `__patch_ripasso_colonne__`;
+
+-- | 202610023501
+
 CREATE TABLE `__patch_ripasso_colonne__` (
   `tabella` char(64) NOT NULL,
   `posizione` int(11) NOT NULL,
@@ -23,7 +27,7 @@ CREATE TABLE `__patch_ripasso_colonne__` (
   KEY `posizione` (`tabella`, `posizione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 202610023501
+-- | 202610023502
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('__acl_anagrafica__', 1, 'id', 'bigint(20) NOT NULL AUTO_INCREMENT', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('__acl_anagrafica__', 2, 'id_entita', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
@@ -326,7 +330,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('annunci', 15, 'note_fine_validita', 'text DEFAULT NULL', 'text', 'text', 65535, NULL, NULL, 'YES'),
 ('annunci', 16, 'note', 'text DEFAULT NULL', 'text', 'text', 65535, NULL, NULL, 'YES');
 
--- | 202610023502
+-- | 202610023503
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('annunci', 17, 'template', 'char(255) DEFAULT NULL', 'char(255)', 'char', 255, NULL, NULL, 'YES'),
 ('annunci', 18, 'schema_html', 'char(128) DEFAULT NULL', 'char(128)', 'char', 128, NULL, NULL, 'YES'),
@@ -629,7 +633,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('banner', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('banner', 2, 'id_tipologia', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023503
+-- | 202610023504
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('banner', 3, 'id_sito', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('banner', 4, 'ordine', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
@@ -932,7 +936,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('categorie_notizie', 14, 'data_archiviazione', 'date DEFAULT NULL', 'date', 'date', NULL, NULL, NULL, 'YES'),
 ('categorie_notizie', 15, 'note_archiviazione', 'text NULL', 'text', 'text', 65535, NULL, NULL, 'YES');
 
--- | 202610023504
+-- | 202610023505
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('categorie_notizie', 16, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('categorie_notizie', 17, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
@@ -1235,7 +1239,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('contenuti', 66, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('contenuti', 67, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023505
+-- | 202610023506
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('continenti', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('continenti', 2, 'codice', 'char(32) DEFAULT NULL', 'char(32)', 'char', 32, NULL, NULL, 'YES'),
@@ -1538,7 +1542,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('documenti_articoli', 24, 'id_rinnovo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('documenti_articoli', 25, 'id_carrelli_articoli', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023506
+-- | 202610023507
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('documenti_articoli', 26, 'quantita_prevista', 'decimal(9,2) DEFAULT NULL', 'decimal(9,2)', 'decimal', NULL, 9, 2, 'YES'),
 ('documenti_articoli', 27, 'quantita', 'decimal(9,2) DEFAULT NULL', 'decimal(9,2)', 'decimal', NULL, 9, 2, 'YES'),
@@ -1841,7 +1845,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('licenze_software', 4, 'ordine', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('licenze_software', 5, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023507
+-- | 202610023508
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('licenze_software', 6, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('licenze_software', 7, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -2144,7 +2148,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('metadati', 7, 'id_articolo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('metadati', 8, 'id_categoria_prodotti', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023508
+-- | 202610023509
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('metadati', 9, 'id_notizia', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('metadati', 10, 'id_annuncio', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -2447,7 +2451,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('pianificazioni', 44, 'model_id_indirizzo', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('pianificazioni', 45, 'model_id_immobile', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023509
+-- | 202610023510
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('pianificazioni', 46, 'model_id_licenza', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('pianificazioni', 47, 'model_id_listino', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -2750,7 +2754,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('recensioni', 18, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('recensioni', 19, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023510
+-- | 202610023511
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('redirect', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('redirect', 2, 'id_sito', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
@@ -3053,7 +3057,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('ruoli_file', 21, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('ruoli_file', 22, 'id_account_aggiornamento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023511
+-- | 202610023512
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('ruoli_file', 23, 'timestamp_aggiornamento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
 ('ruoli_immagini', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
@@ -3356,7 +3360,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('testate', 1, 'id', 'bigint(20) NOT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'NO'),
 ('testate', 2, 'nome', 'char(128) DEFAULT NULL', 'char(128)', 'char', 128, NULL, NULL, 'YES');
 
--- | 202610023512
+-- | 202610023513
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('testate', 3, 'id_account_inserimento', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('testate', 4, 'timestamp_inserimento', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES'),
@@ -3659,7 +3663,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('tipologie_periodi', 2, 'id_genitore', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('tipologie_periodi', 3, 'ordine', 'int(11) DEFAULT NULL', 'int(11)', 'int', NULL, NULL, NULL, 'YES');
 
--- | 202610023513
+-- | 202610023514
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('tipologie_periodi', 4, 'codice', 'char(32) DEFAULT NULL', 'char(32)', 'char', 32, NULL, NULL, 'YES'),
 ('tipologie_periodi', 5, 'nome', 'char(64) DEFAULT NULL', 'char(64)', 'char', 64, NULL, NULL, 'YES'),
@@ -3962,7 +3966,7 @@ INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `de
 ('valutazioni', 7, 'id_condizione', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('valutazioni', 8, 'id_disponibilita', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES');
 
--- | 202610023514
+-- | 202610023515
 INSERT INTO `__patch_ripasso_colonne__` ( `tabella`, `posizione`, `colonna`, `definizione`, `tipo_colonna`, `tipo`, `lunghezza`, `precisione`, `scala`, `nullabile` ) VALUES
 ('valutazioni', 9, 'id_classe_energetica', 'bigint(20) DEFAULT NULL', 'bigint(20)', 'bigint', NULL, NULL, NULL, 'YES'),
 ('valutazioni', 10, 'note', 'text DEFAULT NULL', 'text', 'text', 65535, NULL, NULL, 'YES'),
