@@ -693,6 +693,15 @@ configurazione — è spool.
   export, screenshot, copie di sicurezza e file di appoggio vanno in `<progetto>/var/<sottocartella parlante>/`,
   un livello sopra `dev/` — e `dev/var/` non è un'alternativa, è sempre sotto la document root. Apache serve
   quello che sta lì dentro. Vedi la "Regola fondamentale" sul materiale di progetto in cima a questo file.
+- **Non scrivere in una tabella con una vista statica senza aggiornare la statica.** Una `*_view_static` non
+  deve mai disallinearsi dai dati sottostanti ( regola di Fabio, 03/10/2026 ). Le scritture via PHP la
+  aggiornano da sole ( `mysqlInsertRow` → `update<X>ViewStatic` / `refreshStaticView()` ); **importatori,
+  travasi, script SQL e Python e ogni scrittura diretta** devono aggiornare, sulle righe che toccano, le
+  statiche che quelle righe influenzano ( `refreshStaticView( $c, $tabella, $id_o_array_di_id )` e
+  `cleanStaticView()` per le righe sparite, oppure lo stesso `REPLACE INTO … SELECT … WHERE id IN (…)` ).
+  Il ricalcolo completo di una statica e' **solo per le emergenze**, mai una pianificazione: in produzione,
+  con decine o centinaia di migliaia di righe, costa troppo. Caso che l'ha fatta nascere: bernispa connor, le
+  statiche mai rigenerate dopo gli import SQL hanno svuotato la tendina fornitori di ricezione e ddt-fornitori.
 - **Non committare `shadow.*` files.** Contengono credenziali. Sono già coperti dal `.gitignore` del framework
   e dovrebbero esserlo anche dal `.gitignore` del progetto cliente.
 - **Non mettere credenziali in `config.yaml`.** Quel file è committato — usa `shadow.yaml` per ogni cosa
