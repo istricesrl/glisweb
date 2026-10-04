@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `durata` decimal(7,2) DEFAULT NULL,
   `id_udm_durata` bigint(20) DEFAULT NULL,
   `udm_durata` char(32) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
+  `nome` varchar(512) DEFAULT NULL,
   `id_categorie` char(255) DEFAULT NULL,
   `categorie` char(255) DEFAULT NULL,
   `prezzi` text DEFAULT NULL,
