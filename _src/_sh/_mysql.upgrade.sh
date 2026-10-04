@@ -149,16 +149,25 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     // gli errori si leggono da mysqli_errno(), come nel task
     mysqli_report( MYSQLI_REPORT_OFF );
 
-    $cn = mysqli_init();
-    mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 6 );
-    if( ! @mysqli_real_connect( $cn, $addr, $user, $pasw, $s['db'], $port ) ) {
-        echo '  ERRORE: connessione non riuscita: ' . mysqli_connect_errno() . ' ' . mysqli_connect_error() . PHP_EOL;
-        exit( 1 );
-    }
+    // la connessione si apre qui e si riapre dopo il dump preventivo, quindi sta in una funzione
+    $connetti = function() use ( $addr, $user, $pasw, $s, $port ) {
 
-    // stessa collation della connessione del framework ( _src/_config/_125.mysql.php )
-    mysqli_set_charset( $cn, 'utf8' );
-    mysqli_query( $cn, 'SET NAMES utf8mb4 COLLATE utf8mb4_general_ci' );
+        $cn = mysqli_init();
+        mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 6 );
+        if( ! @mysqli_real_connect( $cn, $addr, $user, $pasw, $s['db'], $port ) ) {
+            echo '  ERRORE: connessione non riuscita: ' . mysqli_connect_errno() . ' ' . mysqli_connect_error() . PHP_EOL;
+            exit( 1 );
+        }
+
+        // stessa collation della connessione del framework ( _src/_config/_125.mysql.php )
+        mysqli_set_charset( $cn, 'utf8' );
+        mysqli_query( $cn, 'SET NAMES utf8mb4 COLLATE utf8mb4_general_ci' );
+
+        return $cn;
+
+    };
+
+    $cn = $connetti();
 
     // livello di patch del database; senza tabella __patch__ il database e' da creare
     $patchLevel = mysqlPatchLevel( $cn );
@@ -261,6 +270,12 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
 
         chmod( $out, 0640 );
         echo '  fatto: ' . sprintf( '%.1f', filesize( $out ) / 1048576 ) . ' MB' . PHP_EOL;
+
+        // NOTA la connessione e' rimasta inattiva per tutta la durata del dump: se questa supera il wait_timeout
+        // il server la chiude, e la prima query delle patch muore con 2006 MySQL server has gone away ( polmasi
+        // DEV, 04/10/2026: dump di 65 secondi contro un wait_timeout di 60 ); la si riapre invece di contarci
+        @mysqli_close( $cn );
+        $cn = $connetti();
 
     }
 
