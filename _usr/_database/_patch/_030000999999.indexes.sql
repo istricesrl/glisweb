@@ -2293,7 +2293,7 @@ ALTER TABLE `mailing_liste` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mailing_mail
 ALTER TABLE `mailing_mail`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`),
+	ADD UNIQUE KEY `unica_mail` (`id_mailing`, `id_mail`),
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_mail`(`id_mail`),
 	ADD KEY `id_mail_out` (`id_mail_out`),

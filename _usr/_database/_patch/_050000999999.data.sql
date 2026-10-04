@@ -327,7 +327,8 @@ INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (21,        'MP21',         'SEPA Direct Debit B2B' ),
 (22,        'MP22',         'Trattenuta su somme già riscosse' ),
 (23,        'MP08',         'bancomat' ),
-(24,        'MP08',         'paypal' );
+(24,        'MP08',         'paypal' ),
+(25,        'MP23',         'PagoPA' );
 
 -- | 050000023600
 
@@ -475,7 +476,12 @@ INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
 (12,    'IVA per cassa P.A.',           'RF16'),
 (13,    'IVA per cassa',                'RF17'),
 (14,    'altro',                        'RF18'),
-(15,    'forfettario',                  'RF19');
+(15,    'forfettario',                  'RF19'),
+(16,    'fiammiferi',                   'RF06'),
+(17,    'telefonia pubblica',           'RF08'),
+(18,    'documenti di trasporto',       'RF09'),
+(19,    'vendite all\'asta',            'RF15'),
+(20,    'franchigia transfrontaliera',  'RF20');
 
 -- NOTE
 -- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
@@ -4196,6 +4202,8 @@ INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `num
 (26,	1,	    NULL,	'TD25',	'F',	'fattura differita ex art. 21 c. 4 terzo per. lett. b d.P.R. 633/1972',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (27,	1,	    NULL,	'TD26',	'F',	'cessione beni ammortizzabili e per passaggi interni',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (28,	1,	    NULL,	'TD27',	'F',	'fattura per autoconsumo o cessioni gratuite senza rivalsa',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(35,	1,	    NULL,	'TD28',	'F',	'acquisti da San Marino con IVA (fattura cartacea)',	'integr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(36,	1,	    NULL,	'TD29',	'F',	'comunicazione per omessa o irregolare fatturazione',	'comunic.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	'doc. di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	'doc. di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	'doc. di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),

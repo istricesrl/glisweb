@@ -1,95 +1,63 @@
 <?php
 
+    /**
+     * popolazione della vista statica anagrafica_view_static
+     *
+     * Wrapper su syncStaticView() ( _src/_lib/_mysql.tools.php ), che fa il lavoro vero: cerca fino a un lotto
+     * di righe rimaste indietro ( mancanti nella statica, o con i timestamp NULL o piu' vecchi della tabella
+     * base ) e le rigenera. Il nome e il percorso restano quelli di sempre, perche' le pianificazioni dei deploy
+     * e i pulsanti degli strumenti lo chiamano cosi'.
+     *
+     * Le correlate sono le stesse del task di prima: anagrafica_categorie, perche' la vista porta le categorie.
+     *
+     * Gemello di _mod/_AN000.anagrafica/_src/_api/_task/_anagrafica.view.static.popolazione.php.
+     *
+     * Chiamata standard: /task/anagrafica.view.static.popolazione
+     * Chiamata forzata, che riscrive una riga sola: /task/anagrafica.view.static.popolazione?idAnagrafica=<id>
+     *
+     * Fa parte della corte di task della statica: popolazione ( questo ), pulizia ( righe sparite dalla tabella
+     * base ) e svuotamento ( solo per le emergenze ). Il ricalcolo completo non e' una pianificazione: a
+     * tenere allineata la statica sono i controller e, come rete di sicurezza, questo task a lotti.
+     *
+     * @file
+     *
+     */
+
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
+	    require '../../_src/_config.php';
 	}
 
     // verifica dei privilegi
     checkTaskPrivilege( 'GESTIONE_MYSQL' );
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
-	// ...
-	if( ! isset( $_REQUEST['idAnagrafica'] ) ) {
+    // ...
+    if( ! isset( $_REQUEST['idAnagrafica'] ) ) {
 
-		// trovo una riga da aggiornare
-		$status['aggiornare'] = mysqlSelectRow(
-			$cf['mysql']['connection'],
-			'SELECT anagrafica.id FROM anagrafica 
-            LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
-            WHERE
-                ( anagrafica_view_static.timestamp_inserimento IS NULL OR anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
-                OR
-                ( anagrafica_view_static.timestamp_aggiornamento IS NULL OR anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
-			ORDER BY anagrafica.id DESC
-			LIMIT 1'
-		);
+        // riallineo un lotto di righe rimaste indietro
+        $status['riallineate'] = syncStaticView( $cf['mysql']['connection'], 'anagrafica', 100, array( 'anagrafica_categorie' ) );
+        $status['modalita'] = 'standard';
 
-        // verifico le tabelle collegate
-		if( empty( $status['aggiornare'] ) ) {
+        // metroLoopWs() ripete la chiamata finche' aggiornare.id non e' vuoto
+        $status['aggiornare']['id'] = ( ! empty( $status['riallineate'] ) ) ? $status['riallineate'] : NULL;
 
-			// ...
-			$aggiornare = array();
+    } else {
 
-			// tabelle collegate
-			foreach( array( 'anagrafica_categorie' ) as $table ) {
-
-				// trovo una riga da aggiornare
-				$aggiornare[] = mysqlSelectValue(
-					$cf['mysql']['connection'],
-					'SELECT ' . $table . '.id_anagrafica 
-					FROM ' . $table . ' 
-					LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
-					WHERE ( coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento, 0 ) > anagrafica_view_static.timestamp_aggiornamento 
-					OR anagrafica_view_static.timestamp_aggiornamento IS NULL )
-					LIMIT 1'
-				);
-
-			}
-
-            // status
-			$status['aggiornare']['id'] = max( $aggiornare );
-            $status['modalita'] = 'categorie';
-
-		} else {
-
-            // status
-            $status['modalita'] = 'standard';
-
-        }
-
-/*
-		// ...
-		if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
-			updateReportGiacenzaMagazzini(
-				$status['aggiornare']['id_mastro_destinazione'],
-				$status['aggiornare']['id_articolo'],
-				$status['aggiornare']['id_matricola']
-			);
-		}
-*/
-
-    } elseif( isset( $_REQUEST['idAnagrafica'] ) ) {
-
-        // scrivo la riga
+        // riscrivo la riga indicata
         $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
         $status['modalita'] = 'forzata';
+        $status['done'] = true;
+        updateAnagraficaViewStatic( $status['aggiornare']['id'] );
 
-	}
+    }
 
-	// ...
-	if( ! empty( $status['aggiornare']['id'] ) ) {
-		updateAnagraficaViewStatic(
-			$status['aggiornare']['id']
-		);
-	}
-
-	// debug
+    // debug
     // print_r( $_REQUEST );
 
-	// output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    // output
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

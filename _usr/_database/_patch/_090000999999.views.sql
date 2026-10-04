@@ -4359,6 +4359,65 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		LEFT JOIN notizie ON notizie.id = notizie_categorie.id_notizia
 ;
 
+-- | 090000022250
+
+-- offerte_view
+-- tutte le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ); ricavata il 2026-10-04 dalla vecchia
+-- offerte_attive_view ( tolta dal canone in d975b4a15 ) togliendo il filtro sull'emittente gestito, che adesso
+-- applica l'elenco ( _offerte.commerciale.view.php ); materializzata in offerte_view_static
+CREATE OR REPLACE VIEW `offerte_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.codice,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			documenti.nome,
+			' ',
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_offerta IS NOT NULL
+;
+
 -- | 090000022301
 
 -- orari_view

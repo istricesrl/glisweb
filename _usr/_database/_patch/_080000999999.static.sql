@@ -225,22 +225,27 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
 
 -- | 080000002300
 
--- offerte_attive_view_static
+-- offerte_view_static
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: materializza le offerte ancora attive per le ricerche e le tendine
+-- funzione: materializza offerte_view per le ricerche e le tendine
 --
--- offerte_attive_view costa: ha nel WHERE anagrafica_check_gestita( a1.id ), una funzione chiamata
--- riga per riga su tutti i documenti. Misurata su 12.705 documenti l'08/09/2026: 13,5 secondi con
--- la funzione, 0,1 senza, e la condizione non ne scarta nemmeno uno. Materializzando la vista quel
--- costo si paga una riga per volta, quando l'offerta si salva, invece che tutto intero a ogni
--- apertura dell'elenco.
+-- Comprende TUTTE le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ). Fino al
+-- 04/10/2026 si materializzava offerte_attive_view, cioe' le sole offerte emesse da
+-- un'anagrafica gestita: quel filtro adesso lo applica l'elenco
+-- ( _mod/_0400.documenti/_src/_inc/_macro/_offerte.commerciale.view.php ), e la patch
+-- _202610041000.offerte.view.sql ha sostituito offerte_attive_view_static con questa.
+--
+-- Materializzarla serve per lo stesso motivo di prima: la vecchia offerte_attive_view aveva nel
+-- WHERE anagrafica_check_gestita( a1.id ), chiamata riga per riga su tutti i documenti ( misurata
+-- su 12.705 documenti l'08/09/2026: 13,5 secondi con la funzione, 0,1 senza ), e l'elenco delle
+-- offerte resta fra quelli che si aprono di piu'.
 --
 -- Le colonne sono quelle della vista, piu' timestamp_inserimento e timestamp_aggiornamento come
--- nelle altre statiche: la vista non le espone, e' il task di popolazione a scriverle
--- ( _mod/_0400.documenti/_src/_api/_task/_offerte.attive.view.static.popolazione.php ), che le usa
--- per sapere quali righe sono rimaste indietro.
-CREATE TABLE IF NOT EXISTS `offerte_attive_view_static` (     --
+-- nelle altre statiche: la vista non le espone, e' syncStaticView() a scriverle ( task
+-- _mod/_0400.documenti/_src/_api/_task/_offerte.view.static.popolazione.php ), che le usa per
+-- sapere quali righe sono rimaste indietro.
+CREATE TABLE IF NOT EXISTS `offerte_view_static` (            --
   `id` bigint(20) PRIMARY KEY NOT NULL,                       --
   `id_tipologia` bigint(20) DEFAULT NULL,                     --
   `tipologia` char(255) DEFAULT NULL,                         --

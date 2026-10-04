@@ -131,6 +131,8 @@
      * -----------------------------------------|---------------------------------------------------------------
      * getStaticView()                          | restituisce il nome della vista statica di una tabella, se esiste
      * refreshStaticView()                      | aggiorna una vista statica dalla vista che la alimenta
+     * cleanStaticView()                        | toglie da una vista statica le righe che non esistono piu' nella tabella
+     * syncStaticView()                         | riallinea a lotti una vista statica con la tabella da cui nasce
      * getStaticViewExtension()                 | restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
      * funzioni per le patch del database
@@ -1870,7 +1872,7 @@
             // LA STATICA CHE NON C'E' NON E' UN ERRORE ( 2026-09-14 )
             //
             // Non tutte le tabelle hanno una vista materializzata: ne hanno una quelle che
-            // alimentano tendine grosse ( anagrafica, articoli, attivita', offerte_attive, todo ),
+            // alimentano tendine grosse ( anagrafica, articoli, attivita', offerte, todo ),
             // e l'elenco canonico sta in _usr/_database/_patch/_080000999999.static.sql. I
             // controller finally pero' chiamano questa funzione senza chiedersi se la statica
             // esista: _documenti.articoli.finally.php la chiama per `documenti_articoli`, che una
@@ -2018,15 +2020,26 @@
      * di eventi e progetti ) chiama questa funzione prima di refreshStaticView(). Se la statica non esiste sul
      * deploy non fa niente.
      *
+     * Le statiche il cui nome non coincide con una tabella ( offerte_view_static nasce da documenti ) passano
+     * la tabella base in $b e la condizione che ne seleziona le righe in $w, come a syncStaticView(): in quel
+     * caso si tolgono anche le righe la cui riga base esiste ma non soddisfa piu' la condizione ( un documento
+     * che ha cambiato tipologia e non e' piu' un'offerta ).
+     *
      * @param mysqli $c  connessione
      * @param string $t  nome della tabella ( senza suffissi: 'attivita', non 'attivita_view_static' )
+     * @param string $b  tabella base, se diversa da $t
+     * @param string $w  condizione SQL sulla tabella base che seleziona le righe della vista
      *
      * @return bool true se la pulizia e' andata a buon fine o non serviva
      */
-    function cleanStaticView($c, $t)
+    function cleanStaticView($c, $t, $b = null, $w = null)
     {
 
-        if (! preg_match('/^[a-z0-9_]+$/', $t)) {
+        if (empty($b)) {
+            $b = $t;
+        }
+
+        if (! preg_match('/^[a-z0-9_]+$/', $t) || ! preg_match('/^[a-z0-9_]+$/', $b)) {
             return false;
         }
 
@@ -2044,10 +2057,218 @@
 
         mysqlQuery(
             $c,
-            'DELETE `' . $static . '` FROM `' . $static . '` LEFT JOIN `' . $t . '` ON `' . $t . '`.id = `' . $static . '`.id WHERE `' . $t . '`.id IS NULL'
+            'DELETE `' . $static . '` FROM `' . $static . '` LEFT JOIN `' . $b . '` ON `' . $b . '`.id = `' . $static . '`.id'
+                . ((! empty($w)) ? ' AND ( ' . $w . ' )' : '')
+                . ' WHERE `' . $b . '`.id IS NULL'
         );
 
         return empty(mysqli_errno($c));
+    }
+
+    /**
+     * riallinea a lotti una vista materializzata con la tabella da cui nasce
+     *
+     * E' la rete di sicurezza delle viste statiche: i controller finally e le scritture via PHP le
+     * aggiornano da soli, ma importatori, travasi, script SQL e qualunque scrittura diretta possono
+     * lasciarle indietro. Questa funzione cerca fino a $lotto righe rimaste indietro e le rigenera con
+     * refreshStaticView(); i task *.view.static.popolazione sono wrapper su di lei, e chiamandola in
+     * ciclo ( a mano con lws, o da una pianificazione ) la statica si rimette in pari un lotto alla volta.
+     *
+     * Una riga e' indietro quando nella statica manca, oppure ha timestamp_inserimento o
+     * timestamp_aggiornamento NULL o piu' vecchi di quelli della tabella base: e' lo stesso criterio
+     * dei vecchi task di popolazione, che pero' lavoravano UNA riga per chiamata. Per le tabelle
+     * $correlate ( quelle che portano id_<entita> e che la vista legge, come anagrafica_categorie per
+     * anagrafica ) e' indietro anche la riga la cui correlata e' piu' recente della statica.
+     *
+     * Dopo la rigenerazione i timestamp rimasti NULL si timbrano con l'ora corrente, come facevano i
+     * task; quello di aggiornamento si porta anche all'ultima modifica delle correlate, altrimenti una
+     * riga rigenerata per una correlata resterebbe "indietro" per sempre ( la vista copia il
+     * timestamp della base, che puo' essere piu' vecchio ) e il ciclo non finirebbe mai.
+     *
+     * NIENTE RICALCOLO COMPLETO: si lavora solo a lotti. Il ricalcolo completo di una statica e' per le
+     * emergenze ( task di svuotamento e poi popolazione ), mai una pianificazione.
+     *
+     * Le statiche il cui nome non coincide con una tabella ( offerte_view_static nasce da documenti )
+     * passano la tabella base in $b e la condizione che ne seleziona le righe in $w, scritta sulla
+     * tabella base per nome ( es. 'documenti.id_tipologia IN ( SELECT id FROM tipologie_documenti WHERE
+     * se_offerta IS NOT NULL )' ): senza condizione, le righe della base che la vista non restituisce
+     * risulterebbero mancanti a ogni giro. La stessa coppia va passata a cleanStaticView().
+     *
+     * Una statica senza le colonne dei timestamp ( todo_view_static, a oggi ) viene riallineata solo
+     * per le righe mancanti, e lo si scrive nel log.
+     *
+     * @param mysqli $c  connessione
+     * @param string $t  nome della vista senza suffissi ( 'anagrafica', non 'anagrafica_view_static' )
+     * @param int    $l  quante righe riallineare al massimo in questa chiamata
+     * @param array  $r  tabelle correlate: 'tabella' ( colonna id_<t> ) oppure 'tabella' => 'colonna'
+     * @param string $b  tabella base, se diversa da $t
+     * @param string $w  condizione SQL sulla tabella base che seleziona le righe della vista
+     *
+     * @return mixed     quante righe sono state riallineate, false se la rigenerazione e' fallita
+     */
+    function syncStaticView($c, $t, $l = 100, $r = array(), $b = null, $w = null)
+    {
+
+        // le colonne dei timestamp della statica cambiano solo con una migrazione
+        static $colonne = array();
+
+        if (empty($b)) {
+            $b = $t;
+        }
+
+        if (! preg_match('/^[a-z0-9_]+$/', $t) || ! preg_match('/^[a-z0-9_]+$/', $b)) {
+            return false;
+        }
+
+        $static = $t . '_view_static';
+        $l      = max(1, (int) $l);
+
+        if (! isset($colonne[$t])) {
+            $colonne[$t] = mysqlSelectColumn(
+                'COLUMN_NAME',
+                $c,
+                'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+                array(array('s' => $static))
+            );
+        }
+
+        // la statica che non c'e' non e' un errore, come in refreshStaticView()
+        if (empty($colonne[$t])) {
+            return 0;
+        }
+
+        $timestamp = in_array('timestamp_inserimento', $colonne[$t]) && in_array('timestamp_aggiornamento', $colonne[$t]);
+
+        // condizione sulle righe della base
+        $dove = (! empty($w)) ? '( ' . $w . ' ) AND ' : '';
+
+        // righe mancanti o con i timestamp indietro
+        if ($timestamp) {
+            $indietro = '( `' . $static . '`.timestamp_inserimento IS NULL OR `' . $b . '`.timestamp_inserimento > `' . $static . '`.timestamp_inserimento )'
+                . ' OR ( `' . $static . '`.timestamp_aggiornamento IS NULL OR `' . $b . '`.timestamp_aggiornamento > `' . $static . '`.timestamp_aggiornamento )';
+        } else {
+            logger('la vista materializzata ' . $static . ' non ha i timestamp: si riallineano solo le righe mancanti', 'static', LOG_WARNING);
+            $indietro = '`' . $static . '`.id IS NULL';
+        }
+
+        $ids = mysqlSelectColumn(
+            'id',
+            $c,
+            'SELECT `' . $b . '`.id FROM `' . $b . '` '
+                . 'LEFT JOIN `' . $static . '` ON `' . $static . '`.id = `' . $b . '`.id '
+                . 'WHERE ' . $dove . '( ' . $indietro . ' ) '
+                . 'ORDER BY `' . $b . '`.id DESC '
+                . 'LIMIT ' . $l
+        );
+
+        if (! is_array($ids)) {
+            $ids = array();
+        }
+
+        // tabelle correlate: righe la cui correlata e' piu' recente della statica
+        $correlate = array();
+        foreach ($r as $k => $v) {
+            if (is_int($k)) {
+                $correlate[$v] = 'id_' . $t;
+            } else {
+                $correlate[$k] = $v;
+            }
+        }
+
+        if ($timestamp) {
+            foreach ($correlate as $tc => $fk) {
+
+                if (count($ids) >= $l) {
+                    break;
+                }
+
+                if (! preg_match('/^[a-z0-9_]+$/', $tc) || ! preg_match('/^[a-z0-9_]+$/', $fk)) {
+                    continue;
+                }
+
+                $altri = mysqlSelectColumn(
+                    'id',
+                    $c,
+                    'SELECT DISTINCT `' . $tc . '`.`' . $fk . '` AS id FROM `' . $tc . '` '
+                        . 'INNER JOIN `' . $b . '` ON `' . $b . '`.id = `' . $tc . '`.`' . $fk . '` '
+                        . 'LEFT JOIN `' . $static . '` ON `' . $static . '`.id = `' . $tc . '`.`' . $fk . '` '
+                        . 'WHERE ' . $dove . '( `' . $static . '`.timestamp_aggiornamento IS NULL '
+                        . 'OR coalesce( `' . $tc . '`.timestamp_aggiornamento, `' . $tc . '`.timestamp_inserimento, 0 ) > `' . $static . '`.timestamp_aggiornamento ) '
+                        . 'ORDER BY `' . $tc . '`.`' . $fk . '` DESC '
+                        . 'LIMIT ' . ($l - count($ids))
+                );
+
+                if (is_array($altri)) {
+                    $ids = array_values(array_unique(array_merge($ids, $altri)));
+                }
+
+            }
+        }
+
+        if (empty($ids)) {
+            return 0;
+        }
+
+        // rigenerazione
+        if (! refreshStaticView($c, $t, $ids)) {
+            logger('riallineamento di ' . $static . ' non riuscito per ' . count($ids) . ' righe', 'static', LOG_ERR);
+            return false;
+        }
+
+        // timestamp, come li mettevano i task di popolazione
+        if ($timestamp) {
+
+            $segnaposto = implode(', ', array_fill(0, count($ids), '?'));
+            $args       = array();
+            foreach ($ids as $id) {
+                $args[] = array('s' => $id);
+            }
+
+            foreach (array('timestamp_inserimento', 'timestamp_aggiornamento') as $ts) {
+                mysqlQuery(
+                    $c,
+                    'UPDATE `' . $static . '` SET ' . $ts . ' = unix_timestamp() WHERE id IN ( ' . $segnaposto . ' ) AND ' . $ts . ' IS NULL',
+                    $args
+                );
+            }
+
+            foreach ($correlate as $tc => $fk) {
+                if (! preg_match('/^[a-z0-9_]+$/', $tc) || ! preg_match('/^[a-z0-9_]+$/', $fk)) {
+                    continue;
+                }
+                mysqlQuery(
+                    $c,
+                    'UPDATE `' . $static . '` SET timestamp_aggiornamento = greatest( timestamp_aggiornamento, coalesce( ( '
+                        . 'SELECT max( coalesce( `' . $tc . '`.timestamp_aggiornamento, `' . $tc . '`.timestamp_inserimento, 0 ) ) '
+                        . 'FROM `' . $tc . '` WHERE `' . $tc . '`.`' . $fk . '` = `' . $static . '`.id ), 0 ) ) '
+                        . 'WHERE id IN ( ' . $segnaposto . ' )',
+                    $args
+                );
+            }
+
+        }
+
+        // le righe che la vista non restituisce tornerebbero a ogni giro: si segnalano
+        $mancanti = count($ids) - (int) mysqlSelectValue(
+            $c,
+            'SELECT count(*) FROM `' . $static . '` WHERE id IN ( ' . implode(', ', array_fill(0, count($ids), '?')) . ' )',
+            array_map(function ($id) {
+                return array('s' => $id);
+            }, $ids)
+        );
+
+        if ($mancanti > 0) {
+            logger(
+                $mancanti . ' righe di ' . $b . ' non sono arrivate in ' . $static . ' dopo la rigenerazione: la vista non le restituisce, '
+                . 'e senza una condizione sulla tabella base verranno riprese a ogni giro',
+                'static',
+                LOG_WARNING
+            );
+        }
+
+        logger('riallineate ' . count($ids) . ' righe di ' . $static, 'static');
+
+        return count($ids);
     }
 
     /**
