@@ -92,6 +92,9 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
 -- struttura: tabella base
 -- funzione: materializza articoli_view per le ricerche e le tendine
 CREATE TABLE IF NOT EXISTS `articoli_view_static` (
+  `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL,       -- le prime tre come in articoli_view ( 2026-10-04 )
+  `pubblicazione` char(32) DEFAULT NULL,
+  `tipologia_listino` char(64) DEFAULT NULL,
   `id` bigint(20) PRIMARY KEY NOT NULL,
   `codice` char(32) DEFAULT NULL,                             --
   `id_prodotto` bigint(20) DEFAULT NULL,

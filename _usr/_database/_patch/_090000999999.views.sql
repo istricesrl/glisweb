@@ -552,8 +552,20 @@ CREATE OR REPLACE VIEW `annunci_categorie_view` AS
 -- articoli_view
 CREATE OR REPLACE VIEW `articoli_view` AS
 	SELECT
-		coalesce( pubblicazioni.id_tipologia, pubblicazioni_prodotto.id_tipologia ) AS id_tipologia_pubblicazione,
-		tipologie_pubblicazioni.nome AS pubblicazione,
+		-- PUBBLICAZIONE: SOTTOQUERY, NON JOIN ( 2026-10-04 )
+		--
+		-- prima erano due LEFT JOIN su pubblicazioni ( dell'articolo e del prodotto ): un articolo con
+		-- piu' pubblicazioni usciva una volta per pubblicazione, e su glisweb la vista dava 7.920 righe
+		-- per 132 articoli. La statica, che ha id come chiave primaria, non si riusciva piu' a
+		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto.
+		coalesce(
+			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
+			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+		) AS id_tipologia_pubblicazione,
+		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = coalesce(
+				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
+				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+			) ) AS pubblicazione,
 		-- TIPOLOGIA DI VOCE A LISTINO: SOTTOQUERY, NON JOIN
 		--
 		-- prima erano tre LEFT JOIN su articoli_caratteristiche piu' un max( CASE ... ) sotto il
@@ -702,9 +714,6 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN periodicita ON periodicita.id = articoli.id_periodicita
 		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = articoli.id_tipologia_rinnovo
-		LEFT JOIN pubblicazioni ON pubblicazioni.id_articolo = articoli.id
-		LEFT JOIN pubblicazioni AS pubblicazioni_prodotto ON pubblicazioni_prodotto.id_prodotto = articoli.id_prodotto
-		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = coalesce( pubblicazioni.id_tipologia, pubblicazioni_prodotto.id_tipologia )
 ;
 
 -- | 090000001601
