@@ -110,6 +110,13 @@ destinatario del `CHAT.md`, concorrenza fra sessioni, chiusura di una voce in tr
 **`riferimenti/cinque-file.md`** accanto a questo file: **leggilo prima di scrivere in uno dei cinque**,
 se non l'hai già fatto nella sessione.
 
+**Il `READ.md` del progetto porta gli accessi**, sezione *Accessi e credenziali*: almeno le **credenziali
+di root dell'applicazione**, che servono a provare ogni parte del gestionale ( login, schede, form,
+stampe ) senza chiedere a nessuno; poi DB, Adminer, SSH e servizi esterni. È il primo posto dove
+cercarle, prima del config. **Se le credenziali di root non ci sono, vanno aggiunte** ( da
+`dev/src/shadow.json`, `auth.accounts` ): un `READ.md` senza accessi è incompleto. Regola di Fabio del
+04/10/2026; come si usano per le prove è più sotto, in *Le prove sull'applicazione le fa Claude*.
+
 ⚠ **Chiudere una voce sono tre gesti nello stesso turno**: marcatore `[v]` o `[x]`, trasloco nel
 `DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
 `CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
