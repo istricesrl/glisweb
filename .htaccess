@@ -42,7 +42,9 @@ AddType image/webp .webp
 </FilesMatch>
 
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
-<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swn|swo|swp|templ|trace|twig|xsd)$">
+# ( yaml e yml dal 04/10/2026: src/config.yaml e src/config/ext/config.yaml, con le credenziali dentro,
+# si scaricavano in chiaro; le credenziali vanno in shadow.*, ma il blocco non deve contarci )
+<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swn|swo|swp|templ|trace|twig|xsd|yaml|yml)$">
     Deny from all
 </FilesMatch>
 

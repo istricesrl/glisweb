@@ -277,6 +277,10 @@ Prima i YAML, poi i JSON; all'interno di ciascun gruppo, prima `ext/` poi `src/`
 | 2 | `src/config.json` | |
 | 1 — massima | `src/shadow.json` | git-ignored |
 
+**Password, hash e segreti stanno solo in `shadow.*`, mai in `config.*`**: i `config.*` si versionano, e fino
+al 04/10/2026 i `.yaml` non erano nemmeno nel `FilesMatch` del `.htaccess`, quindi un `src/config.yaml` con le
+credenziali si scaricava via HTTP. Se ne trovi in un `config.*`, spostale nello shadow corrispondente.
+
 I file shadow non sono versionati: esistono solo in produzione/staging. Per trovare le credenziali di un progetto
 leggere nell'ordine di priorità decrescente: `src/shadow.json` → `src/config.json` → `src/shadow.yaml` →
 `src/config.yaml`. La stessa logica vale per i moduli: `mod/<nome>/src/config.yaml` +
