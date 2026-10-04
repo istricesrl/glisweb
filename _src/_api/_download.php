@@ -16,10 +16,10 @@
      * 
      * Per ovviare a questo problema, tramite una regola del file .htaccess tutte le richieste di accesso ai file che si trovano nella cartella
      * var/ vengono reindirizzate a questo script che si occupa di verificare se l'utente è autorizzato a scaricare il file richiesto. La regola in
-     * questione è la seguente:
+     * questione è la seguente ( il percorso viaggia in una variabile d'ambiente, non nella query string: vedi "origine dei parametri" ):
      * 
      * ```
-     * RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [B,L,QSA]
+     * RewriteRule ^var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$1,L,QSA]
      * ```
      * 
      * Anche se attualmente il compito principale di questa API è quello di verificare l'autorizzazione al download, la sua peculiare posizione la
@@ -33,8 +33,8 @@
      * script si occupa di riportare il dato rilevato nel database. Le regole specifiche per il mailing sono:
      * 
      * ```
-     * RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$2&__mailing__=$1 [B,L,QSA]
-     * RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$3&__mailing__=$1&__mailing_dst__=$2 [B,L,QSA]
+     * RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$2,E=GLIS_MAILING:$1,L,QSA]
+     * RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$3,E=GLIS_MAILING:$1,E=GLIS_MAILING_DST:$2,L,QSA]
      * ```
      * 
      */
@@ -62,6 +62,51 @@
 
     // variabile generale per il comportamento
     $authorized = false;
+
+    /**
+     * origine dei parametri
+     * =====================
+     *
+     * Il percorso del file e gli identificativi del mailing li mette il .htaccess in variabili
+     * d'ambiente ( E=GLIS_DOWNLOAD, E=GLIS_MAILING, E=GLIS_MAILING_DST ), che dopo la riscrittura
+     * interna PHP vede col prefisso REDIRECT_. Fino al 04/10/2026 viaggiavano nella query string
+     * ( ?__download__=var/$1 con QSA ), e il client poteva scavalcarli: bastava chiamare lo script
+     * direttamente, oppure accodare un proprio __download__ a una URL var/..., perche' PHP tiene
+     * l'ultimo dei parametri omonimi, che era quello del client. Ne veniva la lettura di qualunque
+     * file del deploy, src/config.json compreso. Il client le variabili d'ambiente non le puo'
+     * impostare, quindi quello che arriva da $_REQUEST qui non si guarda piu': lo si sovrascrive
+     * col valore del .htaccess, cosi' le macro custom di download che leggono
+     * $_REQUEST['__download__'] continuano a funzionare e vedono il valore buono.
+     */
+
+    // lettura delle variabili d'ambiente impostate dal .htaccess
+    foreach( array( 'GLIS_DOWNLOAD' => '__download__', 'GLIS_MAILING' => '__mailing__', 'GLIS_MAILING_DST' => '__mailing_dst__' ) as $variabile => $parametro ) {
+
+        // quello che manda il client non vale
+        unset( $_REQUEST[ $parametro ], $_GET[ $parametro ], $_POST[ $parametro ] );
+
+        // vale solo quello che ha messo il .htaccess
+        if( isset( $_SERVER[ 'REDIRECT_' . $variabile ] ) ) {
+            $_REQUEST[ $parametro ] = $_SERVER[ 'REDIRECT_' . $variabile ];
+        } elseif( isset( $_SERVER[ $variabile ] ) ) {
+            $_REQUEST[ $parametro ] = $_SERVER[ $variabile ];
+        }
+
+    }
+
+    // gli identificativi del mailing sono numerici ( lo garantisce gia' la RewriteRule )
+    foreach( array( '__mailing__', '__mailing_dst__' ) as $parametro ) {
+        if( isset( $_REQUEST[ $parametro ] ) && ! ctype_digit( (string) $_REQUEST[ $parametro ] ) ) {
+            unset( $_REQUEST[ $parametro ] );
+        }
+    }
+
+    // senza percorso dal .htaccess lo script e' stato chiamato direttamente
+    if( empty( $_REQUEST['__download__'] ) ) {
+        http_response_code( 403 );
+        header( 'Content-Type: text/plain; charset=utf-8' );
+        die( 'accesso negato' );
+    }
 
     /**
      * integrazione con il modulo mailing
@@ -186,30 +231,68 @@
     }
 
     /**
+     * confinamento in var/
+     * ====================
+     *
+     * Si servono solo file sotto var/, e il controllo e' doppio. Il primo e' sul percorso cosi'
+     * com'e' scritto: comincia con var/ e non ha segmenti vuoti, '.' o '..', ne' backslash o byte
+     * nulli, quindi non puo' risalire da solo. Il secondo e' sul percorso risolto da realpath():
+     * se un collegamento simbolico dentro var/ porta altrove nel deploy ( src/, _src/, etc/ ) il
+     * file si rifiuta. Un collegamento che porta FUORI dal deploy invece resta servibile, perche'
+     * e' cosi' che alcuni deploy montano archivi esterni ( gimbe, var/contenuti/rassegna/ ): li'
+     * il collegamento l'ha messo chi amministra la macchina, e dal client non si raggiunge.
+     */
+
+    // controllo sul percorso scritto
+    $segmentiDownload = explode( '/', $_REQUEST['__download__'] );
+    $percorsoValido = ( $segmentiDownload[0] === 'var' && count( $segmentiDownload ) > 1 )
+        && strpbrk( $_REQUEST['__download__'], "\\\0" ) === false
+        && count( array_intersect( $segmentiDownload, array( '', '.', '..' ) ) ) === 0;
+
+    // controllo sul percorso risolto
+    if( $percorsoValido ) {
+        $percorsoReale = realpath( DIR_BASE . $_REQUEST['__download__'] );
+        $baseReale = rtrim( realpath( DIR_BASE ), '/' ) . '/';
+        $varReale = rtrim( realpath( DIR_BASE . 'var' ), '/' ) . '/';
+        if( $percorsoReale !== false && strpos( $percorsoReale, $baseReale ) === 0 && strpos( $percorsoReale, $varReale ) !== 0 ) {
+            $percorsoValido = false;
+        }
+    }
+
+    // fuori da var/ si nega
+    if( ! $percorsoValido ) {
+        logger( 'download negato fuori da var/: ' . $_REQUEST['__download__'], 'security', LOG_ERR );
+        http_response_code( 403 );
+        header( 'Content-Type: text/plain; charset=utf-8' );
+        die( 'accesso negato' );
+    }
+
+    /**
      * logiche standard di protezione dei file
      * =======================================
-     * 
+     *
      */
 
     clearstatcache(true, DIR_BASE . $_REQUEST['__download__']);
 
+    // nei messaggi il percorso relativo: quello assoluto rivela dove sta il deploy sul disco
     if (!is_file(DIR_BASE . $_REQUEST['__download__'])) {
         http_response_code(404);
         header('Content-Type: text/plain; charset=utf-8');
-        die("File non trovato: " . DIR_BASE . $_REQUEST['__download__']);
+        die("File non trovato: " . $_REQUEST['__download__']);
     }
 
     if (!is_readable(DIR_BASE . $_REQUEST['__download__'])) {
         http_response_code(403);
         header('Content-Type: text/plain; charset=utf-8');
-        die("File non leggibile da PHP: " . DIR_BASE . $_REQUEST['__download__']);
+        die("File non leggibile da PHP: " . $_REQUEST['__download__']);
     }
 
     $size = filesize(DIR_BASE . $_REQUEST['__download__']);
     if ($size === false || $size === 0) {
         http_response_code(500);
         header('Content-Type: text/plain; charset=utf-8');
-        die("File vuoto (per PHP) o size non disponibile: " . DIR_BASE . $_REQUEST['__download__']);
+        die("File vuoto (per PHP) o size non disponibile: " . $_REQUEST['__download__']);
     }
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);

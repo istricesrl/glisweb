@@ -1049,8 +1049,12 @@
         echo PHP_EOL;
 
         // aggiungo all'output le macro incluse
-        foreach( $includes as $include ) {
-            echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+        // solo in sviluppo: sono percorsi assoluti del disco, e il 04/10/2026 uno scanner li ha letti
+        // nell'HTML pubblico per sapere quali file chiedere a _download.php
+        if( SITE_STATUS === DEVELOPEMENT ) {
+            foreach( $includes as $include ) {
+                echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+            }
         }
 
         // rendering del template in base al tipo
