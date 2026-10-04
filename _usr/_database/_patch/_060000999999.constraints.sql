@@ -552,7 +552,7 @@ ALTER TABLE `consensi_moduli`
     ADD CONSTRAINT `consensi_moduli_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `consensi_moduli_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 060000006500
+-- | 060000006600
 
 -- consensi_contatti
 ALTER TABLE `consensi_contatti`
@@ -1498,7 +1498,7 @@ ALTER TABLE `pianificazioni`
     ADD CONSTRAINT `pianificazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pianificazioni_ibfk_06_nofollow`                        FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 060000023600
+-- | 060000023650
 
 -- periodicita
 ALTER TABLE `periodicita`
@@ -2485,7 +2485,7 @@ ALTER TABLE `tipologie_zone`
     ADD CONSTRAINT `tipologie_zone_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_zone_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 060000056900
+-- | 060000058450
 
 -- tipologie_veicoli
 ALTER TABLE `tipologie_veicoli`
