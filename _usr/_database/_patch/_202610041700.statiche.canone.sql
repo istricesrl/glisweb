@@ -331,7 +331,7 @@ CREATE TABLE `attivita_view_static__nuova` (
   `data_archiviazione` date DEFAULT NULL,
   `__label__` text,
   UNIQUE KEY `codice` (`codice`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610041703
 
@@ -397,7 +397,7 @@ CREATE TABLE `articoli_view_static__nuova` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text,
   UNIQUE KEY `codice` (`codice`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610041708
 

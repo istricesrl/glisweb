@@ -57,7 +57,7 @@ CREATE TABLE `anagrafica_view_static__nuova` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text,
   UNIQUE KEY `codice` (`codice`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 202610041802
 
