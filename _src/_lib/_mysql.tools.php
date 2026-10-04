@@ -3107,6 +3107,12 @@
      * che gli script da riga di comando non hanno. Gli errori si leggono sia da mysqli_errno() sia dall'eccezione che mysqli
      * solleva per default da PHP 8.1.
      *
+     * NOTA le patch girano con SET NAMES utf8 COLLATE utf8_general_ci, e alla fine la connessione torna com'era. Una vista
+     * prende charset e collation della sessione che la crea per le colonne fatte solo di letterali, numeri o funzioni su
+     * date ( i __label__ con concat_ws, i group_concat di id, le date formattate ): con la utf8mb4 del framework
+     * ( _src/_config/_125.mysql.php ) queste colonne nascevano utf8mb4_general_ci, fuori dal canone utf8_general_ci
+     * ( censimento del 04/10/2026: 51 colonne su sei deploy di web03 ).
+     *
      * @param       object      $c      la connessione mysqli
      * @param       array       $p      le patch da applicare, di mysqlPatchRead()
      * @param       array       $e      l'array in cui scrivere l'errore, vuoto se tutto è andato bene, modificato sul posto
@@ -3127,11 +3133,11 @@
             'id' => NULL,
             'query' => 'CREATE TABLE IF NOT EXISTS `__patch__` (
                 `id` char(12) NOT NULL PRIMARY KEY,
-                `patch` mediumtext COLLATE utf8_unicode_ci,
+                `patch` mediumtext COLLATE utf8_general_ci,
                 `timestamp_esecuzione` int(11) DEFAULT NULL,
                 `token` char(128) DEFAULT NULL,
                 `note_esecuzione` text
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci'
         ));
 
         // il testo di una patch puo' superare i 64 KB di text ( _202609261002 ne ha 215 ): sui database dove __patch__
@@ -3140,8 +3146,13 @@
         array_splice($p, 1, 0, array(array(
             'file' => NULL,
             'id' => NULL,
-            'query' => 'ALTER TABLE `__patch__` MODIFY `patch` mediumtext COLLATE utf8_unicode_ci'
+            'query' => 'ALTER TABLE `__patch__` MODIFY `patch` mediumtext COLLATE utf8_general_ci'
         )));
+
+        // charset e collation della connessione, da rimettere alla fine; le patch girano in utf8_general_ci ( vedi sopra )
+        $w = mysqli_query($c, 'SELECT @@character_set_client, @@collation_connection');
+        $w = ($w instanceof mysqli_result) ? mysqli_fetch_row($w) : false;
+        mysqli_query($c, 'SET NAMES utf8 COLLATE utf8_general_ci');
 
         // applico una patch alla volta
         foreach ($p as $patch) {
@@ -3208,6 +3219,9 @@
                     'error' => $m,
                     'query' => $patch['query']
                 );
+                if ($w) {
+                    mysqli_query($c, 'SET NAMES ' . $w[0] . ' COLLATE ' . $w[1]);
+                }
                 return $r;
             }
 
@@ -3215,6 +3229,11 @@
             if ($patch['id'] !== NULL) {
                 $r[] = $patch;
             }
+        }
+
+        // rimetto charset e collation della connessione
+        if ($w) {
+            mysqli_query($c, 'SET NAMES ' . $w[0] . ' COLLATE ' . $w[1]);
         }
 
         // restituisco le patch applicate

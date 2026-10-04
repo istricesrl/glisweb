@@ -2306,7 +2306,8 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.causale_id_contratto,
 		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
 		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
-		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
+		-- group_concat di soli numeri, senza un letterale che dia il charset: su MariaDB 10.3 usciva latin1_swedish_ci
+		convert( group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) USING utf8 ) COLLATE utf8_general_ci AS id_aree,
 		group_concat( DISTINCT aree.nome ) AS aree,
 		coupon.id_account_inserimento,
 		coupon.timestamp_inserimento,
