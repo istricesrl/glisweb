@@ -288,6 +288,32 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
         $patchLevel = $p['id'];
     }
 
+    // le query in cache possono avere i dati di prima delle patch: si cancellano le chiavi MYSQL_ di tutti i siti del
+    // deploy, come fa il task ( vedi memcacheCleanQueries() ), ma qui senza bootstrap: server e siti dal config.json
+    if( $patchLevel !== $livelloIniziale ) {
+        require_once $docroot . '/_src/_lib/_memcache.tools.php';
+        $mc = $cf['memcache'] ?? array();
+        $prefissi = array();
+        foreach( $cf['sites'] ?? array() as $sito ) {
+            $seme = memcacheSiteSeed( $sito, $stato, $cf['sites']['1']['domains'][ $stato ] ?? '' );
+            if( $seme !== false ) {
+                $prefissi[] = $seme['seed'] . 'MYSQL_';
+            }
+        }
+        foreach( $mc['profiles'][ $stato ]['servers'] ?? array() as $nome ) {
+            $s = array_replace( $mc['servers'][ $nome ] ?? array(), $sh['memcache']['servers'][ $nome ] ?? array() );
+            if( empty( $s['address'] ) ) {
+                continue;
+            }
+            $errMc = array();
+            $n = memcacheDeleteByPrefix( $s['address'], $s['port'] ?? 11211, $prefissi, $errMc );
+            echo PHP_EOL . '  cache delle query su ' . $s['address'] . ': ' . ( ( $n === false ) ? 'NON svuotata' : $n . ' chiavi cancellate' ) . PHP_EOL;
+            foreach( $errMc as $e ) {
+                echo '  ATTENZIONE ' . $e . PHP_EOL;
+            }
+        }
+    }
+
     // ci si ferma al primo errore, come nel task
     if( ! empty( $errore ) ) {
         echo '  ERRORE nella patch ' . $errore['id'] . ( ( empty( $errore['file'] ) ) ? '' : ' di ' . basename( $errore['file'] ) ) . ': ' . $errore['errno'] . ' ' . $errore['error'] . PHP_EOL;

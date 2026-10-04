@@ -39,6 +39,7 @@
      * memcacheUniqueKey()              | aggiunge un seme univoco alla chiave, per evitare collisioni fra siti diversi
      * memcacheAddKeyAgeSuffix()        | aggiunge il suffisso _AGE alla chiave, per memorizzare l'età della chiave
      * memcacheGetKeyAge()              | legge l'età di una chiave in cache
+     * memcacheSiteSeed()               | calcola il seme delle chiavi di un sito qualsiasi del deploy
      *
      * funzioni per la scrittura dei dati
      * ----------------------------------
@@ -49,6 +50,7 @@
      * memcacheWrite()                  | scrive un dato in cache
      * memcacheDelete()                 | cancella un dato dalla cache
      * memcacheFlush()                  | cancella tutti i dati dalla cache
+     * memcacheDeleteByPrefix()         | cancella le chiavi che cominciano con un prefisso, anche fuori dall'indice
      *
      * funzioni per la lettura dei dati
      * --------------------------------
@@ -177,6 +179,41 @@
         }
 
         return memcacheRead($conn, memcacheAddKeyAgeSuffix($key));
+    }
+
+    /**
+     * calcola il seme delle chiavi di un sito qualsiasi del deploy
+     *
+     * Questa funzione ricostruisce il seme che _src/_config/_040.cache.php mette in MEMCACHE_UNIQUE_SEED, ma per un sito
+     * qualunque e non solo per quello corrente: FQDN del sito ( host più dominio per lo stato indicato ) seguito dal dominio
+     * del sito 1, con i punti sostituiti da trattini bassi e tutto in maiuscolo. Serve a chi deve lavorare sulle chiavi di
+     * tutti i siti di un deploy, come la pulizia di deploy di _src/_api/_task/_memcache.clean.php, o a chi non ha fatto il
+     * bootstrap e quindi non ha la costante. Gli alias non contano, perché il seme lo danno hosts[] e domains[].
+     *
+     * @param       array       $site       la configurazione del sito, cioè un elemento di $cf['sites']
+     * @param       string      $status     lo stato per cui calcolare il seme ( DEV, TEST o PROD )
+     * @param       string      $tail       il dominio del sito 1 per lo stesso stato
+     *
+     * @return      mixed                   array( 'fqdn' => ..., 'seed' => ... ), oppure false se il sito non ha un
+     *                                      dominio per quello stato
+     *
+     */
+    function memcacheSiteSeed($site, $status, $tail)
+    {
+
+        if (empty($site['domains'][$status])) {
+            return false;
+        }
+
+        $fqdn = trim(
+            ((! empty($site['hosts'][$status])) ? $site['hosts'][$status] . '.' : NULL) . $site['domains'][$status],
+            ". \t\n\r\0\x0B"
+        );
+
+        return array(
+            'fqdn' => $fqdn,
+            'seed' => strtoupper(str_replace('.', '_', $fqdn . '_' . $tail . '_'))
+        );
     }
 
     /**
@@ -412,6 +449,97 @@
         );
 
         return ($failed === 0);
+    }
+
+    /**
+     * cancella dalla cache le chiavi che cominciano con un prefisso, anche se non sono nell'indice
+     *
+     * Questa funzione chiede al server l'elenco di tutte le chiavi con il comando lru_crawler metadump ( Memcached 1.4.31 e
+     * successivi ), tiene quelle che cominciano con uno dei prefissi indicati e le cancella una per una, sulla stessa
+     * connessione. Serve per le chiavi che memcacheFlush() non vede perché non sono nell'indice CACHE_INDEX: quelle scritte
+     * prima del 2026-09-24, quando l'indice scadeva con il TTL dell'ultima chiave scritta, e quelle perse per la scrittura non
+     * atomica dell'indice ( issue #605 ). Il 01/10/2026 su polmasi PROD le chiavi MYSQL_ in cache erano 6.826, quelle
+     * nell'indice circa 419.
+     *
+     * Si parla direttamente con il server, con un socket, e non con la classe Memcached, che non ha un modo affidabile di
+     * elencare le chiavi ( getAllKeys() si basa su stats cachedump, che dalla 1.4.23 restituisce un elenco parziale ); per lo
+     * stesso motivo la funzione non dipende da $cf né dalle costanti del framework, e si può usare anche da uno script di shell
+     * che non fa il bootstrap. Le chiavi vanno quindi passate complete, con il seme ( vedi memcacheSiteSeed() ).
+     *
+     * Un prefisso vuoto viene scartato, perché selezionerebbe tutte le chiavi del server, anche quelle degli altri deploy.
+     *
+     * @param       string      $address    l'indirizzo del server
+     * @param       int         $port       la porta del server
+     * @param       mixed       $prefixes   il prefisso, o un array di prefissi, delle chiavi da cancellare
+     * @param       array       $err        gli errori incontrati, modificato sul posto
+     *
+     * @return      mixed                   il numero di chiavi cancellate, oppure false se l'elenco non si è potuto leggere
+     *
+     */
+    function memcacheDeleteByPrefix($address, $port, $prefixes, &$err = array())
+    {
+
+        $prefixes = array_filter((array) $prefixes, 'strlen');
+
+        if (empty($prefixes)) {
+            $err[] = 'nessun prefisso valido';
+            return false;
+        }
+
+        $sock = @fsockopen($address, (int) $port, $errno, $errstr, 5);
+
+        if ($sock === false) {
+            $err[] = 'connessione a ' . $address . ':' . $port . ' non riuscita: ' . $errno . ' ' . $errstr;
+            return false;
+        }
+
+        stream_set_timeout($sock, 60);
+
+        // elenco delle chiavi: una riga key=<chiave codificata come URL> exp=... la=... per chiave, chiuso da END
+        fwrite($sock, "lru_crawler metadump all\r\n");
+
+        $keys = array();
+        while (($line = fgets($sock)) !== false) {
+            $line = rtrim($line, "\r\n");
+            if ($line === 'END') {
+                break;
+            } elseif (strpos($line, 'key=') !== 0) {
+                // BUSY se un altro crawler è in corso, ERROR o CLIENT_ERROR se il server non conosce il comando
+                $err[] = 'elenco delle chiavi rifiutato: ' . $line;
+                fclose($sock);
+                return false;
+            }
+            $key = urldecode(strtok(substr($line, 4), ' '));
+            foreach ($prefixes as $prefix) {
+                if (strpos($key, $prefix) === 0) {
+                    $keys[] = $key;
+                    break;
+                }
+            }
+        }
+
+        if ($line !== 'END') {
+            $err[] = 'elenco delle chiavi interrotto prima della fine';
+            fclose($sock);
+            return false;
+        }
+
+        $deleted = 0;
+        foreach ($keys as $key) {
+            fwrite($sock, 'delete ' . $key . "\r\n");
+            $r = rtrim((string) fgets($sock), "\r\n");
+            if ($r === 'DELETED') {
+                $deleted++;
+            } elseif ($r !== 'NOT_FOUND') {
+                // una chiave già scaduta non è un errore
+                $err[] = 'impossibile eliminare la chiave ' . $key . ': ' . $r;
+            }
+        }
+
+        fwrite($sock, "quit\r\n");
+        fclose($sock);
+
+        return $deleted;
     }
 
     /**

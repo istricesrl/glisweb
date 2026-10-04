@@ -111,16 +111,10 @@
                 }
 
                 // il seed si ricostruisce come in _src/_config/_040.cache.php, a partire dal
-                // FQDN del sito: host di configurazione piu' dominio. Gli alias non contano,
-                // perche' il FQDN lo danno hosts[] e domains[], non l'host della richiesta
-                $fqdn = trim(
-                    ( ( ! empty( $sito['hosts'][ SITE_STATUS ] ) ) ? $sito['hosts'][ SITE_STATUS ] . '.' : NULL )
-                    . $sito['domains'][ SITE_STATUS ],
-                    ". \t\n\r\0\x0B"
-                );
-
-                $seed = strtoupper( str_replace( '.', '_', $fqdn . '_' . $coda . '_' ) );
-
+                // FQDN del sito: host di configurazione piu' dominio ( vedi memcacheSiteSeed() )
+                $seme = memcacheSiteSeed( $sito, SITE_STATUS, $coda );
+                $fqdn = $seme['fqdn'];
+                $seed = $seme['seed'];
                 // indice delle chiavi di QUESTO sito, letto con la chiave gia' completa.
                 // memcacheWrite() salva sempre serialize( $dato ), e memcacheRead() lo scioglie
                 // in lettura: leggendo dalla connessione quel passaggio va rifatto a mano,
@@ -181,6 +175,14 @@
 
         }
 
+    }
+
+    // le query in cache che gli indici non elencano ( vedi memcacheCleanQueries() ): le chiavi MYSQL_ scritte
+    // senza indice restavano in cache anche dopo questo task, e dopo la conversione degli id del 30/09/2026 le
+    // tendine continuavano a mostrare gli id vecchi ( polmasi, 01/10/2026: 6.826 chiavi, circa 419 nell'indice )
+    $status['query'] = memcacheCleanQueries( $status['portata'] === 'deploy' );
+    if( $status['query'] === false ) {
+        $status['esito'] = false;
     }
 
     // controllo

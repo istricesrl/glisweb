@@ -153,6 +153,18 @@
             echo 'patch ' . $pPatch['id'] . ' applicata correttamente' . PHP_EOL;
         }
 
+        // le query in cache possono avere i dati di prima delle patch, e nessun controller le ha invalidate: si
+        // cancellano quelle di tutto il deploy, anche se l'ultima patch e' fallita ( vedi memcacheCleanQueries() )
+        if( ! empty( $pDone ) ) {
+            $pCache = memcacheCleanQueries( true );
+            if( is_array( $pCache ) ) {
+                echo 'cache delle query svuotata: ' . array_sum( $pCache ) . ' chiavi cancellate' . PHP_EOL;
+            } elseif( isset( $cf['memcache']['connection'] ) && is_object( $cf['memcache']['connection'] ) ) {
+                logger( 'patch applicate ma cache delle query non svuotata, chiamare /task/memcache.clean?deploy=1', 'mysql', LOG_WARNING );
+                echo 'ATTENZIONE cache delle query non svuotata, chiamare /task/memcache.clean?deploy=1' . PHP_EOL;
+            }
+        }
+
         // errore
         if( ! empty( $pError ) ) {
             $pStatus = 'errore nella patch ' . $pError['id'] . ( ( empty( $pError['file'] ) ) ? '' : ' di ' . basename( $pError['file'] ) ) . ': ' . $pError['errno'] . ' ' . $pError['error'];

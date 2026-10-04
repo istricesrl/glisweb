@@ -47,6 +47,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * memcacheCleanFromIndex()         | cancella dalla cache le query registrate nell'indice per una tabella
+     * memcacheCleanQueries()           | cancella dalla cache tutte le query del sito o del deploy, anche fuori dagli indici
      *
      * dipendenze
      * ==========
@@ -57,6 +58,8 @@
      * ---------------------------------|---------------------------------------------------------------
      * logWrite()                       | _src/_lib/_log.utils.php
      * memcacheDelete()                 | _src/_lib/_memcache.tools.php
+     * memcacheSiteSeed()               | _src/_lib/_memcache.tools.php
+     * memcacheDeleteByPrefix()         | _src/_lib/_memcache.tools.php
      *
      * changelog
      * =========
@@ -117,5 +120,67 @@
             }
 
         }
+
+    }
+
+    /**
+     * cancella dalla cache tutte le query del sito o del deploy, anche fuori dagli indici
+     *
+     * Questa funzione cancella le chiavi MYSQL_ ( vedi mysqlCachedQuery() ) del sito corrente o, con $deploy a true, di tutti
+     * i siti del deploy, chiedendo a ogni server della connessione l'elenco completo delle chiavi tramite
+     * memcacheDeleteByPrefix(); non passa quindi né dall'indice CACHE_INDEX né da CACHE_QUERY_INDEX, che non elencano tutte le
+     * query in cache ( vedi la NOTA in testa a questo file e la issue #605 ). Le chiavi degli altri deploy che condividono il
+     * server non vengono toccate, perché si cancella solo per prefisso <seme del sito>MYSQL_.
+     *
+     * Serve dove i dati del database sono cambiati senza passare dal framework, per cui nessun controller ha invalidato le
+     * query: l'applicazione delle patch ( _src/_api/_task/_mysql.patch.php ) e lo svuotamento a mano della cache
+     * ( _src/_api/_task/_memcache.clean.php ). Il caso che l'ha resa necessaria è la conversione degli id del 30/09/2026
+     * ( _202609301900.id.numerici.sql ): dopo la patch le tendine di gestionale.polmasi.it mostravano ancora gli id vecchi.
+     *
+     * @param       bool        $deploy     true per tutti i siti del deploy, false ( default ) per il solo sito corrente
+     *
+     * @return      mixed                   array( <server> => <chiavi cancellate> ), oppure false se manca la connessione o se
+     *                                      almeno un server non ha restituito l'elenco delle chiavi
+     *
+     */
+    function memcacheCleanQueries( $deploy = false ) {
+
+        global $cf;
+
+        if( ! isset( $cf['memcache']['connection'] ) || ! is_object( $cf['memcache']['connection'] ) ) {
+            return false;
+        }
+
+        // prefissi delle chiavi da cancellare
+        $prefissi = array();
+        if( $deploy ) {
+            foreach( $cf['sites'] as $sito ) {
+                $seme = memcacheSiteSeed( $sito, SITE_STATUS, $cf['sites']['1']['domains'][ SITE_STATUS ] );
+                if( $seme !== false ) {
+                    $prefissi[] = $seme['seed'] . 'MYSQL_';
+                }
+            }
+        } else {
+            $prefissi[] = MEMCACHE_UNIQUE_SEED . 'MYSQL_';
+        }
+
+        // un giro per ogni server della connessione
+        $esito = array();
+        $ok = true;
+        foreach( $cf['memcache']['connection']->getServerList() as $server ) {
+            $errori = array();
+            $nome = $server['host'] . ':' . $server['port'];
+            $esito[ $nome ] = memcacheDeleteByPrefix( $server['host'], $server['port'], $prefissi, $errori );
+            foreach( $errori as $errore ) {
+                logWrite( 'pulizia delle query su ' . $nome . ': ' . $errore, 'memcache', LOG_ERR );
+            }
+            if( $esito[ $nome ] === false ) {
+                $ok = false;
+            } else {
+                logWrite( 'pulizia delle query su ' . $nome . ': ' . $esito[ $nome ] . ' chiavi cancellate', 'memcache', LOG_INFO );
+            }
+        }
+
+        return ( $ok ) ? $esito : false;
 
     }
