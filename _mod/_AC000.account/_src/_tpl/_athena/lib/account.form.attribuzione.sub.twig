@@ -25,14 +25,22 @@
         {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         <div class="form-group row">
+            <div class="col-2 col-md-1 form-col">
+                <span class="label-top">ordine</span>
+                {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'number', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
             <div class="col-auto form-col">
                 <span class="label-top">gruppo</span>
                 {{ frm.select({ 'field': { 'name': 'id_gruppo', 'disabled': disabled, 'required': 1 }, 'source': { 'values': etc.select.gruppi }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col form-col">
                 <span class="label-top">entità collegata</span>
-                {{ frm.input({ 'field': { 'name': 'entita', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-            </div> 
+                {{ frm.select({ 'field': { 'name': 'entita', 'disabled': disabled, 'required': 1 }, 'source': { 'values': etc.select.entita }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col-auto form-col">
+                <span class="label-top">permesso</span>
+                {{ frm.select({ 'field': { 'name': 'permesso', 'disabled': disabled, 'required': 1, 'default': 'FULL' }, 'source': { 'values': etc.select.permesso }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
             <div class="col form-col">
                 <span class="label-top">note</span>
                 {{ frm.input({ 'field': { 'name': 'note', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
