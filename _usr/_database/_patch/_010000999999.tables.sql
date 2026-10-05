@@ -6092,6 +6092,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
   `se_bozza` tinyint(1) DEFAULT NULL,                           -- se bozza
   `se_pubblicato` tinyint(1) DEFAULT NULL,                      -- se pubblicato
   `se_evidenza` tinyint(1) DEFAULT NULL,                        -- se evidenza
+  `se_anteprima` tinyint(1) DEFAULT NULL,                       -- se anteprima, visibile solo al gruppo anteprima
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia

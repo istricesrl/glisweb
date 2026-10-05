@@ -29,13 +29,15 @@
 	    // recupero le categorie annunci dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT categorie_annunci.* FROM categorie_annunci '.
+            'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_categoria_annunci = categorie_annunci.id ) AS timestamp_pubblicazione, categorie_annunci.* FROM categorie_annunci '.
             'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_annunci = categorie_annunci.id '.
             'WHERE categorie_annunci.id_sito = ? '.
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
             'GROUP BY categorie_annunci.id ',
             array(
+                array( 's' => time() ),
+                array( 's' => time() ),
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
                 array( 's' => time() )
@@ -50,6 +52,9 @@
 
 		    // ciclo principale
 			foreach( $pgs as $pg ) {
+
+                // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+                $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
                 // ID della pagina
                 $pid = PREFX_CATEGORIE_ANNUNCI . $pg['id'];
@@ -85,6 +90,13 @@
                     aggiungiGruppi(
                         $cf['contents']['pages'][$pid],
                         $pg['id']
+                    );
+
+                    // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                    aggiungiPubblicazione(
+                        $cf['contents']['pages'][$pid],
+                        $pg['id'],
+                        'id_categoria_annunci'
                     );
 
                     aggiungiContenuti(
@@ -137,7 +149,7 @@
         // recupero le annunci dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT annunci.*, annunci_categorie.id_categoria AS id_categoria, '.
+            'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_annuncio = annunci.id ) AS timestamp_pubblicazione, annunci.*, annunci_categorie.id_categoria AS id_categoria, '.
             'pubblicazioni.id_tipologia AS id_tipologia_pubblicazione, tipologie_pubblicazioni.nome AS tipologia_pubblicazione '.
             'FROM annunci '.
             'INNER JOIN pubblicazioni ON pubblicazioni.id_annuncio = annunci.id '.
@@ -149,6 +161,8 @@
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
             'GROUP BY annunci.id',
             array(
+                array( 's' => time() ),
+                array( 's' => time() ),
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
                 array( 's' => time() )
@@ -163,6 +177,10 @@
 
             // ciclo principale
             foreach( $pgs as $pg ) {
+
+            // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+            $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
+
             // categorie
             $cat = mysqlQuery( $cf['mysql']['connection'],
                 'SELECT annunci_categorie.id_categoria '
@@ -226,6 +244,13 @@
                         $pg['id']
                     );
 
+                    // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                    aggiungiPubblicazione(
+                        $cf['contents']['pages'][$pid],
+                        $pg['id'],
+                        'id_annuncio'
+                    );
+
                     aggiungiContenuti(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
@@ -286,15 +311,13 @@
 		    $cf['contents']['updated'],
 		    mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT max( categorie_annunci.timestamp_aggiornamento ) AS updated FROM categorie_annunci '.
+                'SELECT max( greatest( coalesce( categorie_annunci.timestamp_aggiornamento, 0 ), coalesce( pubblicazioni.timestamp_aggiornamento, 0 ), if( pubblicazioni.timestamp_inizio < ?, pubblicazioni.timestamp_inizio, 0 ), if( pubblicazioni.timestamp_fine < ?, pubblicazioni.timestamp_fine, 0 ) ) ) AS updated FROM categorie_annunci '.
                 'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_annunci = categorie_annunci.id '.
-                'WHERE categorie_annunci.id_sito = ? '.
-                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
-                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                'WHERE categorie_annunci.id_sito = ? ',
                 array(
-                    array( 's' => SITE_CURRENT ),
                     array( 's' => time() ),
-                    array( 's' => time() )
+                    array( 's' => time() ),
+                    array( 's' => SITE_CURRENT )
                 )
             )
 		);

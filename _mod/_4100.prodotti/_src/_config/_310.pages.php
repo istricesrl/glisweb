@@ -29,7 +29,7 @@ if( $cf['contents']['cached'] === false ) {
     // recupero le pagine dal database
     $pgs = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT prodotti.*, prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione 
+        'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ) AS timestamp_pubblicazione, prodotti.*, prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione 
             FROM prodotti 
             LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
             LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria
@@ -38,8 +38,10 @@ if( $cf['contents']['cached'] === false ) {
             WHERE categorie_prodotti.id_sito = ?
             AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
             AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-            AND tipologie_pubblicazioni.se_pubblicato = 1 ',
+            AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 ) ',
         array(
+            array('s' => time()),
+            array('s' => time()),
             array('s' => SITE_CURRENT),
             array('s' => time()),
             array('s' => time())
@@ -57,6 +59,9 @@ if( $cf['contents']['cached'] === false ) {
 
         // ciclo principale
         foreach( $pgs as $pg ) {
+
+            // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+            $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
             // ID della categoria
             $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
@@ -112,6 +117,13 @@ if( $cf['contents']['cached'] === false ) {
                 aggiungiGruppi(
                     $cf['contents']['pages'][$pid],
                     $pg['id']
+                );
+
+                // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                aggiungiPubblicazione(
+                    $cf['contents']['pages'][$pid],
+                    $pg['id'],
+                    'id_prodotto'
                 );
 
                 aggiungiContenuti(
@@ -215,7 +227,7 @@ if( $cf['contents']['cached'] === false ) {
         // articoli ( 2026-09-25 )
         $art = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT articoli.id, articoli.id_prodotto,
+            'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_articolo = articoli.id ) AS timestamp_pubblicazione, articoli.id, articoli.id_prodotto,
                     greatest( coalesce( articoli.timestamp_aggiornamento, 0 ), coalesce( prodotti.timestamp_aggiornamento, 0 ) ) AS timestamp_aggiornamento,
                     prodotti.template, prodotti.schema_html, prodotti.tema_css,
                     prodotti.se_sitemap, prodotti.se_cacheable,
@@ -229,8 +241,10 @@ if( $cf['contents']['cached'] === false ) {
                 WHERE categorie_prodotti.id_sito = ?
                 AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
                 AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-                AND tipologie_pubblicazioni.se_pubblicato = 1 ',
+                AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 ) ',
             array(
+                array('s' => time()),
+                array('s' => time()),
                 array('s' => SITE_CURRENT),
                 array('s' => time()),
                 array('s' => time())
@@ -243,6 +257,9 @@ if( $cf['contents']['cached'] === false ) {
         if( is_array( $art ) ) {
 
             foreach( $art as $pg ) {
+
+                // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+                $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
                 // ID della categoria e della pagina
                 $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
@@ -282,6 +299,9 @@ if( $cf['contents']['cached'] === false ) {
                         'etc'           => array( 'note' => array( 'tipologia_pubblicazione' => $pg['tipologia_pubblicazione'] ) ),
                         'macro'         => $cf['prodotti']['pages']['articolo']['macro']
                     );
+
+                    // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                    aggiungiPubblicazione( $cf['contents']['pages'][$pid], $pg['id'], 'id_articolo' );
 
                     // i contenuti: prima quelli dell'articolo, se non ne ha quelli del prodotto
                     //
@@ -339,17 +359,15 @@ if( $cf['contents']['cached'] === false ) {
         $cf['contents']['updated'],
         mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max( prodotti.timestamp_aggiornamento ) AS updated FROM prodotti ' .
+            'SELECT max( greatest( coalesce( prodotti.timestamp_aggiornamento, 0 ), coalesce( pubblicazioni.timestamp_aggiornamento, 0 ), if( pubblicazioni.timestamp_inizio < ?, pubblicazioni.timestamp_inizio, 0 ), if( pubblicazioni.timestamp_fine < ?, pubblicazioni.timestamp_fine, 0 ) ) ) AS updated FROM prodotti ' .
                 'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id ' .
                 'LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria ' .
                 'INNER JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id ' .
-                'WHERE categorie_prodotti.id_sito = ? ' .
-                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
-                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                'WHERE categorie_prodotti.id_sito = ? ',
             array(
-                array('s' => SITE_CURRENT),
                 array('s' => time()),
-                array('s' => time())
+                array('s' => time()),
+                array('s' => SITE_CURRENT)
             )
         )
     );

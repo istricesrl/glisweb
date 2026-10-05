@@ -995,6 +995,56 @@
     }
 
     /**
+     * riserva al gruppo anteprima una pagina che è soltanto in anteprima
+     *
+     * Questa funzione legge le pubblicazioni attive ( dentro la finestra timestamp_inizio / timestamp_fine ) collegate
+     * all'oggetto tramite la colonna $f e, se fra queste ce n'è almeno una di una tipologia con se_anteprima e nessuna di
+     * una tipologia con se_pubblicato, riserva la pagina ai gruppi anteprima e roots, la toglie dalla sitemap e dalla cache
+     * delle pagine e le mette il noindex; altrimenti la pagina resta com'è.
+     *
+     * Va chiamata dopo aggiungiGruppi(), perché per le pagine in anteprima i gruppi vengono sostituiti: un'anteprima non
+     * deve diventare visibile a chi poteva vedere la pagina pubblicata.
+     *
+     * NOTA la colonna viene scritta direttamente nella query, quindi non deve mai arrivare dall'esterno.
+     *
+     * @param       array       $p      l'array della pagina, modificato sul posto
+     * @param       string      $id     l'ID dell'oggetto
+     * @param       string      $f      la colonna di pubblicazioni che punta all'oggetto ( default id_pagina )
+     *
+     * @return      void
+     *
+     */
+    function aggiungiPubblicazione(&$p, $id, $f = 'id_pagina')
+    {
+
+        global $cf;
+
+        $pub = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT max( tipologie_pubblicazioni.se_pubblicato ) AS se_pubblicato, ' .
+                'max( tipologie_pubblicazioni.se_anteprima ) AS se_anteprima FROM pubblicazioni ' .
+                'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia ' .
+                'WHERE pubblicazioni.' . $f . ' = ? ' .
+                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
+                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+            array(
+                array('s' => $id),
+                array('s' => time()),
+                array('s' => time())
+            )
+        );
+
+        if (! empty($pub['se_anteprima']) && empty($pub['se_pubblicato'])) {
+            $p['auth']['groups']    = array('anteprima', 'roots');
+            $p['sitemap']           = false;
+            $p['cacheable']         = false;
+            foreach (array_keys($cf['localization']['languages']) as $lg) {
+                $p['robots'][$lg]   = 'noindex, nofollow';
+            }
+        }
+    }
+
+    /**
      * aggiunge a una pagina i contenuti testuali collegati a un oggetto
      *
      * Questa funzione legge dalla tabella contenuti le righe collegate all'oggetto e fonde nella pagina, indicizzati per

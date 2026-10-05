@@ -29,13 +29,15 @@ if( $cf['contents']['cached'] === false ) {
     // recupero le pagine dal database
     $pgs = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT categorie_progetti.* FROM categorie_progetti ' .
+        'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_categoria_progetti = categorie_progetti.id ) AS timestamp_pubblicazione, categorie_progetti.* FROM categorie_progetti ' .
             'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_progetti = categorie_progetti.id ' .
             'WHERE categorie_progetti.id_sito = ? ' .
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' .
             'GROUP BY categorie_progetti.id ',
         array(
+            array('s' => time()),
+            array('s' => time()),
             array('s' => SITE_CURRENT),
             array('s' => time()),
             array('s' => time())
@@ -50,6 +52,9 @@ if( $cf['contents']['cached'] === false ) {
 
         // ciclo principale
         foreach ($pgs as $pg) {
+
+            // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+            $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
             // ID della pagina
             $pid = PREFX_CATEGORIE_PROGETTI . $pg['id'];
@@ -104,6 +109,13 @@ if( $cf['contents']['cached'] === false ) {
                     $pg['id']
                 );
 
+                // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                aggiungiPubblicazione(
+                    $cf['contents']['pages'][$pid],
+                    $pg['id'],
+                    'id_categoria_progetti'
+                );
+
                 aggiungiContenuti(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
@@ -154,15 +166,13 @@ if( $cf['contents']['cached'] === false ) {
         $cf['contents']['updated'],
         mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max( categorie_progetti.timestamp_aggiornamento ) AS updated FROM categorie_progetti ' .
+            'SELECT max( greatest( coalesce( categorie_progetti.timestamp_aggiornamento, 0 ), coalesce( pubblicazioni.timestamp_aggiornamento, 0 ), if( pubblicazioni.timestamp_inizio < ?, pubblicazioni.timestamp_inizio, 0 ), if( pubblicazioni.timestamp_fine < ?, pubblicazioni.timestamp_fine, 0 ) ) ) AS updated FROM categorie_progetti ' .
                 'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_progetti = categorie_progetti.id ' .
-                'WHERE categorie_progetti.id_sito = ? ' .
-                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
-                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                'WHERE categorie_progetti.id_sito = ? ',
             array(
-                array('s' => SITE_CURRENT),
                 array('s' => time()),
-                array('s' => time())
+                array('s' => time()),
+                array('s' => SITE_CURRENT)
             )
         )
     );

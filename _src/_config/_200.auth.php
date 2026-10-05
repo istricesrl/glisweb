@@ -131,6 +131,11 @@
         'users' => array(
             'id' => NULL,
             'nome' => 'users'
+        ),
+        // chi vede le pagine con una pubblicazione di tipologia anteprima ( vedi aggiungiPubblicazione() )
+        'anteprima' => array(
+            'id' => NULL,
+            'nome' => 'anteprima'
         )
     );
 
