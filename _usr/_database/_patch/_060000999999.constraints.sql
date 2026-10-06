@@ -181,6 +181,8 @@ ALTER TABLE `articoli_caratteristiche`
 
 -- asset
 ALTER TABLE `asset`
+    ADD CONSTRAINT `asset_ibfk_01_nofollow`                                 FOREIGN KEY (`id_genitore`) REFERENCES `asset` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `asset_ibfk_02_nofollow`                                 FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_asset` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `asset_ibfk_98_nofollow`                                 FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `asset_ibfk_99_nofollow`                                 FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -2183,6 +2185,14 @@ ALTER TABLE `tipologie_annunci`
     ADD CONSTRAINT `tipologie_annunci_ibfk_01_nofollow`                     FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_annunci` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `tipologie_annunci_ibfk_98_nofollow`                     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_annunci_ibfk_99_nofollow`                     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+-- | 060000050200
+
+-- tipologie_asset
+ALTER TABLE `tipologie_asset`
+    ADD CONSTRAINT `tipologie_asset_ibfk_01_nofollow`                     FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_asset` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `tipologie_asset_ibfk_98_nofollow`                     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_asset_ibfk_99_nofollow`                     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000050400
 

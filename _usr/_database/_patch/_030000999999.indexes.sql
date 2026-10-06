@@ -335,12 +335,13 @@ ALTER TABLE `articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- asset
 ALTER TABLE `asset`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`codice`), 
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`codice`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `codice` (`codice`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` ( `id`,`id_tipologia`,`codice` );
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`);
 
 -- | 030000001701
 
@@ -4048,6 +4049,24 @@ ALTER TABLE `tipologie_annunci`
 
 -- tipologie_annunci
 ALTER TABLE `tipologie_annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000050200
+
+-- tipologie_asset
+ALTER TABLE `tipologie_asset`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+
+-- | 030000050201
+
+-- tipologie_asset
+ALTER TABLE `tipologie_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050400
 

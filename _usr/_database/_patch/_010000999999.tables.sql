@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di indirizzo
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(64) DEFAULT NULL,                             -- codice dell'indirizzo
+  `codice` char(32) DEFAULT NULL,                             -- codice dell'indirizzo
   `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica
   `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo
   `id_ruolo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'indirizzo
@@ -630,14 +630,22 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene gli asset (beni aziendali)
+-- funzione: contiene gli asset, cioè gli oggetti fisici o logici gestiti o catalogati tramite il framework
+-- entità: questa tabella corrisponde all'entità asset
 --
--- questa tabella contiene gli asset (beni aziendali) che possono essere collegati a molte altre entità del framework
+-- questa tabella descrive in astratto oggetti di vario tipo ( cespiti, macchinari, attrezzature... ) che possono essere
+-- utilizzati, gestiti o anche semplicemente catalogati tramite il framework; il tipo di oggetto lo dice id_tipologia, che
+-- punta a tipologie_asset; la tabella è ricorsiva perché un asset può contenerne altri ( ad esempio un modulo di un
+-- macchinario ), e id_genitore punta all'asset che lo contiene
+--
+-- NOTA hostname e ip_address servono per gli asset informatici e per le macchine collegate in rete; cespite è il codice
+-- che l'asset ha nel registro dei beni ammortizzabili, quando ne fa parte
 --
 CREATE TABLE IF NOT EXISTS `asset` (                            --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'asset che contiene questo
   `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di asset
-  `codice` int(11) DEFAULT NULL,                                -- codice dell'asset
+  `codice` char(32) DEFAULT NULL,                               -- codice dell'asset
   `nome` char(128) DEFAULT NULL,                                -- nome dell'asset
   `hostname` char(128) DEFAULT NULL,                            -- hostname dell'asset
   `ip_address` char(32) DEFAULT NULL,                           -- indirizzo IP dell'asset
@@ -1530,7 +1538,7 @@ CREATE TABLE IF NOT EXISTS `condizioni` (
 --
 CREATE TABLE IF NOT EXISTS `consensi` (                       --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `codice` char(64) NOT NULL,                                 -- codice
+  `codice` char(32) NOT NULL,                                 -- codice
   `nome` char(255) DEFAULT NULL,                              -- nome del consenso
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
@@ -1847,7 +1855,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
 CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di corrispondenza
-  `codice` char(64) DEFAULT NULL,                               -- codice della corrispondenza
+  `codice` char(32) DEFAULT NULL,                               -- codice della corrispondenza
   `id_peso` bigint(20) DEFAULT NULL,                               -- chiave esterna per il peso
   `peso` decimal(5,2) DEFAULT NULL,                             -- peso della corrispondenza
   `id_formato` bigint(20) DEFAULT NULL,                            -- chiave esterna per il formato
@@ -2774,7 +2782,7 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
   `id_valuta` bigint(20) DEFAULT NULL,
-  `codice` char(64) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
   `se_default_su_genitore` tinyint(1) DEFAULT NULL,
   `id_emittente` bigint(20) DEFAULT NULL,
@@ -3127,7 +3135,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna ricorsiva per il mastro genitore
   `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia del mastro
-  `codice` char(64) DEFAULT NULL,                               -- codice del mastro
+  `codice` char(32) DEFAULT NULL,                               -- codice del mastro
   `prefisso_modula` char(64) DEFAULT NULL,                      -- prefisso per il codice modula
   `codice_modula` char(64) DEFAULT NULL,                        -- codice modula
   `id_anagrafica_indirizzi` bigint(20) DEFAULT NULL,               -- chiave esterna per l'anagrafica indirizzi collegata al mastro
@@ -3160,7 +3168,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
 CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `codice` char(64) DEFAULT NULL,                               -- codice della collocazione
+  `codice` char(32) DEFAULT NULL,                               -- codice della collocazione
   `id_ruolo` bigint(20) DEFAULT NULL,                              -- ruolo della collocazione
   `id_mastro` bigint(20) DEFAULT NULL,                             -- chiave esterna per il mastro ( l'ubicazione )
   `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
@@ -5468,6 +5476,31 @@ CREATE TABLE IF NOT EXISTS `tipologie_annunci` (
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000050200
+
+-- tipologie_asset
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di asset
+--
+-- questa tabella contiene le tipologie di asset, cioè dice di che genere è l'oggetto descritto da una riga di asset
+-- ( un cespite, un macchinario, un'attrezzatura, un modulo di un macchinario... ); è ricorsiva perché le tipologie
+-- si possono organizzare ad albero
+--
+CREATE TABLE IF NOT EXISTS `tipologie_asset` (             --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000050400
 

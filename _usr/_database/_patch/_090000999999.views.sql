@@ -753,18 +753,20 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 CREATE OR REPLACE VIEW `asset_view` AS
 	SELECT
 		asset.id,
+		asset.id_genitore,
 		asset.id_tipologia,
+		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
 		asset.codice,
 		asset.nome,
-        asset.hostname,
-        asset.ip_address,
+		asset.hostname,
+		asset.ip_address,
 		asset.cespite,
 		asset.note,
 		asset.id_account_inserimento,
 		asset.timestamp_inserimento,
 		asset.id_account_aggiornamento,
 		asset.timestamp_aggiornamento,
-		concat_ws( ' ', concat( '#', asset.codice ), asset.nome ) AS __label__
+		concat_ws( ' ', concat( '#', asset.codice ), asset_path( asset.id ) ) AS __label__
 	FROM asset
 ;
 
@@ -6391,6 +6393,23 @@ CREATE OR REPLACE VIEW `tipologie_annunci_view` AS
 		tipologie_annunci_path( tipologie_annunci.id ) AS __label__
 	FROM tipologie_annunci
 ;
+
+-- | 090000050200
+
+-- tipologie_asset_view
+CREATE OR REPLACE VIEW `tipologie_asset_view` AS                --
+	SELECT                                                    --
+		tipologie_asset.id,                                     --
+		tipologie_asset.id_genitore,                            --
+		tipologie_asset.ordine,                                 --
+		tipologie_asset.nome,                                   --
+		tipologie_asset.html_entity,                            --
+		tipologie_asset.font_awesome,                           --
+		tipologie_asset.id_account_inserimento,                 --
+		tipologie_asset.id_account_aggiornamento,               --
+		tipologie_asset_path( tipologie_asset.id ) AS __label__   -- etichetta per le tendine e le liste
+	FROM tipologie_asset                                        --
+;                                                             --
 
 -- | 090000050400
 
