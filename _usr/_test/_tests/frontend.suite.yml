@@ -1,0 +1,21 @@
+# suite frontend
+#
+# test del front-end: il sito come lo vede il visitatore ( form, carrello, checkout );
+# girano in Chromium headless via chromedriver, perche' tendine intelligenti e form hanno bisogno di JavaScript
+
+actor: FrontendTester
+modules:
+    enabled:
+        - \Helper\Glisweb:
+            gruppi: []
+        - WebDriver:
+            url: '%GLISWEB_TEST_URL%'
+            browser: chrome
+            port: 9515
+            path: ''
+            window_size: 1366x900
+            capabilities:
+                goog:chromeOptions:
+                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage' ]
+        - Asserts
+    step_decorators: ~

@@ -126,3 +126,21 @@
 
     // link al profilo corrente
     $cf['google']['profile'] = &$cf['google']['profiles'][ SITE_STATUS ];
+
+    /**
+     * reCAPTCHA spento durante i test automatici
+     * ==========================================
+     * Il reCAPTCHA v3 da' punteggio zero al browser headless dei test, e i form protetti scartano come spam quello
+     * che il test invia; per la durata di una suite l'helper \Helper\Glisweb crea il file var/test/recaptcha.off
+     * e qui si toglie la chiave privata, cosi' le verifiche lato server passano come "reCAPTCHA non configurato"
+     * mentre la pagina continua a generare il token con la chiave pubblica.
+     *
+     * Non vale in produzione, e il file scade dopo un'ora, cosi' un giro di test interrotto non lascia il sito
+     * senza protezione.
+     *
+     */
+
+    // disattivazione della chiave privata durante i test
+    if( SITE_STATUS != PRODUCTION && file_exists( DIR_VAR . 'test/recaptcha.off' ) && filemtime( DIR_VAR . 'test/recaptcha.off' ) > time() - 3600 ) {
+        unset( $cf['google']['profile']['recaptcha']['keys']['private'] );
+    }

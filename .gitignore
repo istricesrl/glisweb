@@ -3,7 +3,7 @@
 /_usr/_docs/_pdf*
 /_usr/_test/_tests/_data*
 /_usr/_test/_tests/_output*
-/_usr/_test/_tests/_support*
+/_usr/_test/_tests/_support/_generated*
 /etc
 /mod
 /src

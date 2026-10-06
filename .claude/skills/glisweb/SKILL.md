@@ -515,6 +515,21 @@ Claude**, e non chiude con "aprila tu dal browser".
 - **Si prova in DEV.** In PROD si apre in sola lettura, e una prova che scrive dati si fa solo se Fabio
   la chiede.
 
+### I test automatici si scrivono insieme alla feature
+
+Quando una funzionalità del progetto è finita e verificata a mano, **la verifica si fissa in un test**,
+così il prossimo rilascio la ripete da solo. Il capitolo di riferimento è `_usr/_docs/_read/180.test.md`.
+
+1. **Cercare il modello**: `ls _usr/_test/_tests/*/ _mod/*/_usr/_test/_tests/*/` e copiare la forma del Cest
+   più vicino ( maschera di back-end, form di front-end ).
+2. **Scegliere il posto**: `usr/test/tests/<backend|frontend>/<nome>Cest.php` per il progetto,
+   `mod/<modulo>/usr/test/tests/<suite>/` se riguarda un modulo; lo stesso nome di uno standard lo sostituisce.
+3. **Dati**: nomi da `$I->grabTestName()`, pulizia con `$I->deleteTestRecords()` in `_before()` e `_after()`,
+   pagine con `$I->amOnPageId()`, login con `$I->amLoggedInAs( '<gruppo>' )`; il gruppo, se non è `roots`,
+   va nel `gruppi` del `.suite.yml` custom.
+4. **Lanciarlo da solo**: `_src/_sh/_codeception.run.sh backend progetto/<nome>Cest.php`, poi la suite intera.
+5. **Mai in produzione**: il bootstrap la rifiuta, e non si cerca un modo di aggirarlo.
+
 ### 3.1 Come aggiornare il framework in un progetto cliente
 
 Il framework di un deploy cliente si aggiorna **solo** con lo script che il framework stesso spedisce:
@@ -684,6 +699,8 @@ configurazione — è spool.
 | Override di un template Twig | `src/twig/<nome>.twig` |
 | Attivare un modulo standard | creare la cartella `mod/<nome>/` corrispondente a `_mod/_<nome>/` |
 | Smoke test di una pagina | `_src/_sh/_smoke.curl.sh status <url>` |
+| Lanciare i test automatici | `_src/_sh/_codeception.run.sh <unit\|backend\|frontend\|tutte>` |
+| Aggiungere un test del progetto | `usr/test/tests/<suite>/<nome>Cest.php` (vedi `_usr/_docs/_read/180.test.md`) |
 | Aggiornare dipendenze Composer | `composer update` (dalla root del progetto) |
 | Ricostruire la documentazione Doxygen | `_src/_sh/_doxygen.build.sh` |
 | Vedere l'ultima richiesta HTTP | `var/log/latest/run.latest.log` |

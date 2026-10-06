@@ -1,0 +1,20 @@
+# suite backend
+#
+# test del back-end: login con gli account test-* creati per il giro, maschere di gestione, viste;
+# girano in Chromium headless via chromedriver, perche' tendine intelligenti e form hanno bisogno di JavaScript
+
+actor: BackendTester
+modules:
+    enabled:
+        - \Helper\Glisweb
+        - WebDriver:
+            url: '%GLISWEB_TEST_URL%'
+            browser: chrome
+            port: 9515
+            path: ''
+            window_size: 1366x900
+            capabilities:
+                goog:chromeOptions:
+                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage' ]
+        - Asserts
+    step_decorators: ~

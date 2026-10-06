@@ -495,6 +495,29 @@ prima di scrivere o correggere un job**. Il modello è `_src/_api/_job/_test.job
 - dopo aver lanciato un job lungo **si guarda la prima passata** ( `workspace.status`, e
   `var/log/memcache.err` se usa un dataset ) prima di andarsene.
 
+## Test automatici: tre suite, e quelli custom stanno accanto agli standard
+
+I test girano con Codeception in tre suite: **`unit`** ( le librerie, via gli esempi di `_usr/_examples/` ),
+**`backend`** e **`frontend`** ( funzionali, in Chromium headless: aprono le pagine, compilano i form e
+verificano il risultato nel database ). Si lanciano con `_src/_sh/_codeception.run.sh <suite|tutte>`, e un
+test solo col suo percorso di raccolta ( `backend AN000.anagrafica/anagraficaFormCest.php` ). Tutto il
+dettaglio sta nel capitolo `_usr/_docs/_read/180.test.md`: **leggerlo prima di scrivere un test**. Le regole:
+
+- **i test funzionali scrivono nel database del deploy**: il bootstrap rifiuta la produzione, gli account
+  sono `test-<gruppo>` creati e tolti dall'helper `\Helper\Glisweb`, i record si marcano `TEST-E2E-` e si
+  tolgono con `deleteTestRecords()` in `_before()` **e** `_after()`;
+- **vale la legge degli underscore**: i test del progetto in `usr/test/tests/<suite>/` ( stesso nome =
+  sostituisce lo standard, nome nuovo = si aggiunge ), quelli di un modulo in
+  `_mod/<modulo>/_usr/_test/_tests/<suite>/` e girano solo se il modulo è attivo;
+- **nel back-end le pagine si aprono per id** ( `$I->amOnPageId( 'anagrafica.form' )` ), non per URL, e il
+  login passa dal JWT: serve `auth.jwt.secret` nello shadow;
+- **il reCAPTCHA è spento per la durata della suite** ( file `var/test/recaptcha.off`, letto da
+  `_src/_config/_115.google.php`, solo fuori produzione e per un'ora al massimo ): non lo si aggira altrimenti.
+
+I modelli da copiare: `_usr/_test/_tests/backend/loginCest.php`,
+`_mod/_AN000.anagrafica/_usr/_test/_tests/backend/anagraficaFormCest.php`,
+`_mod/_CT000.contatti/_usr/_test/_tests/frontend/contattiCest.php`.
+
 ## Log e debug
 
 I file di log si trovano in `var/log/`. Per il debug rapido i più utili sono i "latest":

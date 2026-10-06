@@ -1,0 +1,12 @@
+# suite unit
+#
+# test delle librerie del framework, che chiamano le pagine di esempio di _usr/_examples/ e ne controllano
+# l'output; non servono JavaScript ne' login, quindi basta PhpBrowser
+
+actor: UnitTester
+modules:
+    enabled:
+        - PhpBrowser:
+            url: '%GLISWEB_TEST_URL%'
+        - Asserts
+    step_decorators: ~
