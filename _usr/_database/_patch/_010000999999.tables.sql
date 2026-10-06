@@ -536,22 +536,35 @@ CREATE TABLE IF NOT EXISTS `annunci_categorie` (              --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene gli articoli di magazzino
+-- funzione: contiene gli articoli, cioè le varianti vendibili e movimentabili dei prodotti
 --
--- questa tabella contiene gli articoli di magazzino, che possono essere collegati a prodotti
+-- questa tabella contiene gli articoli: un articolo è la variante concreta di un prodotto, quella che ha un codice,
+-- un barcode, delle misure e un prezzo, e che finisce nelle righe dei documenti, nei carrelli e nei listini; un
+-- prodotto può avere più articoli ( p.es. per taglia, colore o formato ), e ordine li mette in sequenza dentro il
+-- prodotto; il riferimento al prodotto è facoltativo ( esistono articoli senza prodotto ) e cancellare il prodotto
+-- non cancella i suoi articoli
+--
+-- NOTA il nome dell'articolo è solo la parte che lo distingue dagli altri articoli dello stesso prodotto: il nome
+-- completo lo compone articoli_view, unendo nome del prodotto, nome dell'articolo e misure
+-- NOTA ogni misura è un blocco col suo valore seguito dalla sua unità di misura ( larghezza, lunghezza e altezza
+-- condividono id_udm_dimensioni )
+-- NOTA id_periodicita e id_tipologia_rinnovo servono agli articoli che si vendono come abbonamenti, tesseramenti o
+-- rinnovi; note_codifica raccoglie le annotazioni su come è stato assegnato il codice
 --
 CREATE TABLE IF NOT EXISTS `articoli` (
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `codice` char(32) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
+  `id` bigint(20) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `ean` char(32) DEFAULT NULL,
-  `isbn` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_prodotto` bigint(20) DEFAULT NULL,
   `id_reparto` bigint(20) DEFAULT NULL,
   `id_taglia` bigint(20) DEFAULT NULL,
   `id_colore` bigint(20) DEFAULT NULL,
   `id_periodicita` bigint(20) DEFAULT NULL,
   `id_tipologia_rinnovo` bigint(20) DEFAULT NULL,
+  `ean` char(32) DEFAULT NULL,
+  `isbn` char(32) DEFAULT NULL,
+  `codice_produttore` char(64) DEFAULT NULL,
   `larghezza` decimal(12,5) DEFAULT NULL,
   `lunghezza` decimal(12,5) DEFAULT NULL,
   `altezza` decimal(12,5) DEFAULT NULL,
@@ -564,12 +577,10 @@ CREATE TABLE IF NOT EXISTS `articoli` (
   `id_udm_capacita` bigint(20) DEFAULT NULL,
   `durata` decimal(12,5) DEFAULT NULL,
   `id_udm_durata` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_codifica` text DEFAULT NULL,
-  `codice_produttore` char(64) DEFAULT NULL,	
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
+  `data_archiviazione` date DEFAULT NULL,
+  `note_archiviazione` text DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,

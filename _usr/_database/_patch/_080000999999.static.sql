@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `ordine` int(11) DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,
+  `codice_produttore` char(64) DEFAULT NULL,
   `id_reparto` bigint(20) DEFAULT NULL,
   `id_taglia` bigint(20) DEFAULT NULL,
   `id_colore` bigint(20) DEFAULT NULL,
@@ -127,10 +128,13 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `id_udm_durata` bigint(20) DEFAULT NULL,
   `udm_durata` char(32) DEFAULT NULL,
   `nome` varchar(512) DEFAULT NULL,
+  `note` text,
+  `note_codifica` text,
   `id_categorie` char(255) DEFAULT NULL,
   `categorie` char(255) DEFAULT NULL,
   `prezzi` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     --
+  `note_archiviazione` text,                                  --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --

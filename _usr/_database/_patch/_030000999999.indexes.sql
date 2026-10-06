@@ -320,6 +320,7 @@ ALTER TABLE `articoli`
 	ADD KEY `id_udm_volume` (`id_udm_volume`),
 	ADD KEY `id_udm_capacita` (`id_udm_capacita`),
 	ADD KEY `id_udm_durata` (`id_udm_durata`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 

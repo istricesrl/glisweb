@@ -586,10 +586,11 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.id,
 		articoli.codice,
 		articoli.id_prodotto,
-        prodotti.nome AS prodotto,
+		prodotti.nome AS prodotto,
 		articoli.ordine,
 		articoli.ean,
 		articoli.isbn,
+		articoli.codice_produttore,
 		articoli.id_reparto,
 		articoli.id_taglia,
 		articoli.id_colore,
@@ -600,19 +601,19 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.larghezza,
 		articoli.lunghezza,
 		articoli.altezza,
-        articoli.id_udm_dimensioni,
+		articoli.id_udm_dimensioni,
 		udm_dimensioni.sigla AS udm_dimensioni,
 		articoli.peso,
-        articoli.id_udm_peso,
+		articoli.id_udm_peso,
 		udm_peso.sigla AS udm_peso,
 		articoli.volume,
-        articoli.id_udm_volume,
+		articoli.id_udm_volume,
 		udm_volume.sigla AS udm_volume,
 		articoli.capacita,
-        articoli.id_udm_capacita,
+		articoli.id_udm_capacita,
 		udm_capacita.sigla AS udm_capacita,
-        articoli.durata,
-        articoli.id_udm_durata,
+		articoli.durata,
+		articoli.id_udm_durata,
 		udm_durata.sigla AS udm_durata,
 		concat_ws(
 			' ',
@@ -632,18 +633,18 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 					udm_volume.sigla
 				),
 				concat(
-					
 					articoli.capacita,
 					udm_capacita.sigla
 				),
 				concat(
-					
 					articoli.durata,
 					udm_durata.sigla
 				),
 				''
 			)
 		) AS nome,
+		articoli.note,
+		articoli.note_codifica,
 		-- CATEGORIE E PREZZI: SOTTOQUERY, NON JOIN PIU' GROUP BY
 		--
 		-- stessa ragione della sottoquery di tipologia_listino qui sopra, ma il guasto era peggiore:
@@ -659,26 +660,27 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		-- group_concat trovava comunque una riga. id_categorie invece resta NULL come prima.
 		( SELECT group_concat( DISTINCT pc.id_categoria SEPARATOR ' | ' )
 			FROM prodotti_categorie AS pc
-		   WHERE pc.id_prodotto = articoli.id_prodotto
+			WHERE pc.id_prodotto = articoli.id_prodotto
 		) AS id_categorie,
 		coalesce( ( SELECT group_concat( DISTINCT categorie_prodotti_path( pc.id_categoria ) SEPARATOR ' | ' )
 			FROM prodotti_categorie AS pc
-		   WHERE pc.id_prodotto = articoli.id_prodotto
+			WHERE pc.id_prodotto = articoli.id_prodotto
 		), '' ) AS categorie,
 		coalesce( ( SELECT group_concat( DISTINCT concat_ws( ' ', l.nome, v.iso4217, format( p.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' )
 			FROM prezzi AS p
 			LEFT JOIN listini AS l ON l.id = p.id_listino
 			LEFT JOIN valute AS v ON v.id = l.id_valuta
-		   WHERE p.id_articolo = articoli.id
+			WHERE p.id_articolo = articoli.id
 		), '' ) AS prezzi,
-        coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
+		coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
+		articoli.note_archiviazione,
 		articoli.id_account_inserimento,                      --
 		articoli.timestamp_inserimento,                       --
 		articoli.id_account_aggiornamento,                    --
 		articoli.timestamp_aggiornamento,                     --
 		concat_ws(
 			' ',
-            articoli.ean,
+			articoli.ean,
 			articoli.codice,
 			'/',
 			prodotti.nome,
