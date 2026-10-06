@@ -923,8 +923,20 @@
             logWrite( $p . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
+        /**
+         * SOLO I SEPARATORI INVISIBILI DEL BLOCCO U+2000, NON TUTTO QUELLO CHE COMINCIA PER \xE2
+         * ( fix 2026-10-06 ).
+         *
+         * Il pattern era \xE2[\x80-\x8F]{2}, che oltre agli spazi e ai caratteri a larghezza zero
+         * ( U+2000-U+200F ) prendeva ogni carattere con il secondo e il terzo byte fra 80 e 8F:
+         * pedici ( H₂O ), simboli come ℃, operatori matematici ( ∀ ∈ ∏ ); e \xE2\x80[\xA4-\xA8]
+         * prendeva i puntini di sospensione … insieme al separatore di riga U+2028. Adesso si
+         * tolgono U+2000-U+200F e U+2028-U+202F ( separatori, controlli bidirezionali, spazio
+         * stretto ), e …, i pedici e i simboli restano come sono.
+         */
+
         $p = $s;
-        $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2[\x80-\x8F]{2}|\xE2\x80[\xA4-\xA8]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
+        $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2\x80[\x80-\x8F]|\xE2\x80[\xA8-\xAF]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
 
         if( $s !== $p ) {
             logWrite( $p . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
