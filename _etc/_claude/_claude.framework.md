@@ -497,6 +497,12 @@ prima di scrivere o correggere un job**. Il modello è `_src/_api/_job/_test.job
 
 ## Test automatici: tre suite, e quelli custom stanno accanto agli standard
 
+**⚠ TASSATIVO ( Fabio, 06/10/2026 ): applicazione e test sempre allineati**, nello standard come nei
+progetti. Ogni funzionalità nuova nasce col suo test; ogni modifica aggiorna, nello stesso lavoro, i test che
+la toccano; ogni correzione porta il test che avrebbe preso il bug. Codice e test vanno nello stesso commit, e
+prima di chiudere si fanno girare. Un test che non si può scrivere si dichiara e finisce nel `TODO.md`, area
+`test automatici`. Dettaglio nella skill `glisweb`, sezione "TASSATIVO: applicazione e test sempre allineati".
+
 I test girano con Codeception in tre suite: **`unit`** ( le librerie, via gli esempi di `_usr/_examples/` ),
 **`backend`** e **`frontend`** ( funzionali, in Chromium headless: aprono le pagine, compilano i form e
 verificano il risultato nel database ). Si lanciano con `_src/_sh/_codeception.run.sh <suite|tutte>`, e un
