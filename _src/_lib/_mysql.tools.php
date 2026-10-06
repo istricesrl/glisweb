@@ -1541,8 +1541,8 @@
      * NOTA la query di ricerca per $u scrive i valori direttamente nel testo SQL, fra virgolette, invece di usare i
      * parametri ( c'è un TODO nel corpo ); la query di scrittura invece è un prepared statement.
      *
-     * NOTA il primo log va in mysql/insertrow/<tabella> e gli altri in mysql/insertrow.<tabella>, e la query composta viene
-     * loggata a livello LOG_ERR anche quando non c'è nessun errore.
+     * NOTA il primo log va in mysql/insertrow/<tabella> e gli altri in mysql/insertrow.<tabella>, tutti a livello LOG_DEBUG;
+     * gli errori della scrittura li logga mysqlQuery() in mysql.err.
      *
      * @param       object      $c      la connessione mysqli
      * @param       array       $r      la riga da scrivere, con in chiave i nomi delle colonne
@@ -1599,7 +1599,9 @@
             . 'VALUES ( ' . array2mysqlPlaceholders($r) . ' ) '
             . (($d === true) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues($r) : NULL);
 
-        logger($t . PHP_EOL . $q, 'mysql/insertrow.' . $t, LOG_ERR);
+        // la query composta e' una traccia come le altre di questa funzione, non un errore: a LOG_ERR finiva nel log err
+        // a ogni scrittura riuscita ( fix 2026-10-06, 1,3 GB su polmasi stable ); gli errori veri li logga mysqlQuery() in mysql.err
+        logger($t . PHP_EOL . $q, 'mysql/insertrow.' . $t);
 
         $a = array2mysqlStatementParameters($r);
 
