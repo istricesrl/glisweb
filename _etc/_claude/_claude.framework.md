@@ -231,6 +231,13 @@ e PDF, marcatori `@pubblico`/`@linea`/`@shot`, vincoli della generazione — sta
 `.claude/skills/glisweb/riferimenti/documentazione.md`: **leggerlo prima di toccare documentazione o
 generatore**.
 
+**⚠ TASSATIVO ( Fabio, 06/10/2026 ): applicazione e documentazione sempre allineati**, nello standard come
+nel custom. Ogni modifica aggiorna, nello stesso lavoro, tutto ciò che la descrive: commenti Doxygen,
+`READ.md`, `USER.md` se l'utente vede la differenza, quickstart. Prima si cerca con `grep` **ogni** punto che
+cita la cosa toccata; codice e documentazione vanno nello stesso commit. Documentazione che non si può
+scrivere subito si dichiara e finisce nel `TODO.md`, area `documentazione`. Dettaglio nella skill `glisweb`,
+sezione "TASSATIVO: applicazione e documentazione sempre allineati".
+
 | cosa si documenta | standard | custom |
 |---|---|---|
 | il **deploy** | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |

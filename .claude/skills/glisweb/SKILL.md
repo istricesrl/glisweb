@@ -540,6 +540,27 @@ di dire qualcosa.
 - se un test proprio non si può scrivere ( servizio esterno, hardware, produzione ), **lo si dice** e la voce
   va nel `TODO.md` del progetto, area `test automatici`: non si tace.
 
+### ⚠ TASSATIVO: applicazione e documentazione sempre allineati
+
+Regola di Fabio del **06/10/2026**, gemella di quella dei test e come quella senza eccezioni: **il codice e la
+sua documentazione si muovono insieme**, nello **standard** come nel **custom**. Una documentazione che resta
+indietro è peggio di una che manca, perché chi la legge le crede.
+
+- **ogni modifica aggiorna, nello stesso lavoro, tutta la documentazione che la descrive**: i commenti Doxygen
+  del file ( testata e docblock ), il `READ.md` dello sviluppatore, lo `USER.md` se cambia qualcosa che
+  l'utente vede o fa, le quickstart che la mostrano;
+- **la documentazione segue la legge degli underscore**: lo standard si documenta in `_usr/_docs/` o nel
+  `READ.md`/`USER.md` del modulo `_mod/<modulo>/`, il custom allo stesso percorso senza underscore
+  ( `usr/docs/`, `mod/<modulo>/` ) — dettaglio in `riferimenti/documentazione.md`;
+- **prima si cerca dove la cosa è già descritta**: `grep -rn` del nome del file, della funzione, della classe
+  o del campo in `_usr/_docs/`, nei `READ.md`/`USER.md` dei moduli e dei template e nelle quickstart, e si
+  aggiorna **ogni** punto che la cita, non solo il primo che si trova;
+- **una cosa nuova si documenta quando nasce**: una macro, un attributo, una convenzione, un id di servizio
+  che non compare da nessuna parte non esiste per chi viene dopo;
+- **nel commit stanno insieme**: codice e documentazione nello stesso commit;
+- se la documentazione proprio non si può scrivere subito, **lo si dice** e la voce va nel `TODO.md` del
+  progetto, area `documentazione`: non si tace.
+
 ### I test automatici si scrivono insieme alla feature
 
 Quando una funzionalità del progetto è finita e verificata a mano, **la verifica si fissa in un test**,

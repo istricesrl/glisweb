@@ -478,6 +478,9 @@
 
 {# checkbox() - crea un campo HTML checkbox
     Questa macro generica crea un campo HTML checkbox; fa anche da base ad altre funzioni più specifiche e complesse
+    Il valore viaggia in un campo hidden, che porta name e id del campo; la casella visibile non ha name, ha l'id
+    <id>_checkbox ( come in _privacy.twig ) e la label punta a quello, cosi' cliccandola si attiva la casella e
+    i test la trovano senza selettori acrobatici
     TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
 {% macro checkbox( options ) %}
 
@@ -578,8 +581,8 @@
 
 {% endmacro checkbox %}
 
-{# checkbox() - crea un campo HTML checkbox
-    Questa macro generica crea un campo HTML checkbox; fa anche da base ad altre funzioni più specifiche e complesse
+{# uploader() - crea un campo per il caricamento di file via AJAX
+    Questa macro crea un campo per il caricamento di file tramite AJAX, con pulsante di selezione e anteprima
     TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
 {% macro uploader( options ) %}
 
