@@ -6,7 +6,9 @@
 actor: BackendTester
 modules:
     enabled:
-        - \Helper\Glisweb
+        - \Helper\Glisweb:
+            # users serve ai test dell'autenticazione, per verificare che un gruppo non staff non apra la dashboard
+            gruppi: [ roots, users ]
         - WebDriver:
             url: '%GLISWEB_TEST_URL%'
             browser: chrome

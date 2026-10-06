@@ -19,6 +19,10 @@
      * Il login non passa dal form, perche' il reCAPTCHA v3 da' punteggio zero al browser headless: si usa il
      * login con token JWT del framework, quindi il deploy deve avere auth.jwt.secret nel proprio shadow.
      *
+     * I test che verificano proprio l'autenticazione ( form, HTTP Basic, account inattivo ) leggono id, username,
+     * password e token dell'account con $I->grabTestAccount( '<gruppo>' ); se cambiano la password o lo stato
+     * dell'account, li rimettono com'erano prima di finire, perche' l'account serve agli altri test della suite.
+     *
      * record di test
      * --------------
      * I record creati dai test vanno marcati col prefisso TEST-E2E- in un campo di testo ( nome, codice,
@@ -330,6 +334,26 @@
         }
 
         /**
+         * restituisce i dati dell'account di test di un gruppo
+         *
+         * serve ai test dell'autenticazione, che devono entrare dal form o via HTTP Basic con la password vera
+         *
+         * @param       string      $gruppo         il gruppo dell'account, fra quelli della configurazione gruppi
+         *
+         * @return      array                       id, username, password in chiaro, jwt e id_anagrafica
+         *
+         */
+        public function grabTestAccount( $gruppo = 'roots' ) {
+
+            if( ! isset( $this->accounts[ $gruppo ] ) ) {
+                $this->fail( 'nessun account di test per il gruppo ' . $gruppo . ', va aggiunto alla configurazione gruppi della suite' );
+            }
+
+            return $this->accounts[ $gruppo ];
+
+        }
+
+        /**
          * legge un valore dal database
          *
          * @param       string      $query          la query, con eventuali parametri posizionali
@@ -424,6 +448,7 @@
             }
 
             $account = array(
+                'id'        => NULL,
                 'username'  => self::ACCOUNT_PREFIX . $gruppo,
                 'password'  => bin2hex( random_bytes( 16 ) ),
                 'id_anagrafica' => NULL
@@ -443,7 +468,7 @@
                 );
             }
 
-            $idAccount = mysqlInsertRow(
+            $account['id'] = $idAccount = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id'                        => NULL,
