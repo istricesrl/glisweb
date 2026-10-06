@@ -62,6 +62,8 @@
      *
      * Il vecchio registro banned.hosts.conf, se c'è, viene migrato alla prima richiesta e rinominato. Dietro un proxy o
      * un CDN REMOTE_ADDR è l'indirizzo del proxy: va attivato mod_remoteip, che lo corregge sia per PHP sia per Apache.
+     * Dietro un NAT ( p.es. Google Cloud ) la macchina che chiama sé stessa ( cron, test ) arriva dall'IP pubblico, che
+     * non è SERVER_ADDR: va dirottata sull'IP interno con una regola DNAT in nat OUTPUT, una volta per macchina.
      *
      *
      * chi non viene mai bandito, e come si esce da un bando sbagliato
