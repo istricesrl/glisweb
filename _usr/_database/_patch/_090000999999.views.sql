@@ -460,6 +460,7 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		anagrafica_settori.id,
 		anagrafica_settori.id_anagrafica,
 		anagrafica_settori.id_settore,
+		settori.ateco,
 		settori.nome AS settore,
 		anagrafica_settori.ordine,
 		anagrafica_settori.id_account_inserimento,
@@ -467,14 +468,15 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			settori.nome
+			concat_ws( ' ', settori.ateco, settori.nome )
 		) AS __label__
 	FROM anagrafica_settori
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_settori.id_anagrafica
 		LEFT JOIN settori ON settori.id = anagrafica_settori.id_settore
 ;
 
--- NOTA per il nome del settore usare settori_path?
+-- il settore si etichetta con codice ATECO e nome, come in settori_view; il percorso completo ( settori_path ) è
+-- troppo lungo per un'etichetta
 
 -- | 090000001251
 

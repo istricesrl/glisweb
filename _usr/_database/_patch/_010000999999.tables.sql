@@ -412,26 +412,31 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
 
 -- anagrafica_progetti
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene i anagrafica progetti
+-- funzione: mette in relazione anagrafica e progetti, con un ruolo
+--
+-- nata per assegnare le persone ai progetti ( project manager, sviluppatori, tecnici ), si è estesa alla
+-- didattica ( insegnanti, alunni, sostituti ) e ad altre associazioni come la lista d'attesa ( se_attesa );
+-- id_todo dovrebbe limitare l'associazione a un singolo compito del progetto ( p.es. il sostituto per una
+-- lezione ), ma nessun modulo lo usa e lo scopo originale non è documentato
 --
 CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
   `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_todo` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `id_progetto` bigint(20) DEFAULT NULL,
+  `id_ruolo` bigint(20) DEFAULT NULL,
+  `id_todo` bigint(20) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_attesa` tinyint(1) DEFAULT NULL,
   `se_sostituto` tinyint(1) DEFAULT NULL,
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text NULL,
   `note_inserimento` text NULL,
   `note_aggiornamento` text NULL,
-  `timestamp_archiviazione` int(11) DEFAULT NULL,
-  `id_account_archiviazione` bigint(20) DEFAULT NULL,
-  `note_archiviazione` text NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -446,11 +451,14 @@ CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
 -- struttura: tabella base
 -- funzione: mette in relazione anagrafica e settori
 --
+-- associa a un'anagrafica i suoi settori di attività, cioè i codici ATECO della tabella settori; un'anagrafica
+-- può averne più di uno, e ordine li mette in sequenza
+--
 CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
   `id` bigint(20) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_anagrafica` bigint(20) DEFAULT NULL,
   `id_settore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -463,31 +471,36 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i annunci
+-- funzione: contiene gli annunci di un portale offro/cerco
+--
+-- nata per il portale offro/cerco di Cucine Popolari, come sviluppo sperimentale; un annuncio ha una pagina propria
+-- ( template, schema, tema, sitemap, cache ), può riferirsi a una categoria di prodotti, a un prodotto o a un articolo,
+-- con una quantità, e ha un periodo di validità; le categorie stanno in annunci_categorie, le tipologie in
+-- tipologie_annunci; la tabella resta in vista del modulo annunci della linea latest
 --
 CREATE TABLE IF NOT EXISTS `annunci` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,
   `id_prodotto` bigint(20) DEFAULT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
-  `quantita` decimal(9,2) DEFAULT NULL,
   `id_udm` bigint(20) DEFAULT NULL,
-  `data_inizio_validita` date DEFAULT NULL,
-  `ora_inizio_validita` time DEFAULT NULL,
-  `note_inizio_validita` text DEFAULT NULL,
-  `data_fine_validita` date DEFAULT NULL,
-  `ora_fine_validita` time DEFAULT NULL,
-  `note_fine_validita` text DEFAULT NULL,
+  `id_sito` bigint(20) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
   `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
   `se_sitemap` tinyint(1) DEFAULT NULL,
   `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
+  `data_inizio_validita` date DEFAULT NULL,
+  `ora_inizio_validita` time DEFAULT NULL,
+  `note_inizio_validita` text DEFAULT NULL,
+  `data_fine_validita` date DEFAULT NULL,
+  `ora_fine_validita` time DEFAULT NULL,
+  `note_fine_validita` text DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -500,18 +513,22 @@ CREATE TABLE IF NOT EXISTS `annunci` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione annunci e categorie
+-- funzione: associa molti a molti gli annunci alle categorie degli annunci
 --
-CREATE TABLE IF NOT EXISTS `annunci_categorie` (
-  `id` bigint(20) NOT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene le associazioni molti a molti tra gli annunci e le categorie_annunci; le categorie fanno
+-- parte della scheda dell'annuncio, quindi la chiave verso annunci si segue; appartiene alla famiglia annunci, che
+-- resta in vista del modulo annunci della linea latest
+--
+CREATE TABLE IF NOT EXISTS `annunci_categorie` (              --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_annuncio` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'annuncio
+  `id_categoria` bigint(20) DEFAULT NULL,                        -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000001300
 

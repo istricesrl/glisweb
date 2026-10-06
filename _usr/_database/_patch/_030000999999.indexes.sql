@@ -290,11 +290,13 @@ ALTER TABLE `annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- annunci_categorie
 ALTER TABLE `annunci_categorie`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_annuncio`,`id_categoria`),
 	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria` (`id_categoria`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_annuncio`,`id_categoria`,`ordine`);
 
 -- | 030000001271
 

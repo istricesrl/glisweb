@@ -112,10 +112,10 @@ ALTER TABLE `anagrafica_progetti`
     ADD CONSTRAINT `anagrafica_progetti_ibfk_01`            FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_progetti_ibfk_02_nofollow`   FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_progetti_ibfk_03_nofollow`   FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_progetti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_progetti_ibfk_04_nofollow`   FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `anagrafica_progetti_ibfk_05_nofollow`   FOREIGN KEY (`id_account_archiviazione`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_progetti_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `anagrafica_progetti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `anagrafica_progetti_ibfk_04_nofollow`                   FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `anagrafica_progetti_ibfk_05_nofollow`                   FOREIGN KEY (`id_account_archiviazione`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `anagrafica_progetti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000001200
 
@@ -135,7 +135,7 @@ ALTER TABLE `annunci`
     ADD CONSTRAINT `annunci_ibfk_01_nofollow`               FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_annunci` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `annunci_ibfk_02_nofollow`               FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `annunci_ibfk_03_nofollow`               FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `annunci_ibfk_04_nofollow`               FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `annunci_ibfk_04_nofollow`               FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `annunci_ibfk_05_nofollow`               FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `annunci_ibfk_98_nofollow`               FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `annunci_ibfk_99_nofollow`               FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -144,8 +144,8 @@ ALTER TABLE `annunci`
 
 -- annunci_categorie
 ALTER TABLE `annunci_categorie`
-    ADD CONSTRAINT `annunci_categorie_ibfk_01_nofollow`     FOREIGN KEY (`id_annuncio`) REFERENCES `annunci` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `annunci_categorie_ibfk_02_nofollow`     FOREIGN KEY (`id_categoria`) REFERENCES `categorie_annunci` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `annunci_categorie_ibfk_01`              FOREIGN KEY (`id_annuncio`) REFERENCES `annunci` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `annunci_categorie_ibfk_02_nofollow`     FOREIGN KEY (`id_categoria`) REFERENCES `categorie_annunci` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `annunci_categorie_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `annunci_categorie_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
