@@ -26,6 +26,17 @@
      * da chiamare nel metodo _after() del Cest. La pulizia si fa anche prima del test, per lo stesso motivo
      * degli account.
      *
+     * I dati che servono al test si preparano con $I->haveInDatabase( '<tabella>', $riga ), che restituisce l'id
+     * della riga, e si modificano con $I->updateInDatabase( '<tabella>', $riga ), con l'id nella riga; il prefisso
+     * TEST-E2E- in un campo di testo resta a carico del test, perche' e' quello che permette di toglierli.
+     *
+     * operatore
+     * ---------
+     * Molte maschere lavorano sull'anagrafica dell'operatore collegato ( presenze, attivita', magazzino ): con
+     * anagrafica: true l'helper crea per ogni account di test un'anagrafica test-<gruppo> e la collega
+     * all'account; il test ne legge l'id con $I->grabTestAnagrafica( '<gruppo>' ). L'anagrafica non porta il
+     * prefisso TEST-E2E-, cosi' la pulizia dei record dei test non la tocca, e se ne va insieme all'account.
+     *
      * reCAPTCHA
      * ---------
      * Il reCAPTCHA v3 da' punteggio zero al browser headless, quindi per la durata della suite l'helper crea il
@@ -43,6 +54,7 @@
      * --------------
      * - gruppi: i gruppi per cui creare un account di test, p.es. [ roots, staff ]; [] per non crearne
      * - recaptcha: true per lasciare attivo il reCAPTCHA durante la suite, di default false
+     * - anagrafica: true per collegare a ogni account di test un'anagrafica dell'operatore, di default false
      * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form
      *
      */
@@ -67,6 +79,7 @@
         protected $config = array(
             'gruppi'    => array( 'roots' ),
             'recaptcha' => false,
+            'anagrafica'    => false,
             'login'     => '/admin.it-IT.html'
         );
 
@@ -243,6 +256,78 @@
         }
 
         /**
+         * scrive una riga nel database
+         *
+         * @param       string      $tabella        la tabella
+         * @param       array       $riga           coppie campo => valore; il prefisso TEST-E2E- va messo dal test
+         *
+         * @return      integer                     l'id della riga scritta
+         *
+         */
+        public function haveInDatabase( $tabella, $riga ) {
+
+            global $cf;
+
+            $id = mysqlInsertRow( $cf['mysql']['connection'], $riga, $tabella, false );
+
+            if( empty( $id ) ) {
+                $this->fail( 'riga non scritta in ' . $tabella . ' per ' . json_encode( $riga ) . ', vedi var/log/mysql.err' );
+            }
+
+            return $id;
+
+        }
+
+        /**
+         * modifica una riga del database
+         *
+         * @param       string      $tabella        la tabella
+         * @param       array       $riga           coppie campo => valore, con l'id della riga da modificare
+         *
+         */
+        public function updateInDatabase( $tabella, $riga ) {
+
+            global $cf;
+
+            if( empty( $riga['id'] ) ) {
+                $this->fail( 'per modificare una riga di ' . $tabella . ' serve il suo id' );
+            }
+
+            $id = $riga['id'];
+            unset( $riga['id'] );
+
+            $set = array();
+            foreach( array_keys( $riga ) as $campo ) {
+                $set[] = $campo . ' = ?';
+            }
+
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE ' . $tabella . ' SET ' . implode( ', ', $set ) . ' WHERE id = ?',
+                $this->parametri( array_merge( array_values( $riga ), array( $id ) ) )
+            );
+
+        }
+
+        /**
+         * restituisce l'id dell'anagrafica collegata all'account di test di un gruppo
+         *
+         * @param       string      $gruppo         il gruppo dell'account, fra quelli della configurazione gruppi
+         *
+         * @return      integer                     l'id dell'anagrafica
+         *
+         */
+        public function grabTestAnagrafica( $gruppo = 'roots' ) {
+
+            if( empty( $this->accounts[ $gruppo ]['id_anagrafica'] ) ) {
+                $this->fail( 'l\'account test-' . $gruppo . ' non ha un\'anagrafica: serve anagrafica: true nella configurazione dell\'helper' );
+            }
+
+            return $this->accounts[ $gruppo ]['id_anagrafica'];
+
+        }
+
+        /**
          * legge un valore dal database
          *
          * @param       string      $query          la query, con eventuali parametri posizionali
@@ -338,13 +423,29 @@
 
             $account = array(
                 'username'  => self::ACCOUNT_PREFIX . $gruppo,
-                'password'  => bin2hex( random_bytes( 16 ) )
+                'password'  => bin2hex( random_bytes( 16 ) ),
+                'id_anagrafica' => NULL
             );
+
+            // anagrafica dell'operatore, per le maschere che lavorano su di lui
+            if( $this->config['anagrafica'] ) {
+                $account['id_anagrafica'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id'                        => NULL,
+                        'nome'                      => $account['username'],
+                        'cognome'                   => 'account di test',
+                        'timestamp_inserimento'     => time()
+                    ),
+                    'anagrafica'
+                );
+            }
 
             $idAccount = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id'                        => NULL,
+                    'id_anagrafica'             => $account['id_anagrafica'],
                     'username'                  => $account['username'],
                     'password'                  => passwordHash( $account['password'] ),
                     'se_attivo'                 => 1,
@@ -382,12 +483,19 @@
         /**
          * cancella tutti gli account di test, compresi quelli rimasti da giri interrotti
          *
-         * le righe di account_gruppi se ne vanno in cascata
+         * le righe di account_gruppi se ne vanno in cascata; le anagrafiche degli operatori di test si tolgono prima,
+         * riconoscendole dal collegamento con l'account e dal nome
          *
          */
         protected function rimuoviAccountTest() {
 
             global $cf;
+
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM anagrafica WHERE nome LIKE ? AND id IN ( SELECT id_anagrafica FROM account WHERE username LIKE ? )',
+                array( array( 's' => self::ACCOUNT_PREFIX . '%' ), array( 's' => self::ACCOUNT_PREFIX . '%' ) )
+            );
 
             mysqlQuery(
                 $cf['mysql']['connection'],
