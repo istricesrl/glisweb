@@ -55,7 +55,9 @@
      * - gruppi: i gruppi per cui creare un account di test, p.es. [ roots, staff ]; [] per non crearne
      * - recaptcha: true per lasciare attivo il reCAPTCHA durante la suite, di default false
      * - anagrafica: true per collegare a ogni account di test un'anagrafica dell'operatore, di default false
-     * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form
+     * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form;
+     *   la dashboard e' riservata allo staff, quindi per i gruppi operativi va puntata su una pagina che il gruppo
+     *   puo' aprire ( p.es. login: '/app.it-IT.html' ), altrimenti il login col token riesce ma la pagina e' negata
      *
      */
 

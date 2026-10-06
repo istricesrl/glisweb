@@ -20,7 +20,8 @@
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
-        "league/commonmark": "^1.6"
+        "league/commonmark": "^1.6",
+        "codeception/module-webdriver": "*"
     },
     "suggest": {
         "twig/extra-bundle": "*"
