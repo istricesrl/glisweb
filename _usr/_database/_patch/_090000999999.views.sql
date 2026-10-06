@@ -728,17 +728,20 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 	SELECT
 		articoli_caratteristiche.id,
+		articoli_caratteristiche.ordine,
 		articoli_caratteristiche.id_articolo,
 		articoli_caratteristiche.id_caratteristica,
-		articoli_caratteristiche.ordine,
+		articoli_caratteristiche.id_lingua,
+		caratteristiche.nome AS caratteristica,
 		articoli_caratteristiche.valore,
+		articoli_caratteristiche.note,
 		articoli_caratteristiche.se_assente,
+		articoli_caratteristiche.id_account_inserimento,
+		articoli_caratteristiche.id_account_aggiornamento,
 		concat(
 			articoli_caratteristiche.id_articolo,
-			': ',
-			caratteristiche.nome,
-			' ',
-			articoli_caratteristiche.valore
+			' / ',
+			caratteristiche.nome
 		) AS __label__
 	FROM articoli_caratteristiche
 		LEFT JOIN caratteristiche ON caratteristiche.id = articoli_caratteristiche.id_caratteristica

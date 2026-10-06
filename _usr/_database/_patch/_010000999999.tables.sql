@@ -604,19 +604,24 @@ CREATE TABLE IF NOT EXISTS `articoli` (
 -- vivevano solo nei database, senza nessuna patch che le creasse. Sono state portate qui insieme
 -- alla correzione di valore, che era decimal(5,2) e non poteva quindi contenere una scheda tecnica.
 --
+-- NOTA: il valore e' per lingua, quindi la stessa caratteristica puo' comparire su un articolo una
+-- volta per ogni lingua; per questo id_lingua fa parte della chiave unica ( decisione del 06/10/2026 ).
+-- Le righe con id_lingua a NULL non sono protette dalla chiave unica, perche' MySQL non considera
+-- uguali due NULL.
+--
 CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
   `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
   `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
   `valore` text DEFAULT NULL,                                   -- valore della caratteristica
   `note` text DEFAULT NULL,                                     -- note
   `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000001700

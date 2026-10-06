@@ -598,13 +598,14 @@ ALTER TABLE `prodotti_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- articoli_caratteristiche
 ALTER TABLE `articoli_caratteristiche`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_articolo`,`id_caratteristica`),
+	ADD UNIQUE KEY `unica` (`id_articolo`,`id_caratteristica`,`id_lingua`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`se_assente`);
+	ADD KEY `indice` (`id`,`ordine`,`id_articolo`,`id_caratteristica`,`id_lingua`,`se_assente`);
 
 -- | 030000002931
 
