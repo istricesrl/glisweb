@@ -563,15 +563,17 @@
         {% if default %} default="{{ default }}"{% endif %} 
         value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
 
-    {# campo checkbox visibile #}
+    {# campo checkbox visibile; non ha name perche' il valore lo porta il campo hidden, ma ha un id ( come in
+       _privacy.twig ) cosi' la label lo attiva e i test lo trovano #}
     <input type="checkbox"
         {% if field.disabled %}disabled{% endif %}
+        id="{{ id }}_checkbox"
         class="form-check-input {{ class }}"
         {% if vl or ( default and not df ) %}checked{% endif %}>
 
     {# label del checkbox #}
     {% if field.placeholder %}
-    <label class="form-check-label text-start" for="{{ id }}">{{ field.placeholder }}</label>
+    <label class="form-check-label text-start" for="{{ id }}_checkbox">{{ field.placeholder }}</label>
     {% endif %}
 
 {% endmacro checkbox %}

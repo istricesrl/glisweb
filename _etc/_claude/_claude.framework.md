@@ -519,6 +519,9 @@ dettaglio sta nel capitolo `_usr/_docs/_read/180.test.md`: **leggerlo prima di s
   login passa dal JWT: serve `auth.jwt.secret` nello shadow;
 - **il reCAPTCHA è spento per la durata della suite** ( file `var/test/recaptcha.off`, letto da
   `_src/_config/_115.google.php`, solo fuori produzione e per un'ora al massimo ): non lo si aggira altrimenti.
+- **il framework si fa comodo da testare, non il test acrobatico**: i campi si cercano per `name` o `id`, e i
+  campi di servizio delle macro hanno un id derivato ( `<id>_checkbox`, `<id>_inputbox` ). Se un campo non si
+  raggiunge con un selettore stabile, si corregge la macro standard.
 
 I modelli da copiare: `_usr/_test/_tests/backend/loginCest.php`,
 `_mod/_AN000.anagrafica/_usr/_test/_tests/backend/anagraficaFormCest.php`,

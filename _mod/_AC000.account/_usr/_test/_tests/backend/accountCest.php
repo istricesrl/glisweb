@@ -152,8 +152,7 @@
             $I->amOnPageId( 'account.form' );
             $I->fillField( 'account[username]', $username );
             $I->fillField( 'account[password]', $password );
-            // il checkbox visibile non ha name: e' quello accanto al campo nascosto che porta il valore
-            $I->checkOption( '#account_se_attivo + input[type="checkbox"]' );
+            $I->checkOption( '#account_se_attivo_checkbox' );
             $I->selectOption( 'account[account_gruppi][0][id_gruppo]', (string) $idGruppo );
             $I->click( '#form-account button .fa-floppy-disk' );
 
