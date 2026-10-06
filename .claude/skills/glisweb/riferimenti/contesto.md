@@ -124,6 +124,25 @@ si propone: si dice cosa manca **e lo si sistema**, senza ripassarlo all'utente.
 4. **niente vive solo in conversazione**: una decisione presa a voce va nei file di progetto, una
    domanda all'utente ancora senza risposta va nel `TODO.md`.
 
+⚠ **Alla domanda "posso chiudere?" il primo gesto è `chiusura.py`**, dalla root del deploy:
+
+    python3 dev/.claude/skills/glisweb/bin/chiusura.py          # --no-fetch per saltare il fetch
+
+Raccoglie in un giro solo i fatti che stanno sul disco: git di `dev/` ( su glisweb e glisdev tutti e due,
+più `sync-check.sh` ), quello che c'è da caricare fra `dev/` e `stable/` ( `rsync` di prova con gli
+`--exclude` del `DEPLOY.md` ), i file standard toccati dopo l'ultimo aggiornamento ( stanotte diventano
+disallineamenti ), i cinque file toccati oggi e il lock del `CHAT.md`, file `root:root` e copie di appoggio
+nella document root, processi e tunnel ancora vivi, credenziali in chiaro nelle scratchpad, cron a data
+fissa, codice HTTP del sito. Stampa ✗ bloccante, ⚠ da guardare, ✓ a posto. **Ogni ✗ si sistema o si dice
+perché è voluto, ogni ⚠ si giudica**, e nella risposta vanno i numeri, non "è tutto a posto". Le quattro
+verifiche qui sopra che sono di giudizio — l'aperto nel `TODO.md`, il filo, le decisioni prese in
+conversazione, i carichi che non sono file ( righe di DB ) — restano a Claude: lo script le ricorda in
+fondo, non le fa.
+
+Vale **soprattutto dopo un `/clear`**: lo stato del disco non dipende dalla memoria della sessione. Il
+06/10/2026 tre sessioni appena azzerate hanno risposto *"posso confermare solo lo stato git"*, e intanto
+polmasi aveva 3 file di progetto da caricare in PROD e bernispa 6 file standard modificati a mano.
+
 **La convergenza è un obiettivo di ogni turno, non un controllo finale**: ogni cosa che si apre si
 deposita subito, così la sessione resta sempre a un passo dal `/clear`. La riga di chiusura è una delle
 due:
