@@ -663,72 +663,104 @@ CREATE TABLE IF NOT EXISTS `asset` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le attività
+-- funzione: contiene le attività, cioè tutto ciò che qualcuno fa
+-- entità: questa tabella corrisponde all'entità attività
 --
--- questa tabella contiene le attività, che possono essere collegate a molte altre entità del framework
+-- questa tabella descrive l'ampio insieme dei casi in cui qualcuno fa qualcosa, ed è usata per scopi molto diversi
+-- ( interventi, ore di lavoro, appuntamenti, telefonate, invii di mailing, passi di un todo... ); un'attività può
+-- essere scadenzata, programmata e svolta, e ognuna di queste fasi ha il suo blocco di colonne; la tabella è ricorsiva
+-- perché un'attività può essere parte di un'altra, e id_genitore punta all'attività che la contiene
 --
-CREATE TABLE IF NOT EXISTS `attivita` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'attività genitore
-  `codice` char(32) DEFAULT NULL,                             -- codice dell'attività
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di attività
-  `id_cliente` bigint(20) DEFAULT NULL,                          -- chiave esterna per il cliente collegato all'attività
-  `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto collegato all'attività
-  `referenti` char(255) DEFAULT NULL,                         -- referenti dell'attività
-  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo collegato all'attività
-  `id_luogo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il luogo collegato all'attività
-  `id_messaggio` bigint(20) DEFAULT NULL,                        -- chiave esterna per il messaggio collegato all'attività
-  `id_oggetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'oggetto collegato all'attività
-  `data_scadenza` date DEFAULT NULL,                          -- data di scadenza
-  `ora_scadenza` time DEFAULT NULL,                           -- ora di scadenza
-  `note_scadenza` text DEFAULT NULL,                          -- note sulla scadenza
-  `data_programmazione` date DEFAULT NULL,                    -- data di programmazione
-  `ora_inizio_programmazione` time DEFAULT NULL,              -- ora di inizio programmazione
-  `ora_fine_programmazione` time DEFAULT NULL,                -- ora di fine programmazione
-  `id_anagrafica_programmazione` bigint(20) DEFAULT NULL,        -- chiave esterna per l'anagrafica di programmazione
-  `note_programmazione` text DEFAULT NULL,                    -- note sulla programmazione
-  `ore_programmazione` decimal(5,2) DEFAULT NULL,             -- ore di programmazione
+-- NOTA le attività valorizzano i mastri di tipo tempo, tramite id_mastro_provenienza, id_mastro_destinazione e ore,
+-- così come i pagamenti valorizzano i mastri di tipo denaro e le righe dei documenti quelli di tipo magazzino
+--
+-- NOTA id_asset è l'asset su cui si svolge l'attività, che è uno solo; gli asset con cui la si svolge, che possono
+-- essere più d'uno, stanno nella tabella di relazione attivita_asset
+--
+CREATE TABLE IF NOT EXISTS `attivita` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'attività genitore
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia di attività
+  `codice` char(32) DEFAULT NULL,                                 -- codice dell'attività
+  `nome` char(255) DEFAULT NULL,                                  -- nome dell'attività
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica collegata all'attività
+  `id_mail` bigint(20) DEFAULT NULL,                              -- chiave esterna per la mail collegata all'attività
+  `id_account` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'account collegato all'attività
+  `id_cliente` bigint(20) DEFAULT NULL,                           -- chiave esterna per il cliente collegato all'attività
+  `id_contatto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il contatto collegato all'attività
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo collegato all'attività
+  `id_luogo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il luogo collegato all'attività
+  `id_asset` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'asset su cui si svolge l'attività
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto collegato all'attività
+  `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto collegato all'attività
+  `id_todo` bigint(20) DEFAULT NULL,                              -- chiave esterna per il todo collegato all'attività
+  `id_step` bigint(20) DEFAULT NULL,                              -- chiave esterna per lo step collegato all'attività
+  `id_pianificazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per la pianificazione collegata all'attività
+  `id_matricola` bigint(20) DEFAULT NULL,                         -- chiave esterna per la matricola collegata all'attività
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile collegato all'attività
+  `id_messaggio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il messaggio collegato all'attività
+  `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per il mailing collegato all'attività
+  `id_documento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il documento collegato all'attività
+  `id_corrispondenza` bigint(20) DEFAULT NULL,                    -- chiave esterna per la corrispondenza collegata all'attività
+  `id_pagamento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il pagamento collegato all'attività
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,                -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di destinazione
+  `id_oggetto` bigint(20) DEFAULT NULL,                           -- esce dal canone ( revisione del 06/10/2026 ), si toglie con le patch di allineamento
+  `referenti` char(255) DEFAULT NULL,                             -- referenti dell'attività
+  `ore` decimal(5,2) DEFAULT NULL,                                -- ore effettive dell'attività
+  `codice_archivium` char(32) DEFAULT NULL,                       -- codice per l'integrazione con Archivium
+  `token` char(128) DEFAULT NULL,                                 -- token per geolocalizzazione
+  `note` text DEFAULT NULL,                                       -- note sull'attività
+  `note_cliente` text DEFAULT NULL,                               -- note per il cliente
   `se_confermata` tinyint(1) DEFAULT NULL,                        -- flag che indica se l'attività è confermata
-  `data_attivita` date DEFAULT NULL,                          -- data dell'attività
-  `ora_inizio` time DEFAULT NULL,                             -- ora di inizio dell'attività
-  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,         -- latitudine al momento dell'inizio dell'attività
-  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,        -- longitudine al momento dell'inizio dell'attività
-  `data_fine` date DEFAULT NULL,                              -- data di fine dell'attività
-  `ora_fine` time DEFAULT NULL,                               -- ora di fine dell'attività
-  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,           -- latitudine al momento della fine dell'attività
-  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,          -- longitudine al momento della fine dell'attività
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata all'attività
-  `id_account` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'account collegato all'attività
-  `id_asset` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'asset collegato all'attività
-  `ore` decimal(5,2) DEFAULT NULL,                            -- ore effettive dell'attività
-  `nome` char(255) DEFAULT NULL,                              -- nome dell'attività
-  `note` text DEFAULT NULL,                                   -- note sull'attività
-  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
-  `id_mailing` bigint(20) DEFAULT NULL,                          -- chiave esterna per il mailing collegato all'attività
-  `id_mail` bigint(20) DEFAULT NULL,                             -- chiave esterna per la mail collegata all'attività
-  `id_documento` bigint(20) DEFAULT NULL,                        -- chiave esterna per il documento collegato all'attività
-  `id_corrispondenza` bigint(20) DEFAULT NULL,                   -- chiave esterna per la corrispondenza collegata all'attività
-  `id_pagamento` bigint(20) DEFAULT NULL,                        -- chiave esterna per il pagamento collegato all'attività
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto collegato all'attività
-  `id_contratto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contratto collegato all'attività
-  `id_matricola` bigint(20) DEFAULT NULL,                        -- chiave esterna per la matricola collegata all'attività
-  `id_todo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il todo collegato all'attività
-  `id_mastro_provenienza` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di provenienza
-  `id_mastro_destinazione` bigint(20) DEFAULT NULL,              -- chiave esterna per il mastro di destinazione
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile collegato all'attività
-  `id_step` bigint(20) DEFAULT NULL,                             -- chiave esterna per lo step collegato all'attività
-  `id_pianificazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la pianificazione collegata all'attività
-  `codice_archivium` char(32) DEFAULT NULL,                   -- codice per l'integrazione con Archivium
-  `token` char(128) DEFAULT NULL,                             -- token per geolocalizzazione
-  `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,         -- timestamp dell'ultimo calcolo dei sostituti
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `id_account_archiviazione` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha archiviato l'attività
-  `note_archiviazione` text NULL,                             -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'attività
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'attività
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+  `data_scadenza` date DEFAULT NULL,                              -- data di scadenza
+  `ora_scadenza` time DEFAULT NULL,                               -- ora di scadenza
+  `note_scadenza` text DEFAULT NULL,                              -- note sulla scadenza
+  `id_anagrafica_programmazione` bigint(20) DEFAULT NULL,         -- chiave esterna per l'anagrafica di programmazione
+  `data_programmazione` date DEFAULT NULL,                        -- data di programmazione
+  `ora_inizio_programmazione` time DEFAULT NULL,                  -- ora di inizio programmazione
+  `ora_fine_programmazione` time DEFAULT NULL,                    -- ora di fine programmazione
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,                 -- ore di programmazione
+  `note_programmazione` text DEFAULT NULL,                        -- note sulla programmazione
+  `data_attivita` date DEFAULT NULL,                              -- data dell'attività
+  `ora_inizio` time DEFAULT NULL,                                 -- ora di inizio dell'attività
+  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,             -- latitudine al momento dell'inizio dell'attività
+  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,            -- longitudine al momento dell'inizio dell'attività
+  `data_fine` date DEFAULT NULL,                                  -- data di fine dell'attività
+  `ora_fine` time DEFAULT NULL,                                   -- ora di fine dell'attività
+  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,               -- latitudine al momento della fine dell'attività
+  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,              -- longitudine al momento della fine dell'attività
+  `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,             -- timestamp dell'ultimo calcolo dei sostituti
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato l'attività
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito l'attività
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato l'attività
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000001900
+
+-- attivita_asset
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa molti a molti le attività agli asset con cui vengono svolte
+--
+-- questa tabella contiene gli asset con cui si svolge un'attività ( attrezzi, mezzi, strumenti... ), che possono essere
+-- più d'uno; l'asset su cui si svolge l'attività, che è uno solo, sta invece in attivita.id_asset
+--
+CREATE TABLE IF NOT EXISTS `attivita_asset` (                   --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `id_attivita` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'attività
+  `id_asset` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'asset con cui si svolge l'attività
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000002100
 

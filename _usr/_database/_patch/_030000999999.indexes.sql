@@ -353,50 +353,67 @@ ALTER TABLE `asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- attivita
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`), 
-	ADD UNIQUE KEY `codice` (`codice`),
+	ADD UNIQUE KEY `unica_codice` (`codice`),
+	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `id_account` (`id_account`),
 	ADD KEY `id_cliente` (`id_cliente`),
 	ADD KEY `id_contatto` (`id_contatto`),
-	ADD KEY `id_indirizzo` (`id_indirizzo`), 
-	ADD KEY `id_luogo` (`id_luogo`), 
-	ADD KEY `id_oggetto` (`id_oggetto`), 
-	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_asset` (`id_asset`), 
-	ADD KEY `id_mailing` (`id_mailing`), 
-	ADD KEY `id_mail` (`id_mail`), 
-	ADD KEY `id_documento` (`id_documento`), 
-	ADD KEY `id_corrispondenza` (`id_corrispondenza`), 
-	ADD KEY `id_pagamento` (`id_pagamento`), 
-	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_contratto` (`id_contratto`), 
-	ADD KEY `id_matricola` (`id_matricola`),
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_luogo` (`id_luogo`),
+	ADD KEY `id_asset` (`id_asset`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_todo` (`id_todo`),
-	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
-	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
-	ADD KEY `id_immobile` (`id_immobile`),
-	ADD KEY `codice_archivium` (`codice_archivium`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_step` (`id_step`),
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_matricola` (`id_matricola`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_messaggio` (`id_messaggio`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_corrispondenza` (`id_corrispondenza`),
+	ADD KEY `id_pagamento` (`id_pagamento`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+	ADD KEY `id_oggetto` (`id_oggetto`),
+	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_contatto`,`id_progetto`,`id_todo`),
 	ADD KEY `indice_scadenza` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_scadenza`,`ora_scadenza`),
 	ADD KEY `indice_programmazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`),
 	ADD KEY `indice_attivita` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_attivita`,`ora_inizio`,`ora_fine`),
 	ADD KEY `indice_mastri` (`id`,`id_tipologia`,`id_mastro_provenienza`,`id_mastro_destinazione`),
 	ADD KEY `indice_sostituti` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`timestamp_calcolo_sostituti`),
-	ADD KEY `indice_token` (`id`,`token`),
-	ADD KEY `id_messaggio` (`id_messaggio`),
-	ADD KEY `id_account` (`id_account`),
-	ADD KEY `id_step` (`id_step`),
-	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`);
+	ADD KEY `indice_token` (`id`,`token`);
 
 -- | 030000001801
 
 -- attivita
 ALTER TABLE `attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000001900
+
+-- attivita_asset
+ALTER TABLE `attivita_asset`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_attivita`,`id_asset`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_attivita` (`id_attivita`),
+	ADD KEY `id_asset` (`id_asset`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_attivita`,`id_asset`);
+
+-- | 030000001901
+
+-- attivita_asset
+ALTER TABLE `attivita_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002100
 

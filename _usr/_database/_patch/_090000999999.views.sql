@@ -798,8 +798,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
             )                                                 --
         ) AS luogo,                                           -- percorso del luogo
 		attivita.id_messaggio,                                --
-		attivita.id_oggetto,                                  --
-		concat( asset1.id, ' ', asset1.nome ) AS oggetto,     -- id e nome dell'oggetto
+		attivita.id_asset,                                    --
+		concat( asset.id, ' ', asset.nome ) AS asset,         -- id e nome dell'asset su cui si svolge l'attività
         coalesce(                                             --
             attivita.data_attivita,                           --
             attivita.data_programmazione                      --
@@ -856,8 +856,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
             ''                                                --
         ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
 		attivita.id_account,                                  --
-		attivita.id_asset,                                    --
-		concat( asset2.id, ' ', asset2.nome ) AS asset,       -- id e nome dell'asset
 		attivita.ore,                                         --
         da.id_articolo,                                       -- id dell'articolo previsto
         da.quantita AS quantita_prevista,                     -- quantità prevista
@@ -1001,14 +999,30 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
             ON o.id = cr.id_organizzazione_mittente           --
 		LEFT JOIN tipologie_corrispondenza AS tc2             --
             ON tc2.id = cr.id_tipologia                       --
-		LEFT JOIN asset AS asset1                             --
-            ON asset1.id = attivita.id_asset                  --
-		LEFT JOIN asset AS asset2                             --
-            ON asset2.id = attivita.id_asset                  --
-        LEFT JOIN documenti_articoli AS da                    --
+		LEFT JOIN asset                                       --
+            ON asset.id = attivita.id_asset                   --
+		LEFT JOIN documenti_articoli AS da                    --
             ON da.id = todo.id_documenti_articoli             --
 	GROUP BY attivita.id                                      --
 ;                                                             --
+
+-- | 090000001900
+
+-- attivita_asset_view
+CREATE OR REPLACE VIEW `attivita_asset_view` AS
+	SELECT
+		attivita_asset.id,
+		attivita_asset.ordine,
+		attivita_asset.id_attivita,
+		attivita.nome AS attivita,
+		attivita_asset.id_asset,
+		asset_path( attivita_asset.id_asset ) AS asset,
+		attivita_asset.id_account_inserimento,
+		attivita_asset.id_account_aggiornamento,
+		concat_ws( ' / ', attivita.nome, asset_path( attivita_asset.id_asset ) ) AS __label__
+	FROM attivita_asset
+		LEFT JOIN attivita ON attivita.id = attivita_asset.id_attivita
+;
 
 -- | 090000002100
 

@@ -164,8 +164,8 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `id_luogo` bigint(20) DEFAULT NULL,                            --
   `luogo` char(255) DEFAULT NULL,                             --
   `id_messaggio` bigint(20) DEFAULT NULL,                        --
-  `id_oggetto` bigint(20) DEFAULT NULL,                          --
-  `oggetto` char(255) DEFAULT NULL,                           --
+  `id_asset` bigint(20) DEFAULT NULL,                            --
+  `asset` char(255) DEFAULT NULL,                             --
   `data_riferimento` date DEFAULT NULL,                       --
   `ora_inizio_riferimento` time DEFAULT NULL,                 --
   `ora_fine_riferimento` time DEFAULT NULL,                   --
@@ -193,8 +193,6 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `id_anagrafica` bigint(20) DEFAULT NULL,                       --
   `anagrafica` char(255) DEFAULT NULL,                        --
   `id_account` bigint(20) DEFAULT NULL,                          --
-  `id_asset` bigint(20) DEFAULT NULL,                            --
-  `asset` char(255) DEFAULT NULL,                             --
   `ore` decimal(5,2) DEFAULT NULL,                            --
   `id_articolo` bigint(20) DEFAULT NULL,                      --
   `quantita_prevista` decimal(9,2) DEFAULT NULL,              --
