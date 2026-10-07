@@ -43,6 +43,12 @@
 
             }
 
+            // tolgo il marcatore di indirizzo impossibile da normalizzare ( lo scrive _src/_api/_task/_anagrafica.indirizzi.normalizzazione.php )
+            if( ! in_array( 'note_elaborazione', $ks ) ) {
+                $vs['note_elaborazione']['s'] = NULL;
+                $ks[] = 'note_elaborazione';
+            }
+
 	    break;
 
 	}
