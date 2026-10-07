@@ -25,6 +25,17 @@
 # Codeception gira con _usr/_test/_bootstrap.php come auto_prepend_file, che avvia il framework e si rifiuta
 # di proseguire se il sito e' in produzione; se lo script e' lanciato da root, i test girano come www-data
 #
+# ogni esecuzione lascia i suoi risultati in var/spool/test/<data e ora>/, cosi' un giro non si confonde coi
+# precedenti e si puo' rileggere a distanza di giorni:
+#
+# - errori.log                   <- solo i test falliti, col messaggio e il punto in cui sono falliti
+# - test.log                     <- l'output completo, passo per passo, di tutte le suite
+# - <suite>.report.html e .xml   <- il report di Codeception, da browser e in formato JUnit
+# - *.fail.html e *.fail.png     <- HTML e screenshot della pagina al momento di ogni fallimento
+# - chromedriver.log             <- il log del browser
+#
+# le esecuzioni piu' vecchie di 30 giorni vengono tolte all'avvio
+#
 
 ## pulizia schermo
 clear
@@ -76,6 +87,14 @@ function collega() {
 rm -rf var/test/tests var/test/support
 mkdir -p var/test/tests var/test/support/Helper var/test/support/_generated var/test/output
 
+## cartella dei risultati di questa esecuzione
+# var/test/output/ e' l'area di lavoro di Codeception e si svuota a ogni giro: senza, i fallimenti dei giri
+# precedenti restano li' accanto a quelli nuovi e non si distinguono
+ESECUZIONE="var/spool/test/$(date +%Y%m%d%H%M%S)"
+mkdir -p "$ESECUZIONE"
+rm -rf var/test/output/*
+find var/spool/test -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
+
 # supporto
 collega _usr/_test/_tests/_support var/test/support "*.php"
 collega _usr/_test/_tests/_support/Helper var/test/support/Helper "*.php"
@@ -110,7 +129,7 @@ done
 
 ## permessi
 if [ "$(id -u)" = "0" ]; then
-    chown -R www-data:www-data var/test
+    chown -R www-data:www-data var/test var/spool/test
 fi
 
 ## browser per le suite che ne hanno bisogno
@@ -127,8 +146,8 @@ CODECEPTION_EXIT_CODE=$?
 ## esecuzione delle suite
 if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
     for s in $SUITE; do
-        $ESEGUI $CODECEPT run $s -c _usr/_test/codeception.yml --no-colors --steps "$@"
-        ESITO=$?
+        $ESEGUI $CODECEPT run $s -c _usr/_test/codeception.yml --no-colors --steps --html $s.report.html --xml $s.report.xml "$@" 2>&1 | tee var/test/output/$s.log
+        ESITO=${PIPESTATUS[0]}
         [ "$ESITO" = "0" ] || CODECEPTION_EXIT_CODE=$ESITO
     done
 fi
@@ -141,6 +160,24 @@ fi
 
 ## reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
 rm -f var/test/recaptcha.off
+
+## raccolta dei risultati
+# il log completo e' l'output delle suite una dopo l'altra; il report degli errori ne prende, per ogni suite, la
+# parte finale che Codeception dedica ai fallimenti ( da "There was/were N failure/error" in poi )
+for s in $SUITE; do
+    [ -f var/test/output/$s.log ] || continue
+    cat var/test/output/$s.log >> "$ESECUZIONE/test.log"
+    FALLIMENTI=$(sed -n '/^There \(was\|were\) [0-9]* \(failure\|error\)/,$p' var/test/output/$s.log)
+    if [ -n "$FALLIMENTI" ]; then
+        printf '== suite %s ==\n\n%s\n\n' "$s" "$FALLIMENTI" >> "$ESECUZIONE/errori.log"
+    fi
+    rm -f var/test/output/$s.log
+done
+[ "$CODECEPTION_EXIT_CODE" = "0" ] || [ -s "$ESECUZIONE/errori.log" ] || echo "esecuzione fallita prima dei test ( codice $CODECEPTION_EXIT_CODE ): vedi test.log" >> "$ESECUZIONE/errori.log"
+[ -s "$ESECUZIONE/errori.log" ] || echo "nessun errore" > "$ESECUZIONE/errori.log"
+cp -a var/test/output/. "$ESECUZIONE/"
+echo
+echo "risultati in $ESECUZIONE/"
 
 ## codice di uscita
 exit $CODECEPTION_EXIT_CODE

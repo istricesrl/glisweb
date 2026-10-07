@@ -316,6 +316,27 @@
         }
 
         /**
+         * allinea la vista statica di una riga di test
+         *
+         * le maschere che leggono una statica ( p.es. le tendine dei fornitori su anagrafica_view_static ) non vedono
+         * una riga scritta con haveInDatabase() finché la statica non viene riallineata; la riga della statica porta gli
+         * stessi campi della vista, quindi si toglie con deleteTestRecords() sulla statica, come quella della tabella
+         *
+         * @param       string      $tabella        la tabella che alimenta la statica, p.es. anagrafica
+         * @param       integer     $id             l'id della riga da riallineare
+         *
+         */
+        public function haveInStaticView( $tabella, $id ) {
+
+            global $cf;
+
+            if( ! refreshStaticView( $cf['mysql']['connection'], $tabella, $id ) ) {
+                $this->fail( 'statica di ' . $tabella . ' non riallineata per l\'id ' . $id . ', vedi var/log/mysql.err' );
+            }
+
+        }
+
+        /**
          * restituisce l'id dell'anagrafica collegata all'account di test di un gruppo
          *
          * @param       string      $gruppo         il gruppo dell'account, fra quelli della configurazione gruppi
