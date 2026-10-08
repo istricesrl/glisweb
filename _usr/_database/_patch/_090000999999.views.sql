@@ -1212,17 +1212,15 @@ CREATE OR REPLACE VIEW `banner_pagine_view` AS
 CREATE OR REPLACE VIEW `banner_zone_view` AS
 	SELECT
 		banner_zone.id,
+		banner_zone.ordine,
 		banner_zone.id_banner,
 		banner_zone.id_zona,
-		banner_zone.se_presente,
 		banner_zone.id_account_inserimento,
 		banner_zone.id_account_aggiornamento,
 		concat(
 			banner.nome,
 			' / ',
-			zone_path( banner_zone.id_zona ),
-			' / ',
-			coalesce( banner_zone.se_presente, 0 )
+			zone_path( banner_zone.id_zona )
 		) AS __label__
 	FROM banner_zone
 		LEFT JOIN banner ON banner.id = banner_zone.id_banner

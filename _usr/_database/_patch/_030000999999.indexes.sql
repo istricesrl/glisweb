@@ -568,13 +568,13 @@ ALTER TABLE `banner_pagine` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-08-04 10:22 Chiara GDL
 ALTER TABLE `banner_zone`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_zona`,`id_banner`), 
+	ADD UNIQUE KEY `unica` (`id_banner`,`id_zona`), 
+	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `id_zona` (`id_zona`),
-	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_zona`,`id_banner`,`se_presente`);
+	ADD KEY `indice` (`id`,`ordine`,`id_banner`,`id_zona`);
 
 -- | 030000002601
 

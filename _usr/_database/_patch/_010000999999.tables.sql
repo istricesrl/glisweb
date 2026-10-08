@@ -936,18 +936,28 @@ CREATE TABLE IF NOT EXISTS `banner_pagine` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione banner e zone
+-- funzione: associa molti a molti i banner alle zone geografiche in cui devono comparire
 --
-CREATE TABLE IF NOT EXISTS `banner_zone` (
-  `id` bigint(20) NOT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `id_banner` bigint(20) DEFAULT NULL,
-  `se_presente` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- è il targeting geografico del banner; le zone sono aree geografiche di rilevanza commerciale, logistica o
+-- organizzativa che non coincidono con l'albero della geografia, e un banner associato a una zona compare
+-- anche nelle zone figlie
+--
+-- NOTA vale la regola del framework "default ampio, specifiche a restringere": un banner senza righe qui compare
+-- ovunque, un banner con righe compare solo in quelle zone; l'esclusione esplicita non c'è
+--
+-- NOTA questa tabella dice dove il banner può comparire geograficamente, non dove è collocato: la collocazione
+-- ( sito o app, pagina, spazio, periodo ) sta in pubblicazioni, collegata con id_banner
+--
+CREATE TABLE IF NOT EXISTS `banner_zone` (                      --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `id_banner` bigint(20) DEFAULT NULL,                            -- chiave esterna per il banner
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000002700
 
