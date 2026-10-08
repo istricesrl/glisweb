@@ -18,7 +18,7 @@
      * id=<id>          | invia la mail indicata anche se non è ancora il suo momento, purché nessun altro processo l'abbia già marcata; una mail ferma per troppi tentativi riparte con i tentativi azzerati
      * hard=1           | invia la prima mail della coda per `ordine` e `timestamp_invio`, ignorando la data prevista
      * full=1           | rimette in circolo tutta la coda: azzera `timestamp_invio` su tutte le righe, tranne quelle ferme per troppi tentativi, e non invia nulla, la coda la riprende il cron dal giro successivo
-     * nessuno          | invia la prima mail la cui data prevista è passata o assente
+     * nessuno          | invia, fra le mail la cui data prevista è passata o assente, la prima per `ordine` ( NULL per primo, sono le transazionali ) e `timestamp_invio`
      *
      * Con `full=1` il task risponde con quante mail avevano una data prevista, ora azzerata ( `rimesse` ), quante ne ha
      * sbloccate ( `sbloccate`, vedi sotto ) e quante restano ferme per troppi tentativi ( `ferme` ). Fino al 2026-09-30

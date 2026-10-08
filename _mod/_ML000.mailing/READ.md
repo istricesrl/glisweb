@@ -75,7 +75,8 @@ sola lettura anche i consensi registrati sui singoli indirizzi della persona.
    frattempo si aggiunge, e un indirizzo già presente con un'altra riga di `mail` non rientra;
 3. il task `_genera.mail.php` prende una riga di `mailing_mail` per giro, controlla di nuovo il consenso
    ( se è stato revocato dopo la preparazione toglie la riga e passa oltre ), compone la mail e la mette in
-   coda con la data di invio del mailing;
+   coda con la data di invio del mailing e con `ordine` 10, così le mail transazionali ( `ordine` NULL ) passano
+   prima anche quando il mailing ha migliaia di righe;
 4. la coda di `_MA000.mail` la spedisce e scrive `mailing_mail.timestamp_invio`.
 
 > **attenzione** — `_genera.mail.php` va schedulato a mano sul deploy, come gli altri task: una riga nella

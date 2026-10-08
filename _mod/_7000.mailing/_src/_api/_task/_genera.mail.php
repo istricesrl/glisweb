@@ -243,7 +243,9 @@
                     '<mailto:'.$cnt['mittente_mail'].'?subject=Unsubscribe%20:%20{'.$row['indirizzo'].'}>,'.
                     '<' . $cf['site']['url'] . 'disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>',
                 'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click'
-            )
+            ),
+            NULL,
+            10          // gli invii massivi passano dopo le transazionali ( ordine NULL ): una newsletter da migliaia di righe non deve far aspettare una conferma
         );
 
         // TODO prelevare i dati dai metadati del mailing e inserirli come dt

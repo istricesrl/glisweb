@@ -382,11 +382,12 @@
      * @param       array       $attach             allegati aggiuntivi per lingua, nel formato 'it-IT' => array( ... ) ( default nessuno )
      * @param       array       $headers            gli header aggiuntivi, nel formato 'nome' => 'valore' ( default nessuno )
      * @param       string      $server             la chiave del server SMTP in $cf['smtp']['servers'] ( default NULL, il server di default )
+     * @param       int         $ordine             la priorità in coda: la coda spedisce per ordine crescente e poi per data, e NULL viene prima di tutto ( default NULL, le mail transazionali; un valore alto per gli invii massivi, che così non le scavalcano )
      *
      * @return      int                             l'ID della mail in mail_out, oppure null se non ci sono destinatari validi
      *
      */
-    function queueMailFromTemplate($c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL)
+    function queueMailFromTemplate($c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL, $ordine = NULL)
     {
 
         // NOTA $d deve contenere 'ct' => $ct e 'dt' => <i dati che volete incorporare nella mail>
@@ -568,7 +569,8 @@
             $destinatari_bcc,
             $allegati,
             $headers,
-            $server
+            $server,
+            $ordine
         );
 
         // debug
@@ -600,11 +602,12 @@
      * @param       array       $allegati           i percorsi dei file da allegare ( default nessuno )
      * @param       array       $headers            gli header aggiuntivi, nel formato 'nome' => 'valore' ( default nessuno )
      * @param       string      $server             la chiave del server SMTP in $cf['smtp']['servers'] ( default NULL, il server di default )
+     * @param       int         $ordine             la priorità in coda: la coda spedisce per ordine crescente e poi per data, e NULL viene prima di tutto ( default NULL, le mail transazionali; un valore alto per gli invii massivi, che così non le scavalcano )
      *
      * @return      int                             l'ID della mail in mail_out, null se non ci sono destinatari validi, false in caso di errore del database
      *
      */
-    function queueMail($c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL)
+    function queueMail($c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL, $ordine = NULL)
     {
 
         // guard: blocco accodamento se nessun destinatario valido
@@ -650,8 +653,10 @@
                         allegati
                         ,
                         headers
+                        ,
+                        ordine
                     ) VALUES (
-                        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                     )",
             array(
                 array('s' => time()),
@@ -664,7 +669,8 @@
                 array('s' => $oggetto),
                 array('s' => $corpo),
                 array('s' => serialize($allegati)),
-                array('s' => serialize($headers))
+                array('s' => serialize($headers)),
+                array('s' => $ordine)
             )
         );
 

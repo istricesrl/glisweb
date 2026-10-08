@@ -263,7 +263,9 @@
             array(),
             array(),
             array(),
-            $headers
+            $headers,
+            NULL,
+            10          // gli invii massivi passano dopo le transazionali ( ordine NULL ): una newsletter da migliaia di righe non deve far aspettare una conferma
         );
 
         // aggiorno la coda
