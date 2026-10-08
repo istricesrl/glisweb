@@ -199,6 +199,26 @@ Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
 Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
 niente.
 
+#### L'urgenza scade: dopo 14 giorni fermi il `!` cade da solo
+
+Regola data da Fabio l'**08/10/2026**: *"una cosa urgente che è lì da due mesi era ovvio che non
+fosse urgente"*. Quel giorno le voci urgenti aperte erano 375 su 1364: il flag non aiutava più a
+scegliere da dove partire, e le urgenze vere si perdevano fra quelle scadute.
+
+- una voce `- [ ]` col primo flag a `!` che **non si muove da più di 14 giorni** perde l'urgenza:
+  `(!!-)` diventa `(-!-)`, e in coda alla riga si aggiunge `( declassata GG/MM/AAAA: ferma da N gg )`.
+  Non si chiude e non si sposta: cambia solo il flag;
+- **il movimento è la data più recente citata nella voce o nelle sue note**, compreso il campo
+  `( aperta … )`. Una voce su cui si lavora si muove da sola, perché ogni nota porta la sua data;
+- **restano fuori** le voci `[=]` e `[?]`, che aspettano qualcun altro, quelle che citano una data
+  futura ( hanno una scadenza davanti ), e quelle senza nessuna data, perché non si sa da quando
+  sono ferme;
+- lo fa `bin/normalizza-urgenze.py` della skill, ogni sera, su tutti i `TODO.md` di `/var/www`.
+  Senza `--applica` è un'anteprima: `-v` elenca le voci, `-p <testo>` limita ai progetti;
+- **chi la ritiene ancora urgente rimette il `!` e scrive perché**, in una nota datata: la data
+  nuova le dà altri 14 giorni. Rimettere il `!` senza scrivere niente vuol dire ritrovarselo
+  declassato fra due settimane, ed è giusto così.
+
 #### Due campi fissi in coda alla voce: quando è nata e chi avvisare
 
 Regola data da Fabio l'**08/10/2026**. In fondo alla riga, in quest'ordine:
@@ -489,6 +509,9 @@ impatto, `!` se sì e `-` se no:
 **urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
 l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
 tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
+
+⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `bin/normalizza-urgenze.py`, ogni sera
+( vedi *"L'urgenza scade"* sopra ).
 
 ⚠ **`[?]` non conta nel residuo**: è il posto dove mettere una cosa senza doverla né fare né buttare.
 
