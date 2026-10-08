@@ -216,7 +216,9 @@ scegliere da dove partire, e le urgenze vere si perdevano fra quelle scadute.
 - lo fa `/usr/local/bin/normalizza-urgenze.py`, ogni sera alle 21:30 su web02 e web03, su tutti i
   `TODO.md` di `/var/www`; il resoconto è in `/var/log/normalizza-urgenze.log`. Senza `--applica` è
   un'anteprima: `-v` elenca le voci, `-p <testo>` limita ai progetti. Il sorgente sta nel repository
-  avanzamenti-todo, non nella skill: si modifica lì e si reinstalla su tutte e due le macchine;
+  avanzamenti-todo, che lo installa sulle macchine; la skill ne porta la stessa copia in
+  `bin/normalizza-urgenze.py`, per lanciarlo dal deploy. **Le due copie devono restare identiche**:
+  chi ne modifica una aggiorna l'altra e reinstalla su web02 e web03;
 - **chi la ritiene ancora urgente rimette il `!` e scrive perché**, in una nota datata: la data
   nuova le dà altri 14 giorni. Rimettere il `!` senza scrivere niente vuol dire ritrovarselo
   declassato fra due settimane, ed è giusto così.
