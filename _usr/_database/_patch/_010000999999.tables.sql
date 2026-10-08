@@ -768,47 +768,55 @@ CREATE TABLE IF NOT EXISTS `attivita_asset` (                   --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene gli audio collegati a varie entità del sistema
+-- funzione: contiene gli audio collegati agli oggetti delle tabelle principali
 --
--- questa tabella è la gemella di video e ne ha le stesse colonne di collegamento, tranne orientamento
--- e ratio che per un audio non hanno senso; era sparita nel riallineamento del 2026-03-02 ed è stata
--- rimessa il 2026-09-25 insieme a ruoli_audio, perché aggiungiAudio() e i form dei moduli la usano
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file ), che collegano un
+-- media a un oggetto di una tabella principale; ogni riga descrive un oggetto solo, indicato da una delle chiavi
+-- esterne id_*, ed è qualificata dalla lingua e dal ruolo che il media ha per quell'oggetto; lo stesso file può
+-- descrivere più oggetti, e per questo le chiavi uniche sono una per oggetto e non una globale sul path
 --
-CREATE TABLE IF NOT EXISTS `audio` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `id_file` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_marchio` bigint(20) DEFAULT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,
-  `id_lingua` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `id_valutazione` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `path` char(255) DEFAULT NULL,
-  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,
-  `codice_embed` char(128) DEFAULT NULL,
-  `embed_custom` char(128) DEFAULT NULL,
-  `target` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- NOTA questa tabella è la gemella di video e ne ha le stesse colonne di collegamento, tranne orientamento e ratio
+-- che per un audio non hanno senso; era sparita nel riallineamento del 2026-03-02 ed è stata rimessa il 2026-09-25
+-- insieme a ruoli_audio, perché aggiungiAudio() e i form dei moduli la usano
+--
+-- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un audio non ha senso senza il suo oggetto, e
+-- se l'oggetto viene cancellato le sue righe se ne vanno con lui
+--
+CREATE TABLE IF NOT EXISTS `audio` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione dell'audio
+  `nome` char(255) DEFAULT NULL,                                  -- nome dell'audio
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica descritta
+  `id_annuncio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'annuncio descritto
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto descritto
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo descritto
+  `id_lingua` bigint(20) DEFAULT NULL,                            -- chiave esterna per la lingua dell'audio
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo descritto
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto descritto
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile descritto
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina descritta
+  `id_file` bigint(20) DEFAULT NULL,                              -- chiave esterna per il file descritto
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
+  `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria notizie descritta
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria annunci descritta
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti descritta
+  `id_edificio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'edificio descritto
+  `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
+  `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'audio
+  `path` char(255) DEFAULT NULL,                                  -- percorso del file audio
+  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,           -- piattaforma dell'audio incorporato
+  `codice_embed` char(128) DEFAULT NULL,                          -- codice dell'audio sulla piattaforma
+  `embed_custom` char(128) DEFAULT NULL,                          -- codice di incorporamento personalizzato
+  `target` char(255) DEFAULT NULL,                                -- destinazione del collegamento
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000002250
@@ -817,20 +825,32 @@ CREATE TABLE IF NOT EXISTS `audio` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i badge
+-- funzione: contiene i badge, cioè i dispositivi di identificazione ( tesserini, chiavette RFID e simili )
 --
-CREATE TABLE IF NOT EXISTS `badge` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `rfid` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- un badge è un dispositivo, fisico o digitale, che identifica chi lo porta; si gestisce col modulo dei badge e
+-- serve per i controlli di accesso e per gli scenari di automazione e domotica; il tipo di dispositivo è indicato
+-- dalla tipologia, da tipologie_badge
+--
+-- NOTA un'anagrafica può essere titolare di più badge, e a un contratto possono essere associati più badge: per
+-- questo il legame sta qui, nelle chiavi esterne id_*, come per le tabelle dei media, e non in una colonna id_badge
+-- delle tabelle collegate; anagrafica.id_badge e contratti.id_badge escono con la revisione dello schema canonico
+--
+-- NOTA le chiavi esterne verso anagrafica e contratti sono SET NULL e non CASCADE come per i media: il badge è un
+-- oggetto a sé, e se il titolare o il contratto vengono cancellati resta, non assegnato
+--
+CREATE TABLE IF NOT EXISTS `badge` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del badge
+  `codice` char(32) DEFAULT NULL,                                 -- codice del badge, unico per tipologia
+  `nome` char(255) DEFAULT NULL,                                  -- nome del badge
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica titolare del badge
+  `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto a cui è associato il badge
+  `rfid` char(32) DEFAULT NULL,                                   -- codice RFID del badge, unico
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000002300

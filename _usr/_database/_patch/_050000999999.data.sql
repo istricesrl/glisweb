@@ -4099,7 +4099,14 @@ INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 -- tipologie_badge
 INSERT IGNORE INTO `tipologie_badge` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'tesserini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'token di accesso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(2,	NULL,	NULL,	'token di accesso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'RFID',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	3,	NULL,	'chiavette',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	3,	NULL,	'braccialetti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	3,	NULL,	'etichette',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	NULL,	'NFC',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	7,	NULL,	'adesivi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	NULL,	'telecomandi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050700
 
