@@ -422,7 +422,7 @@ Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
    così** — è l'unica cosa che risponderà a *"perché l'avevamo fatto così?"* fra sei mesi;
 3. ⚠ se è una cosa che **il cliente vede o che stava aspettando**, la stessa riga va **anche nel
    `CHAT.md`**, nella sezione `### Da dirgli alla prossima occasione` della persona giusta, **il giorno
-   stesso** Se la voce ha il campo `( avvisare: … )`, la persona giusta è ognuna di quelle.
+   stesso**. Se la voce ha il campo `( avvisare: … )`, la persona giusta è ognuna di quelle.
 
 **Il test, in una riga**: *se ne accorgerebbe, o l'aveva chiesta lui?* Se sì, il terzo gesto non è
 facoltativo. **Uno sviluppo finito e non comunicato, per il cliente, non è finito** — e nessuno se ne
