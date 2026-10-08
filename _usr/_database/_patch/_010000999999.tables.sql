@@ -964,19 +964,46 @@ CREATE TABLE IF NOT EXISTS `banner_zone` (                      --
 -- campagne
 -- tipologia: tabella gestita
 -- rango: tabella principale
--- struttura: tabella base
--- funzione: contiene i campagne
+-- struttura: tabella ricorsiva
+-- funzione: contiene le campagne, cioè i contenitori delle iniziative che avvengono per step ( funnel di marketing, DEM... )
 --
-CREATE TABLE IF NOT EXISTS `campagne` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- una campagna è un contenitore per un'iniziativa che si svolge a step, come un funnel di marketing o una DEM; ha
+-- un proprio budget e un periodo di svolgimento, e le si attribuiscono i contatti e i carrelli che ha portato
+-- ( contatti.id_campagna, carrelli.id_campagna ); le campagne si possono annidare con id_genitore, per esempio
+-- una campagna annuale che contiene le campagne stagionali; il tipo di campagna è indicato dalla tipologia, da
+-- tipologie_campagne
+--
+-- il codice è l'identificativo interno della campagna, distinto dai tag UTM: questi ultimi sono quelli con cui la
+-- campagna si presenta all'esterno, e sono gli stessi che contatti registra all'arrivo del contatto
+--
+-- NOTA gli step della campagna non sono campagne figlie: stanno nella tabella step
+--
+-- NOTA i risultati della campagna non sono colonne: si calcolano nella vista, dai contatti e dai carrelli attribuiti
+--
+CREATE TABLE IF NOT EXISTS `campagne` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la campagna genitore
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della campagna
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice interno della campagna, distinto dai tag UTM
+  `nome` char(128) DEFAULT NULL,                                  -- nome della campagna
+  `id_valuta` bigint(20) DEFAULT NULL,                            -- chiave esterna per la valuta del budget
+  `testo` text DEFAULT NULL,                                      -- testo della campagna
+  `note` text DEFAULT NULL,                                       -- note
+  `budget` decimal(16,2) DEFAULT NULL,                            -- budget della campagna
+  `utm_id` char(128) DEFAULT NULL,                                -- UTM id
+  `utm_source` char(128) DEFAULT NULL,                            -- UTM source
+  `utm_medium` char(128) DEFAULT NULL,                            -- UTM medium
+  `utm_campaign` char(128) DEFAULT NULL,                          -- UTM campaign
+  `utm_term` char(128) DEFAULT NULL,                              -- UTM term
+  `utm_content` char(128) DEFAULT NULL,                           -- UTM content
+  `data_inizio` date DEFAULT NULL,                                -- data di inizio della campagna
+  `data_fine` date DEFAULT NULL,                                  -- data di fine della campagna
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000002900
 
@@ -984,33 +1011,35 @@ CREATE TABLE IF NOT EXISTS `campagne` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero delle caratteristiche di prodotti, articoli, immobili e categorie
+-- funzione: contiene l albero delle caratteristiche di prodotti, articoli, immobili, edifici e indirizzi
 --
 -- i nodi di primo livello sono i gruppi ( "Linea mandrino", "Capacita'" ) e i figli le caratteristiche; i flag se_*
--- dicono a cosa si applica un nodo. Fino al 01/10/2026 l'albero dei prodotti stava in una tabella a parte,
+-- dicono a quali oggetti si applica un nodo, e i form li usano per mostrare nelle tendine solo le caratteristiche
+-- pertinenti; il codice e' la chiave stabile per gli import da gestionale, che altrimenti agganciano per nome. Fino al 01/10/2026 l'albero dei prodotti stava in una tabella a parte,
 -- caratteristiche_prodotti, che ora e' una vista su questa con i nomi di colonna di allora ( vedi la patch
 -- _202610011700.caratteristiche.albero.sql ).
 --
 -- ATTENZIONE all'indice unico ( nome, id_genitore ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
 -- NON protegge i nodi di radice, che id_genitore ce l'hanno NULL. Chi scrive qui deve passare la chiave di ricerca
 -- esplicita a mysqlInsertRow(), altrimenti a ogni importazione nasce una radice nuova.
-CREATE TABLE IF NOT EXISTS `caratteristiche` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `font_awesome` char(24) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `se_prodotti` tinyint(1) DEFAULT NULL,
-  `se_articoli` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_edifici` tinyint(1) DEFAULT NULL,
-  `se_indirizzi` tinyint(1) DEFAULT NULL,
-  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `caratteristiche` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per il gruppo genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della caratteristica, chiave per gli import
+  `nome` char(64) DEFAULT NULL,                                   -- nome della caratteristica
+  `font_awesome` char(24) DEFAULT NULL,                           -- icona Font Awesome
+  `html_entity` char(8) DEFAULT NULL,                             -- icona come entità HTML
+  `se_prodotti` tinyint(1) DEFAULT NULL,                          -- flag per le caratteristiche assegnabili ai prodotti
+  `se_articoli` tinyint(1) DEFAULT NULL,                          -- flag per le caratteristiche assegnabili agli articoli
+  `se_immobili` tinyint(1) DEFAULT NULL,                          -- flag per le caratteristiche assegnabili agli immobili
+  `se_edifici` tinyint(1) DEFAULT NULL,                           -- flag per le caratteristiche assegnabili agli edifici
+  `se_indirizzi` tinyint(1) DEFAULT NULL,                         -- flag per le caratteristiche assegnabili agli indirizzi
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000002920
 
@@ -5661,6 +5690,27 @@ CREATE TABLE IF NOT EXISTS `tipologie_badge` (
 -- funzione: contiene i tipologie banner
 --
 CREATE TABLE IF NOT EXISTS `tipologie_banner` (
+  `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000050550
+
+-- tipologie_campagne
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie delle campagne
+--
+CREATE TABLE IF NOT EXISTS `tipologie_campagne` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,

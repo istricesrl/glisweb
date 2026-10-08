@@ -10,11 +10,11 @@
 
 -- caratteristiche
 -- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026
-INSERT IGNORE INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_prodotti`, `se_articoli`, `se_immobili`, `se_categorie_prodotti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'peso indicativo',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	'standard tecnici',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	'unità di vendita',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	'normativa FSC',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT IGNORE INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_prodotti`, `se_articoli`, `se_immobili`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'peso indicativo',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'standard tecnici',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'unità di vendita',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'normativa FSC',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000003080
 

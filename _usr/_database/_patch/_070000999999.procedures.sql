@@ -5,6 +5,142 @@
 -- TODO documentare
 -- 
 
+-- | 070000002700
+
+-- campagne_path
+DROP FUNCTION IF EXISTS `campagne_path`;
+
+-- | 070000002701
+
+-- campagne_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `campagne_path`( `p1` BIGINT( 20 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT campagne_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				campagne.id_genitore,
+				campagne.nome
+			FROM campagne
+			WHERE campagne.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000002710
+
+-- campagne_path_check
+DROP FUNCTION IF EXISTS `campagne_path_check`;
+
+-- | 070000002711
+
+-- campagne_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `campagne_path_check`( `p1` BIGINT( 20 ), `p2` BIGINT( 20 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 bigint( 20 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT campagne_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				campagne.id_genitore
+			FROM campagne
+			WHERE campagne.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000002720
+
+-- campagne_path_find_ancestor
+DROP FUNCTION IF EXISTS `campagne_path_find_ancestor`;
+
+-- | 070000002721
+
+-- campagne_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `campagne_path_find_ancestor`( `p1` BIGINT( 20 ) ) RETURNS BIGINT( 20 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT campagne_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 bigint( 20 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				campagne.id_genitore,
+				campagne.id
+			FROM campagne
+			WHERE campagne.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000002900
 
 -- caratteristiche_path
@@ -4442,6 +4578,142 @@ CREATE
 				tipologie_banner.id
 			FROM tipologie_banner
 			WHERE tipologie_banner.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+-- | 070000050550
+
+-- tipologie_campagne_path
+DROP FUNCTION IF EXISTS `tipologie_campagne_path`;
+
+-- | 070000050551
+
+-- tipologie_campagne_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_campagne_path`( `p1` BIGINT( 20 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_campagne_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_campagne.id_genitore,
+				tipologie_campagne.nome
+			FROM tipologie_campagne
+			WHERE tipologie_campagne.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000050560
+
+-- tipologie_campagne_path_check
+DROP FUNCTION IF EXISTS `tipologie_campagne_path_check`;
+
+-- | 070000050561
+
+-- tipologie_campagne_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_campagne_path_check`( `p1` BIGINT( 20 ), `p2` BIGINT( 20 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 bigint( 20 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_campagne_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_campagne.id_genitore
+			FROM tipologie_campagne
+			WHERE tipologie_campagne.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000050570
+
+-- tipologie_campagne_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_campagne_path_find_ancestor`;
+
+-- | 070000050571
+
+-- tipologie_campagne_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_campagne_path_find_ancestor`( `p1` BIGINT( 20 ) ) RETURNS BIGINT( 20 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_campagne_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 bigint( 20 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_campagne.id_genitore,
+				tipologie_campagne.id
+			FROM tipologie_campagne
+			WHERE tipologie_campagne.id = p1
 			INTO p1, p2;
 
 		END WHILE;

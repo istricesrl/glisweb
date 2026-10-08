@@ -515,7 +515,7 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
 		caratteristiche.nome,
 		caratteristiche.font_awesome,
 		caratteristiche.html_entity,
-		caratteristiche.se_categorie_prodotti AS se_categoria,
+		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
@@ -1232,13 +1232,32 @@ CREATE OR REPLACE VIEW `banner_zone_view` AS
 CREATE OR REPLACE VIEW `campagne_view` AS
 	SELECT
 		campagne.id,
+		campagne.id_genitore,
+		campagne.id_tipologia,
+		tipologie_campagne_path( campagne.id_tipologia ) AS tipologia,
+		campagne.ordine,
+		campagne.codice,
 		campagne.nome,
+		campagne.id_valuta,
+		valute.iso4217 AS valuta,
 		campagne.testo,
+		campagne.note,
+		campagne.budget,
+		campagne.utm_id,
+		campagne.utm_source,
+		campagne.utm_medium,
+		campagne.utm_campaign,
+		campagne.utm_term,
+		campagne.utm_content,
+		campagne.data_inizio,
+		campagne.data_fine,
 		( SELECT count( contatti.id ) FROM contatti WHERE contatti.id_campagna = campagne.id ) AS n_contatti,
+		( SELECT count( carrelli.id ) FROM carrelli WHERE carrelli.id_campagna = campagne.id ) AS n_carrelli,
 		campagne.id_account_inserimento,
 		campagne.id_account_aggiornamento,
-		campagne.nome AS __label__
+		campagne_path( campagne.id ) AS __label__
 	FROM campagne
+		LEFT JOIN valute ON valute.id = campagne.id_valuta
 ;
 
 -- | 090000002900
@@ -1248,15 +1267,16 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 	SELECT
 		caratteristiche.id,
 		caratteristiche.id_genitore,
+		caratteristiche.ordine,
+		caratteristiche.codice,
 		caratteristiche.nome,
-		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
+		caratteristiche.html_entity,
 		caratteristiche.se_prodotti,
 		caratteristiche.se_articoli,
 		caratteristiche.se_immobili,
 		caratteristiche.se_edifici,
 		caratteristiche.se_indirizzi,
-		caratteristiche.se_categorie_prodotti,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -1279,7 +1299,7 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
-		caratteristiche.se_categorie_prodotti AS se_categoria,
+		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
@@ -6517,6 +6537,24 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 		tipologie_banner.id_account_aggiornamento,
 		tipologie_banner_path( tipologie_banner.id ) AS __label__
 	FROM tipologie_banner
+;
+
+-- | 090000050551
+
+-- tipologie_campagne_view
+-- tipologia: tabella assistita
+CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
+	SELECT
+		tipologie_campagne.id,
+		tipologie_campagne.id_genitore,
+		tipologie_campagne.ordine,
+		tipologie_campagne.nome,
+		tipologie_campagne.html_entity,
+		tipologie_campagne.font_awesome,
+		tipologie_campagne.id_account_inserimento,
+		tipologie_campagne.id_account_aggiornamento,
+		tipologie_campagne_path( tipologie_campagne.id ) AS __label__
+	FROM tipologie_campagne
 ;
 
 -- | 090000050601

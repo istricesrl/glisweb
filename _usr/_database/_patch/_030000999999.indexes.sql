@@ -585,12 +585,21 @@ ALTER TABLE `banner_zone` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000002700
 
 -- campagne
-ALTER TABLE `campagne` 
+ALTER TABLE `campagne`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `budget` (`budget`),
+	ADD KEY `utm_campaign` (`utm_campaign`),
+	ADD KEY `data_inizio` (`data_inizio`),
+	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`codice`,`nome`,`id_valuta`,`budget`,`data_inizio`,`data_fine`);
 
 -- | 030000002701
 
@@ -602,10 +611,16 @@ ALTER TABLE `campagne` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- caratteristiche
 ALTER TABLE `caratteristiche`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `nome_id_genitore` (`nome`,`id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_prodotti` (`se_prodotti`),
+	ADD KEY `se_articoli` (`se_articoli`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`se_prodotti`,`se_articoli`,`se_immobili`,`se_edifici`,`se_indirizzi`);
 
 -- | 030000002901
 
@@ -4187,6 +4202,26 @@ ALTER TABLE `tipologie_banner`
 -- tipologie_banner
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_banner` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000050550
+
+-- tipologie_campagne
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_campagne`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000050551
+
+-- tipologie_campagne
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_campagne` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050600
 
