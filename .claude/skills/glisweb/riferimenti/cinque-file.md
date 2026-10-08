@@ -213,8 +213,10 @@ scegliere da dove partire, e le urgenze vere si perdevano fra quelle scadute.
 - **restano fuori** le voci `[=]` e `[?]`, che aspettano qualcun altro, quelle che citano una data
   futura ( hanno una scadenza davanti ), e quelle senza nessuna data, perché non si sa da quando
   sono ferme;
-- lo fa `bin/normalizza-urgenze.py` della skill, ogni sera, su tutti i `TODO.md` di `/var/www`.
-  Senza `--applica` è un'anteprima: `-v` elenca le voci, `-p <testo>` limita ai progetti;
+- lo fa `/usr/local/bin/normalizza-urgenze.py`, ogni sera alle 21:30 su web02 e web03, su tutti i
+  `TODO.md` di `/var/www`; il resoconto è in `/var/log/normalizza-urgenze.log`. Senza `--applica` è
+  un'anteprima: `-v` elenca le voci, `-p <testo>` limita ai progetti. Il sorgente sta nel repository
+  avanzamenti-todo, non nella skill: si modifica lì e si reinstalla su tutte e due le macchine;
 - **chi la ritiene ancora urgente rimette il `!` e scrive perché**, in una nota datata: la data
   nuova le dà altri 14 giorni. Rimettere il `!` senza scrivere niente vuol dire ritrovarselo
   declassato fra due settimane, ed è giusto così.
@@ -510,7 +512,7 @@ impatto, `!` se sì e `-` se no:
 l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
 tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
 
-⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `bin/normalizza-urgenze.py`, ogni sera
+⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `/usr/local/bin/normalizza-urgenze.py`, ogni sera
 ( vedi *"L'urgenza scade"* sopra ).
 
 ⚠ **`[?]` non conta nel residuo**: è il posto dove mettere una cosa senza doverla né fare né buttare.
