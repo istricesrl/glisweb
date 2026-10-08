@@ -199,6 +199,25 @@ Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
 Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
 niente.
 
+#### Due campi fissi in coda alla voce: quando è nata e chi avvisare
+
+Regola data da Fabio l'**08/10/2026**. In fondo alla riga, in quest'ordine:
+
+    - [ ] (!--) il registro presenze in PDF ( avvisare: Melania, Marco Mosti ) ( aperta 08/10/2026 )
+
+- **`( aperta GG/MM/AAAA )` — obbligatorio su ogni voce nuova**, con l'anno intero e la parola
+  `aperta`. È l'unica data che gli strumenti leggono come nascita della voce: le altre date citate
+  nel testo ( *"ferme fra 01/10 e 02/10"* ) parlano del contenuto, e un `( 07/10 )` senza anno né
+  parola chiave non si distingue da loro. Il cruscotto `~/.claude/bin/panoramica.py`, che dice quanto
+  si sta muovendo ogni progetto, conta su questo campo; una voce senza data risulta vecchia.
+- **`( avvisare: Nome, Nome )` — quando qualcuno va avvisato alla chiusura**: chi l'ha chiesta, chi
+  l'aspetta. Alla chiusura ogni nome diventa una riga nel `### Da dirgli alla prossima occasione` della
+  sua sezione del `CHAT.md` ( vedi *"Quando una voce chiude, il giro non finisce nel DONE.md"* ). Non
+  si scrive in prosa nelle note: lì non lo trova nessuno.
+- `~/.claude/bin/voce-progetto.py <dominio> todo-aggiungi "(!--) testo" -p "Nome, Nome"` scrive tutti e
+  due i campi da solo. Chi aggiunge la voce con Edit li scrive a mano.
+- le voci già esistenti non si ridatano a tappeto: una data inventata è peggio di nessuna data.
+
 #### Quanto dettaglio ci sta in una voce
 
 ⚠ **Nel TODO ci sta quello che serve per decidere e per cominciare. Niente di più.** Ogni compito
@@ -403,7 +422,7 @@ Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
    così** — è l'unica cosa che risponderà a *"perché l'avevamo fatto così?"* fra sei mesi;
 3. ⚠ se è una cosa che **il cliente vede o che stava aspettando**, la stessa riga va **anche nel
    `CHAT.md`**, nella sezione `### Da dirgli alla prossima occasione` della persona giusta, **il giorno
-   stesso**.
+   stesso** Se la voce ha il campo `( avvisare: … )`, la persona giusta è ognuna di quelle.
 
 **Il test, in una riga**: *se ne accorgerebbe, o l'aveva chiesta lui?* Se sì, il terzo gesto non è
 facoltativo. **Uno sviluppo finito e non comunicato, per il cliente, non è finito** — e nessuno se ne
