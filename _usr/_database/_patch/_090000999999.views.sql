@@ -1134,25 +1134,26 @@ CREATE OR REPLACE VIEW `badge_view` AS
 
 -- banner_view
 -- tipologia: tabella gestita
--- verifica: 2022-07-20 17:22 Chiara GDL
 CREATE OR REPLACE VIEW `banner_view` AS
 	SELECT
 		banner.id,
 		banner.id_tipologia,
 		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
-		banner.id_sito,
 		banner.ordine,
 		banner.nome,
 		banner.id_inserzionista,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS inserzionista,
-		banner.altezza_modulo,
-		banner.larghezza_modulo,
-		banner.token,
+		banner.id_affiliazione,
+		contratti.nome AS affiliazione,
+		banner.larghezza,
+		banner.altezza,
+		banner.note,
 		banner.id_account_inserimento,
 		banner.id_account_aggiornamento,
-		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
+		concat( banner.nome, ' ', banner.larghezza, 'x', banner.altezza ) AS __label__
 	FROM banner
 		LEFT JOIN anagrafica ON anagrafica.id = banner.id_inserzionista
+		LEFT JOIN contratti ON contratti.id = banner.id_affiliazione
 	;
 
 -- | 090000002401

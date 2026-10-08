@@ -700,6 +700,8 @@ CREATE TABLE IF NOT EXISTS `attivita` (                         --
   `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile collegato all'attività
   `id_messaggio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il messaggio collegato all'attività
   `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per il mailing collegato all'attività
+  `id_banner` bigint(20) DEFAULT NULL,                            -- chiave esterna per il banner visualizzato o cliccato
+  `id_pubblicazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la collocazione che ha servito il banner
   `id_documento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il documento collegato all'attività
   `id_corrispondenza` bigint(20) DEFAULT NULL,                    -- chiave esterna per la corrispondenza collegata all'attività
   `id_pagamento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il pagamento collegato all'attività
@@ -859,23 +861,33 @@ CREATE TABLE IF NOT EXISTS `badge` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i banner
+-- funzione: contiene i banner, pubblicitari o informativi, da mostrare sui siti e sulle app
 --
-CREATE TABLE IF NOT EXISTS `banner` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `id_inserzionista` bigint(20) DEFAULT NULL,
-  `altezza_modulo` int(11) DEFAULT NULL,
-  `larghezza_modulo` int(11) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- un banner è un elemento pubblicitario o informativo che si mostra sui siti e sulle app mobile; si gestisce col
+-- modulo dei banner, che ne cura la generazione, la rotazione, la collocazione negli spazi e il tracciamento delle
+-- visualizzazioni e dei click ( in banner_azioni ); il tipo di banner è indicato dalla tipologia, da tipologie_banner;
+-- l'immagine e il testo del banner stanno nelle tabelle dei media, collegate con id_banner
+--
+-- un banner può essere legato a un contratto di affiliazione, per tracciare o alimentare i link affiliati: i click
+-- sul banner vengono attribuiti a quel contratto, come per account.id_affiliazione
+--
+-- NOTA dove e quando il banner appare non sta qui ma in pubblicazioni, collegata con id_banner: ogni pubblicazione
+-- è una collocazione, col sito o l'app, lo spazio, l'ordine e il periodo di validità
+--
+CREATE TABLE IF NOT EXISTS `banner` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del banner
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `nome` char(255) DEFAULT NULL,                                  -- nome del banner
+  `id_inserzionista` bigint(20) DEFAULT NULL,                     -- chiave esterna per l'anagrafica inserzionista
+  `id_affiliazione` bigint(20) DEFAULT NULL,                      -- chiave esterna per il contratto di affiliazione a cui vanno i click
+  `larghezza` int(11) DEFAULT NULL,                               -- larghezza del banner in pixel
+  `altezza` int(11) DEFAULT NULL,                                 -- altezza del banner in pixel
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000002400

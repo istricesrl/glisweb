@@ -4092,7 +4092,10 @@ INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 (40,	18,	    NULL,	NULL,	'lista di attesa',	                            NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (41,    NULL,	NULL,	NULL,	'chat',	                                        NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (42,	41,	    NULL,	NULL,	'lettura',	                                    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,   NULL),
-(43,	NULL,	NULL,	NULL,	'download file',	                            NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(43,	NULL,	NULL,	NULL,	'download file',	                            NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(44,	NULL,	NULL,	NULL,	'banner',	                                            NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(45,	44,	NULL,	NULL,	'visualizzazione',	                                   NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(46,	44,	NULL,	NULL,	'click',	                                             NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050450
 

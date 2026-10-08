@@ -374,6 +374,8 @@ ALTER TABLE `attivita`
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_messaggio` (`id_messaggio`),
 	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_banner` (`id_banner`),
+	ADD KEY `id_pubblicazione` (`id_pubblicazione`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_corrispondenza` (`id_corrispondenza`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
@@ -497,20 +499,18 @@ ALTER TABLE `badge` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- banner
 -- tipologia: tabella gestita
--- verifica: 2022-07-20 17:22 Chiara GDL
 ALTER TABLE `banner`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_sito` (`id_sito`), 
-	ADD KEY `ordine` (`ordine`), 
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_inserzionista` (`id_inserzionista`),
-	ADD KEY `altezza_modulo` (`altezza_modulo`),	
-	ADD KEY `larghezza_modulo` (`larghezza_modulo`),
-	ADD KEY `token` (`token`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_affiliazione` (`id_affiliazione`),
+	ADD KEY `larghezza` (`larghezza`),
+	ADD KEY `altezza` (`altezza`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`, `id_inserzionista`,`altezza_modulo`,`larghezza_modulo`, `token`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`nome`,`id_inserzionista`,`id_affiliazione`,`larghezza`,`altezza`);
 
 -- | 030000002301
 
