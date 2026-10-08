@@ -1329,6 +1329,707 @@
 
     }
 
+    /**
+     * genera il PDF di un documento e lo salva nel percorso indicato
+     *
+     * E' il punto d'ingresso unico delle stampe dei documenti: riceve l'id del documento e il percorso dove salvare
+     * il file, raccoglie i dati con generaContenutiDocumento(), sceglie il modello, disegna, salva e annota
+     * l'attivita' di stampa. Gli endpoint di /print/ e chi allega un documento a una mail non fanno altro che
+     * chiamarla e poi, se serve, inviare il file al browser.
+     *
+     * Il modello si sceglie dalla colonna stampa_pdf della tipologia del documento; se e' vuota si guarda quella
+     * della tipologia genitore, poi il modello predefinito del chiamante ( $etc['predefinito'], p.es. 'ddt' per
+     * l'endpoint ddt.pdf ), e in mancanza anche di quello si usa il modello generico. Il nome del modello
+     * diventa il nome della funzione che disegna: 'nota.credito' -> generaNotaCreditoPdf(). Per personalizzare la
+     * stampa di una tipologia in un deploy basta quindi scrivere la propria funzione in
+     * mod/0400.documenti/src/lib/pdf.tools.add.php e mettere il suo nome in stampa_pdf, oppure passare il modello
+     * in $etc['modello'].
+     *
+     * @param       integer     $idDocumento    l'ID del documento
+     * @param       string      $percorso       il percorso del file da scrivere, assoluto o relativo a DIR_BASE
+     * @param       array       $etc            le impostazioni passate al modello; 'modello' forza il modello,
+     *                                          'predefinito' lo indica quando la tipologia non ne dichiara uno
+     *
+     * @return      string|boolean              il percorso completo del file scritto, oppure false
+     *
+     */
+    function generaDocumentoPdf( $idDocumento, $percorso, $etc = array() ) {
+
+        // ...
+        global $cf;
+
+        // dati del documento
+        $dati = generaContenutiDocumento( $idDocumento );
+
+        // il documento deve esistere
+        if( empty( $dati['doc']['id'] ) ) {
+            logWrite( 'documento #' . $idDocumento . ' non trovato, stampa non generata', 'documenti', LOG_ERR );
+            return false;
+        }
+
+        // modello forzato dal chiamante, poi quello della tipologia, poi quello della tipologia genitore
+        $modello = ( ! empty( $etc['modello'] ) ) ? $etc['modello'] : $dati['doc']['stampa_pdf'];
+        if( empty( $modello ) && ! empty( $dati['doc']['id_genitore_tipologia'] ) ) {
+            $modello = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT stampa_pdf FROM tipologie_documenti WHERE id = ?',
+                array( array( 's' => $dati['doc']['id_genitore_tipologia'] ) )
+            );
+        }
+
+        // poi il predefinito del chiamante
+        if( empty( $modello ) && ! empty( $etc['predefinito'] ) ) {
+            $modello = $etc['predefinito'];
+        }
+
+        // il modello diventa il nome della funzione che disegna
+        $funzione = 'genera' . str_replace( ' ', '', ucwords( str_replace( '.', ' ', $modello ) ) ) . 'Pdf';
+
+        // un modello senza funzione ripiega sul generico, ma lo si dice: e' quasi sempre un refuso in stampa_pdf
+        if( empty( $modello ) || ! function_exists( $funzione ) ) {
+            if( ! empty( $modello ) ) {
+                logWrite( 'modello di stampa ' . $modello . ' senza la funzione ' . $funzione . ', uso il generico', 'documenti', LOG_ERR );
+            }
+            $funzione = 'generaDocumentoGenericoPdf';
+        }
+
+        // il modello non e' un'impostazione del disegno
+        unset( $etc['modello'], $etc['predefinito'] );
+
+        // disegno il documento
+        $pdf = new TCPDF( 'P', 'mm', 'A4' );
+        $funzione( $pdf, $dati, $etc );
+
+        // percorso completo e cartella
+        $percorso = getFullPath( $percorso );
+        checkFolder( dirname( $percorso ) );
+
+        // salvo il file
+        $pdf->Output( $percorso, 'F' );
+
+        // l'attivita' si annota solo se il file c'e' davvero
+        if( ! file_exists( $percorso ) ) {
+            logWrite( 'stampa del documento #' . $idDocumento . ' non scritta in ' . $percorso, 'documenti', LOG_ERR );
+            return false;
+        }
+
+        // annoto l'attivita' di stampa
+        registraStampaDocumento( $idDocumento );
+
+        // restituisco il percorso del file
+        return $percorso;
+
+    }
+
+    /**
+     * annota l'attivita' di stampa di un documento
+     *
+     * Scrive un'attivita' di tipologia 23 ( stampa ) collegata al documento, con l'account e l'anagrafica
+     * dell'utente collegato se c'e'. Va chiamata DOPO aver scritto il file: un'attivita' annotata prima della
+     * generazione resta anche quando la generazione fallisce.
+     *
+     * @param       integer     $idDocumento    l'ID del documento
+     * @param       string      $nome           il nome dell'attivita'
+     * @param       integer     $idTipologia    la tipologia dell'attivita' ( 23 stampa PDF, 24 esportazione XML )
+     *
+     * @return      integer|boolean             l'ID dell'attivita' inserita, oppure false
+     *
+     */
+    function registraStampaDocumento( $idDocumento, $nome = 'stampa documento', $idTipologia = 23 ) {
+
+        // ...
+        global $cf;
+
+        // inserisco l'attivita'
+        $idAttivita = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'id_tipologia' => $idTipologia,
+                'id_documento' => $idDocumento,
+                'id_anagrafica' => ( isset( $_SESSION['account']['id_anagrafica'] ) ) ? $_SESSION['account']['id_anagrafica'] : NULL,
+                'id_account' => ( isset( $_SESSION['account']['id'] ) ) ? $_SESSION['account']['id'] : NULL,
+                'data_attivita' => date( 'Y-m-d' ),
+                'ora_inizio' => date( 'H:i:s' ),
+                'ora_fine' => date( 'H:i:s' ),
+                'nome' => $nome,
+                'id_account_inserimento' => ( isset( $_SESSION['account']['id'] ) ) ? $_SESSION['account']['id'] : NULL,
+                'timestamp_inserimento' => time()
+            ),
+            'attivita',
+            false
+        );
+
+        // aggiorno la vista statica
+        if( ! empty( $idAttivita ) && function_exists( 'updateAttivitaViewStatic' ) ) {
+            updateAttivitaViewStatic( $idAttivita );
+        }
+
+        return $idAttivita;
+
+    }
+
+    /**
+     * modello generico di stampa di un documento
+     *
+     * Disegna intestazione ( logo, codice a barre, emittente, destinatario, oggetto ), la tabella delle righe, i
+     * totali, i dati del trasporto e le note. E' il modello di ripiego di generaDocumentoPdf() ed e' la base dei
+     * modelli delle singole tipologie, che cambiano solo la configurazione: le colonne della tabella in
+     * $etc['tbl']['colonne'] e le sezioni da mostrare in $etc['sez']. Ogni colonna e' un array con:
+     *
+     * chiave       | contenuto
+     * -------------|-----------------------------------------------------------------------------------------------
+     * campo        | la chiave della riga da stampare
+     * titolo       | l'intestazione della colonna
+     * w            | la larghezza, in dodicesimi dell'area del testo
+     * align        | l'allineamento ( L, C, R )
+     * formato      | 'importo' per due decimali e il simbolo dell'euro, 'quantita' per togliere gli zeri in coda
+     *
+     * Le righe che cominciano con un asterisco hanno lo sfondo grigio, e la quantita' delle righe che hanno
+     * sottorighe e' in grassetto.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+     * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+     *
+     * @return      void
+     *
+     */
+    function generaDocumentoGenericoPdf( &$pdf, $dati, $cnf = array() ) {
+
+        /**
+         * SEZIONE DI CONFIGURAZIONE
+         * qui vengono dichiarati e impostati i valori e i dati che verranno
+         * poi visualizzati nel PDF
+         */
+
+        // dimensioni pagina
+        $etc['pag']['size']['h']		            = 297;								                // altezza del foglio
+        $etc['pag']['size']['w']		            = 210;								                // larghezza del foglio
+        $etc['pag']['margin']['t']		            = 15;								                // margine superiore
+        $etc['pag']['margin']['l']		            = 15;								                // margine sinistro
+        $etc['pag']['margin']['r']		            = 15;								                // margine destro
+        $etc['pag']['margin']['b']		            = 15;								                // margine inferiore
+        $etc['pag']['spacer']['base']		        = 5;								                // spaziatore standard
+
+        // tipografia
+        $etc['fnt']['base']['family']		        = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['base']['style']		        = '';						                        // stile del font base
+        $etc['fnt']['base']['size']		            = 10;								                // dimensione del font base
+
+        // spessori linee
+        $etc['thk']['base']		                    = .3;								                // spessore linea standard
+        $etc['thk']['sottile']	                    = .15;								                // spessore linea sottile
+
+        // colori
+        $etc['rgb']['nero']		                    = array( 0, 0, 0 );					                // il nero
+        $etc['rgb']['grigio']		                = array( 128, 128, 128 );			                // grigio
+        $etc['rgb']['evidenza']		                = 230;								                // sfondo delle righe con l'asterisco
+        $etc['rgb']['bianco']		                = 255;								                // sfondo delle altre righe
+
+        // bordi delle celle
+        $etc['tbl']['celle']['intestazione']		= array( 'B' => array( 'width' => $etc['thk']['base'], 'color' => $etc['rgb']['nero'], 'dash' => false ) );
+        $etc['tbl']['celle']['dati']		        = array( 'B' => array( 'width' => $etc['thk']['sottile'], 'color' => $etc['rgb']['grigio'], 'dash' => false ) );
+
+        // colonne della tabella delle righe
+        $etc['tbl']['colonne'] = array(
+            array( 'campo' => 'codice_articolo', 'titolo' => 'codice', 'w' => 2, 'align' => 'L' ),
+            array( 'campo' => 'articolo', 'titolo' => 'descrizione', 'w' => 4, 'align' => 'L' ),
+            array( 'campo' => 'quantita', 'titolo' => 'q.tà', 'w' => 1, 'align' => 'R', 'formato' => 'quantita' ),
+            array( 'campo' => 'udm', 'titolo' => 'udm', 'w' => 1, 'align' => 'C' ),
+            array( 'campo' => 'importo_netto_unitario', 'titolo' => 'prezzo', 'w' => 2, 'align' => 'R', 'formato' => 'importo' ),
+            array( 'campo' => 'importo_netto_totale', 'titolo' => 'importo', 'w' => 2, 'align' => 'R', 'formato' => 'importo' )
+        );
+
+        // sezioni da mostrare
+        $etc['sez']['barcode']                      = true;								                // codice a barre del documento
+        $etc['sez']['totali']                       = true;								                // totali e riepilogo IVA
+        $etc['sez']['trasporto']                    = true;								                // vettore, causale, colli, resa
+        $etc['sez']['note']                         = true;								                // note per il cliente
+
+        // testi
+        $etc['txt']['oggetto']                      = '{{ doc.oggetto }}';				                // oggetto del documento
+        $etc['txt']['note']                         = 'note per il cliente: ';			                // etichetta delle note
+
+        // immagini
+        $etc['img']['logo']['w']                    = 2;								                // larghezza del logo, in colonne
+        $etc['img']['logo']['h']                    = 5;								                // altezza del logo, in righe
+
+        // barcode
+        $etc['bcd']['principale'] = array(
+            'position' => 'R',
+            'align' => 'C',
+            'stretch' => false,
+            'fitwidth' => true,
+            'cellfitalign' => '',
+            'border' => false,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array( 0, 0, 0 ),
+            'bgcolor' => false,
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 8,
+            'stretchtext' => 4
+        );
+
+        /**
+         * ELABORAZIONE IMPOSTAZIONI
+         * nessun valore o impostazione va modificato oltre questo punto
+         */
+
+        // le colonne si sostituiscono intere: unite chiave per chiave ne resterebbero di quelle di base
+        if( isset( $cnf['tbl']['colonne'] ) ) {
+            $etc['tbl']['colonne'] = array();
+        }
+
+        // unisco le impostazioni custom a quelle di base
+        $etc = array_replace_recursive( $etc, $cnf );
+
+        // larghezza dell'area del testo
+        $etc['pag']['size']['text_area']['w']		= $etc['pag']['size']['w'] - ( $etc['pag']['margin']['l'] + $etc['pag']['margin']['r'] );
+
+        // larghezza colonna base
+        $etc['pag']['spacer']['col']		        = $etc['pag']['size']['text_area']['w'] / 12;
+
+        // rendering dei testi
+        twigRenderText( $etc['txt'], $dati );
+
+        // titolo del documento
+        $pdf->SetTitle( $etc['txt']['oggetto'] );
+
+        // scorciatoie
+        $col = $etc['pag']['spacer']['col'];
+        $ml = $etc['pag']['margin']['l'];
+        $mt = $etc['pag']['margin']['t'];
+        $stdsp = $etc['pag']['spacer']['base'];
+
+        /**
+         * IMPOSTAZIONE PAGINA
+         * nessun valore o impostazione va modificato oltre questo punto
+         */
+
+        // carattere di base
+        $pdf->SetFont( $etc['fnt']['base']['family'], $etc['fnt']['base']['style'], $etc['fnt']['base']['size'] );
+
+        // imposto il PDF per non stampare l'header e il footer
+        $pdf->SetPrintHeader( false );
+        $pdf->SetPrintFooter( false );
+
+        // imposto i margini
+        $pdf->SetMargins( $ml, $mt, $etc['pag']['margin']['r'] );
+
+        // margine dell'intestazione
+        $pdf->SetHeaderMargin( 0 );
+
+        // margine del footer
+        $pdf->SetFooterMargin( 0 );
+
+        // imposto il font monospaziato di default
+        $pdf->SetDefaultMonospacedFont( PDF_FONT_MONOSPACED );
+
+        // imposto l'aggiunta automatica di pagine quando il contenuto raggiunge il margine inferiore
+        $pdf->SetAutoPageBreak( true, $etc['pag']['margin']['b'] );
+
+        // fattore di conversione da pixel a millimetri
+        $pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
+
+        // aggiunta della prima pagina
+        $pdf->AddPage();
+
+        // altezza stimata della linea di testo
+        $lh = $pdf->getStringHeight( $col, 'a' );
+
+        /**
+         * INIZIO INSERIMENTO CONTENUTI
+         */
+
+        // logo dell'emittente
+        if( ! empty( $dati['sri']['logo'] ) && file_exists( $dati['sri']['logo'] ) ) {
+            $pdf->image( $dati['sri']['logo'], $ml, $mt, $col * $etc['img']['logo']['w'], $lh * $etc['img']['logo']['h'], NULL, NULL, 'T', false, 300, '', false, false, 1, true );
+        }
+
+        // codice a barre del documento
+        if( ! empty( $etc['sez']['barcode'] ) && ! empty( $dati['doc']['codice'] ) ) {
+            $pdf->SetY( $mt + 5 );
+            $pdf->write1DBarcode( $dati['doc']['codice'], 'C128', '', '', '', 18, 0.4, $etc['bcd']['principale'], 'N' );
+        }
+
+        // emittente, accanto al logo
+        $righe = documentoRigheSoggetto( $dati['src'], ( isset( $dati['sri'] ) ) ? $dati['sri'] : array() );
+        $x = $ml + ( ( ! empty( $dati['sri']['logo'] ) ) ? $col * $etc['img']['logo']['w'] + 5 : 0 );
+        $y = $mt;
+        foreach( $righe as $i => $riga ) {
+            $pdf->SetFont( '', ( ( $i == 0 ) ? 'B' : '' ) );
+            $pdf->Text( $x, $y, $riga );
+            $y += $lh;
+        }
+
+        // destinatario, a destra sotto il codice a barre
+        $y = max( $y, $mt + $lh * $etc['img']['logo']['h'] ) + 10;
+        if( ! empty( $dati['dst'] ) ) {
+            $righe = documentoRigheSoggetto( $dati['dst'], ( isset( $dati['dsi'] ) ) ? $dati['dsi'] : array() );
+            foreach( $righe as $i => $riga ) {
+                $pdf->SetFont( '', ( ( $i == 0 ) ? 'B' : '' ) );
+                $pdf->SetXY( $ml, $y );
+                $pdf->Cell( $etc['pag']['size']['text_area']['w'], 0, $riga, 0, 0, 'R' );
+                $y += $lh;
+            }
+        }
+
+        // oggetto
+        $pdf->SetXY( $ml, $y + $stdsp );
+        $pdf->SetFont( '', 'B' );
+        $pdf->Cell( $col * 2, 0, 'oggetto:', 0, 0, 'L' );
+        $pdf->SetFont( '', '' );
+        $pdf->Cell( $col * 10, 0, $etc['txt']['oggetto'], 0, 1, 'L' );
+        $pdf->SetY( $pdf->GetY() + $stdsp );
+
+        // tabella delle righe
+        documentoTabellaRighe( $pdf, $dati['doc']['righe'], $etc );
+
+        // totali e riepilogo IVA
+        if( ! empty( $etc['sez']['totali'] ) && ! empty( $dati['doc']['tot']['importo_lordo_totale'] ) && $dati['doc']['tot']['importo_lordo_totale'] != 0 ) {
+
+            $pdf->SetY( $pdf->GetY() + $stdsp );
+
+            // riepilogo per aliquota
+            if( ! empty( $dati['doc']['iva'] ) ) {
+                foreach( $dati['doc']['iva'] as $iva ) {
+                    $pdf->Cell( $col * 8, 0, 'imponibile ' . ( ( isset( $iva['descrizione'] ) ) ? $iva['descrizione'] : '' ) . ' ' . $iva['imponibile_tot'] . ' €', 0, 0, 'R' );
+                    $pdf->Cell( $col * 4, 0, 'IVA ' . $iva['tot'] . ' €', 0, 1, 'R' );
+                }
+            }
+
+            // totali
+            $pdf->Cell( $col * 8, 0, 'totale imponibile', 0, 0, 'R' );
+            $pdf->Cell( $col * 4, 0, $dati['doc']['tot']['importo_netto_totale'] . ' €', 0, 1, 'R' );
+            $pdf->Cell( $col * 8, 0, 'totale IVA', 0, 0, 'R' );
+            $pdf->Cell( $col * 4, 0, $dati['doc']['tot']['importo_iva_totale'] . ' €', 0, 1, 'R' );
+            $pdf->SetFont( '', 'B' );
+            $pdf->Cell( $col * 8, 0, 'totale documento', 0, 0, 'R' );
+            $pdf->Cell( $col * 4, 0, $dati['doc']['tot']['importo_lordo_totale'] . ' €', 0, 1, 'R' );
+            $pdf->SetFont( '', '' );
+
+        }
+
+        // dati del trasporto
+        if( ! empty( $etc['sez']['trasporto'] ) && ! empty( $dati['doc']['trasporto'] ) ) {
+
+            $pdf->SetY( $pdf->GetY() + $stdsp );
+
+            $trasporto = array();
+            if( ! empty( $dati['doc']['trasporto']['causale'] ) ) {
+                $trasporto[] = 'causale: ' . $dati['doc']['trasporto']['causale'];
+            }
+            if( ! empty( $dati['doc']['trasporto']['vettore'] ) ) {
+                $v = $dati['doc']['trasporto']['vettore'];
+                $trasporto[] = 'vettore: ' . trim( $v['nome'] . ' ' . $v['cognome'] . ' ' . $v['denominazione'] );
+            }
+            if( ! empty( $dati['doc']['trasporto']['colli'] ) ) {
+                $c = $dati['doc']['trasporto']['colli'];
+                $trasporto[] = 'colli: ' . $c['numero'] . ( ( ! empty( $c['peso'] ) && $c['udm_diverse'] == 1 ) ? ', peso ' . documentoFormatoQuantita( $c['peso'] ) . ' ' . $c['udm_peso'] : '' );
+            }
+            if( ! empty( $dati['doc']['trasporto']['resa'] ) ) {
+                $r = $dati['doc']['trasporto']['resa'];
+                $trasporto[] = 'consegna: ' . trim( $r['tipologia'] . ' ' . $r['indirizzo'] . ', ' . $r['civico'] . ' - ' . $r['cap'] . ' ' . $r['comune'] . ' ' . $r['provincia'] );
+            }
+
+            foreach( $trasporto as $riga ) {
+                $pdf->Cell( $col * 12, 0, $riga, 0, 1, 'L' );
+            }
+
+        }
+
+        // note per il cliente
+        if( ! empty( $etc['sez']['note'] ) && ! empty( $dati['doc']['note'] ) ) {
+            $pdf->SetY( $pdf->GetY() + $stdsp );
+            $pdf->SetFont( '', 'B' );
+            $pdf->Cell( $col * 12, 0, $etc['txt']['note'], 0, 1, 'L' );
+            $pdf->SetFont( '', '' );
+            $pdf->MultiCell( $col * 12, 0, $dati['doc']['note'], 0, 'L' );
+        }
+
+    }
+
+    /**
+     * modello di stampa del documento di trasporto
+     *
+     * Il generico con le colonne dei magazzini al posto dei prezzi, come il DDT di sempre.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+     * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+     *
+     * @return      void
+     *
+     */
+    function generaDdtPdf( &$pdf, $dati, $cnf = array() ) {
+
+        // colonne della tabella delle righe
+        $etc['tbl']['colonne'] = array(
+            array( 'campo' => 'articolo', 'titolo' => 'descrizione', 'w' => 4, 'align' => 'L' ),
+            array( 'campo' => 'quantita', 'titolo' => 'q.tà', 'w' => 1, 'align' => 'R', 'formato' => 'quantita' ),
+            array( 'campo' => 'udm', 'titolo' => 'udm', 'w' => 1, 'align' => 'C' ),
+            array( 'campo' => 'mastro_provenienza', 'titolo' => 'magazzino scarico', 'w' => 3, 'align' => 'L' ),
+            array( 'campo' => 'mastro_destinazione', 'titolo' => 'magazzino carico', 'w' => 3, 'align' => 'L' )
+        );
+
+        // il DDT non ha totali
+        $etc['sez']['totali'] = false;
+
+        // disegno col modello generico
+        generaDocumentoGenericoPdf( $pdf, $dati, documentoUnisciImpostazioni( $etc, $cnf ) );
+
+    }
+
+    /**
+     * modello di stampa dell'ordine
+     *
+     * Il generico con codice, descrizione, quantita' e magazzino di scarico; i totali compaiono solo se l'ordine
+     * ha un importo.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+     * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+     *
+     * @return      void
+     *
+     */
+    function generaOrdinePdf( &$pdf, $dati, $cnf = array() ) {
+
+        // colonne della tabella delle righe
+        $etc['tbl']['colonne'] = array(
+            array( 'campo' => 'codice_articolo', 'titolo' => 'codice', 'w' => 2, 'align' => 'L' ),
+            array( 'campo' => 'articolo', 'titolo' => 'descrizione', 'w' => 5, 'align' => 'L' ),
+            array( 'campo' => 'quantita', 'titolo' => 'q.tà', 'w' => 1, 'align' => 'R', 'formato' => 'quantita' ),
+            array( 'campo' => 'udm', 'titolo' => 'udm', 'w' => 1, 'align' => 'C' ),
+            array( 'campo' => 'importo_netto_totale', 'titolo' => 'importo', 'w' => 3, 'align' => 'R', 'formato' => 'importo' )
+        );
+
+        // disegno col modello generico
+        generaDocumentoGenericoPdf( $pdf, $dati, documentoUnisciImpostazioni( $etc, $cnf ) );
+
+    }
+
+    if( ! function_exists( 'generaNotaCreditoPdf' ) ) {
+
+        /**
+         * modello di stampa della nota di credito
+         *
+         * Il generico con prezzi e totali; l'oggetto ricorda il documento stornato quando c'e' un riferimento.
+         *
+         * Protetta da function_exists() perche' un deploy puo' gia' avere una sua generaNotaCreditoPdf() nella libreria
+         * custom ( polmasi ) e includere questa dopo, per avere le altre funzioni dello standard.
+         *
+         * @param       object      $pdf            l'oggetto TCPDF
+         * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+         * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+         *
+         * @return      void
+         *
+         */
+        function generaNotaCreditoPdf( &$pdf, $dati, $cnf = array() ) {
+
+            // l'oggetto riporta il riferimento al documento stornato
+            $etc['txt']['oggetto'] = '{{ doc.oggetto }}{% if doc.riferimento %} - rif. {{ doc.riferimento }}{% endif %}';
+
+            // disegno col modello generico
+            generaDocumentoGenericoPdf( $pdf, $dati, documentoUnisciImpostazioni( $etc, $cnf ) );
+
+        }
+
+    }
+
+    /**
+     * modello di stampa della fattura pro forma
+     *
+     * Il generico con prezzi e totali, e la dicitura che il documento non ha valore fiscale.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+     * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+     *
+     * @return      void
+     *
+     */
+    function generaProformaPdf( &$pdf, $dati, $cnf = array() ) {
+
+        // l'oggetto avverte che il documento non e' fiscale
+        $etc['txt']['oggetto'] = '{{ doc.oggetto }} - documento privo di valore fiscale';
+
+        // disegno col modello generico
+        generaDocumentoGenericoPdf( $pdf, $dati, documentoUnisciImpostazioni( $etc, $cnf ) );
+
+    }
+
+    /**
+     * modello di stampa dell'offerta
+     *
+     * Il generico con prezzi e totali, senza codice a barre e senza dati del trasporto.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $dati           i dati del documento, da generaContenutiDocumento()
+     * @param       array       $cnf            le impostazioni che sostituiscono quelle di base
+     *
+     * @return      void
+     *
+     */
+    function generaOffertaPdf( &$pdf, $dati, $cnf = array() ) {
+
+        // sezioni da mostrare
+        $etc['sez']['barcode'] = false;
+        $etc['sez']['trasporto'] = false;
+
+        // disegno col modello generico
+        generaDocumentoGenericoPdf( $pdf, $dati, documentoUnisciImpostazioni( $etc, $cnf ) );
+
+    }
+
+    /**
+     * unisce le impostazioni di un modello a quelle del chiamante
+     *
+     * Le colonne della tabella si sostituiscono intere, come fa generaDocumentoGenericoPdf(): unite chiave per
+     * chiave, tre colonne del chiamante lascerebbero in fondo le restanti del modello.
+     *
+     * @param       array       $etc            le impostazioni del modello
+     * @param       array       $cnf            le impostazioni del chiamante
+     *
+     * @return      array                       le impostazioni unite
+     *
+     */
+    function documentoUnisciImpostazioni( $etc, $cnf ) {
+
+        if( isset( $cnf['tbl']['colonne'] ) ) {
+            $etc['tbl']['colonne'] = array();
+        }
+
+        return array_replace_recursive( $etc, $cnf );
+
+    }
+
+    /**
+     * righe di intestazione di un soggetto del documento
+     *
+     * Restituisce denominazione, indirizzo, comune, partita IVA, codice fiscale e SDI o PEC di emittente o
+     * destinatario, scartando quelle vuote: i documenti senza sedi richieste hanno la sede fatta di NULL, e
+     * l'indirizzo diventa " , ".
+     *
+     * @param       array       $soggetto       la riga di anagrafica ( src o dst )
+     * @param       array       $sede           la sua sede ( sri o dsi )
+     *
+     * @return      array                       le righe da stampare
+     *
+     */
+    function documentoRigheSoggetto( $soggetto, $sede ) {
+
+        $righe = array(
+            ( isset( $soggetto['denominazione_fiscale'] ) ) ? $soggetto['denominazione_fiscale'] : NULL,
+            ( isset( $sede['indirizzo_fiscale'] ) ) ? $sede['indirizzo_fiscale'] : NULL,
+            ( isset( $sede['comune_indirizzo_fiscale'] ) ) ? $sede['comune_indirizzo_fiscale'] : NULL,
+            ( ! empty( $soggetto['partita_iva'] ) ) ? 'P.IVA ' . $soggetto['partita_iva'] : NULL,
+            ( ! empty( $soggetto['codice_fiscale'] ) ) ? 'cod.fisc. ' . $soggetto['codice_fiscale'] : NULL,
+            ( ! empty( $soggetto['codice_sdi'] ) && $soggetto['codice_sdi'] != '0000000' ) ? 'SDI ' . $soggetto['codice_sdi'] : NULL
+        );
+
+        // PEC in mancanza dello SDI
+        if( empty( $righe[5] ) && ! empty( $soggetto['id'] ) ) {
+            $pec = anagraficaGetPEC( $soggetto['id'] );
+            $righe[5] = ( ! empty( $pec ) ) ? 'PEC ' . $pec : NULL;
+        }
+
+        // tolgo le righe vuote o fatte di sola punteggiatura
+        return array_values( array_filter( $righe, function( $r ) { return trim( $r, " ,\t" ) !== ''; } ) );
+
+    }
+
+    /**
+     * tabella delle righe di un documento
+     *
+     * Disegna intestazione e righe secondo le colonne di $etc['tbl']['colonne'], ripetendo l'intestazione a ogni
+     * cambio pagina.
+     *
+     * @param       object      $pdf            l'oggetto TCPDF
+     * @param       array       $righe          le righe del documento
+     * @param       array       $etc            le impostazioni del modello
+     *
+     * @return      void
+     *
+     */
+    function documentoTabellaRighe( &$pdf, $righe, $etc ) {
+
+        $col = $etc['pag']['spacer']['col'];
+        $limite = $etc['pag']['size']['h'] - $etc['pag']['margin']['b'];
+
+        // intestazione
+        $intestazione = function() use ( &$pdf, $etc, $col ) {
+            $pdf->SetFont( '', 'B' );
+            foreach( $etc['tbl']['colonne'] as $i => $c ) {
+                $pdf->Cell( $col * $c['w'], 0, $c['titolo'], $etc['tbl']['celle']['intestazione'], ( ( $i == count( $etc['tbl']['colonne'] ) - 1 ) ? 1 : 0 ), $c['align'] );
+            }
+            $pdf->SetFont( '', '' );
+        };
+
+        $intestazione();
+
+        foreach( (array) $righe as $riga ) {
+
+            // testi delle celle
+            $testi = array();
+            foreach( $etc['tbl']['colonne'] as $c ) {
+                $v = ( isset( $riga[ $c['campo'] ] ) ) ? $riga[ $c['campo'] ] : '';
+                if( isset( $c['formato'] ) && $c['formato'] == 'importo' && $v !== '' && $v !== NULL ) {
+                    $v = sprintf( '%0.2f', $v ) . ' €';
+                } elseif( isset( $c['formato'] ) && $c['formato'] == 'quantita' ) {
+                    $v = documentoFormatoQuantita( $v );
+                }
+                $testi[] = $v;
+            }
+
+            // altezza della riga, la massima fra le celle
+            $trh = 0;
+            foreach( $etc['tbl']['colonne'] as $i => $c ) {
+                $trh = max( $trh, $pdf->getStringHeight( $col * $c['w'], $testi[ $i ] ) );
+            }
+
+            // cambio pagina con ripetizione dell'intestazione
+            if( $pdf->GetY() + $trh > $limite ) {
+                $pdf->AddPage();
+                $intestazione();
+            }
+
+            // riempimento delle righe con l'asterisco
+            $pdf->SetFillColor( ( substr( trim( (string) ( isset( $riga['nome'] ) ? $riga['nome'] : '' ) ), 0, 1 ) == '*' ) ? $etc['rgb']['evidenza'] : $etc['rgb']['bianco'] );
+
+            // celle
+            foreach( $etc['tbl']['colonne'] as $i => $c ) {
+                $pdf->SetFont( '', ( ( $c['campo'] == 'quantita' && ! empty( $riga['sottorighe'] ) ) ? 'B' : '' ) );
+                $pdf->MultiCell( $col * $c['w'], $trh, $testi[ $i ], $etc['tbl']['celle']['dati'], $c['align'], true, ( ( $i == count( $etc['tbl']['colonne'] ) - 1 ) ? 1 : 0 ) );
+            }
+            $pdf->SetFont( '', '' );
+
+        }
+
+    }
+
+    /**
+     * formatta una quantita' togliendo gli zeri decimali in coda
+     *
+     * @param       string      $q              la quantita'
+     *
+     * @return      string                      la quantita' formattata
+     *
+     */
+    function documentoFormatoQuantita( $q ) {
+
+        if( ! is_numeric( $q ) ) {
+            return (string) $q;
+        }
+
+        return rtrim( rtrim( sprintf( '%0.3f', $q ), '0' ), '.' );
+
+    }
+
     /*
      * NB: qui stavano, dal 15/09/2026 e per poche ore, due fallback di `anagraficaGetLogo()` e
      * `anagraficaGetPEC()`, messi perche' le due funzioni vivevano in `_mod/_0010.anagrafica/` e

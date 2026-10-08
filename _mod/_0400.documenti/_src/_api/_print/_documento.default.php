@@ -167,18 +167,16 @@
     }
 
     // annoto l'attività di stampa
-    $idAttivitaStampa = mysqlInsertRow(
-        $cf['mysql']['connection'],
-        array(
-            'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
-            'id_documento' => $_REQUEST['__documento__'],
-            'data_attivita' => date('Y-m-d'),
-            'nome' => 'stampa documento',
-            'ora_inizio' => date( 'H:i:s' ),
-            'ora_fine' => date( 'H:i:s' )
-        ),
-        'attivita'
-    );
+    // NOTA qui il file non esiste ancora, quindi un'attivita' annotata qui resta anche se la generazione fallisce: gli
+    // endpoint che passano da _documento.output.php ( e _fattura.xml.php ) impostano $cnf['attivita'] a false e la
+    // annotano a file scritto; la si annota qui solo per gli endpoint dei deploy scritti prima di quel canone
+    if( ! isset( $cnf['attivita'] ) || $cnf['attivita'] !== false ) {
+        $idAttivitaStampa = registraStampaDocumento(
+            $_REQUEST['__documento__'],
+            'stampa documento',
+            ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) )
+        );
+    }
 
     // debug
     // die( $idAttivitaStampa );

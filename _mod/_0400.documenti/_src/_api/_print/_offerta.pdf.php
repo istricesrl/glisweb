@@ -1,14 +1,15 @@
 <?php
 
     /**
-     * stampa PDF: documento qualsiasi
+     * stampa PDF: offerta
      *
-     * Stampa un documento di qualunque tipologia col modello che la tipologia dichiara in stampa_pdf ( o quello del
-     * genitore, o il generico ): e' lo stesso giro degli endpoint specifici, descritto in _documento.output.php.
+     * Endpoint sottile: il PDF lo genera generaDocumentoPdf() ( _src/_lib/_pdf.tools.add.php del modulo ), che legge i
+     * dati con generaContenutiDocumento(), sceglie il modello dalla colonna stampa_pdf della tipologia del documento
+     * ( e in mancanza usa 'offerta' ), salva il file in var/spool/docs/offerte/pdf/ e annota l'attivita' di stampa.
+     * L'uscita verso il browser e i parametri d, f, fi sono descritti in _documento.output.php.
      *
-     * Il parametro n chiede di salvare il PDF in un percorso preciso, relativo alla radice del deploy: lo usa
-     * _inc/_macro/_documenti.form.invio.php per preparare l'allegato della mail. In quel caso il percorso viene
-     * rifiutato se esce dalla radice, e l'uscita e' un JSON col percorso salvato.
+     * Per cambiare l'impaginazione in un deploy non si copia questo file: si scrive un modello custom e lo si
+     * dichiara in tipologie_documenti.stampa_pdf, oppure si forza $cnf['modello'] in un endpoint custom.
      *
      * @file
      *
@@ -50,34 +51,12 @@
 
     // configurazioni specifiche
     $cnf['estensione'] = 'pdf';
-    $cnf['cartella'] = 'documenti';
+    $cnf['cartella'] = 'offerte';
+    $cnf['predefinito'] = 'offerta';
     $cnf['attivita'] = false;
 
     // inclusione dei dati base
     require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
-    // salvataggio in un percorso dato
-    if( isset( $_REQUEST['n'] ) && ! empty( $_REQUEST['n'] ) ) {
-
-        // il percorso arriva dalla richiesta: niente risalite fuori dalla radice
-        if( strpos( $_REQUEST['n'], '..' ) !== false ) {
-            dieText( 'percorso non valido' );
-        }
-
-        // ...
-        $filePdf = generaDocumentoPdf( $dati['doc']['id'], fullPath( $_REQUEST['n'] ) );
-
-        // ...
-        if( $filePdf === false ) {
-            dieText( 'stampa del documento non generata, vedere il log dei documenti' );
-        }
-
-        // ...
-        buildJson( array( 'file' => getShortPath( $filePdf ) ) );
-
-    } else {
-
-        // generazione, salvataggio e uscita
-        require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.output.php';
-
-    }
+    // generazione, salvataggio e uscita
+    require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.output.php';

@@ -21,6 +21,37 @@ debug del sistema di interscambio
 
 [...] per attivare manualmente il job di download delle note chiamare il task task/0400.documenti/download.note.attive.start [...]
 
+stampe PDF
+----------
+
+Ogni documento si stampa con `generaDocumentoPdf( $id, $percorso, $etc )` ( `_src/_lib/_pdf.tools.add.php` ): legge
+i dati con `generaContenutiDocumento()`, sceglie il modello, lo disegna, salva il file, annota l'attività di stampa
+( tipologia 23, con `id_account` e `id_anagrafica` della sessione ) e restituisce il percorso, o `false`.
+
+Il modello si sceglie in quest'ordine: `$etc['modello']`, la colonna `tipologie_documenti.stampa_pdf` della tipologia,
+quella della tipologia genitore, `$etc['predefinito']`, `documento.generico`. La funzione di disegno ha il nome del
+modello: `nota.credito` → `generaNotaCreditoPdf( &$pdf, $dati, $etc )`. Nello standard ci sono `documento.generico`,
+`fattura`, `nota.credito`, `ddt`, `proforma`, `offerta`, `ordine`, `ricevuta`, `copertina.missione`; la patch
+`_202610081200.stampa.pdf.tipologie.sql` li assegna alle tipologie radice, e le figlie ereditano dal genitore.
+
+Gli endpoint di `print/0400.documenti/` ( `ddt.pdf`, `ordine.pdf`, `nota.credito.pdf`, `proforma.pdf`, `offerta.pdf`,
+`fattura.pdf`, `ricevuta.pdf`, `copertina.missione.pdf` e il generico `documento.pdf` ) sono sottili: autorizzazione in
+`_documento.default.php`, generazione e uscita in `_documento.output.php`. Il file finisce sempre in
+`var/spool/docs/<cartella>/pdf/<oggetto>.pdf`; `d` lo scarica, `f` restituisce un JSON col percorso.
+
+Attenzione:
+
+- il nome del file è l'oggetto del documento, che contiene il numero: due documenti **senza numero** della stessa
+  tipologia e data si sovrascrivono il file a vicenda;
+- gli endpoint che chiedono `GESTIONE_DOCUMENTI` ( ddt, ordine, nota di credito, offerta, documento ) lo chiedono anche
+  a chi porta il token `t` del documento: col solo token passano fattura, proforma, ricevuta e copertina;
+- `$cnf['attivita'] = false` dice a `_documento.default.php` di non annotare l'attività, che annota
+  `generaDocumentoPdf()` a file scritto: gli endpoint che non lo impostano continuano ad annotarla lì.
+
+Per personalizzare la stampa in un deploy si scrive la funzione di disegno custom e la si dichiara in `stampa_pdf`,
+oppure la si forza con `$cnf['modello']` in un endpoint custom; il procedimento generale sta nel capitolo
+"come creare i file PDF".
+
 fattura elettronica
 -------------------
 

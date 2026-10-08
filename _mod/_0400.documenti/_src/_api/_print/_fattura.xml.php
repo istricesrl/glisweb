@@ -77,6 +77,7 @@
     // configurazioni specifiche
     $cnf['estensione'] = 'xml';
     $cnf['cartella'] = 'fatture';
+    $cnf['attivita'] = false;
 
     // inclusione dei dati base
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
@@ -84,20 +85,6 @@
 	// die( print_r( $dati, true ) );
     // error_reporting( E_ALL );
     // ini_set( 'display_errors', TRUE );
-
-    // annoto l'attività di stampa
-    mysqlInsertRow(
-        $cf['mysql']['connection'],
-        array(
-            'id_tipologia' => 24,
-            'id_documento' => $dati['doc']['id'],
-            'data_attivita' => date('Y-m-d'),
-            'nome' => 'stampa documento',
-            'ora_inizio' => date( 'H:i:s' ),
-            'ora_fine' => date( 'H:i:s' )
-        ),
-        'attivita'
-    );
 
     // debug
 	// header( 'Content-type: text/plain;' );
@@ -818,6 +805,11 @@
 
     // scrittura su file
 	array2xml( $fattura, getShortPath( $outFile ) );
+
+    // annoto l'attività di esportazione, solo se il file c'è davvero
+	if( file_exists( $outFile ) ) {
+	    registraStampaDocumento( $dati['doc']['id'], 'stampa documento', 24 );
+	}
 
     // leggo l'XML per righe
 	$rows = readFromFile( $outFile );

@@ -219,6 +219,10 @@
             'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, tipologie_documenti.nome AS tipologia, '.
             'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
             'tipologie_documenti.codice AS codice_tipologia, tipologie_documenti.se_trasporto, '.
+            'tipologie_documenti.se_ricevuta, tipologie_documenti.se_pro_forma, tipologie_documenti.se_offerta, '.
+            'tipologie_documenti.se_ordine, tipologie_documenti.se_missione, '.
+            'tipologie_documenti.id_genitore AS id_genitore_tipologia, tipologie_documenti.stampa_pdf, '.
+            'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, coalesce( tipologie_documenti.se_ricevuta, 0 ) ) AS se_sedi_richieste, '.
             'condizioni_pagamento.codice AS codice_pagamento '.
             'FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
@@ -281,15 +285,25 @@
         $r['doc']['tot']['importo_iva_totale'] = 0;
         $r['doc']['tot']['importo_lordo_totale'] = 0;
 
-        // carico le righe del documento
+        // carico le righe del documento: per i documenti fiscali reparto, IVA e unita' di misura sono obbligatori e una
+        // riga che non li ha resta fuori, come e' sempre stato; per gli altri ( DDT, ordini, offerte, missioni... ) le
+        // righe arrivano spesso dagli import senza reparto, e vanno stampate lo stesso, con aliquota zero
+        $join = ( ( ! empty( $r['doc']['se_sedi_richieste'] ) ) ? 'INNER' : 'LEFT' );
         $r['doc']['righe'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT documenti_articoli.*,
-            iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
-            udm.sigla AS udm FROM documenti_articoli 
-            INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
-            INNER JOIN iva ON iva.id = reparti.id_iva 
-            INNER JOIN udm ON udm.id = documenti_articoli.id_udm 
+            coalesce( iva.aliquota, 0 ) AS aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
+            udm.sigla AS udm,
+            articoli.codice AS codice_articolo, coalesce( documenti_articoli.nome, articoli.nome ) AS articolo,
+            mp.nome AS mastro_provenienza, md.nome AS mastro_destinazione,
+            ( SELECT count(*) FROM documenti_articoli AS sottorighe WHERE sottorighe.id_genitore = documenti_articoli.id ) AS sottorighe
+            FROM documenti_articoli 
+            LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo 
+            LEFT JOIN mastri AS mp ON mp.id = documenti_articoli.id_mastro_provenienza 
+            LEFT JOIN mastri AS md ON md.id = documenti_articoli.id_mastro_destinazione 
+            ' . $join . ' JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
+            ' . $join . ' JOIN iva ON iva.id = reparti.id_iva 
+            ' . $join . ' JOIN udm ON udm.id = documenti_articoli.id_udm 
             WHERE documenti_articoli.id_documento = ? 
             AND documenti_articoli.id_genitore IS NULL ',
             array( array( 's' => $r['doc']['id'] ) )
@@ -632,7 +646,7 @@
         }
 
         // verifico la presenza del progressivo di invio
-        if( empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
+        if( ! empty( $r['doc']['se_progressivo_invio_richiesto'] ) && empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
 
         // denominazione fiscale
         $r['src']['denominazione_fiscale'] = trim( $r['src']['nome'] . ' ' . $r['src']['cognome'] . ' ' . $r['src']['denominazione'] );
@@ -656,9 +670,11 @@
             )
         );
 
-        // controllo indirizzo
-        if( empty( $r['sri'] ) ) {
+        // controllo indirizzo: obbligatorio solo per i documenti fiscali, gli altri si stampano anche senza sede
+        if( empty( $r['sri'] ) && ! empty( $r['doc']['se_sedi_richieste'] ) ) {
             dieText('richiesto indirizzo sede emittente');
+        } elseif( empty( $r['sri'] ) ) {
+            $r['sri'] = array( 'tipologia' => NULL, 'indirizzo' => NULL, 'civico' => NULL, 'cap' => NULL, 'comune' => NULL, 'provincia' => NULL, 'sigla_stato' => NULL );
         }
 
         // recupero il logo dell'azienda emittente
@@ -764,9 +780,11 @@
             // debug
             // print_r( $r['dsi'] );
 
-            // controllo indirizzo
-            if( empty( $r['dsi'] ) ) {
+            // controllo indirizzo: obbligatorio solo per i documenti fiscali, gli altri si stampano anche senza sede
+            if( empty( $r['dsi'] ) && ! empty( $r['doc']['se_sedi_richieste'] ) ) {
                 dieText('richiesto indirizzo sede destinatario');
+            } elseif( empty( $r['dsi'] ) ) {
+                $r['dsi'] = array( 'tipologia' => NULL, 'indirizzo' => NULL, 'civico' => NULL, 'cap' => NULL, 'comune' => NULL, 'provincia' => NULL, 'sigla_stato' => NULL );
             }
 
             // indirizzo fiscale
@@ -941,11 +959,11 @@
             );
         }
 
-        // dati del trasporto ( DatiTrasporto ), per la fattura che accompagna la merce ( tipologia di fattura con
-        // se_trasporto, la fattura accompagnatoria ): il vettore, la causale, i colli con il loro peso, l'indirizzo e
-        // la data di consegna, quando il documento li ha
+        // dati del trasporto ( DatiTrasporto ), per i documenti che accompagnano la merce ( tipologie con se_trasporto:
+        // il DDT e la fattura accompagnatoria ): il vettore, la causale, i colli con il loro peso, l'indirizzo e la data
+        // di consegna, quando il documento li ha
         $r['doc']['trasporto'] = array();
-        if( ! empty( $r['doc']['se_fattura'] ) && ! empty( $r['doc']['se_trasporto'] ) ) {
+        if( ! empty( $r['doc']['se_trasporto'] ) ) {
 
             if( ! empty( $r['doc']['id_trasportatore'] ) ) {
                 $r['doc']['trasporto']['vettore'] = mysqlSelectRow(
