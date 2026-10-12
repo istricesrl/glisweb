@@ -1492,22 +1492,26 @@ CREATE OR REPLACE VIEW `carrelli_articoli_view` AS
 
 -- carrelli_consensi_view
 -- tipologia: tabella gestita
--- verifica: 2022-08-23 11:12 Chiara GDL
+-- verifica: 2026-10-12 punto 6, riga 30
 CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
 	SELECT
 		carrelli_consensi.id,
-		carrelli_consensi.id_account,
+		carrelli_consensi.ordine,
+		carrelli_consensi.id_carrello,
 		carrelli_consensi.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		carrelli_consensi.id_carrello,
+		carrelli_consensi.id_account,
 		carrelli_consensi.id_consenso,
+		consensi.nome AS consenso,
+		carrelli_consensi.note,
 		carrelli_consensi.se_prestato,
 		carrelli_consensi.timestamp_consenso,
 		carrelli_consensi.id_account_inserimento,
 		carrelli_consensi.id_account_aggiornamento,
-		concat( 'consenso per ', carrelli_consensi.id_consenso, ' callerro #', carrelli_consensi.id_carrello) AS __label__
+		concat( 'consenso ', coalesce( consensi.nome, carrelli_consensi.id_consenso ), ' carrello #', coalesce( carrelli_consensi.id_carrello, '' ) ) AS __label__
 	FROM carrelli_consensi
-		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica;
+		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica
+		LEFT JOIN consensi ON consensi.id = carrelli_consensi.id_consenso;
 
 -- | 090000003071
 

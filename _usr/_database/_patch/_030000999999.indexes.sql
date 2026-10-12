@@ -703,18 +703,19 @@ ALTER TABLE `carrelli_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- carrelli_consensi
 -- tipologia: tabella gestita
--- verifica: 2022-08-23 11:12 Chiara GDL
+-- verifica: 2026-10-12 punto 6, riga 30
 ALTER TABLE `carrelli_consensi`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_carrello`, `id_consenso`), 
-	ADD KEY `id_account` (`id_account`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_carrello`,`id_consenso`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_account` (`id_account`),
 	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `se_prestato` (`se_prestato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_account`, `id_anagrafica`, `id_carrello`, `id_consenso`, `se_prestato` );
+	ADD KEY `indice` (`id`,`ordine`,`id_carrello`,`id_anagrafica`,`id_account`,`id_consenso`,`se_prestato`);
 
 -- | 030000003061
 

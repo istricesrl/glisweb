@@ -1157,21 +1157,30 @@ CREATE TABLE IF NOT EXISTS `carrelli_articoli` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione carrelli e consensi
+-- funzione: registra i consensi prestati al momento del checkout
+--
+-- questa tabella registra, per ogni carrello, i consensi ( privacy, condizioni di vendita, marketing... ) che
+-- l'intestatario ha prestato o negato al momento del checkout; e' la prova legale del consenso, quindi le righe
+-- si scrivono sempre e non si cancellano a mano.
+--
+-- NOTA: id_anagrafica e id_account fotografano l'intestatario del carrello al momento del consenso ( i campi
+-- intestazione_* di carrelli ); la chiave unica ( id_carrello, id_consenso ) fa si' che una nuova prestazione
+-- dello stesso consenso sullo stesso carrello aggiorni la riga invece di duplicarla.
 --
 CREATE TABLE IF NOT EXISTS `carrelli_consensi` (
-  `id` bigint(20) NOT NULL,
-  `id_account` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_carrello` bigint(20) DEFAULT NULL,
-  `id_consenso` bigint(20) DEFAULT NULL,
-  `se_prestato` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `timestamp_consenso` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_carrello` bigint(20) DEFAULT NULL,                        -- chiave esterna per il carrello in cui e' stato prestato il consenso
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica intestataria del carrello
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account intestatario del carrello
+  `id_consenso` bigint(20) DEFAULT NULL,                        -- chiave esterna per il consenso
+  `note` text DEFAULT NULL,                                     -- descrizione del consenso ( data, ora e carrello )
+  `se_prestato` tinyint(1) DEFAULT NULL,                        -- flag consenso prestato
+  `timestamp_consenso` int(11) DEFAULT NULL,                    -- timestamp di prestazione del consenso
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000003065
