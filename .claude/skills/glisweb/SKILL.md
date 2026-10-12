@@ -250,22 +250,40 @@ Se da un progetto cliente serve correggere il framework standard, il workflow è
    underscore (es. `src/lib/example.php` per estendere `_src/_lib/_example.php`, vedi tabella overrides nel
    manuale framework). Per fix urgenti che toccano davvero un file `_*`, modificarlo *nel progetto cliente
    stesso*, lì localmente.
-2. **Sincronizzazione notturna**: un job notturno raccoglie le divergenze del progetto cliente rispetto al
-   framework standard e genera un *disallineamento* che confluisce in `glisweb.istricesrl.it`.
-3. **Valutazione**: su `glisweb` un manutentore del framework valuta il disallineamento. Se la modifica è
-   generalizzabile, entra nel codice standard del framework; altrimenti resta una customizzazione del solo
-   progetto cliente (e va consolidata in `src/`/`mod/` del cliente).
-4. **Redistribuzione**: le modifiche accettate vengono committate nel framework e ridistribuite ai
-   progetti cliente al successivo aggiornamento (`composer update` + `_src/_sh/_gw.upgrade.sh` o
-   equivalente).
+2. **Disallineamento subito, non la notte**: appena la modifica al file `_*` funziona sul deploy, si
+   raccoglie il disallineamento a mano, senza aspettare l'aggiornamento notturno:
+   `dev/_src/_sh/_gw.disallineamenti.sh` dalla root del deploy. Produce in `../disallineamenti/<ts>/` il
+   file e il suo `.diff` rispetto allo standard installato.
+3. **Commit e push su glisweb, lo stesso giorno**: il `.diff` si porta su `glisweb.istricesrl.it` (branch
+   `develop`) con la procedura della skill `riallineamento`: **si applicano gli hunk, mai il file intero**,
+   con `stat` degli inode prima e dopo ( glisweb e glisdev condividono i file ), `php -l`/`bash -n`,
+   permessi su entrambi, un commit che spiega il perché e cita il deploy d'origine, push su `develop`. Se
+   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se tocca
+   autenticazione, permessi, pagamenti o cancellazioni, o toglie righe che a monte esistono, si chiede
+   prima di promuovere.
+4. **Ridistribuzione subito dopo il push**: `./dev/_src/_sh/_gw.upgrade.sh "$(cat update.branch.conf)"`
+   dalla root di **ogni** deploy che ha `update.branch.conf` ( mai su glisweb, glisdev, glistest ). Su
+   ognuno si controlla `_etc/_current.version`, che il `.diff` del file promosso nella nuova cartella
+   `disallineamenti/` sia vuoto o assente, e che `_smoke.curl.sh status /` risponda 200. Solo a quel
+   punto la modifica è davvero fatta.
+
+**⚠ Perché subito ( Fabio, 12/10/2026 ).** L'aggiornamento notturno **reinstalla** l'albero `_*` da
+`develop`: tutto quello che sul deploy non è ancora a monte sparisce dal sito e finisce in
+`disallineamenti/`, dove resta finché qualcuno non lo promuove. Il 09/10 sono stati corretti dei file
+standard su lughese, gimbe, polmasi e bernispa contando sul "ciclo normale"; nessun riallineamento è
+passato prima della notte, l'aggiornamento del 10/10 li ha tolti tutti, e per un fine settimana i deploy
+hanno girato di nuovo coi bug già corretti ( le caratteristiche dei prodotti che non si salvavano, i CSV,
+i vincoli dei form ). Contare sul giro notturno vuol dire perdere la correzione **la notte stessa**.
+Corollario: una modifica allo standard non si dichiara chiusa finché non è su `develop` e ridistribuita.
 
 **Anti-pattern da NON fare mai, da un progetto cliente:**
 
-- SSH/edit/git su `/var/www/glisweb.istricesrl.it/` o `/var/www/glisdev.istricesrl.com/` per "anticipare"
-  un fix che vorresti veder ridistribuito. Bypassi la valutazione, e rischi di propagare modifiche non
-  validate a tutti gli altri progetti cliente.
-- Aprire PR o push diretti verso i repo upstream del framework "perché ho una fix urgente". Il canale
-  corretto è comunque il disallineamento — i manutentori del framework hanno strumenti per fast-track.
+- modificare a mano i file di `/var/www/glisweb.istricesrl.it/` o `/var/www/glisdev.istricesrl.com/`
+  invece di partire dal `.diff` del disallineamento, o copiarci il file intero dal deploy. Si scavalca la
+  valutazione hunk per hunk, si rompono gli hard link e si sovrascrivono le modifiche arrivate nel
+  frattempo da altri deploy: è così che sono nati i revert incrociati.
+- Aprire PR o pushare verso il framework **fuori dal giro** disallineamento → commit e push su glisweb →
+  ridistribuzione. Il giro si fa subito, ma si fa tutto.
 - Toccare gli hard link fra `glisweb` e `glisdev` da un progetto cliente. La gestione degli hard link è
   competenza esclusiva dei manutentori upstream.
 
