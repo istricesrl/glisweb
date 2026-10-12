@@ -1195,6 +1195,24 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
     );
+
+    /**
+     * tabelle leggibili senza login
+     * =============================
+     *
+     * Chi non è connesso non ha una sessione con dei permessi, quindi il gruppo guests dichiarato
+     * qui sopra non varrebbe per nessuno: una tendina pubblica come quella dei comuni con api = 'comuni'
+     * ( p.es. nei form di registrazione ) riceverebbe 401 da /api/comuni. getAclPermission() concede
+     * all'anonimo il solo METHOD_GET sulle tabelle di questo elenco, e solo se nei permessi qui sopra
+     * il METHOD_GET della tabella comprende guests: servono tutte e due le cose, così un guests
+     * aggiunto per distrazione su un'altra tabella non apre da solo l'API agli anonimi.
+     *
+     * Un progetto che deve pubblicare un'altra tabella la aggiunge in src/config/250.auth.php.
+     *
+     */
+
+    // tabelle di lookup leggibili dagli anonimi
+    $cf['auth']['guests'] = array( 'comuni', 'provincie', 'regioni', 'stati' );
  
     // debug
     // var_dump($cf['auth']['permissions']);

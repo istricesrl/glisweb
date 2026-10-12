@@ -271,6 +271,23 @@
 
         }
 
+        // lettura concessa agli anonimi sulle tabelle pubbliche ( vedi _250.auth.php )
+        if (empty($_SESSION['account']['id'])
+            && $a == METHOD_GET
+            && isset($cf['auth']['guests']) && in_array($t, $cf['auth']['guests'], true)
+            && isset($cf['auth']['permissions'][$t][METHOD_GET]) && in_array('guests', $cf['auth']['permissions'][$t][METHOD_GET], true)) {
+
+            // log
+            logger('accesso consentito in lettura agli anonimi per ' . $t, 'auth');
+
+            // passaggio ricorsivo dei permessi
+            $i['__auth__'] = array(METHOD_GET);
+
+            // concessione del permesso
+            return true;
+
+        }
+
         // log
         logger('permessi non settati in SESSION per ' . $t, 'auth', LOG_INFO);
 
