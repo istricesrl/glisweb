@@ -80,9 +80,12 @@
                             );
 */
 
+                            // Fix 2026-10-09: qui c'era `BETWEEN ? AND ?` con un solo parametro di data, la query
+                            // falliva e il task rispondeva comunque OK; le date sono quelle della pianificazione,
+                            // quindi il confronto e' di uguaglianza come nella versione commentata sopra
                             $query = 'UPDATE todo SET todo.id_luogo = ?, 
                             todo.timestamp_aggiornamento = unix_timestamp() 
-                            WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+                            WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ';
 
                             $status['query'][] = $query;
 
@@ -93,7 +96,7 @@
 
                             $query = 'UPDATE attivita, todo SET attivita.id_luogo = ?, 
                             attivita.timestamp_aggiornamento = unix_timestamp()
-                            WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+                            WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ';
 
                             $status['query'][] = $query;
 

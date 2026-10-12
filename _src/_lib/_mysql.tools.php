@@ -1793,8 +1793,9 @@
      * e ne restituisce il nome se esiste, altrimenti false. È usata da mysqlInsertRow() per sapere se dopo una scrittura
      * deve aggiornare la vista statica.
      *
-     * NOTA la ricerca non filtra su TABLE_SCHEMA, quindi trova la vista statica anche se esiste in un altro database dello
-     * stesso server; lo stesso vale per getStaticViewExtension().
+     * La ricerca e' ristretta al database corrente ( TABLE_SCHEMA = database() ): su un server che ospita piu' deploy, una
+     * vista statica presente solo in un altro database non deve far credere che esista anche qui; lo stesso vale per
+     * getStaticViewExtension().
      *
      * @param       object      $m      la connessione a memcache ( NULL per non usare la cache )
      * @param       object      $c      la connessione mysqli
@@ -1810,7 +1811,7 @@
         $stv = mysqlSelectCachedValue(
             $m,
             $c,
-            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
             array(array('s' => $t . '_view_static'))
         );
 
@@ -2294,7 +2295,7 @@
         $stv = mysqlSelectCachedValue(
             $m,
             $c,
-            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
             array(array('s' => $t . '_view_static'))
         );
 

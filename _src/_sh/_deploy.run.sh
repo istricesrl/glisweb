@@ -329,8 +329,12 @@ else
                     echo "ATTENZIONE: apertura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): se il deploy non copia i file è questo il motivo"
                 fi
 
+                # niente -u: con -u un file piu' recente sul target ( un ritocco a caldo ) viene saltato
+                # in silenzio anche se diverso, e il deploy si dichiara riuscito lasciando sul target una
+                # versione che non e' quella di DEV ( il 01/10/2026 ha lasciato www2 in fatal ); il
+                # --checksum basta a non ricopiare i file identici
                 # comando
-                CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+                CMD="rsync $EXCLUDE -avz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -340,7 +344,7 @@ else
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avuz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
 
                 # esito del deploy
                 RSYNC_STATUS=$?
@@ -443,8 +447,12 @@ else
                     echo "ATTENZIONE: apertura dei permessi su $DST_PATH fallita: se il deploy non copia i file e' questo il motivo"
                 fi
 
+                # niente -u: con -u un file piu' recente sul target ( un ritocco a caldo ) viene saltato
+                # in silenzio anche se diverso, e il deploy si dichiara riuscito lasciando sul target una
+                # versione che non e' quella di DEV ( il 01/10/2026 ha lasciato www2 in fatal ); il
+                # --checksum basta a non ricopiare i file identici
                 # comando
-                CMD="rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH"
+                CMD="rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -454,7 +462,7 @@ else
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
 
                 # esito del deploy
                 RSYNC_STATUS=$?

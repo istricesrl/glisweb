@@ -64,7 +64,7 @@
 			}
 
 			$fp = fopen( DIR_TMP . microtime( true ) . '.csv', 'wb');
-			foreach ($csv as $line) {fputcsv($fp, $line, ';');}
+			foreach ($csv as $line) {fputcsv($fp, $line, ';', '"', '\\');}
 			fclose($fp);
 
 		}else { buildText( 'nessun risultato per la ricerca effettuata' ); }

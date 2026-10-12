@@ -248,15 +248,33 @@
          * @param       string      $campo          il campo che porta il prefisso TEST-E2E-
          * @param       boolean     $ovunque        true se il prefisso puo' stare in mezzo al campo, p.es. dentro un YAML
          *
+         * nelle tabelle ad albero il vincolo su id_genitore si controlla riga per riga, quindi una DELETE che prende
+         * un padre prima di suo figlio fallisce tutta e i record di test restano, bloccando anche le pulizie successive;
+         * per questo si tolgono prima le foglie, a giri, finche' se ne trovano, e solo alla fine si fa la DELETE di tutto
+         *
          */
         public function deleteTestRecords( $tabella, $campo, $ovunque = false ) {
 
             global $cf;
 
+            $prefisso = array( array( 's' => ( ( $ovunque ) ? '%' : '' ) . self::RECORD_PREFIX . '%' ) );
+
+            if( mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT count(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?',
+                array( array( 's' => $tabella ), array( 's' => 'id_genitore' ) )
+            ) ) {
+                while( mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM ' . $tabella . ' WHERE ' . $campo . ' LIKE ? AND id NOT IN ( SELECT id_genitore FROM ( SELECT DISTINCT id_genitore FROM ' . $tabella . ' WHERE id_genitore IS NOT NULL ) AS genitori )',
+                    $prefisso
+                ) ) {}
+            }
+
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'DELETE FROM ' . $tabella . ' WHERE ' . $campo . ' LIKE ?',
-                array( array( 's' => ( ( $ovunque ) ? '%' : '' ) . self::RECORD_PREFIX . '%' ) )
+                $prefisso
             );
 
         }

@@ -331,7 +331,7 @@
         }
 
         // prima riga: intestazione. Le chiavi si normalizzano come quelle della risposta breve
-        $intestazione = str_getcsv( array_shift( $csv ) );
+        $intestazione = str_getcsv( array_shift( $csv ), ',', '"', '\\' );
 
         foreach( $intestazione as $c => $nome ) {
             $intestazione[ $c ] = strtolower( trim( str_replace( ' ', '_', $nome ) ) );
@@ -343,7 +343,7 @@
 
             if( trim( $r ) === '' ) { continue; }
 
-            $v = str_getcsv( $r );
+            $v = str_getcsv( $r, ',', '"', '\\' );
             $e = array();
 
             foreach( $intestazione as $c => $nome ) {
