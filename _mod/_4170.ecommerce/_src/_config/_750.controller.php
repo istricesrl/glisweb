@@ -181,8 +181,15 @@
                     array( array( 's' => $_SESSION['id'] ) )
                 );
 
-                // se lo trovo, lo resetto
-                if( !empty( $carrelloEsistente ) ){
+                // se lo trovo ed è già chiuso non lo tocco: si libera la session più sotto
+                // NOTA fino al 2026-10-12 qui si cancellava anche un carrello già pagato ( segnalato da gimbe, carrello 34663 )
+                if( ! empty( $carrelloEsistente['timestamp_checkout'] ) ) {
+
+                    logWrite( 'presente a database il carrello chiuso ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', lo stacco dalla sessione' , 'cart' );
+
+                }
+                // se lo trovo aperto, lo resetto
+                elseif( !empty( $carrelloEsistente ) ){
 
                     logWrite( 'presente a database il carrello ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', procedo con il reset' , 'cart' );
 
@@ -220,6 +227,19 @@
                 // aggiungo al carrello l'esito del controllo anti spam
                 $_SESSION['carrello']['spam_score'] = $spam['score'];
                 $_SESSION['carrello']['spam_check'] = $spam['check'];
+
+                // il carrello nuovo nasce sempre con un ID nuovo
+                $_SESSION['carrello']['id'] = NULL;
+
+                // libera la session dai carrelli vecchi: è chiave unica, e la ON DUPLICATE di mysqlInsertRow()
+                // riscriverebbe il carrello già chiuso; stessa query del logout in _220.auth.php
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE carrelli SET session = NULL WHERE session = ?',
+                    array(
+                        array( 's' => $_SESSION['carrello']['session'] )
+                    )
+                );
 
                 // inserimento del carrello a database e recupero dell'ID
                 $_SESSION['carrello']['id'] = mysqlInsertRow(

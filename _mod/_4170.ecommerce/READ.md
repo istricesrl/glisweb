@@ -153,6 +153,13 @@ if( carrelloForm.checkValidity() ) {
   codice o id, in `$cf['ecommerce']['listini']['dal_sito']`. Il codice coupon del carrello ( *codice_coupon* ) resta aperto a tutti:
   lo verifica verificaValiditaCoupon(). Fino al 2026-10-01 questi campi si accettavano da chiunque.
 
+  Allo stesso modo si tolgono *id* e *session* del carrello, che decide la controller. *carrelli.session* è chiave unica e
+  mysqlInsertRow() fa INSERT ... ON DUPLICATE KEY UPDATE: un carrello nuovo che nascesse con la session o l'id di un altro
+  ne riscriverebbe la riga. Per questo il carrello nuovo nasce sempre senza id, e prima di scriverlo la controller toglie la
+  session della richiesta dai carrelli vecchi; un carrello vecchio ancora aperto con la stessa session si cancella, uno già
+  chiuso ( *timestamp_checkout* valorizzata ) si lascia com'è. Fino al 2026-10-12 un carrello nuovo poteva riscrivere o
+  cancellare un carrello già pagato dallo stesso browser.
+
   Il prezzo di una riga lo calcola il motore di _mod/_4000.catalogo/_src/_lib/_mysql.tools.add.php. calcolaPrezzoArticolo() raccoglie i
   candidati sul listino: il prezzo del prodotto dell'articolo ( per la quantità del prodotto nel carrello ), quello dell'articolo ( per
   la sua quantità ) e, per ogni paniere di cui l'articolo fa parte ( *relazioni_articoli* con ruolo 6, quantità del paniere da

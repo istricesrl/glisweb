@@ -418,7 +418,9 @@
      * listino, uno sconto o il coupon di un altro. Fa eccezione il listino del carrello o della riga, se è fra quelli che
      * $cf['ecommerce']['listini']['dal_sito'] ( codici o id ) lascia scegliere al sito. Fino al 2026-10-01 tutti questi
      * campi si accettavano da chiunque: sconto_valore di riga, per esempio, restava quello inviato se lo sconto percentuale
-     * era zero, e id_coupon di riga usava il residuo di qualunque coupon.
+     * era zero, e id_coupon di riga usava il residuo di qualunque coupon. Allo stesso modo si tolgono id e session del
+     * carrello, che decide la controller: fino al 2026-10-12 chi li passava poteva far riscrivere un carrello altrui o già
+     * pagato dalla ON DUPLICATE di mysqlInsertRow().
      *
      * @param  array   $r  la richiesta del carrello, $_REQUEST['__carrello__'], modificata sul posto
      *
@@ -450,6 +452,15 @@
         $listinoAmmesso = function( $v ) use ( $ammessi ) {
             return ( $v === NULL || $v === '' || in_array( (int) $v, $ammessi, true ) );
         };
+
+        // id e session del carrello: li decide la controller, altrimenti la ON DUPLICATE di mysqlInsertRow() fa
+        // riscrivere un carrello altrui ( o già pagato ) a chi ne conosce l'id o la session
+        foreach( array( 'id', 'session' ) as $campo ) {
+            if( array_key_exists( $campo, $r ) ) {
+                $tolti[] = $campo . '=' . ( is_scalar( $r[ $campo ] ) ? $r[ $campo ] : '...' );
+                unset( $r[ $campo ] );
+            }
+        }
 
         // listino del carrello
         if( array_key_exists( 'id_listino', $r ) && ! $listinoAmmesso( $r['id_listino'] ) ) {
