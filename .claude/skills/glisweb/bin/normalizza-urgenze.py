@@ -2,13 +2,14 @@
 """normalizza-urgenze.py — toglie l'urgenza alle voci ferme da troppo tempo.
 
 Regola decisa da Fabio l'08/10/2026, scritta in riferimenti/cinque-file.md ( "L'urgenza scade" ):
-una voce `- [ ]` col primo flag a `!` che non si muove da piu' di 14 giorni non era urgente, e
+una voce `- [ ]` o `- [?]` col primo flag a `!` che non si muove da piu' di 14 giorni non era urgente, e
 perde il `!`. Non si chiude e non si sposta: cambia solo il flag, e in coda alla riga si aggiunge
 `( declassata GG/MM/AAAA: ferma da N gg )`, cosi' chi la rimette urgente sa da dove viene.
 
 Il movimento e' la data piu' recente citata nella voce o nelle sue note, compreso il campo
 `( aperta GG/MM/AAAA )`. Restano fuori:
-  - le voci `[=]` e `[?]`, che non sono nel carico e aspettano qualcun altro;
+  - le voci `[=]`, che non sono nel carico e aspettano qualcun altro ( le `[?]` invece si
+    declassano dal 12/10/2026: una sospesa ferma restava urgente per sempre );
   - le voci che citano una data futura, cioe' hanno una scadenza davanti;
   - le voci senza nessuna data: non si sa da quando sono ferme, e una data non si inventa.
 
@@ -46,7 +47,7 @@ def base_conf():
 
 FUTURO_SENZA_ANNO = 60  # un gg/mm senza anno oltre questi giorni avanti e' dell'anno scorso
 
-RE_VOCE = re.compile(r'^- \[ \]\s*\(!([-!?])([-!?])\)')
+RE_VOCE = re.compile(r'^- \[[ ?]\]\s*\(!([-!?])([-!?])\)')
 RE_ALTRA = re.compile(r'^(- \[|#)')
 RE_ANNO_ISO = re.compile(r'\b(20\d\d)-(\d\d)-(\d\d)\b')
 RE_ANNO = re.compile(r'\b(\d{1,2})/(\d{1,2})/(20\d\d|\d\d)\b')
@@ -112,12 +113,12 @@ def esamina(righe, soglia):
 
 def declassa(riga, giorni):
     riga = riga.rstrip()
-    nuova = re.sub(r'^(- \[ \]\s*\()!', r'\1-', riga, count=1)
+    nuova = re.sub(r'^(- \[[ ?]\]\s*\()!', r'\1-', riga, count=1)
     return '%s ( declassata %s: ferma da %d gg )' % (nuova, OGGI.strftime('%d/%m/%Y'), giorni)
 
 
 def breve(riga, n=100):
-    t = re.sub(r'^- \[ \]\s*', '', riga.strip())
+    t = re.sub(r'^- \[[ ?]\]\s*', '', riga.strip())
     return t if len(t) <= n else t[:n - 1] + '…'
 
 
