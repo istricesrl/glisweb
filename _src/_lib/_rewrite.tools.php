@@ -64,8 +64,9 @@
      * Questa funzione toglie gli spazi ai bordi della stringa, la porta in minuscolo (con mb_strtolower() se
      * disponibile), decodifica le entità HTML, sostituisce € con EURO, @ con AT e % con " percento", elimina la
      * punteggiatura e i simboli più comuni, toglie gli accenti dalle vocali, trasforma spazi e apostrofi in
-     * URL_WORD_SEPARATOR, translittera in ASCII con iconv() eliminando i caratteri non convertibili, riduce i separatori
-     * consecutivi a uno solo e li toglie dai bordi. Ad esempio "Caffè & Tè: 10% più" diventa "caffe-te-10-percento-piu".
+     * URL_WORD_SEPARATOR, translittera in ASCII con iconv() eliminando i caratteri non convertibili, elimina tutto
+     * quello che non è lettera, cifra, _ o URL_WORD_SEPARATOR, riduce i separatori consecutivi a uno solo e li toglie
+     * dai bordi. Ad esempio "Caffè & Tè: 10% più" diventa "caffe-te-10-percento-piu".
      * Se la stringa è vuota (compresi NULL e '0') viene restituita così com'è.
      * 
      * NOTA i trattini presenti nella stringa originale vengono eliminati e non trasformati in separatori, per cui
@@ -167,6 +168,10 @@
             $t = str_replace( ' '        , URL_WORD_SEPARATOR, $t );
 
             $t = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $t );
+
+            // tolgo tutto quello che la RewriteRule del .htaccess non accetta ( p.es. # e = ): uno slug che lo contiene
+            // risponde comunque 404, quindi questo passaggio cambia solo URL che già non funzionano
+            $t = preg_replace( '/[^A-Za-z0-9_' . preg_quote( URL_WORD_SEPARATOR, '/' ) . ']/', '', $t );
 
             $t = riduciCaratteriDoppi( $t, URL_WORD_SEPARATOR );
 
