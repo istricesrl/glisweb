@@ -2171,7 +2171,7 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
 		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-	GROUP BY contratti.id, anagrafica.id
+	GROUP BY contratti_anagrafica.id
 ;
 
 -- | 090000007401
@@ -2212,7 +2212,7 @@ CREATE OR REPLACE VIEW contratti_progetti_view AS
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = contratti_progetti.id_ruolo
 		LEFT JOIN progetti ON progetti.id = contratti_progetti.id_progetto
 		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-	GROUP BY contratti.id, progetti.id
+	GROUP BY contratti_progetti.id
 ;
 
 -- | 090000007501
