@@ -204,8 +204,62 @@
             }
         });
 
+        /*
+         * NAVIGAZIONE DA TASTIERA ( 12/10/2026, gh#13 )
+         *
+         * Con la lista aperta, freccia giu' e freccia su spostano la voce attiva ( classe active ),
+         * ENTER sceglie la voce attiva come farebbe un click, ESC chiude la lista. Si ascolta il
+         * keydown e non il keyup perche' ENTER va fermato prima che il browser mandi il form, e
+         * perche' tenendo premuta una freccia il keydown si ripete e il keyup no.
+         *
+         * Con la lista chiusa i tasti fanno quello che hanno sempre fatto: ENTER manda il form.
+         */
+        var tastiNavigazione = [ 'ArrowDown', 'ArrowUp', 'Enter', 'Escape' ];
+
+        box.keydown( function( e ) {
+
+            if( ! $( lista ).is( ':visible' ) || tastiNavigazione.indexOf( e.key ) < 0 ) {
+                return;
+            }
+
+            var voci = $( lista ).find( 'li' );
+            var attiva = voci.index( voci.filter( '.active' ) );
+
+            if( e.key == 'ArrowDown' || e.key == 'ArrowUp' ) {
+                e.preventDefault();
+                if( voci.length == 0 ) {
+                    return;
+                }
+                if( e.key == 'ArrowDown' ) {
+                    attiva = ( attiva + 1 ) % voci.length;
+                } else {
+                    attiva = ( attiva <= 0 ) ? voci.length - 1 : attiva - 1;
+                }
+                voci.removeClass( 'active' );
+                $( voci[ attiva ] ).addClass( 'active' );
+                voci[ attiva ].scrollIntoView( { block: 'nearest' } );
+            } else if( e.key == 'Enter' ) {
+                e.preventDefault();
+                if( attiva >= 0 ) {
+                    $( voci[ attiva ] ).click();
+                }
+            } else if( e.key == 'Escape' ) {
+                e.preventDefault();
+                $( lista ).hide();
+                $( box ).addClass( 'combobox-base-background' );
+                $( box ).removeClass( 'combobox-active-background' );
+                verifica();
+            }
+
+        });
+
         // faccio il bind della funzione principale di ricerca
         box.keyup( function( e, d ) {
+
+        // i tasti di navigazione li gestisce il keydown: qui svuoterebbero il valore scelto e rifarebbero la ricerca
+        if( typeof d === 'undefined' && tastiNavigazione.indexOf( e.key ) >= 0 ) {
+            return;
+        }
 
         // debug
         // console.log( d );
@@ -315,10 +369,20 @@
             
                                 var li = '<li value="' + el.id + '"' + classe + '>' + el.__label__ + '</li>';
 
-                
+
                                 lista.append( li );
 
-                                
+                            });
+
+                            /*
+                             * IL BIND SI FA UNA VOLTA SOLA, DOPO AVER RIEMPITO LA LISTA ( 12/10/2026 )
+                             *
+                             * Stava dentro il forEach, quindi a ogni risultato si rifaceva il bind su
+                             * tutti gli <li> gia' in lista: il primo di N risultati si trovava N handler
+                             * sul click. Finche' il click cambiava solo dei valori non si vedeva; da
+                             * quando fa scattare il change ( vedi sotto ) avrebbe lanciato N volte
+                             * l'onchange del campo, autosubmit compreso.
+                             */
                                 lista.find('li').each( function( idxl, li ) {
                                     var opzione = $( li ).html();
                                     var valore = $( li ).attr( 'value' );
@@ -335,6 +399,16 @@
                                             $( select ).append( new Option( $.parseHTML( opzione )[0].nodeValue, valore ) );
                                         }
                                         $( select ).val( valore );
+                                        /*
+                                         * IL CHANGE VA FATTO SCATTARE A MANO ( 12/10/2026, gh#13 )
+                                         *
+                                         * Cambiare il valore da script non genera l'evento change, e il
+                                         * campo e' un input hidden su cui l'utente non agisce mai: senza
+                                         * questa riga l'onchange del campo non partiva, e con lui
+                                         * l'autosubmit ( "l'autosubmit non funziona", Silvia su gh#13 ).
+                                         * La tendina statica qui sotto lo ha sempre fatto.
+                                         */
+                                        $( select ).change();
                                         $( box ).val( $.parseHTML( opzione )[0].nodeValue );
                                         $( box ).addClass( 'combobox-base-background' );
                                         $( box ).removeClass( 'combobox-active-background' );
@@ -344,9 +418,6 @@
                                         // console.log( 'valore della select al click -> ' + $( select ).val() );
                                     });
                                 });
-    
-
-                            });
 
                             $( lista ).show();
                             $( box ).closest( '.spinner-border' ).hide();

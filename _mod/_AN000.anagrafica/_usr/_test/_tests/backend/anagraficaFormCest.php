@@ -80,4 +80,39 @@
 
         }
 
+        // la stessa scelta fatta da tastiera: ESC chiude la lista, freccia giu' attiva la voce, ENTER la sceglie
+        // senza mandare il form ( gh#13 )
+        public function tastiera( BackendTester $I ) {
+
+            $denominazione = $I->grabTestName( 'tastiera' );
+
+            $I->amLoggedInAs( 'roots' );
+
+            // anagrafica da scegliere
+            $I->amOnPageId( 'anagrafica.form' );
+            $I->fillField( 'anagrafica[denominazione]', $denominazione );
+            $I->click( '#form-anagrafica button .fa-floppy-disk' );
+            $idAnagrafica = $I->grabFromDatabase( 'SELECT id FROM anagrafica WHERE denominazione = ?', array( $denominazione ) );
+
+            // ESC chiude la lista
+            $I->amOnPageId( 'anagrafica.archivio.telefoni.form' );
+            $I->fillField( '#telefoni_id_anagrafica_inputbox', $denominazione );
+            $I->waitForElementVisible( '#telefoni_id_anagrafica_list li[value="' . $idAnagrafica . '"]', 10 );
+            $I->pressKey( '#telefoni_id_anagrafica_inputbox', \Facebook\WebDriver\WebDriverKeys::ESCAPE );
+            $I->waitForElementNotVisible( '#telefoni_id_anagrafica_list', 5 );
+
+            // la si riapre, freccia giu' attiva l'unica voce ed ENTER la sceglie
+            $I->fillField( '#telefoni_id_anagrafica_inputbox', $denominazione );
+            $I->waitForElementVisible( '#telefoni_id_anagrafica_list li[value="' . $idAnagrafica . '"]', 10 );
+            $I->pressKey( '#telefoni_id_anagrafica_inputbox', \Facebook\WebDriver\WebDriverKeys::ARROW_DOWN );
+            $I->seeElement( '#telefoni_id_anagrafica_list li.active[value="' . $idAnagrafica . '"]' );
+            $I->pressKey( '#telefoni_id_anagrafica_inputbox', \Facebook\WebDriver\WebDriverKeys::ENTER );
+            $I->waitForElementNotVisible( '#telefoni_id_anagrafica_list', 5 );
+            $I->seeInField( 'telefoni[id_anagrafica]', (string) $idAnagrafica );
+
+            // ENTER non ha mandato il form: nessun telefono collegato
+            $I->dontSeeInDatabase( 'telefoni', array( 'id_anagrafica' => $idAnagrafica ) );
+
+        }
+
     }
