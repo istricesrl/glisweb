@@ -38,7 +38,8 @@ if( $cf['contents']['cached'] === false ) {
             WHERE categorie_prodotti.id_sito = ?
             AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
             AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-            AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 ) ',
+            AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 )
+            ORDER BY prodotti_categorie.ordine, prodotti_categorie.id ',
         array(
             array('s' => time()),
             array('s' => time()),
@@ -55,7 +56,7 @@ if( $cf['contents']['cached'] === false ) {
     if( is_array( $pgs ) ) {
 
         // canonical
-        $canon = NULL;
+        $canon = array();
 
         // ciclo principale
         foreach( $pgs as $pg ) {
@@ -68,6 +69,11 @@ if( $cf['contents']['cached'] === false ) {
 
             // ID della pagina
             $pid = $cid . '.' . PREFX_PRODOTTI . $pg['id'];
+
+            // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+            if( empty( $canon[ $pg['id'] ] ) ) {
+                $canon[ $pg['id'] ] = $pid;
+            }
             //$pip = PREFX_PRODOTTI . $pg['id_genitore'];
 
             if (empty($pip)) {
@@ -75,7 +81,7 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // ...
-            $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $pid;
+            $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $canon[ $pg['id'] ];
 
             // aggiornamento delle pagine
             if ($pg['timestamp_aggiornamento'] > $cf['contents']['updated']) {
@@ -100,7 +106,7 @@ if( $cf['contents']['cached'] === false ) {
                     'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                     // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $cid),
-                    'canonical'        => $canon,
+                    'canonical'        => $canon[ $pg['id'] ],
                     'template'        => array(
 #                        'path'    => $cf['prodotti']['pages']['scheda']['template'],
 #                        'schema' => $cf['prodotti']['pages']['scheda']['schema'],
@@ -172,8 +178,6 @@ if( $cf['contents']['cached'] === false ) {
                 );
 */
 
-                // canonical
-                $canon = $pid;
 
                // scrivo la pagina del prodotto in cache
                memcacheWrite( $cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid] );
@@ -182,8 +186,8 @@ if( $cf['contents']['cached'] === false ) {
 
                 $cf['contents']['pages'][$pid] = $pgc;
 
-                // canonical
-                $canon = $pid;
+                // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                $cf['contents']['pages'][$pid]['canonical'] = $canon[ $pg['id'] ];
             }
         }
     }
@@ -241,7 +245,8 @@ if( $cf['contents']['cached'] === false ) {
                 WHERE categorie_prodotti.id_sito = ?
                 AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
                 AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-                AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 ) ',
+                AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 )
+                ORDER BY prodotti_categorie.ordine, prodotti_categorie.id ',
             array(
                 array('s' => time()),
                 array('s' => time()),
@@ -256,6 +261,9 @@ if( $cf['contents']['cached'] === false ) {
 
         if( is_array( $art ) ) {
 
+            // canonical
+            $canart = array();
+
             foreach( $art as $pg ) {
 
                 // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
@@ -265,8 +273,13 @@ if( $cf['contents']['cached'] === false ) {
                 $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
                 $pid = $cid . '.' . PREFX_ARTICOLI . $pg['id'];
 
+                // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+                if( empty( $canart[ $pg['id'] ] ) ) {
+                    $canart[ $pg['id'] ] = $pid;
+                }
+
                 // ...
-                $cf['contents']['reverse']['articoli'][ $pg['id'] ] = $pid;
+                $cf['contents']['reverse']['articoli'][ $pg['id'] ] = $canart[ $pg['id'] ];
 
                 // aggiornamento delle pagine
                 if( $pg['timestamp_aggiornamento'] > $cf['contents']['updated'] ) {
@@ -290,6 +303,7 @@ if( $cf['contents']['cached'] === false ) {
                         'sitemap'       => ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                         'cacheable'     => ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'        => array( 'id' => $cid ),
+                        'canonical'     => $canart[ $pg['id'] ],
                         'template'      => array(
                             'path'      => $pg['template'],
                             'schema'    => $pg['schema_html'],
@@ -337,6 +351,9 @@ if( $cf['contents']['cached'] === false ) {
                 } else {
 
                     $cf['contents']['pages'][$pid] = $pgc;
+
+                    // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                    $cf['contents']['pages'][$pid]['canonical'] = $canart[ $pg['id'] ];
 
                 }
 

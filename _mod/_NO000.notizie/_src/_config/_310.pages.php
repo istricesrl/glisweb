@@ -195,7 +195,7 @@
                 'SELECT notizie_categorie.id_categoria '
                 .'FROM notizie_categorie '
                 .'WHERE notizie_categorie.id_notizia = ? '
-                .'ORDER BY ordine',
+                .'ORDER BY ordine, id',
                 array( array( 's' => $pg['id'] ) )
             );
 
@@ -211,6 +211,11 @@
 
                 // ID della pagina
                 $pid = $cid . '.' . PREFX_NOTIZIE . $pg['id'];
+
+                // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+                if( empty( $canon ) ) {
+                    $canon = $pid;
+                }
 
                 if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
@@ -296,10 +301,8 @@
 */
 
                     // ...
-                    $cf['notizie']['index'][ $pg['id'] ] = $pid;
+                    $cf['notizie']['index'][ $pg['id'] ] = $canon;
 
-                    // canonical
-				    $canon = $pid;
 
                    // scrivo la pagina della notizia in cache
                     memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
@@ -309,10 +312,10 @@
                     $cf['contents']['pages'][ $pid ] = $pgc;
 
                     // ...
-                    $cf['notizie']['index'][ $pg['id'] ] = $pid;
+                    $cf['notizie']['index'][ $pg['id'] ] = $canon;
 
-                    // canonical
-                    $canon = $pid;
+                    // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                    $cf['contents']['pages'][ $pid ]['canonical'] = $canon;
 
                     }
                 }

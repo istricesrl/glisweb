@@ -156,7 +156,8 @@ if( $cf['contents']['cached'] === false ) {
             'INNER JOIN pubblicazioni ON pubblicazioni.id_risorsa = risorse.id ' .
             'WHERE risorse.id_sito = ? ' .
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
-            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' ,
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' .
+            'ORDER BY risorse_categorie.ordine, risorse_categorie.id ' ,
         array(
             array('s' => time()),
             array('s' => time()),
@@ -173,7 +174,7 @@ if( $cf['contents']['cached'] === false ) {
     if (is_array($pgs)) {
 
         // canonical
-        $canon = NULL;
+        $canon = array();
 
         // ciclo principale
         foreach ($pgs as $pg) {
@@ -186,6 +187,11 @@ if( $cf['contents']['cached'] === false ) {
 
             // ID della pagina
             $pid = $cid . '.' . PREFX_RISORSE . $pg['id'];
+
+            // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+            if( empty( $canon[ $pg['id'] ] ) ) {
+                $canon[ $pg['id'] ] = $pid;
+            }
             // $pip = PREFX_RISORSE . $pg['id_genitore'];
 
             if (empty($pip)&&isset($pg['id_pagina'])) {
@@ -210,7 +216,7 @@ if( $cf['contents']['cached'] === false ) {
                     'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                     // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $cid),
-                    'canonical'        => $canon,
+                    'canonical'        => $canon[ $pg['id'] ],
                     'template'        => array('path'    => $cf['risorse']['pages']['scheda']['template'], 'schema' => $cf['risorse']['pages']['scheda']['schema'], 'theme' => $cf['risorse']['pages']['scheda']['css']),
                     'metadati'      => array('id_risorsa' => $pg['id'])
                 );
@@ -252,8 +258,6 @@ if( $cf['contents']['cached'] === false ) {
                     'id_risorsa'
                 );
 
-                // canonical
-                $canon = $pid;
 
                 // scrivo la pagina in cache
                 memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
@@ -261,8 +265,8 @@ if( $cf['contents']['cached'] === false ) {
 
                 $cf['contents']['pages'][$pid] = $pgc;
 
-                // canonical
-                $canon = $pid;
+                // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                $cf['contents']['pages'][$pid]['canonical'] = $canon[ $pg['id'] ];
             }
         }
     }

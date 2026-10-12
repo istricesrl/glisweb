@@ -186,7 +186,7 @@
                 'SELECT annunci_categorie.id_categoria '
                 .'FROM annunci_categorie '
                 .'WHERE annunci_categorie.id_annuncio = ? '
-                .'ORDER BY ordine',
+                .'ORDER BY ordine, id',
                 array( array( 's' => $pg['id'] ) )
             );
 
@@ -202,6 +202,11 @@
 
                 // ID della pagina
                 $pid = $cid . '.' . PREFX_ANNUNCI . $pg['id'];
+
+                // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+                if( empty( $canon ) ) {
+                    $canon = $pid;
+                }
 
                 if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
@@ -282,8 +287,6 @@
                         'id_annuncio'
                     );
 */
-                    // canonical
-				    $canon = $pid;
 
                    // scrivo la pagina della annuncio in cache
                     memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
@@ -292,8 +295,8 @@
 
                     $cf['contents']['pages'][ $pid ] = $pgc;
 
-                    // canonical
-                    $canon = $pid;
+                    // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                    $cf['contents']['pages'][ $pid ]['canonical'] = $canon;
 
                     }
                 }

@@ -19,9 +19,11 @@
      * 
      * meccanismo di generazione della sitemap
      * =======================================
-     * Il meccanismo con cui viene generata la sitemap è abbastanza semplice, tutte le pagine del sito presenti nell'array $cf['contents']['pages']
-     * vengono elaborate e, se il flag 'sitemap' è impostato a true, aggiunte alla sitemap. Si noti che questo processo è ripetuto per ognuna delle
-     * lingue attive nel sito, il che genera una sitemap multilingua.
+     * Il meccanismo con cui viene generata la sitemap è abbastanza semplice, tutte le pagine del sito presenti nell'array
+     * $cf['contents']['pages'] vengono elaborate e, se il flag 'sitemap' è impostato a true, aggiunte alla sitemap. Sono
+     * escluse le pagine che dichiarano come canonical una pagina diversa da sé stesse ( p.es. la scheda di un prodotto vista
+     * da una categoria secondaria ), perché in sitemap vanno solo gli URL canonici. Si noti che questo processo è ripetuto per
+     * ognuna delle lingue attive nel sito, il che genera una sitemap multilingua.
      * 
      * Le sitemap elaborate e completate vengono salvate in /var/sitemap/ e fornite ai client su richiesta tramite una regola di .htaccess:
      * 
@@ -113,8 +115,8 @@
                 // latest
                 loggerLatest( 'pagina elaborata: ' . $id, FILE_LATEST_SITEMAP );
 
-                // verifico se la pagina va nella sitemap
-                if( isset( $page['sitemap'] ) && $page['sitemap'] == true ) {
+                // verifico se la pagina va nella sitemap: una pagina che dichiara canonical un'altra pagina ne è un doppione, e in sitemap va solo la canonical
+                if( isset( $page['sitemap'] ) && $page['sitemap'] == true && ( empty( $page['canonical'] ) || $page['canonical'] == $id ) ) {
 
                     // latest
                     loggerLatest( 'sitemap true per: ' . $id, FILE_LATEST_SITEMAP );

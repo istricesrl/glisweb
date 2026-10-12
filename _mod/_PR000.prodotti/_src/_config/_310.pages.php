@@ -195,7 +195,7 @@
                 'SELECT prodotti_categorie.id_categoria '
                 .'FROM prodotti_categorie '
                 .'WHERE prodotti_categorie.id_prodotto = ? '
-                .'ORDER BY ordine',
+                .'ORDER BY ordine, id',
                 array( array( 's' => $pg['id'] ) )
             );
 
@@ -211,6 +211,11 @@
 
                 // ID della pagina
                 $pid = $cid . '.' . PREFX_PRODOTTI . $pg['id'];
+
+                // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+                if( empty( $canon ) ) {
+                    $canon = $pid;
+                }
 
                 if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
@@ -296,10 +301,8 @@
 */
 
                     // ...
-                    $cf['prodotti']['index'][ $pg['id'] ] = $pid;
+                    $cf['prodotti']['index'][ $pg['id'] ] = $canon;
 
-                    // canonical
-				    $canon = $pid;
 
                    // scrivo la pagina della prodotto in cache
                     memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
@@ -309,10 +312,10 @@
                     $cf['contents']['pages'][ $pid ] = $pgc;
 
                     // indice dall'ID del prodotto all'ID della sua pagina
-                    $cf['prodotti']['index'][ $pg['id'] ] = $pid;
+                    $cf['prodotti']['index'][ $pg['id'] ] = $canon;
 
-                    // canonical
-                    $canon = $pid;
+                    // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                    $cf['contents']['pages'][ $pid ]['canonical'] = $canon;
 
                     }
                 }
