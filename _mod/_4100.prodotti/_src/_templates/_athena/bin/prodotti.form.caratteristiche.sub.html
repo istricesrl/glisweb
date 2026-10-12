@@ -43,10 +43,11 @@
                 {{ frm.select( table, subtable, i, 'id_lingua', '', etc.select.lingue, request, '', '', '', '', '', disabled ) }}
             </div>  
 
-            <div class="col">
-                <span class="label-top">etichetta</span>
-                {{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '', disabled ) }}
-            </div>
+            {#
+               niente campo "etichetta": prodotti_caratteristiche non ha la colonna nome, e il campo
+               mandava in errore l'INSERT di tutta la sottoscheda ( Unknown column 'nome' ), per cui
+               "salva" non salvava nessuna riga ( segnalato da Lughese il 09/10/2026 )
+            #}
 
             <div class="col">
                 <span class="label-top">valore</span>

@@ -47,6 +47,29 @@
             $( box ).prop( 'required', true );
         }
 
+        /*
+         * IL REQUIRED DEL BOX NON BASTA ( 09/10/2026 )
+         *
+         * Il valore che parte col form e' quello del campo nascosto, ma il required sta sul box
+         * visibile, e il browser controlla solo che il box non sia vuoto. Basta scrivere qualcosa
+         * senza sceglierlo dall'elenco - il keyup svuota il campo nascosto - e il form parte
+         * senza valore; lo stesso quando si svuota il box e il focusout ci rimette l'etichetta
+         * del valore di prima. E' cosi' che il 29/09 su Lughese una riga d'offerta si e' salvata
+         * senza documento in un modulo che lo dichiarava obbligatorio.
+         *
+         * Il box si dichiara quindi non valido quando ha del testo e il campo nascosto e' vuoto.
+         * Resta un controllo lato client: il rifiuto vero lo deve fare il controller.
+         */
+        var verifica = function() {
+            if( $( select ).attr( 'data-required' ) == 'true' && $( box ).length ) {
+                if( $( box ).val() != '' && ( $( select ).val() == '' || $( select ).val() === null ) ) {
+                    $( box )[0].setCustomValidity( 'scegliere un elemento dall\'elenco' );
+                } else {
+                    $( box )[0].setCustomValidity( '' );
+                }
+            }
+        };
+
         // prelevo il valore corrente
         // NOTA perché .text() e non .html()?
         var current = $( select ).find( 'option:selected' ).text().trim();
@@ -74,6 +97,7 @@
                 if( $( box ).val() == ''){
                     $( box ).val( $( select ).attr( 'placeholder-api' ) );
                 }
+                verifica();
               });
         /* ...fin qui era commentato, perché? */
         } else {
@@ -183,6 +207,9 @@
             $( select ).val( '' );
         }
 
+        // il campo nascosto e' stato svuotato: il box non vale finche' non si sceglie
+        verifica();
+
         // debug
         console.log( 'valore della select al click -> ' + $( select ).val() );
 
@@ -289,6 +316,7 @@
                                         $( box ).removeClass( 'combobox-active-background' );
                                         // $( box ).css( 'background-color', '#ffffff' );
                                         $( lista ).hide();
+                                        verifica();
                                         // console.log( 'valore della select al click -> ' + $( select ).val() );
                                     });
                                 });
@@ -352,6 +380,7 @@
                     $( box ).removeClass( 'combobox-active-background' );
                     // $( box ).css( 'background-color', '#ffffff' );
                     $( lista ).hide();
+                    verifica();
                     // console.log( 'valore della select al click -> ' + $( select ).val() );
                 });
                 // console.log( 'bind a ' + valore + ' di ' + opzione );
