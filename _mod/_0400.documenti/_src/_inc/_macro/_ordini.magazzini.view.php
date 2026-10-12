@@ -61,13 +61,17 @@
 	    'SELECT id   , __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
 	);
 
-    // tendina destinatari
-	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__'
-	);
+	/**
+	 * tendina id_destinatari — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_destinatari'] = array();
 
     // inclusione filtri speciali
 //	$ct['etc']['include']['filters'] = 'inc/ddt.magazzini.view.filters.html';

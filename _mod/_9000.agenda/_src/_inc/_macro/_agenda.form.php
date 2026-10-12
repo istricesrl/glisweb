@@ -31,20 +31,30 @@
 
     // tendina anagrafica
     // TODO serve?
-	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static'
-    );
+	/**
+	 * tendina id_anagrafica — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_anagrafica'] = array();
 
     // TODO serve?
-	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static'
-    );
+	/**
+	 * tendina id_anagrafica_collaboratori — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = array();
 
     // tendina tipologia
 	$ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
@@ -56,12 +66,17 @@
 
     // tendina clienti
     // TODO serve?
-	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static'
-    );
+	/**
+	 * tendina id_cliente — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_cliente'] = array();
 
 /*
     // tendina categorie attivita
