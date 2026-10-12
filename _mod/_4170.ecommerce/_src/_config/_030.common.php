@@ -323,6 +323,12 @@
 
     // TODO occhio la timestamp_checkout dev'essere modificabile solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
 
+    // metadati del carrello accettati da __carrello__[__metadati__]
+    // NOTA lo standard non ne accetta nessuno: ogni progetto dichiara i suoi nel custom, con la stessa forma degli altri
+    // campi, e quelli non dichiarati vengono ignorati per non lasciar scrivere al visitatore righe arbitrarie in metadati
+    $cf['ecommerce']['fields']['metadati']      = array(
+    );
+
     // TODO aggiungere campi per i coupon id_coupon, coupon_percentuale e coupon_valore
     $cf['ecommerce']['fields']['articoli']      = array(
         'id'                            => array( 'tipe' => 'int',      'default' => NULL ),

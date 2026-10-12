@@ -306,6 +306,42 @@
                 }
             }
 
+            // STEP 3.2 - registro i metadati
+            // NOTA solo quelli dichiarati in $cf['ecommerce']['fields']['metadati']; il valore vuoto non si scrive, ma '0' sì
+            // ( un metadato binario come "no" è un valore ), e si rileggono in sessione da _710.session.php
+            if( isset( $_REQUEST['__carrello__']['__metadati__'] ) && is_array( $_REQUEST['__carrello__']['__metadati__'] ) ) {
+
+                // per ogni metadato previsto...
+                foreach( $cf['ecommerce']['fields']['metadati'] as $mk => $model ) {
+
+                    // se il metadato è valorizzato
+                    if( isset( $_REQUEST['__carrello__']['__metadati__'][ $mk ] ) && is_scalar( $_REQUEST['__carrello__']['__metadati__'][ $mk ] ) && $_REQUEST['__carrello__']['__metadati__'][ $mk ] !== '' ) {
+
+                        // aggiorno la sessione
+                        $_SESSION['carrello']['metadati'][ $mk ] = $_REQUEST['__carrello__']['__metadati__'][ $mk ];
+
+                        // log
+                        logWrite( 'registro il metadato ' . $mk . ' per il carrello #' . $_SESSION['carrello']['id'], 'cart' );
+
+                        // salvo le informazioni nella tabella metadati
+                        $metaId = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_carrello' => $_SESSION['carrello']['id'],
+                                'id_lingua' => $cf['localization']['language']['id'],
+                                'nome' => $mk,
+                                'testo' => $_SESSION['carrello']['metadati'][ $mk ]
+                            ),
+                            'metadati'
+                        );
+
+                    }
+
+                }
+
+            }
+
             // debug
             // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
             // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';

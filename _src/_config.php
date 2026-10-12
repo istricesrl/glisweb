@@ -1673,6 +1673,11 @@
      * - file standard moduli
      * - file custom moduli
      * 
+     * Se accanto al file custom esiste la sua versione .alt.php (ad esempio src/config/750.controller.alt.php
+     * per il base, oppure mod/<modulo>/src/config/750.controller.alt.php per un modulo), questa viene inclusa
+     * IN SOSTITUZIONE DI file standard e file custom dello stesso livello, coerentemente con quanto descritto
+     * per la logica di customizzazione; la sostituzione vale separatamente per il base e per ogni modulo.
+     * 
      * Comprendere l'ordine in cui vengono inclusi i file è essenziale per poter customizzare il framework,
      * quindi si consiglia di prestare particolare attenzione a questa sezione e studiarne bene il contenuto.
      *
@@ -1702,6 +1707,9 @@
         // controparte locale
         $locale = path2custom( $runLvlFile );
 
+        // controparte alternativa
+        $alternativa = str_replace( '.php', '.alt.php', $locale );
+
         // calcolo runlevel
         $lvls = explode( '.', basename( $locale ) );
         $lvl = array_shift( $lvls );
@@ -1709,26 +1717,43 @@
         // salto i runlevel specificati
         if( ! in_array( $lvl, $cf['lvls']['skip'] ) ) {
 
-            // inclusione file standard
-            if( is_readable( $runLvlFile ) ) {                
-                loggerLatest( 'inizio: ' . $runLvlFile );
-                require $runLvlFile;
-                timerCheck( $cf['speed'], $runLvlFile );
-                loggerLatest( 'completato: ' . $runLvlFile );
-            } else {
-                loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
-            }
+            // se esiste il file alternativo, sostituisce standard e locale
+            if( file_exists( $alternativa ) ) {
 
-            // inclusione file locale
-            if( file_exists( $locale ) ) {
-                if( is_readable( $locale ) ) {
-                    loggerLatest( 'inizio: ' . $locale );
-                    require $locale;
-                    timerCheck( $cf['speed'], $locale );
-                    loggerLatest( 'completato: ' . $locale );
+                // inclusione file alternativo
+                if( is_readable( $alternativa ) ) {
+                    loggerLatest( 'inizio: ' . $alternativa );
+                    require $alternativa;
+                    timerCheck( $cf['speed'], $alternativa );
+                    loggerLatest( 'completato: ' . $alternativa );
                 } else {
-                    loggerLatest( 'impossibile leggere il file ' . $locale );
+                    loggerLatest( 'impossibile leggere il file ' . $alternativa );
                 }
+
+            } else {
+
+                // inclusione file standard
+                if( is_readable( $runLvlFile ) ) {
+                    loggerLatest( 'inizio: ' . $runLvlFile );
+                    require $runLvlFile;
+                    timerCheck( $cf['speed'], $runLvlFile );
+                    loggerLatest( 'completato: ' . $runLvlFile );
+                } else {
+                    loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
+                }
+
+                // inclusione file locale
+                if( file_exists( $locale ) ) {
+                    if( is_readable( $locale ) ) {
+                        loggerLatest( 'inizio: ' . $locale );
+                        require $locale;
+                        timerCheck( $cf['speed'], $locale );
+                        loggerLatest( 'completato: ' . $locale );
+                    } else {
+                        loggerLatest( 'impossibile leggere il file ' . $locale );
+                    }
+                }
+
             }
 
             // controparte moduli
@@ -1737,29 +1762,49 @@
             // inclusione controparte moduli
             foreach( $moduli as $modulo ) {
 
-                // inclusione file di modulo
-                if( is_readable( $modulo ) ) {
-                    loggerLatest( 'inizio: ' . $modulo );
-                    require $modulo;
-                    timerCheck( $cf['speed'], $modulo );
-                    loggerLatest( 'completato: ' . $modulo );
-                } else {
-                    loggerLatest( 'impossibile leggere il file ' . $modulo );
-                }
-
                 // controparte modulo locale
                 $locale = path2custom( $modulo );
 
-                // inclusione controparte modulo locale
-                if( file_exists( $locale ) ) {
-                    if( is_readable( $locale ) ) {                        
-                        loggerLatest( 'inizio: ' . $locale );
-                        require $locale;
-                        timerCheck( $cf['speed'], $locale );
-                        loggerLatest( 'completato: ' . $locale );
+                // controparte modulo alternativa
+                $alternativa = str_replace( '.php', '.alt.php', $locale );
+
+                // se esiste il file alternativo, sostituisce standard e locale del modulo
+                if( file_exists( $alternativa ) ) {
+
+                    // inclusione file alternativo di modulo
+                    if( is_readable( $alternativa ) ) {
+                        loggerLatest( 'inizio: ' . $alternativa );
+                        require $alternativa;
+                        timerCheck( $cf['speed'], $alternativa );
+                        loggerLatest( 'completato: ' . $alternativa );
                     } else {
-                        loggerLatest( 'impossibile leggere il file ' . $locale );
+                        loggerLatest( 'impossibile leggere il file ' . $alternativa );
                     }
+
+                } else {
+
+                    // inclusione file di modulo
+                    if( is_readable( $modulo ) ) {
+                        loggerLatest( 'inizio: ' . $modulo );
+                        require $modulo;
+                        timerCheck( $cf['speed'], $modulo );
+                        loggerLatest( 'completato: ' . $modulo );
+                    } else {
+                        loggerLatest( 'impossibile leggere il file ' . $modulo );
+                    }
+
+                    // inclusione controparte modulo locale
+                    if( file_exists( $locale ) ) {
+                        if( is_readable( $locale ) ) {
+                            loggerLatest( 'inizio: ' . $locale );
+                            require $locale;
+                            timerCheck( $cf['speed'], $locale );
+                            loggerLatest( 'completato: ' . $locale );
+                        } else {
+                            loggerLatest( 'impossibile leggere il file ' . $locale );
+                        }
+                    }
+
                 }
 
             }
