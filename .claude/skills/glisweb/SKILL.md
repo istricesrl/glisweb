@@ -132,7 +132,9 @@ gestionale.
 ⚠ **Chiudere una voce sono tre gesti nello stesso turno**: marcatore `[v]` o `[x]`, trasloco nel
 `DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
 `CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
-comunicato, per il cliente, non è finito.
+comunicato, per il cliente, non è finito. ⚠ Se la voce porta il tag `[gh#N]`, c'è un **quarto gesto**:
+la issue GitHub si chiude **nello stesso turno** con `~/.claude/bin/issue-todo.py -C <deploy> --chiudi`,
+senza aspettare il cron della notte ( vedi `riferimenti/cinque-file.md` ).
 
 ⚠ **Una domanda per il cliente si scrive quando nasce**: nello stesso turno va nel `CHAT.md`, in
 `### Da chiedergli alla prossima occasione` della persona giusta, con data e voce di origine. Una

@@ -439,7 +439,7 @@ Due regole che valgono più di tutte le altre:
 Regola data da Fabio il **22/09/2026**, ribadita il **23/09/2026**: *"quando fanno le cose e chiudono i
 task devono sempre aggiornare di conseguenza il `CHAT.md`"*.
 
-Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
+Chiudere una voce sono **tre gesti nello stesso turno** ( quattro se è nata da una issue GitHub ), non uno:
 
 1. il marcatore diventa `[v]` ( o `[x]` se si è deciso di non farla );
 2. la voce **trasloca** nel `DONE.md`, nel capitolo di oggi, con **com'è andata e perché si è deciso
@@ -447,6 +447,16 @@ Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
 3. ⚠ se è una cosa che **il cliente vede o che stava aspettando**, la stessa riga va **anche nel
    `CHAT.md`**, nella sezione `### Da dirgli alla prossima occasione` della persona giusta, **il giorno
    stesso**. Se la voce ha il campo `( avvisare: … )`, la persona giusta è ognuna di quelle.
+
+4. ⚠ se la voce porta il tag **`[gh#N]`** ( è nata da una issue GitHub ), **si chiude anche la issue**,
+   nello stesso turno: `~/.claude/bin/issue-todo.py -C <deploy> --chiudi`, **dopo** il trasloco nel
+   `DONE.md`, perché chiude su GitHub le issue la cui voce `[gh#N]` trova lì come `[v]` o `[x]`. Regola
+   di Fabio del **12/10/2026**: *"quando chiudi una todo collegata a una issue github […] chiudere anche
+   la issue"*. C'è il cron notturno `/etc/cron.daily/issue-github` che fa la stessa cosa, ma è una rete
+   di sicurezza, non il gesto: chi ha aperto la issue la vede chiusa quando il lavoro è fatto, non il
+   giorno dopo. Lo script commenta senza citare il testo della voce, perché il repo è pubblico: **non si
+   chiude a mano con `gh issue close` aggiungendo dettagli del TODO**. Una voce `[gh#N]` chiusa solo in
+   parte resta aperta, e la issue con lei.
 
 **Il test, in una riga**: *se ne accorgerebbe, o l'aveva chiesta lui?* Se sì, il terzo gesto non è
 facoltativo. **Uno sviluppo finito e non comunicato, per il cliente, non è finito** — e nessuno se ne
