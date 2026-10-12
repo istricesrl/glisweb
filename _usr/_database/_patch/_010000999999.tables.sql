@@ -1049,21 +1049,27 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (                  --
 -- struttura: tabella base
 -- funzione: collega un prodotto alle sue caratteristiche
 --
--- gemella di articoli_caratteristiche. L'indice unico e' ( id_prodotto, id_caratteristica ) e NON
--- comprende la lingua: un prodotto ha un valore solo per caratteristica.
+-- questa tabella collega un prodotto all'albero delle caratteristiche ( caratteristiche ) e ne
+-- porta il valore. E' la gemella di articoli_caratteristiche, senza la colonna se_assente, che
+-- serve solo alle voci di listino.
+--
+-- NOTA: il valore e' per lingua, quindi la stessa caratteristica puo' comparire su un prodotto una
+-- volta per ogni lingua; per questo id_lingua fa parte della chiave unica ( decisione del 12/10/2026,
+-- come per articoli_caratteristiche ). Le righe con id_lingua a NULL non sono protette dalla chiave
+-- unica, perche' MySQL non considera uguali due NULL.
 --
 CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
   `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
   `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
   `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
   `valore` text DEFAULT NULL,                                   -- valore della caratteristica
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
   `note` text DEFAULT NULL,                                     -- note
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000003050

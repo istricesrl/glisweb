@@ -632,14 +632,14 @@ ALTER TABLE `caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- prodotti_caratteristiche
 ALTER TABLE `prodotti_caratteristiche`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`),
+	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`,`id_lingua`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_prodotto`,`id_caratteristica`,`id_lingua`);
 
 -- | 030000002921
 

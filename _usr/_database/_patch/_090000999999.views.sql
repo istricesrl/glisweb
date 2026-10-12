@@ -5013,12 +5013,13 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 	SELECT
 		prodotti_caratteristiche.id,
+		prodotti_caratteristiche.ordine,
 		prodotti_caratteristiche.id_prodotto,
 		prodotti_caratteristiche.id_caratteristica,
 		prodotti_caratteristiche.id_lingua,
 		caratteristiche.nome AS caratteristica,
-		prodotti_caratteristiche.valore AS valore,
-		prodotti_caratteristiche.ordine,
+		prodotti_caratteristiche.valore,
+		prodotti_caratteristiche.note,
 		prodotti_caratteristiche.id_account_inserimento,
 		prodotti_caratteristiche.id_account_aggiornamento,
 		concat(
