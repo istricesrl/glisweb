@@ -223,6 +223,9 @@ Le regole che contano di più:
    `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
    dove muore col `/clear`.
 
+La **pulizia** di un `TODO.md` ( voci già chiuse, doppioni, domande da fare ) ha una procedura sua:
+`.claude/skills/glisweb/riferimenti/pulizia-todo.md`, coi verdetti applicati da `bin/applica-triage.py`.
+
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
 
 **La documentazione segue la legge del codice: standard e custom allo stesso percorso, al netto degli
