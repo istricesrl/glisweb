@@ -376,14 +376,58 @@
             // die( print_r( $_REQUEST['__carrello__']['__articolo__'], true ) );
 
             // NOTA un id_articolo che non e' un numero e' un codice: link e moduli scritti prima del 02/03/2026, quando
-            // l'id dell'articolo era il suo codice. Si traduce nell'id ( articoli.codice ); se il codice non esiste
-            // l'articolo non si aggiunge ( 2026-09-30 )
+            // l'id dell'articolo era il suo codice, e i progetti che mandano il codice di proposito. Si traduce nell'id
+            // ( articoli.codice ), una volta sola e prima di tutto il resto, sia per __articolo__ sia per __articoli__;
+            // se il codice non esiste l'articolo non entra nel carrello ( 2026-09-30, __articoli__ dal 2026-10-12 )
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) && ! ctype_digit( (string) $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
-                $_REQUEST['__carrello__']['__articolo__']['id_articolo'] = mysqlSelectValue(
+                $idArticolo = mysqlSelectValue(
                     $cf['mysql']['connection'],
                     'SELECT id FROM articoli WHERE codice = ?',
                     array( array( 's' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) )
                 );
+                if( empty( $idArticolo ) ) {
+                    logWrite( 'articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                }
+                $_REQUEST['__carrello__']['__articolo__']['id_articolo'] = $idArticolo;
+            }
+
+            // NOTA per __articoli__ la chiave della riga, quando coincide con l'id_articolo, è anch'essa un codice e va
+            // tradotta con lui, altrimenti la riga entrerebbe in sessione sotto il codice
+            if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+                $articoliTradotti = array();
+                foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => $item ) {
+                    if( isset( $item['id_articolo'] ) && ! ctype_digit( (string) $item['id_articolo'] ) ) {
+                        $idArticolo = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM articoli WHERE codice = ?',
+                            array( array( 's' => $item['id_articolo'] ) )
+                        );
+                        if( empty( $idArticolo ) ) {
+                            logWrite( 'articolo ' . $item['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                            continue;
+                        }
+                        $key = ( (string) $key === (string) $item['id_articolo'] ) ? $idArticolo : $key;
+                        $item['id_articolo'] = $idArticolo;
+                    }
+                    $articoliTradotti[ $key ] = $item;
+                }
+                $_REQUEST['__carrello__']['__articoli__'] = $articoliTradotti;
+            }
+
+            // NOTA un articolo che non esiste più nel catalogo non resta in sessione: la sua riga non si può scrivere in
+            // carrelli_articoli, e il carrello mostrerebbe una riga vuota fino al checkout, che si chiuderebbe senza
+            // niente da vendere; anche un codice rimasto in sessione da prima delle traduzioni non è un id, e se ne va
+            if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
+                foreach( $_SESSION['carrello']['articoli'] as $key => $dati ) {
+                    if( ! empty( $dati['id_articolo'] ) && ! mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM articoli WHERE id = ?',
+                        array( array( 's' => $dati['id_articolo'] ) )
+                    ) ) {
+                        logWrite( 'articolo ' . $dati['id_articolo'] . ' inesistente, tolto dalla sessione del carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                        unset( $_SESSION['carrello']['articoli'][ $key ] );
+                    }
+                }
             }
 
             // STEP 4 - gestione acquisto singolo articolo
