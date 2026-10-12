@@ -679,10 +679,20 @@ ALTER TABLE `carrelli_articoli`
 	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
 	ADD KEY `id_coupon` (`id_coupon`),
-	ADD KEY `id_account_evasione` (`id_account_evasione`),
+	ADD KEY `destinatario_id_tipologia_anagrafica` (`destinatario_id_tipologia_anagrafica`),
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `destinatario_id_account` (`destinatario_id_account`),
+	ADD KEY `destinatario_id_comune` (`destinatario_id_comune`),
+	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`),
+	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`),
+	ADD KEY `destinatario_id_comune_nascita` (`destinatario_id_comune_nascita`),
+	ADD KEY `destinatario_id_provincia_nascita` (`destinatario_id_provincia_nascita`),
+	ADD KEY `destinatario_id_stato_nascita` (`destinatario_id_stato_nascita`),
+	ADD KEY `id_account_evasione` (`id_account_evasione`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_carrello`,`id_articolo`,`destinatario_id_anagrafica`);
 
 -- | 030000003051
 
