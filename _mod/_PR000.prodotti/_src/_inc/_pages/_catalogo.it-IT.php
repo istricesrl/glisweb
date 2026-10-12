@@ -588,3 +588,29 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
     );
+
+    // vista caratteristiche
+    $p['catalogo.caratteristiche.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo caratteristiche' ),
+        'h1'                => array( $l        => 'caratteristiche' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.caratteristiche.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.caratteristiche.view' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'caratteristiche' ),
+                                                                            'priority'    => '300' ) ) )
+    );
+
+    // gestione caratteristiche
+    $p['catalogo.caratteristiche.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo caratteristiche form' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'catalogo.caratteristiche.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.caratteristiche.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.caratteristiche.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.caratteristiche.form' ) )
+    );

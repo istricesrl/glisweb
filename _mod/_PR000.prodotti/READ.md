@@ -59,6 +59,16 @@ Questa è la macro della scheda strumenti del modulo di gestione articoli.
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.view.php
 Questa è la macro della vista articoli.
 
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.caratteristiche.form.php
+Questa è la macro del modulo di gestione delle caratteristiche, cioè delle voci che le tendine delle schede
+caratteristiche di prodotti e articoli propongono; la tendina del genitore legge caratteristiche_view, il cui
+__label__ è il percorso completo.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.caratteristiche.view.php
+Questa è la macro della vista caratteristiche. La tabella non ha data_archiviazione, quindi la vista non ha la linguetta
+degli archiviati; il filtro sul genitore ( inc/catalogo.caratteristiche.view.filters.twig ) propone solo le
+caratteristiche che hanno figli, le uniche per cui filtrare ha senso.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php
 Questa è la macro della scheda archiviazione del modulo di gestione categorie prodotti.
 
@@ -78,7 +88,8 @@ Questa è la macro della scheda strumenti della vista prodotti.
 Questa è la macro della vista delle categorie prodotti archiviate.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.php
-Questa è la macro della vista categorie prodotti.
+Questa è la macro della vista categorie prodotti. Il riquadro dei filtri ( inc/catalogo.categorie.prodotti.view.filters.twig )
+aggiunge alla ricerca la tendina del genitore, che propone solo le categorie che hanno figli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php
 Questa è la macro della scheda archiviazione del modulo di gestione marchi.

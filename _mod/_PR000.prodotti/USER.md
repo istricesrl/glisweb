@@ -10,8 +10,8 @@ Attorno a prodotti e articoli il modulo tiene le **categorie** in cui si ordinan
 cui appartengono. I **prezzi** non stanno qui: si registrano per listino, e il loro elenco completo
 è nell'archivio del catalogo ( vedi il capitolo di quell'area e quello dei listini ).
 
-Il modulo sta nell'area **catalogo**, alle voci **prodotti** ( con la sotto-voce **categorie** ) e
-**marchi**. Tutte le pagine sono aperte a chi appartiene allo **staff** o agli
+Il modulo sta nell'area **catalogo**, alle voci **prodotti** ( con le sotto-voci **categorie** e
+**caratteristiche** ) e **marchi**. Tutte le pagine sono aperte a chi appartiene allo **staff** o agli
 **amministratori**.
 
 ## l'elenco dei prodotti
@@ -95,7 +95,9 @@ Le linguette della scheda di un articolo sono:
 
 Si aprono dalla sotto-voce **categorie**. Le categorie si annidano l'una nell'altra — *utensili →
 elettroutensili → trapani* — e un prodotto può stare in più di una. L'elenco ha le linguette
-**stampe**, **archiviati** e **azioni**.
+**stampe**, **archiviati** e **azioni**, e sopra la ricerca la tendina **genitore**, che mostra solo
+le categorie contenute in quella scelta; la tendina propone solo le categorie che ne contengono
+altre.
 
 La scheda di una categoria tiene **genitore** ( la categoria che la contiene ), **codice**,
 **nome** e **note**. La sua linguetta **prodotti** elenca i prodotti della categoria, e da lì si
@@ -108,6 +110,19 @@ lavora nei due sensi:
 
 Le altre linguette sono le stesse di un prodotto per la parte web e media, più la linguetta
 **menu**, da cui la pagina della categoria si aggiunge ai menu del sito.
+
+## le caratteristiche
+<!-- @pubblico: operatore, amministratore -->
+<!-- @pagina: catalogo.caratteristiche.view -->
+
+Si aprono dalla sotto-voce **caratteristiche**, e sono le voci che si scelgono nella linguetta
+*caratteristiche* di un prodotto o di un articolo — *potenza*, *peso*, *alimentazione*. Anche
+loro si annidano, e sopra la ricerca c'è la stessa tendina **genitore** delle categorie.
+
+La scheda di una caratteristica tiene **genitore**, **codice**, **nome** e **ordine**, e due
+spunte che dicono dove la si può usare: **prodotti** e **articoli**. Una caratteristica senza la
+spunta *prodotti* non compare nella tendina della scheda di un prodotto, e lo stesso per gli
+articoli. Le caratteristiche non si archiviano.
 
 ## i marchi
 <!-- @pubblico: operatore, amministratore -->
@@ -134,6 +149,6 @@ Le linguette *stampe* e *azioni* hanno la forma di tutte le pagine di riquadri (
 ## quello che questo capitolo non dice ancora
 
 - le **tipologie** di prodotto: dove si configurano e che effetto hanno;
-- dove si definiscono le **caratteristiche** e i **tipi di relazione** che le tendine propongono;
+- dove si definiscono i **tipi di relazione** che le tendine propongono;
 - come si vede, dalla scheda di un prodotto, **quanto costa** in ciascun listino;
 - come il prodotto arriva sul **sito**, e cosa lo rende visibile al visitatore.
