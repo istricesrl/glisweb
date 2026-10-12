@@ -14,14 +14,38 @@
 -- altri due ), e un modello assegnato per id scavalcherebbe quello ereditato. La copertina della missione la assegna
 -- bernispa nelle sue patch.
 --
+-- Nata l'08/10 come _202610081200 con i sette UPDATE sotto un solo marcatore e senza -- | FINE: mysqlPatchRead() non
+-- la chiudeva e non la applicava mai. Promossa il 12/10 con id nuovi, uno per UPDATE: i deploy erano gia' oltre
+-- 202610081200 ( gimbe a 202610091202 ) e mysqlPatchRead() applica solo gli id maggiori del livello.
+--
 -- IDEMPOTENTE.
 
--- | 202610081200
+-- | 202610121200
 
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'fattura' WHERE `id` = 1 AND `stampa_pdf` IS NULL;
+
+-- | 202610121201
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'nota.credito' WHERE `id` = 3 AND `stampa_pdf` IS NULL;
+
+-- | 202610121202
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'ddt' WHERE `id` = 4 AND `stampa_pdf` IS NULL;
+
+-- | 202610121203
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'proforma' WHERE `id` = 5 AND `stampa_pdf` IS NULL;
+
+-- | 202610121204
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'offerta' WHERE `id` = 6 AND `stampa_pdf` IS NULL;
+
+-- | 202610121205
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'ordine' WHERE `id` = 7 AND `stampa_pdf` IS NULL;
+
+-- | 202610121206
+
 UPDATE `tipologie_documenti` SET `stampa_pdf` = 'ricevuta' WHERE `id` = 8 AND `stampa_pdf` IS NULL;
+
+-- | FINE

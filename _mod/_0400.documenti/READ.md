@@ -32,7 +32,7 @@ Il modello si sceglie in quest'ordine: `$etc['modello']`, la colonna `tipologie_
 quella della tipologia genitore, `$etc['predefinito']`, `documento.generico`. La funzione di disegno ha il nome del
 modello: `nota.credito` → `generaNotaCreditoPdf( &$pdf, $dati, $etc )`. Nello standard ci sono `documento.generico`,
 `fattura`, `nota.credito`, `ddt`, `proforma`, `offerta`, `ordine`, `ricevuta`, `copertina.missione`; la patch
-`_202610081200.stampa.pdf.tipologie.sql` li assegna alle tipologie radice, e le figlie ereditano dal genitore.
+`_202610121200.stampa.pdf.tipologie.sql` li assegna alle tipologie radice, e le figlie ereditano dal genitore.
 
 Gli endpoint di `print/0400.documenti/` ( `ddt.pdf`, `ordine.pdf`, `nota.credito.pdf`, `proforma.pdf`, `offerta.pdf`,
 `fattura.pdf`, `ricevuta.pdf`, `copertina.missione.pdf` e il generico `documento.pdf` ) sono sottili: autorizzazione in

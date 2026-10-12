@@ -17,14 +17,26 @@
 -- Nata su bernispa il 09/10 come _202610091200, promossa il 12/10 con un id nuovo: 202610091200 era gia' stato
 -- registrato in __patch__ dalla patch documenti_articoli, e mysqlPatchRead() applica solo gli id maggiori del livello.
 --
+-- Un ALTER per marcatore: mysqlPatchRead() passa il blocco fra due marcatori come una query sola, e con i quattro ALTER
+-- sotto lo stesso marcatore su MySQL la traduzione si fermava ( clausola non tradotta ) e su MariaDB mysqli_query()
+-- li rifiutava insieme.
+--
 -- IDEMPOTENTE.
 
 -- | 202610121100
 
 ALTER TABLE `mastri_articoli` DROP FOREIGN KEY IF EXISTS `mastri_articoli_ibfk_02_nofollow`;
+
+-- | 202610121101
+
 ALTER TABLE `mastri_articoli` ADD CONSTRAINT `mastri_articoli_ibfk_02` FOREIGN KEY IF NOT EXISTS (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- | 202610121102
+
 ALTER TABLE `mastri_tipologie_veicoli` DROP FOREIGN KEY IF EXISTS `mastri_tipologie_veicoli_ibfk_01_nofollow`;
+
+-- | 202610121103
+
 ALTER TABLE `mastri_tipologie_veicoli` ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_01` FOREIGN KEY IF NOT EXISTS (`id_mastro`) REFERENCES `mastri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- | FINE
