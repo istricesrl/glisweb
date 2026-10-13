@@ -1944,6 +1944,8 @@ CREATE TABLE IF NOT EXISTS `contatti` (
 -- NOTA mittente_mail e destinatari_*_mail contengono un array nome => indirizzo serializzato con serialize(),
 -- che il controller di CO000.contenuti ricava dalla forma "Nome <indirizzo>" scritta nel form; per questo non ci
 -- sono colonne per i nomi dei destinatari, mentre mittente_nome resta perché serve agli sms
+-- NOTA i destinatari sono text e non char perché un elenco serializzato troncato non si rilegge più, e la
+-- mail partirebbe senza destinatari; il mittente è una voce sola e gli basta char(255)
 --
 CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
@@ -2001,11 +2003,11 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `label_menu` char(255) DEFAULT NULL,                          -- label menu
   `mittente_nome` char(128) DEFAULT NULL,                       -- mittente nome
   `mittente_numero` char(128) DEFAULT NULL,                     -- mittente numero
-  `mittente_mail` char(128) DEFAULT NULL,                       -- mittente mail
+  `mittente_mail` char(255) DEFAULT NULL,                       -- mittente mail
   `destinatari_numero` char(128) DEFAULT NULL,                  -- destinatario numero
-  `destinatari_mail` char(128) DEFAULT NULL,                    -- destinatario mail
-  `destinatari_cc_mail` char(128) DEFAULT NULL,                 -- destinatario cc mail
-  `destinatari_bcc_mail` char(128) DEFAULT NULL,                -- destinatario bcc mail
+  `destinatari_mail` text DEFAULT NULL,                         -- destinatario mail
+  `destinatari_cc_mail` text DEFAULT NULL,                      -- destinatario cc mail
+  `destinatari_bcc_mail` text DEFAULT NULL,                     -- destinatario bcc mail
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
