@@ -37,9 +37,11 @@ sitemap.*
 # progetto ( usr/docs/, i READ.md e USER.md di mod/ ) e' scritta a mano e va versionata. Il vecchio
 # `*.md` non ancorato la escludeva tutta.
 /*.md
-# l'output di _src/_sh/_docs.build.sh si rigenera, il sorgente sta in usr/docs/
+# l'output di _src/_sh/_docs.build.sh ( manuali, quickstart, esito dei test ) si rigenera, il
+# sorgente sta in usr/docs/
 usr/pages/manual/
 usr/pages/quickstart/
+usr/pages/test/
 # hook e skill che lo zip del framework sovrascrive: solo quei nomi, non le cartelle intere
 .githooks/commit-msg
 .githooks/post-commit
