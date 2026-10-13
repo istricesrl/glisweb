@@ -1192,17 +1192,21 @@ CREATE TABLE IF NOT EXISTS `carrelli_consensi` (
 -- funzione: contiene la distinta base degli articoli
 --
 -- questa tabella dice di quali componenti, e in che quantita', e' fatto un articolo: id_articolo e' il composto,
--- id_componente l'articolo che ne fa parte
+-- id_componente l'articolo che ne fa parte; le righe si compilano dalla scheda distinta dell'articolo composto
+--
+-- NOTA id_componente non segue la cascata: un articolo che compare nella distinta di un altro non si puo' cancellare
+-- finche' non lo si toglie dalla distinta, altrimenti la distinta del composto resterebbe incompleta senza avviso
 --
 CREATE TABLE IF NOT EXISTS `distinta` (
-  `id` bigint(20) NOT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_componente` bigint(20) DEFAULT NULL,
-  `quantita` decimal(16,5) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo composto
+  `id_componente` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'articolo che entra nella composizione
+  `quantita` decimal(16,5) DEFAULT NULL,                        -- quantita' del componente nell'articolo composto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000003070
@@ -1231,18 +1235,22 @@ CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
 -- struttura: tabella base
 -- funzione: contiene le casse previdenziali della fattura elettronica
 --
--- questa tabella contiene le casse di previdenza delle categorie professionali, con il codice TipoCassa ( TC01 - TC22 )
--- delle specifiche tecniche della fattura elettronica
+-- le casse di previdenza delle categorie professionali, col codice TipoCassa ( TC01 - TC22 ) che la fattura
+-- elettronica scrive nel blocco DatiCassaPrevidenziale; la tabella si usa per scegliere la cassa nei dati fiscali
+-- dei documenti, attraverso documenti_casse_previdenziali.
 --
-CREATE TABLE IF NOT EXISTS `casse_previdenziali` (
-  `id` bigint(20) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: l'elenco e' quello chiuso delle specifiche tecniche, e lo carica il 050 con le descrizioni dell'enumerazione
+-- TipoCassaType dello schema XSD; quando le specifiche cambiano si aggiorna con una patch, non a mano. Le righe
+-- usate da un documento non si cancellano ( documenti_casse_previdenziali punta qui con NO ACTION ).
+CREATE TABLE IF NOT EXISTS `casse_previdenziali` (              --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                                 -- codice TipoCassa della fattura elettronica
+  `nome` char(255) DEFAULT NULL,                                  -- nome della cassa previdenziale
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000003100
 
@@ -1250,37 +1258,61 @@ CREATE TABLE IF NOT EXISTS `casse_previdenziali` (
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le categorie delle anagrafiche
--- 
--- questa tabella contiene le categorie delle anagrafiche
--- 
-CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la categoria genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(32) DEFAULT NULL,                             -- codice della categoria
-  `nome` char(64) DEFAULT NULL,                               -- nome della categoria
-  `note` text DEFAULT NULL,                                   -- note sulla categoria
-  `se_lead` tinyint(1) DEFAULT NULL,                          -- flag che indica se la categoria è un lead
-  `se_prospect` tinyint(1) DEFAULT NULL,                      -- flag che indica se la categoria è un prospect
-  `se_cliente` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un cliente
-  `se_fornitore` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è un fornitore
-  `se_produttore` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è un produttore
-  `se_collaboratore` tinyint(1) DEFAULT NULL,                 -- flag che indica se la categoria è un collaboratore
-  `se_interno` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un interno
-  `se_esterno` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è un esterno
-  `se_concorrente` tinyint(1) DEFAULT NULL,                   -- flag che indica se la categoria è un concorrente
-  `se_gestita` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è gestita
-  `se_amministrazione` tinyint(1) DEFAULT NULL,               -- flag che indica se la categoria è in amministrazione
-  `se_produzione` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è in produzione
-  `se_commerciale` tinyint(1) DEFAULT NULL,                   -- flag che indica se la categoria è nel commerciale
-  `se_notizie` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è collegata alle notizie
-  `se_corriere` tinyint(1) DEFAULT NULL,                      -- flag che indica se la categoria è un corriere
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la categoria
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- funzione: contiene l albero delle categorie delle anagrafiche
+--
+-- le anagrafiche si associano alle categorie tramite anagrafica_categorie, anche a piu' d'una; i flag di un'anagrafica
+-- sono il massimo dei flag delle sue categorie, propagato in anagrafica_view_static. I flag se_* sono di due famiglie:
+-- i flag di ruolo dicono cosa e' l'anagrafica per l'azienda ( lead, prospect, cliente, fornitore, partner... ) e in
+-- quale segmento dell'organigramma sta ( amministrazione, produzione, commerciale, logistica, simmetrici a ruoli_mastri );
+-- i flag di associabilita' ( da se_annunci a se_risorse ) dicono a quali oggetti l'anagrafica puo' essere associata,
+-- cioe' in quali tendine compare: p.es. gli autori delle notizie o delle risorse, gli inquilini degli immobili. Sono lo
+-- specchio dei flag di ruoli_anagrafica: il ruolo dice a che titolo un'anagrafica e' associata, la categoria chi puo'
+-- esserlo.
+--
+-- NOTA se_interno e se_esterno dicono se un collaboratore fa parte dell'organigramma; se e' un dipendente non lo dice
+-- la categoria, lo dice il contratto ( tabella contratti ). se_produzione qui e' un segmento dell'organigramma, mentre
+-- l'omonimo flag di ruoli_anagrafica e' di associabilita'.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL. Chi scrive qui deve passare la chiave di ricerca
+-- esplicita a mysqlInsertRow(), altrimenti a ogni importazione nasce una radice nuova.
+CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (               --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `se_lead` tinyint(1) DEFAULT NULL,                              -- contatto identificato ma non ancora lavorato commercialmente
+  `se_prospect` tinyint(1) DEFAULT NULL,                          -- contatto lavorato commercialmente che non ha ancora acquistato
+  `se_cliente` tinyint(1) DEFAULT NULL,                           -- ha acquistato almeno una volta
+  `se_fornitore` tinyint(1) DEFAULT NULL,                         -- fornisce beni o servizi all'azienda
+  `se_produttore` tinyint(1) DEFAULT NULL,                        -- produce i beni ( il marchio ), distinto da chi li vende
+  `se_corriere` tinyint(1) DEFAULT NULL,                          -- fornisce servizi di spedizione, vettore nei documenti di trasporto
+  `se_collaboratore` tinyint(1) DEFAULT NULL,                     -- persona che collabora con l'azienda a qualsiasi titolo
+  `se_interno` tinyint(1) DEFAULT NULL,                           -- fa parte dell'organigramma
+  `se_esterno` tinyint(1) DEFAULT NULL,                           -- collaboratore che non fa parte dell'organigramma
+  `se_concorrente` tinyint(1) DEFAULT NULL,                       -- concorrente sullo stesso mercato
+  `se_partner` tinyint(1) DEFAULT NULL,                           -- azienda con cui si collabora alla pari, contrario di concorrente
+  `se_gestita` tinyint(1) DEFAULT NULL,                           -- azienda per cui il gestionale emette documenti e tiene la contabilita'
+  `se_amministrazione` tinyint(1) DEFAULT NULL,                   -- segmento amministrazione dell'organigramma
+  `se_produzione` tinyint(1) DEFAULT NULL,                        -- segmento produzione dell'organigramma
+  `se_commerciale` tinyint(1) DEFAULT NULL,                       -- segmento commerciale dell'organigramma
+  `se_logistica` tinyint(1) DEFAULT NULL,                         -- segmento logistica dell'organigramma
+  `se_annunci` tinyint(1) DEFAULT NULL,                           -- associabile agli annunci
+  `se_contratti` tinyint(1) DEFAULT NULL,                         -- associabile ai contratti
+  `se_didattica` tinyint(1) DEFAULT NULL,                         -- associabile ai corsi e alla didattica
+  `se_immobili` tinyint(1) DEFAULT NULL,                          -- associabile agli immobili ( p.es. inquilini, proprietari )
+  `se_notizie` tinyint(1) DEFAULT NULL,                           -- associabile alle notizie ( p.es. autori )
+  `se_organizzazioni` tinyint(1) DEFAULT NULL,                    -- associabile alle organizzazioni
+  `se_progetti` tinyint(1) DEFAULT NULL,                          -- associabile ai progetti
+  `se_relazioni` tinyint(1) DEFAULT NULL,                         -- associabile alle relazioni fra anagrafiche
+  `se_risorse` tinyint(1) DEFAULT NULL,                           -- associabile alle risorse ( p.es. autori )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000003300
 
@@ -1288,27 +1320,39 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (           --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i categorie annunci
+-- funzione: contiene l albero delle categorie degli annunci
 --
-CREATE TABLE IF NOT EXISTS `categorie_annunci` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- gli annunci si associano alle categorie tramite annunci_categorie, anche a piu' d'una. Ogni categoria genera una
+-- pagina del sito, quindi porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito,
+-- id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso modello ( annunci, notizie, prodotti,
+-- progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e vista ).
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_annunci` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000003700
 
@@ -1316,31 +1360,40 @@ CREATE TABLE IF NOT EXISTS `categorie_annunci` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le categorie delle notizie
+-- funzione: contiene l albero delle categorie delle notizie
 --
--- questa tabella contiene le categorie delle notizie
+-- le notizie si associano alle categorie tramite notizie_categorie, anche a piu' d'una. Ogni categoria genera una
+-- pagina del sito ( modulo notizie, _310.pages.php ), quindi porta il blocco web ( template, schema_html, tema_css,
+-- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso
+-- modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
+-- vista ).
 --
-CREATE TABLE IF NOT EXISTS `categorie_notizie` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `note_archiviazione` text NULL,                             -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_notizie` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000003900
 
@@ -1349,27 +1402,39 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
 -- funzione: contiene l albero delle categorie di prodotti
-CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `note_archiviazione` text NULL,                             -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- i prodotti si associano alle categorie tramite prodotti_categorie, anche a piu' d'una. Ogni categoria genera una
+-- pagina del sito ( modulo prodotti, _310.pages.php ), quindi porta il blocco web ( template, schema_html, tema_css,
+-- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso
+-- modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
+-- vista ).
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_prodotti` (                 --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000004300
 
@@ -1377,35 +1442,48 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le categorie dei progetti
+-- funzione: contiene l albero delle categorie di progetti
 --
--- questa tabella contiene le categorie dei progetti
+-- i progetti si associano alle categorie tramite progetti_categorie, anche a piu' d'una. Ogni categoria puo' generare
+-- una pagina del sito, quindi porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito,
+-- id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso modello ( annunci, notizie, prodotti,
+-- progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e vista ).
 --
-CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la categoria genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(32) DEFAULT NULL,                             -- codice della categoria
-  `nome` char(255) DEFAULT NULL,                              -- nome della categoria
-  `note` text DEFAULT NULL,                                   -- note sulla categoria
-  `template` char(255) DEFAULT NULL,                          -- template associato alla categoria
-  `schema_html` char(128) DEFAULT NULL,                       -- schema HTML associato alla categoria
-  `tema_css` char(128) DEFAULT NULL,                          -- tema CSS associato alla categoria
-  `se_sitemap` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria deve essere inclusa nella sitemap
-  `se_cacheable` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è cacheable
-  `id_sito` bigint(20) DEFAULT NULL,                             -- chiave esterna per il sito di appartenenza
-  `id_pagina` bigint(20) DEFAULT NULL,                           -- chiave esterna per la pagina di appartenenza
-  `se_ordinario` tinyint(1) DEFAULT NULL,                     -- flag che indica se la categoria è ordinaria
-  `se_straordinario` tinyint(1) DEFAULT NULL,                 -- flag che indica se la categoria è straordinaria
-  `se_disciplina` tinyint(1) DEFAULT NULL,                    -- flag che indica se la categoria è disciplinare
-  `se_classe` tinyint(1) DEFAULT NULL,                        -- flag che indica se la categoria è di classe
-  `se_fascia` tinyint(1) DEFAULT NULL,                        -- flag che indica se la categoria è di fascia
-  `se_periodo` tinyint(1) DEFAULT NULL,                       -- flag che indica se la categoria è di periodo
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la categoria
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la categoria
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA e' l'unica delle cinque con dei flag di dominio ( se_ordinario, se_straordinario, se_disciplina, se_classe,
+-- se_fascia ): servono a distinguere l'attivita' ordinaria da quella straordinaria e, per i corsi, le discipline, le
+-- classi e le fasce. Sono un'eccezione scritta al modello.
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_progetti` (                --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                               -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                -- nome della categoria
+  `note` text DEFAULT NULL,                                     -- note sulla categoria
+  `se_ordinario` tinyint(1) DEFAULT NULL,                       -- la categoria e' di attivita' ordinaria
+  `se_straordinario` tinyint(1) DEFAULT NULL,                   -- la categoria e' di attivita' straordinaria
+  `se_disciplina` tinyint(1) DEFAULT NULL,                      -- la categoria e' una disciplina ( corsi )
+  `se_classe` tinyint(1) DEFAULT NULL,                          -- la categoria e' una classe ( corsi )
+  `se_fascia` tinyint(1) DEFAULT NULL,                          -- la categoria e' una fascia ( corsi )
+  `template` char(255) DEFAULT NULL,                            -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                         -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                            -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                       -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                            -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                          -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
 
 -- | 010000004500
 
@@ -1413,27 +1491,40 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (             --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i categorie risorse
+-- funzione: contiene l albero delle categorie delle risorse
 --
-CREATE TABLE IF NOT EXISTS `categorie_risorse` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- le risorse si associano alle categorie tramite risorse_categorie, anche a piu' d'una. Ogni categoria genera una
+-- pagina del sito ( oggi solo il modulo legacy 3500.risorse, _310.pages.php ), quindi porta il blocco web ( template,
+-- schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_*
+-- che seguono lo stesso modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi
+-- esterne, funzioni _path e vista ).
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_risorse` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000004600
 
@@ -1441,17 +1532,23 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i causali
+-- funzione: contiene le causali dei documenti
 --
-CREATE TABLE IF NOT EXISTS `causali` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(64) NOT NULL,
-  `se_trasporto` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- le causali dei documenti, cioe' il motivo per cui la merce viaggia o il documento viene emesso ( vendita, reso,
+-- conto visione... ); un documento ne cita una in documenti.id_causale, e la fattura accompagnatoria ne scrive il nome
+-- nel campo CausaleTrasporto della fattura elettronica.
+--
+-- NOTA: il 050 carica le causali del trasporto d'uso comune, tutte con se_trasporto; non e' un elenco normativo ( il
+-- DPR 472/96 non codifica le causali ), quindi ogni deploy le rinomina, le toglie o ne aggiunge a piacere.
+CREATE TABLE IF NOT EXISTS `causali` (                          --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) NOT NULL,                                      -- nome della causale
+  `se_trasporto` tinyint(1) DEFAULT NULL,                         -- flag per le causali dei documenti di trasporto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000004700
 
@@ -1459,21 +1556,28 @@ CREATE TABLE IF NOT EXISTS `causali` (
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i certificazioni
+-- funzione: contiene i tipi di documenti e attestati
 --
-CREATE TABLE IF NOT EXISTS `certificazioni` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `se_identificazione` tinyint(1) DEFAULT NULL,
-  `se_medico` tinyint(1) DEFAULT NULL,
-  `se_sportivo` tinyint(1) DEFAULT NULL,
-  `se_agonistico` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- i tipi di documenti e attestati che una persona, un progetto o una valutazione possono possedere o richiedere:
+-- documenti di identita', diplomi, certificati medici, certificazioni, attestati eccetera; il possesso di un'anagrafica
+-- sta in anagrafica_certificazioni ( con emissione e scadenza ), il requisito di un progetto in progetti_certificazioni.
+--
+-- NOTA: il 050 carica i tipi d'uso comune; i flag se_* classificano il tipo ( un tipo puo' averne piu' d'uno, p.es.
+-- il certificato agonistico e' medico, sportivo e agonistico ), ma oggi nessun codice li legge.
+CREATE TABLE IF NOT EXISTS `certificazioni` (                   --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                                  -- nome del tipo di documento o attestato
+  `se_identificazione` tinyint(1) DEFAULT NULL,                   -- flag per i documenti adatti a identificare una persona
+  `se_medico` tinyint(1) DEFAULT NULL,                            -- flag per i documenti con informazioni mediche su una persona
+  `se_sportivo` tinyint(1) DEFAULT NULL,                          -- flag per i certificati sportivi
+  `se_agonistico` tinyint(1) DEFAULT NULL,                        -- flag per i certificati di abilitazione agonistica
+  `se_didattica` tinyint(1) DEFAULT NULL,                         -- flag per diplomi, certificati di frequenza e simili
+  `se_immobili` tinyint(1) DEFAULT NULL,                          -- flag per i certificati applicabili a un immobile
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000004800
 
@@ -1481,20 +1585,25 @@ CREATE TABLE IF NOT EXISTS `certificazioni` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i chiavi
+-- funzione: contiene le chiavi di validazione
 --
-CREATE TABLE IF NOT EXISTS `chiavi` (
-  `id` bigint(20) NOT NULL,
-  `id_licenza` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `seriale` char(32) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- le chiavi che validano l'uso di software, contratti, chiamate API e simili; la catena e' contratti -> licenze -> chiavi,
+-- e le licenze si legano ai software tramite licenze_software ( software -> licenze_software -> licenze -> chiavi ).
+--
+-- NOTA: le chiavi potranno descrivere attivazioni una tantum, a periodo, a consumo eccetera; e' da sviluppare insieme
+-- ai moduli software e licenze, oggi nessun codice usa la tabella.
+CREATE TABLE IF NOT EXISTS `chiavi` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- tipologia della chiave
+  `codice` char(32) DEFAULT NULL,                                 -- codice della chiave, unico
+  `nome` char(255) DEFAULT NULL,                                  -- nome descrittivo della chiave
+  `id_licenza` bigint(20) DEFAULT NULL,                           -- licenza a cui appartiene la chiave
+  `seriale` char(32) DEFAULT NULL,                                -- seriale legato alla chiave
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000005000
 
@@ -1502,59 +1611,75 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i classi energetiche
+-- funzione: contiene le classi energetiche
 --
-CREATE TABLE IF NOT EXISTS `classi_energetiche` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(8) DEFAULT NULL,
-  `ep_min` int(11) DEFAULT NULL,
-  `ep_max` int(11) DEFAULT NULL,
-  `rgb` char(8) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- le classi energetiche degli immobili, da G ad A4, con il colore con cui si rappresentano; l'id segue la scala dalla
+-- classe peggiore alla migliore. Le classi sono relative all'edificio di riferimento, quindi i file di base non caricano
+-- ep_min ed ep_max. La tabella appartiene al dominio immobiliare, insieme a valutazioni.
+CREATE TABLE IF NOT EXISTS `classi_energetiche` (             --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della classe, unico
+  `ep_min` int(11) DEFAULT NULL,                              -- valore minimo dell'indice di prestazione energetica
+  `ep_max` int(11) DEFAULT NULL,                              -- valore massimo dell'indice di prestazione energetica
+  `hex` char(8) DEFAULT NULL,                                 -- colore della classe in esadecimale
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005050
 
 -- colli
 -- tipologia: tabella gestita
--- rango: tabella secondaria
+-- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i colli di una spedizione, con dimensioni, peso e raggruppamento
-CREATE TABLE IF NOT EXISTS `colli` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per il collo che contiene questo
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_documento` bigint(20) DEFAULT NULL,
-  `id_mittente` bigint(20) DEFAULT NULL,
-  `id_destinatario` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica del collo
-  `id_mastro` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `raggruppamento` char(32) DEFAULT NULL,
-  `larghezza` decimal(7,2) DEFAULT NULL,
-  `lunghezza` decimal(7,2) DEFAULT NULL,
-  `altezza` decimal(7,2) DEFAULT NULL,
-  `id_udm_dimensioni` bigint(20) DEFAULT NULL,
-  `peso` decimal(7,2) DEFAULT NULL,
-  `id_udm_peso` bigint(20) DEFAULT NULL,
-  `volume` decimal(7,2) DEFAULT NULL,
-  `id_udm_volume` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `pezzi` int(11) DEFAULT NULL,
-  `timestamp_chiusura`	int(11) DEFAULT NULL,
-  `note_chiusura`	text DEFAULT NULL,
-  `timestamp_spedizione`	int(11) DEFAULT NULL,
-  `note_spedizione`	text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene i colli, contenitori fisici organizzati ad albero
+--
+-- questa tabella contiene i colli: un collo è un contenitore fisico ( una scatola, un pallet, un container ) e i colli
+-- formano un albero, perché un collo può contenerne altri. Il contenuto di un collo, cioè la sua packing list, è fatto
+-- dai colli figli e dalle righe di documenti_articoli che puntano al collo con id_collo ( articoli in quantità oppure
+-- matricole ); una riga divisa fra due colli diventa due righe. Un collo può essere collegato al documento di
+-- trasporto che lo accompagna ( DDT o fattura accompagnatoria ), ma esiste anche senza documento e sopravvive alla sua
+-- cancellazione. La tabella appartiene al modulo logistica.
+-- NOTA id_mittente e id_destinatario sono le anagrafiche della spedizione, id_anagrafica quella a cui il collo è
+-- riferito ( p.es. il cliente per cui lo si prepara ), id_mastro il magazzino in cui si trova
+-- NOTA raggruppamento è un'etichetta libera per raggruppare i colli; pezzi è il conteggio dichiarato a mano, che non
+-- sostituisce il contenuto ricavato dalle righe
+-- NOTA le misure sono a blocchi, ogni grandezza col suo id_udm_*, come in articoli
+-- NOTA i blocchi *_chiusura e *_spedizione registrano quando il collo è stato chiuso e quando è partito
+CREATE TABLE IF NOT EXISTS `colli` (                          --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                      -- collo che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- tipologia del collo ( container, pallet, scatola )
+  `ordine` int(11) DEFAULT NULL,                              -- posizione fra i colli dello stesso genitore
+  `codice` char(32) DEFAULT NULL,                             -- codice parlante del collo, p.es. stampato sull'etichetta
+  `nome` char(255) DEFAULT NULL,                              -- nome del collo, a uso interno
+  `id_anagrafica` bigint(20) DEFAULT NULL,                    -- anagrafica a cui il collo è riferito
+  `id_documento` bigint(20) DEFAULT NULL,                     -- documento di trasporto che accompagna il collo
+  `id_mittente` bigint(20) DEFAULT NULL,                      -- anagrafica che spedisce il collo
+  `id_destinatario` bigint(20) DEFAULT NULL,                  -- anagrafica a cui il collo è spedito
+  `id_mastro` bigint(20) DEFAULT NULL,                        -- mastro ( magazzino ) in cui si trova il collo
+  `raggruppamento` char(32) DEFAULT NULL,                     -- etichetta libera per raggruppare i colli
+  `larghezza` decimal(7,2) DEFAULT NULL,                      -- larghezza del collo
+  `lunghezza` decimal(7,2) DEFAULT NULL,                      -- lunghezza del collo
+  `altezza` decimal(7,2) DEFAULT NULL,                        -- altezza del collo
+  `id_udm_dimensioni` bigint(20) DEFAULT NULL,                -- unità di misura di larghezza, lunghezza e altezza
+  `peso` decimal(7,2) DEFAULT NULL,                           -- peso del collo
+  `id_udm_peso` bigint(20) DEFAULT NULL,                      -- unità di misura del peso
+  `volume` decimal(7,2) DEFAULT NULL,                         -- volume del collo
+  `id_udm_volume` bigint(20) DEFAULT NULL,                    -- unità di misura del volume
+  `pezzi` int(11) DEFAULT NULL,                               -- numero di pezzi contenuti, quando lo si dichiara a mano
+  `note` text DEFAULT NULL,                                   -- note sul collo
+  `timestamp_chiusura` int(11) DEFAULT NULL,                  -- timestamp in cui il collo è stato chiuso
+  `note_chiusura` text DEFAULT NULL,                          -- note sulla chiusura
+  `timestamp_spedizione` int(11) DEFAULT NULL,                -- timestamp in cui il collo è stato spedito
+  `note_spedizione` text DEFAULT NULL,                        -- note sulla spedizione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005100
 

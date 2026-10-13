@@ -1537,11 +1537,14 @@ CREATE OR REPLACE VIEW carrelli_documenti_view AS
 
 -- casse_previdenziali_view
 -- tipologia: tabella standard
-CREATE OR REPLACE VIEW casse_previdenziali_view AS
+-- funzione: espone le casse previdenziali con l'etichetta codice - nome per le tendine dei dati fiscali
+CREATE OR REPLACE VIEW `casse_previdenziali_view` AS
 	SELECT
 		casse_previdenziali.id,
 		casse_previdenziali.codice,
 		casse_previdenziali.nome,
+		casse_previdenziali.id_account_inserimento,
+		casse_previdenziali.id_account_aggiornamento,
 		concat( casse_previdenziali.codice, ' - ', casse_previdenziali.nome ) AS __label__
 	FROM casse_previdenziali
 ;
@@ -1554,22 +1557,33 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS           --
 		categorie_anagrafica.id,                              --
 		categorie_anagrafica.id_genitore,                     --
 		categorie_anagrafica.ordine,                          --
+		categorie_anagrafica.codice,                          --
 		categorie_anagrafica.nome,                            --
-		categorie_anagrafica.se_prospect,                     --
 		categorie_anagrafica.se_lead,                         --
+		categorie_anagrafica.se_prospect,                     --
 		categorie_anagrafica.se_cliente,                      --
 		categorie_anagrafica.se_fornitore,                    --
 		categorie_anagrafica.se_produttore,                   --
+		categorie_anagrafica.se_corriere,                     --
 		categorie_anagrafica.se_collaboratore,                --
 		categorie_anagrafica.se_interno,                      --
 		categorie_anagrafica.se_esterno,                      --
 		categorie_anagrafica.se_concorrente,                  --
+		categorie_anagrafica.se_partner,                      --
 		categorie_anagrafica.se_gestita,                      --
 		categorie_anagrafica.se_amministrazione,              --
 		categorie_anagrafica.se_produzione,                   --
 		categorie_anagrafica.se_commerciale,                  --
+		categorie_anagrafica.se_logistica,                    --
+		categorie_anagrafica.se_annunci,                      --
+		categorie_anagrafica.se_contratti,                    --
+		categorie_anagrafica.se_didattica,                    --
+		categorie_anagrafica.se_immobili,                     --
 		categorie_anagrafica.se_notizie,                      --
-		categorie_anagrafica.se_corriere,                     --
+		categorie_anagrafica.se_organizzazioni,               --
+		categorie_anagrafica.se_progetti,                     --
+		categorie_anagrafica.se_relazioni,                    --
+		categorie_anagrafica.se_risorse,                      --
 		count( c1.id ) AS figli,                              -- conteggio dei figli
 		count( ac.id ) AS membri,                             -- conteggio dei membri
 		categorie_anagrafica.id_account_inserimento,          --
@@ -1592,6 +1606,7 @@ CREATE OR REPLACE VIEW categorie_annunci_view AS
 		categorie_annunci.id,
 		categorie_annunci.id_genitore,
 		categorie_annunci.ordine,
+		categorie_annunci.codice,
 		categorie_annunci.nome,
 		categorie_annunci.template,
 		categorie_annunci.schema_html,
@@ -1600,6 +1615,7 @@ CREATE OR REPLACE VIEW categorie_annunci_view AS
 		categorie_annunci.se_cacheable,
 		categorie_annunci.id_sito,
 		categorie_annunci.id_pagina,
+		categorie_annunci.data_archiviazione,
 		count( c1.id ) AS figli,
 		count( annunci_categorie.id ) AS membri,
 		categorie_annunci.id_account_inserimento,
@@ -1619,6 +1635,7 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.id,
 		categorie_notizie.id_genitore,
 		categorie_notizie.ordine,
+		categorie_notizie.codice,
 		categorie_notizie.nome,
 		categorie_notizie.template,
 		categorie_notizie.schema_html,
@@ -1627,7 +1644,7 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.se_cacheable,
 		categorie_notizie.id_sito,
 		categorie_notizie.id_pagina,
-        categorie_notizie.data_archiviazione,
+		categorie_notizie.data_archiviazione,
 		count( c1.id ) AS figli,
 		count( notizie_categorie.id ) AS membri,
 		categorie_notizie.id_account_inserimento,
@@ -1646,8 +1663,8 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	SELECT
 		categorie_prodotti.id,
 		categorie_prodotti.id_genitore,
-		categorie_prodotti.codice,
 		categorie_prodotti.ordine,
+		categorie_prodotti.codice,
 		categorie_prodotti.nome,
 		categorie_prodotti.template,
 		categorie_prodotti.schema_html,
@@ -1656,9 +1673,9 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.se_cacheable,
 		categorie_prodotti.id_sito,
 		categorie_prodotti.id_pagina,
+		categorie_prodotti.data_archiviazione,
 		count( c1.id ) AS figli,
 		count( prodotti_categorie.id ) AS membri,
-		categorie_prodotti.data_archiviazione,
 		categorie_prodotti.id_account_inserimento,
 		categorie_prodotti.id_account_aggiornamento,
 		categorie_prodotti_path( categorie_prodotti.id ) AS __label__
@@ -1671,14 +1688,18 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 -- | 090000004301
 
 -- categorie_progetti_view
--- tipologia: tabella assistita
--- verifica: 2021-06-01 20:02 Fabio Mosti
 CREATE OR REPLACE VIEW categorie_progetti_view AS
 	SELECT
 		categorie_progetti.id,
 		categorie_progetti.id_genitore,
 		categorie_progetti.ordine,
+		categorie_progetti.codice,
 		categorie_progetti.nome,
+		categorie_progetti.se_ordinario,
+		categorie_progetti.se_straordinario,
+		categorie_progetti.se_disciplina,
+		categorie_progetti.se_classe,
+		categorie_progetti.se_fascia,
 		categorie_progetti.template,
 		categorie_progetti.schema_html,
 		categorie_progetti.tema_css,
@@ -1686,11 +1707,7 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.se_cacheable,
 		categorie_progetti.id_sito,
 		categorie_progetti.id_pagina,
-		categorie_progetti.se_straordinario,
-		categorie_progetti.se_ordinario,
-		categorie_progetti.se_disciplina,
-		categorie_progetti.se_classe,
-		categorie_progetti.se_fascia,
+		categorie_progetti.data_archiviazione,
 		count( c1.id ) AS figli,
 		count( progetti_categorie.id ) AS membri,
 		categorie_progetti.id_account_inserimento,
@@ -1705,13 +1722,12 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 -- | 090000004501
 
 -- categorie_risorse_view
--- tipologia: tabella assistita
--- verifica: 2021-06-01 20:25 Fabio Mosti
 CREATE OR REPLACE VIEW categorie_risorse_view AS
 	SELECT
 		categorie_risorse.id,
 		categorie_risorse.id_genitore,
 		categorie_risorse.ordine,
+		categorie_risorse.codice,
 		categorie_risorse.nome,
 		categorie_risorse.template,
 		categorie_risorse.schema_html,
@@ -1720,6 +1736,7 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 		categorie_risorse.se_cacheable,
 		categorie_risorse.id_sito,
 		categorie_risorse.id_pagina,
+		categorie_risorse.data_archiviazione,
 		count( c1.id ) AS figli,
 		count( risorse_categorie.id ) AS membri,
 		categorie_risorse.id_account_inserimento,
@@ -1734,8 +1751,6 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 -- | 090000004601
 
 -- causali_view
--- tipologia: tabella gestita
--- verifica: 2022-04-26 11:12 Chiara GDL
 CREATE OR REPLACE VIEW causali_view AS
 	SELECT
 		causali.id,
@@ -1743,14 +1758,12 @@ CREATE OR REPLACE VIEW causali_view AS
 		causali.se_trasporto,
 		causali.id_account_inserimento,
 		causali.id_account_aggiornamento,
-	 	causali.nome AS __label__
+		causali.nome AS __label__
 	FROM causali
 ;
 
 -- | 090000004701
 -- certificazioni_view
--- tipologia: tabella assistita
--- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE OR REPLACE VIEW certificazioni_view AS
 	SELECT
 		certificazioni.id,
@@ -1759,46 +1772,43 @@ CREATE OR REPLACE VIEW certificazioni_view AS
 		certificazioni.se_medico,
 		certificazioni.se_sportivo,
 		certificazioni.se_agonistico,
+		certificazioni.se_didattica,
 		certificazioni.se_immobili,
-	 	certificazioni.nome AS __label__
+		certificazioni.nome AS __label__
 	FROM certificazioni
 ;
 
 -- | 090000004801
 
 -- chiavi_view
--- tipologia: tabella gestita
--- verifica: 2021-11-15 12:29 Chiara GDL
 CREATE OR REPLACE VIEW chiavi_view AS
 	SELECT
 		chiavi.id,
+		chiavi.id_tipologia,
+		tipologie_chiavi.nome AS tipologia,
+		chiavi.codice,
+		chiavi.nome,
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
-        chiavi.id_tipologia,
-        tipologie_chiavi.nome AS tipologia,
-		chiavi.codice,
 		chiavi.seriale,
-		chiavi.nome,
 		chiavi.id_account_inserimento,
 		chiavi.id_account_aggiornamento,
 		chiavi.nome AS __label__
 	FROM chiavi
+		LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
-        LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
 -- | 090000005001
 
 -- classi_energetiche_view
--- tipologia: tabella standard
--- verifica: 2022-04-28 22:22 Chiara GDL
 CREATE OR REPLACE VIEW classi_energetiche_view AS
 	SELECT
 		classi_energetiche.id,
 		classi_energetiche.nome,
 		classi_energetiche.ep_min,
 		classi_energetiche.ep_max,
-		classi_energetiche.rgb,
+		classi_energetiche.hex,
 		classi_energetiche.nome AS __label__
 	FROM classi_energetiche
 ;
@@ -2621,6 +2631,7 @@ CREATE OR REPLACE VIEW disponibilita_view AS
 CREATE OR REPLACE VIEW `distinta_view` AS
 	SELECT
 		distinta.id,
+		distinta.ordine,
 		distinta.id_articolo,
 		concat_ws( ' ', p1.nome, a1.nome ) AS articolo,
 		distinta.id_componente,
@@ -2646,9 +2657,21 @@ CREATE OR REPLACE VIEW `distinta_view` AS
 CREATE OR REPLACE VIEW `colli_view` AS
 	SELECT
 		colli.id,
-		colli.id_documento,
+		colli.id_genitore,
+		colli.id_tipologia,
+		tipologie_colli_path( colli.id_tipologia ) AS tipologia,
 		colli.ordine,
 		colli.codice,
+		colli.nome,
+		colli.id_anagrafica,
+		a2.denominazione AS anagrafica,
+		colli.id_documento,
+		colli.id_mittente,
+		a3.denominazione AS mittente,
+		colli.id_destinatario,
+		a4.denominazione AS destinatario,
+		colli.id_mastro,
+		mastri_path( colli.id_mastro ) AS mastro,
 		colli.raggruppamento,
 		colli.larghezza,
 		colli.lunghezza,
@@ -2658,23 +2681,25 @@ CREATE OR REPLACE VIEW `colli_view` AS
 		colli.id_udm_peso,
 		colli.volume,
 		colli.id_udm_volume,
-		colli.nome,
-		colli.id_mastro,
-		mastri_path( colli.id_mastro ) AS mastro,
-		colli.id_anagrafica,
-		a2.denominazione AS anagrafica,
+		colli.pezzi,
+		colli.note,
 		GROUP_CONCAT( DISTINCT anagrafica.denominazione SEPARATOR '|' ) AS destinatari,
-		colli.id_account_inserimento,
-		colli.id_account_aggiornamento,
 		colli.timestamp_chiusura,
+		colli.note_chiusura,
 		IF( colli.timestamp_chiusura IS NOT NULL AND colli.timestamp_chiusura > 0,
 			'<i class="fa fa-check text-success"></i>', '' ) AS chiuso,    -- indicatore collo chiuso
+		colli.timestamp_spedizione,
+		colli.note_spedizione,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
 		CONCAT_WS( ' ', colli.codice, tipologie_colli_path( colli.id_tipologia ), colli.nome ) AS __label__
 	FROM colli
 		LEFT JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id
 		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_packing_list
 		LEFT JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
 		LEFT JOIN anagrafica a2 ON a2.id = colli.id_anagrafica
+		LEFT JOIN anagrafica a3 ON a3.id = colli.id_mittente
+		LEFT JOIN anagrafica a4 ON a4.id = colli.id_destinatario
 	GROUP BY colli.id
 ;
 

@@ -53,7 +53,7 @@ INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `codic
 (3,	2,	NULL,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1760456720),
 (4,	NULL,	NULL,	NULL,	'fornitori',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	NULL,	'aziende gestite',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1760456633),
-(6,	NULL,	NULL,	NULL,	'rivenditori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	NULL,	'rivenditori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (7,	1,	NULL,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (8,	1,	NULL,	NULL,	'prospect',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (9,	1,	NULL,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -68,6 +68,21 @@ INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `codic
 INSERT IGNORE INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000004600
+
+-- causali
+-- le causali del trasporto d'uso comune, aggiunte il 2026-10-12 ( schema canonico, punto 6 riga 40 ); non e' un elenco
+-- normativo, ogni deploy lo adatta
+INSERT IGNORE INTO `causali` (`id`, `nome`, `se_trasporto`) VALUES
+(1,	'vendita',	1),
+(2,	'conto visione',	1),
+(3,	'reso',	1),
+(4,	'riparazione',	1),
+(5,	'omaggio',	1),
+(6,	'conto lavorazione',	1),
+(7,	'conto deposito',	1),
+(8,	'trasferimento fra sedi',	1);
 
 -- | 050000004700
 
@@ -86,9 +101,7 @@ INSERT IGNORE INTO `certificazioni` (`id`, `nome`, `se_identificazione`, `se_med
 -- | 050000005000
 
 -- classi_energetiche
--- tipologia: tabella standard
--- verifica: 2022-04-28 22:22 Chiara GDL
-INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `hex`) VALUES
 (1, 'G', NULL, NULL, 'ff2a1a'),
 (2, 'F', NULL, NULL, 'c0504d'),
 (3, 'E', NULL, NULL, 'e46c1c'),
