@@ -2259,32 +2259,39 @@ CREATE TABLE IF NOT EXISTS `costi_contratti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i coupon di sconto
+-- funzione: contiene i coupon, cioe' i buoni che attivano uno sconto
 --
--- questa tabella contiene i coupon di sconto, con le informazioni principali; id e' numerico dal
--- riallineamento del 02/03/2026, e il codice che il cliente digita sta in codice ( prima di marzo era l'id )
+-- questa tabella contiene un coupon per riga: il codice che il cliente digita ( univoco ), uno sconto percentuale o
+-- fisso, il periodo di validita' e tre flag che dicono come si usa ( piu' volte, sull'intero carrello, solo per
+-- l'anagrafica indicata ). A quali articoli, categorie, listini, marchi e prodotti si applica lo dicono le tabelle
+-- di relazione coupon_*, e chi lo ha usato lo dicono carrelli, carrelli_articoli, documenti e pagamenti. La causale
+-- spiega perche' il coupon esiste e, quando nasce da un contratto o da un suo rinnovo ( p.es. un credito per un
+-- ritiro o un rimborso ), lo collega a quel contratto e a quel rinnovo. E' gestita dal modulo coupon.
+--
+-- NOTA: id e' numerico dal riallineamento del 02/03/2026, e il codice che il cliente digita sta in codice ( prima
+-- di marzo era l'id ).
 --
 CREATE TABLE IF NOT EXISTS `coupon` (
-  `id` bigint(20) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `timestamp_inizio` int(11) DEFAULT NULL,
-  `timestamp_fine` int(11) DEFAULT NULL,
-  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
-  `sconto_fisso` decimal(15,2) DEFAULT NULL,
-  `se_multiuso` tinyint(1) DEFAULT NULL,
-  `se_globale` tinyint(1) DEFAULT NULL,
-  `se_vincolato` tinyint(1) DEFAULT NULL,
-  `causale` text DEFAULT NULL,
-  `causale_id_contratto` bigint(20) DEFAULT NULL,
-  `causale_id_rinnovo` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                               -- codice del coupon, quello che il cliente digita
+  `nome` char(255) DEFAULT NULL,                                -- nome del coupon
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica intestataria
+  `causale_id_contratto` bigint(20) DEFAULT NULL,               -- chiave esterna per il contratto che ha generato il coupon
+  `causale_id_rinnovo` bigint(20) DEFAULT NULL,                 -- chiave esterna per il rinnovo che ha generato il coupon
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,               -- sconto in percentuale
+  `sconto_fisso` decimal(15,2) DEFAULT NULL,                    -- sconto a importo fisso
+  `causale` text DEFAULT NULL,                                  -- motivo per cui il coupon e' stato emesso
+  `note` text DEFAULT NULL,                                     -- note sul coupon
+  `se_multiuso` tinyint(1) DEFAULT NULL,                        -- flag per il coupon utilizzabile piu' volte
+  `se_globale` tinyint(1) DEFAULT NULL,                         -- flag per il coupon che si applica all'intero carrello
+  `se_vincolato` tinyint(1) DEFAULT NULL,                       -- flag per il coupon utilizzabile solo dall'anagrafica intestataria
+  `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio validita'
+  `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine validita'
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000008100
 

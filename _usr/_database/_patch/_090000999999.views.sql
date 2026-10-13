@@ -2381,7 +2381,9 @@ CREATE OR REPLACE VIEW `costi_contratti_view` AS
 -- | 090000008001
 
 -- coupon_view
--- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026, con il codice che il cliente digita
+-- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026, con il codice che il cliente digita; dal
+-- 2026-10-13 non porta piu' le discipline e le aree del contratto di causale, che erano di un solo deploy e vanno
+-- in un report custom
 CREATE OR REPLACE VIEW `coupon_view` AS
 	SELECT
 		coupon.id,
@@ -2389,22 +2391,19 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.nome,
 		coupon.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		coupon.causale_id_contratto,
+		coupon.causale_id_rinnovo,
+		coupon.sconto_percentuale,
+		coupon.sconto_fisso,
+		coupon.causale,
+		coupon.note,
+		coupon.se_multiuso,
+		coupon.se_globale,
+		coupon.se_vincolato,
 		coupon.timestamp_inizio,
 		from_unixtime( coupon.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
 		coupon.timestamp_fine,
 		from_unixtime( coupon.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
-		coupon.sconto_percentuale,
-		coupon.sconto_fisso,
-		coupon.se_multiuso,
-		coupon.se_globale,
-		coupon.se_vincolato,
-		coupon.causale,
-		coupon.causale_id_contratto,
-		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
-		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
-		-- group_concat di soli numeri, senza un letterale che dia il charset: su MariaDB 10.3 usciva latin1_swedish_ci
-		convert( group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) USING utf8 ) COLLATE utf8_general_ci AS id_aree,
-		group_concat( DISTINCT aree.nome ) AS aree,
 		coupon.id_account_inserimento,
 		coupon.timestamp_inserimento,
 		coupon.id_account_aggiornamento,
@@ -2412,12 +2411,6 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		concat_ws( ' ', coupon.codice, coupon.nome ) AS __label__
 	FROM coupon
 		LEFT JOIN anagrafica AS a1 ON a1.id = coupon.id_anagrafica
-		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
-		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
-		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
-		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
-	GROUP BY coupon.id
 ;
 
 -- | 090000008101

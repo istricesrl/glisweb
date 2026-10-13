@@ -1396,8 +1396,11 @@ ALTER TABLE `coupon`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `causale_id_contratto` (`causale_id_contratto`),
+	ADD KEY `causale_id_rinnovo` (`causale_id_rinnovo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`,`id_anagrafica`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`,`se_vincolato`,`timestamp_inizio`,`timestamp_fine`);
 
 -- | 030000008001
 
