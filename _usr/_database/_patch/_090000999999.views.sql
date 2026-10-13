@@ -2443,14 +2443,14 @@ CREATE OR REPLACE VIEW `coupon_articoli_view` AS
 
 -- coupon_categorie_prodotti_view
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 16:12 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 63
 CREATE OR REPLACE VIEW `coupon_categorie_prodotti_view` AS
 	SELECT
 		coupon_categorie_prodotti.id,
+		coupon_categorie_prodotti.ordine,
 		coupon_categorie_prodotti.id_coupon,
 		coupon_categorie_prodotti.id_categoria,
 		categorie_prodotti.nome AS categoria,
-		coupon_categorie_prodotti.ordine,
 		coupon_categorie_prodotti.id_account_inserimento,
 		coupon_categorie_prodotti.id_account_aggiornamento,
 		CONCAT(

@@ -1433,18 +1433,19 @@ ALTER TABLE `coupon_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 16:06 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 63
 ALTER TABLE `coupon_categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_categoria`),
-	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_categoria` (`id_categoria`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_categoria`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_categoria`);
 
 -- | 030000008201
- 
+
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
