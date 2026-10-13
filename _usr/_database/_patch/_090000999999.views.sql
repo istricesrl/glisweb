@@ -2491,14 +2491,14 @@ CREATE OR REPLACE VIEW `coupon_listini_view` AS
 
 -- coupon_marchi_view
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 16:40 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 65
 CREATE OR REPLACE VIEW `coupon_marchi_view` AS
 	SELECT
 		coupon_marchi.id,
+		coupon_marchi.ordine,
 		coupon_marchi.id_coupon,
 		coupon_marchi.id_marchio,
 		marchi.nome AS marchio,
-		coupon_marchi.ordine,
 		coupon_marchi.id_account_inserimento,
 		coupon_marchi.id_account_aggiornamento,
 		CONCAT(
