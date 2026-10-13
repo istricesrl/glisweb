@@ -2400,8 +2400,7 @@ ALTER TABLE `marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mastri
 ALTER TABLE `mastri`
  	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`), 
-	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
  	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_anagrafica_indirizzi` (`id_anagrafica_indirizzi`),
