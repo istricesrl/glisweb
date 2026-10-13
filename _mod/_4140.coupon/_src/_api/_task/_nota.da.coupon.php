@@ -64,6 +64,8 @@
             );
 
             // aggiungo un pagamento pagato per la nota di credito
+            // NOTA il pagamento valorizza `coupon_valore` perche' le query del residuo ( coupon_view, cassa, app )
+            // sommano solo quel campo: senza, il coupon gia' rimborsato restava scalabile per intero
             $status['nota_di_credito']['id_pagamento'] = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
@@ -73,6 +75,7 @@
                     'codice' => substr( 'P-NC-CPN-' . $status['coupon']['codice'], 0, 32 ),
                     'importo_lordo_totale' => $status['coupon']['totale_finale'],
                     'importo_lordo_finale' => $status['coupon']['totale_finale'],
+                    'coupon_valore' => $status['coupon']['totale_finale'],
                     'timestamp_pagamento' => time(),
                 ),
                 'pagamenti'
