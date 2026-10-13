@@ -1145,9 +1145,8 @@ ALTER TABLE `consensi_contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contatti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `nome` (`nome`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_inviante` (`id_inviante`),
-	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `id_campagna` (`id_campagna`),
 	ADD KEY `id_sito` (`id_sito`),	
 	ADD KEY `utm_id` ( `utm_id` ),
@@ -1156,10 +1155,13 @@ ALTER TABLE `contatti`
 	ADD KEY `utm_campaign` ( `utm_campaign` ),
 	ADD KEY `utm_term` ( `utm_term` ),
 	ADD KEY `utm_content` ( `utm_content` ),
+	ADD KEY `modulo` (`modulo`), 
+	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`), 
+	ADD KEY `data_archiviazione` (`data_archiviazione`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `nome`, `id_anagrafica`, `id_campagna`, `id_sito`, `modulo`, `timestamp_contatto`);
 
 -- | 030000006701
 

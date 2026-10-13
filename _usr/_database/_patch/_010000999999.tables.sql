@@ -1887,37 +1887,42 @@ CREATE TABLE IF NOT EXISTS `consensi_contatti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i contatti acquisiti
+-- funzione: contiene i contatti acquisiti ( le ricezioni dei moduli contatti, e i contatti registrati a mano )
 --
--- questa tabella contiene i contatti acquisiti, con le informazioni principali
+-- questa tabella registra un contatto per ogni ricezione di un modulo contatti del sito, piu' quelli inseriti a mano
+-- dal back-end; tiene chi ha scritto ( id_anagrafica ), da dove arriva ( campagna, sito, parametri UTM ) e cosa ha
+-- scritto ( note, json, yaml ). I consensi prestati insieme al contatto stanno in consensi_contatti.
 --
-CREATE TABLE IF NOT EXISTS `contatti` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di contatto
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica collegata al contatto
-  `id_inviante` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica dell'inviante
-  `id_ranking` bigint(20) DEFAULT NULL,                          -- chiave esterna per il ranking
-  `id_campagna` bigint(20) DEFAULT NULL,                         -- chiave esterna per la campagna che ha portato il contatto
-  `id_sito` bigint(20) DEFAULT NULL,                             -- chiave esterna per il sito di acquisizione
-  `utm_id` char(128) DEFAULT NULL,                            -- UTM id
-  `utm_source` char(128) DEFAULT NULL,                        -- UTM source
-  `utm_medium` char(128) DEFAULT NULL,                        -- UTM medium
-  `utm_campaign` char(128) DEFAULT NULL,                      -- UTM campaign
-  `utm_term` char(128) DEFAULT NULL,                          -- UTM term
-  `utm_content` char(128) DEFAULT NULL,                       -- UTM content
-  `nome` char(255) DEFAULT NULL,                              -- nome del contatto
-  `modulo` char(128) DEFAULT NULL,                            -- modulo di acquisizione
-  `note` text DEFAULT NULL,                                   -- note sul contatto
-  `json` text DEFAULT NULL,                                   -- campo JSON per informazioni aggiuntive
-  `yaml` text DEFAULT NULL,                                   -- campo YAML per informazioni aggiuntive
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `note_archiviazione` text NULL,                             -- note di archiviazione
-  `timestamp_contatto` int(11) DEFAULT NULL,                  -- timestamp del contatto
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA: id_sito non ha chiave esterna, come nelle altre tabelle che lo portano: e' l'id del sito in $cf['sites'],
+-- non una riga del database. modulo e' la chiave del modulo contatti che ha generato la riga, la stessa che finisce
+-- in consensi_contatti.modulo.
+--
+CREATE TABLE IF NOT EXISTS `contatti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di contatto
+  `nome` char(255) DEFAULT NULL,                                -- nome del contatto
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica collegata al contatto
+  `id_campagna` bigint(20) DEFAULT NULL,                        -- chiave esterna per la campagna che ha portato il contatto
+  `id_sito` bigint(20) DEFAULT NULL,                            -- id del sito di acquisizione ( senza chiave esterna )
+  `utm_id` char(128) DEFAULT NULL,                              -- UTM id
+  `utm_source` char(128) DEFAULT NULL,                          -- UTM source
+  `utm_medium` char(128) DEFAULT NULL,                          -- UTM medium
+  `utm_campaign` char(128) DEFAULT NULL,                        -- UTM campaign
+  `utm_term` char(128) DEFAULT NULL,                            -- UTM term
+  `utm_content` char(128) DEFAULT NULL,                         -- UTM content
+  `modulo` char(32) DEFAULT NULL,                               -- chiave del modulo contatti di acquisizione
+  `note` text DEFAULT NULL,                                     -- note sul contatto
+  `json` text DEFAULT NULL,                                     -- campo JSON per informazioni aggiuntive
+  `yaml` text DEFAULT NULL,                                     -- campo YAML per informazioni aggiuntive
+  `timestamp_contatto` int(11) DEFAULT NULL,                    -- timestamp del contatto
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha archiviato il contatto
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000006900
 

@@ -1976,31 +1976,30 @@ CREATE OR REPLACE VIEW `consensi_contatti_view` AS
 -- | 090000006700
 
 -- contatti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-13 punto 6, riga 52
 CREATE OR REPLACE VIEW contatti_view AS
 	SELECT
 		contatti.id,
 		contatti.id_tipologia,
 		tipologie_contatti.nome AS tipologia,
+		contatti.nome,
 		contatti.id_anagrafica,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		contatti.id_inviante,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
-		contatti.id_ranking,
-		ranking.nome AS ranking,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		contatti.id_campagna,
 		campagne.nome AS campagna,
 		contatti.id_sito,
-        contatti.utm_id,
-        contatti.utm_source,
-        contatti.utm_medium,
-        contatti.utm_campaign,
-        contatti.utm_term,
-        contatti.utm_content,
-		contatti.nome,
+		contatti.utm_id,
+		contatti.utm_source,
+		contatti.utm_medium,
+		contatti.utm_campaign,
+		contatti.utm_term,
+		contatti.utm_content,
 		contatti.modulo,
-        contatti.data_archiviazione,
 		contatti.timestamp_contatto,
 		from_unixtime( contatti.timestamp_contatto, '%Y-%m-%d %H:%i' ) AS data_ora_contatto,
+		contatti.id_account_archiviazione,
+		contatti.data_archiviazione,
 		contatti.id_account_inserimento,
 		contatti.id_account_aggiornamento,
 		concat(
@@ -2010,9 +2009,7 @@ CREATE OR REPLACE VIEW contatti_view AS
 		) AS __label__
 	FROM contatti
 		LEFT JOIN tipologie_contatti ON tipologie_contatti.id = contatti.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
-		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
+		LEFT JOIN anagrafica ON anagrafica.id = contatti.id_anagrafica
 		LEFT JOIN campagne ON campagne.id = contatti.id_campagna
 ;
 
