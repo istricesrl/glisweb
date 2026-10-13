@@ -116,8 +116,6 @@ INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `hex`
 -- | 050000005100
 
 -- colori
--- tipologia: tabella standard
--- verifica: 2021-06-02 22:27 Fabio Mosti
 INSERT INTO `colori` (`id`, `id_genitore`, `nome`, `hex`, `r`, `g`, `b`, `ral`, `pantone`, `c`, `m`, `y`, `k`, `css`) VALUES
 (1,	NULL,	'rosso',	'ff0000',	255,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	'bianco',	'ffffff',	255,	255,	255,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -132,22 +130,21 @@ INSERT INTO `colori` (`id`, `id_genitore`, `nome`, `hex`, `r`, `g`, `b`, `ral`, 
 -- | 050000006000
 
 -- condizioni_pagamento
--- tipologia: tabella standard
--- verifica: 2022-01-17 16:12 Chiara GDL
+-- i codici CondizioniPagamento delle specifiche tecniche della fattura elettronica; id e codici non si cambiano
 INSERT IGNORE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
-(1,	    'TP01',	'pagamento a rate'),
-(2,	    'TP02',	'pagamento completo'),
-(3,	    'TP03',	    'anticipo');
+(1,		'TP01',		'pagamento a rate'),
+(2,		'TP02',		'pagamento completo'),
+(3,		'TP03',		'anticipo');
 
 -- | 050000006050
 
 -- condizioni
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
-INSERT IGNORE INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
-(1,	'nuovo',	1,	1),
-(2,	'usato',	1,	NULL),
-(3,	'da ristrutturare',	NULL,	1);
+INSERT IGNORE INTO `condizioni` (`id`, `nome`, `se_asset`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'nuovo',	1,	1,	1),
+(2,	'usato',	1,	1,	NULL),
+(3,	'da ristrutturare',	NULL,	NULL,	1),
+(4,	'da riparare',	1,	NULL,	NULL),
+(5,	'da restaurare',	1,	NULL,	NULL);
 
 -- | 050000006200
 
@@ -156,14 +153,6 @@ INSERT IGNORE INTO `consensi` (`id`, `codice`, `nome`, `note`, `id_account_inser
 (1,   'PRIVACY_POLICY',                  'la privacy e cookie policy del sito',      NULL,   NULL,   NULL,   NULL,   NULL),
 (2,   'EVASIONE_ORDINE',                 "evasione dell\'ordine",                    NULL,   NULL,   NULL,   NULL,   NULL),
 (3,   'INVIO_COMUNICAZIONI_MARKETING',   'invio di comunicazioni commerciali',       NULL,   NULL,   NULL,   NULL,   NULL);
-
--- | 050000006500
-
--- consensi_moduli
-INSERT IGNORE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1, 1,    1,                                'ecommerce',    10,    'letto_e_accetto',  'la privacy e cookie policy del sito',                                       NULL,                                   NULL,    'privacy', 1,      NULL,   NULL,   NULL,   NULL),
-(2, 1,    2,                                'ecommerce',    20,    'autorizzo',        "il trattamento dei miei dati per l\'evasione del mio ordine",               "evasione dell\'ordine",                NULL,    '',        1,      NULL,   NULL,   NULL,   NULL),
-(3, 1,    3,                                'ecommerce',    30,    'autorizzo',        "il trattamento dei miei dati per l\'invio di comunicazioni commerciali",    'invio di comunicazioni commerciali',   NULL,    '',        NULL,   NULL,   NULL,   NULL,   NULL);
 
 -- | 050000007100
 

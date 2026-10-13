@@ -645,6 +645,7 @@ CREATE TABLE IF NOT EXISTS `asset` (                            --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'asset che contiene questo
   `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di asset
+  `id_condizione` bigint(20) DEFAULT NULL,                         -- chiave esterna per la condizione dell'asset
   `codice` char(32) DEFAULT NULL,                               -- codice dell'asset
   `nome` char(128) DEFAULT NULL,                                -- nome dell'asset
   `hostname` char(128) DEFAULT NULL,                            -- hostname dell'asset
@@ -1689,72 +1690,84 @@ CREATE TABLE IF NOT EXISTS `colli` (                          --
 -- struttura: tabella ricorsiva
 -- funzione: contiene i colori
 --
-CREATE TABLE IF NOT EXISTS `colori` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(16) DEFAULT NULL,
-  `hex` char(8) DEFAULT NULL,
-  `r` int(3) DEFAULT NULL,
-  `g` int(3) DEFAULT NULL,
-  `b` int(3) DEFAULT NULL,
-  `ral` char(16) DEFAULT NULL,
-  `pantone` char(8) DEFAULT NULL,
-  `c` decimal(5,2) DEFAULT NULL,
-  `m` decimal(5,2) DEFAULT NULL,
-  `y` decimal(5,2) DEFAULT NULL,
-  `k` decimal(5,2) DEFAULT NULL,
-  `css` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- i colori, descritti secondo più codifiche ( esadecimale, RGB, RAL, Pantone, CMYK ) e organizzati ad albero: un
+-- colore può avere come figli le sue varianti. È un classificatore, quindi fra fratelli il colore si identifica col
+-- nome. Serve soprattutto come variante degli articoli ( articoli.id_colore ), e per associare un colore ad altri
+-- oggetti, p.es. ai contenuti o in vista di grafici e infografiche.
+-- NOTA css serve per i colori che non si riducono a una tinta ( p.es. un effetto carbonio ) e può stare da solo
+CREATE TABLE IF NOT EXISTS `colori` (                         --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                      -- colore di cui questo è una variante
+  `nome` char(255) DEFAULT NULL,                              -- nome del colore, unico fra i fratelli
+  `hex` char(8) DEFAULT NULL,                                 -- colore in esadecimale
+  `r` int(3) DEFAULT NULL,                                    -- componente rossa in RGB
+  `g` int(3) DEFAULT NULL,                                    -- componente verde in RGB
+  `b` int(3) DEFAULT NULL,                                    -- componente blu in RGB
+  `ral` char(16) DEFAULT NULL,                                -- codice RAL
+  `pantone` char(16) DEFAULT NULL,                            -- codice Pantone
+  `c` decimal(5,2) DEFAULT NULL,                              -- componente ciano in CMYK
+  `m` decimal(5,2) DEFAULT NULL,                              -- componente magenta in CMYK
+  `y` decimal(5,2) DEFAULT NULL,                              -- componente gialla in CMYK
+  `k` decimal(5,2) DEFAULT NULL,                              -- componente nera in CMYK
+  `css` text DEFAULT NULL,                                    -- dichiarazioni CSS, per i colori che non sono una tinta sola
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005300
 
 -- comuni
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i comuni italiani
+-- funzione: contiene i comuni
 --
--- questa tabella contiene i comuni italiani, con le informazioni relative al nome, al codice ISTAT, al codice catastale,
--- all'ID della provincia di appartenenza, e ad un eventuale URL di riferimento
---
+-- i comuni, penultimo livello della geografia ( continenti, stati, regioni, provincie, comuni, indirizzi ). Ogni
+-- livello è secondario rispetto a quello che lo contiene: un comune non ha senso senza la sua provincia, quindi una
+-- provincia che ha dei comuni non si può cancellare. I file di base non popolano la geografia, la carica
+-- un'importazione; dentro l'Italia il comune si identifica col codice ISTAT e col codice catastale.
+-- NOTA codice_istat e codice_catasto sono codici esterni e mantengono il loro formato; i comuni esteri non li hanno
 CREATE TABLE IF NOT EXISTS `comuni` (                         --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_provincia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la provincia di appartenenza
-  `nome` varchar(254) DEFAULT NULL,                           -- nome del comune
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome del comune
+  `id_provincia` bigint(20) DEFAULT NULL,                     -- provincia che contiene il comune
   `codice_istat` char(12) DEFAULT NULL,                       -- codice ISTAT del comune
   `codice_catasto` char(4) DEFAULT NULL,                      -- codice catastale del comune
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento del comune
-  `note` text DEFAULT NULL,                                    -- note sul comune
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `note` text DEFAULT NULL,                                   -- note sul comune
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006000
 
 -- condizioni_pagamento
--- tipologia: tabella assistita
+-- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le condizioni di pagamento
+-- funzione: contiene le condizioni di pagamento della fattura elettronica
 --
--- questa tabella contiene le condizioni di pagamento, con le informazioni relative al codice, al nome e alle note
+-- le condizioni di pagamento col codice CondizioniPagamento ( TP01 - TP03 ) che la fattura elettronica scrive nel
+-- blocco DatiPagamento; un documento ne cita una in documenti.id_condizione_pagamento, e la scelgono da una tendina
+-- i form dei documenti, delle fatture, delle offerte e dei modelli di pianificazione.
 --
-CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
-  `id` bigint(20) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: l'elenco e' quello chiuso delle specifiche tecniche, e lo carica il 050; id e codici non si cambiano, perche'
+-- il codice finisce cosi' com'e' nell'XML e alcuni moduli scrivono l'id 2 ( pagamento completo ) nel codice. Quando
+-- escono nuove specifiche della fattura elettronica l'elenco va ricontrollato e aggiornato con una patch, non a mano.
+CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `codice` char(32) NOT NULL,                                     -- codice CondizioniPagamento della fattura elettronica
+  `nome` char(255) DEFAULT NULL,                                  -- nome della condizione di pagamento
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000006050
 
@@ -1762,44 +1775,47 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i condizioni
+-- funzione: contiene le condizioni dei beni
 --
-CREATE TABLE IF NOT EXISTS `condizioni` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `se_catalogo` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- le condizioni in cui si trova un bene ( nuovo, usato, da ristrutturare ): è un vocabolario unico, che i flag di
+-- ambito segmentano per gli asset, il catalogo e gli immobili, così ogni gestione mostra in tendina solo le condizioni
+-- che la riguardano. Vi fanno riferimento valutazioni, matricole e asset.
+CREATE TABLE IF NOT EXISTS `condizioni` (                     --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della condizione, unico
+  `se_asset` tinyint(1) DEFAULT NULL,                         -- flag che indica se la condizione vale per gli asset
+  `se_catalogo` tinyint(1) DEFAULT NULL,                      -- flag che indica se la condizione vale per il catalogo ( matricole )
+  `se_immobili` tinyint(1) DEFAULT NULL,                      -- flag che indica se la condizione vale per gli immobili
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006200
 
 -- consensi
--- tipologia: tabella assistita
+-- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i consensi per i trattamenti dati attivi nel sistema
--- entità: questa tabella corrisponde all'entità consensi
+-- funzione: contiene i consensi che è possibile prestare all'interno del sito o dell'applicazione
 --
--- questa tabella contiene i consensi per i trattamenti dati attivi nel sistema, con le informazioni relative al nome del consenso
--- e alle note
+-- i consensi ai trattamenti di dati che il sito o l'applicazione chiede nei suoi form; il framework li cerca sempre per
+-- codice ( _privacy.utils.php, _180.privacy.php, mailing ) e scrive l'id nelle tabelle che li registrano, cioe'
+-- anagrafica_consensi, carrelli_consensi e consensi_contatti, mentre consensi_moduli dice quali chiede ogni modulo.
 --
+-- NOTA: i tre consensi standard li carica il 050 e i loro codici non si cambiano, perche' il codice li cerca per codice;
+-- un progetto aggiunge i propri consensi come righe nuove, con un codice suo.
 CREATE TABLE IF NOT EXISTS `consensi` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `codice` char(32) NOT NULL,                                 -- codice
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `codice` char(32) NOT NULL,                                 -- codice del consenso, con cui il framework lo cerca
   `nome` char(255) DEFAULT NULL,                              -- nome del consenso
-  `note` text DEFAULT NULL,                                   -- note sul consenso
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `note` text DEFAULT NULL,                                   -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
-
--- TODO documentare meglio questa tabella con riferimenti al codice
---
 
 -- | 010000006300
 
@@ -1807,54 +1823,63 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
 -- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: specifica quali consensi vanno chiesti per ogni modulo attivo nel sistema
--- 
--- questa tabella contiene i consensi che vanno chiesti per ogni modulo attivo nel sistema, e va a integrare le informazioni già
--- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
--- ulteriori approfondimenti
+-- funzione: associa i consensi ai moduli che li chiedono ( contatti, carrello, ecc. ), lingua per lingua
 --
-CREATE TABLE IF NOT EXISTS `consensi_moduli` (                              --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_lingua` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lingua
-  `id_consenso` bigint(20) DEFAULT NULL,                       -- chiave esterna per il consenso
-  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
-  `ordine` int(11) DEFAULT NULL,                              -- campo di ordinamento
-  `azione` char(32) DEFAULT NULL,                             -- etichetta per l'azione che l'utente deve compiere per accettare il consenso
-  `nome` char(128) DEFAULT NULL,                              -- nome del consenso
-  `informativa` char(128) DEFAULT NULL,                       -- testo per il link alla pagina che contiene l'informativa relativa al consenso, se presente
-  `note` text DEFAULT NULL,                                   -- note sul consenso
-  `pagina` char(32) DEFAULT NULL,                             -- ID della pagina che contiene l'informativa relativa al consenso, se presente
-  `se_richiesto` tinyint(1) DEFAULT NULL,                     -- flag che indica se il consenso è richiesto
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+-- ogni riga dice che il modulo privacy *modulo* chiede, nella lingua *id_lingua*, il consenso *id_consenso*, con quale
+-- testo, in che ordine e se e' obbligatorio; il runlevel _src/_config/_180.privacy.php la legge in join con consensi e
+-- la fonde in $cf['privacy']['moduli'][<modulo>]['consensi'][<codice del consenso>], cioe' integra la stessa gerarchia
+-- che i moduli dichiarano nei file di configurazione.
+--
+-- NOTA: il framework non carica righe standard; la tabella si popola nel progetto, per i moduli che vogliono consensi
+-- diversi da quelli della configurazione.
+CREATE TABLE IF NOT EXISTS `consensi_moduli` (                -- 
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine del consenso nel form
+  `nome` char(128) DEFAULT NULL,                              -- testo del consenso
+  `id_lingua` bigint(20) DEFAULT NULL,                        -- chiave esterna per la lingua
+  `id_consenso` bigint(20) DEFAULT NULL,                      -- chiave esterna per il consenso
+  `modulo` char(32) DEFAULT NULL,                             -- modulo privacy che chiede il consenso
+  `azione` char(32) DEFAULT NULL,                             -- azione con cui l'utente presta il consenso ( letto_e_accetto, autorizzo )
+  `informativa` char(128) DEFAULT NULL,                       -- testo dell'informativa
+  `pagina` char(32) DEFAULT NULL,                             -- ID della pagina dell'informativa
+  `note` text DEFAULT NULL,                                   -- note
+  `se_richiesto` tinyint(1) DEFAULT NULL,                     -- flag che indica se il consenso e' obbligatorio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006500
 
 -- consensi_contatti
 -- tipologia: tabella gestita
--- rango: tabella secondaria
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: specifica quali consensi sono stati acquisiti per ogni contatto acquisito
--- 
--- questa tabella contiene i consensi che sono stati acquisiti per ogni contatto acquisito, e va a integrare le informazioni già
--- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
--- ulteriori approfondimenti
+-- funzione: collega i contatti ( le ricezioni dei moduli contatti ) ai consensi prestati
 --
-CREATE TABLE IF NOT EXISTS `consensi_contatti` (                              --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_consenso` bigint(20) DEFAULT NULL,                         -- chiave esterna per il consenso
-  `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto
-  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
-  `valore` int(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,                                   -- note sul consenso
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella registra, per ogni contatto ricevuto da un modulo contatti, i consensi ( privacy, marketing... )
+-- prestati da chi ha compilato il modulo; e' la prova legale del consenso, quindi le righe si scrivono sempre e non
+-- si cancellano a mano. La scrive associazioneConsensiContatto() di _src/_lib/_privacy.utils.php.
+--
+-- NOTA: modulo e' la chiave del modulo contatti su cui e' stato prestato il consenso, la stessa che finisce in
+-- contatti.modulo; la si tiene qui perche' fa parte della prova. La chiave unica ( id_contatto, id_consenso, modulo )
+-- impedisce di registrare due volte lo stesso consenso per lo stesso contatto.
+--
+CREATE TABLE IF NOT EXISTS `consensi_contatti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_contatto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contatto su cui e' stato prestato il consenso
+  `id_consenso` bigint(20) DEFAULT NULL,                        -- chiave esterna per il consenso
+  `modulo` char(32) DEFAULT NULL,                               -- chiave del modulo contatti su cui e' stato prestato il consenso
+  `note` text DEFAULT NULL,                                     -- note sul consenso
+  `se_prestato` tinyint(1) DEFAULT NULL,                        -- flag consenso prestato
+  `timestamp_consenso` int(11) DEFAULT NULL,                    -- timestamp di prestazione del consenso
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000006700
 
@@ -3470,6 +3495,7 @@ CREATE TABLE IF NOT EXISTS `matricole` (
   `id_marchio` bigint(20) DEFAULT NULL,
   `id_produttore` bigint(20) DEFAULT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
+  `id_condizione` bigint(20) DEFAULT NULL,
   `matricola` char(128) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,

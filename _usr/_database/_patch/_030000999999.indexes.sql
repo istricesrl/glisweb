@@ -338,6 +338,7 @@ ALTER TABLE `asset`
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_condizione` (`id_condizione`),
 	ADD KEY `codice` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -1017,28 +1018,17 @@ ALTER TABLE `colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000005100
 
 -- colori
--- tipologia: tabella di supporto
--- verifica: 2021-06-02 22:27 Fabio Mosti
 ALTER TABLE `colori`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_hex` (`nome`,`hex`),
-	ADD UNIQUE KEY `unica_rgb` (`nome`,`r`,`g`,`b`),
-	ADD UNIQUE KEY `unica_ral` (`nome`,`ral`),
-	ADD UNIQUE KEY `unica_pantone` (`nome`,`pantone`),
-	ADD UNIQUE KEY `unica_cmyk` (`nome`,`c`,`m`,`y`,`k`),
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`, `nome`,`id_genitore`,`hex`,`r`,`g`,`b`),
-	ADD KEY `indice_ral` (`id`, `nome`,`id_genitore`,`ral`),
-	ADD KEY `indice_pantone` (`id`, `nome`,`id_genitore`,`pantone`),
-	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`hex`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000005101
 
 -- colori
--- tipologia: tabella di supporto
 ALTER TABLE `colori` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000005300
@@ -1049,7 +1039,7 @@ ALTER TABLE `comuni`
 	ADD UNIQUE KEY `unica_istat` (`codice_istat`),
 	ADD UNIQUE KEY `unica_catasto` (`codice_catasto`),
 	ADD KEY `id_provincia` (`id_provincia`),
-	ADD KEY `indice` (`id`,`id_provincia`, `nome`,`codice_istat`,`codice_catasto`),
+	ADD KEY `indice` (`id`,`nome`,`id_provincia`,`codice_istat`,`codice_catasto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -1061,48 +1051,47 @@ ALTER TABLE `comuni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000006000
 
 -- condizioni_pagamento
+-- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unico` (`codice`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`);
 
 -- | 030000006001
 
 -- condizioni_pagamento
+-- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006050
 
 -- condizioni
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
 ALTER TABLE `condizioni`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`nome`),
-	ADD KEY `nome` (`nome`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `se_asset` (`se_asset`),
 	ADD KEY `se_catalogo` (`se_catalogo`),
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`se_asset`,`se_catalogo`,`se_immobili`);
 
 -- | 030000006051
 
 -- condizioni
--- tipologia: tabella standard
 ALTER TABLE `condizioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006200
 
 -- consensi
 ALTER TABLE `consensi`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `codice` (`codice`), 
-	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
+	ADD KEY `indice` (`id`,`codice`,`nome`);
 
 -- | 030000006201
 
@@ -1113,20 +1102,15 @@ ALTER TABLE `consensi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- consensi_moduli
 ALTER TABLE `consensi_moduli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_consenso`,`id_lingua`,`modulo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `modulo` (`modulo`),
-	ADD KEY `ordine` (`ordine`),
-	ADD KEY `azione` (`azione`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `informativa` (`informativa`),
-	ADD KEY `pagina` (`pagina`),
-	ADD KEY `se_richiesto` (`se_richiesto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+	ADD KEY `indice` (`id`,`ordine`,`nome`,`id_lingua`,`id_consenso`,`modulo`);
 
 -- | 030000006301
 
@@ -1136,15 +1120,19 @@ ALTER TABLE `consensi_moduli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000006500
 
 -- consensi_contatti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-13 punto 6, riga 51
 ALTER TABLE `consensi_contatti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_consenso`, `id_contatto`, `modulo`), 
-	ADD KEY `id_consenso` (`id_consenso`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contatto`,`id_consenso`,`modulo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_contatto` (`id_contatto`),
+	ADD KEY `id_consenso` (`id_consenso`),
 	ADD KEY `modulo` (`modulo`),
+	ADD KEY `se_prestato` (`se_prestato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_consenso`, `id_contatto`, `modulo`);
+	ADD KEY `indice` (`id`,`ordine`,`id_contatto`,`id_consenso`,`modulo`,`se_prestato`);
 
 -- | 030000006501
 
@@ -2461,6 +2449,7 @@ ALTER TABLE `matricole`
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_condizione` (`id_condizione`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
