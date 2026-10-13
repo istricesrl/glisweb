@@ -1193,6 +1193,13 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_template` (`id_template`,`id_lingua`),
 	ADD UNIQUE KEY `unica_colore` (`id_colore`,`id_lingua`),
 	ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_lingua`),
+	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_lingua`),
+	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_lingua`),
+	ADD UNIQUE KEY `unica_annuncio` (`id_annuncio`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_annunci` (`id_categoria_annunci`,`id_lingua`),
+	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_lingua`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_lingua`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
@@ -1221,6 +1228,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_banner` (`id_banner`),
+	ADD KEY `indice` (`id`,`id_lingua`,`title`,`h1`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 

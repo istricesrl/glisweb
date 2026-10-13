@@ -2042,6 +2042,7 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 		contenuti.id_categoria_notizie,                         --
 		contenuti.id_categoria_annunci,                         --
 		contenuti.id_template,                                  --
+		contenuti.id_mailing,                                   --
 		contenuti.id_colore,                                    --
 		contenuti.id_progetto,                                  --
 		contenuti.id_categoria_progetti,                        --
@@ -2057,7 +2058,7 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 			lingue.nome                                         --
 		) AS __label__                                          -- etichetta per le tendine e le liste
 	FROM contenuti                                              --
-		INNER JOIN lingue                                       --
+		LEFT JOIN lingue                                        --
             ON lingue.id = contenuti.id_lingua                  --
 ;                                                               --
 

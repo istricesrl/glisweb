@@ -1930,9 +1930,20 @@ CREATE TABLE IF NOT EXISTS `contatti` (
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i contenuti associati a varie entità del sistema
+-- funzione: contiene i testi da pubblicare sul web per gli oggetti delle tabelle principali
 --
--- questa tabella contiene i contenuti associati a varie entità del sistema, come prodotti, articoli, pagine, ecc.
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file, contenuti, metadati ),
+-- che collegano qualcosa a un oggetto di una tabella principale; qui sono i testi web ( title, meta tag, Open Graph,
+-- h1, testo... ) di pagine, prodotti, articoli, anagrafiche, notizie, annunci, risorse, immagini e degli altri
+-- oggetti indicati dalle chiavi esterne id_*, e i campi di mittente e destinatari dei template mail e sms; ogni
+-- riga descrive un oggetto solo in una lingua, e per questo le chiavi uniche sono ( id_<oggetto>, id_lingua )
+--
+-- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un contenuto non ha senso senza il suo oggetto,
+-- e se l'oggetto viene cancellato le sue righe se ne vanno con lui
+--
+-- NOTA mittente_mail e destinatari_*_mail contengono un array nome => indirizzo serializzato con serialize(),
+-- che il controller di CO000.contenuti ricava dalla forma "Nome <indirizzo>" scritta nel form; per questo non ci
+-- sono colonne per i nomi dei destinatari, mentre mittente_nome resta perché serve agli sms
 --
 CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
@@ -1991,17 +2002,14 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `mittente_nome` char(128) DEFAULT NULL,                       -- mittente nome
   `mittente_numero` char(128) DEFAULT NULL,                     -- mittente numero
   `mittente_mail` char(128) DEFAULT NULL,                       -- mittente mail
-  `destinatari_nome` char(128) DEFAULT NULL,                    -- destinatario nome
   `destinatari_numero` char(128) DEFAULT NULL,                  -- destinatario numero
   `destinatari_mail` char(128) DEFAULT NULL,                    -- destinatario mail
-  `destinatari_cc_nome` char(128) DEFAULT NULL,                 -- destinatario cc nome
   `destinatari_cc_mail` char(128) DEFAULT NULL,                 -- destinatario cc mail
-  `destinatari_bcc_nome` char(128) DEFAULT NULL,                -- destinatario bcc nome
   `destinatari_bcc_mail` char(128) DEFAULT NULL,                -- destinatario bcc mail
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000007100
