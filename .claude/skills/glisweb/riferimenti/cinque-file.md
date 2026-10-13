@@ -24,11 +24,13 @@ una riga comincia con "non fare mai" va nel CLAUDE; se comincia con "il database
 ⚠ **Nel `READ.md` di progetto non va la documentazione del framework.** Snippet e tecniche che
 valgono su qualunque deploy glisweb non sono informazioni di *questo* progetto: vanno nella
 documentazione del framework (questo file, `dev/READ.md`, o la skill). Il READ di progetto tiene
-sette cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
+nove cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
 credenziali utili, o il posto preciso dove trovarle; **3)** architettura e risorse — macchine,
 database, servizi esterni, domini; **4)** mappa delle personalizzazioni — cosa in questo deploy è
 diverso dallo standard, e perché; **5)** FAQ di progetto; **6)** soluzioni ai problemi frequenti —
-il sintomo, e cosa si fa; **7)** procedure proprie del progetto.
+il sintomo, e cosa si fa; **7)** procedure proprie del progetto; **8)** documentazione — i link ai manuali, standard e custom, e
+come si genera, si aggiorna e si verifica quella custom ( vedi sotto ); **9)** test automatici — i link
+all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ).
 
 Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
 trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
@@ -40,14 +42,75 @@ dentro o fuori l'aggiornamento notturno del framework. Un cliente può avere **d
 macchine diverse** — il sito su una, il gestionale legacy su un'altra: se il READ non lo dice,
 nessuno lo sa.
 
+### ⚠ La voce 8, documentazione: ogni manuale a un clic
+
+Regola di Fabio del **13/10/2026**. Lo sviluppatore che lavora sul progetto deve poter aprire la
+documentazione che gli serve **con un clic**, senza ricostruire URL, cercare quale host la pubblica o
+ricordarsi dove stanno le credenziali. Per questo il `READ.md` ha una sezione **Documentazione**,
+divisa in due sottosezioni:
+
+- **standard** — i link alla documentazione del framework, sul sito pubblico della linea che il
+  deploy segue ( `glisweb.istricesrl.it` per la stabile, `glisdev.istricesrl.com` per la latest ):
+  manuale sviluppatore e manuale utente, ciascuno come **indice HTML**, **pagina unica**
+  ( `tutto.html` ) e **PDF**, più l'indice delle quickstart. **Solo i link**: come si genera lo
+  standard è lavoro del framework, e qui non si scrive;
+- **custom** — gli stessi link per la documentazione di progetto ( `/manual/read/`, `/manual/user/`,
+  `/quickstart/` ), **per ogni ambiente** su cui è pubblicata, con le credenziali della Basic auth o il
+  rimando preciso alla voce 2 che le contiene. E poi, per esteso, **come si lavora sulla
+  documentazione di questo progetto**:
+  - **generazione** — quali sorgenti ci sono davvero ( `usr/docs/READ.md`, `USER.md`, `read/`,
+    `user/`, `quickstart/`, i `READ.md` sotto `mod/` e `src/tpl/` ), il comando con le opzioni che
+    servono qui ( `_src/_sh/_docs.build.sh --dev`, `--user`, `--quickstart` ), dove scrive
+    ( `usr/pages/` ), se gira anche dentro l'aggiornamento notturno, e se su questa macchina esce il
+    PDF ( serve chromium ) o solo la pagina unica;
+  - **aggiornamento** — chi la rigenera e quando, come arriva sugli altri ambienti ( il deploy, e il
+    `.htpasswd` che viaggia con lui ), gli screenshot se il progetto ne usa ( `_docs.shots.sh` );
+  - **verifica** — come si controlla che sia giusta e protetta: `401` senza credenziali e `200` con,
+    data di modifica delle pagine posteriore all'ultima modifica dei sorgenti, PDF presente o assenza
+    spiegata.
+
+Tre vincoli:
+
+- **un link si scrive solo dopo averlo aperto**: si controlla il codice di risposta, e si linka
+  sempre il file ( `index.html` ), mai la cartella, che dà 404;
+- **gli URL si scrivono interi**, `https://` compreso, così il visualizzatore li rende cliccabili;
+- ⚠ **la sezione si aggiorna ogni volta che si aggiorna la documentazione**, perché è l'ultimo anello
+  del giro di ogni modifica: **codice → test → report dei test → documentazione → file di progetto**, e fra questi il
+  `READ.md`. Un capitolo nuovo, un manuale che nasce o sparisce, un PDF che comincia a uscire, un
+  ambiente nuovo su cui si pubblica: se la sezione non lo dice, per chi viene dopo non c'è.
+
+Il verso è uno solo: **il `READ.md` linka la documentazione, la documentazione non cita il `READ.md`**,
+che resta fuori dalla generazione ( vedi `documentazione.md` ).
+
 ### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
+
+### ⚠ La voce 9, test automatici: l'esito a un clic, come la documentazione
+
+Regola di Fabio del **13/10/2026**, stessa logica della voce 8. Ogni esecuzione dei test
+( `_src/_sh/_codeception.run.sh` ) lascia un `esito.md` in `var/spool/test/<data e ora>/` e pubblica
+l'ultima a un indirizzo fisso; la sezione **Test automatici** del `READ.md` ne tiene i link, divisa
+nelle stesse due sottosezioni:
+
+- **standard** — l'esito dei test dello standard, sul sito pubblico della linea
+  ( `https://glisweb.istricesrl.it/_test/index.html` ), **solo se esiste**: si pubblica solo sui deploy
+  del framework, dopo che ci sono girati i test. Se non c'è si scrive che non c'è, non si mette il link;
+- **custom** — l'esito del progetto ( `/test/index.html` ) **per ogni ambiente dove i test girano**, con
+  la stessa Basic auth del manuale. Di norma è il solo DEV: l'esito non viaggia col deploy, e i test
+  funzionali scrivono nel database, quindi in produzione il bootstrap li rifiuta. E poi:
+  - **come si lanciano** qui ( le suite che il progetto ha davvero, il comando );
+  - **dove finiscono i risultati** ( `var/spool/test/`, 30 giorni ) e cosa si pubblica ( `esito.md` e i
+    report HTML, mai HTML e screenshot dei fallimenti );
+  - **lo stato noto** — i fallimenti che si conoscono e il perché, o il rimando alla voce del `TODO.md`.
+
+Anche qui un link si scrive solo dopo averlo aperto, e la sezione si aggiorna nel giro di ogni
+modifica: **codice → test → report dei test → documentazione → file di progetto**.
 
 Detto da Fabio il 23/09/2026: *"mi fanno domande riguardo a cose che dovrebbero essere descritte
 dal READ.md"*. Una domanda del tipo *"su che macchina sta questo?"*, *"dove sta il database?"*,
 *"qual è il deploy di produzione?"*, *"come si fa il rilascio qui?"* **è un buco nel READ**, non è
 una domanda. Prima di farla:
 
-1. **si cerca nel READ** — le sette voci, non solo quella che sembra;
+1. **si cerca nel READ** — le nove voci, non solo quella che sembra;
 2. se non c'è, **si guarda**: la macchina risponde. `ssh`, `src/config.json`, `/etc/cron.d`,
    `git remote -v`, `update.branch.conf`, il vhost;
 3. **si scrive nel READ**, nella voce che le compete, **nello stesso turno in cui si è scoperta** —

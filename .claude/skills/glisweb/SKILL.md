@@ -586,6 +586,11 @@ indietro è peggio di una che manca, perché chi la legge le crede.
 - **una cosa nuova si documenta quando nasce**: una macro, un attributo, una convenzione, un id di servizio
   che non compare da nessuna parte non esiste per chi viene dopo;
 - **nel commit stanno insieme**: codice e documentazione nello stesso commit;
+- **il giro finisce nei file di progetto**: codice → test → report dei test → documentazione → file di
+  progetto. Quando la documentazione cambia ( un capitolo, un manuale, un PDF, un ambiente su cui si
+  pubblica ) si aggiorna la sezione **Documentazione** del `READ.md` della root del deploy, coi link a
+  portata di clic, e allo stesso modo la sezione **Test automatici** coi link all'esito dei test — regole
+  del 13/10/2026, dettaglio in `riferimenti/cinque-file.md`, "La voce 8" e "La voce 9";
 - se la documentazione proprio non si può scrivere subito, **lo si dice** e la voce va nel `TODO.md` del
   progetto, area `documentazione`: non si tace.
 
