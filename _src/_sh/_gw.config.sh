@@ -24,7 +24,7 @@
 # _etc/_claude/_claude.framework.md ). I segnaposto dei due file si chiedono nello stesso giro, prima
 # quelli di config e poi quelli di shadow. Il file shadow sta accanto al file di configurazione e ne
 # prende il nome: config.json -> shadow.json, prova.json -> shadow.prova.json. Fino al 30/09/2026 tutto
-# finiva in src/config.json, che per questo .gitignore.dev escludeva dal repository.
+# finiva in src/config.json, che per questo il .gitignore dei progetti escludeva dal repository.
 #
 # LA PASSWORD DI ROOT si salva come hash di password_hash() ( bcrypt ), lo stesso di passwordHash() e
 # di _password.hash.sh; fino al 30/09/2026 era md5, che passwordVerify() accetta ancora.

@@ -16,6 +16,8 @@ src/py/*/*/lib/
 src/py/*/*/lib64/
 src/py/*/*/share/
 src/py/*/*/lib64
+src/py/*/*/todo/
+src/py/*/*/done/
 tmp/
 var/
 # artefatti standard della root del deploy: ancorati con lo slash
