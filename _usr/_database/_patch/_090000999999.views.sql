@@ -2366,10 +2366,10 @@ CREATE OR REPLACE VIEW `corrispondenza_view` AS
 CREATE OR REPLACE VIEW `costi_contratti_view` AS
 	SELECT
 		costi_contratti.id,
-		costi_contratti.id_contratto,
 		costi_contratti.id_tipologia,
-		costi_contratti.note,
+		costi_contratti.id_contratto,
 		costi_contratti.costo_orario,
+		costi_contratti.note,
 		concat(
 			if( tipologie_attivita_inps.codice IS NOT NULL, concat( tipologie_attivita_inps.codice, ' - ' ), '' ),
 			tipologie_attivita_inps.nome

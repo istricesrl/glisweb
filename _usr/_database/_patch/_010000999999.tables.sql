@@ -2230,22 +2230,28 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                 --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i costi orari di un contratto per tipologia di attivita' INPS
+-- funzione: contiene i costi orari di un contratto di lavoro per tipologia di attivita' INPS
 --
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
--- bigint: la usano il modulo _0600.contratti ( costi_contratti_view ) e _1000.produzione
+-- questa tabella contiene un costo orario per riga, uno per ogni coppia di contratto e tipologia di attivita' INPS
+-- ( tipologie_attivita_inps ). Le fasce di orari_contratti, cioe' i turni di lavoro e di disponibilita' del
+-- contratto, rimandano a un costo, ed e' da li' che si ricava il costo delle ore lavorate per i cartellini e per il
+-- calcolo delle ore di produzione. Fa parte della gestione del personale, che oggi vive nei moduli legacy
+-- _0600.contratti, _1000.produzione e _8100.cartellini e passera' al modulo risorse umane di latest.
+--
+-- NOTA: e' tornata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), dove era
+-- int; qui e' portata a bigint come il resto del canone.
 --
 CREATE TABLE IF NOT EXISTS `costi_contratti` (
-  `id` bigint(20) NOT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `costo_orario` decimal(16,5) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di attivita' INPS
+  `id_contratto` bigint(20) DEFAULT NULL,                       -- chiave esterna per il contratto
+  `costo_orario` decimal(16,5) DEFAULT NULL,                    -- costo orario
+  `note` text DEFAULT NULL,                                     -- note sul costo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000008000
 

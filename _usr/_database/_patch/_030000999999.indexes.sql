@@ -1377,11 +1377,12 @@ ALTER TABLE `corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- costi_contratti
 ALTER TABLE `costi_contratti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`),
-	ADD KEY `id_contratto` (`id_contratto`),
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_tipologia`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_contratto`,`costo_orario`);
 
 -- | 030000007901
 
