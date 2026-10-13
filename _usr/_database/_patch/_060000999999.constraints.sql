@@ -542,6 +542,7 @@ ALTER TABLE `colori`
 -- comuni
 ALTER TABLE `comuni`
     ADD CONSTRAINT `comuni_ibfk_01_nofollow`                                FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `comuni_ibfk_02_nofollow`                                FOREIGN KEY (`id_successore`) REFERENCES `comuni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `comuni_ibfk_98_nofollow`                                FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `comuni_ibfk_99_nofollow`                                FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1702,6 +1703,7 @@ ALTER TABLE `progetti_matricole`
 
 -- provincie
 ALTER TABLE `provincie`
+    ADD CONSTRAINT `provincie_ibfk_02_nofollow`                             FOREIGN KEY (`id_successore`) REFERENCES `provincie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `provincie_ibfk_98_nofollow`                             FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `provincie_ibfk_99_nofollow`                             FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1776,6 +1778,7 @@ ALTER TABLE `regimi`
 
 -- regioni
 ALTER TABLE `regioni`
+    ADD CONSTRAINT `regioni_ibfk_02_nofollow`                               FOREIGN KEY (`id_successore`) REFERENCES `regioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `regioni_ibfk_98_nofollow`                               FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `regioni_ibfk_99_nofollow`                               FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -2161,6 +2164,7 @@ ALTER TABLE `software`
 -- stati
 ALTER TABLE `stati`
     ADD CONSTRAINT `stati_ibfk_01_nofollow`                   FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `stati_ibfk_02_nofollow`                                 FOREIGN KEY (`id_successore`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `stati_ibfk_98_nofollow`                                 FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `stati_ibfk_99_nofollow`                                 FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 

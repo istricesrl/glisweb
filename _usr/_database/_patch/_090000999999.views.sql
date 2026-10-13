@@ -1855,6 +1855,8 @@ CREATE OR REPLACE VIEW comuni_view AS                         --
 		comuni.nome,                                          --
 		comuni.codice_istat,                                  --
 		comuni.codice_catasto,                                --
+		comuni.data_archiviazione,                            --
+		comuni.id_successore,                                 --
 		concat(                                               --
 			comuni.nome, ' ',                                 --
 			coalesce(                                         --
@@ -5343,6 +5345,8 @@ CREATE OR REPLACE VIEW provincie_view AS                      --
 		provincie.nome,                                       --
 		provincie.sigla,                                      --
 		provincie.codice_istat,                               --
+		provincie.data_archiviazione,                         --
+		provincie.id_successore,                              --
 		concat_ws(                                            --
 			' ',                                              --
 			provincie.nome,                                   --
@@ -5505,6 +5509,8 @@ CREATE OR REPLACE VIEW regioni_view AS
 		stati.nome AS stato,
 		regioni.nome,
 		regioni.codice_istat,
+		regioni.data_archiviazione,
+		regioni.id_successore,
 		concat_ws(
 			' ',
 			regioni.nome,
@@ -6337,6 +6343,7 @@ CREATE OR REPLACE VIEW stati_view AS                          --
 		stati.iso31661alpha3,                                 --
 		stati.codice_istat,                                   --
 		stati.data_archiviazione,                             --
+		stati.id_successore,                                  --
 		concat_ws(                                            --
 			' ',                                              --
 			continenti.nome,                                  --

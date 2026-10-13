@@ -1039,6 +1039,8 @@ ALTER TABLE `comuni`
 	ADD UNIQUE KEY `unica_istat` (`codice_istat`),
 	ADD UNIQUE KEY `unica_catasto` (`codice_catasto`),
 	ADD KEY `id_provincia` (`id_provincia`),
+	ADD KEY `id_successore` (`id_successore`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `indice` (`id`,`nome`,`id_provincia`,`codice_istat`,`codice_catasto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3163,6 +3165,8 @@ ALTER TABLE `provincie`
 	ADD UNIQUE KEY `unica_sigla` (`sigla`),
 	ADD UNIQUE KEY `unica_codice_istat` (`codice_istat`),
 	ADD KEY `id_regione` (`id_regione`),
+	ADD KEY `id_successore` (`id_successore`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `codice_istat` (`codice_istat`),
 	ADD KEY `indice` (`id`,`id_regione`,`nome`,`sigla`,`codice_istat`),
@@ -3299,6 +3303,8 @@ ALTER TABLE `regioni`
 	ADD UNIQUE KEY `unica` (`codice_istat`),
 	ADD UNIQUE KEY `unica_nome` (`id_stato`,`nome`),
 	ADD KEY `id_stato` (`id_stato`),
+	ADD KEY `id_successore` (`id_successore`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
@@ -3994,6 +4000,8 @@ ALTER TABLE `stati`
 	ADD UNIQUE KEY `unica_iso31661alpha2` (`iso31661alpha2`),
 	ADD UNIQUE KEY `unica_iso31661alpha3` (`iso31661alpha3`),
 	ADD KEY `id_continente` (`id_continente`),
+	ADD KEY `id_successore` (`id_successore`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);

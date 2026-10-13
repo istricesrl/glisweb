@@ -1728,15 +1728,21 @@ CREATE TABLE IF NOT EXISTS `colori` (                         --
 -- livello è secondario rispetto a quello che lo contiene: un comune non ha senso senza la sua provincia, quindi una
 -- provincia che ha dei comuni non si può cancellare. I file di base non popolano la geografia, la carica
 -- un'importazione; dentro l'Italia il comune si identifica col codice ISTAT e col codice catastale.
+-- un comune soppresso non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore al comune che ne ha preso il posto. I valori li scrive l'importazione dall'elenco ISTAT dei comuni
+-- soppressi; i riferimenti vivi ( indirizzi ) si spostano sul successore, quelli di storia ( nascita, destinatari ) no.
 -- NOTA codice_istat e codice_catasto sono codici esterni e mantengono il loro formato; i comuni esteri non li hanno
 CREATE TABLE IF NOT EXISTS `comuni` (                         --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `nome` char(255) DEFAULT NULL,                              -- nome del comune
   `id_provincia` bigint(20) DEFAULT NULL,                     -- provincia che contiene il comune
+  `id_successore` bigint(20) DEFAULT NULL,                    -- comune che ha preso il posto di questo dopo l'archiviazione
   `codice_istat` char(12) DEFAULT NULL,                       -- codice ISTAT del comune
   `codice_catasto` char(4) DEFAULT NULL,                      -- codice catastale del comune
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento del comune
   `note` text DEFAULT NULL,                                   -- note sul comune
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del comune
+  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione del comune
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
@@ -4498,14 +4504,19 @@ CREATE TABLE IF NOT EXISTS `progetti_matricole` (
 -- questa tabella contiene le provincie italiane, con le informazioni relative alla regione di appartenenza, al nome,
 -- alla sigla, al codice ISTAT, all'URL di riferimento e alle note
 --
+-- La provincia soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore alla provincia che ne ha preso il posto; questi campi si valorizzano a mano
 CREATE TABLE IF NOT EXISTS `provincie` (                      --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_regione` bigint(20) DEFAULT NULL,                          -- chiave esterna per la regione di appartenenza
+  `id_successore` bigint(20) DEFAULT NULL,                       -- provincia che ha preso il posto di questa dopo l'archiviazione
   `nome` varchar(254) DEFAULT NULL,                           -- nome della provincia
   `sigla` char(8) DEFAULT NULL,                               -- sigla della provincia
   `codice_istat` char(3) DEFAULT NULL,                        -- codice ISTAT della provincia
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della provincia
   `note` text DEFAULT NULL,                                    -- note sulla provincia
+  `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione della provincia
+  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione della provincia
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -4686,13 +4697,18 @@ CREATE TABLE IF NOT EXISTS `regimi` (
 -- questa tabella contiene le regioni italiane, con le informazioni relative allo stato di appartenenza, al nome,
 -- al codice ISTAT, all'URL di riferimento e alle note
 --
+-- La regione soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore alla regione che ne ha preso il posto; questi campi si valorizzano a mano
 CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_stato` bigint(20) DEFAULT NULL,                            -- chiave esterna per lo stato di appartenenza
+  `id_successore` bigint(20) DEFAULT NULL,                       -- regione che ha preso il posto di questa dopo l'archiviazione
   `nome` char(64) DEFAULT NULL,                               -- nome della regione
   `codice_istat` char(2) DEFAULT NULL,                        -- codice ISTAT della regione
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL,                                    -- note sulla regione
+  `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione della regione
+  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione della regione
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -5651,9 +5667,12 @@ CREATE TABLE IF NOT EXISTS `software` (
 -- questa tabella contiene gli stati del mondo, con le informazioni relative al continente di appartenenza, al nome,
 -- ai codici ISO e ISTAT, all'URL di riferimento e alle note
 --
+-- uno stato che cessa di esistere non si cancella: si archivia con data_archiviazione e note_archiviazione e punta
+-- col id_successore allo stato che ne ha preso il posto; questi campi si valorizzano a mano
 CREATE TABLE IF NOT EXISTS `stati` (                          --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_continente` bigint(20) DEFAULT NULL,                       -- chiave esterna per il continente di appartenenza
+  `id_successore` bigint(20) DEFAULT NULL,                       -- stato che ha preso il posto di questo dopo l'archiviazione
   `nome` char(128) DEFAULT NULL,                              -- nome dello stato
   `nome_esteso` char(128) DEFAULT NULL,                       -- nome esteso dello stato
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento dello stato
@@ -5662,6 +5681,7 @@ CREATE TABLE IF NOT EXISTS `stati` (                          --
   `iso31661alpha3` char(3) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-3 dello stato
   `codice_istat` char(4) DEFAULT NULL,                        -- codice ISTAT dello stato
   `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione dello stato
+  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione dello stato
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
