@@ -15,6 +15,32 @@
     // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
     // die();
 
+    // STEP 0 - se il carrello della sessione è già chiuso, lo stacco dalla sessione
+    // NOTA questo controllo stava in _760.controller.php, cioè dopo lo STEP 1: la prima richiesta
+    // con __carrello__ dopo la chiusura ( pagamento confermato dal listener ) scriveva sul carrello
+    // chiuso, e i dati di un acquisto nuovo finivano su quello già pagato
+    if( isset( $_SESSION['carrello']['id'] ) ) {
+
+        // se non è impostata la timestamp di checkout, la recupero dal database
+        if( empty( $_SESSION['carrello']['timestamp_checkout'] ) ) {
+            $_SESSION['carrello']['timestamp_checkout'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT timestamp_checkout FROM carrelli WHERE id = ?',
+                array( array( 's' => $_SESSION['carrello']['id'] ) )
+            );
+        }
+
+        // se il carrello corrente è chiuso, lo elimino dalla sessione
+        if( ! empty( $_SESSION['carrello']['timestamp_checkout'] ) ) {
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE carrelli SET session = NULL WHERE id = ?',
+                array( array( 's' => $_SESSION['carrello']['id'] ) )
+            );
+            $_SESSION['carrello'] = array();
+        }
+
+    }
 
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
