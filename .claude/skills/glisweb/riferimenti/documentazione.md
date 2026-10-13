@@ -124,7 +124,9 @@ contiene tutti.
 Un livello **sopra** la document root vive un `READ.md` che contiene gli **accessi** del progetto: CMS,
 SSH, database. Non è sorgente di documentazione, non va scansionato, non va pubblicato, non va citato.
 Non confonderlo con `dev/READ.md`, che è il manuale sviluppatore del framework: sono due file diversi
-con lo stesso nome a due livelli diversi. Tutti i percorsi della generazione sono relativi alla
+con lo stesso nome a due livelli diversi. Il verso è uno solo: è **quel** `READ.md` a linkare la
+documentazione, nella sua sezione **Documentazione** ( regola del 13/10/2026, in `cinque-file.md`,
+"La voce 8" ), e va aggiornato ogni volta che la documentazione cambia. Tutti i percorsi della generazione sono relativi alla
 document root e `docsBuildPath()` aborta se uno risolve fuori.
 
 **E per lo stesso motivo la root del deploy non è versionata, di proposito.** Il repository è la

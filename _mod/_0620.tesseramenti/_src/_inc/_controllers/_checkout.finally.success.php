@@ -199,6 +199,10 @@
                                 $cf['mysql']['connection'],
                                 array(
                                     'id_documento' => $idDocumento,
+                                    // Fix 2026-10-13: il pagamento va agganciato alla riga di carrello come fa
+                                    // `_0920.corsi`, altrimenti le somme per riga della cassa non lo vedono e
+                                    // ripropongono come da pagare una tessera già pagata ( rischio doppio incasso )
+                                    'id_carrelli_articoli' => $articolo['id'],
                                     'id_tipologia' => NULL,
                                     'id_modalita_pagamento' => 24,  // TODO così è fisso a PayPal, rendere dinamico da carrello
                                     'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
