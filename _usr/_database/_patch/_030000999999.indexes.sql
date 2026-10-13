@@ -1454,15 +1454,16 @@ ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INC
  
 -- coupon_listini
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 16:47 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 64
 ALTER TABLE `coupon_listini`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_listino`),
-	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_listino` (`id_listino`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_listino`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_listino`);
 
 -- | 030000008401
 

@@ -2352,17 +2352,22 @@ CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione coupon e listini
+-- funzione: dice per quali listini e' valido un coupon
+--
+-- questa tabella elenca i listini per i quali e' valido un coupon, cioe' limita il coupon ai clienti ( e ai carrelli )
+-- che stanno su quei listini; e' una delle tabelle di applicazione del coupon e, come tutte le tabelle coupon_*, ha
+-- la sua gemella negli sconti ( sconti_listini ). Oggi nessuna parte del framework la compila ne' la legge:
+-- verificaValiditaCoupon() del modulo ecommerce guarda solo coupon_articoli.
 --
 CREATE TABLE IF NOT EXISTS `coupon_listini` (
-  `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) DEFAULT NULL,
-  `id_listino` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_coupon` bigint(20) DEFAULT NULL,                          -- chiave esterna per il coupon
+  `id_listino` bigint(20) DEFAULT NULL,                         -- chiave esterna per il listino
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000008600
