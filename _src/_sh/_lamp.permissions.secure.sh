@@ -135,6 +135,9 @@ find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log"
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
 find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
 find ./$SUB/.githooks           -type f                                                                                                 -exec chmod ug+x {} +
+# gli script delle skill ( .claude/skills/<skill>/bin/ ) non finiscono in .sh e il chmod 640 qui sopra toglie loro
+# il bit di esecuzione, che git registra nell'indice: senza questa riga il deploy li vede modificati
+find ./$SUB/.claude/skills/*/bin -type f                                                                                                -exec chmod ug+x {} + 2>/dev/null
 find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 2770 {} +
 find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 2770 {} +
 find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
