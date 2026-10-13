@@ -2417,14 +2417,15 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 
 -- coupon_articoli_view
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 17:00 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 62
 CREATE OR REPLACE VIEW `coupon_articoli_view` AS
 	SELECT
 		coupon_articoli.id,
+		coupon_articoli.ordine,
 		coupon_articoli.id_coupon,
 		coupon_articoli.id_articolo,
 		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
-		coupon_articoli.ordine,
+		coupon_articoli.gruppo_alternative,
 		coupon_articoli.id_account_inserimento,
 		coupon_articoli.id_account_aggiornamento,
 		CONCAT(

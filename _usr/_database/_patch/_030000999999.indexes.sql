@@ -1411,15 +1411,17 @@ ALTER TABLE `coupon` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- coupon_articoli
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 16:57 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 62
 ALTER TABLE `coupon_articoli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_articolo`),
-	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `gruppo_alternative` (`gruppo_alternative`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_articolo`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_articolo`,`gruppo_alternative`);
 
 -- | 030000008101
 
