@@ -12,6 +12,8 @@
 #                                 quickstart, manuale utente e manuale sviluppatore dello standard
 #                                 sono PUBBLICI: descrivono il framework e non le personalizzazioni
 #                                 di un cliente, che restano dietro Basic auth in usr/pages/
+#   _docs.build.sh --test         esito dell'ultima esecuzione dei test -> usr/pages/test/ o, sui deploy
+#                                 del framework, _usr/_pages/_test/ (vedi _codeception.run.sh)
 #   _docs.build.sh --all          tutte le precedenti
 #   _docs.build.sh --dry-run      elenca cosa genererebbe, non scrive niente
 #
@@ -36,7 +38,7 @@ echo "lavoro su: $(pwd)"
 
 ## verifica delle opzioni
 if [ $# -eq 0 ]; then
-    echo "nessuna opzione: uso $(basename "$0") [--user] [--dev] [--quickstart] [--standard] [--all] [--dry-run]" >&2
+    echo "nessuna opzione: uso $(basename "$0") [--user] [--dev] [--quickstart] [--standard] [--test] [--all] [--dry-run]" >&2
     exit 1
 fi
 
@@ -53,7 +55,7 @@ fi
 #
 # _lamp.permissions.secure.sh gira PRIMA della generazione dentro _gw.upgrade.sh, quindi i file
 # appena scritti nascerebbero con l'umask di root e Apache non li leggerebbe
-for i in ./usr/pages/manual ./usr/pages/quickstart ./_usr/_pages; do
+for i in ./usr/pages/manual ./usr/pages/quickstart ./usr/pages/test ./_usr/_pages; do
     if [ -d "$i" ]; then
         chown -R root:www-data "$i" 2>/dev/null
         find "$i" -type d -exec chmod 750 {} + 2>/dev/null

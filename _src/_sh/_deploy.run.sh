@@ -206,6 +206,9 @@ else
                     EXCLUDE="$EXCLUDE --exclude $i"
                 done
 
+                ## esito dei test automatici ( vedi il ramo rsync )
+                EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
+
                 # informazioni
                 echo "accesso FTP: $FTP_USER"
                 echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
@@ -277,6 +280,11 @@ else
             for i in $SET_EXCLUDE; do
                 EXCLUDE="$EXCLUDE --exclude $i"
             done
+
+            ## esito dei test automatici
+            # appartiene alla macchina dove i test sono girati ( _codeception.run.sh ): copiato altrove
+            # mostrerebbe sul target l'esito di un altro ambiente, quindi non viaggia mai
+            EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
 
             ## host di destinazione
             if [ -n "$DST_HOST" -a -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
@@ -390,6 +398,9 @@ else
                     exit 1
                 fi
 
+                # protezioni Basic auth della destinazione
+                deploy-realign-protections "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
+
                 # invalidazione delle cache della destinazione
                 deploy-invalidate-caches "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
 
@@ -492,6 +503,9 @@ else
                     echo "ERRORE: deploy su $DST_PATH fallito (rsync esito $RSYNC_STATUS), i file NON sono stati copiati o lo sono stati solo in parte"
                     exit 1
                 fi
+
+                # protezioni Basic auth della destinazione
+                deploy-realign-protections "$DST_PATH"
 
                 # invalidazione delle cache della destinazione
                 deploy-invalidate-caches "$DST_PATH"

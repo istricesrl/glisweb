@@ -33,6 +33,12 @@
 # - <suite>.report.html e .xml   <- il report di Codeception, da browser e in formato JUnit
 # - *.fail.html e *.fail.png     <- HTML e screenshot della pagina al momento di ogni fallimento
 # - chromedriver.log             <- il log del browser
+# - esito.md                     <- l'esito in breve: versione, commit, conteggi per suite e fallimenti
+#
+# esito.md e i report HTML dell'ultima esecuzione vengono poi pubblicati da _docs.build.sh --test, insieme
+# all'elenco delle esecuzioni precedenti: quelli del progetto in usr/pages/test/ dietro Basic auth, quelli
+# dello standard in _usr/_pages/_test/ sui deploy del framework; i *.fail.* non si pubblicano mai, perche'
+# contengono i dati veri del deploy
 #
 # le esecuzioni piu' vecchie di 30 giorni vengono tolte all'avvio
 #
@@ -176,6 +182,80 @@ done
 [ "$CODECEPTION_EXIT_CODE" = "0" ] || [ -s "$ESECUZIONE/errori.log" ] || echo "esecuzione fallita prima dei test ( codice $CODECEPTION_EXIT_CODE ): vedi test.log" >> "$ESECUZIONE/errori.log"
 [ -s "$ESECUZIONE/errori.log" ] || echo "nessun errore" > "$ESECUZIONE/errori.log"
 cp -a var/test/output/. "$ESECUZIONE/"
+
+## esito in breve
+# e' la pagina che si legge per prima e quella che si pubblica: dice su quale codice hanno girato i test
+# ( versione e commit, con i file non ancora committati ) e quanti ne sono passati per ogni suite, contati
+# dal report JUnit di Codeception
+VERSIONE=$(cat etc/version.conf 2>/dev/null)
+COMMIT=$(git rev-parse --short HEAD 2>/dev/null)
+if [ -n "$COMMIT" ]; then
+    MODIFICATI=$(git status --porcelain 2>/dev/null | wc -l)
+    [ "$MODIFICATI" = "0" ] || COMMIT="$COMMIT, piu' $MODIFICATI file modificati e non committati"
+else
+    COMMIT="non disponibile"
+fi
+DATA=$(basename "$ESECUZIONE" | sed -E 's|^(....)(..)(..)(..)(..)(..)$|\3/\2/\1 \4:\5:\6|')
+if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
+    ESITO="superati"
+else
+    ESITO="falliti ( codice $CODECEPTION_EXIT_CODE )"
+fi
+{
+    echo "# esecuzione del $DATA"
+    echo
+    echo "- deploy: $(hostname) $(pwd)"
+    echo "- versione: ${VERSIONE:-non disponibile}"
+    echo "- commit: $COMMIT"
+    echo "- suite: $SUITE"
+    echo "- esito: $ESITO"
+    echo
+    echo "| suite | test | superati | falliti | saltati | tempo |"
+    echo "|---|---|---|---|---|---|"
+    for s in $SUITE; do
+        php -r '
+            $x = @simplexml_load_file( $argv[1] );
+            if( ! $x ) { exit( 1 ); }
+            $t = ( $x->getName() == "testsuites" ) ? $x->testsuite[0] : $x;
+            $n = (int) $t["tests"]; $f = (int) $t["failures"] + (int) $t["errors"]; $k = (int) $t["skipped"];
+            printf( "| [%s](%s.report.html) | %d | %d | %d | %d | %.1f s |\n", $argv[2], $argv[2], $n, $n - $f - $k, $f, $k, (float) $t["time"] );
+        ' "$ESECUZIONE/$s.report.xml" "$s" 2>/dev/null || echo "| $s | non eseguita | | | | |"
+    done
+    # i fallimenti si leggono dal report JUnit e non da errori.log: con --steps Codeception scrive il
+    # dettaglio dentro lo scenario, e nel riepilogo finale restano solo i separatori. Una riga per test,
+    # col messaggio, e un tetto, perche' una suite rotta per intero farebbe una pagina illeggibile.
+    # Del messaggio di JUnit la prima riga ripete il nome del test: il messaggio e' la seconda, e se e'
+    # un confronto su una pagina l'atteso sta nell'ultima riga "-->", dopo il corpo della pagina
+    if [ "$CODECEPTION_EXIT_CODE" != "0" ]; then
+        echo
+        echo "## fallimenti"
+        echo
+        for s in $SUITE; do
+            php -r '
+                $x = @simplexml_load_file( $argv[1] );
+                if( ! $x ) { exit( 1 ); }
+                $c = $x->xpath( "//testcase[failure or error]" );
+                foreach( array_slice( $c, 0, 50 ) as $t ) {
+                    $e = ( isset( $t->failure ) ) ? $t->failure : $t->error;
+                    $r = array_values( array_filter( array_map( "trim", explode( "\n", (string) $e ) ) ) );
+                    $m = ( isset( $r[1] ) ) ? $r[1] : "";
+                    $a = preg_grep( "/^--> /", $r );
+                    if( count( $a ) > 1 ) { $m .= " " . substr( end( $a ), 4 ); }
+                    printf( "- %s, `%s:%s`: %s\n", $argv[2], $t["class"], $t["name"], ( $m === "" ) ? "nessun messaggio" : $m );
+                }
+                if( count( $c ) > 50 ) { printf( "- %s: e altri %d, vedi il report\n", $argv[2], count( $c ) - 50 ); }
+            ' "$ESECUZIONE/$s.report.xml" "$s" 2>/dev/null
+        done
+        grep -q "^esecuzione fallita prima dei test" "$ESECUZIONE/errori.log" && echo "- $(cat "$ESECUZIONE/errori.log")"
+    fi
+} > "$ESECUZIONE/esito.md"
+[ "$(id -u)" = "0" ] && chown -R www-data:www-data "$ESECUZIONE"
+
+## pubblicazione dell'esito
+# la fa il generatore della documentazione, che ne condivide la protezione e la pagina; se fallisce i
+# risultati restano comunque in var/spool/test/
+./_src/_sh/_docs.build.sh --test > /dev/null || echo "pubblicazione dell'esito non riuscita: lanciare _src/_sh/_docs.build.sh --test" >&2
+
 echo
 echo "risultati in $ESECUZIONE/"
 

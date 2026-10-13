@@ -87,6 +87,52 @@ increment-version() {
   echo $(local IFS=$delimiter ; echo "${array[*]}")
 }
 #
+# Riallinea le protezioni Basic auth di un deploy appena aggiornato.
+#
+# Fix 2026-10-13: le pagine protette del progetto ( usr/pages/manual/, usr/pages/quickstart/,
+# usr/pages/test/ ) hanno un .htaccess con AuthUserFile, che vuole un percorso ASSOLUTO. Il file
+# lo scrive _docs.build.sh sulla macchina dove gira, quindi porta il percorso di quella macchina,
+# e il deploy lo copiava tale e quale: su www2, timbrature e gm Apache cercava le password nella
+# document root di DEV, non le trovava e rispondeva 500 su tutto il manuale. Il file delle
+# password ( etc/secret/.htpasswd ) invece viaggia gia' col deploy: e' solo il percorso che va
+# rifatto sul target, ed e' quello che si fa qui, a ogni deploy, come per le cache.
+#
+# Si tocca la sola riga AuthUserFile, e solo se punta altrove: e' la stessa regola di
+# docsBuildProtezione() in _src/_cli/_docs.build.php, che fa lo stesso quando genera.
+#
+# $1 percorso della document root di destinazione
+# $2 prefisso di esecuzione remota, opzionale (es. "ssh -i chiave utente@host")
+#
+function deploy-realign-protections() {
+
+    local DST="$1"
+    local VIA="$2"
+
+    if [ -z "$DST" ]; then
+        echo "ATTENZIONE: riallineamento delle protezioni saltato, percorso di destinazione non indicato"
+        return 1
+    fi
+
+    local SCRIPT='
+        cd "$1" || exit 1
+        for f in usr/pages/*/.htaccess; do
+            [ -f "$f" ] && grep -q "^[[:space:]]*AuthUserFile" "$f" || continue
+            grep -q "^AuthUserFile $1/etc/secret/.htpasswd$" "$f" && continue
+            sed -i "s|^[[:space:]]*AuthUserFile[[:space:]].*\$|AuthUserFile $1/etc/secret/.htpasswd|" "$f"
+            chown root:www-data "$f"; chmod 640 "$f"
+            echo "protezione riallineata in $f"
+        done
+        [ -f etc/secret/.htpasswd ] || echo "ATTENZIONE: manca etc/secret/.htpasswd, le pagine protette restano chiuse"
+    '
+
+    if [ -n "$VIA" ]; then
+        echo "$SCRIPT" | $VIA "bash -s -- '$DST'"
+    else
+        echo "$SCRIPT" | bash -s -- "$DST"
+    fi
+
+}
+#
 # Invalida le cache di un deploy appena aggiornato.
 #
 # Fix 2026-09-02: fino a qui _deploy.run.sh copiava i file e finiva. I file arrivavano davvero,
