@@ -20,6 +20,14 @@
 # REGOLA sul perimetro: si guarda SOLO dentro la document root. Un livello sopra vive il READ.md
 # del deploy, che contiene gli accessi del progetto e non e' documentazione.
 #
+# REGOLA sullo standard: i file _* si controllano SOLO sul framework. Su un deploy cliente sono
+# la copia installata dello standard, e un rilievo li' nasce identico in tutti i deploy e si
+# chiude solo a monte: il 12/10/2026 due patch nuove senza sezione sono diventate la stessa
+# voce in sette TODO.md. Sul cliente si guarda solo il custom. Il framework si riconosce come
+# in _gw.disallineamenti.sh, da _src/_config.php versionato: i file standard stanno sotto git
+# solo dove sono il sorgente. Il nome del remote no, perche' i deploy di sviluppo non si
+# chiamano tutti glisweb.
+#
 # REGOLA sulla linea: si documenta la linea NUOVA e non il legacy, che convive di proposito per
 # lasciare migrare un progetto un pezzo per volta. I due si riconoscono dal nome, senza guardare
 # dentro i file: un modulo della linea nuova ha il codice a CINQUE caratteri ( _CT000.contatti )
@@ -59,6 +67,22 @@ while [ $# -gt 0 ]; do
 done
 
 SOGLIA=10
+
+## framework o deploy cliente ( vedi REGOLA sullo standard )
+FRAMEWORK=""
+if [ -d ./.git ] && [ -n "$( git ls-files -- _src/_config.php 2> /dev/null )" ]; then
+    FRAMEWORK="1"
+fi
+
+# filtra un elenco di percorsi tenendo solo quelli che rientrano nel perimetro: tutti sul
+# framework, solo i custom ( niente componenti che iniziano per underscore ) su un cliente
+perimetro() {
+    if [ -n "$FRAMEWORK" ]; then
+        cat
+    else
+        grep -v '/_'
+    fi
+}
 
 ## i rilievi si accumulano su file e non in una variabile: emetti() li produce dentro una
 ## pipeline, cioe' in una subshell, e un contatore incrementato li' non tornerebbe mai al
@@ -116,13 +140,13 @@ while IFS= read -r f; do
             fi
         done < <( espandi_percorsi "${r#\#\#\# }" )
     done < <( grep '^### /' "$f" 2> /dev/null )
-done < <( sorgenti_doc )
+done < <( sorgenti_doc | perimetro )
 
 # emette un rilievo
 #   $1 categoria   $2 testo ( stabile: niente numeri, niente date )
 rilievo() {
     if [ $TODO -eq 1 ]; then
-        echo "- [ ] doc/$1: $2" >> "$ELENCO"
+        echo "- [ ] (---) doc/$1: $2" >> "$ELENCO"
     else
         printf '  %-14s %s\n' "$1" "$2" >> "$ELENCO"
     fi
@@ -160,7 +184,7 @@ da_documentare() {
 #
 # ogni file standard deve avere la sua sezione "### <percorso>", in QUALUNQUE sorgente della
 # documentazione: il capitolo del manuale, il READ.md del suo modulo, quello del suo template.
-if attiva read-md; then
+if attiva read-md && [ -n "$FRAMEWORK" ]; then
 
     MANCANTI=$( while IFS= read -r f; do
         [ -n "${DOVE[${f#.}]}" ] || echo "${f#.}"
@@ -217,7 +241,7 @@ fi
 # coincide quasi: dev'essere leggibile da un deploy cliente, dove l'altro deploy non esiste.
 # Regge da solo, ed e' verificabile con un segnale indipendente: nessuno dei cinquantatre
 # moduli a quattro caratteri usa _src/_tpl/, e lo usano ventiquattro dei ventisei a cinque.
-MODULI=$( ls -d ./_mod/_?????.*/ 2> /dev/null | sed 's|^\./_mod/_||; s|/$||' )
+MODULI=$( [ -n "$FRAMEWORK" ] && ls -d ./_mod/_?????.*/ 2> /dev/null | sed 's|^\./_mod/_||; s|/$||' )
 
 for tipo in READ USER; do
 
@@ -248,7 +272,7 @@ done
 # segnala. Chiedere il manuale di una cartella vuota manda a documentare il nulla, e la
 # domanda vera su un guscio non e' "gli manca il manuale" ma "ha ancora senso che esista".
 # Se il guscio diventa un template, il rilievo compare da solo.
-TEMPLATE=$( for t in ./_src/_tpl/_*/; do
+TEMPLATE=$( [ -n "$FRAMEWORK" ] && for t in ./_src/_tpl/_*/; do
     [ -d "$t" ] || continue
     [ -n "$( find "$t" -name '*.twig' -print -quit 2> /dev/null )" ] || continue
     n="$( basename "$t" )"
@@ -279,7 +303,7 @@ done
 # sezione che non viene mai filtrata o un callout che resta una citazione qualunque
 if attiva marcatori; then
 
-    SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs -name '*.md' -not -path '*/_legacy/*' 2> /dev/null )
+    SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs -name '*.md' -not -path '*/_legacy/*' 2> /dev/null | perimetro )
 
     if [ -n "$SORGENTI" ]; then
 
@@ -328,7 +352,7 @@ if attiva schema; then
     # standard e custom allo stesso percorso al netto degli underscore, come per tutto il resto.
     # Da non confondere con usr/database/, che accanto ospita gli snapshot datati delle
     # migrazioni: quelli sono dump, non sorgenti, e marcatori non ne portano.
-    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null )
+    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null | perimetro )
 
     if [ -n "$SCHEMA" ]; then
 
@@ -355,7 +379,7 @@ fi
 # impossibile uno scatto orfano o una dichiarazione senza uso
 if attiva screenshot; then
 
-    SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs -name '*.md' -not -path '*/_legacy/*' 2> /dev/null )
+    SORGENTI=$( find ./_usr/_docs ./_mod ./mod ./usr/docs -name '*.md' -not -path '*/_legacy/*' 2> /dev/null | perimetro )
 
     if [ -n "$SORGENTI" ]; then
 
@@ -386,7 +410,7 @@ if attiva protezione && [ -d ./usr/pages/manual ]; then
 fi
 
 ## ------------------------------------------------------------------ 9. legacy da travasare
-if attiva legacy && [ -d ./_usr/_docs/_legacy ]; then
+if attiva legacy && [ -n "$FRAMEWORK" ] && [ -d ./_usr/_docs/_legacy ]; then
     N=$( find ./_usr/_docs/_legacy -name '*.dox' | wc -l )
     [ "$N" -gt 0 ] && rilievo legacy "restano .dox in _usr/_docs/_legacy da travasare nei READ.md e USER.md"
 fi
@@ -443,7 +467,7 @@ if [ $METRICHE -eq 1 ] && [ $TODO -eq 0 ]; then
 
     # quanto dello schema dichiara la propria natura. Non e' un rilievo: le tabelle senza i
     # marcatori sono una coda che si accorcia lavorando, non un elenco su cui agire una per una.
-    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null )
+    SCHEMA=$( ls ./_usr/_database/_patch/*.sql ./usr/database/patch/*.sql 2> /dev/null | perimetro )
     if [ -n "$SCHEMA" ]; then
         TAB=$( grep -hE '^CREATE TABLE' $SCHEMA 2> /dev/null | wc -l )
         MAR=$( grep -hE '^-- tipologia: ' $SCHEMA 2> /dev/null | wc -l )
