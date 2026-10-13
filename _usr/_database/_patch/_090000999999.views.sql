@@ -2515,14 +2515,14 @@ CREATE OR REPLACE VIEW `coupon_marchi_view` AS
 
 -- coupon_prodotti_view
 -- tipologia: tabella gestita
--- verifica: 2021-06-29 17:00 Fabio Mosti
+-- verifica: 2026-10-13 punto 6, riga 66
 CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 	SELECT
 		coupon_prodotti.id,
+		coupon_prodotti.ordine,
 		coupon_prodotti.id_coupon,
 		coupon_prodotti.id_prodotto,
 		prodotti.nome AS prodotto,
-		coupon_prodotti.ordine,
 		coupon_prodotti.id_account_inserimento,
 		coupon_prodotti.id_account_aggiornamento,
 		CONCAT(

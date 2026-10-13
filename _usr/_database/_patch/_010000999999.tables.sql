@@ -2401,17 +2401,23 @@ CREATE TABLE IF NOT EXISTS `coupon_marchi` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione coupon e prodotti
+-- funzione: dice per quali prodotti e' valido un coupon
+--
+-- questa tabella elenca i prodotti per i quali e' valido un coupon, cioe' limita il coupon agli articoli di quei
+-- prodotti; e' una delle tabelle di applicazione del coupon ( con coupon_articoli, coupon_categorie_prodotti e
+-- coupon_marchi ) e, come tutte le tabelle coupon_*, va affiancata dalla sua gemella negli sconti ( sconti_prodotti,
+-- che il canone non ha ancora ). Nel framework latest nessuna parte la legge; in oldstable la legge calcolaCoupon()
+-- del modulo prodotti, come secondo controllo dopo l'articolo.
 --
 CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
-  `id` bigint(20) NOT NULL,
-  `id_coupon` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_coupon` bigint(20) DEFAULT NULL,                          -- chiave esterna per il coupon
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000008900
