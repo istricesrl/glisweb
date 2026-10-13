@@ -836,7 +836,7 @@ CREATE TABLE IF NOT EXISTS `audio` (                            --
 --
 -- NOTA un'anagrafica può essere titolare di più badge, e a un contratto possono essere associati più badge: per
 -- questo il legame sta qui, nelle chiavi esterne id_*, come per le tabelle dei media, e non in una colonna id_badge
--- delle tabelle collegate; anagrafica.id_badge e contratti.id_badge escono con la revisione dello schema canonico
+-- delle tabelle collegate; anagrafica.id_badge esce con la revisione dello schema canonico, contratti.id_badge e' gia' uscita
 --
 -- NOTA le chiavi esterne verso anagrafica e contratti sono SET NULL e non CASCADE come per i media: il badge è un
 -- oggetto a sé, e se il titolare o il contratto vengono cancellati resta, non assegnato
@@ -2022,16 +2022,19 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
 -- struttura: tabella base
 -- funzione: contiene i continenti
 --
--- questa tabella contiene i continenti, con il loro codice e il loro nome
---
+-- i continenti, radice della geografia ( continenti, stati, regioni, provincie, comuni, indirizzi ): è l'unico livello
+-- che non è contenuto da un altro, e un continente che ha degli stati non si può cancellare. Sono i sette continenti
+-- standard, caricati dai file di base; il nome è in italiano, ad uso interno.
+-- NOTA il codice è quello standard a due lettere dei continenti ( AF, AN, AS, EU, NA, OC, SA ), che non va confuso
+-- coi codici ISO degli stati; l'America del Nord comprende il Centro America e i Caraibi
 CREATE TABLE IF NOT EXISTS `continenti` (                     --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `codice` char(32) DEFAULT NULL,                             -- codice del continente
-  `nome` char(32) DEFAULT NULL,                                -- nome del continente
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `nome` char(255) DEFAULT NULL,                              -- nome del continente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000007200
@@ -2040,26 +2043,37 @@ CREATE TABLE IF NOT EXISTS `continenti` (                     --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i contratti di affiliazione
+-- funzione: contiene i contratti, cioe' gli accordi fra anagrafiche ( iscrizioni, abbonamenti, tesseramenti, licenze,
+-- compravendite, affiliazioni, eccetera )
 --
--- questa tabella contiene i contratti di affiliazione, con le informazioni principali
+-- questa tabella contiene un contratto per riga; il tipo di accordo lo dice la tipologia. Le parti del contratto
+-- stanno in contratti_anagrafica, coi loro ruoli ( proponente, contraente ): in origine erano campi di questa
+-- tabella, poi sono state spostate li' per consentire piu' contraenti. La validita' del contratto e' data dai periodi
+-- registrati in rinnovi. Un contratto puo' essere citato da una riga di documento, e da un articolo quando gli si
+-- vuole dare un prezzo. Il codice e' il numero del contratto ( p.es. il numero di tessera ).
 --
-CREATE TABLE IF NOT EXISTS `contratti` (                                    --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di contratto
-  `codice` char(32) DEFAULT NULL,                             -- codice del contratto
-  `codice_affiliazione` char(32) DEFAULT NULL,                -- codice di affiliazione
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile associato al contratto
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto associato al contratto
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di progetti associata al contratto
-  `id_badge` bigint(20) DEFAULT NULL,                            -- chiave esterna per il badge associato al contratto
-  `nome` char(128) DEFAULT NULL,                              -- nome del contratto
-  `note` text DEFAULT NULL,                                   -- note sul contratto
-  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il contratto
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il contratto
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+-- NOTA: l'archiviazione non e' la chiusura del contratto. Un contratto che si attiva a periodi ( p.es. un
+-- abbonamento in palestra ) resta non archiviato finche' non lo si disdice del tutto, cosi' gli si aggiungono
+-- facilmente altri rinnovi; lo si archivia quando non lo si vuole piu' fra quelli in uso. I contratti di
+-- affiliazione si citano con la loro chiave ( account.id_affiliazione, banner.id_affiliazione,
+-- carrelli.id_affiliazione ), e il loro codice pubblico e' il codice del contratto.
+--
+CREATE TABLE IF NOT EXISTS `contratti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di contratto
+  `codice` char(32) DEFAULT NULL,                               -- codice del contratto
+  `nome` char(255) DEFAULT NULL,                                -- nome del contratto
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile oggetto del contratto
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto oggetto del contratto
+  `note` text DEFAULT NULL,                                     -- note sul contratto
+  `note_cliente` text DEFAULT NULL,                             -- note per il cliente
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha archiviato il contratto
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000007400

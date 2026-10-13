@@ -161,9 +161,9 @@ INSERT IGNORE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (1,	'EU',	'Europa'),
 (2,	'AF',	'Africa'),
 (3,	'AS',	'Asia'),
-(4,	'NA',	'Nord America'),
-(5,	'AU',	'Oceania'),
-(6,	'LA',	'America Latina'),
+(4,	'NA',	'America del Nord'),
+(5,	'OC',	'Oceania'),
+(6,	'SA',	'America del Sud'),
 (7,	'AN',	'Antartide');
 
 -- | 050000009000

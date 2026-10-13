@@ -1261,14 +1261,14 @@ ALTER TABLE `contratti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `codice` ( `codice` ),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
-	ADD KEY `id_badge` (`id_badge`),
+	ADD KEY `nome` (`nome`),
 	ADD KEY `id_immobile` (`id_immobile`),
-	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
-	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` ( `id`, `id_tipologia`, `codice`, `nome`, `id_immobile`, `id_progetto`, `data_archiviazione` );
 
 -- | 030000007201
 

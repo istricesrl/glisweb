@@ -22,7 +22,7 @@ CREATE OR REPLACE VIEW account_view AS                        --
 		account.id_mail,                                      --
 		mail.indirizzo AS mail,                               -- indirizzo email
 		account.id_affiliazione,                              --
-		contratti.codice_affiliazione,                        -- codice affiliazione
+		contratti.codice AS codice_affiliazione,              -- codice del contratto di affiliazione
 		account.username,                                     --
 		account.password,                                     --
 		account.se_attivo,                                    --
@@ -2079,14 +2079,14 @@ CREATE OR REPLACE VIEW continenti_view AS
 
 -- contratti_view
 -- tipologia: tabella gestita
--- verifica: 2022-02-21 11:50 Chiara GDL
+-- verifica: 2026-10-13 punto 6, riga 55
 CREATE OR REPLACE VIEW `contratti_view` AS
 	SELECT
 		contratti.id,
 		contratti.id_tipologia,
-        tipologie_contratti.nome AS tipologia,
+		tipologie_contratti.nome AS tipologia,
 		contratti.codice,
-		contratti.codice_affiliazione,
+		contratti.nome,
 		contratti.id_immobile,
 		concat_ws(
 			' ',
@@ -2115,11 +2115,8 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		) AS immobile,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
-		contratti.id_categoria_progetti,
-		categorie_progetti_path( contratti.id_categoria_progetti ) AS categoria_progetti,
-		contratti.id_badge,
-		badge.codice AS badge,
-		contratti.nome,
+		contratti.id_account_archiviazione,
+		contratti.data_archiviazione,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
         coalesce( min(rinnovi.data_inizio), '-' ) AS data_inizio,
@@ -2146,7 +2143,6 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-		LEFT JOIN badge ON badge.id = contratti.id_badge
 		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
 		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
 		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
