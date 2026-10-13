@@ -177,6 +177,61 @@ INSERT IGNORE INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) 
 (3,	'nuda proprietà',	NULL,	1),
 (4,	'occupato',	NULL,	1);
 
+-- | 050000015100
+
+-- formati_tipologie_corrispondenza
+INSERT IGNORE INTO `formati_tipologie_corrispondenza` (`id`, `id_tipologia`, `nome`, `altezza_min`, `larghezza_min`, `spessore_min`, `altezza_max`, `larghezza_max`, `spessore_max`, `id_udm_dimensioni`) VALUES
+(1,	1,	'PP piccolo standard (max 12cm x 23,5cm x 0,5cm)',	9.00,	14.00,	0.15,	12.00,	23.50,	0.50,	3),
+(2,	1,	'PP medio standard (max 25cm x 35,3cm x 2,5cm)',	12.00,	23.50,	0.50,	25.00,	35.30,	2.50,	3),
+(6,	1,	'PP extra standard (max 25cm x 35,3cm x 0,5cm)',	12.00,	23.50,	0.25,	25.00,	35.30,	0.50,	3),
+(7,	2,	'RA standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(8,	7,	'RA standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(9,	2,	'RA non standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(10,	7,	'RA non standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(11,	2,	'RA c/assegno cc',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(12,	2,	'RA c/assegno vaglia',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(13,	3,	'AG standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(14,	3,	'AG non standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(15,	4,	'AR fino 50€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(16,	4,	'AR fino 250€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(17,	4,	'AR fino 500€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(18,	4,	'AR fino 1000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(19,	4,	'AR fino 2000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(20,	4,	'AR fino3000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(21,	6,	'PDL racc',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(22,	7,	'PDL racc',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(23,	6,	'PDL racc contrassegno c/c',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(24,	7,	'PDL racc contrassegno c/c',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(25,	6,	'PDL racc contrassegno vaglia',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(26,	7,	'PDL racc contrassegno vaglia',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(27,	5,	'PDL MAAF',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(28,	6,	'PDL standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(29,	8,	'corrispondenza estera',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(30,	9,	'AE fino 50€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(31,	9,	'AE fino 250€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(32,	9,	'AE fino 500€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(33,	9,	'AE fino 1000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(34,	9,	'AE fino 2000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(35,	9,	'AE fino 3000€',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(36,	10,	'RE standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(37,	10,	'RE contrassegno',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(38,	10,	'RE con RR',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(39,	2,	'PDL racc',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(40,	2,	'PDL racc contrassegno c/c',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(41,	2,	'PDL racc contrassegno vaglia',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(42,	12,	'PP piccolo standard (max 12cm x 23,5cm x 0,5cm)',	9.00,	14.00,	0.15,	12.00,	23.50,	0.50,	3),
+(43,	12,	'PP medio standard (max 25cm x 35,3cm x 2,5cm)',	12.00,	23.50,	0.50,	25.00,	35.30,	2.50,	3),
+(44,	12,	'PP extra standard (max 25cm x 35,3cm x 0,5cm)',	12.00,	23.50,	0.25,	25.00,	35.30,	0.50,	3),
+(45,	11,	'piccolo / medio standard (max 23,5cm x 12cm x 5mm)',	9.00,	14.00,	0.02,	12.00,	23.50,	0.50,	3),
+(46,	11,	'extra standard (max 35,3cm x 25cm x 2,5cm)',	12.00,	23.50,	0.50,	25.00,	35.30,	2.50,	3),
+(47,	13,	'normalizzato + compatto',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(48,	13,	'voluminoso',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(49,	14,	'normalizzato',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(50,	14,	'compatto',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(51,	14,	'voluminoso',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(52,	15,	'standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
+(53,	15,	'contrassegno',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3);
+
 -- | 050000015150
 
 -- giorni
@@ -589,6 +644,16 @@ INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_
 INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_annunci`, `se_categorie_annunci`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
 (1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	1),
 (2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+
+-- | 050000034280
+
+-- ruoli_conversazioni
+INSERT IGNORE INTO `ruoli_conversazioni` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	NULL,	'spettatore',	NULL,	NULL),
+(2,	NULL,	'membro',	NULL,	NULL),
+(3,	NULL,	'moderatore',	NULL,	NULL),
+(4,	NULL,	'amministratore',	NULL,	NULL),
+(5,	NULL,	'proprietario',	NULL,	NULL);
 
 -- | 050000034300
 

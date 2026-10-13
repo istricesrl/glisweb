@@ -2257,11 +2257,9 @@ CREATE OR REPLACE VIEW contratti_progetti_view AS
 CREATE OR REPLACE VIEW conversazioni_view AS
 	SELECT
 		conversazioni.id,
-		conversazioni.id_annuncio,
 		conversazioni.codice,
 		conversazioni.nome,
-		conversazioni.id_articolo,
-		conversazioni.quantita,
+		conversazioni.id_annuncio,
 		conversazioni.note,
 		conversazioni.timestamp_apertura,
 		conversazioni.timestamp_chiusura,
@@ -2278,13 +2276,14 @@ CREATE OR REPLACE VIEW conversazioni_view AS
 
 -- conversazioni_account_view
 -- tipologia: tabella gestita
--- verifica: 2022-08-31 11:50 Chiara GDL
 CREATE OR REPLACE VIEW conversazioni_account_view AS
 	SELECT
 		conversazioni_account.id,
+		conversazioni_account.ordine,
 		conversazioni_account.id_conversazione,
 		conversazioni_account.id_account,
 		conversazioni_account.id_ruolo,
+		ruoli_conversazioni.nome AS ruolo,
 		conversazioni_account.timestamp_lettura,
 		conversazioni_account.timestamp_entrata,
 		conversazioni_account.timestamp_uscita,
@@ -2292,33 +2291,29 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 		conversazioni_account.timestamp_inserimento,
 		conversazioni_account.id_account_aggiornamento,
 		conversazioni_account.timestamp_aggiornamento,
-		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
-	FROM
-		conversazioni_account
+		concat_ws( ' - ', conversazioni_account.id_conversazione, conversazioni_account.id_account, ruoli_conversazioni.nome ) AS __label__
+	FROM conversazioni_account
+		LEFT JOIN ruoli_conversazioni ON ruoli_conversazioni.id = conversazioni_account.id_ruolo
 ;
 
 -- | 090000007801
 
 -- corrispondenza_view
-CREATE OR REPLACE VIEW corrispondenza_view AS 
-	SELECT 
+CREATE OR REPLACE VIEW `corrispondenza_view` AS
+	SELECT
 		corrispondenza.id,
-		corrispondenza.id_distinta,
 		corrispondenza.id_tipologia,
 		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
-		corrispondenza.id_peso,
-		pesi_tipologie_corrispondenza.nome AS peso_tipologia,
 		tipologie_corrispondenza.se_pesata,
-		corrispondenza.peso,
-		corrispondenza.id_formato,
-		corrispondenza.quantita,
+		corrispondenza.codice,
+		corrispondenza.nome,
 		corrispondenza.id_mittente,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS mittente,
 		corrispondenza.id_organizzazione_mittente,
 		organizzazioni_path( corrispondenza.id_organizzazione_mittente ) AS organizzazione_mittente,
 		corrispondenza.id_commesso,
 		coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
-		corrispondenza.nome,
+		corrispondenza.destinatario_id_anagrafica,
 		coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
 		coalesce(
 			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
@@ -2326,6 +2321,15 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 			concat_ws( ' ', corrispondenza.destinatario_cap, stati.nome ),
 			''
 		) AS destinazione,
+		corrispondenza.id_formato,
+		formati_tipologie_corrispondenza.nome AS formato,
+		corrispondenza.id_peso,
+		pesi_tipologie_corrispondenza.nome AS peso_tipologia,
+		corrispondenza.peso,
+		corrispondenza.id_udm_peso,
+		corrispondenza.quantita,
+		corrispondenza.id_distinta_spedizione,
+		corrispondenza.timestamp_consegna,
 		corrispondenza.timestamp_elaborazione,
 		corrispondenza.timestamp_gestione,
 		corrispondenza.id_account_inserimento,
@@ -2333,24 +2337,24 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		corrispondenza.id_account_aggiornamento,
 		corrispondenza.timestamp_aggiornamento,
 		concat_ws(
-            ' ',
-            'da',
-            coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-            concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
-            tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
-            'per',
-            coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' )
-        ) AS __label__
+			' ',
+			'da',
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
+			tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
+			'per',
+			coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' )
+		) AS __label__
 	FROM corrispondenza
-        INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
+		INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
+		LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
 		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
 		LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
-		LEFT JOIN anagrafica AS commessi ON anagrafica.id = corrispondenza.id_commesso
+		LEFT JOIN anagrafica AS commessi ON commessi.id = corrispondenza.id_commesso
 		LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN provincie ON provincie.id = coalesce( corrispondenza.destinatario_id_provincia, comuni.id_provincia )
 		LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
-    WHERE tipologie_corrispondenza.se_corrispondenza = 1
-	GROUP BY corrispondenza.id
+	WHERE tipologie_corrispondenza.se_corrispondenza = 1
 ;
 
 -- | 090000007901
@@ -3162,6 +3166,32 @@ CREATE OR REPLACE VIEW `file_view` AS
 	FROM file
 		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
 		LEFT JOIN lingue ON lingue.id = file.id_lingua
+;
+
+-- | 090000015101
+
+-- formati_tipologie_corrispondenza_view
+CREATE OR REPLACE VIEW `formati_tipologie_corrispondenza_view` AS
+	SELECT
+		formati_tipologie_corrispondenza.id,
+		formati_tipologie_corrispondenza.id_tipologia,
+		tipologie_corrispondenza_path( formati_tipologie_corrispondenza.id_tipologia ) AS tipologia,
+		formati_tipologie_corrispondenza.nome,
+		formati_tipologie_corrispondenza.altezza_min,
+		formati_tipologie_corrispondenza.larghezza_min,
+		formati_tipologie_corrispondenza.spessore_min,
+		formati_tipologie_corrispondenza.altezza_max,
+		formati_tipologie_corrispondenza.larghezza_max,
+		formati_tipologie_corrispondenza.spessore_max,
+		formati_tipologie_corrispondenza.id_udm_dimensioni,
+		formati_tipologie_corrispondenza.id_account_inserimento,
+		formati_tipologie_corrispondenza.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_corrispondenza_path( formati_tipologie_corrispondenza.id_tipologia ),
+			formati_tipologie_corrispondenza.nome
+		) AS __label__
+	FROM formati_tipologie_corrispondenza
 ;
 
 -- | 090000015150
@@ -5920,6 +5950,21 @@ CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 	FROM ruoli_categorie_progetti
 ;
 
+-- | 090000034281
+
+-- ruoli_conversazioni_view
+-- tipologia: tabella di supporto
+CREATE OR REPLACE VIEW ruoli_conversazioni_view AS
+	SELECT
+		ruoli_conversazioni.id,
+		ruoli_conversazioni.id_genitore,
+		ruoli_conversazioni.nome,
+		ruoli_conversazioni.html_entity,
+		ruoli_conversazioni.font_awesome,
+	 	ruoli_conversazioni_path( ruoli_conversazioni.id ) AS __label__
+	FROM ruoli_conversazioni
+;
+
 -- | 090000034300
 
 -- ruoli_documenti_view
@@ -6706,6 +6751,7 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 		tipologie_corrispondenza.nome,
 		tipologie_corrispondenza.se_massivo,
 		tipologie_corrispondenza.se_corrispondenza,
+		tipologie_corrispondenza.se_pesata,
 		tipologie_corrispondenza.se_atto,
 		tipologie_corrispondenza.se_ricevuta_ritorno,
 		tipologie_corrispondenza.id_account_inserimento,

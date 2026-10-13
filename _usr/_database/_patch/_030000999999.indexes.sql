@@ -1302,15 +1302,14 @@ ALTER TABLE `contratti_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-08-31 11:50 Chiara GDL
 ALTER TABLE `conversazioni`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
-	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD UNIQUE KEY `codice` ( `codice` ),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
 	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
-	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` ( `id`, `codice`, `nome`, `id_annuncio`, `timestamp_apertura`, `timestamp_chiusura` );
 
 -- | 030000007501
 
@@ -1322,19 +1321,19 @@ ALTER TABLE `conversazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- conversazioni_account
 -- tipologia: tabella gestita
--- verifica: 2022-08-31 11:50 Chiara GDL
 ALTER TABLE `conversazioni_account`
- 	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_account`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_conversazione` (`id_conversazione`),
 	ADD KEY `id_account` (`id_account`),
- 	ADD KEY `timestamp_lettura` (`timestamp_lettura`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `timestamp_lettura` (`timestamp_lettura`), 
 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
- 	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
-	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_lettura`,`timestamp_entrata`, `timestamp_uscita`),
+	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
+	ADD KEY `indice` (`id`,`ordine`,`id_conversazione`,`id_account`,`id_ruolo`,`timestamp_lettura`,`timestamp_entrata`,`timestamp_uscita`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
 
 -- | 030000007601
 
@@ -1347,18 +1346,24 @@ ALTER TABLE `conversazioni_account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREME
 -- corrispondenza
 ALTER TABLE `corrispondenza`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_peso`,`id_formato`,`id_mittente`,`id_organizzazione_mittente`,`id_commesso`),
-	ADD UNIQUE KEY `codice` ( `codice` ),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_peso` (`id_peso`),
-	ADD KEY `id_formato` (`id_formato`),
+	ADD KEY `nome` (`nome`),
 	ADD KEY `id_mittente` (`id_mittente`),
 	ADD KEY `id_organizzazione_mittente` (`id_organizzazione_mittente`),
 	ADD KEY `id_commesso` (`id_commesso`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `id_distinta` (`id_distinta`);
+	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `destinatario_id_tipologia_anagrafica` (`destinatario_id_tipologia_anagrafica`),
+	ADD KEY `destinatario_id_comune` (`destinatario_id_comune`),
+	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`),
+	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`),
+	ADD KEY `id_formato` (`id_formato`),
+	ADD KEY `id_peso` (`id_peso`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_distinta_spedizione` (`id_distinta_spedizione`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000007801
 
@@ -1803,6 +1808,23 @@ ALTER TABLE `file`
 
 -- file
 ALTER TABLE `file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000015100
+
+-- formati_tipologie_corrispondenza
+ALTER TABLE `formati_tipologie_corrispondenza`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000015101
+
+-- formati_tipologie_corrispondenza
+ALTER TABLE `formati_tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015150
 
@@ -2813,6 +2835,8 @@ ALTER TABLE `periodicita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `pesi_tipologie_corrispondenza`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`grammi_min`,`grammi_max`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -3656,6 +3680,24 @@ ALTER TABLE `ruoli_categorie_progetti`
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000034280
+
+-- ruoli_conversazioni
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_conversazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000034281
+
+-- ruoli_conversazioni
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_conversazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000034300
 
 -- ruoli_documenti
@@ -4330,12 +4372,12 @@ ALTER TABLE `tipologie_contratti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- tipologie_corrispondenza
 ALTER TABLE `tipologie_corrispondenza`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000051001
 

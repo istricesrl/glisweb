@@ -2107,22 +2107,25 @@ CREATE TABLE IF NOT EXISTS `contratti_progetti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i conversazioni
+-- funzione: contiene le conversazioni, cioe' i contenitori dei messaggi
+--
+-- questa tabella contiene una conversazione per riga. La conversazione e' il contenitore dei messaggi, che stanno in
+-- messaggi, mentre i partecipanti stanno in conversazioni_account; collegandola ad altri oggetti se ne fanno chat uno
+-- a uno, chat di gruppo, forum, eccetera. Con id_annuncio la conversazione si lega all'annuncio da cui nasce ( p.es.
+-- la risposta di un utente a un annuncio ). Apertura e chiusura delimitano la vita della conversazione.
 --
 CREATE TABLE IF NOT EXISTS `conversazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `quantita` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `timestamp_apertura` int(11) DEFAULT NULL,
-  `timestamp_chiusura` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                               -- codice della conversazione
+  `nome` char(255) DEFAULT NULL,                                -- nome della conversazione
+  `id_annuncio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'annuncio a cui si riferisce la conversazione
+  `note` text DEFAULT NULL,                                     -- note sulla conversazione
+  `timestamp_apertura` int(11) DEFAULT NULL,                    -- timestamp di apertura della conversazione
+  `timestamp_chiusura` int(11) DEFAULT NULL,                    -- timestamp di chiusura della conversazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000007600
@@ -2131,20 +2134,25 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione conversazioni e account
+-- funzione: contiene i partecipanti alle conversazioni, cioe' chi partecipa a una conversazione e con che ruolo
+--
+-- questa tabella mette in relazione conversazioni e account: ogni riga e' un account che partecipa a una conversazione,
+-- con il suo ruolo preso da ruoli_conversazioni ( spettatore, membro, moderatore, amministratore, proprietario ).
+-- Entrata e uscita delimitano la partecipazione, la lettura segna l'ultima volta che il partecipante ha letto.
 --
 CREATE TABLE IF NOT EXISTS `conversazioni_account` (
-  `id` bigint(20) NOT NULL,
-  `id_conversazione` bigint(20) DEFAULT NULL,
-  `id_account` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `timestamp_lettura` int(11) DEFAULT NULL,
-  `timestamp_entrata` int(11) DEFAULT NULL,
-  `timestamp_uscita` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_conversazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la conversazione
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account che partecipa alla conversazione
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo dell'account nella conversazione
+  `timestamp_lettura` int(11) DEFAULT NULL,                     -- timestamp dell'ultima lettura della conversazione
+  `timestamp_entrata` int(11) DEFAULT NULL,                     -- timestamp di entrata nella conversazione
+  `timestamp_uscita` int(11) DEFAULT NULL,                      -- timestamp di uscita dalla conversazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000007800
@@ -2153,54 +2161,62 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene la corrispondenza in uscita
+-- funzione: contiene la corrispondenza cartacea in uscita
 --
--- questa tabella contiene la corrispondenza in uscita, con le informazioni principali
---
-CREATE TABLE IF NOT EXISTS `corrispondenza` (                   --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di corrispondenza
-  `codice` char(32) DEFAULT NULL,                               -- codice della corrispondenza
-  `id_peso` bigint(20) DEFAULT NULL,                               -- chiave esterna per il peso
-  `peso` decimal(5,2) DEFAULT NULL,                             -- peso della corrispondenza
-  `id_formato` bigint(20) DEFAULT NULL,                            -- chiave esterna per il formato
-  `id_distinta` bigint(20) DEFAULT NULL,                           -- chiave esterna per la distinta
-  `quantita` int(11) DEFAULT NULL,                              -- quantità della corrispondenza
-  `id_mittente` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'anagrafica mittente
-  `id_organizzazione_mittente` bigint(20) DEFAULT NULL,            -- chiave esterna per l'organizzazione mittente
-  `id_commesso` bigint(20) DEFAULT NULL,                           -- chiave esterna per il commesso
-  `nome` char(255) DEFAULT NULL,                                -- nome del mittente
-  `destinatario_nome` char(155) DEFAULT NULL,                   -- nome del destinatario
-  `destinatario_cognome` char(255) DEFAULT NULL,                -- cognome del destinatario
-  `destinatario_denominazione` char(255) DEFAULT NULL,          -- denominazione del destinatario
-  `destinatario_codice_fiscale` char(255) DEFAULT NULL,         -- codice fiscale del destinatario
-  `destinatario_partita_iva` char(255) DEFAULT NULL,            -- partita IVA del destinatario
-  `destinatario_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,  -- chiave esterna per la tipologia di anagrafica del destinatario
-  `destinatario_id_anagrafica` bigint(20) DEFAULT NULL,            -- chiave esterna per l'anagrafica del destinatario
-  `destinatario_indirizzo` char(255) DEFAULT NULL,              -- indirizzo del destinatario
-  `destinatario_civico` char(16) DEFAULT NULL,                  -- civico del destinatario
-  `destinatario_cap` char(16) DEFAULT NULL,                     -- CAP del destinatario
-  `destinatario_citta` char(255) DEFAULT NULL,                  -- città del destinatario
-  `destinatario_id_comune` bigint(20) DEFAULT NULL,                -- chiave esterna per il comune del destinatario
-  `destinatario_id_provincia` bigint(20) DEFAULT NULL,             -- chiave esterna per la provincia del destinatario
-  `destinatario_id_stato` bigint(20) DEFAULT NULL,                 -- chiave esterna per lo stato del destinatario
-  `id_tipologia_certificazione_consegna` bigint(20) DEFAULT NULL,  -- chiave esterna per la tipologia di certificazione di consegna
-  `numero_certificazione_consegna` char(255) DEFAULT NULL,      -- numero della certificazione di consegna
-  `id_tipologia_consegna` bigint(20) DEFAULT NULL,                 -- chiave esterna per la tipologia di consegna
-  `nome_consegna` char(255) DEFAULT NULL,                       -- nome per la consegna
-  `cognome_consegna` char(255) DEFAULT NULL,                    -- cognome per la consegna
-  `timestamp_consegna` int(11) DEFAULT NULL,                    -- timestamp di consegna
-  `requisiti_consegna` text DEFAULT NULL,                       -- requisiti per la consegna
-  `note_consegna` text DEFAULT NULL,                            -- note sulla consegna
-  `timestamp_elaborazione` int(11) DEFAULT NULL,                -- timestamp dell'ultima elaborazione
-  `note_elaborazione` text DEFAULT NULL,                        -- note sull'ultima elaborazione
-  `timestamp_gestione` int(11) DEFAULT NULL,                    -- timestamp dell'ultima gestione
-  `note_gestione` text DEFAULT NULL,                            -- note sull'ultima gestione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la corrispondenza
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la corrispondenza
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+-- questa tabella contiene la corrispondenza cartacea spedita: una riga può essere un singolo invio ( forma
+-- dettagliata, col destinatario compilato ) oppure un blocco di invii uguali ( forma aggregata, con quantita e senza
+-- destinatario ). La tipologia dice di che spedizione si tratta ( posta ordinaria, raccomandata, atto, con o senza
+-- ricevuta di ritorno ), il formato e lo scaglione di peso dicono come si tariffa. La tabella appartiene al modulo
+-- corrispondenza.
+-- NOTA il destinatario si scrive per esteso nei campi destinatario_*, perché la corrispondenza parte anche verso chi
+-- non è in anagrafica; destinatario_id_anagrafica lo collega quando c'è
+-- NOTA id_peso è lo scaglione della tariffa ( pesi_tipologie_corrispondenza ), peso e id_udm_peso il peso effettivo
+-- NOTA id_distinta_spedizione è la distinta con cui la corrispondenza viene consegnata all'ufficio postale; la tabella
+-- delle distinte di spedizione non esiste ancora, quindi la colonna non ha chiave esterna
+-- NOTA il blocco *_consegna registra l'esito della consegna al destinatario
+CREATE TABLE IF NOT EXISTS `corrispondenza` (                 --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- tipologia della corrispondenza
+  `codice` char(32) DEFAULT NULL,                             -- codice della corrispondenza, p.es. il numero della raccomandata
+  `nome` char(255) DEFAULT NULL,                              -- nome della corrispondenza, a uso interno
+  `id_mittente` bigint(20) DEFAULT NULL,                      -- anagrafica che spedisce la corrispondenza
+  `id_organizzazione_mittente` bigint(20) DEFAULT NULL,       -- organizzazione ( ufficio ) che spedisce la corrispondenza
+  `id_commesso` bigint(20) DEFAULT NULL,                      -- anagrafica del commesso che ha in carico la corrispondenza
+  `destinatario_id_anagrafica` bigint(20) DEFAULT NULL,       -- anagrafica del destinatario, se esiste
+  `destinatario_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,  -- tipologia di anagrafica del destinatario
+  `destinatario_nome` char(255) DEFAULT NULL,                 -- nome del destinatario
+  `destinatario_cognome` char(255) DEFAULT NULL,              -- cognome del destinatario
+  `destinatario_denominazione` char(255) DEFAULT NULL,        -- denominazione del destinatario
+  `destinatario_codice_fiscale` char(32) DEFAULT NULL,        -- codice fiscale del destinatario
+  `destinatario_partita_iva` char(32) DEFAULT NULL,           -- partita IVA del destinatario
+  `destinatario_indirizzo` char(255) DEFAULT NULL,            -- indirizzo del destinatario
+  `destinatario_civico` char(16) DEFAULT NULL,                -- numero civico del destinatario
+  `destinatario_cap` char(16) DEFAULT NULL,                   -- CAP del destinatario
+  `destinatario_citta` char(255) DEFAULT NULL,                -- città del destinatario, come scritta sulla busta
+  `destinatario_id_comune` bigint(20) DEFAULT NULL,           -- comune del destinatario
+  `destinatario_id_provincia` bigint(20) DEFAULT NULL,        -- provincia del destinatario
+  `destinatario_id_stato` bigint(20) DEFAULT NULL,            -- stato del destinatario
+  `id_formato` bigint(20) DEFAULT NULL,                       -- formato della busta o del plico
+  `id_peso` bigint(20) DEFAULT NULL,                          -- scaglione di peso della tariffa
+  `peso` decimal(7,2) DEFAULT NULL,                           -- peso effettivo della corrispondenza
+  `id_udm_peso` bigint(20) DEFAULT NULL,                      -- unità di misura del peso
+  `quantita` int(11) DEFAULT NULL,                            -- numero di pezzi, per la corrispondenza aggregata
+  `id_distinta_spedizione` bigint(20) DEFAULT NULL,           -- distinta di spedizione in cui è consegnata all'ufficio postale
+  `numero_certificazione_consegna` char(255) DEFAULT NULL,    -- numero della certificazione di consegna ( p.es. della ricevuta di ritorno )
+  `nome_consegna` char(255) DEFAULT NULL,                     -- nome di chi ha ricevuto la corrispondenza
+  `cognome_consegna` char(255) DEFAULT NULL,                  -- cognome di chi ha ricevuto la corrispondenza
+  `timestamp_consegna` int(11) DEFAULT NULL,                  -- timestamp della consegna
+  `requisiti_consegna` text DEFAULT NULL,                     -- requisiti per la consegna
+  `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
+  `timestamp_elaborazione` int(11) DEFAULT NULL,              -- timestamp dell'ultima elaborazione
+  `note_elaborazione` text DEFAULT NULL,                      -- note sull'ultima elaborazione
+  `timestamp_gestione` int(11) DEFAULT NULL,                  -- timestamp dell'ultima gestione
+  `note_gestione` text DEFAULT NULL,                          -- note sull'ultima gestione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000007900
 
@@ -2696,6 +2712,37 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il file
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000015100
+
+-- formati_tipologie_corrispondenza
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i formati ammessi per ogni tipologia di corrispondenza
+--
+-- questa tabella contiene i formati della corrispondenza cartacea ( p.es. piccolo, medio ed extra per la posta
+-- ordinaria ): ogni formato appartiene a una tipologia e ha le dimensioni minime e massime della busta o del plico, da
+-- cui dipende la tariffa. La tabella appartiene al modulo corrispondenza.
+-- NOTA le dimensioni sono un blocco con la sua id_udm_dimensioni, come in colli; dimensioni a zero o nulle vogliono
+-- dire che il formato non pone limiti
+--
+CREATE TABLE IF NOT EXISTS `formati_tipologie_corrispondenza` (--
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- tipologia di corrispondenza a cui il formato appartiene
+  `nome` char(255) DEFAULT NULL,                              -- nome del formato
+  `altezza_min` decimal(7,2) DEFAULT NULL,                    -- altezza minima
+  `larghezza_min` decimal(7,2) DEFAULT NULL,                  -- larghezza minima
+  `spessore_min` decimal(7,2) DEFAULT NULL,                   -- spessore minimo
+  `altezza_max` decimal(7,2) DEFAULT NULL,                    -- altezza massima
+  `larghezza_max` decimal(7,2) DEFAULT NULL,                  -- larghezza massima
+  `spessore_max` decimal(7,2) DEFAULT NULL,                   -- spessore massimo
+  `id_udm_dimensioni` bigint(20) DEFAULT NULL,                -- unità di misura delle dimensioni
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000015150
@@ -4009,19 +4056,24 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le pesi tipologie corrispondenza
+-- funzione: contiene gli scaglioni di peso per ogni tipologia di corrispondenza
 --
-CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `nome` varchar(128) DEFAULT NULL,
-  `grammi_min` decimal(8,2) DEFAULT NULL,
-  `grammi_max` decimal(8,2) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene gli scaglioni di peso della corrispondenza cartacea ( p.es. fino a 20 grammi, da 21 a 50 ):
+-- ogni scaglione appartiene a una tipologia e, insieme al formato, determina la tariffa. La tabella appartiene al
+-- modulo corrispondenza.
+-- NOTA gli estremi dello scaglione sono in grammi, come dice il nome delle colonne
+--
+CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (  --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- tipologia di corrispondenza a cui lo scaglione appartiene
+  `nome` char(255) DEFAULT NULL,                              -- nome dello scaglione
+  `grammi_min` decimal(8,2) DEFAULT NULL,                     -- peso minimo dello scaglione, in grammi
+  `grammi_max` decimal(8,2) DEFAULT NULL,                     -- peso massimo dello scaglione, in grammi
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000023800
 
@@ -5084,6 +5136,29 @@ CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000034280
+
+-- ruoli_conversazioni
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei partecipanti alle conversazioni
+--
+-- questa tabella contiene i ruoli con cui un account partecipa a una conversazione ( spettatore, membro, moderatore,
+-- amministratore, proprietario ); la legge conversazioni_account.id_ruolo
+--
+CREATE TABLE IF NOT EXISTS `ruoli_conversazioni` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000034300
 
 -- ruoli_documenti
@@ -6044,23 +6119,27 @@ CREATE TABLE IF NOT EXISTS `tipologie_contratti` (                          --
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di corrispondenza
 --
--- questa tabella contiene le tipologie di corrispondenza, con le informazioni relative
--- al nome e alle funzionalità associate (massivo, corrispondenza, pesata, atto, ricevuta di ritorno)
+-- questa tabella contiene le tipologie della corrispondenza cartacea ( posta ordinaria, raccomandata, atto giudiziario
+-- e così via ), organizzate ad albero; i flag dicono come si comporta la corrispondenza della tipologia. La tabella
+-- appartiene al modulo corrispondenza.
+-- NOTA se_corrispondenza marca le tipologie che compaiono in corrispondenza_view
+-- NOTA se_massivo vuol dire che la tipologia si spedisce in forma aggregata, se_pesata che va pesata, se_atto che è un
+-- atto giudiziario, se_ricevuta_ritorno che prevede la ricevuta di ritorno
 --
-CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (         --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
-  `nome` char(255) DEFAULT NULL,                                -- nome della tipologia
-  `se_massivo` tinyint(1) DEFAULT NULL,                         -- se massivo
-  `se_corrispondenza` tinyint(1) DEFAULT NULL,                  -- se corrispondenza
-  `se_pesata` tinyint(1) DEFAULT NULL,                          -- se pesata
-  `se_atto` tinyint(1) DEFAULT NULL,                            -- se atto
-  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,                -- se ricevuta di ritorno
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
+CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (       --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                      -- tipologia genitore
+  `nome` char(255) DEFAULT NULL,                              -- nome della tipologia
+  `se_massivo` tinyint(1) DEFAULT NULL,                       -- se la tipologia si spedisce in forma aggregata
+  `se_corrispondenza` tinyint(1) DEFAULT NULL,                -- se la tipologia compare fra la corrispondenza
+  `se_pesata` tinyint(1) DEFAULT NULL,                        -- se la corrispondenza va pesata
+  `se_atto` tinyint(1) DEFAULT NULL,                          -- se è un atto giudiziario
+  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,              -- se prevede la ricevuta di ritorno
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000052600
 
