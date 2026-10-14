@@ -2596,6 +2596,8 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 -- | 090000008950
 
 -- dichiarazioni_intento_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-14 punto 6, riga 68
 CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
 	SELECT
 		dichiarazioni_intento.id,
@@ -2607,6 +2609,7 @@ CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
 		dichiarazioni_intento.data_inizio,
 		dichiarazioni_intento.data_fine,
 		dichiarazioni_intento.importo,
+		dichiarazioni_intento.note,
 		dichiarazioni_intento.id_account_inserimento,
 		dichiarazioni_intento.id_account_aggiornamento,
 		concat_ws( ' ', dichiarazioni_intento.protocollo, 'del', dichiarazioni_intento.data_protocollo ) AS __label__

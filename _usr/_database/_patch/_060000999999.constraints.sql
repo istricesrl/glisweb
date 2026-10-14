@@ -800,6 +800,8 @@ ALTER TABLE `crediti`
 -- | 060000008950
 
 -- dichiarazioni_intento
+-- tipologia: tabella gestita
+-- verifica: 2026-10-14 punto 6, riga 68
 ALTER TABLE `dichiarazioni_intento`
     ADD CONSTRAINT `dichiarazioni_intento_ibfk_01`            FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `dichiarazioni_intento_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,

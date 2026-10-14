@@ -2461,23 +2461,31 @@ CREATE TABLE IF NOT EXISTS `crediti` (
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le dichiarazioni d'intento degli esportatori abituali, citate dalla fattura elettronica nelle righe con natura N3.5
+-- funzione: registra le dichiarazioni d'intento ricevute dagli esportatori abituali
 --
-CREATE TABLE IF NOT EXISTS `dichiarazioni_intento` (             --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'esportatore abituale che ha emesso la dichiarazione
-  `protocollo` char(32) DEFAULT NULL,                         -- protocollo di ricezione telematica ( 17 cifre, trattino, 6 cifre )
-  `data_protocollo` date DEFAULT NULL,                        -- data della ricevuta telematica
-  `anno` int(4) DEFAULT NULL,                                 -- anno a cui si riferisce la dichiarazione
-  `data_inizio` date DEFAULT NULL,                            -- inizio del periodo di validita', se la dichiarazione ne indica uno
-  `data_fine` date DEFAULT NULL,                              -- fine del periodo di validita'
-  `importo` decimal(16,2) DEFAULT NULL,                       -- importo fino a concorrenza del quale vale la dichiarazione
-  `note` text DEFAULT NULL,                                   -- note
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la dichiarazione
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la dichiarazione
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella registra, per ogni cliente esportatore abituale, le dichiarazioni d'intento che ha presentato
+-- all'Agenzia delle Entrate per acquistare senza IVA entro il suo plafond: il protocollo e la data della ricevuta
+-- telematica, l'anno o il periodo di validita' e l'importo fino a concorrenza del quale vale. Non e' una codifica
+-- ufficiale da sincronizzare: le dichiarazioni le comunica il cliente e si registrano a mano nella sua anagrafica.
+-- La fattura elettronica cita la dichiarazione valida alla data del documento nelle righe con natura N3.5
+-- ( AltriDatiGestionali, TipoDato INTENTO ). Il protocollo identifica la dichiarazione, da cui l'unicita' su
+-- anagrafica e protocollo. E' gestita dalla scheda cliente dell'anagrafica; in oldstable la legge 0400.documenti.
+--
+CREATE TABLE IF NOT EXISTS `dichiarazioni_intento` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'esportatore abituale che ha presentato la dichiarazione
+  `protocollo` char(32) DEFAULT NULL,                           -- protocollo della ricevuta telematica ( 17 cifre, trattino, 6 cifre )
+  `data_protocollo` date DEFAULT NULL,                          -- data della ricevuta telematica
+  `anno` int(4) DEFAULT NULL,                                   -- anno per cui vale la dichiarazione, se ne indica uno
+  `data_inizio` date DEFAULT NULL,                              -- inizio del periodo di validita', se la dichiarazione ne indica uno
+  `data_fine` date DEFAULT NULL,                                -- fine del periodo di validita'
+  `importo` decimal(16,2) DEFAULT NULL,                         -- importo fino a concorrenza del quale vale la dichiarazione
+  `note` text DEFAULT NULL,                                     -- note sulla dichiarazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000009000
 
