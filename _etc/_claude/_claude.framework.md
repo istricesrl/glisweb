@@ -92,6 +92,15 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 
 `_src/_config.php` rileva e carica i file custom automaticamente tramite `path2custom()` e `glob2custom()`.
 
+**⚠ Promuovere a monte codice che vive in un `.add.php` vuol dire anche toglierlo dal progetto, nello stesso
+gesto.** Il `.add.php` non sostituisce lo standard, si carica **in più**, sempre ( `_src/_config.php`, ciclo su
+`$cf['library']['files']` ): finché le funzioni restano anche nel progetto, il primo aggiornamento che porta lo
+standard nuovo manda il deploy in `Cannot redeclare` **su ogni pagina**, non su una sola. Mettere a monte e
+togliere dal progetto sono **una mossa sola**: prima si toglie dal progetto ( o lo si fa nella stessa finestra
+dell'aggiornamento ), poi si verifica con `_smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
+del sottoscorta promosse in `_0500.mastri` e rimaste in `src/lib/mysql.utils.add.php` hanno fermato il sito
+otto minuti e mezzo, col magazzino al lavoro.
+
 ---
 
 ## Il materiale di progetto sta in `var/`, mai dentro la document root

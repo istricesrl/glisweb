@@ -267,7 +267,10 @@ Se da un progetto cliente serve correggere il framework standard, il workflow è
    `develop`) con la procedura della skill `riallineamento`: **si applicano gli hunk, mai il file intero**,
    con `stat` degli inode prima e dopo ( glisweb e glisdev condividono i file ), `php -l`/`bash -n`,
    permessi su entrambi, un commit che spiega il perché e cita il deploy d'origine, push su `develop`. Se
-   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se tocca
+   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se si promuove
+   codice che nel progetto vive in un `.add.php`, **lo si toglie dal progetto nello stesso gesto**: il
+   `.add.php` si carica in più dello standard, e al primo aggiornamento ogni pagina va in
+   `Cannot redeclare` ( vedi `_claude.framework.md`, sotto la tabella degli override ). Se tocca
    autenticazione, permessi, pagamenti o cancellazioni, o toglie righe che a monte esistono, si chiede
    prima di promuovere.
 4. **Ridistribuzione subito dopo il push**: `./dev/_src/_sh/_gw.upgrade.sh "$(cat update.branch.conf)"`
