@@ -625,6 +625,12 @@ contiene `dev/`, non la document root. È lo stesso che usa il cron notturno
 `/etc/cron.daily/manutenzione-siti`: allinearsi a quello evita che l'aggiornamento manuale e quello
 automatico si rincorrano.
 
+Il repository da cui si scarica è `glisweb`, a meno che `update.repository.conf`, accanto a
+`update.branch.conf`, non dica `glisdev` ( oppure il terzo argomento, che vince sul file: il secondo è
+il profilo del database ). Ammessi solo questi due nomi; un nome diverso ferma lo script prima del
+backup. Il file lo legge la copia dello script **già installata**, quindi un deploy appena passato alla
+versione che lo conosce cambia repository solo dal giro di aggiornamento successivo.
+
 **Non è un `git pull`, e non lo si sostituisce con git.** Un deploy cliente non è un checkout del
 framework: `_src/`, `_mod/`, `_etc/` e `_usr/` arrivano dallo zip di GitHub, non da git. Se in macchina
 esiste un checkout del framework (p.es. `/var/www/glisweb.istricesrl.it/dev/`) quello serve a **leggere** —

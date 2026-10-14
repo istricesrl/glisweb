@@ -73,6 +73,30 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
+        # repository da cui scaricare il branch
+        #
+        # alcuni deploy si aggiornano da glisdev invece che da glisweb: lo dice il file
+        # update.repository.conf nella root del deploy, accanto a update.branch.conf, oppure il
+        # terzo argomento, che ha la precedenza ( il secondo e' gia' il profilo del database ).
+        # Senza l'uno e l'altro vale glisweb, com'e' sempre stato. Il nome si controlla QUI, prima
+        # del backup, perche' un nome sbagliato non deve toccare niente
+        REPO="glisweb"
+        if [ -n "$3" ]; then
+            REPO="$3"
+        elif [ -s ../update.repository.conf ]; then
+            REPO=$( tr -d '[:space:]' < ../update.repository.conf )
+        fi
+
+        case "$REPO" in
+            glisweb|glisdev)
+                echo "aggiorno dal repository istricesrl/$REPO"
+                ;;
+            *)
+                echo "ERRORE: repository '$REPO' non ammesso ( glisweb o glisdev ), il framework NON viene toccato"
+                exit 1
+                ;;
+        esac
+
         cartellaDisallineamenti="../$DISALLINEAMENTI_SUBDIR/$( date '+%Y%m%d%H%M%S' )/"
 
         echo "inizio il backup"
@@ -162,10 +186,10 @@ else
 
         # residui di un tentativo precedente andato male: se restassero, i controlli qui sotto
         # li scambierebbero per il risultato di questo giro e darebbero via libera al rm -rf
-        rm -rf ./glisweb-$BRANCHDIR
+        rm -rf ./$REPO-$BRANCHDIR
         rm -f ./$BRANCHZIP.zip
 
-        # scarico Glisweb
+        # scarico il framework dal repository scelto
         #
         # ATTENZIONE: da qui alla riga del rm -rf ./_* non si distrugge ancora niente, ed e'
         # l'unico momento in cui ci si puo' ancora fermare. Fino al 2026-09-09 non ci si fermava:
@@ -176,7 +200,7 @@ else
         #
         # Ogni controllo qui sotto esce PRIMA del rm -rf, quindi il deploy resta esattamente
         # com'era e riprova al giro successivo.
-        if ! wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip; then
+        if ! wget https://github.com/istricesrl/$REPO/archive/$BRANCH.zip; then
             echo "ERRORE: scaricamento di $BRANCH.zip fallito, il framework NON viene toccato"
             exit 1
         fi
@@ -186,7 +210,7 @@ else
             exit 1
         fi
 
-        # scompatto Glisweb
+        # scompatto il framework
         if ! unzip -qq ./$BRANCHZIP.zip; then
             echo "ERRORE: scompattamento di ./$BRANCHZIP.zip fallito, il framework NON viene toccato"
             exit 1
@@ -194,8 +218,8 @@ else
 
         # controllo che sia davvero un framework e non una pagina di errore rinominata .zip:
         # _src/_config.php e' il bootstrap, senza quello non c'e' niente da installare
-        if [ ! -f ./glisweb-$BRANCHDIR/_src/_config.php ]; then
-            echo "ERRORE: ./glisweb-$BRANCHDIR/ non contiene _src/_config.php, non sembra una"
+        if [ ! -f ./$REPO-$BRANCHDIR/_src/_config.php ]; then
+            echo "ERRORE: ./$REPO-$BRANCHDIR/ non contiene _src/_config.php, non sembra una"
             echo "        distribuzione del framework. Il framework NON viene toccato"
             exit 1
         fi
@@ -210,7 +234,7 @@ else
         rm -rf ./_*
 
         # installo la nuova versione
-        cp -rf ./glisweb-$BRANCHDIR/{.[!.],}* ./
+        cp -rf ./$REPO-$BRANCHDIR/{.[!.],}* ./
 
         # ripristino il vendor salvato (il rm -rf ./_* lo aveva eliminato): cosi'
         # l'autoload esiste gia' anche prima di lanciare composer
@@ -220,7 +244,7 @@ else
         fi
 
         # elimino la vecchia cartella
-        rm -rf ./glisweb-$BRANCHDIR
+        rm -rf ./$REPO-$BRANCHDIR
         rm -rf ./$BRANCHZIP.zip
 
         # installo il .gitignore se è presente un repository .git
@@ -356,7 +380,7 @@ else
     else
 
         # sinossi
-        echo "utilizzo: $0 <branch> [ DEV | TEST | PROD ]"
+        echo "utilizzo: $0 <branch> [ DEV | TEST | PROD ] [ glisweb | glisdev ]"
 
     fi
 

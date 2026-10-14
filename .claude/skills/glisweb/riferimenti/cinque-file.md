@@ -49,8 +49,10 @@ documentazione che gli serve **con un clic**, senza ricostruire URL, cercare qua
 ricordarsi dove stanno le credenziali. Per questo il `READ.md` ha una sezione **Documentazione**,
 divisa in due sottosezioni:
 
-- **standard** — i link alla documentazione del framework, sul sito pubblico della linea che il
-  deploy segue ( `glisweb.istricesrl.it` per la stabile, `glisdev.istricesrl.com` per la latest ):
+- **standard** — i link alla documentazione del framework, sul sito pubblico del **repository da cui il
+  deploy si aggiorna**, e non su uno a scelta: quello di `update.repository.conf` nella root del
+  deploy ( `glisweb` → `glisweb.istricesrl.it`, `glisdev` → `glisdev.istricesrl.com`; senza il file vale
+  `glisweb` ). Lo standard che il deploy fa girare è quello, e il manuale da aprire è il suo:
   manuale sviluppatore e manuale utente, ciascuno come **indice HTML**, **pagina unica**
   ( `tutto.html` ) e **PDF**, più l'indice delle quickstart. **Solo i link**: come si genera lo
   standard è lavoro del framework, e qui non si scrive;
@@ -91,8 +93,9 @@ Regola di Fabio del **13/10/2026**, stessa logica della voce 8. Ogni esecuzione 
 l'ultima a un indirizzo fisso; la sezione **Test automatici** del `READ.md` ne tiene i link, divisa
 nelle stesse due sottosezioni:
 
-- **standard** — l'esito dei test dello standard, sul sito pubblico della linea
-  ( `https://glisweb.istricesrl.it/_test/index.html` ), **solo se esiste**: si pubblica solo sui deploy
+- **standard** — l'esito dei test dello standard, sul sito pubblico del repository da cui il deploy si
+  aggiorna, con la stessa regola della voce 8 ( `https://glisweb.istricesrl.it/_test/index.html` o
+  `https://glisdev.istricesrl.com/_test/index.html` ), **solo se esiste**: si pubblica solo sui deploy
   del framework, dopo che ci sono girati i test. Se non c'è si scrive che non c'è, non si mette il link;
 - **custom** — l'esito del progetto ( `/test/index.html` ) **per ogni ambiente dove i test girano**, con
   la stessa Basic auth del manuale. Di norma è il solo DEV: l'esito non viaggia col deploy, e i test
