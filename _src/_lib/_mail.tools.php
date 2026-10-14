@@ -367,6 +367,11 @@
      * mai la forma con i placeholder. Dopo il rendering vengono scartati i destinatari con indirizzo vuoto, e nel corpo i
      * percorsi assoluti degli attributi src vengono trasformati in URL completi con path2url().
      *
+     * Proprio perché nomi e indirizzi in $to, $to_cc e $to_bcc vengono compilati come template, i dati che arrivano
+     * dall'utente non vanno mai concatenati lì dentro ma passati in $d e richiamati coi placeholder, p.es.
+     * array( '{{ dt.nome }} {{ dt.cognome }}' => '{{ dt.email }}' ): un nome scritto in un form con della sintassi Twig
+     * verrebbe altrimenti eseguito ( fino al 14/10/2026 la registrazione faceva così ).
+     *
      * Se il template non ha il mittente per la lingua richiesta ( anche perché la lingua manca del tutto ), oppure se Twig
      * solleva un'eccezione, la funzione interrompe l'esecuzione con die(). Se il tipo del template non è supportato l'errore
      * viene loggato e, non essendoci destinatari, la funzione restituisce null.

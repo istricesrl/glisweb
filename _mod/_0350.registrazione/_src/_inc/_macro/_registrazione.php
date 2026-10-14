@@ -74,7 +74,7 @@
 				$cf['mail']['tpl'][ $ct['etc']['profilo']['mail'] ],
 				array( 'dt' => $_REQUEST['__signup__'], 'ct' => $ct, 'pf' => $ct['etc']['profilo'] ),
 				strtotime( '-1 minute' ),
-				array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
+				array( '{{ dt.nome }} {{ dt.cognome }}' => '{{ dt.email }}' ),
 				$cf['localization']['language']['ietf']
 			);
 

@@ -19,7 +19,7 @@
             $cf['mail']['tpl']['DEFAULT_AGGIORNAMENTO_DATI'],
             array( 'dt' => array_replace_recursive( $_REQUEST['__profile__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
             strtotime( '+1 minutes' ),
-            array( $_REQUEST['__profile__']['nome'] . ' ' . $_REQUEST['__profile__']['cognome'] => $_REQUEST['__profile__']['email'] ),
+            array( '{{ dt.nome }} {{ dt.cognome }}' => '{{ dt.email }}' ),
             $cf['localization']['language']['ietf']
         );
 
