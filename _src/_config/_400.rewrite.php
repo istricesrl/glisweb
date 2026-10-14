@@ -99,7 +99,7 @@
     // print_r( array_keys( $cf['contents']['pages'] ) );
 
     // default
-    $cf['parser']['parent']     = NULL;
+    $cf['parser']['parents']    = array( NULL );
     $cf['parser']['page']       = NULL;
     $cf['parser']['lingua']     = $cf['localization']['language']['ietf'];
 
@@ -181,12 +181,24 @@
                             // verifico se l'elemento corrente è presente nell'indice delle pagine rewritate
                             if( array_key_exists( $cf['parser']['step'], $cf['contents']['index'][ LINGUA_CORRENTE ] ) ) {
 
+                                /*
+                                 * NOTA
+                                 * uno step può corrispondere a più pagine dello stesso livello, p.es. una pagina
+                                 * di contenuto e una categoria di prodotti che si chiamano entrambe "occasioni":
+                                 * tenendo come genitore solo l'ultima trovata, i figli delle altre davano 404;
+                                 * per questo i genitori dello step successivo sono tutte le pagine trovate
+                                 *
+                                 */
+
+                                // genitori per lo step successivo
+                                $cf['parser']['found'] = array();
+
                                 // esamino le pagine presenti nell'indice per vedere se ce n'e' una che ha lo stesso genitore di quella corrente
                                 foreach( $cf['contents']['index'][ LINGUA_CORRENTE ][ $cf['parser']['step'] ] as $cf['parser']['candidate'] ) {
 
-                                    // se la pagina attualmente controllata ha lo stesso id genitore della pagina step, allora e' lei
+                                    // se la pagina attualmente controllata ha come genitore una delle pagine dello step precedente, allora e' lei
                                     if(
-                                        $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['id'] == $cf['parser']['parent'] 
+                                        in_array( $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['id'], $cf['parser']['parents'] )
                                         ||
                                         empty( $cf['contents']['pages'][ $cf['parser']['candidate'] ]['parent']['title'][ $cf['parser']['lingua'] ] )
                                     ) {
@@ -194,11 +206,16 @@
                                         // la pagina trovata diventa la nuova pagina corrente
                                         $cf['parser']['page'] = $cf['parser']['candidate'];
 
-                                        // scendo di un livello nell'analisi dell'albero: la pagina trovata diventa il nuovo genitore
-                                        $cf['parser']['parent'] = $cf['parser']['candidate'];
+                                        // la pagina trovata è un possibile genitore dello step successivo
+                                        $cf['parser']['found'][] = $cf['parser']['candidate'];
 
                                     }
 
+                                }
+
+                                // scendo di un livello nell'analisi dell'albero: le pagine trovate diventano i nuovi genitori
+                                if( ! empty( $cf['parser']['found'] ) ) {
+                                    $cf['parser']['parents'] = $cf['parser']['found'];
                                 }
 
                             } else {

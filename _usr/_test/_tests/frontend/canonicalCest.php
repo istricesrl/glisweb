@@ -5,8 +5,9 @@
      *
      * verifica il canonical delle pagine generate dai moduli che pubblicano un contenuto in più categorie ( prodotti,
      * articoli, notizie, annunci, risorse ): ogni pagina del contenuto dichiara canonical la stessa pagina, quella della
-     * prima categoria, e quella pagina dichiara canonical sé stessa; nella sitemap vanno solo le pagine canoniche, e
-     * l'head della pagina doppione porta il <link rel="canonical"> verso la canonica
+     * prima categoria, e quella pagina dichiara canonical sé stessa; nella sitemap vanno solo le pagine canoniche,
+     * l'head della pagina doppione porta il <link rel="canonical"> verso la canonica, e la pagina doppione risponde
+     * anche se non è pubblicata: il suo URL può essere stato indicizzato prima, o digitato a mano
      *
      * i test leggono l'albero delle pagine dal framework avviato da _usr/_test/_bootstrap.php, quindi valgono per i
      * contenuti che il deploy ha davvero: su un deploy senza contenuti in più categorie le verifiche non trovano
@@ -61,6 +62,21 @@
                 if( $this->scarica( $cf['contents']['pages'][ $id ]['path'][ $lingua ], $raw ) == 200 ) {
                     $I->assertStringContainsString( '<link rel="canonical" href="' . $cf['contents']['pages'][ $canonical ]['url'][ $lingua ] . '">', $raw );
                     return;
+                }
+            }
+
+        }
+
+        // la pagina doppione risponde, anche quando uno step del suo percorso corrisponde a più pagine
+        public function doppioniRaggiungibili( FrontendTester $I ) {
+
+            global $cf;
+
+            $lingua = $cf['localization']['language']['ietf'];
+
+            foreach( $this->doppioni() as $id => $canonical ) {
+                if( ! empty( $cf['contents']['pages'][ $id ]['path'][ $lingua ] ) ) {
+                    $I->assertEquals( 200, $this->scarica( $cf['contents']['pages'][ $id ]['path'][ $lingua ], $raw ), 'il doppione ' . $id . ' non risponde' );
                 }
             }
 
