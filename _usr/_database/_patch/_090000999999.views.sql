@@ -6806,6 +6806,8 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 		tipologie_documenti_articoli.se_raggruppamento,
 		tipologie_documenti_articoli.se_somma,
 		tipologie_documenti_articoli.se_alternativa,
+		tipologie_documenti_articoli.se_dettaglio,
+		tipologie_documenti_articoli.se_evasione,
 		tipologie_documenti_articoli.id_account_inserimento,
 		tipologie_documenti_articoli.id_account_aggiornamento,
 		tipologie_documenti_articoli_path( tipologie_documenti_articoli.id ) AS __label__

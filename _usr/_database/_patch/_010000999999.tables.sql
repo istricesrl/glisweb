@@ -6257,17 +6257,25 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (            --
 -- che descrivono un'alternativa. La tipologia del documento sta in tipologie_documenti ed e'
 -- riferita da documenti.id_tipologia e da documenti_articoli.id_tipologia_documento
 --
+-- una riga figlia di un'altra ( documenti_articoli.id_genitore ) ha uno di tre ruoli, e la tipologia lo dice con un
+-- flag perche' il codice legga il comportamento e non un id: raggruppamento ( se_raggruppamento, con se_somma o
+-- se_alternativa, tipologie 1 e 2 ), dettaglio ( se_dettaglio, tipologia 5: la figlia ripartisce la madre, p.es. per
+-- ubicazione ) ed evasione ( se_evasione, tipologia 6: la figlia evade la madre in tutto o in parte ). Decisione di
+-- Fabio del 13/10/2026
+--
 CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (   --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `nome` char(64) DEFAULT NULL,                                 -- nome della tipologia
+  `nome` char(255) DEFAULT NULL,                                -- nome della tipologia
   `sigla` char(16) DEFAULT NULL,                                -- sigla della tipologia
   `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
   `se_raggruppamento` tinyint(1) DEFAULT NULL,                  -- se la riga raggruppa le righe figlie invece di essere una riga a sé
   `se_somma` tinyint(1) DEFAULT NULL,                           -- se le righe raggruppate concorrono al totale del documento
   `se_alternativa` tinyint(1) DEFAULT NULL,                     -- se le righe raggruppate sono alternative fra loro e non si sommano
+  `se_dettaglio` tinyint(1) DEFAULT NULL,                       -- se la riga dettaglia la riga genitore ( p.es. la ripartisce per ubicazione )
+  `se_evasione` tinyint(1) DEFAULT NULL,                        -- se la riga evade in tutto o in parte la riga genitore
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia

@@ -4435,9 +4435,10 @@ ALTER TABLE `tipologie_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- | 030000052700
 
 -- tipologie_documenti_articoli
+-- verifica: 2026-10-14 punto 6, riga 203
 ALTER TABLE `tipologie_documenti_articoli`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
@@ -4445,9 +4446,11 @@ ALTER TABLE `tipologie_documenti_articoli`
 	ADD KEY `se_raggruppamento` (`se_raggruppamento`),
 	ADD KEY `se_somma` (`se_somma`),
 	ADD KEY `se_alternativa` (`se_alternativa`),
+	ADD KEY `se_dettaglio` (`se_dettaglio`),
+	ADD KEY `se_evasione` (`se_evasione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`se_raggruppamento`,`se_somma`,`se_alternativa`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`se_raggruppamento`,`se_somma`,`se_alternativa`,`se_dettaglio`,`se_evasione`);
 
 -- | 030000052701
 
