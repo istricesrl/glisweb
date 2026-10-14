@@ -2721,22 +2721,29 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.codice,
 		documenti.numero,
 		documenti.sezionale,
-        concat_ws(
-            '/',
-            documenti.numero,
-            documenti.sezionale
-        ) AS numero_sezionale,
+		concat_ws(
+			'/',
+			documenti.numero,
+			documenti.sezionale
+		) AS numero_sezionale,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_referente_emittente,
+		documenti.id_sede_emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_sede_destinatario,
 		documenti.id_destinatario_spedizione,
 		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS destinatario_spedizione,
+		documenti.id_sede_destinatario_spedizione,
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
-		documenti.esigibilita, 
+		documenti.esigibilita,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
 		-- Il totale di un documento e' quello che vale la prestazione, non i soli contanti.
 		--
 		-- Fix 2026-09-08. `importo_lordo_finale` e' la sola parte pagata in denaro: una ricevuta
@@ -2762,39 +2769,39 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 			END
 		) AS totale_lordo_finale,
 		sum( coalesce( pagamenti.coupon_valore, 0 ) ) AS totale_coupon,
+		documenti.codice_sdi,
 		documenti.codice_archivium,
-    	documenti.codice_sdi,
-		documenti.cig,
-		documenti.cup,
-		documenti.riferimento,
-    	documenti.timestamp_invio,
-    	documenti.progressivo_invio,
+		documenti.progressivo_invio,
+		documenti.timestamp_invio,
+		documenti.data_consegna,
 		documenti.id_coupon,
+		documenti.id_carrello,
+		documenti.id_carrelli_articoli,
 		documenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
-        group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
-        group_concat( DISTINCT d2.codice SEPARATOR ' | ' ) AS documenti_successivi,
-		documenti.porto,
 		documenti.id_causale,
 		documenti.id_trasportatore,
-		documenti.id_immobile,
+		documenti.porto,
 		documenti.id_pianificazione,
-		documenti.data_consegna,
+		documenti.id_progetto,
+		group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
+		group_concat( DISTINCT d2.codice SEPARATOR ' | ' ) AS documenti_successivi,
 		documenti.timestamp_chiusura,
-		documenti.data_archiviazione,
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
+		documenti.id_account_archiviazione,
+		documenti.data_archiviazione,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
 			tipologie_documenti.sigla,
 			' ',
-            concat_ws(
-                '/',
-                documenti.numero,
-                documenti.sezionale
-            ),
+			concat_ws(
+				'/',
+				documenti.numero,
+				documenti.sezionale
+			),
 			' del ',
 			documenti.data,
 			' per ',
@@ -2812,16 +2819,16 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-        LEFT JOIN anagrafica AS a3 ON a3.id = documenti.id_destinatario_spedizione
+		LEFT JOIN anagrafica AS a3 ON a3.id = documenti.id_destinatario_spedizione
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
 		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
-        LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
-        LEFT JOIN documenti AS d1 ON d1.id = r1.id_documento_collegato
-        LEFT JOIN relazioni_documenti AS r2 ON r2.id_documento_collegato = documenti.id
-        LEFT JOIN documenti AS d2 ON d2.id = r2.id_documento
+		LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
+		LEFT JOIN documenti AS d1 ON d1.id = r1.id_documento_collegato
+		LEFT JOIN relazioni_documenti AS r2 ON r2.id_documento_collegato = documenti.id
+		LEFT JOIN documenti AS d2 ON d2.id = r2.id_documento
 	GROUP BY
 		documenti.id
 ;

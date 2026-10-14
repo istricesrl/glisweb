@@ -279,6 +279,88 @@ CREATE TABLE IF NOT EXISTS `offerte_view_static` (            --
   KEY `data` (`data`)                                         --
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 080000009800
+
+-- documenti_view_static
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: materializza documenti_view per le ricerche e le tendine
+--
+-- documenti e' una delle tabelle piu' importanti del framework, e la sua vista una delle piu' care:
+-- tre JOIN su anagrafica, i totali sommati da pagamenti e i group_concat dei documenti antecedenti e
+-- successivi, ricalcolati riga per riga a ogni apertura dell'elenco e di ogni tendina. La statica la
+-- materializza ( decisione di Fabio, 14/10/2026 ), come offerte_view_static per le offerte.
+--
+-- Le colonne sono quelle della vista, piu' timestamp_inserimento e timestamp_aggiornamento come
+-- nelle altre statiche: la vista non le espone, e' syncStaticView() a scriverle, e le usa per sapere
+-- quali righe sono rimaste indietro. refreshStaticView() elenca i campi per nome: conta che siano gli
+-- stessi della vista, non il loro ordine.
+--
+-- ATTENZIONE: getStaticViewExtension() ( _src/_lib/_mysql.tools.php ) legge dalla statica appena la
+-- tabella esiste. Su un deploy va quindi creata solo insieme al meccanismo che la popola e la tiene
+-- aggiornata ( task di popolazione, pulizia e svuotamento, aggiornamento quando si scrivono
+-- documenti, righe, pagamenti e relazioni_documenti ): una statica vuota, o ferma, svuota l'elenco
+-- dei documenti senza nessun errore.
+CREATE TABLE IF NOT EXISTS `documenti_view_static` (             --
+  `id` bigint(20) PRIMARY KEY NOT NULL,                          --
+  `id_tipologia` bigint(20) DEFAULT NULL,                        --
+  `tipologia` char(255) DEFAULT NULL,                            --
+  `codice` char(32) DEFAULT NULL,                                --
+  `numero` char(32) DEFAULT NULL,                                --
+  `sezionale` char(32) DEFAULT NULL,                             --
+  `numero_sezionale` varchar(65) DEFAULT NULL,                   --
+  `data` date DEFAULT NULL,                                      --
+  `nome` char(255) DEFAULT NULL,                                 --
+  `id_emittente` bigint(20) DEFAULT NULL,                        --
+  `emittente` varchar(320) DEFAULT NULL,                         --
+  `id_referente_emittente` bigint(20) DEFAULT NULL,              --
+  `id_sede_emittente` bigint(20) DEFAULT NULL,                   --
+  `id_destinatario` bigint(20) DEFAULT NULL,                     --
+  `destinatario` varchar(320) DEFAULT NULL,                      --
+  `id_sede_destinatario` bigint(20) DEFAULT NULL,                --
+  `id_destinatario_spedizione` bigint(20) DEFAULT NULL,          --
+  `destinatario_spedizione` varchar(320) DEFAULT NULL,           --
+  `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,     --
+  `id_condizione_pagamento` bigint(20) DEFAULT NULL,             --
+  `condizione_pagamento` char(32) DEFAULT NULL,                  --
+  `esigibilita` enum('I','D','S') DEFAULT NULL,                  --
+  `cig` char(16) DEFAULT NULL,                                   --
+  `cup` char(16) DEFAULT NULL,                                   --
+  `riferimento` char(255) DEFAULT NULL,                          --
+  `totale_lordo_finale` decimal(16,2) DEFAULT NULL,              --
+  `totale_coupon` decimal(16,2) DEFAULT NULL,                    --
+  `codice_sdi` char(64) DEFAULT NULL,                            --
+  `codice_archivium` char(64) DEFAULT NULL,                      --
+  `progressivo_invio` char(5) DEFAULT NULL,                      --
+  `timestamp_invio` int(11) DEFAULT NULL,                        --
+  `data_consegna` date DEFAULT NULL,                             --
+  `id_coupon` bigint(20) DEFAULT NULL,                           --
+  `id_carrello` bigint(20) DEFAULT NULL,                         --
+  `id_carrelli_articoli` bigint(20) DEFAULT NULL,                --
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,               --
+  `mastro_provenienza` char(64) DEFAULT NULL,                    --
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,              --
+  `mastro_destinazione` char(64) DEFAULT NULL,                   --
+  `id_causale` bigint(20) DEFAULT NULL,                          --
+  `id_trasportatore` bigint(20) DEFAULT NULL,                    --
+  `porto` enum('franco','assegnato','-') DEFAULT NULL,           --
+  `id_pianificazione` bigint(20) DEFAULT NULL,                   --
+  `id_progetto` bigint(20) DEFAULT NULL,                         --
+  `documenti_antecedenti` text,                                  --
+  `documenti_successivi` text,                                   --
+  `timestamp_chiusura` int(11) DEFAULT NULL,                     --
+  `data_ora_chiusura` char(16) DEFAULT NULL,                     --
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,            --
+  `data_archiviazione` date DEFAULT NULL,                        --
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              --
+  `timestamp_inserimento` int(11) DEFAULT NULL,                  --
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,                --
+  `__label__` text,                                              --
+  UNIQUE KEY `codice` (`codice`),                                --
+  KEY `data` (`data`)                                            --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
+
 -- | 080000999020
 
 -- todo_view_static

@@ -2515,63 +2515,91 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (                  --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i documenti emessi
+-- funzione: contiene tutti i documenti gestiti dal framework
+-- entità: questa tabella corrisponde all'entità documento
 --
--- questa tabella contiene i documenti emessi, con le informazioni principali
+-- questa tabella è una delle più importanti del framework, perché descrive tutti i documenti che vengono gestiti,
+-- emessi o ricevuti ( fatture, note di credito, ricevute, DDT, offerte, ordini... ); il tipo di documento lo dice
+-- id_tipologia, che punta a tipologie_documenti; le righe stanno in documenti_articoli e hanno implicazioni importanti
+-- per molti moduli ( magazzino, crediti, ore, vendite, pianificazioni ), quindi ogni modifica a questa tabella o alle
+-- sue righe va valutata anche dal loro punto di vista
 --
-CREATE TABLE IF NOT EXISTS `documenti` (                      --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di documento
-  `codice` char(32) DEFAULT NULL,                             -- codice del documento
-  `numero` char(32) DEFAULT NULL,                             -- numero del documento
-  `sezionale` char(32) DEFAULT NULL,                          -- sezionale del documento
-  `data` date DEFAULT NULL,                                   -- data del documento
-  `nome` char(255) DEFAULT NULL,                              -- nome del documento
-  `id_emittente` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica emittente
-  `id_referente_emittente` bigint(20) DEFAULT NULL,              -- chiave esterna per il referente dell'anagrafica emittente
-  `id_sede_emittente` bigint(20) DEFAULT NULL,                   -- chiave esterna per la sede dell'anagrafica emittente
-  `id_destinatario` bigint(20) DEFAULT NULL,                     -- chiave esterna per l'anagrafica destinataria
-  `id_sede_destinatario` bigint(20) DEFAULT NULL,                -- chiave esterna per la sede dell'anagrafica destinataria
-  `id_destinatario_spedizione` bigint(20) DEFAULT NULL,          -- chiave esterna per l'anagrafica destinataria della spedizione
-  `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,     -- chiave esterna per la sede dell'anagrafica destinataria della spedizione
-  `note_spedizione` text DEFAULT NULL,                        -- note per la spedizione
-  `id_condizione_pagamento` bigint(20) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
-  `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
-  `se_bollo_virtuale` tinyint(1) DEFAULT NULL,                -- se l'imposta di bollo è assolta in modo virtuale ( DatiBollo della fattura elettronica )
-  `importo_bollo` decimal(16,2) DEFAULT NULL,                 -- importo dell'imposta di bollo
-  `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium
-  `codice_sdi` char(64) DEFAULT NULL,                         -- codice SDI per fatturazione elettronica
-  `cig` char(16) DEFAULT NULL,                                -- codice CIG
-  `cup` char(16) DEFAULT NULL,                                -- codice CUP
-  `riferimento` char(255) DEFAULT NULL,                       -- riferimento del documento
-  `timestamp_invio` int(11) DEFAULT NULL,                     -- timestamp di invio del documento
-  `progressivo_invio` char(5) DEFAULT NULL,                   -- progressivo di invio del documento
-  `id_coupon` bigint(20) DEFAULT NULL,                        -- chiave esterna per il coupon associato al documento
-  `id_mastro_provenienza` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di provenienza
-  `id_mastro_destinazione` bigint(20) DEFAULT NULL,              -- chiave esterna per il mastro di destinazione
-  `porto` enum('franco','assegnato','-') DEFAULT NULL,        -- modalità di consegna
-  `id_causale` bigint(20) DEFAULT NULL,                          -- chiave esterna per la causale del documento
-  `id_trasportatore` bigint(20) DEFAULT NULL,                    -- chiave esterna per l'anagrafica del trasportatore
-  `id_carrello` bigint(20) DEFAULT NULL,                         -- chiave esterna per il carrello collegato al documento
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile collegato al documento
-  `id_pianificazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la pianificazione collegata al documento
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto collegato al documento
-  `xml` longtext DEFAULT NULL,                                -- contenuto XML per fatturazione elettronica
-  `data_consegna` date DEFAULT NULL,                          -- data di consegna
-  `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
-  `note` text DEFAULT NULL,                                   -- note sul documento
-  `note_cliente` text DEFAULT NULL,                           -- note per il cliente
-  `note_invio` text DEFAULT NULL,                             -- note per l'invio
-  `timestamp_chiusura` int(11) DEFAULT NULL,                  -- timestamp di chiusura del documento
-  `note_chiusura` text DEFAULT NULL,                          -- note per la chiusura del documento
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
-  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
-  `token` char(128) DEFAULT NULL,                             -- token per la gestione del documento
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il documento
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento del documento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il documento
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento del documento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- le colonne sono raggruppate per funzione, nell'ordine in cui compaiono:
+-- - testata: id_tipologia, codice, numero, sezionale, data, nome
+-- - anagrafiche e sedi: emittente col suo referente e la sua sede, destinatario con la sua sede, destinatario e sede
+--   della spedizione, note_spedizione
+-- - dati fiscali: id_condizione_pagamento, esigibilita, se_bollo_virtuale, importo_bollo, cig, cup, riferimento
+-- - fattura elettronica: codice_sdi, codice_archivium, progressivo_invio, timestamp_invio, note_invio, xml,
+--   data_consegna, token
+-- - commercio: id_coupon, id_carrello, id_carrelli_articoli
+-- - magazzino: id_mastro_provenienza, id_mastro_destinazione
+-- - trasporto: id_causale, id_trasportatore, porto
+-- - collegamenti: id_pianificazione, id_progetto
+-- - note: note, note_consegna, note_cliente
+-- - chiusura: timestamp_chiusura, note_chiusura
+-- - archiviazione e audit
+--
+-- NOTA il legame col carrello si scrive solo dal lato del documento: id_carrello per il carrello, id_carrelli_articoli
+-- per la singola riga di carrello; se un documento ha id_carrelli_articoli, il suo id_carrello è il carrello di quella
+-- riga ( regola applicativa, non imposta dal database )
+--
+-- NOTA i mastri di tipo magazzino li valorizzano le righe del documento, che hanno i loro mastri di provenienza e di
+-- destinazione; quelli della testata indicano i mastri del documento nel suo insieme
+--
+CREATE TABLE IF NOT EXISTS `documenti` (                        --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia di documento
+  `codice` char(32) DEFAULT NULL,                                 -- codice del documento
+  `numero` char(32) DEFAULT NULL,                                 -- numero del documento
+  `sezionale` char(32) DEFAULT NULL,                              -- sezionale del documento
+  `data` date DEFAULT NULL,                                       -- data del documento
+  `nome` char(255) DEFAULT NULL,                                  -- nome del documento
+  `id_emittente` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica emittente
+  `id_referente_emittente` bigint(20) DEFAULT NULL,               -- chiave esterna per il referente dell'anagrafica emittente
+  `id_sede_emittente` bigint(20) DEFAULT NULL,                    -- chiave esterna per la sede dell'anagrafica emittente
+  `id_destinatario` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica destinataria
+  `id_sede_destinatario` bigint(20) DEFAULT NULL,                 -- chiave esterna per la sede dell'anagrafica destinataria
+  `id_destinatario_spedizione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'anagrafica destinataria della spedizione
+  `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,      -- chiave esterna per la sede della spedizione
+  `note_spedizione` text DEFAULT NULL,                            -- note per la spedizione
+  `id_condizione_pagamento` bigint(20) DEFAULT NULL,              -- chiave esterna per la condizione di pagamento
+  `esigibilita` enum('I','D','S') DEFAULT NULL,                   -- esigibilità dell'IVA ( immediata, differita, split payment )
+  `se_bollo_virtuale` tinyint(1) DEFAULT NULL,                    -- se l'imposta di bollo è assolta in modo virtuale
+  `importo_bollo` decimal(16,2) DEFAULT NULL,                     -- importo dell'imposta di bollo
+  `cig` char(16) DEFAULT NULL,                                    -- codice identificativo di gara
+  `cup` char(16) DEFAULT NULL,                                    -- codice unico di progetto
+  `riferimento` char(255) DEFAULT NULL,                           -- riferimento del documento
+  `codice_sdi` char(64) DEFAULT NULL,                             -- identificativo assegnato dal Sistema di Interscambio
+  `codice_archivium` char(64) DEFAULT NULL,                       -- codice per la conservazione in Archivium
+  `progressivo_invio` char(5) DEFAULT NULL,                       -- progressivo di invio della fattura elettronica
+  `timestamp_invio` int(11) DEFAULT NULL,                         -- timestamp di invio della fattura elettronica
+  `note_invio` text DEFAULT NULL,                                 -- note sull'invio della fattura elettronica
+  `xml` longtext DEFAULT NULL,                                    -- XML della fattura elettronica
+  `data_consegna` date DEFAULT NULL,                              -- data di consegna della fattura elettronica
+  `token` char(128) DEFAULT NULL,                                 -- token per la gestione della fattura elettronica
+  `id_coupon` bigint(20) DEFAULT NULL,                            -- chiave esterna per il coupon usato nel documento
+  `id_carrello` bigint(20) DEFAULT NULL,                          -- chiave esterna per il carrello da cui nasce il documento
+  `id_carrelli_articoli` bigint(20) DEFAULT NULL,                 -- chiave esterna per la riga di carrello da cui nasce il documento
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,                -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di destinazione
+  `id_causale` bigint(20) DEFAULT NULL,                           -- chiave esterna per la causale del trasporto
+  `id_trasportatore` bigint(20) DEFAULT NULL,                     -- chiave esterna per l'anagrafica del trasportatore
+  `porto` enum('franco','assegnato','-') DEFAULT NULL,            -- porto del trasporto
+  `id_pianificazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per la pianificazione che ha generato il documento
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al documento
+  `note` text DEFAULT NULL,                                       -- note sul documento
+  `note_consegna` text DEFAULT NULL,                              -- note sulla consegna
+  `note_cliente` text DEFAULT NULL,                               -- note per il cliente
+  `timestamp_chiusura` int(11) DEFAULT NULL,                      -- timestamp di chiusura del documento
+  `note_chiusura` text DEFAULT NULL,                              -- note di chiusura
+  `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato il documento
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito il documento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato il documento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000010000
 
