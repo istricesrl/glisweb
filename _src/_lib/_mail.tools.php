@@ -370,7 +370,10 @@
      * Proprio perché nomi e indirizzi in $to, $to_cc e $to_bcc vengono compilati come template, i dati che arrivano
      * dall'utente non vanno mai concatenati lì dentro ma passati in $d e richiamati coi placeholder, p.es.
      * array( '{{ dt.nome }} {{ dt.cognome }}' => '{{ dt.email }}' ): un nome scritto in un form con della sintassi Twig
-     * verrebbe altrimenti eseguito ( fino al 14/10/2026 la registrazione faceva così ).
+     * verrebbe altrimenti eseguito ( fino al 14/10/2026 la registrazione faceva così ). Per difesa, prima della compilazione
+     * nomi e indirizzi dei destinatari passano da twigPulisci(), che lascia intatti solo i segnaposto puri ( un percorso di
+     * variabile, senza filtri, chiamate né indici ) e rende testo tutto il resto della sintassi Twig; il mittente, che
+     * viene dal template, non viene pulito.
      *
      * Se il template non ha il mittente per la lingua richiesta ( anche perché la lingua manca del tutto ), oppure se Twig
      * solleva un'eccezione, la funzione interrompe l'esecuzione con die(). Se il tipo del template non è supportato l'errore
@@ -469,7 +472,8 @@
                     // elaboro i placeholder nei destinatari
                     if (isset($to)) {
                         foreach ($to as $k => $v) {
-                            $tm = array('nome' => $k, 'mail' => $v);
+                            // NB i destinatari possono contenere dati scritti da un utente: si lasciano solo i segnaposto puri
+                            $tm = array('nome' => twigPulisci($k, true), 'mail' => twigPulisci($v, true));
                             $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
                             $destinatari[$tw->render('nome', $d)] = $tw->render('mail', $d);
                         }
@@ -490,7 +494,8 @@
                     // elaboro i placeholder nei destinatari
                     if (isset($to_cc)) {
                         foreach ($to_cc as $k => $v) {
-                            $tm = array('nome' => $k, 'mail' => $v);
+                            // NB i destinatari possono contenere dati scritti da un utente: si lasciano solo i segnaposto puri
+                            $tm = array('nome' => twigPulisci($k, true), 'mail' => twigPulisci($v, true));
                             $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
                             $destinatari_cc[$tw->render('nome', $d)] = $tw->render('mail', $d);
                         }
@@ -512,7 +517,8 @@
                     // elaboro i placeholder nei destinatari
                     if (isset($to_bcc)) {
                         foreach ($to_bcc as $k => $v) {
-                            $tm = array('nome' => $k, 'mail' => $v);
+                            // NB i destinatari possono contenere dati scritti da un utente: si lasciano solo i segnaposto puri
+                            $tm = array('nome' => twigPulisci($k, true), 'mail' => twigPulisci($v, true));
                             $tw = new \Twig\Environment(new \Twig\Loader\ArrayLoader($tm), array('cache' => false));
                             $destinatari_bcc[$tw->render('nome', $d)] = $tw->render('mail', $d);
                         }
