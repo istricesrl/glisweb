@@ -1538,8 +1538,8 @@
      * ( es. updateAnagraficaViewStatic() ), la chiama con l'ID scritto. Ogni passaggio viene loggato nei file
      * mysql/insertrow.<tabella>, con i valori sensibili censurati da array2censored().
      *
-     * NOTA la query di ricerca per $u scrive i valori direttamente nel testo SQL, fra virgolette, invece di usare i
-     * parametri ( c'è un TODO nel corpo ); la query di scrittura invece è un prepared statement.
+     * NOTA sia la query di ricerca per $u sia quella di scrittura sono prepared statement: fino al 2026-10-14 la ricerca
+     * scriveva i valori nel testo SQL fra virgolette, e un valore con le virgolette dentro la rompeva.
      *
      * NOTA il primo log va in mysql/insertrow/<tabella> e gli altri in mysql/insertrow.<tabella>, tutti a livello LOG_DEBUG;
      * gli errori della scrittura li logga mysqlQuery() in mysql.err.
@@ -1564,13 +1564,21 @@
         if (! empty($u)) {
 
             $uQuery = 'SELECT id FROM ' . $t . ' WHERE ';
+            $uPars = array();
 
+            // i valori vanno come parametri e non nel testo della query: un nome con le virgolette
+            // ( 'Scanalature a "T"' ) rompeva la SELECT con un errore 1064, la riga esistente
+            // non veniva trovata e se ne scriveva un doppione a ogni importazione ( fix 2026-10-14 )
             foreach ($u as $uFld) {
-                $uConds[] = ' ' . $uFld . ((! isset($r[$uFld]) || empty($r[$uFld])) ? ' IS NULL' : ' = "' . $r[$uFld] . '" ');
+                if (! isset($r[$uFld]) || empty($r[$uFld])) {
+                    $uConds[] = ' ' . $uFld . ' IS NULL';
+                } else {
+                    $uConds[] = ' ' . $uFld . ' = ?';
+                    $uPars[] = array('s' => $r[$uFld]);
+                }
             }
 
-            // TODO migliorare questa query con i parametri posizionali
-            $r['id'] = mysqlSelectValue($c, $uQuery . implode(' AND ', $uConds));
+            $r['id'] = mysqlSelectValue($c, $uQuery . implode(' AND ', $uConds), ((empty($uPars)) ? false : $uPars));
 
             // debug
             // var_dump( $uQuery . implode(' AND ', $uConds) );
