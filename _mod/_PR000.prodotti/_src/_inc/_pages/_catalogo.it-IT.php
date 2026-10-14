@@ -77,7 +77,7 @@
     $p['catalogo.prodotti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo prodotti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione prodotto' ),
         'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.php' ),
@@ -255,7 +255,7 @@
     $p['catalogo.categorie.prodotti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo categorie prodotti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione categoria' ),
         'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.php' ),
@@ -348,7 +348,7 @@
     $p['catalogo.articoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo articoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione articolo' ),
         'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.php' ),
@@ -511,7 +511,7 @@
     $p['catalogo.marchi.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo marchi form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione marchio' ),
         'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.php' ),
@@ -607,7 +607,7 @@
     $p['catalogo.caratteristiche.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo caratteristiche form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione caratteristica' ),
         'parent'            => array( 'id'        => 'catalogo.caratteristiche.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.caratteristiche.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.caratteristiche.form.php' ),

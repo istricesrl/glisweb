@@ -79,7 +79,7 @@
         $p['acquisti.listini.acquisto.form'] = array(
             'sitemap'            => false,
             'title'                => array( $l        => 'acquisti listini acquisto form' ),
-            'h1'                => array( $l        => 'gestione' ),
+            'h1'                => array( $l        => 'gestione listino' ),
             'parent'            => array( 'id'        => 'acquisti.listini.acquisto.view' ),
             'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'acquisti.listini.acquisto.form.twig' ),
             'macro'                => array( $m . '_src/_inc/_macro/_acquisti.listini.acquisto.form.php' ),

@@ -81,7 +81,7 @@
     $p['anagrafica.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione anagrafica' ),
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.php' ),
@@ -283,7 +283,7 @@
     $p['anagrafica.archivio.telefoni.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio telefoni' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione telefono' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.telefoni.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.telefoni.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.form.php' ),
@@ -321,7 +321,7 @@
     $p['anagrafica.archivio.mail.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-mail' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione mail' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.mail.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.mail.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.form.php' ),
@@ -359,7 +359,7 @@
     $p['anagrafica.archivio.anagrafica.indirizzi.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-anagrafica.indirizzi' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione indirizzo' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.anagrafica.indirizzi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.anagrafica.indirizzi.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.php' ),
@@ -397,7 +397,7 @@
     $p['anagrafica.archivio.url.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-url' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione url' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.url.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.url.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.php' ),
@@ -435,7 +435,7 @@
     $p['anagrafica.archivio.iban.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-iban' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione iban' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.iban.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.iban.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.form.php' ),
@@ -474,7 +474,7 @@
     $p['anagrafica.archivio.tipologie.anagrafica.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio e-tipologie.anagrafica' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione tipologia' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.tipologie.anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.tipologie.anagrafica.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.php' ),
@@ -526,7 +526,7 @@
     $p['anagrafica.archivio.ruoli.anagrafica.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione archivio ruoli.anagrafica' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione ruolo' ),
         'parent'            => array( 'id'        => 'anagrafica.archivio.ruoli.anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.ruoli.anagrafica.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.ruoli.anagrafica.form.php' ),
@@ -577,7 +577,7 @@
     $p['categorie.anagrafica.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'categorie anagrafica gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione categoria' ),
         'parent'            => array( 'id'        => 'categorie.anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'categorie.anagrafica.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
@@ -642,7 +642,7 @@
     $p['ranking.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'ranking gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione ranking' ),
         'parent'            => array( 'id'        => 'ranking.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'ranking.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_ranking.form.php' ),

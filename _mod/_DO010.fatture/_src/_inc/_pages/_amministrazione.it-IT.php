@@ -88,7 +88,7 @@
     $p['amministrazione.ciclo.attivo.fatture.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione fatture attive form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione fattura' ),
         'parent'            => array( 'id'        => 'amministrazione.ciclo.attivo.fatture.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.ciclo.attivo.fatture.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.ciclo.attivo.fatture.form.php' ),

@@ -52,7 +52,7 @@ da qui non si può modificare.
 ### l'elenco dei file di un template
 <!-- @pagina: contenuti.template.form -->
 
-La linguetta **gestione** mostra tutti i file del template, compresi quelli che i moduli attivi gli
+La linguetta **gestione template** mostra tutti i file del template, compresi quelli che i moduli attivi gli
 aggiungono:
 
 | colonna | contenuto |

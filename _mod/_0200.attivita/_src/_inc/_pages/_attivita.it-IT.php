@@ -37,7 +37,7 @@
 	$p['attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione attività' ),
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
@@ -117,7 +117,7 @@
 	$p['turni.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione turno' ),
 	    'parent'		=> array( 'id'		=> 'turni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.php' ),
@@ -156,7 +156,7 @@
 	$p['categorie.attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione categoria' ),
 	    'parent'		=> array( 'id'		=> 'categorie.attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_categorie.attivita.form.php' ),
@@ -182,7 +182,7 @@
 	$p['tipologie.attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione tipologia' ),
 	    'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),

@@ -53,7 +53,7 @@
     $p['pianificazioni.form'] = array(
         'sitemap'		=> false,
         'title'			=> array( $l		=> 'gestione' ),
-        'h1'			=> array( $l		=> 'gestione' ),
+        'h1'			=> array( $l		=> 'gestione pianificazione' ),
         'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'pianificazioni.form.twig' ),
         'macro'			=> array( $m . '_src/_inc/_macro/_pianificazioni.form.php' ),
         'parent'		=> array( 'id'		=> 'pianificazioni.view' ),

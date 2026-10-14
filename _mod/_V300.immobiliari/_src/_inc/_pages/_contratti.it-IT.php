@@ -29,7 +29,7 @@
 		$p['contratti.immobiliari.form'] = array(
 			'sitemap'		=> false,
 			'title'		=> array( $l		=> 'gestione' ),
-			'h1'		=> array( $l		=> 'gestione' ),
+			'h1'		=> array( $l		=> 'gestione contratto' ),
 			'parent'		=> array( 'id'		=> 'contratti.immobiliari.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 			'macro'		=> array(  $m_c . '_src/_inc/_macro/_contratti.form.php' ),

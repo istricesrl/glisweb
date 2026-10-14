@@ -119,7 +119,7 @@
 	$p['amministrazione.archivio.reparti.form'] = array(
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione reparto' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione reparto' ),
 	    'parent'			=> array( 'id'		=> 'amministrazione.archivio.reparti.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.reparti.form.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.form.php' ),

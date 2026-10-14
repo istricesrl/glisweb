@@ -32,7 +32,7 @@
     $p['contenuti.archivio.contenuti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione contenuti' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione contenuto' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.contenuti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.contenuti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.contenuti.form.php' ),

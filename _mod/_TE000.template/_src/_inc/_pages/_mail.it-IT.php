@@ -33,7 +33,7 @@
 	$p['mail.template.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione template' ),
 		'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'mail.template.form.twig' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_mail.template.form.php' ),
 		'parent'		=> array( 'id'		=> 'mail.template.view' ),

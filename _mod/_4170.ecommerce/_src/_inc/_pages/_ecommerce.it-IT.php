@@ -178,7 +178,7 @@
 	$p['carrelli.form'] = array(
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'gestione' ),
-		'h1'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione carrello' ),
 		'parent'		=> array( 'id'		=> 'carrelli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'carrelli.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_carrelli.form.php' ),

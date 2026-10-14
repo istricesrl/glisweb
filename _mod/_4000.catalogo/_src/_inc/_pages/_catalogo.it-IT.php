@@ -51,7 +51,7 @@
 	$p['categorie.prodotti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione categoria' ),
 	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.php' ),

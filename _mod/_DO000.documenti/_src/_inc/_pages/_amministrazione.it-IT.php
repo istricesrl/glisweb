@@ -63,7 +63,7 @@
     $p['amministrazione.archivio.documenti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione documento' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.php' ),
@@ -190,7 +190,7 @@
     $p['amministrazione.archivio.documenti.articoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti articoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione riga' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.articoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.articoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php' ),
@@ -243,7 +243,7 @@
     $p['amministrazione.archivio.documenti.pagamenti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti pagamenti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione pagamento' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.pagamenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.pagamenti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.php' ),

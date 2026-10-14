@@ -52,7 +52,7 @@
 	$p['template.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione template' ),
 		'parent'		=> array( 'id'		=> 'template.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_template.form.php' ),
@@ -107,7 +107,7 @@
 	$p['mail.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione mail' ),
 		'parent'		=> array( 'id'		=> 'mail.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_mail.form.php' ),
@@ -178,7 +178,7 @@
 	$p['indirizzi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione indirizzo' ),
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_indirizzi.form.php' ),
@@ -231,7 +231,7 @@
 	$p['indirizzi.normalizzazione.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione indirizzo' ),
 		'parent'		=> array( 'id'		=> 'indirizzi.normalizzazione.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.normalizzazione.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_indirizzi.normalizzazione.form.php' ),
@@ -245,7 +245,7 @@
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione indirizzo' ),
 		'parent'		=> array( 'id'		=> 'indirizzi.normalizzazione.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_indirizzi.normalizzazione.form.tools.php' ),
@@ -271,7 +271,7 @@
 	$p['luoghi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione luogo' ),
 		'parent'		=> array( 'id'		=> 'luoghi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'luoghi.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_luoghi.form.php' ),
@@ -298,7 +298,7 @@
 	$p['tipologie.luoghi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione tipologia' ),
 		'parent'		=> array( 'id'		=> 'tipologie.luoghi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.luoghi.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_tipologie.luoghi.form.php' ),
@@ -325,7 +325,7 @@
 	$p['zone.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione zona' ),
 		'parent'		=> array( 'id'		=> 'zone.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_zone.form.php' ),
@@ -351,7 +351,7 @@
 	$p['zone.stati.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione stati zona' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione stato' ),
 		'parent'		=> array( 'id'		=> 'zone.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.stati.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_zone.stati.form.php' ),
@@ -379,7 +379,7 @@
 	$p['tipologie.zone.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione tipologia' ),
 		'parent'		=> array( 'id'		=> 'tipologie.zone.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.zone.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_tipologie.zone.form.php' ),
@@ -406,7 +406,7 @@
 	$p['tipologie.corrispondenza.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione tipologia corrispondenza' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione tipologia' ),
 		'parent'		=> array( 'id'		=> 'tipologie.corrispondenza.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.corrispondenza.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_tipologie.corrispondenza.form.php' ),
@@ -446,7 +446,7 @@
 	$p['pesi.tipologie.corrispondenza.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione pesi tipologia corrispondenza' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione peso' ),
 		'parent'		=> array( 'id'		=> 'pesi.tipologie.corrispondenza.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pesi.tipologie.corrispondenza.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pesi.tipologie.corrispondenza.form.php' ),
@@ -500,7 +500,7 @@
 	$p['immagini.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione immagine' ),
 		'parent'		=> array( 'id'		=> 'immagini.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_immagini.form.php' ),
@@ -610,7 +610,7 @@
 	$p['video.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione video' ),
 		'parent'		=> array( 'id'		=> 'video.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'video.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_video.form.php' ),
@@ -665,7 +665,7 @@
 	$p['audio.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione audio' ),
 		'parent'		=> array( 'id'		=> 'audio.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audio.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_audio.form.php' ),
@@ -721,7 +721,7 @@
 	$p['valutazioni.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione valutazione' ),
 		'parent'		=> array( 'id'		=> 'video.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'valutazioni.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_valutazioni.form.php' ),
@@ -749,7 +749,7 @@
 	$p['periodi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione periodo' ),
 		'parent'		=> array( 'id'		=> 'periodi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_periodi.form.php' ),
@@ -776,7 +776,7 @@
 	$p['tipologie.periodi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione tipologia' ),
 		'parent'		=> array( 'id'		=> 'tipologie.periodi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.periodi.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_tipologie.periodi.form.php' ),
@@ -819,7 +819,7 @@
 	$p['redirect.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione redirect' ),
 	    'parent'		=> array( 'id'		=> 'redirect.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_redirect.form.php' ),
@@ -889,7 +889,7 @@
 	$p['listini.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione listino' ),
 	    'parent'		=> array( 'id'		=> 'listini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.php' ),
@@ -928,7 +928,7 @@
 	$p['reparti.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione reparto' ),
 		'parent'		=> array( 'id'		=> 'reparti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_reparti.form.php' ),
@@ -954,7 +954,7 @@
 	$p['modalita.spedizione.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione modalità di spedizione' ),
 		'parent'		=> array( 'id'		=> 'modalita.spedizione.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'modalita.spedizione.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_modalita.spedizione.form.php' ),

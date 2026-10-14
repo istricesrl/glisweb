@@ -36,6 +36,10 @@
 
             // compilazione e salvataggio del form
             $I->amOnPageId( 'anagrafica.form' );
+
+            // il titolo dice cosa si gestisce, non solo "gestione"
+            $I->see( 'gestione anagrafica', 'h1' );
+
             $I->fillField( 'anagrafica[denominazione]', $denominazione );
             $I->fillField( 'anagrafica[note]', 'inserita dal test automatico' );
             $I->click( '#form-anagrafica button .fa-floppy-disk' );

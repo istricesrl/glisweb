@@ -24,7 +24,7 @@
 		$p['ddt.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ddt' ),
 			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.php' ),
@@ -129,7 +129,7 @@
 		$p['righe.ddt.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ddt.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ddt.magazzini.form.php' ),
@@ -155,7 +155,7 @@
 		$p['ddt.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ddt' ),
 			'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.passivi.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.passivi.magazzini.form.php' ),
@@ -182,7 +182,7 @@
 		$p['righe.ddt.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT passivi' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ddt.passivi.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ddt.passivi.magazzini.form.php' ),

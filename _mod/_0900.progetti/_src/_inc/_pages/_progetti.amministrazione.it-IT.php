@@ -53,7 +53,7 @@
 		$p['progetti.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione progetto' ),
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.php' ),

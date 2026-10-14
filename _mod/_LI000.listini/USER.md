@@ -60,7 +60,7 @@ un'azienda gestita, cioè di norma da un fornitore. Le linguette sono le stesse 
 Un clic su una riga, o il più, apre la scheda del listino di acquisto. Ha gli stessi campi della
 scheda di vendita, con una differenza: l'**emittente** è **obbligatorio** e si cerca in tutta
 l'anagrafica scrivendone il nome, perché è il fornitore che ha emesso il listino. Le linguette sono
-**gestione**, **archiviazione** e **azioni**.
+**gestione listino**, **archiviazione** e **azioni**.
 
 > **attenzione** — se come emittente si sceglie una delle aziende gestite, il listino diventa di
 > vendita: salvato, sparisce da questo elenco e si ritrova fra i listini del catalogo.

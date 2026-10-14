@@ -127,7 +127,7 @@
     $p['contenuti.template.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione template' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione template' ),
         'parent'            => array( 'id'        => 'contenuti.template.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.template.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.template.form.php' ),

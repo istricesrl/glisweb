@@ -40,7 +40,7 @@
 		$p['fatture.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione fattura' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.php' ),
@@ -114,7 +114,7 @@
 		$p['righe.fatture.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.fatture.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.fatture.amministrazione.form.php' ),
@@ -217,7 +217,7 @@
 		$p['fatture.passive.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione fattura' ),
 			'parent'		=> array( 'id'		=> 'fatture.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.passive.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.passive.amministrazione.form.php' ),
@@ -258,7 +258,7 @@
 		$p['righe.fatture.passive.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.fatture.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.fatture.passive.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.fatture.passive.amministrazione.form.php' ),

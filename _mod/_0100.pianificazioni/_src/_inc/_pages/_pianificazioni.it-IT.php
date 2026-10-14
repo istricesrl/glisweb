@@ -24,7 +24,7 @@
 	$p['pianificazioni.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione pianificazione' ),
 	    'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.php' ),

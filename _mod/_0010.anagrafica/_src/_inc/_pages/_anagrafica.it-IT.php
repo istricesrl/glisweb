@@ -80,7 +80,7 @@
 	$p['anagrafica.form'] = array(
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione anagrafica' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.php' ),
@@ -412,7 +412,7 @@
 	$p['account.form'] = array(
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione account' ),
 	    'parent'			=> array( 'id'		=> 'account.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_account.form.php' ),
@@ -465,7 +465,7 @@
 	$p['gruppi.form'] = array(
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione gruppo' ),
 	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.form.php' ),
@@ -504,7 +504,7 @@
 	$p['categorie.anagrafica.form'] = array(
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione categoria' ),
 	    'parent'			=> array( 'id'		=> 'categorie.anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
 		'macro'				=> array( $m . '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
@@ -557,7 +557,7 @@
 	$p['indirizzi.form'] = array(
 		'sitemap'			=> false,
 		'title'				=> array( $l		=> 'gestione' ),
-		'h1'				=> array( $l		=> 'gestione' ),
+		'h1'				=> array( $l		=> 'gestione indirizzo' ),
 		'parent'			=> array( 'id'		=> 'anagrafica.archivio.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 		'macro'				=> array( $m . '_src/_inc/_macro/_indirizzi.form.php' ),
@@ -584,7 +584,7 @@
 	$p['ranking.anagrafica.form'] = array(
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'gestione' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
+	    'h1'				=> array( $l		=> 'gestione ranking' ),
 	    'parent'			=> array( 'id'		=> 'ranking.anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.html' ),
 		'macro'				=> array( $m . '_src/_inc/_macro/_ranking.anagrafica.form.php' ),

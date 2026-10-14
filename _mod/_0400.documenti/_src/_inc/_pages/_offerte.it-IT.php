@@ -24,7 +24,7 @@
 		$p['offerte.commerciale.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione offerta' ),
 			'parent'		=> array( 'id'		=> 'offerte.commerciale.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'offerte.commerciale.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_offerte.commerciale.form.php' ),
@@ -129,7 +129,7 @@
 		$p['righe.offerte.commerciale.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe offerte' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'offerte.commerciale.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.offerte.commerciale.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.offerte.commerciale.form.php' ),

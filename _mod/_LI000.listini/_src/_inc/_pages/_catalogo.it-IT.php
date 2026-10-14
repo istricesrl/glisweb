@@ -79,7 +79,7 @@
     $p['catalogo.listini.vendita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo listini vendita form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione listino' ),
         'parent'            => array( 'id'        => 'catalogo.listini.vendita.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.listini.vendita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.listini.vendita.form.php' ),

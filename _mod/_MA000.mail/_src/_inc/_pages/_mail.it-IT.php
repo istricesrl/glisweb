@@ -44,7 +44,7 @@
 	$p['mail.out.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'mail.out.form.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
@@ -90,7 +90,7 @@
 	$p['mail.sent.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'mail.sent.form.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),

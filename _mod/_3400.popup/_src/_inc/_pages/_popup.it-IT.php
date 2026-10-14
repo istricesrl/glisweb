@@ -25,7 +25,7 @@
 	$p['popup.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione popup' ),
 	    'parent'		=> array( 'id'		=> 'popup.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'popup.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.form.php' ),

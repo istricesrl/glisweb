@@ -22,7 +22,7 @@
 	$p['pagamenti.form'] = array(
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'gestione' ),
-		'h1'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione pagamento' ),
 		'parent'		=> array( 'id'		=> 'pagamenti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagamenti.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.form.php' ),
@@ -56,7 +56,7 @@
 		$p['pagamenti.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione pagamento' ),
 			'parent'		=> array( 'id'		=> 'pagamenti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagamenti.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.amministrazione.form.php' ),

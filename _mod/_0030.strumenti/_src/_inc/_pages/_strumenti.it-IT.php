@@ -41,7 +41,7 @@
 	$p['mail.out.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
@@ -94,7 +94,7 @@
 	$p['mail.sent.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.sent.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),
@@ -133,7 +133,7 @@
 	$p['template.mail.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione template' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.form.php' ),
 		'parent'		=> array( 'id'		=> 'template.mail.view' ),
@@ -239,7 +239,7 @@
 	$p['sms.out.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
@@ -291,7 +291,7 @@
 	$p['sms.sent.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.sent.view' ),
@@ -330,7 +330,7 @@
 	$p['template.sms.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione template' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.form.php' ),
 		'parent'		=> array( 'id'		=> 'template.sms.view' ),
@@ -411,7 +411,7 @@
 	$p['job.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione job' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_job.form.php' ),
 		'parent'		=> array( 'id'		=> 'job.view' ),
@@ -439,7 +439,7 @@
 	$p['task.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione task' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_task.form.php' ),
 		'parent'		=> array( 'id'		=> 'task.view' ),
@@ -480,7 +480,7 @@
 	$p['cron_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione cron' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'cron.gestione.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_cron.gestione.php' ),
 	    'parent'		=> array( 'id'		=> 'cron' ),
@@ -505,7 +505,7 @@
 	$p['job_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione job' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'job.gestione.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_job.gestione.php' ),
 	    'parent'		=> array( 'id'		=> 'job' ),
@@ -532,7 +532,7 @@
 	$p['mail_out_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'mail.out.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'mail_out' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.gestione.php' ),
@@ -555,7 +555,7 @@
 	$p['mail_sent_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione mail' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'mail.sent.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'mail_sent' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.gestione.php' ),
@@ -578,7 +578,7 @@
 	$p['template_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione template' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'template' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.gestione.php' ),
@@ -631,7 +631,7 @@
 	$p['sms.out.gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'sms.out' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.gestione.php' ),
@@ -654,7 +654,7 @@
 	$p['sms.sent.gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'sms.sent' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.gestione.php' ),
@@ -678,7 +678,7 @@
 	$p['log_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione log' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'log.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'log' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_log.gestione.php' ),

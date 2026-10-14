@@ -40,7 +40,7 @@
 		$p['ricevute.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ricevuta' ),
 			'parent'		=> array( 'id'		=> 'ricevute.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ricevute.amministrazione.form.php' ),
@@ -101,7 +101,7 @@
 		$p['righe.ricevute.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.ricevute.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ricevute.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ricevute.amministrazione.form.php' ),
@@ -177,7 +177,7 @@
 		$p['righe.ricevute.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.ricevute.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ricevute.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ricevute.amministrazione.form.php' ),
@@ -216,7 +216,7 @@
 		$p['ricevute.passive.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ricevuta' ),
 			'parent'		=> array( 'id'		=> 'ricevute.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.passive.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ricevute.passive.amministrazione.form.php' ),
@@ -257,7 +257,7 @@
 		$p['ricevute.passive.amministrazione.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.ricevute.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.passive.amministrazione.righe.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ricevute.passive.amministrazione.righe.form.php' ),

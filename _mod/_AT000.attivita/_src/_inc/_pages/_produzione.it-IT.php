@@ -89,7 +89,7 @@
     $p['produzione.attivita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'produzione attivita form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione attività' ),
         'parent'            => array( 'id'        => 'produzione.attivita.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'produzione.attivita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.form.php' ),
@@ -134,7 +134,7 @@
     $p['produzione.tipologie.attivita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'produzione tipologie attivita form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione tipologia' ),
         'parent'            => array( 'id'        => 'produzione.tipologie.attivita.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'produzione.tipologie.attivita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.form.php' ),

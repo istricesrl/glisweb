@@ -140,7 +140,7 @@ Nell'area *contenuti*, sotto **archivio**, la linguetta **contenuti** elenca in 
 i testi dell'installazione, qualunque sia l'oggetto a cui appartengono: una riga per ogni testo in
 ogni lingua. Serve a cercare un testo quando non si sa dove sia.
 
-La scheda di un contenuto raccoglie in una sola linguetta, **gestione**, i testi e i dati per i
+La scheda di un contenuto raccoglie in una sola linguetta, **gestione contenuto**, i testi e i dati per i
 motori di ricerca e i social descritti qui sopra, più due linguette per il corpo del testo:
 
 | linguetta | cosa ci sta |

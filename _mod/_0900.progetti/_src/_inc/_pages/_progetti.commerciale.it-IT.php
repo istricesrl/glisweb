@@ -40,7 +40,7 @@
 		$p['progetti.commerciale.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione progetto' ),
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),

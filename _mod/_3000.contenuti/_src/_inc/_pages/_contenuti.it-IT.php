@@ -65,7 +65,7 @@
 	$p['pagine.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione pagina' ),
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php' ),
@@ -275,7 +275,7 @@
 	$p['template.pagine.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione template' ),
 	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.pagine.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.php' ),

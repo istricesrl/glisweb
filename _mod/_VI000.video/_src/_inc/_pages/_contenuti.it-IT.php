@@ -50,7 +50,7 @@
     $p['contenuti.archivio.video.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti video form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione video' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.video.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.video.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.video.form.php' ),

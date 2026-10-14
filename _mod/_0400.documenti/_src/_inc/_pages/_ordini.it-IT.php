@@ -36,7 +36,7 @@
 		$p['ordini.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ordine' ),
 			'parent'		=> array( 'id'		=> 'ordini.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.magazzini.form.php' ),
@@ -116,7 +116,7 @@
 		$p['ordini.magazzini.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe ordini' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'ordini.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ordini.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ordini.passivi.magazzini.form.php' ),
@@ -154,7 +154,7 @@
 		$p['ordini.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione ordine' ),
 			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.passivi.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.form.php' ),
@@ -220,7 +220,7 @@
 		$p['righe.ordini.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe ordini passivi' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ordini.passivi.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ordini.passivi.magazzini.form.php' ),

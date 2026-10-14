@@ -49,7 +49,7 @@
     $p['logistica.tipologie.veicoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'logistica tipologie veicoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione tipologia' ),
         'parent'            => array( 'id'        => 'logistica.tipologie.veicoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'logistica.tipologie.veicoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_logistica.tipologie.veicoli.form.php' ),
@@ -101,7 +101,7 @@
     $p['logistica.veicoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'logistica veicoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione veicolo' ),
         'parent'            => array( 'id'        => 'logistica.veicoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'logistica.veicoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_logistica.veicoli.form.php' ),

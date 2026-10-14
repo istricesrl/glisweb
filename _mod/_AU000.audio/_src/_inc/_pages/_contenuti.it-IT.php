@@ -50,7 +50,7 @@
     $p['contenuti.archivio.audio.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti audio form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione audio' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.audio.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.audio.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.audio.form.php' ),

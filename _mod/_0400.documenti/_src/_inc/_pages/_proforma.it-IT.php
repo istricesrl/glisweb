@@ -39,7 +39,7 @@
 		$p['proforma.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione proforma' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.php' ),
@@ -94,7 +94,7 @@
 		$p['righe.proforma.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.proforma.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.proforma.amministrazione.form.php' ),

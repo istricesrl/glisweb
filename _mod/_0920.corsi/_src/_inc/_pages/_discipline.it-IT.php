@@ -38,7 +38,7 @@
 	$p['discipline.form'] = array(
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'gestione' ),
-		'h1'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione disciplina' ),
 		'parent'		=> array( 'id'		=> 'discipline.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'discipline.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_discipline.form.php' ),

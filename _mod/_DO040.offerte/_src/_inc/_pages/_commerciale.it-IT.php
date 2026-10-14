@@ -88,7 +88,7 @@
     $p['commerciale.ciclo.attivo.offerte.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'commerciale offerte form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione offerta' ),
         'parent'            => array( 'id'        => 'commerciale.ciclo.attivo.offerte.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'commerciale.ciclo.attivo.offerte.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_commerciale.ciclo.attivo.offerte.form.php' ),

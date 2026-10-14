@@ -70,7 +70,7 @@
 		$p['corsi.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione corso' ),
 			'parent'		=> array( 'id'		=> 'corsi.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_corsi.form.php' ),

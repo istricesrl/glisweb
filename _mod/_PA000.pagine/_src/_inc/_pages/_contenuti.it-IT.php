@@ -63,7 +63,7 @@
     $p['contenuti.pagine.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti pagine form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione pagina' ),
         'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.php' ),
@@ -163,7 +163,7 @@
     $p['contenuti.menu.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti menu form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione menu' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.menu.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.menu.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.menu.form.php' ),
@@ -201,7 +201,7 @@
     $p['contenuti.redirect.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti redirect form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione redirect' ),
         'parent'            => array( 'id'        => 'contenuti.redirect.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.redirect.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.redirect.form.php' ),

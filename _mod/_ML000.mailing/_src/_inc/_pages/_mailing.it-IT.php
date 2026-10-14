@@ -53,7 +53,7 @@
     $p['mailing.form'] = array(
         'sitemap'           => false,
         'title'             => array( $l        => 'gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione mailing' ),
         'parent'            => array( 'id'      => 'mailing.view' ),
         'template'          => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'mailing.form.twig' ),
         'macro'             => array( $m . '_src/_inc/_macro/_mailing.form.php' ),
@@ -163,7 +163,7 @@
     $p['liste.form'] = array(
         'sitemap'           => false,
         'title'             => array( $l        => 'gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione lista' ),
         'parent'            => array( 'id'      => 'liste.view' ),
         'template'          => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'liste.form.twig' ),
         'macro'             => array( $m . '_src/_inc/_macro/_liste.form.php' ),
@@ -202,7 +202,7 @@
     $p['liste.mail.form'] = array(
         'sitemap'           => false,
         'title'             => array( $l        => 'gestione liste mail' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione iscrizione' ),
         'parent'            => array( 'id'      => 'liste.form' ),
         'template'          => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'liste.mail.form.twig' ),
         'macro'             => array( $m . '_src/_inc/_macro/_liste.mail.form.php' ),

@@ -25,7 +25,7 @@
 	$p['indirizzi.immobiliari.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione indirizzo' ),
 	    'parent'		=> array( 'id'		=> 'indirizzi.immobiliari.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_indirizzi.immobiliari.form.php' ),

@@ -24,7 +24,7 @@
 	$p['reparti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione reparto' ),
 	    'parent'		=> array( 'id'		=> 'reparti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_reparti.form.php' ),

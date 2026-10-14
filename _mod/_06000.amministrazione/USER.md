@@ -89,10 +89,10 @@ due linguette:
 
 | linguetta | cosa contiene |
 |---|---|
-| gestione | i dati del reparto |
+| gestione reparto | i dati del reparto |
 | azioni | le operazioni sul reparto, divise in esportazioni, importazioni, elaborazioni e viste statiche; nello standard sono vuote |
 
-Nella linguetta **gestione** si compilano:
+Nella linguetta **gestione reparto** si compilano:
 
 | campo | cosa indica |
 |---|---|

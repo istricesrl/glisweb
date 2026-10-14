@@ -53,7 +53,7 @@
 	$p['macchine.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione macchina' ),
 	    'parent'		=> array( 'id'		=> 'macchine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'macchine.form.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_macchine.form.php' ),
@@ -237,7 +237,7 @@
 	$p['edifici.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione edificio' ),
 	    'parent'		=> array( 'id'		=> 'edifici.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'edifici.form.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_edifici.form.php' ),

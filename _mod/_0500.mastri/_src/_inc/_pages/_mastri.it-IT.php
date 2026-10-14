@@ -21,7 +21,7 @@
 	$p['mastri.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione mastro' ),
 	    'parent'		=> array( 'id'		=> 'mastri.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mastri.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_mastri.form.php' ),

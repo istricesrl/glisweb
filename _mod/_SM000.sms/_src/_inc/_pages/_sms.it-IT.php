@@ -44,7 +44,7 @@
 	$p['sms.out.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'sms.out.form.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
@@ -85,7 +85,7 @@
 	$p['sms.sent.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sms' ),
 	    'template'		=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'sms.sent.form.twig' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.sent.view' ),

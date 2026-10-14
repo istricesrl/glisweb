@@ -37,7 +37,7 @@
 		$p['magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione magazzino' ),
 			'parent'		=> array( 'id'		=> 'magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_magazzini.form.php' ),

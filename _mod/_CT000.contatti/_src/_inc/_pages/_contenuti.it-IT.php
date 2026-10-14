@@ -62,7 +62,7 @@
     $p['contenuti.contatti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti contatti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione contatto' ),
         'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.php' ),

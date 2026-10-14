@@ -25,7 +25,7 @@
 		$p['progetti.produzione.matricole.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione matricole progetto' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione matricola' ),
 			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.matricole.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.matricole.form.php' ),
