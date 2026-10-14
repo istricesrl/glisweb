@@ -15,7 +15,8 @@
      *
      * I verdetti vengono messi in cache nella tabella `mail_status`, chiavata sull'indirizzo, cosi'
      * si paga una verifica per indirizzo e non una per richiesta. La scadenza della cache e'
-     * configurabile sotto emailable.profiles.<PROFILO>.ttl ( default sei mesi ). Sui deploy dove la
+     * configurabile sotto emailable.profiles.<PROFILO>.ttl ( default sei mesi ), l'attesa della verifica
+     * singola sotto emailable.profiles.<PROFILO>.timeout ( default 10 secondi ). Sui deploy dove la
      * tabella non esiste ancora le letture tornano vuote e le scritture falliscono in silenzio: la
      * verifica funziona lo stesso, solo senza cache.
      *
@@ -398,9 +399,17 @@
             return NULL;
         }
 
+        // attesa: Emailable ha un suo timeout interno ( default 5 secondi, poi risponde 249 "riprova" )
+        // e restCall() ne ha un altro, di default sempre 5 secondi: scadendo insieme, su PROD il 4-6%
+        // delle verifiche dai form tornava senza verdetto ( ottobre 2026: 93 curl abbandonate e 13
+        // risposte 249 ). Si da' a Emailable un'attesa esplicita e a curl qualche secondo in piu',
+        // cosi' e' sempre Emailable a chiudere per primo; si regola in emailable.profiles.<PROFILO>.timeout
+        $attesa = ( isset( $cf['emailable']['profile']['timeout'] ) ) ? (int) $cf['emailable']['profile']['timeout'] : 10;
+
         $dati = array(
             'api_key' => emailableApiKey(),
-            'email'   => $e
+            'email'   => $e,
+            'timeout' => $attesa
         );
 
         // la chiave client-side e' ristretta ai trusted domains del pannello Emailable e da server
@@ -412,7 +421,7 @@
             $headers['Referer'] = $cf['site']['url'];
         }
 
-        $r = restCall( 'https://api.emailable.com/v1/verify', METHOD_GET, $dati, 'query', MIME_APPLICATION_JSON, $status, $headers );
+        $r = restCall( 'https://api.emailable.com/v1/verify', METHOD_GET, $dati, 'query', MIME_APPLICATION_JSON, $status, $headers, NULL, NULL, $errore, NULL, CURLAUTH_BASIC, $raw, $resHeaders, $attesa + 5 );
 
         if( isset( $r['state'] ) ) {
 
@@ -431,7 +440,7 @@
         }
 
         // disservizio, compreso il 249 con cui Emailable dice "riprova": fail-open
-        logger( 'verifica singola di ' . $e . ' non conclusa ( http ' . $status . ' ): ' . serialize( $r ), 'emailable', LOG_ERR );
+        logger( 'verifica singola di ' . $e . ' non conclusa ( http ' . $status . ', ' . $errore . ' ): ' . serialize( $r ), 'emailable', LOG_ERR );
         $esito = ( isset( $r['message'] ) ) ? $r['message'] : 'nessuna risposta';
 
         return NULL;

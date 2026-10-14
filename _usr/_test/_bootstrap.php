@@ -46,7 +46,8 @@
     $_SERVER['SERVER_PORT']         = 443;
     $_SERVER['HTTPS']               = 'on';
     $_SERVER['REQUEST_METHOD']      = 'GET';
-    $_SERVER['REQUEST_URI']         = '/';
+    // Fix 2026-10-13: non '/', perche' un redirect da database su '/' ( _135.redirect.php ) fa exit e il bootstrap muore muto
+    $_SERVER['REQUEST_URI']         = '/__test__';
     $_SERVER['REMOTE_ADDR']         = '127.0.0.1';
 
     // da riga di comando apache_request_headers() non esiste
