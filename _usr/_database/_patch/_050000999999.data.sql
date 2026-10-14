@@ -169,8 +169,6 @@ INSERT IGNORE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 -- | 050000009000
 
 -- disponibilita
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
 INSERT IGNORE INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 (1,	'disponibile',	1,	1),
 (2,	'in riassortimento',	1,	NULL),

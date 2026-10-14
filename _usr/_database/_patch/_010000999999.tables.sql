@@ -2493,18 +2493,21 @@ CREATE TABLE IF NOT EXISTS `dichiarazioni_intento` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le disponibilita
+-- funzione: contiene le disponibilità degli oggetti
 --
-CREATE TABLE IF NOT EXISTS `disponibilita` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `se_catalogo` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- la disponibilità di un oggetto ( immobili, articoli del catalogo, risorse e simili: disponibile, in riassortimento,
+-- occupato ): è un vocabolario unico, che i flag di ambito segmentano per tipo di oggetto, così ogni gestione mostra in
+-- tendina solo le disponibilità che la riguardano. Vi fa riferimento valutazioni.
+CREATE TABLE IF NOT EXISTS `disponibilita` (                  --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della disponibilità, unico
+  `se_catalogo` tinyint(1) DEFAULT NULL,                      -- flag che indica se la disponibilità vale per il catalogo
+  `se_immobili` tinyint(1) DEFAULT NULL,                      -- flag che indica se la disponibilità vale per gli immobili
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000009800
 

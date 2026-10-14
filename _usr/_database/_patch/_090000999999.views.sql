@@ -2620,17 +2620,16 @@ CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
 -- | 090000009001
 
 -- disponibilita_view
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
 CREATE OR REPLACE VIEW disponibilita_view AS
 	SELECT
 		disponibilita.id,
 		disponibilita.nome,
-		disponibilita.se_immobili,
 		disponibilita.se_catalogo,
+		disponibilita.se_immobili,
+		disponibilita.id_account_inserimento,
+		disponibilita.id_account_aggiornamento,
 		disponibilita.nome AS __label__
-	FROM
-		disponibilita
+	FROM disponibilita
 ;
 
 -- | 090000009002

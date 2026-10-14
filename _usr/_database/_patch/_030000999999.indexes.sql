@@ -1559,22 +1559,18 @@ ALTER TABLE `dichiarazioni_intento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREME
 -- | 030000009000
 
 -- disponibilita
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
 ALTER TABLE `disponibilita`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`nome`),
-	ADD KEY `nome` (`nome`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `se_catalogo` (`se_catalogo`),
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`se_catalogo`,`se_immobili`);
 
 -- | 030000009001
 
 -- disponibilita
--- tipologia: tabella standard
 ALTER TABLE `disponibilita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000009800
