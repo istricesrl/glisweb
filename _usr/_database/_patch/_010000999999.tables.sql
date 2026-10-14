@@ -2426,24 +2426,33 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i crediti
+-- funzione: registra i movimenti dei crediti, la valuta interna del framework
+--
+-- questa tabella registra un movimento di crediti per riga: una quantita' che esce dal mastro di provenienza ed entra
+-- in quello di destinazione, in una data, fra un account emittente e uno destinatario. I crediti sono una valuta
+-- interna al framework, pensata per giochi, applicazioni con acquisti in-app, annunci e simili ( non sono crediti
+-- contabili verso clienti ): vivono nei mastri di tipologia crediti ( se_credito ), come le merci nei mastri di
+-- magazzino e le ore nei registri, e come loro hanno i report di giacenza e di movimentazione
+-- ( __report_giacenza_crediti__, __report_movimenti_crediti__ ). Quando il movimento nasce da un acquisto e' legato
+-- alla riga di documento che lo ha generato. E' gestita dal modulo crediti, costruito sul modulo mastri; in oldstable
+-- la scrivono i checkout di 0530.crediti e di altri moduli che vendono crediti.
 --
 CREATE TABLE IF NOT EXISTS `crediti` (
-  `id` bigint(20) NOT NULL,
-  `id_documenti_articolo` bigint(20) DEFAULT NULL,
-  `id_mastro_provenienza` bigint(20) DEFAULT NULL,
-  `id_mastro_destinazione` bigint(20) DEFAULT NULL,
-  `id_account_destinatario` bigint(20) DEFAULT NULL,
-  `id_account_emittente` bigint(20) DEFAULT NULL,
-  `id_pianificazione` bigint(20) DEFAULT NULL,
-  `data` date DEFAULT NULL,
-  `quantita` decimal(9,2) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                                -- descrizione del movimento
+  `id_pianificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per la pianificazione collegata
+  `id_documenti_articolo` bigint(20) DEFAULT NULL,              -- chiave esterna per la riga di documento che ha generato il movimento
+  `id_account_emittente` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che cede i crediti
+  `id_account_destinatario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che riceve i crediti
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,              -- chiave esterna per il mastro da cui escono i crediti
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,             -- chiave esterna per il mastro in cui entrano i crediti
+  `quantita` decimal(9,2) DEFAULT NULL,                         -- quantita' di crediti movimentata
+  `note` text DEFAULT NULL,                                     -- note sul movimento
+  `data` date DEFAULT NULL,                                     -- data del movimento
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000008950

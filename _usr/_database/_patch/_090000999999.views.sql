@@ -2539,12 +2539,14 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 
 -- crediti_view
 -- tipologia: tabella gestita
--- verifica: 2022-07-15 11:56 Chiara GDL
+-- verifica: 2026-10-14 punto 6, riga 67
 CREATE OR REPLACE VIEW `crediti_view` AS
-    SELECT
+	SELECT
 		crediti.id,
+		crediti.nome,
+		crediti.id_pianificazione,
 		crediti.id_documenti_articolo,
-        concat(
+		concat(
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2555,7 +2557,6 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 			' ',
 			documenti_articoli.id_articolo
 		) AS riga_documento,
-		crediti.data,
 		crediti.id_account_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS account_emittente,
 		crediti.id_account_destinatario,
@@ -2565,8 +2566,8 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 		crediti.id_mastro_destinazione,
 		mastri_path( m2.id ) AS mastro_destinazione,
 		crediti.quantita,
-		crediti.id_pianificazione,
-		crediti.nome,
+		crediti.note,
+		crediti.data,
 		crediti.id_account_inserimento,
 		crediti.id_account_aggiornamento,
 		concat(
@@ -2580,17 +2581,16 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 			' / ',
 			crediti.nome
 		) AS __label__
-	FROM
-		crediti
+	FROM crediti
 		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-        LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-        LEFT JOIN account AS acc1 ON acc1.id = m1.id_account
-		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
-		LEFT JOIN account AS acc2 ON acc2.id = m2.id_account
-		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
+		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
+		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
+		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
+		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 ;
 
 -- | 090000008950

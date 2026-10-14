@@ -1517,22 +1517,19 @@ ALTER TABLE `coupon_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- crediti
 -- tipologia: tabella gestita
--- verifica: 2022-07-15 11:56 Chiara GDL
+-- verifica: 2026-10-14 punto 6, riga 67
 ALTER TABLE `crediti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`),
-	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`), 
-	ADD KEY `id_account_emittente` (`id_account_emittente`), 
-	ADD KEY `id_account_destinatario` (`id_account_destinatario`), 
-	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
-	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
-    ADD KEY `id_pianificazione` (`id_pianificazione`),
-	ADD KEY `data` (`data`), 
-	ADD KEY `quantita` (`quantita`), 
-	ADD KEY `nome` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_pianificazione`,  `quantita`,  `nome`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
+	ADD KEY `id_account_emittente` (`id_account_emittente`),
+	ADD KEY `id_account_destinatario` (`id_account_destinatario`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+	ADD KEY `data` (`data`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_pianificazione`,`id_documenti_articolo`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`quantita`,`data`);
 
 -- | 030000008901
 
