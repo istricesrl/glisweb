@@ -149,10 +149,10 @@ INSERT IGNORE INTO `condizioni` (`id`, `nome`, `se_asset`, `se_catalogo`, `se_im
 -- | 050000006200
 
 -- consensi
-INSERT IGNORE INTO `consensi` (`id`, `codice`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,   'PRIVACY_POLICY',                  'la privacy e cookie policy del sito',      NULL,   NULL,   NULL,   NULL,   NULL),
-(2,   'EVASIONE_ORDINE',                 "evasione dell\'ordine",                    NULL,   NULL,   NULL,   NULL,   NULL),
-(3,   'INVIO_COMUNICAZIONI_MARKETING',   'invio di comunicazioni commerciali',       NULL,   NULL,   NULL,   NULL,   NULL);
+INSERT IGNORE INTO `consensi` (`id`, `codice`, `nome`, `note`) VALUES
+(1,   'PRIVACY_POLICY',                  'la privacy e cookie policy del sito',      NULL),
+(2,   'EVASIONE_ORDINE',                 "evasione dell\'ordine",                    NULL),
+(3,   'INVIO_COMUNICAZIONI_MARKETING',   'invio di comunicazioni commerciali',       NULL);
 
 -- | 050000007100
 
@@ -4331,48 +4331,48 @@ INSERT IGNORE INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_in
 -- | 050000053000
 
 -- tipologie_indirizzi
-INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	    NULL,	NULL,	'calle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	    NULL,	NULL,	'campiello',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	    NULL,	NULL,	'campo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	    NULL,	NULL,	'carraia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	    NULL,	NULL,	'carrarone',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	    NULL,	NULL,	'chiasso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	    NULL,	NULL,	'circondario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	    NULL,	NULL,	'circonvallazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	    NULL,	NULL,	'contrà',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	NULL,	'contrada',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	NULL,	NULL,	'diga',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	NULL,	NULL,	'discesa',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(14,	NULL,	NULL,	'frazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(15,	NULL,	NULL,	'giardino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(16,	NULL,	NULL,	'largo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(17,	NULL,	NULL,	'località',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(18,	NULL,	NULL,	'lungoargine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(19,	NULL,	NULL,	'lungolago',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(20,	NULL,	NULL,	'lungomare',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(21,	NULL,	NULL,	'maso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(22,	NULL,	NULL,	'parallela',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(23,	NULL,	NULL,	'passeggiata',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(24,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(25,	NULL,	NULL,	'piazzale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(26,	NULL,	NULL,	'piazzetta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(27,	NULL,	NULL,	'rotonda',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(28,	NULL,	NULL,	'salita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(29,	NULL,	NULL,	'strada',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(30,	NULL,	NULL,	'stradella',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(31,	NULL,	NULL,	'stradello',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(32,	NULL,	NULL,	'traversa',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	NULL,	NULL,	'via',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(34,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(35,	NULL,	NULL,	'vico',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(36,	NULL,	NULL,	'vicoletto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(37,	NULL,	NULL,	'vicolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(38,	NULL,	NULL,	'vietta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(39,	NULL,	NULL,	'viottolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	    NULL,	NULL,	'calle',	NULL,	NULL),
+(2,	    NULL,	NULL,	'campiello',	NULL,	NULL),
+(3,	    NULL,	NULL,	'campo',	NULL,	NULL),
+(4,	    NULL,	NULL,	'carraia',	NULL,	NULL),
+(5,	    NULL,	NULL,	'carrarone',	NULL,	NULL),
+(6,	    NULL,	NULL,	'chiasso',	NULL,	NULL),
+(7,	    NULL,	NULL,	'circondario',	NULL,	NULL),
+(8,	    NULL,	NULL,	'circonvallazione',	NULL,	NULL),
+(9,	    NULL,	NULL,	'contrà',	NULL,	NULL),
+(10,	NULL,	NULL,	'contrada',	NULL,	NULL),
+(11,	NULL,	NULL,	'corso',	NULL,	NULL),
+(12,	NULL,	NULL,	'diga',	NULL,	NULL),
+(13,	NULL,	NULL,	'discesa',	NULL,	NULL),
+(14,	NULL,	NULL,	'frazione',	NULL,	NULL),
+(15,	NULL,	NULL,	'giardino',	NULL,	NULL),
+(16,	NULL,	NULL,	'largo',	NULL,	NULL),
+(17,	NULL,	NULL,	'località',	NULL,	NULL),
+(18,	NULL,	NULL,	'lungoargine',	NULL,	NULL),
+(19,	NULL,	NULL,	'lungolago',	NULL,	NULL),
+(20,	NULL,	NULL,	'lungomare',	NULL,	NULL),
+(21,	NULL,	NULL,	'maso',	NULL,	NULL),
+(22,	NULL,	NULL,	'parallela',	NULL,	NULL),
+(23,	NULL,	NULL,	'passeggiata',	NULL,	NULL),
+(24,	NULL,	NULL,	'piazza',	NULL,	NULL),
+(25,	NULL,	NULL,	'piazzale',	NULL,	NULL),
+(26,	NULL,	NULL,	'piazzetta',	NULL,	NULL),
+(27,	NULL,	NULL,	'rotonda',	NULL,	NULL),
+(28,	NULL,	NULL,	'salita',	NULL,	NULL),
+(29,	NULL,	NULL,	'strada',	NULL,	NULL),
+(30,	NULL,	NULL,	'stradella',	NULL,	NULL),
+(31,	NULL,	NULL,	'stradello',	NULL,	NULL),
+(32,	NULL,	NULL,	'traversa',	NULL,	NULL),
+(33,	NULL,	NULL,	'via',	NULL,	NULL),
+(34,	NULL,	NULL,	'viale',	NULL,	NULL),
+(35,	NULL,	NULL,	'vico',	NULL,	NULL),
+(36,	NULL,	NULL,	'vicoletto',	NULL,	NULL),
+(37,	NULL,	NULL,	'vicolo',	NULL,	NULL),
+(38,	NULL,	NULL,	'vietta',	NULL,	NULL),
+(39,	NULL,	NULL,	'viottolo',	NULL,	NULL),
+(40,	NULL,	NULL,	'viuzza',	NULL,	NULL),
+(41,	NULL,	NULL,	'viuzzo',	NULL,	NULL);
 
 -- | 050000053300
 
@@ -4401,16 +4401,16 @@ INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `h
 -- | 050000053700
 
 -- tipologie_mail_status
-INSERT IGNORE INTO `tipologie_mail_status` (`id`, `ordine`, `codice`, `nome`, `note`, `se_recapitabile`, `se_sistema`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	1,	'Rating A+',	'Deliverable +',	'Engagement Activity These emails are deliverable and have a history of clicks or opens. These addresses are always safe to send to!',	1,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	2,	'Rating A',	'Deliverable',	'These emails are deliverable. These addresses are always safe to send to!',	1,	1,	NULL,	NULL,	NULL,	NULL),
-(3,	3,	'Rating B',	'Accepts All',	'These emails have been deemed as "Accepts All", meaning the server will accept all mail and may bounce it back to sender. We do not recommend sending to the "Accept All" category. All emails with a grade of B should be segmented (until later confirmed valid).',	1,	1,	NULL,	NULL,	NULL,	NULL),
-(4,	4,	'Rating D',	'Indeterminate',	'In checking for an email, we were not able to do anything. We do not recommend sending to the "Indeterminate" category. All emails with a grade of D should be segmented off your list.',	1,	1,	NULL,	NULL,	NULL,	NULL),
-(5,	5,	'Rating F',	'Undeliverable',	'The emails given a grade of F have been deemed as undeliverable and invalid. Do not send mail to these addresses.',	0,	1,	NULL,	NULL,	NULL,	NULL),
-(8,	6,	'Cleaned',	'Puliti da MailChimp / Hard Bounce',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
-(9,	7,	'Blacklisted',	'Cancellati su MChimp / Blacklisted',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
-(10,	8,	'Non importabile',	'-',	'-',	0,	1,	NULL,	NULL,	NULL,	NULL),
-(20,	9,	'OK',	'-',	'-',	1,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT IGNORE INTO `tipologie_mail_status` (`id`, `ordine`, `codice`, `nome`, `note`, `se_recapitabile`, `se_sistema`) VALUES
+(1,	1,	'Rating A+',	'Deliverable +',	'Engagement Activity These emails are deliverable and have a history of clicks or opens. These addresses are always safe to send to!',	1,	1),
+(2,	2,	'Rating A',	'Deliverable',	'These emails are deliverable. These addresses are always safe to send to!',	1,	1),
+(3,	3,	'Rating B',	'Accepts All',	'These emails have been deemed as "Accepts All", meaning the server will accept all mail and may bounce it back to sender. We do not recommend sending to the "Accept All" category. All emails with a grade of B should be segmented (until later confirmed valid).',	1,	1),
+(4,	4,	'Rating D',	'Indeterminate',	'In checking for an email, we were not able to do anything. We do not recommend sending to the "Indeterminate" category. All emails with a grade of D should be segmented off your list.',	1,	1),
+(5,	5,	'Rating F',	'Undeliverable',	'The emails given a grade of F have been deemed as undeliverable and invalid. Do not send mail to these addresses.',	0,	1),
+(8,	6,	'Cleaned',	'Puliti da MailChimp / Hard Bounce',	'-',	0,	1),
+(9,	7,	'Blacklisted',	'Cancellati su MChimp / Blacklisted',	'-',	0,	1),
+(10,	8,	'Non importabile',	'-',	'-',	0,	1),
+(20,	9,	'OK',	'-',	'-',	1,	1);
 
 -- | 050000053800
 
@@ -4564,10 +4564,10 @@ INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity
 
 -- tipologie_zone
 -- tipologia: tabella assistita
-INSERT INTO `tipologie_zone` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_ecommerce`, `se_commerciale`, `se_immobiliare`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'e-commerce',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'immobiliare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_zone` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_ecommerce`, `se_commerciale`, `se_immobiliare`) VALUES
+(1,	NULL,	NULL,	'e-commerce',	NULL,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL),
+(3,	NULL,	NULL,	'immobiliare',	NULL,	NULL,	NULL,	NULL,	1);
 
 -- | 050000062000
 

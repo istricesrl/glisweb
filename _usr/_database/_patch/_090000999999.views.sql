@@ -1546,8 +1546,6 @@ CREATE OR REPLACE VIEW `casse_previdenziali_view` AS
 		casse_previdenziali.id,
 		casse_previdenziali.codice,
 		casse_previdenziali.nome,
-		casse_previdenziali.id_account_inserimento,
-		casse_previdenziali.id_account_aggiornamento,
 		concat( casse_previdenziali.codice, ' - ', casse_previdenziali.nome ) AS __label__
 	FROM casse_previdenziali
 ;
@@ -1885,8 +1883,6 @@ CREATE OR REPLACE VIEW `condizioni_pagamento_view` AS
 		condizioni_pagamento.codice,
 		condizioni_pagamento.nome,
 		condizioni_pagamento.note,
-		condizioni_pagamento.id_account_inserimento,
-		condizioni_pagamento.id_account_aggiornamento,
 		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome ) AS __label__
 	FROM condizioni_pagamento
 ;
@@ -1901,8 +1897,6 @@ CREATE OR REPLACE VIEW condizioni_view AS
 		condizioni.se_asset,
 		condizioni.se_catalogo,
 		condizioni.se_immobili,
-		condizioni.id_account_inserimento,
-		condizioni.id_account_aggiornamento,
 		condizioni.nome AS __label__
 	FROM condizioni
 ;
@@ -1918,8 +1912,6 @@ CREATE OR REPLACE VIEW `consensi_view` AS
 		consensi.codice,
 		consensi.nome,
 		consensi.note,
-		consensi.id_account_inserimento,
-		consensi.id_account_aggiornamento,
 		consensi.nome AS __label__
 	FROM consensi
 ;
@@ -2626,8 +2618,6 @@ CREATE OR REPLACE VIEW disponibilita_view AS
 		disponibilita.nome,
 		disponibilita.se_catalogo,
 		disponibilita.se_immobili,
-		disponibilita.id_account_inserimento,
-		disponibilita.id_account_aggiornamento,
 		disponibilita.nome AS __label__
 	FROM disponibilita
 ;
@@ -5898,8 +5888,6 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_contratti,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
-		ruoli_anagrafica.id_account_inserimento,
-		ruoli_anagrafica.id_account_aggiornamento,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;
@@ -6097,8 +6085,6 @@ CREATE OR REPLACE VIEW `ruoli_mail_view` AS
 		ruoli_mail.se_acquisti,
 		ruoli_mail.se_ordini,
 		ruoli_mail.se_helpdesk,
-		ruoli_mail.id_account_inserimento,
-		ruoli_mail.id_account_aggiornamento,
 		ruoli_mail_path( ruoli_mail.id ) AS __label__
 	FROM ruoli_mail
 ;
@@ -6552,8 +6538,6 @@ CREATE OR REPLACE VIEW `tipologie_annunci_view` AS
 		tipologie_annunci.sigla,
 		tipologie_annunci.html_entity,
 		tipologie_annunci.font_awesome,
-		tipologie_annunci.id_account_inserimento,
-		tipologie_annunci.id_account_aggiornamento,
 		tipologie_annunci_path( tipologie_annunci.id ) AS __label__
 	FROM tipologie_annunci
 ;
@@ -6883,8 +6867,6 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 		tipologie_indirizzi.nome,                             --
 		tipologie_indirizzi.html_entity,                      --
 		tipologie_indirizzi.font_awesome,                     --
-		tipologie_indirizzi.id_account_inserimento,           --
-		tipologie_indirizzi.id_account_aggiornamento,         --
 		tipologie_indirizzi_path(                             --
             tipologie_indirizzi.id                            --
         ) AS __label__                                        -- etichetta per le tendine e le liste
@@ -6940,8 +6922,6 @@ CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
 		tipologie_mail_status.nome,
 		tipologie_mail_status.se_recapitabile,
 		tipologie_mail_status.se_sistema,
-		tipologie_mail_status.id_account_inserimento,
-		tipologie_mail_status.id_account_aggiornamento,
 		tipologie_mail_status.nome AS __label__
 	FROM tipologie_mail_status
 ;
@@ -7201,8 +7181,6 @@ CREATE OR REPLACE VIEW `tipologie_spedizioni_view` AS
 		tipologie_spedizioni.nome,
 		tipologie_spedizioni.html_entity,
 		tipologie_spedizioni.font_awesome,
-		tipologie_spedizioni.id_account_inserimento,
-		tipologie_spedizioni.id_account_aggiornamento,
 		tipologie_spedizioni_path( tipologie_spedizioni.id ) AS __label__
 	FROM tipologie_spedizioni
 ;
@@ -7296,8 +7274,6 @@ CREATE OR REPLACE VIEW `tipologie_zone_view` AS
 		tipologie_zone.nome,
 		tipologie_zone.html_entity,
 		tipologie_zone.font_awesome,
-		tipologie_zone.id_account_inserimento,
-		tipologie_zone.id_account_aggiornamento,
 		tipologie_zone_path( tipologie_zone.id ) AS __label__
 	FROM tipologie_zone
 ;

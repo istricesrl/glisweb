@@ -1246,11 +1246,7 @@ CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
 CREATE TABLE IF NOT EXISTS `casse_previdenziali` (              --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `codice` char(32) DEFAULT NULL,                                 -- codice TipoCassa della fattura elettronica
-  `nome` char(255) DEFAULT NULL,                                  -- nome della cassa previdenziale
-  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+  `nome` char(255) DEFAULT NULL                                   -- nome della cassa previdenziale
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000003100
@@ -1622,11 +1618,7 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche` (             --
   `nome` char(255) DEFAULT NULL,                              -- nome della classe, unico
   `ep_min` int(11) DEFAULT NULL,                              -- valore minimo dell'indice di prestazione energetica
   `ep_max` int(11) DEFAULT NULL,                              -- valore massimo dell'indice di prestazione energetica
-  `hex` char(8) DEFAULT NULL,                                 -- colore della classe in esadecimale
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `hex` char(8) DEFAULT NULL                                  -- colore della classe in esadecimale
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005050
@@ -1709,11 +1701,7 @@ CREATE TABLE IF NOT EXISTS `colori` (                         --
   `m` decimal(5,2) DEFAULT NULL,                              -- componente magenta in CMYK
   `y` decimal(5,2) DEFAULT NULL,                              -- componente gialla in CMYK
   `k` decimal(5,2) DEFAULT NULL,                              -- componente nera in CMYK
-  `css` text DEFAULT NULL,                                    -- dichiarazioni CSS, per i colori che non sono una tinta sola
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `css` text DEFAULT NULL                                     -- dichiarazioni CSS, per i colori che non sono una tinta sola
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005300
@@ -1742,11 +1730,7 @@ CREATE TABLE IF NOT EXISTS `comuni` (                         --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento del comune
   `note` text DEFAULT NULL,                                   -- note sul comune
   `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del comune
-  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione del comune
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `note_archiviazione` text DEFAULT NULL                      -- note sull'archiviazione del comune
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006000
@@ -1768,11 +1752,7 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (             --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `codice` char(32) NOT NULL,                                     -- codice CondizioniPagamento della fattura elettronica
   `nome` char(255) DEFAULT NULL,                                  -- nome della condizione di pagamento
-  `note` text DEFAULT NULL,                                       -- note
-  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+  `note` text DEFAULT NULL                                        -- note
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000006050
@@ -1791,11 +1771,7 @@ CREATE TABLE IF NOT EXISTS `condizioni` (                     --
   `nome` char(255) DEFAULT NULL,                              -- nome della condizione, unico
   `se_asset` tinyint(1) DEFAULT NULL,                         -- flag che indica se la condizione vale per gli asset
   `se_catalogo` tinyint(1) DEFAULT NULL,                      -- flag che indica se la condizione vale per il catalogo ( matricole )
-  `se_immobili` tinyint(1) DEFAULT NULL,                      -- flag che indica se la condizione vale per gli immobili
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `se_immobili` tinyint(1) DEFAULT NULL                       -- flag che indica se la condizione vale per gli immobili
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006200
@@ -1816,11 +1792,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `codice` char(32) NOT NULL,                                 -- codice del consenso, con cui il framework lo cerca
   `nome` char(255) DEFAULT NULL,                              -- nome del consenso
-  `note` text DEFAULT NULL,                                   -- note
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `note` text DEFAULT NULL                                    -- note
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000006300
@@ -2036,11 +2008,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
 CREATE TABLE IF NOT EXISTS `continenti` (                     --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `codice` char(32) DEFAULT NULL,                             -- codice del continente
-  `nome` char(255) DEFAULT NULL,                              -- nome del continente
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `nome` char(255) DEFAULT NULL                               -- nome del continente
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000007200
@@ -2502,11 +2470,7 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (                  --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `nome` char(255) DEFAULT NULL,                              -- nome della disponibilità, unico
   `se_catalogo` tinyint(1) DEFAULT NULL,                      -- flag che indica se la disponibilità vale per il catalogo
-  `se_immobili` tinyint(1) DEFAULT NULL,                      -- flag che indica se la disponibilità vale per gli immobili
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
+  `se_immobili` tinyint(1) DEFAULT NULL                       -- flag che indica se la disponibilità vale per gli immobili
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000009800
@@ -3195,11 +3159,7 @@ CREATE TABLE IF NOT EXISTS `iva` (
   `nome` char(64) DEFAULT NULL,
   `descrizione` text DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
-  `timestamp_archiviazione` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `timestamp_archiviazione` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000016200
@@ -3269,11 +3229,7 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `note` char(128) DEFAULT NULL,                              -- note sulla lingua (nome esteso, paese, eccetera)
   `iso6391alpha2` char(36) DEFAULT NULL,                      -- codice ISO 639-1 alpha-2 della lingua
   `iso6393alpha3` char(36) DEFAULT NULL,                      -- codice ISO 639-3 alpha-3 della lingua
-  `ietf` char(36) DEFAULT NULL,                                -- codice IETF della lingua
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `ietf` char(36) DEFAULT NULL                                 -- codice IETF della lingua
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000017000
@@ -3941,11 +3897,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `id` bigint(20) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `codice` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000021950
@@ -4866,11 +4818,7 @@ CREATE TABLE IF NOT EXISTS `redirect_azioni` (
 CREATE TABLE IF NOT EXISTS `regimi` (
   `id` bigint(20) NOT NULL,
   `nome` char(32) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `codice` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030200
@@ -4895,11 +4843,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL,                                    -- note sulla regione
   `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione della regione
-  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione della regione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `note_archiviazione` text DEFAULT NULL                       -- note sull'archiviazione della regione
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000030300
@@ -5220,11 +5164,7 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
 CREATE TABLE IF NOT EXISTS `ritenute` (
   `id` bigint(20) NOT NULL,
   `codice` char(32) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `nome` char(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034000
@@ -5251,11 +5191,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_contratti` tinyint(1) DEFAULT NULL,
   `se_proponente` tinyint(1) DEFAULT NULL,
   `se_contraente` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034100
@@ -5275,11 +5211,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
   `se_progetti` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_acquisto` tinyint(1) DEFAULT NULL,
-  `se_rinnovo` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_rinnovo` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034200
@@ -5311,11 +5243,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_immobili` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034250
@@ -5332,11 +5260,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
-  `se_recuperi` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_recuperi` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034280
@@ -5355,11 +5279,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_conversazioni` (
   `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
   `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
   `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
-  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
-  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
+  `font_awesome` char(16) DEFAULT NULL                          -- classe Font Awesome dell'icona del ruolo
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034300
@@ -5386,11 +5306,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
   `se_relazioni` tinyint(1) DEFAULT NULL,
   `se_conferma` tinyint(1) DEFAULT NULL,
   `se_consuntivo` tinyint(1) DEFAULT NULL,
-  `se_evasione` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_evasione` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034400
@@ -5423,11 +5339,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_mail` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_documenti` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_documenti` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034600
@@ -5460,11 +5372,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
   `se_immobili` tinyint(1) DEFAULT NULL,                         -- se immobili
   `se_file` tinyint(1) DEFAULT NULL,                         -- se immobili
-  `se_video` tinyint(1) DEFAULT NULL,                            -- se video
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_video` tinyint(1) DEFAULT NULL                             -- se video
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000034800
@@ -5488,11 +5396,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (                --
   `se_sede_legale` tinyint(1) DEFAULT NULL,                   -- se l'indirizzo è una sede legale
   `se_sede_operativa` tinyint(1) DEFAULT NULL,                -- se l'indirizzo è una sede operativa
   `se_residenza` tinyint(1) DEFAULT NULL,                     -- se l'indirizzo è una residenza
-  `se_domicilio` tinyint(1) DEFAULT NULL,                      -- se l'indirizzo è un domicilio
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_domicilio` tinyint(1) DEFAULT NULL                       -- se l'indirizzo è un domicilio
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034850
@@ -5519,11 +5423,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
   `se_amministrazione` tinyint(1) DEFAULT NULL,               -- se l'indirizzo mail è di tipo amministrazione
   `se_acquisti` tinyint(1) DEFAULT NULL,                      -- se l'indirizzo mail è di tipo acquisti
   `se_ordini` tinyint(1) DEFAULT NULL,                        -- se l'indirizzo mail è di tipo ordini
-  `se_helpdesk` tinyint(1) DEFAULT NULL,                       -- se l'indirizzo mail è di tipo helpdesk
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_helpdesk` tinyint(1) DEFAULT NULL                        -- se l'indirizzo mail è di tipo helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034870
@@ -5550,11 +5450,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_mastri` (
   `se_acquisti` tinyint(1) DEFAULT NULL,
   `se_ordini` tinyint(1) DEFAULT NULL,
   `se_logistica` tinyint(1) DEFAULT NULL,
-  `se_helpdesk` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_helpdesk` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034900
@@ -5570,11 +5466,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035000
@@ -5593,11 +5485,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035100
@@ -5617,11 +5505,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `se_sottoprogetto` tinyint(1) DEFAULT NULL,
   `se_proseguimento` tinyint(1) DEFAULT NULL,
   `se_sostituto` tinyint(1) DEFAULT NULL,
-  `se_attesa` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_attesa` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035200
@@ -5654,11 +5538,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_immobili` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000036000
@@ -5744,11 +5624,7 @@ CREATE TABLE IF NOT EXISTS `settori` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `soprannome` char(64) DEFAULT NULL,
-  `ateco` char(32) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000041000
@@ -5868,11 +5744,7 @@ CREATE TABLE IF NOT EXISTS `stati` (                          --
   `iso31661alpha3` char(3) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-3 dello stato
   `codice_istat` char(4) DEFAULT NULL,                        -- codice ISTAT dello stato
   `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione dello stato
-  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione dello stato
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `note_archiviazione` text DEFAULT NULL                       -- note sull'archiviazione dello stato
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000042200
@@ -5887,11 +5759,7 @@ CREATE TABLE IF NOT EXISTS `stati_lingue` (
   `id` bigint(20) NOT NULL,
   `id_stato` bigint(20) DEFAULT NULL,
   `id_lingua` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000042500
@@ -6058,11 +5926,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_annunci` (
   `nome` char(64) DEFAULT NULL,
   `sigla` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000050200
@@ -6485,11 +6349,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
   `nome` char(32) DEFAULT NULL,                               -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
+  `font_awesome` char(16) DEFAULT NULL                        -- icona Font Awesome per la tipologia
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000053200
@@ -6601,11 +6461,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_mail_status` (          --
   `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
   `note` text DEFAULT NULL,                                   -- descrizione estesa della tipologia
   `se_recapitabile` tinyint(1) DEFAULT NULL,                  -- flag che indica se a un indirizzo in questo stato si puo' spedire
-  `se_sistema` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia e' una tipologia di sistema
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+  `se_sistema` tinyint(1) DEFAULT NULL                        -- flag che indica se la tipologia e' una tipologia di sistema
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000053800
@@ -6846,11 +6702,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
 CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
   `id` bigint(20) NOT NULL,
   `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `nome` char(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000056000
@@ -6867,11 +6719,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_spedizioni` (
   `ordine` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000056200
@@ -6994,11 +6842,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_zone` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_ecommerce` tinyint(1) DEFAULT NULL,
   `se_commerciale` tinyint(1) DEFAULT NULL,
-  `se_immobiliare` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_immobiliare` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000060000
@@ -7093,11 +6937,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `se_peso` tinyint(1) DEFAULT NULL,
   `se_tempo` tinyint(1) DEFAULT NULL,
   `se_quantita` tinyint(1) DEFAULT NULL,
-  `se_area` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `se_area` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000062600
@@ -7191,11 +7031,7 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `id` bigint(20) NOT NULL,
   `iso4217` char(3) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `utf8` char(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000063500
