@@ -1675,12 +1675,14 @@ ALTER TABLE `documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `documenti_casse_previdenziali`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_documento`,`id_cassa_previdenziale`),
+	ADD UNIQUE KEY `unica` (`id_documento`,`id_cassa_previdenziale`,`id_iva`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_cassa_previdenziale` (`id_cassa_previdenziale`),
 	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_documento`,`id_cassa_previdenziale`,`aliquota`,`imponibile`,`importo`,`id_iva`,`se_ritenuta`);
 
 -- | 030000010051
 

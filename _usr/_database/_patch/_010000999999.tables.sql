@@ -2709,19 +2709,26 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
 -- questa tabella contiene i contributi alle casse di previdenza addebitati in un documento, con i dati del blocco
 -- DatiCassaPrevidenziale della fattura elettronica; imponibile e importo, se vuoti, li calcola generaContenutiDocumento()
 --
+-- il contributo è quello integrativo ( o la rivalsa INPS ) che il professionista addebita al cliente e versa alla
+-- cassa, non quello trattenuto dal cliente ( ENASARCO, quota INPS dei collaboratori ), che sta in documenti_ritenute;
+-- un documento può avere più casse, e la stessa cassa due volte con IVA diversa ( compenso in parte imponibile e in
+-- parte esente ), per questo la chiave unica comprende id_iva; ordine dà la sequenza dei blocchi nell'XML
+--
 CREATE TABLE IF NOT EXISTS `documenti_casse_previdenziali` (    --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                   -- ordine dei blocchi DatiCassaPrevidenziale nel documento
   `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento
-  `id_cassa_previdenziale` bigint(20) DEFAULT NULL,                -- chiave esterna per la cassa previdenziale
-  `aliquota` decimal(5,2) DEFAULT NULL,                         -- aliquota del contributo ( AlCassa )
-  `imponibile` decimal(16,2) DEFAULT NULL,                      -- importo su cui si calcola il contributo, se diverso dal totale delle righe
-  `importo` decimal(16,2) DEFAULT NULL,                         -- importo del contributo, se diverso da quello calcolato
-  `id_iva` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'aliquota IVA applicata al contributo
-  `se_ritenuta` tinyint(1) DEFAULT NULL,                        -- se il contributo è soggetto a ritenuta
+  `id_cassa_previdenziale` bigint(20) DEFAULT NULL,                -- chiave esterna per la cassa previdenziale ( TipoCassa )
+  `aliquota` decimal(5,2) DEFAULT NULL,                            -- aliquota del contributo ( AlCassa )
+  `imponibile` decimal(16,2) DEFAULT NULL,                         -- importo su cui si calcola il contributo, se diverso dal totale delle righe ( ImponibileCassa )
+  `importo` decimal(16,2) DEFAULT NULL,                            -- importo del contributo, se diverso da quello calcolato ( ImportoContributoCassa )
+  `id_iva` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'aliquota IVA del contributo ( AliquotaIVA e Natura )
+  `se_ritenuta` tinyint(1) DEFAULT NULL,                           -- se il contributo è soggetto a ritenuta ( Ritenuta )
+  `riferimento_amministrazione` char(20) DEFAULT NULL,             -- riferimento contabile del cedente ( RiferimentoAmministrazione )
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                    -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la riga
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                   -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000010100

@@ -3001,6 +3001,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 CREATE OR REPLACE VIEW documenti_casse_previdenziali_view AS
 	SELECT
 		documenti_casse_previdenziali.id,
+		documenti_casse_previdenziali.ordine,
 		documenti_casse_previdenziali.id_documento,
 		documenti_casse_previdenziali.id_cassa_previdenziale,
 		casse_previdenziali.codice AS cassa_previdenziale,
@@ -3010,6 +3011,7 @@ CREATE OR REPLACE VIEW documenti_casse_previdenziali_view AS
 		documenti_casse_previdenziali.id_iva,
 		iva.nome AS iva,
 		documenti_casse_previdenziali.se_ritenuta,
+		documenti_casse_previdenziali.riferimento_amministrazione,
 		documenti_casse_previdenziali.id_account_inserimento,
 		documenti_casse_previdenziali.id_account_aggiornamento,
 		concat_ws( ' ', casse_previdenziali.codice, concat( documenti_casse_previdenziali.aliquota, '%' ) ) AS __label__
