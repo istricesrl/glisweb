@@ -1697,10 +1697,12 @@ ALTER TABLE `documenti_casse_previdenziali` MODIFY `id` bigint(20) NOT NULL AUTO
 ALTER TABLE `documenti_ritenute`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_documento`,`id_ritenuta`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_ritenuta` (`id_ritenuta`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_documento`,`id_ritenuta`,`aliquota`,`causale_pagamento`,`importo`);
 
 -- | 030000010101
 

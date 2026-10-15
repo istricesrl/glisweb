@@ -3027,6 +3027,7 @@ CREATE OR REPLACE VIEW documenti_casse_previdenziali_view AS
 CREATE OR REPLACE VIEW documenti_ritenute_view AS
 	SELECT
 		documenti_ritenute.id,
+		documenti_ritenute.ordine,
 		documenti_ritenute.id_documento,
 		documenti_ritenute.id_ritenuta,
 		ritenute.codice AS ritenuta,

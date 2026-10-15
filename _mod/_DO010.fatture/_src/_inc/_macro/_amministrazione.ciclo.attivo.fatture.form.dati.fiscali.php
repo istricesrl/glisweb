@@ -49,7 +49,7 @@
 
     // tendina causali del pagamento, i codici della Certificazione Unica ammessi dallo schema della fattura elettronica
     // NOTA manca Z, che le specifiche ammettono solo per le fatture emesse fino al 31/12/2020
-    foreach( array( 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'L', 'L1', 'M', 'M1', 'M2', 'N', 'O', 'O1', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'V1', 'W', 'X', 'Y', 'ZO' ) as $causale ) {
+    foreach( array( 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'L', 'L1', 'M', 'M1', 'M2', 'N', 'O', 'O1', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'V1', 'V2', 'W', 'X', 'Y', 'ZO' ) as $causale ) {
         $ct['etc']['select']['causali_pagamento'][] = array( 'id' => $causale, '__label__' => $causale );
     }
 

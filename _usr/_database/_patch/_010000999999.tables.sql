@@ -2742,17 +2742,23 @@ CREATE TABLE IF NOT EXISTS `documenti_casse_previdenziali` (    --
 -- questa tabella contiene le ritenute applicate a un documento, con i dati del blocco DatiRitenuta della fattura
 -- elettronica; l'importo, se vuoto, lo calcola generaContenutiDocumento() sulle righe soggette a ritenuta
 --
+-- la ritenuta è quella che il cliente trattiene e versa al posto del cedente ( d'acconto, ENASARCO, quota INPS dei
+-- collaboratori ), non il contributo che il cedente addebita, che sta in documenti_casse_previdenziali; lo schema
+-- ammette un blocco per tipo di ritenuta, per questo la chiave unica è ( id_documento, id_ritenuta ); ordine dà la
+-- sequenza dei blocchi nell'XML
+--
 CREATE TABLE IF NOT EXISTS `documenti_ritenute` (               --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                   -- ordine dei blocchi DatiRitenuta nel documento
   `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento
-  `id_ritenuta` bigint(20) DEFAULT NULL,                           -- chiave esterna per la ritenuta
-  `aliquota` decimal(5,2) DEFAULT NULL,                         -- aliquota della ritenuta
-  `causale_pagamento` char(2) DEFAULT NULL,                     -- causale del pagamento ( codice della Certificazione Unica )
-  `importo` decimal(16,2) DEFAULT NULL,                         -- importo della ritenuta, se diverso da quello calcolato
+  `id_ritenuta` bigint(20) DEFAULT NULL,                           -- chiave esterna per il tipo di ritenuta ( TipoRitenuta )
+  `aliquota` decimal(5,2) DEFAULT NULL,                            -- aliquota della ritenuta ( AliquotaRitenuta )
+  `causale_pagamento` char(2) DEFAULT NULL,                        -- causale del pagamento, codice della Certificazione Unica ( CausalePagamento )
+  `importo` decimal(16,2) DEFAULT NULL,                            -- importo della ritenuta, se diverso da quello calcolato ( ImportoRitenuta )
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                    -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la riga
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                   -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000012000
