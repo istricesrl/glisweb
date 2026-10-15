@@ -3225,6 +3225,7 @@ CREATE OR REPLACE VIEW `gruppi_view` AS
 -- | 090000015400
 
 -- iban_view
+-- tipologia: tabella gestita
 CREATE OR REPLACE VIEW `iban_view` AS
 	SELECT
 		iban.id,
@@ -3232,6 +3233,7 @@ CREATE OR REPLACE VIEW `iban_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		iban.intestazione,
 		iban.iban,
+		iban.note,
 		iban.id_account_inserimento,
 		iban.id_account_aggiornamento,
 		concat_ws(

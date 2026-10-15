@@ -2931,22 +2931,30 @@ CREATE TABLE IF NOT EXISTS `gruppi` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene gli IBAN associati alle anagrafiche
+-- funzione: contiene i conti correnti ( IBAN ) delle anagrafiche
 --
--- questa tabella contiene gli IBAN associati alle anagrafiche, con le informazioni relative all'intestazione e
--- alle note
+-- questa tabella contiene i conti correnti di un'anagrafica, una riga per conto, con l'intestazione del conto;
+-- i conti si usano per dire su quale conto si paga o si incassa un pagamento ( pagamenti.id_iban ) e per
+-- precompilarlo nel modello di una pianificazione ( pianificazioni.model_id_iban ), e finiscono nella fattura
+-- elettronica
 --
-CREATE TABLE IF NOT EXISTS `iban` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `intestazione` char(255) DEFAULT NULL,
-  `iban` char(27) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA la colonna iban è lunga 34 caratteri, il massimo dello standard ISO 13616: un IBAN italiano ne ha 27, ma
+-- quelli esteri arrivano a 34 ( decisione del 2026-10-15 )
+--
+-- NOTA la chiave esterna verso l'anagrafica è CASCADE: un conto non ha senso senza la sua anagrafica; lo stesso
+-- conto non si registra due volte sulla stessa anagrafica ( chiave unica su id_anagrafica e iban )
+--
+CREATE TABLE IF NOT EXISTS `iban` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica titolare del conto
+  `intestazione` char(255) DEFAULT NULL,                          -- intestazione del conto
+  `iban` char(34) DEFAULT NULL,                                   -- codice IBAN del conto
+  `note` text DEFAULT NULL,                                       -- note sul conto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito il conto
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato il conto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000015600
 

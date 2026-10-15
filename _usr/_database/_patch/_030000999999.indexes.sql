@@ -1788,9 +1788,11 @@ ALTER TABLE `gruppi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- iban
 ALTER TABLE `iban`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`iban`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`intestazione`,`iban`);
 
 -- | 030000015401
 
