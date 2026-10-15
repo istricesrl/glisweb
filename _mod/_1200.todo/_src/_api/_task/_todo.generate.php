@@ -35,7 +35,7 @@
             $status['__status__'] = 'OK';
     
             // log
-            logWrite( 'data inizio generazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_ERR );
+            logWrite( 'data inizio generazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_DEBUG );
 
             // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
@@ -50,7 +50,7 @@
             
             }
 
-            logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_DEBUG ); 
             
             // die( print_r( $status, true ) );
 
@@ -107,10 +107,17 @@
                         }
                     }
 
+                    // Fix 2026-10-15: senza istruttore ( né sul corso né in __a__ ) la stringa vuota finiva
+                    // in todo.id_anagrafica e attivita.id_anagrafica_programmazione, colonne intere: errore
+                    // 1366 e attività non creata. La lezione senza istruttore si scrive con NULL.
+                    if( empty( $resp ) ) {
+                        $resp = NULL;
+                    }
+
                     // creazione todo [andrebbe fatto un job?]
                     foreach( $result as $data ) {
 
-                        logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_ERR ); 
+                        logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_DEBUG ); 
 
                         if( in_array( $data, $status['dateSalt'] ) ) {
                             $idTipo = 17;
@@ -139,7 +146,7 @@
                             $attivita['id'] = mysqlQuery( $cf['mysql']['connection'], 
                             'INSERT INTO attivita (id_anagrafica_programmazione, id_luogo, id_todo, id_progetto, ora_inizio_programmazione, ora_fine_programmazione, data_programmazione, id_tipologia) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                                 array(  
-                                    array( 's' => $_REQUEST['__a__'] ),
+                                    array( 's' => ( empty( $_REQUEST['__a__'] ) ? NULL : $_REQUEST['__a__'] ) ),
                                     array( 's' => $_REQUEST['__l__'] ), 
                                     array( 's' => $todo['id'] ),                             
                                     array( 's' => $_REQUEST['progetto'] ), 
