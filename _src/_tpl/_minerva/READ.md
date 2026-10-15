@@ -20,6 +20,7 @@ Tabella di conversione delle classi/attributi che ricorrono qui:
 | `.close` (bottone chiusura modale) | `.btn-close` (senza `&times;` dentro) |
 | `data-toggle` / `data-target` / `data-dismiss` | `data-bs-toggle` / `data-bs-target` / `data-bs-dismiss` |
 | `.media` / `.media-body` / `.media-left` | rimosse: si usa `d-flex` + utility flex |
+| `btn-block` | `w-100` sul bottone ( o un contenitore `d-grid` ) |
 
 Note pratiche viste sul progetto:
 - `form-row` da solo in BS5 **non è un flex row**: dove il markup ha `class="form-row row"` funziona
@@ -27,7 +28,14 @@ Note pratiche viste sul progetto:
 - il toggler dell'hamburger in `inc/navbar.twig` era già stato portato a `data-bs-toggle`/`data-bs-target`
   (per questo il menu collassa), ma tooltip, `text-right`, `ml-auto`/`mr-auto` erano rimasti BS4.
 - i **tooltip** (`data-bs-toggle="tooltip"`) in BS5 vanno **inizializzati via JS**: il solo attributo non
-  li accende. Qui non sono inizializzati, quindi si vede solo il `title` nativo del browser.
+  li accende. Lo fa `_src/_js/_main.js` ( sezione *tooltip e hint* ), che Minerva carica fra i
+  `js.internal`: su BS5 usa `bootstrap.Tooltip`, su BS4 `$().tooltip`.
+- `btn-block` in BS5 **non esiste**: il bottone torna largo quanto il testo, senza errori. Il 14/10/2026
+  è stato portato a `w-100` in `_src/_templates/_minerva/login.html`; i template di progetto su Minerva
+  vanno convertiti allo stesso modo ( `src/tpl/minerva/*.twig` ).
+- `.media*` e `form-group` restano **di proposito** dove sono affiancati dalle utility BS5 ( `d-flex`,
+  `flex-grow-1`… in `inc/subnav.twig` ): in BS5 non fanno niente, ma `css/main.css` li usa come agganci
+  ( `div.subnav .media*`, `.form-login .form-group` ). Toglierli vuol dire riscrivere prima quei selettori.
 
 ## Usabilità tablet (2026-09-01)
 

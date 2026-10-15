@@ -19,6 +19,9 @@
 #      - solo nei patch      ( dichiarato e mai creato: di solito un patch che non gira )
 #      - solo nel database   ( esiste ma nessuno lo dichiara: la fonte di verita' e' altrove )
 #      - colonne diverse     ( stesso oggetto, forma diversa )
+#   3. le statiche <t>_view_static dei patch che non hanno le colonne della loro <t>_view, nello
+#      stesso ordine ( si riempiono con REPLACE ... SELECT *, quindi conta la posizione ); con
+#      --inventario anche le colonne dello stesso nome e tipo diverso, che non fanno fallire.
 #
 # La seconda parte e' anche l'inventario di quanto i patch coprano davvero lo schema.
 #
@@ -128,6 +131,20 @@ def oggetti( s, db ):
             d[ nome ] = ( 'vista' if tipo == 'VIEW' else 'tabella', colonne.split( ',' ) )
     return d
 
+# colonne con il tipo, in ordine, delle sole viste <t>_view e delle loro statiche <t>_view_static
+def colonne_viste( s, db ):
+    _, out, _ = sql( s, db,
+        "SELECT table_name, column_name, column_type FROM information_schema.columns "
+        "WHERE table_schema = database() "
+        "AND ( table_name LIKE '%\\_view' OR table_name LIKE '%\\_view\\_static' ) "
+        "ORDER BY table_name, ordinal_position;" )
+    d = {}
+    for riga in out.split( '\n' ):
+        if riga.count( '\t' ) >= 2:
+            nome, colonna, tipo = riga.split( '\t', 2 )
+            d.setdefault( nome, [] ).append( ( colonna, tipo ) )
+    return d
+
 print( 'ricostruzione dello schema dai patch' )
 print( '  profilo %s, database vero: %s su %s' % ( stato, VERO[ 'db' ], VERO.get( 'address' ) ) )
 print( '  banco di prova: %s su %s' % ( banco_db, BANCO.get( 'address' ) ) )
@@ -205,6 +222,25 @@ solo_patch = sorted( set( ric ) - set( vero ) )
 solo_db    = sorted( set( vero ) - set( ric ) )
 diverse    = sorted( n for n in set( ric ) & set( vero ) if ric[ n ][1] != vero[ n ][1] )
 
+# statiche e viste: le statiche si riempiono con REPLACE INTO <t>_view_static SELECT * FROM <t>_view,
+# quindi conta l'ordine; si confrontano nome e posizione insieme e si segnala la prima posizione in
+# cui divergono. Il controllo e' sullo schema ricostruito dai patch, cioe' sul canone, non sul
+# database vero. I tipi diversi a parita' di nome sono solo un avviso ( in --inventario ).
+ricv      = colonne_viste( BANCO, banco_db )
+statiche  = {}
+tipi      = {}
+for st in sorted( n for n in ricv if n.endswith( '_view_static' ) ):
+    vi = st[ : -len( '_static' ) ]
+    if vi not in ricv: continue
+    a, b = [ c for c, _ in ricv[ vi ] ], [ c for c, _ in ricv[ st ] ]
+    if a != b:
+        i = next( ( k for k in range( min( len( a ), len( b ) ) ) if a[ k ] != b[ k ] ), min( len( a ), len( b ) ) )
+        statiche[ st ] = ( i + 1, a[ i ] if i < len( a ) else '-', b[ i ] if i < len( b ) else '-',
+                           sorted( set( a ) - set( b ) ), sorted( set( b ) - set( a ) ) )
+    tv, ts = dict( ricv[ vi ] ), dict( ricv[ st ] )
+    t = [ '%s %s/%s' % ( c, tv[ c ], ts[ c ] ) for c in a if c in ts and tv[ c ] != ts[ c ] ]
+    if t: tipi[ st ] = t
+
 def conta( elenco, fonte ):
     t = len( [ n for n in elenco if fonte[ n ][0] == 'tabella' ] )
     return t, len( elenco ) - t
@@ -215,6 +251,7 @@ print( '  nel database vero     : %3d tabelle, %3d viste' % conta( list( vero ),
 print( '  solo nei patch        : %3d tabelle, %3d viste   ( dichiarati e non creati )' % conta( solo_patch, ric ) )
 print( '  solo nel database     : %3d tabelle, %3d viste   ( creati e non dichiarati )' % conta( solo_db, vero ) )
 print( '  stesso nome, forma diversa: %d' % len( diverse ) )
+print( '  statiche disallineate alla vista ( nei patch ): %d, con tipi diversi: %d' % ( len( statiche ), len( tipi ) ) )
 
 if INVENTARIO:
     for titolo, elenco, fonte in ( ( 'SOLO NEI PATCH', solo_patch, ric ),
@@ -233,12 +270,24 @@ if INVENTARIO:
             else:
                 print( '  %-8s %s' % ( fonte[ n ][0], n ) )
 
+if INVENTARIO and statiche:
+    print( '\nSTATICHE DISALLINEATE ALLA VISTA ( %d )' % len( statiche ) )
+    for n, ( pos, cv, cs, manca, avanza ) in sorted( statiche.items() ):
+        note = [ 'posizione %d: vista %s, statica %s' % ( pos, cv, cs ) ]
+        if manca:  note.append( 'mancano: '  + ','.join( manca ) )
+        if avanza: note.append( 'in piu\': ' + ','.join( avanza ) )
+        print( '  %-44s %s' % ( n, '; '.join( note )[:160] ) )
+
+if INVENTARIO and tipi:
+    print( '\nSTATICHE CON TIPI DIVERSI DALLA VISTA ( %d, non bloccante: colonna vista/statica )' % len( tipi ) )
+    for n, t in sorted( tipi.items() ):
+        print( '  %-44s %s' % ( n, '; '.join( t )[:160] ) )
 if TIENI:
     print( '\n  il database di prova %s e\' stato lasciato in piedi' % banco_db )
 else:
     butta( banco_db )
 
-print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti'
-       % ( errori, len( solo_db ), len( diverse ) ) )
-sys.exit( 1 if ( errori or diverse ) else 0 )
+print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti, %d statiche disallineate'
+       % ( errori, len( solo_db ), len( diverse ), len( statiche ) ) )
+sys.exit( 1 if ( errori or diverse or statiche ) else 0 )
 PYTHON

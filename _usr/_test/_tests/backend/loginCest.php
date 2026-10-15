@@ -19,4 +19,11 @@
 
         }
 
+        // la connessione dell'helper regge le pause del browser, vedi wait_timeout in _usr/_test/_bootstrap.php
+        public function connessioneDatabaseDurevole( BackendTester $I ) {
+
+            $I->assertGreaterThanOrEqual( 3600, (int) $I->grabFromDatabase( 'SELECT @@SESSION.wait_timeout' ) );
+
+        }
+
     }

@@ -5,7 +5,7 @@
      *
      * Gli endpoint PDF di /print/0400.documenti/ sono tutti uguali: includono il framework, impostano la cartella di
      * spool e il modello, includono _documento.default.php per l'autorizzazione e poi questo file, che genera il PDF con
-     * generaDocumentoPdf(), lo salva in var/spool/docs/<cartella>/pdf/ e lo invia al browser. Generazione, scelta del
+     * generaDocumentoPdf(), lo salva in var/spool/docs/<cartella>/pdf/<oggetto>.<id>.pdf e lo invia al browser. Generazione, scelta del
      * modello, salvataggio e annotazione dell'attivita' di stampa stanno tutti nella funzione, qui resta solo l'uscita.
      *
      * configurazione
@@ -44,11 +44,14 @@
     }
 
     // nome del file: l'oggetto del documento senza i caratteri che non possono stare in un nome di file ( p.es. la
-    // barra di un numero 12/2026, che finirebbe per indicare una cartella )
+    // barra di un numero 12/2026, che finirebbe per indicare una cartella ), seguito dall'id; l'oggetto da solo non
+    // e' univoco ( non porta il sezionale, e un documento senza numero ha per oggetto solo tipologia e data ), e due
+    // documenti con lo stesso oggetto si sovrascrivevano il PDF a vicenda
     $dobj = trim( preg_replace( '/[^A-Za-z0-9._-]+/', '_', $dati['doc']['oggetto'] ), '._' );
     if( empty( $dobj ) ) {
-        $dobj = 'documento.' . $dati['doc']['id'];
+        $dobj = 'documento';
     }
+    $dobj .= '.' . $dati['doc']['id'];
 
     // genero e salvo il PDF
     $filePdf = generaDocumentoPdf( $dati['doc']['id'], DIR_VAR_SPOOL_DOCS . $cnf['cartella'] . '/pdf/' . $dobj . '.pdf', $etcStampa );

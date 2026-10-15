@@ -73,6 +73,13 @@
         exit( 1 );
     }
 
+    // connessioni al database tenute aperte per tutta la suite: il wait_timeout del server ( 60 s su mysql03 ) e' pensato
+    // per le richieste web, mentre qui la connessione del bootstrap resta ferma finche' il browser lavora, e se fra due
+    // chiamate dell'helper passa piu' di un minuto le query muoiono con 2006, o grabFromDatabase() torna vuoto senza errori; da PHP 7.3 mysqli_ping() non riconnette
+    foreach( ( isset( $cf['mysql']['connections'] ) ? $cf['mysql']['connections'] : array() ) as $cn ) {
+        mysqlQuery( $cn, 'SET SESSION wait_timeout = 28800' );
+    }
+
     // URL del sito per i file .suite.yml
     $_SERVER['GLISWEB_TEST_URL'] = $_ENV['GLISWEB_TEST_URL'] = $cf['site']['url'];
     putenv( 'GLISWEB_TEST_URL=' . $cf['site']['url'] );

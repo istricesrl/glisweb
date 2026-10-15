@@ -37,7 +37,7 @@ modello: `nota.credito` → `generaNotaCreditoPdf( &$pdf, $dati, $etc )`. Nello 
 Gli endpoint di `print/0400.documenti/` ( `ddt.pdf`, `ordine.pdf`, `nota.credito.pdf`, `proforma.pdf`, `offerta.pdf`,
 `fattura.pdf`, `ricevuta.pdf`, `copertina.missione.pdf` e il generico `documento.pdf` ) sono sottili: autorizzazione in
 `_documento.default.php`, generazione e uscita in `_documento.output.php`. Il file finisce sempre in
-`var/spool/docs/<cartella>/pdf/<oggetto>.pdf`; `d` lo scarica, `f` restituisce un JSON col percorso.
+`var/spool/docs/<cartella>/pdf/<oggetto>.<id>.pdf` ( l'id perché l'oggetto da solo non è univoco ); `d` lo scarica, `f` restituisce un JSON col percorso.
 
 Attenzione:
 
