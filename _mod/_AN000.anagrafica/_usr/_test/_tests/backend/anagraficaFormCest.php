@@ -37,8 +37,9 @@
             // compilazione e salvataggio del form
             $I->amOnPageId( 'anagrafica.form' );
 
-            // il titolo dice cosa si gestisce, non solo "gestione"
-            $I->see( 'gestione anagrafica', 'h1' );
+            // il titolo dice cosa si gestisce, non solo "gestione"; nelle maschere a schede l'h1
+            // della pagina non ha un tag <h1>, lo stampa la scheda attiva ( _navigation.twig )
+            $I->see( 'gestione anagrafica', '.nav-link.active' );
 
             $I->fillField( 'anagrafica[denominazione]', $denominazione );
             $I->fillField( 'anagrafica[note]', 'inserita dal test automatico' );
