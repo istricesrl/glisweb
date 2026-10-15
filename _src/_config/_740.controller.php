@@ -51,6 +51,9 @@
      * caricare i file non nella cartella DIR_VAR_SPOOL_IMPORT, ma nella sotto cartella
      * DIR_VAR_SPOOL_IMPORT_TODO, e all'interno di questa in una sotto cartella il cui nome
      * rispetti il formato YmdHis (ad esempio 20231025123000 per il 25 ottobre 2023 alle 12:30:00).
+     * Il nome è normalizzato con string2YmdHis(), che tollera i minuti senza zero iniziale e i minuti
+     * a 60 o 61 senza riporto sull'ora; un nome non interpretabile viene elaborato subito, con un
+     * errore nel log di importazione.
      * 
      * Per il naming dei file da caricare, si veda più avanti la sezione "gestione blocchi dati correnti".
      * 
@@ -71,8 +74,17 @@
             // cerco le cartelle programmate nel passato
             foreach( $cf['import']['programmati'] as $programmata ) {
 
-                // se la cartella è programmata nel passato
-                if( basename( $programmata ) <= date('YmdHis') ) {
+                // normalizzo il nome della cartella, che i gestionali a volte generano storto
+                $quando = string2YmdHis( basename( $programmata ) );
+
+                // un nome non interpretabile non deve restare fermo in silenzio
+                if( $quando === false ) {
+                    logWrite( 'nome di cartella programmata non valido, la elaboro subito: ' . $programmata, 'import', LOG_ERR );
+                    $quando = '00000000000000';
+                }
+
+                // se la cartella è programmata nel passato ( confronto fra stringhe, <= le confronterebbe come numeri )
+                if( strcmp( $quando, date('YmdHis') ) <= 0 ) {
 
                     // log
                     logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import' );

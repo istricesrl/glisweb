@@ -56,6 +56,7 @@
      * int2day()                        | converte il numero di un giorno della settimana nel suo nome in italiano
      * ts2string()                      | converte una timestamp in una data in forma estesa in italiano
      * date2string()                    | converte una data in forma estesa in italiano
+     * string2YmdHis()                  | normalizza una data e ora in formato YmdHis
      * logLvl2string()                  | converte in stringa il livello di errore
      * reportLvl2string()               | converte in stringa il livello di report
      * convertISO8601Duration()         | converte una durata ISO 8601 in ore, minuti e secondi
@@ -722,6 +723,35 @@
     function date2string( $d ) {
 
         return ts2string( strtotime( $d ) );
+
+    }
+
+    /**
+     * normalizza una data e ora in formato YmdHis
+     *
+     * Questa funzione riceve una stringa che dovrebbe rappresentare una data e ora nel formato YmdHis e la restituisce
+     * normalizzata a 14 cifre, così che due valori si possano confrontare come stringhe con strcmp(). Il confronto diretto
+     * con <= non è affidabile, perché PHP confronta due stringhe numeriche come numeri: un valore più corto di 14 cifre
+     * risulterebbe sempre nel passato.
+     *
+     * Sono tollerati i due difetti che si trovano nei nomi generati dai gestionali: i minuti senza zero iniziale ( 13 cifre,
+     * 2026101315401 diventa 20261013150401 ) e i minuti a 60 o 61 senza il riporto sull'ora ( 20260604136101 diventa
+     * 20260604140101 ); il riporto lo fa mktime(). Mese, giorno, ora e secondi fuori dall'intervallo valido rendono invece
+     * il valore non interpretabile.
+     *
+     * @param       string      $s      la data e ora da normalizzare
+     *
+     * @return      string|bool         la data e ora in formato YmdHis, oppure false se il valore non è interpretabile
+     *
+     */
+    function string2YmdHis( $s ) {
+
+        if( preg_match( '/^([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{1,2})([0-9]{2})$/', $s, $p )
+            && $p[2] >= 1 && $p[2] <= 12 && $p[3] >= 1 && $p[3] <= 31 && $p[4] <= 23 && $p[6] <= 59 ) {
+            return date( 'YmdHis', mktime( $p[4], $p[5], $p[6], $p[2], $p[3], $p[1] ) );
+        }
+
+        return false;
 
     }
 

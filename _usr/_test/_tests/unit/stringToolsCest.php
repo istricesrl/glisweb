@@ -216,6 +216,17 @@ class stringToolsCest
         //$I->see("boolean true");
     }
 
+    // string2YmdHis() -> deve normalizzare i nomi storti e rifiutare quelli non validi
+    public function string2YmdHis(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_string2YmdHis.01.php');
+        $I->see("20261013150401");
+        $I->see("20260604140101");
+        $I->see("20231025123000");
+        $I->see("false");
+        $I->see("true");
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {
