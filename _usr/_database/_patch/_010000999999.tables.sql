@@ -2544,7 +2544,7 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (                  --
 -- riga ( regola applicativa, non imposta dal database )
 --
 -- NOTA i mastri di tipo magazzino li valorizzano le righe del documento, che hanno i loro mastri di provenienza e di
--- destinazione; quelli della testata indicano i mastri del documento nel suo insieme
+-- destinazione; quelli della testata sono solo il default delle righe che vi si aggiungono
 --
 CREATE TABLE IF NOT EXISTS `documenti` (                        --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
@@ -2607,61 +2607,96 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene gli articoli associati ai documenti emessi
+-- funzione: contiene le righe dei documenti, cioè i movimenti di articoli, quantità e importi
 --
--- questa tabella contiene gli articoli associati ai documenti emessi, con le informazioni principali
+-- questa tabella è una delle più critiche del framework: ogni riga è un movimento, e da queste righe si calcolano
+-- giacenze, crediti, ore e vendite; il calcolo dei mastri è comune a tutti questi casi e appartiene al modulo mastri,
+-- quindi ogni modifica a questa tabella va valutata dal punto di vista di tutti i moduli che la leggono
+--
+-- le colonne sono raggruppate per funzione, nell'ordine in cui compaiono:
+-- - testata: id_genitore, id_tipologia, id_tipologia_documento, ordine, codice, nome
+-- - documenti: id_documento, data, id_missione, id_packing_list
+-- - anagrafiche: id_emittente, id_destinatario
+-- - articolo: id_articolo, id_prodotto, id_matricola, id_udm, quantita_prevista, quantita
+-- - magazzino: id_mastro_provenienza, id_mastro_destinazione, id_collo
+-- - importi: id_listino, costi, prezzi, importi, sconti, se_ritenuta
+-- - commercio: id_carrello, id_carrelli_articoli, id_rinnovo
+-- - collegamenti: id_reparto, id_progetto, id_todo, id_attivita, id_pianificazione, id_immobile
+-- - testo: specifiche, note
+-- - consegna: data_consegna, note_consegna
+-- - audit
+--
+-- NOTA il movimento lo fa la riga: i mastri di provenienza e di destinazione della testata del documento sono solo il
+-- default delle righe che vi si aggiungono, e la giacenza si calcola per mastro, articolo e matricola
+--
+-- NOTA una riga può esistere senza documento, e il documento le si può assegnare dopo; id_tipologia_documento dice il
+-- tipo di documento atteso dalla riga, e le viste usano coalesce( id_tipologia_documento, documenti.id_tipologia )
+--
+-- NOTA una riga può stare su più documenti, che ne rappresentano aspetti diversi: la fattura del bullone
+-- ( id_documento ), la missione che lo preleva ( id_missione ), la packing list che lo spedisce ( id_packing_list );
+-- le aggregazioni e le evasioni ( un ordine evaso da più documenti, a loro volta fatturati in più fatture ) stanno
+-- invece in relazioni_documenti_articoli
+--
+-- NOTA le righe figlie ( id_genitore ) sono di raggruppamento, di dettaglio o di evasione, secondo i flag se_dettaglio
+-- e se_evasione della loro tipologia; un prodotto può essere evaso da articoli di taglio diverso, convertendo peso e
+-- unità di misura ( vedi __report_evasione_righe_ordini__ )
+--
+-- NOTA la chiave esterna id_documento è ON DELETE NO ACTION ON UPDATE CASCADE: un documento si cancella solo dopo
+-- averne tolto le righe, cosa che fanno i controller ricalcolando la giacenza
 --
 CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo genitore (per articoli composti)
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia della riga (tipologie_documenti_articoli)
-  `id_tipologia_documento` bigint(20) DEFAULT NULL,                -- chiave esterna per la tipologia del documento (tipologie_documenti), fino al 2026-09-15 si chiamava id_tipologia
-  `codice` char(32) DEFAULT NULL,                               -- codice dell'articolo
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento di appartenenza
-  `data` date DEFAULT NULL,                                     -- data dell'articolo
-  `id_missione`	bigint(20) DEFAULT NULL,                           -- chiave esterna per la missione collegata all'articolo
-  `id_packing_list`	bigint(20) DEFAULT NULL,                       -- chiave esterna per la packing list collegata all'articolo
-  `id_destinatario` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica destinataria
-  `id_emittente` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'anagrafica emittente
-  `id_reparto` bigint(20) DEFAULT NULL,                            -- chiave esterna per il reparto collegato all'articolo
-  `id_progetto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il progetto collegato all'articolo
-  `id_todo` bigint(20) DEFAULT NULL,                               -- chiave esterna per la todo collegata all'articolo
-  `id_attivita` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'attività collegata all'articolo
-  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo collegato
-  `id_collo` bigint(20) DEFAULT NULL,                              -- chiave esterna per il collo collegato all'articolo
-  `id_prodotto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il prodotto collegato
-  `id_mastro_provenienza` bigint(20) DEFAULT NULL,                 -- chiave esterna per il mastro di provenienza
-  `id_mastro_destinazione` bigint(20) DEFAULT NULL,                -- chiave esterna per il mastro di destinazione
-  `id_udm` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'unità di misura
-  `id_matricola` bigint(20) DEFAULT NULL,                          -- chiave esterna per la matricola collegata
-  `id_rinnovo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il rinnovo collegato
-  `id_carrelli_articoli` bigint(20) DEFAULT NULL,                  -- chiave esterna per l'articolo del carrello collegato
-  `quantita_prevista` decimal(9,2) DEFAULT NULL,                -- quantità prevista
-  `quantita` decimal(9,2) DEFAULT NULL,                         -- quantità dell'articolo
-  `id_listino` bigint(20) DEFAULT NULL,                            -- chiave esterna per il listino applicato
-  `costo_netto_unitario` decimal(16,2) DEFAULT NULL,            -- costo netto unitario
-  `costo_netto_totale` decimal(16,2) DEFAULT NULL,              -- costo netto totale
-  `note_costi` text DEFAULT NULL,                               -- note sull'articolo
-  `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,           -- prezzo netto unitario
-  `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,             -- prezzo netto totale
-  `importo_netto_totale` decimal(16,2) DEFAULT NULL,            -- importo netto totale
-  `importo_lordo_totale` decimal(16,2) DEFAULT NULL,            -- importo lordo totale
-  `sconto_percentuale` decimal(9,2) DEFAULT NULL,               -- sconto percentuale
-  `sconto_valore` decimal(9,2) DEFAULT NULL,                    -- sconto in valore assoluto
-  `importo_lordo_finale` decimal(16,2) DEFAULT NULL,            -- importo lordo finale
-  `se_ritenuta` tinyint(1) DEFAULT NULL,                        -- se la riga è soggetta a ritenuta ( Ritenuta della fattura elettronica )
-  `nome` char(255) DEFAULT NULL,                                -- nome dell'articolo
-  `specifiche` text DEFAULT NULL,                               -- specifiche dell'articolo
-  `note` text DEFAULT NULL,                                     -- note sull'articolo
-  `data_consegna` date DEFAULT NULL,                            -- data di consegna
-  `note_consegna` text DEFAULT NULL,                            -- note sulla consegna
-  `id_pianificazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la pianificazione collegata all'articolo
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'articolo
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'articolo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           -- tabella articoli
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la riga genitore ( raggruppamento, dettaglio o evasione )
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della riga ( tipologie_documenti_articoli )
+  `id_tipologia_documento` bigint(20) DEFAULT NULL,               -- chiave esterna per il tipo di documento atteso dalla riga, fino al 2026-09-15 si chiamava id_tipologia
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della riga
+  `nome` char(255) DEFAULT NULL,                                  -- descrizione della riga
+  `id_documento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il documento di appartenenza, si può assegnare dopo
+  `data` date DEFAULT NULL,                                       -- data della riga, se diversa da quella del documento
+  `id_missione` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento della missione ( prelievo, deposito ) che movimenta la riga
+  `id_packing_list` bigint(20) DEFAULT NULL,                      -- chiave esterna per il documento della packing list che spedisce la riga
+  `id_emittente` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica emittente, se diversa da quella del documento
+  `id_destinatario` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica destinataria, se diversa da quella del documento
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto, per le righe che non indicano l'articolo
+  `id_matricola` bigint(20) DEFAULT NULL,                         -- chiave esterna per la matricola ( la giacenza si calcola per mastro, articolo e matricola )
+  `id_udm` bigint(20) DEFAULT NULL,                               -- chiave esterna per l'unità di misura
+  `quantita_prevista` decimal(9,2) DEFAULT NULL,                  -- quantità prevista
+  `quantita` decimal(9,2) DEFAULT NULL,                           -- quantità movimentata
+  `id_mastro_provenienza` bigint(20) DEFAULT NULL,                -- chiave esterna per il mastro di provenienza
+  `id_mastro_destinazione` bigint(20) DEFAULT NULL,               -- chiave esterna per il mastro di destinazione
+  `id_collo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il collo che contiene la riga
+  `id_listino` bigint(20) DEFAULT NULL,                           -- chiave esterna per il listino applicato
+  `costo_netto_unitario` decimal(16,2) DEFAULT NULL,              -- costo netto unitario
+  `costo_netto_totale` decimal(16,2) DEFAULT NULL,                -- costo netto totale
+  `note_costi` text DEFAULT NULL,                                 -- note sui costi
+  `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,             -- prezzo netto unitario
+  `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,               -- prezzo netto totale
+  `importo_netto_totale` decimal(16,2) DEFAULT NULL,              -- importo netto totale
+  `importo_lordo_totale` decimal(16,2) DEFAULT NULL,              -- importo lordo totale
+  `sconto_percentuale` decimal(9,2) DEFAULT NULL,                 -- sconto percentuale
+  `sconto_valore` decimal(9,2) DEFAULT NULL,                      -- sconto in valore assoluto
+  `importo_lordo_finale` decimal(16,2) DEFAULT NULL,              -- importo lordo finale
+  `se_ritenuta` tinyint(1) DEFAULT NULL,                          -- se la riga è soggetta a ritenuta ( Ritenuta della fattura elettronica )
+  `id_carrello` bigint(20) DEFAULT NULL,                          -- chiave esterna per il carrello da cui viene la riga
+  `id_carrelli_articoli` bigint(20) DEFAULT NULL,                 -- chiave esterna per la riga di carrello da cui viene la riga
+  `id_rinnovo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il rinnovo
+  `id_reparto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il reparto
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto
+  `id_todo` bigint(20) DEFAULT NULL,                              -- chiave esterna per la todo
+  `id_attivita` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'attività
+  `id_pianificazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per la pianificazione che ha generato la riga
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile
+  `specifiche` text DEFAULT NULL,                                 -- specifiche della riga
+  `note` text DEFAULT NULL,                                       -- note sulla riga
+  `data_consegna` date DEFAULT NULL,                              -- data di consegna
+  `note_consegna` text DEFAULT NULL,                              -- note sulla consegna
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000010050
 
