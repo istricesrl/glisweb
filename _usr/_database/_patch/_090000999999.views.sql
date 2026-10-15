@@ -3045,12 +3045,15 @@ CREATE OR REPLACE VIEW documenti_ritenute_view AS
 
 -- edifici
 -- tipologia: tabella gestita
--- verifica: 2022-04-27 16:56 Chiara GDL
+-- verifica: 2026-10-15 punto 6, riga 74
 CREATE OR REPLACE VIEW edifici_view AS
 	SELECT
 		edifici.id,
+		edifici.id_genitore,
 		edifici.id_tipologia,
 		tipologie_edifici.nome AS tipologia,
+		edifici.codice,
+		edifici.nome,
 		edifici.id_indirizzo,
 		concat_ws(
 			' ',
@@ -3062,15 +3065,13 @@ CREATE OR REPLACE VIEW edifici_view AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
-		edifici.codice,
-		edifici.nome,
 		edifici.piani,
 		edifici.id_account_inserimento,
 		edifici.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			tipologie_edifici.nome,
-			edifici.nome,
+			edifici_path( edifici.id ),
 			tipologie_indirizzi.nome,
 			indirizzo,
 			indirizzi.civico,
@@ -3092,20 +3093,21 @@ CREATE OR REPLACE VIEW edifici_view AS
 -- | 090000012051
 
 -- edifici_caratteristiche_view
--- tipologia: tabella gestita
--- verifica: 2022-04-27 16:56 Chiara GDL
 CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
 	SELECT
 		edifici_caratteristiche.id,
+		edifici_caratteristiche.ordine,
 		edifici_caratteristiche.id_edificio,
 		edifici_caratteristiche.id_caratteristica,
+		edifici_caratteristiche.id_lingua,
 		caratteristiche.nome AS caratteristica,
-		edifici_caratteristiche.ordine,
-		edifici_caratteristiche.se_presente,
+		edifici_caratteristiche.valore,
+		edifici_caratteristiche.note,
+		edifici_caratteristiche.se_assente,
 		edifici_caratteristiche.id_account_inserimento,
 		edifici_caratteristiche.id_account_aggiornamento,
 		concat(
-			edifici_caratteristiche.id_edificio,
+			edifici_path( edifici_caratteristiche.id_edificio ),
 			' / ',
 			caratteristiche.nome
 		) AS __label__
@@ -3120,42 +3122,43 @@ CREATE OR REPLACE VIEW `file_view` AS
 	SELECT
 		file.id,
 		file.ordine,
-		file.id_ruolo,
-		ruoli_file.nome AS ruolo,
+		file.nome,
 		file.id_anagrafica,
+		file.id_annuncio,
 		file.id_prodotto,
 		file.id_articolo,
-		file.id_categoria_prodotti,
-		file.id_marchio,
-		file.id_todo,
-		file.id_pagina,
-		file.id_template,
-		file.id_notizia,
-		file.id_annuncio,
-		file.id_categoria_notizie,
-		file.id_categoria_annunci,
-		file.id_risorsa,
-		file.id_categoria_risorse,
-		file.id_mail_out,                    
-		file.id_mail_sent, 
-		file.id_progetto,
-		file.id_categoria_progetti,
-		file.id_documento,
-		file.id_indirizzo,
-		file.id_edificio,
-		file.id_immobile,
-		file.id_contratto,
-        file.id_valutazione,
-        file.id_rinnovo,
-		file.id_anagrafica_certificazioni,
-		file.id_valutazione_certificazioni,
-		file.id_licenza,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
+		file.id_indirizzo,
+		file.id_progetto,
+		file.id_contratto,
+		file.id_todo,
+		file.id_immobile,
+		file.id_mailing,
+		file.id_documento,
+		file.id_pagina,
+		file.id_categoria_prodotti,
+		file.id_marchio,
+		file.id_risorsa,
+		file.id_categoria_risorse,
+		file.id_notizia,
+		file.id_categoria_notizie,
+		file.id_categoria_annunci,
+		file.id_categoria_progetti,
+		file.id_edificio,
+		file.id_valutazione,
+		file.id_licenza,
+		file.id_anagrafica_certificazioni,
+		file.id_template,
+		file.id_rinnovo,
+		file.id_valutazione_certificazioni,
+		file.id_mail_out,
+		file.id_mail_sent,
 		file.id_attivita,
+		file.id_ruolo,
+		ruoli_file.nome AS ruolo,
 		file.path,
 		file.url,
-		file.nome,
 		file.id_account_inserimento,
 		file.id_account_aggiornamento,
 		concat(
@@ -3429,16 +3432,17 @@ CREATE OR REPLACE VIEW  immobili_anagrafica_view AS
 -- | 090000015751
 
 -- immobili_caratteristiche_view
--- tipologia: tabella gestita
--- verifica: 2022-04-28 12:20 Chiara GDL
 CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
 	SELECT
 		immobili_caratteristiche.id,
+		immobili_caratteristiche.ordine,
 		immobili_caratteristiche.id_immobile,
 		immobili_caratteristiche.id_caratteristica,
+		immobili_caratteristiche.id_lingua,
 		caratteristiche.nome AS caratteristica,
-		immobili_caratteristiche.ordine,
-		immobili_caratteristiche.se_presente,
+		immobili_caratteristiche.valore,
+		immobili_caratteristiche.note,
+		immobili_caratteristiche.se_assente,
 		immobili_caratteristiche.id_account_inserimento,
 		immobili_caratteristiche.id_account_aggiornamento,
 		concat(
@@ -3499,16 +3503,17 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 -- | 090000015851
 
 -- indirizzi_caratteristiche_view
--- tipologia: tabella gestita
--- verifica: 2022-05-03 15:21 Chiara GDL
 CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 	SELECT
 		indirizzi_caratteristiche.id,
+		indirizzi_caratteristiche.ordine,
 		indirizzi_caratteristiche.id_indirizzo,
 		indirizzi_caratteristiche.id_caratteristica,
+		indirizzi_caratteristiche.id_lingua,
 		caratteristiche.nome AS caratteristica,
-		indirizzi_caratteristiche.ordine,
-		indirizzi_caratteristiche.se_presente,
+		indirizzi_caratteristiche.valore,
+		indirizzi_caratteristiche.note,
+		indirizzi_caratteristiche.se_assente,
 		indirizzi_caratteristiche.id_account_inserimento,
 		indirizzi_caratteristiche.id_account_aggiornamento,
 		concat(

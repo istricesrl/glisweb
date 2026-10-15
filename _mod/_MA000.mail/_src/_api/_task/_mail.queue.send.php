@@ -396,7 +396,7 @@
 
 				// sposto gli allegati sulla mail inviata
 				// NOTA va fatto prima del DELETE, che con il vincolo ON DELETE SET NULL azzera file.id_mail_out; l'indice unico
-				// ( id_mail_sent, id_ruolo, path ) non può collidere: nessun file punta già a questa mail inviata, perché la
+				// ( id_mail_sent, id_ruolo, id_lingua, path ) non può collidere: nessun file punta già a questa mail inviata, perché la
 				// riga di mail_sent l'ha appena scritta il REPLACE, e se ne esisteva una con lo stesso id il REPLACE l'ha
 				// cancellata staccandone i file con lo stesso vincolo
 				$s4 = mysqlQuery(

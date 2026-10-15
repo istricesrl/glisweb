@@ -2766,22 +2766,31 @@ CREATE TABLE IF NOT EXISTS `documenti_ritenute` (               --
 -- edifici
 -- tipologia: tabella gestita
 -- rango: tabella principale
--- struttura: tabella base
--- funzione: contiene i edifici
+-- struttura: tabella ricorsiva
+-- funzione: contiene gli edifici, e i complessi di edifici che li contengono
+-- entità: questa tabella corrisponde all'entità edificio
 --
-CREATE TABLE IF NOT EXISTS `edifici` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `piani` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella è un livello della catena della geografia fisica, che va dall'indirizzo ai vani passando per edifici
+-- e immobili; è ricorsiva perché i complessi più articolati ( un polo industriale coi suoi capannoni, un campus coi
+-- suoi padiglioni ) si descrivono come edifici genitori di altri edifici, su quanti livelli servono, e id_genitore
+-- punta all'edificio o al complesso che contiene questo; l'indirizzo è facoltativo sui figli, che ereditano quello
+-- del complesso, e se lo si cancella l'edificio resta; un mastro di magazzino può essere collocato a uno qualsiasi
+-- dei livelli della catena ( indirizzo, edificio, immobile, vano )
+--
+CREATE TABLE IF NOT EXISTS `edifici` (                          --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio o il complesso che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di edificio
+  `codice` char(32) DEFAULT NULL,                               -- codice dell'edificio
+  `nome` char(255) DEFAULT NULL,                                -- nome dell'edificio
+  `id_indirizzo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'indirizzo dell'edificio
+  `piani` int(11) DEFAULT NULL,                                 -- numero di piani
+  `note` text DEFAULT NULL,                                     -- note sull'edificio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'edificio
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'edificio
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
 -- | 010000012050
 
@@ -2789,76 +2798,96 @@ CREATE TABLE IF NOT EXISTS `edifici` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione edifici e caratteristiche
+-- funzione: collega un edificio alle sue caratteristiche
+--
+-- questa tabella collega un edificio all'albero delle caratteristiche ( caratteristiche ) e ne porta
+-- il valore. E' gemella di articoli_caratteristiche, come immobili_caratteristiche e indirizzi_caratteristiche ( decisione
+-- del 15/10/2026: prima era un si'/no con se_presente ): il valore e' per lingua, quindi id_lingua
+-- fa parte della chiave unica, e se_assente dichiara che la caratteristica non c'e'. Le caratteristiche
+-- proponibili sono quelle con caratteristiche.se_edifici.
 --
 CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
-  `id` bigint(20) NOT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `id_caratteristica` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `se_presente` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_edificio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015000
 
 -- file
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i file caricati nel sistema
--- 
--- questa tabella contiene i file caricati nel sistema, con le informazioni relative al percorso, al nome e alle
--- entità a cui sono associati
+-- funzione: contiene i file collegati agli oggetti delle tabelle principali
 --
-CREATE TABLE IF NOT EXISTS `file` (                           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `id_ruolo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il ruolo del file
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il file
-  `id_anagrafica_certificazioni` bigint(20) DEFAULT NULL,        -- chiave esterna per l'anagrafica certificazioni a cui è associato il file
-  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
-  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associato il file
-  `id_marchio` bigint(20) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associato il file
-  `id_todo` bigint(20) DEFAULT NULL,                             -- chiave esterna per la todo a cui è associato il file
-  `id_pagina` bigint(20) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associato il file
-  `id_template` bigint(20) DEFAULT NULL,                         -- chiave esterna per il template a cui è associato il file
-  `id_mailing` bigint(20) DEFAULT NULL,                          -- chiave esterna per la mailing a cui è associato il file
-  `id_notizia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associato il file
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associato il file
-  `id_annuncio` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'annuncio a cui è associato il file
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associato il file
-  `id_risorsa` bigint(20) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associato il file
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associato il file
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associato il file
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associato il file
-  `id_documento` bigint(20) DEFAULT NULL,                        -- chiave esterna per il documento a cui è associato il file
-  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associato il file
-  `id_edificio` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'edificio a cui è associato il file
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile a cui è associato il file
-  `id_contratto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contratto a cui è associato il file
-  `id_rinnovo` bigint(20) DEFAULT NULL,                          -- chiave esterna per il rinnovo a cui è associato il file
-  `id_valutazione` bigint(20) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associato il file
-  `id_valutazione_certificazioni` bigint(20) DEFAULT NULL,       -- chiave esterna per la valutazione certificazioni a cui è associato il file
-  `id_mail_out` bigint(20) DEFAULT NULL,                         -- chiave esterna per la mail in uscita a cui è associato il file
-  `id_mail_sent` bigint(20) DEFAULT NULL,                        -- chiave esterna per la mail inviata a cui è associato il file
-  `id_licenza` bigint(20) DEFAULT NULL,                          -- chiave esterna per la licenza a cui è associato il file
-  `id_attivita` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'attività a cui è associato il file
-  `id_lingua` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lingua del file
-  `nome` char(255) DEFAULT NULL,                              -- nome del file
-  `path` char(255) DEFAULT NULL,                              -- percorso del file
-  `url` char(255) DEFAULT NULL,                               -- URL del file
-  `note` text DEFAULT NULL,                                   -- note sul file
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il file
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il file
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file ), che collegano un
+-- media a un oggetto di una tabella principale; ogni riga descrive un oggetto solo, indicato da una delle chiavi
+-- esterne id_*, ed è qualificata dalla lingua e dal ruolo che il media ha per quell'oggetto; lo stesso file può
+-- descrivere più oggetti, e per questo le chiavi uniche sono una per oggetto e non una globale sul path
+--
+-- NOTA è la tabella del gruppo con più oggetti collegati, e per stare sotto il limite di 64 indici secondari di
+-- InnoDB non ha le chiavi semplici sulle colonne id_* che fanno da prima colonna di una chiave unica: la chiave
+-- unica fa da indice della colonna anche per la chiave esterna; la regola vale per tutto il gruppo dei media
+-- ( decisione del 2026-10-15 )
+--
+-- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un file non ha senso senza il suo oggetto, e
+-- se l'oggetto viene cancellato le sue righe se ne vanno con lui; fanno eccezione id_mail_out e id_mail_sent, che
+-- restano SET NULL perché la coda della posta sposta gli allegati dalla mail in uscita a quella inviata ( e
+-- viceversa al reinvio ) prima di cancellare la mail di partenza
+--
+CREATE TABLE IF NOT EXISTS `file` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione del file
+  `nome` char(255) DEFAULT NULL,                                  -- nome del file
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica descritta
+  `id_annuncio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'annuncio descritto
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto descritto
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo descritto
+  `id_lingua` bigint(20) DEFAULT NULL,                            -- chiave esterna per la lingua del file
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo descritto
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto descritto
+  `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto descritto
+  `id_todo` bigint(20) DEFAULT NULL,                              -- chiave esterna per la todo descritta
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile descritto
+  `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per la mailing descritta
+  `id_documento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il documento descritto
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina descritta
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
+  `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria notizie descritta
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria annunci descritta
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti descritta
+  `id_edificio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'edificio descritto
+  `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
+  `id_licenza` bigint(20) DEFAULT NULL,                           -- chiave esterna per la licenza descritta
+  `id_anagrafica_certificazioni` bigint(20) DEFAULT NULL,         -- chiave esterna per la certificazione dell'anagrafica descritta
+  `id_template` bigint(20) DEFAULT NULL,                          -- chiave esterna per il template descritto
+  `id_rinnovo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il rinnovo descritto
+  `id_valutazione_certificazioni` bigint(20) DEFAULT NULL,        -- chiave esterna per la certificazione della valutazione descritta
+  `id_mail_out` bigint(20) DEFAULT NULL,                          -- chiave esterna per la mail in uscita a cui il file è allegato
+  `id_mail_sent` bigint(20) DEFAULT NULL,                         -- chiave esterna per la mail inviata a cui il file è allegato
+  `id_attivita` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'attività descritta
+  `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo del file
+  `path` char(255) DEFAULT NULL,                                  -- percorso del file
+  `url` char(255) DEFAULT NULL,                                   -- URL del file
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015100
 
@@ -3066,19 +3095,27 @@ CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione immobili e caratteristiche
+-- funzione: collega un immobile alle sue caratteristiche
+--
+-- questa tabella collega un immobile all'albero delle caratteristiche ( caratteristiche ) e ne porta
+-- il valore. E' gemella di articoli_caratteristiche, come edifici_caratteristiche e indirizzi_caratteristiche ( decisione
+-- del 15/10/2026: prima era un si'/no con se_presente ): il valore e' per lingua, quindi id_lingua
+-- fa parte della chiave unica, e se_assente dichiara che la caratteristica non c'e'. Le caratteristiche
+-- proponibili sono quelle con caratteristiche.se_immobili.
 --
 CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
-  `id` bigint(20) NOT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `id_caratteristica` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `se_presente` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015800
@@ -3119,19 +3156,27 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione indirizzi e caratteristiche
+-- funzione: collega un indirizzo alle sue caratteristiche
+--
+-- questa tabella collega un indirizzo all'albero delle caratteristiche ( caratteristiche ) e ne porta
+-- il valore. E' gemella di articoli_caratteristiche, come edifici_caratteristiche e immobili_caratteristiche ( decisione
+-- del 15/10/2026: prima era un si'/no con se_presente ): il valore e' per lingua, quindi id_lingua
+-- fa parte della chiave unica, e se_assente dichiara che la caratteristica non c'e'. Le caratteristiche
+-- proponibili sono quelle con caratteristiche.se_indirizzi.
 --
 CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
-  `id` bigint(20) NOT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `id_caratteristica` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `se_presente` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_indirizzo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'indirizzo
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000016000
