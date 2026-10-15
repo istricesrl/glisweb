@@ -101,3 +101,5 @@ CREATE OR REPLACE VIEW `comuni_view` AS
 		INNER JOIN stati
 			ON stati.id = regioni.id_stato
 ;
+
+-- | FINE
