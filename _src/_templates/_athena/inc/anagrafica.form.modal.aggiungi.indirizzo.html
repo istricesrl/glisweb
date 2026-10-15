@@ -51,7 +51,8 @@
 
 				<div class="col-12 col-md">
 				<span class="label-top ">comune</span>
-					{{ frm.selectBox( modalTable, '', '', 'id_comune', 'comune', '', '', '', '', 1, '', '', '', '', 'comuni', 'id_comune', page, pages, ietf, 'comuni', 2 ) }}
+					{# niente comuni soppressi ( data_archiviazione valorizzata, patch _202610151200 ) #}
+					{{ frm.selectBox( modalTable, '', '', 'id_comune', 'comune', '', '', '', '', 1, '', '', '', '', 'comuni', 'id_comune', page, pages, ietf, 'comuni', 2, '', '', { 'data_archiviazione': { 'NL': 1 } } ) }}
 					{# frm.selectBox( table, '', '',       'id_badge',  'badge', '', request, '', '', '', '', '', 'badge.form', 'badge.form', 'badge', 'id_badge', page, pages, ietf ) #}
 				</div>
 			</div>
