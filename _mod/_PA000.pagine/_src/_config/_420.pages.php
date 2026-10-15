@@ -245,6 +245,7 @@
 
                     // salto le sotto pagine che non sono state caricate (non pubblicate o fuori finestra)
                     if( ! isset( $cf['contents']['pages'][ $sid ] ) ) {
+                        logger( 'sotto pagina ' . $sid . ' della pagina ' . $cf['contents']['page']['id'] . ' non caricata, salto', 'pagine', LOG_DEBUG );
                         continue;
                     }
 
