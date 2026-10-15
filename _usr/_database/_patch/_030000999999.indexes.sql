@@ -1774,13 +1774,10 @@ ALTER TABLE `formati_tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL A
 -- | 030000015150
 
 -- giorni
-ALTER TABLE `giorni` 
+ALTER TABLE `giorni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`), 
-	ADD KEY `nome` (`nome`), 
-	ADD KEY `indice` (`id`,`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 
 -- | 030000015151
 

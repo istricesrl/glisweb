@@ -2923,19 +2923,21 @@ CREATE TABLE IF NOT EXISTS `formati_tipologie_corrispondenza` (--
 -- | 010000015150
 
 -- giorni
--- tipologia: tabella gestita
+-- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i giorni
+-- funzione: contiene i giorni della settimana
 --
-CREATE TABLE IF NOT EXISTS `giorni` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(12) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- i giorni della settimana, da lunedì a domenica, caricati dai file di base; il nome è in italiano, ad uso interno.
+-- La tabella fa parte del framework col suo contenuto: non si modifica dalle interfacce, e per questo non ha la coda
+-- di audit.
+-- NOTA l'id è il numero del giorno secondo ISO-8601, lo stesso di date( 'N' ) in PHP e di WEEKDAY() + 1 in MySQL
+-- ( 1 lunedì … 7 domenica; non DAYOFWEEK(), che parte dalla domenica ): il codice lo confronta con le date, quindi
+-- gli id non si cambiano
+CREATE TABLE IF NOT EXISTS `giorni` (                         --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria, numero ISO-8601 del giorno
+  `nome` char(255) DEFAULT NULL                               -- nome del giorno
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000015200
 

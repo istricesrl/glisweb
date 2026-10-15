@@ -3207,7 +3207,8 @@ CREATE OR REPLACE VIEW `formati_tipologie_corrispondenza_view` AS
 
 -- | 090000015150
 
--- giorni
+-- giorni_view
+-- tipologia: tabella di supporto
 CREATE OR REPLACE VIEW `giorni_view` AS
 	SELECT
 		giorni.id,

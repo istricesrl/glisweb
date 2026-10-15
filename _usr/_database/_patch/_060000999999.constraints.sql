@@ -963,13 +963,6 @@ ALTER TABLE `formati_tipologie_corrispondenza`
     ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 060000015150
-
--- giorni
-ALTER TABLE `giorni`
-    ADD CONSTRAINT `giorni_ibfk_98_nofollow`                                FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `giorni_ibfk_99_nofollow`                                FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
-
 -- | 060000015200
 
 -- gruppi
