@@ -3341,17 +3341,24 @@ CREATE TABLE IF NOT EXISTS `lingue` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i liste
+-- funzione: contiene le liste di iscritti a cui si spediscono i mailing
+-- entità: questa tabella corrisponde all'entità lista
 --
-CREATE TABLE IF NOT EXISTS `liste` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- una lista raccoglie indirizzi mail ( liste_mail ) e un mailing si spedisce a una o più liste ( mailing_liste );
+-- le liste nascono dal form di iscrizione alla newsletter e dai job di importazione degli iscritti, che le cercano
+-- per nome e le creano se mancano, per cui il nome è unico; il codice serve a riferire la lista indipendentemente
+-- dal nome
+--
+CREATE TABLE IF NOT EXISTS `liste` (                            --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                               -- codice della lista
+  `nome` char(255) DEFAULT NULL,                                -- nome della lista
+  `note` text DEFAULT NULL,                                     -- note sulla lista
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000017100
 

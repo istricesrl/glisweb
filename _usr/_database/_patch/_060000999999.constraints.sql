@@ -1060,8 +1060,6 @@ ALTER TABLE `licenze_software`
 -- | 060000017000
 
 -- liste
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `liste`
     ADD CONSTRAINT `liste_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `liste_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

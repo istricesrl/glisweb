@@ -2047,20 +2047,18 @@ ALTER TABLE `lingue` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000017000
 
 -- liste
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `liste`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`);
-	
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`);
+
 
 -- | 030000017001
 
 -- liste
--- tipolgia: tabella gestita
 ALTER TABLE `liste` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000017100

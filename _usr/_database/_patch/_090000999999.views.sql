@@ -3678,15 +3678,16 @@ CREATE OR REPLACE VIEW lingue_view AS                         --
 -- | 090000017001
 
 -- liste_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `liste_view` AS
-	SELECT
-	liste.id,
-	liste.nome,
-	liste.nome AS __label__
-	FROM liste
-;
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW liste_view AS                          --
+  SELECT                                                      --
+    liste.id,                                                 --
+    liste.codice,                                             --
+    liste.nome,                                               --
+    liste.note,                                               --
+    liste.nome AS __label__                                   -- etichetta per le tendine e le liste
+  FROM liste                                                  --
+  ;                                                           --
 
 -- | 090000017101
 
