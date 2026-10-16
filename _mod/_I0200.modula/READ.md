@@ -87,24 +87,24 @@ Ogni funzione ha il suo esempio in `_usr/_examples/_lib/_modula.utils/`: punta i
 server finto e stampa l'esito. `_usr/_test/_tests/unit/modulaUtilsCest.php` ne controlla l'output.
 I test girano solo col modulo attivo:
 
-    sudo _src/_sh/_codeception.run.sh unit E300.modula/modulaUtilsCest.php
+    sudo _src/_sh/_codeception.run.sh unit I0200.modula/modulaUtilsCest.php
 
 ## i file del modulo
 
-### /_mod/_E300.modula/_src/_config/_030.common.php
+### /_mod/_I0200.modula/_src/_config/_030.common.php
 In questo file vengono dichiarati i default dei profili del modulo modula.
 
-### /_mod/_E300.modula/_src/_config/_035.common.php
+### /_mod/_I0200.modula/_src/_config/_035.common.php
 In questo file la configurazione del modulo modula viene fusa con quella del progetto e collegata al profilo corrente.
 
-### /_mod/_E300.modula/_src/_lib/_modula.utils.php
+### /_mod/_I0200.modula/_src/_lib/_modula.utils.php
 Questa è la libreria del client REST verso il WMS Modula.
 
-### /_mod/_E300.modula/_usr/_examples/_lib/_modula.utils/
+### /_mod/_I0200.modula/_usr/_examples/_lib/_modula.utils/
 Gli esempi delle funzioni della libreria, usati dai test unitari.
 
-### /_mod/_E300.modula/_usr/_test/_fake/_wms.php
+### /_mod/_I0200.modula/_usr/_test/_fake/_wms.php
 Questo è il server finto del WMS Modula, per i test.
 
-### /_mod/_E300.modula/_usr/_test/_tests/unit/modulaUtilsCest.php
+### /_mod/_I0200.modula/_usr/_test/_tests/unit/modulaUtilsCest.php
 Questi sono i test unitari della libreria del modulo modula.

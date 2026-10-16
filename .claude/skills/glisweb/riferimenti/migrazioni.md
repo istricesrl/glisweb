@@ -72,7 +72,7 @@ sapere in quale delle due sta, e **il prefisso non si legge a occhio**:
 | nuova | `_XXNNN.nome` — **due** lettere e tre cifre, per **entita'** | `_AN000.anagrafica` | `_src/_tpl/`, file `.twig` |
 
 La trappola e' la seconda riga: **un prefisso di lettere non vuol dire "nuovo"**. `_V300.immobiliari`,
-`_V900.software`, `_F030.pagamenti`, `_V150.macchine` ed `_E300.modula` hanno una lettera sola e sono
+`_V900.software`, `_F030.pagamenti` e `_V150.macchine` hanno una lettera sola e sono
 della generazione vecchia; `_AN000`, `_CT000`, `_DO000` ne hanno due e sono della nuova. A contarle
 male si tratta un modulo vecchio come nuovo, e ci si porta dietro l'albero di template sbagliato.
 

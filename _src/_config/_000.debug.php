@@ -125,6 +125,9 @@
     // impostazioni aggiuntive per TESTING
     $cf['debug'][ TESTING ]                                     = $cf['debug'][ DEVELOPEMENT ];
     $cf['debug'][ TESTING ]['log']['lvl']                       = LOG_NOTICE;
+    // TESTING si comporta come PRODUCTION: spesso fa servizio reale ( web service, integrazioni ) e un
+    // errore stampato a video corrompe le risposte JSON lasciando lo stato HTTP a 200; gli errori restano nei log
+    $cf['debug'][ TESTING ]['display']                          = false;
 
     // impostazioni aggiuntive per PRODUCTION
     $cf['debug'][ PRODUCTION ]                                  = $cf['debug'][ DEVELOPEMENT ];

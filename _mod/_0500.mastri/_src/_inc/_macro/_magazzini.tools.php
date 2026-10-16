@@ -29,7 +29,7 @@
 	);
 
     // esportazione contatti anagrafica
-	if( in_array( "E300.modula", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "I0200.modula", $cf['mods']['active']['array'] ) ) {
 		$ct['page']['contents']['metro']['04.connessioni'][] = array(
 			'modal' => array( 'id' => 'test_modula', 'include' => 'inc/magazzini.tools.modal.modula.html' ),
 			'icon' => NULL,
