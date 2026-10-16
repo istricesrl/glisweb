@@ -3366,17 +3366,23 @@ CREATE TABLE IF NOT EXISTS `liste` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione liste e mail
+-- funzione: contiene le iscrizioni degli indirizzi mail alle liste
 --
-CREATE TABLE IF NOT EXISTS `liste_mail` (
-  `id` bigint(20) NOT NULL,
-  `id_lista` bigint(20) DEFAULT NULL,
-  `id_mail` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ogni riga iscrive un indirizzo ( mail ) a una lista ( liste ); le iscrizioni nascono dal form di iscrizione alla
+-- newsletter, dai job di importazione degli iscritti, dal task che popola una lista da una categoria di anagrafica e
+-- dai form della lista e della mail, tutti con INSERT IGNORE: la chiave unica su lista e indirizzo fa sì che iscrivere
+-- due volte lo stesso indirizzo non crei doppioni
+--
+CREATE TABLE IF NOT EXISTS `liste_mail` (                       --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_lista` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lista
+  `id_mail` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'indirizzo mail iscritto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000017200
 

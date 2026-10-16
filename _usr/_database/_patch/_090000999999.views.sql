@@ -3692,28 +3692,34 @@ CREATE OR REPLACE VIEW liste_view AS                          --
 -- | 090000017101
 
 -- liste_mail_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `liste_mail_view` AS
-	SELECT
-	liste_mail.id,
-	liste_mail.id_lista,
-	liste.nome AS lista,
-	liste_mail.id_mail,
-	mail.indirizzo AS mail,
-	mail.id_anagrafica,
-	coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-	a1.nome AS anagrafica_nome,
-	a1.cognome AS anagrafica_cognome,
-	a1.denominazione AS anagrafica_denominazione,
-	a1.codice_fiscale AS anagrafica_codice_fiscale,
-	a1.codice AS anagrafica_codice,
-	concat( liste_mail.id_lista, liste_mail.id_mail ) AS __label__
-	FROM liste_mail
-	INNER JOIN liste ON liste.id = liste_mail.id_lista
-	INNER JOIN mail ON mail.id = liste_mail.id_mail
-	LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
-;
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW liste_mail_view AS                                                --
+  SELECT                                                                                 --
+    liste_mail.id,                                                                       --
+    liste_mail.ordine,                                                                   --
+    liste_mail.id_lista,                                                                 --
+    liste.nome AS lista,                                                                 --
+    liste_mail.id_mail,                                                                  --
+    mail.indirizzo AS mail,                                                              --
+    mail.id_anagrafica,                                                                  --
+    coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,  --
+    a1.nome AS anagrafica_nome,                                                          --
+    a1.cognome AS anagrafica_cognome,                                                    --
+    a1.denominazione AS anagrafica_denominazione,                                        --
+    a1.codice_fiscale AS anagrafica_codice_fiscale,                                      --
+    a1.codice AS anagrafica_codice,                                                      --
+    liste_mail.id_account_inserimento,                                                   --
+    liste_mail.id_account_aggiornamento,                                                 --
+    concat(                                                                              --
+      liste.nome,                                                                        --
+      ' / ',                                                                             --
+      mail.indirizzo                                                                     --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM liste_mail                                                                        --
+    LEFT JOIN liste ON liste.id = liste_mail.id_lista                                    --
+    LEFT JOIN mail ON mail.id = liste_mail.id_mail                                       --
+    LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica                             --
+  ;                                                                                      --
 
 -- | 090000017200
 

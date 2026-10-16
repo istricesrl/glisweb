@@ -2064,21 +2064,19 @@ ALTER TABLE `liste` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000017100
 
 -- liste_mail
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `liste_mail`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mail`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_lista` (`id_lista`),
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_lista`,`id_mail`);
 
 -- | 030000017101
 
 -- liste_mail
--- tipolgia: tabella gestita
 ALTER TABLE `liste_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000017200
