@@ -16,7 +16,8 @@
      * ------------------
      * Il framework e' pensato per girare dietro Apache e ricava il sito dall'host della richiesta, quindi qui
      * si simula una richiesta HTTPS verso il deploy: l'host e' quello della variabile d'ambiente
-     * GLISWEB_TEST_HOST o, se manca, il nome della cartella del deploy ( /var/www/<host>/dev ). Serve anche
+     * GLISWEB_TEST_HOST o, se manca, il nome della cartella del deploy ( /var/www/<host>/dev ); sui deploy dove la
+     * cartella ha il nome dell'host di produzione l'host va dato esplicitamente ( vedi sotto, sicurezza ). Serve anche
      * SERVER_NAME, senza il quale _135.redirect.php risponde con un 301 e chiude, e una apache_request_headers()
      * vuota, che da riga di comando non esiste e _210.auth.php chiama.
      *
@@ -28,7 +29,10 @@
      * sicurezza
      * ---------
      * Il file gira solo da riga di comando, e si rifiuta di andare avanti se il sito e' in produzione: i test
-     * scrivono nel database ( account test-*, record TEST-E2E- ) e non devono farlo su dati veri.
+     * scrivono nel database ( account test-*, record TEST-E2E- ) e non devono farlo su dati veri. Il controllo
+     * lo fa _src/_config/_015.site.php appena ricavato lo status, grazie alla costante GLISWEB_TEST, cioe' prima
+     * di qualunque connessione: fino al 16/10/2026 lo si faceva qui dopo il bootstrap, e su crm.trbitaly.com, senza
+     * GLISWEB_TEST_HOST, il nome della cartella aveva portato i test a collegarsi al database di produzione.
      *
      */
 
@@ -36,6 +40,9 @@
     if( PHP_SAPI !== 'cli' ) {
         die( 'questo file va eseguito da riga di comando' );
     }
+
+    // segnala al framework che lo avviano i test ( vedi _src/_config/_015.site.php )
+    define( 'GLISWEB_TEST', true );
 
     // host del deploy
     $testHost = ( getenv( 'GLISWEB_TEST_HOST' ) ) ? getenv( 'GLISWEB_TEST_HOST' ) : basename( dirname( dirname( dirname( __DIR__ ) ) ) );

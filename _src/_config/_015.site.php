@@ -198,6 +198,30 @@
     define( 'SITE_STATUS', $cf['site']['status'] );
 
     /**
+     * niente test in produzione
+     * =========================
+     * Quando il framework lo avvia _usr/_test/_bootstrap.php ( costante GLISWEB_TEST ) e l'host simulato e' quello
+     * di produzione, ci si ferma qui, prima che i runlevel successivi aprano le connessioni a cache, sessioni e
+     * database: un test non deve nemmeno tentare di collegarsi ai server di produzione. Il messaggio elenca gli
+     * host DEV e TEST dei siti, da passare in GLISWEB_TEST_HOST.
+     *
+     */
+
+    // niente test in produzione
+    if( defined( 'GLISWEB_TEST' ) && SITE_STATUS == PRODUCTION ) {
+        $testHosts = array();
+        foreach( $cf['sites'] as $testSite ) {
+            foreach( array( DEVELOPEMENT, TESTING ) as $testStatus ) {
+                if( ! empty( $testSite['domains'][ $testStatus ] ) ) {
+                    $testHosts[] = ( ( empty( $testSite['hosts'][ $testStatus ] ) ) ? NULL : $testSite['hosts'][ $testStatus ] . '.' ) . $testSite['domains'][ $testStatus ];
+                }
+            }
+        }
+        fwrite( STDERR, 'l\'host ' . $_SERVER['HTTP_HOST'] . ' e\' di produzione, i test non si eseguono; impostare GLISWEB_TEST_HOST con un host DEV o TEST' . ( ( empty( $testHosts ) ) ? ' ( nessuno configurato )' : ': ' . implode( ', ', array_unique( $testHosts ) ) ) . PHP_EOL );
+        exit( 1 );
+    }
+
+    /**
      * debug del runlevel
      * ==================
      * In questa sezione sono presenti alcune righe commentate utili per il debug del runlevel.
