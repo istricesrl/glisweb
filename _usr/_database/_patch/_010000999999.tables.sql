@@ -3317,17 +3317,22 @@ CREATE TABLE IF NOT EXISTS `licenze_software` (
 -- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene le lingue del sistema
--- entità: questa tabella corrisponde all'entità lingue
--- 
--- questa tabella contiene le lingue del sistema, con i relativi codici ISO e IETF
--- 
+-- famiglia: iso
+--
+-- questa tabella contiene le lingue che il framework supporta, ciascuna nella variante di un paese, coi codici ISO
+-- 639-1, ISO 639-3 e il tag IETF BCP 47; il tag IETF è la chiave funzionale, quella con cui la localizzazione, le
+-- mail e gli SMS trovano la lingua
+--
+-- è una tabella standard ad aggiornamento centralizzato, famiglia iso: le righe sono un sottoinsieme scelto dal
+-- framework, i codici e i nomi si allineano alle fonti istituzionali sul database canonico e arrivano ai deploy dal
+-- dataserver; i deploy le importano e non le modificano
 CREATE TABLE IF NOT EXISTS `lingue` (                         --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `nome` char(128) DEFAULT NULL,                              -- nome della lingua  
-  `note` char(128) DEFAULT NULL,                              -- note sulla lingua (nome esteso, paese, eccetera)
-  `iso6391alpha2` char(36) DEFAULT NULL,                      -- codice ISO 639-1 alpha-2 della lingua
-  `iso6393alpha3` char(36) DEFAULT NULL,                      -- codice ISO 639-3 alpha-3 della lingua
-  `ietf` char(36) DEFAULT NULL                                 -- codice IETF della lingua
+  `nome` char(255) DEFAULT NULL,                              -- nome comune della lingua, in italiano
+  `note` char(128) DEFAULT NULL,                              -- nome esteso della variante, con il paese
+  `iso6391alpha2` char(2) DEFAULT NULL,                       -- codice ISO 639-1 a due lettere
+  `iso6393alpha3` char(3) DEFAULT NULL,                       -- codice ISO 639-3 a tre lettere
+  `ietf` char(36) DEFAULT NULL                                 -- tag IETF BCP 47 della lingua con il paese
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000017000

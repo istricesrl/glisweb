@@ -3662,10 +3662,12 @@ CREATE OR REPLACE VIEW `licenze_software_view` AS
 -- | 090000016800
 
 -- lingue_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW lingue_view AS                         --
   SELECT                                                      --
     lingue.id,                                                --
     lingue.nome,                                              --
+    lingue.note,                                              --
     lingue.iso6391alpha2,                                     --
     lingue.iso6393alpha3,                                     --
     lingue.ietf,                                              --
