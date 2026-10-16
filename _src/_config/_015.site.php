@@ -76,6 +76,30 @@
     // debug
     // die( print_r( $cf['sites'], true ) );
 
+    /**
+     * host dei test ricavato dalla cartella
+     * =====================================
+     * Quando _usr/_test/_bootstrap.php non riceve GLISWEB_TEST_HOST ricava l'host dal nome della cartella del deploy
+     * ( costante GLISWEB_TEST_AUTO ); se quel nome e' l'host di produzione di un sito, come su crm.trbitaly.com, i
+     * test girano sull'host DEV dello stesso sito, o in mancanza su quello TEST. Un host di produzione dato
+     * esplicitamente in GLISWEB_TEST_HOST invece non si cambia, e piu' sotto ferma i test.
+     *
+     */
+
+    // host dei test ricavato dalla cartella
+    if( defined( 'GLISWEB_TEST_AUTO' ) ) {
+        foreach( $cf['sites'] as $testSite ) {
+            if( ! empty( $testSite['domains'][ PRODUCTION ] ) && $_SERVER['HTTP_HOST'] == ( ( empty( $testSite['hosts'][ PRODUCTION ] ) ) ? NULL : $testSite['hosts'][ PRODUCTION ] . '.' ) . $testSite['domains'][ PRODUCTION ] ) {
+                foreach( array( DEVELOPEMENT, TESTING ) as $testStatus ) {
+                    if( ! empty( $testSite['domains'][ $testStatus ] ) ) {
+                        $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = ( ( empty( $testSite['hosts'][ $testStatus ] ) ) ? NULL : $testSite['hosts'][ $testStatus ] . '.' ) . $testSite['domains'][ $testStatus ];
+                        break 2;
+                    }
+                }
+            }
+        }
+    }
+
     // cerco di ricavare il sito corrente dal dominio
     foreach( $cf['sites'] as $id => &$site ) {
 
@@ -202,8 +226,9 @@
      * =========================
      * Quando il framework lo avvia _usr/_test/_bootstrap.php ( costante GLISWEB_TEST ) e l'host simulato e' quello
      * di produzione, ci si ferma qui, prima che i runlevel successivi aprano le connessioni a cache, sessioni e
-     * database: un test non deve nemmeno tentare di collegarsi ai server di produzione. Il messaggio elenca gli
-     * host DEV e TEST dei siti, da passare in GLISWEB_TEST_HOST.
+     * database: un test non deve nemmeno tentare di collegarsi ai server di produzione. Ci si arriva solo con un host
+     * di produzione dato esplicitamente in GLISWEB_TEST_HOST, o ricavato dalla cartella per un sito che non ha host
+     * DEV ne' TEST; il messaggio elenca gli host DEV e TEST dei siti, da passare in GLISWEB_TEST_HOST.
      *
      */
 

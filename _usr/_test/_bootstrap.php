@@ -16,8 +16,9 @@
      * ------------------
      * Il framework e' pensato per girare dietro Apache e ricava il sito dall'host della richiesta, quindi qui
      * si simula una richiesta HTTPS verso il deploy: l'host e' quello della variabile d'ambiente
-     * GLISWEB_TEST_HOST o, se manca, il nome della cartella del deploy ( /var/www/<host>/dev ); sui deploy dove la
-     * cartella ha il nome dell'host di produzione l'host va dato esplicitamente ( vedi sotto, sicurezza ). Serve anche
+     * GLISWEB_TEST_HOST o, se manca, il nome della cartella del deploy ( /var/www/<host>/dev ); in questo secondo caso
+     * si definisce GLISWEB_TEST_AUTO, e se la cartella ha il nome dell'host di produzione di un sito
+     * _src/_config/_015.site.php passa all'host DEV ( o TEST ) dello stesso sito. Serve anche
      * SERVER_NAME, senza il quale _135.redirect.php risponde con un 301 e chiude, e una apache_request_headers()
      * vuota, che da riga di comando non esiste e _210.auth.php chiama.
      *
@@ -46,6 +47,11 @@
 
     // host del deploy
     $testHost = ( getenv( 'GLISWEB_TEST_HOST' ) ) ? getenv( 'GLISWEB_TEST_HOST' ) : basename( dirname( dirname( dirname( __DIR__ ) ) ) );
+
+    // host ricavato dalla cartella ( vedi _src/_config/_015.site.php )
+    if( ! getenv( 'GLISWEB_TEST_HOST' ) && ! defined( 'GLISWEB_TEST_AUTO' ) ) {
+        define( 'GLISWEB_TEST_AUTO', true );
+    }
 
     // richiesta simulata
     $_SERVER['HTTP_HOST']           = $testHost;
