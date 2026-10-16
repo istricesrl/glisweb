@@ -604,6 +604,9 @@
         'edifici' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'edifici_anagrafica' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
         'edifici_caratteristiche' => array(
             CONTROL_FULL => array( 'roots' )
         ),

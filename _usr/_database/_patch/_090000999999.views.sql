@@ -3085,6 +3085,32 @@ CREATE OR REPLACE VIEW edifici_view AS
 		LEFT JOIN stati ON stati.id = regioni.id_stato
 ;
 
+-- | 090000012011
+
+-- edifici_anagrafica_view
+CREATE OR REPLACE VIEW `edifici_anagrafica_view` AS
+	SELECT
+		edifici_anagrafica.id,
+		edifici_anagrafica.ordine,
+		edifici_anagrafica.id_edificio,
+		edifici_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		edifici_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		edifici_anagrafica.note,
+		edifici_anagrafica.id_account_inserimento,
+		edifici_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			edifici_path( edifici_anagrafica.id_edificio ),
+			coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
+	FROM edifici_anagrafica
+		LEFT JOIN anagrafica ON anagrafica.id = edifici_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = edifici_anagrafica.id_ruolo
+;
+
 -- | 090000012051
 
 -- edifici_caratteristiche_view
@@ -3394,23 +3420,28 @@ CREATE OR REPLACE VIEW immobili_view AS
 -- | 090000015711
 
 -- immobili_anagrafica_view
--- tipologia: tabella gestita
--- verifica: 2022-04-28 12:20 Chiara GDL
-CREATE OR REPLACE VIEW  immobili_anagrafica_view AS 
-	SELECT 
+CREATE OR REPLACE VIEW `immobili_anagrafica_view` AS
+	SELECT
 		immobili_anagrafica.id,
+		immobili_anagrafica.ordine,
 		immobili_anagrafica.id_immobile,
 		immobili_anagrafica.id_anagrafica,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		immobili_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome AS ruolo,
-		immobili_anagrafica.ordine,
-		immobili_anagrafica.id_account_inserimento ,
-		immobili_anagrafica.id_account_aggiornamento ,
-		concat( 'immobile ', immobili_anagrafica.id_immobile, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+		immobili_anagrafica.note,
+		immobili_anagrafica.id_account_inserimento,
+		immobili_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			immobili_anagrafica.id_immobile,
+			coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
 	FROM immobili_anagrafica
+		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = immobili_anagrafica.id_ruolo
-		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica;
+;
 
 -- | 090000015751
 
@@ -7555,6 +7586,32 @@ CREATE OR REPLACE VIEW vani_view AS
 		LEFT JOIN immobili ON immobili.id = vani.id_immobile
 		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
 		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+;
+
+-- | 090000063211
+
+-- vani_anagrafica_view
+CREATE OR REPLACE VIEW `vani_anagrafica_view` AS
+	SELECT
+		vani_anagrafica.id,
+		vani_anagrafica.ordine,
+		vani_anagrafica.id_vano,
+		vani_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		vani_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		vani_anagrafica.note,
+		vani_anagrafica.id_account_inserimento,
+		vani_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			vani_anagrafica.id_vano,
+			coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
+	FROM vani_anagrafica
+		LEFT JOIN anagrafica ON anagrafica.id = vani_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = vani_anagrafica.id_ruolo
 ;
 
 -- | 090000063251

@@ -1672,6 +1672,25 @@ ALTER TABLE `edifici`
 -- tipologia: tabella gestita
 ALTER TABLE `edifici`  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000012010
+
+-- edifici_anagrafica
+ALTER TABLE `edifici_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_edificio`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_edificio` (`id_edificio`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_edificio`,`id_anagrafica`,`id_ruolo`);
+
+-- | 030000012011
+
+-- edifici_anagrafica
+ALTER TABLE `edifici_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000012050
 
 -- edifici_caratteristiche
@@ -1882,23 +1901,20 @@ ALTER TABLE `immobili` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000015710
 
 -- immobili_anagrafica
--- tipologia: tabella gestita
--- verifica: 2022-04-28 12:20 Chiara GDL
 ALTER TABLE `immobili_anagrafica`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_immobile`,`id_anagrafica`,`id_ruolo`), 
-	ADD KEY `id_immobile` (`id_immobile`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_immobile`,`id_anagrafica`,`id_ruolo`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_immobile`,`id_anagrafica`,`id_ruolo`);
 
 -- | 030000015711
 
 -- immobili_anagrafica
--- tipologia: tabella gestita
 ALTER TABLE `immobili_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015750
@@ -4914,6 +4930,25 @@ ALTER TABLE `vani`
 
 -- vani
 ALTER TABLE `vani` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000063210
+
+-- vani_anagrafica
+ALTER TABLE `vani_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_vano`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_vano` (`id_vano`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_vano`,`id_anagrafica`,`id_ruolo`);
+
+-- | 030000063211
+
+-- vani_anagrafica
+ALTER TABLE `vani_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000063250
 

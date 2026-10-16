@@ -2765,6 +2765,34 @@ CREATE TABLE IF NOT EXISTS `edifici` (                          --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
+-- | 010000012010
+
+-- edifici_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega un edificio alle anagrafiche che hanno un ruolo su di esso
+--
+-- questa tabella collega un edificio alle anagrafiche che vi hanno un ruolo ( l'amministratore condominiale,
+-- la guardia di un deposito...; un complesso di edifici e' un edificio genitore, perche' edifici e' ricorsiva );
+-- e' gemella di immobili_anagrafica e vani_anagrafica ( decisione del 16/10/2026 ): le anagrafiche si
+-- assegnano a tutti i livelli degli immobili; i ruoli proponibili sono quelli con ruoli_anagrafica.se_immobili
+--
+-- NOTA la chiave unica e' ( id_edificio, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli
+--
+CREATE TABLE IF NOT EXISTS `edifici_anagrafica` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_edificio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000012050
 
 -- edifici_caratteristiche
@@ -3082,20 +3110,27 @@ CREATE TABLE IF NOT EXISTS `immobili` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione immobili e anagrafica
+-- funzione: collega un immobile alle anagrafiche che hanno un ruolo su di esso
 --
-CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega un immobile alle anagrafiche che vi hanno un ruolo ( professionisti per le riparazioni,
+-- amministratore, inquilini o proprietari quando non si passa dai contratti... );
+-- e' gemella di edifici_anagrafica e vani_anagrafica ( decisione del 16/10/2026 ): le anagrafiche si
+-- assegnano a tutti i livelli degli immobili; i ruoli proponibili sono quelli con ruoli_anagrafica.se_immobili
+--
+-- NOTA la chiave unica e' ( id_immobile, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli
+--
+CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (              --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000015750
 
@@ -7132,6 +7167,34 @@ CREATE TABLE IF NOT EXISTS `vani` (                             --
   `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile che contiene il vano
   `superficie` decimal(16,2) DEFAULT NULL,                      -- superficie del vano in metri quadrati
   `note` text DEFAULT NULL,                                     -- note sul vano
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000063210
+
+-- vani_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega un vano alle anagrafiche che hanno un ruolo su di esso
+--
+-- questa tabella collega un vano alle anagrafiche che vi hanno un ruolo ( la guardia di un deposito,
+-- un professionista per un locale tecnico... );
+-- e' gemella di edifici_anagrafica e immobili_anagrafica ( decisione del 16/10/2026 ): le anagrafiche si
+-- assegnano a tutti i livelli degli immobili; i ruoli proponibili sono quelli con ruoli_anagrafica.se_immobili
+--
+-- NOTA la chiave unica e' ( id_vano, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli
+--
+CREATE TABLE IF NOT EXISTS `vani_anagrafica` (                  --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
