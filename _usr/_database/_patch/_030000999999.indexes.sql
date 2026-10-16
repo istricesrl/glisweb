@@ -2084,14 +2084,15 @@ ALTER TABLE `liste_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- listini
 ALTER TABLE `listini`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_valuta`,`nome`),
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_emittente` (`id_emittente`),
 	ADD KEY `id_valuta` (`id_valuta`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `id_emittente` (`id_emittente`); 
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`nome`);
 
 -- | 030000017201
 

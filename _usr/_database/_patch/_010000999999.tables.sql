@@ -3387,31 +3387,39 @@ CREATE TABLE IF NOT EXISTS `liste_mail` (                       --
 -- | 010000017200
 
 -- listini
--- tipologia: tabella assistita
+-- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
 -- funzione: contiene i listini prezzi
+-- entità: questa tabella corrisponde all'entità listino
 --
--- questa tabella contiene i listini prezzi, con le informazioni principali
+-- il listino fa da mediatore fra gli articoli e i prezzi: un prezzo ( prezzi ) esiste solo dentro un listino, e i
+-- listini collegano i prezzi agli articoli secondo una serie di regole ( gruppo o account connesso, zona,
+-- anagrafica e così via ); un listino può contenerne altri, e vale il principio di specificità: se un prezzo è
+-- presente sul listino figlio vale quello, altrimenti vale il prezzo corrispondente del listino padre, e così via
+-- risalendo l'albero; fra listini possono valere regole, per esempio una scontistica ( sconto_su_genitore: il
+-- listino figlio costa il 20% in meno del genitore ); il listino è di acquisto se ha un emittente esterno alle
+-- aziende gestite, altrimenti è di vendita; il codice è unico perché i listini sono oggetti riferiti anche dai
+-- gestionali esterni, il nome è unico per valuta
 --
-CREATE TABLE IF NOT EXISTS `listini` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_valuta` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
-  `se_default_su_genitore` tinyint(1) DEFAULT NULL,
-  `id_emittente` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
-  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `listini` (                          --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna ricorsiva per il listino genitore
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia del listino
+  `codice` char(32) DEFAULT NULL,                               -- codice del listino
+  `nome` char(255) DEFAULT NULL,                                -- nome del listino
+  `id_emittente` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica che emette il listino
+  `id_valuta` bigint(20) DEFAULT NULL,                          -- chiave esterna per la valuta del listino
+  `sconto_su_genitore` decimal(5,2) DEFAULT NULL,               -- sconto percentuale rispetto al listino genitore
+  `note` text DEFAULT NULL,                                     -- note sul listino
+  `se_default_su_genitore` tinyint(1) DEFAULT NULL,             -- flag per il listino di default fra i figli del genitore
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000017400
 

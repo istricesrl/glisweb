@@ -1077,12 +1077,12 @@ ALTER TABLE `liste_mail`
 
 -- listini
 ALTER TABLE `listini`
-    ADD CONSTRAINT `listini_ibfk_01_nofollow`                 FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `listini_ibfk_98_nofollow`                 FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `listini_ibfk_99_nofollow`                 FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `listini_ibfk_02_nofollow`                               FOREIGN KEY (`id_genitore`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-    ADD CONSTRAINT `listini_ibfk_03_nofollow`                               FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_listini` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-    ADD CONSTRAINT `listini_ibfk_04_nofollow`                               FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `listini_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `listini_ibfk_02_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_listini` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `listini_ibfk_03_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `listini_ibfk_04_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `listini_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `listini_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000017400
 

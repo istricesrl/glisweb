@@ -3724,28 +3724,35 @@ CREATE OR REPLACE VIEW liste_mail_view AS                                       
 -- | 090000017200
 
 -- listini_view
-CREATE OR REPLACE VIEW `listini_view` AS
-	SELECT
-		listini.id,
-		listini.id_valuta,
-		listini.id_tipologia,
-		tipologie_listini_path( listini.id_tipologia ) AS tipologia,
-		valute.iso4217 AS valuta,
-		listini.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		listini.nome,
-		listini.data_archiviazione,
-		listini.id_account_inserimento,
-		listini.id_account_aggiornamento,
-		concat(
-			listini.nome,
-			' ',
-			valute.iso4217
-		) AS __label__
-	FROM listini
-		LEFT JOIN valute ON valute.id = listini.id_valuta
-		LEFT JOIN anagrafica AS a1 ON a1.id = listini.id_emittente
-;
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW listini_view AS                                                   --
+  SELECT                                                                                 --
+    listini.id,                                                                          --
+    listini.id_genitore,                                                                 --
+    listini.id_tipologia,                                                                --
+    tipologie_listini_path( listini.id_tipologia ) AS tipologia,                         --
+    listini.codice,                                                                      --
+    listini.nome,                                                                        --
+    listini.id_emittente,                                                                --
+    coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,   --
+    listini.id_valuta,                                                                   --
+    valute.iso4217 AS valuta,                                                            --
+    listini.sconto_su_genitore,                                                          --
+    listini.note,                                                                        --
+    listini.se_default_su_genitore,                                                      --
+    listini.data_archiviazione,                                                          --
+    listini.id_account_inserimento,                                                      --
+    listini.id_account_aggiornamento,                                                    --
+    concat_ws(                                                                           --
+      ' ',                                                                               --
+      listini.codice,                                                                    --
+      listini_path( listini.id ),                                                        --
+      valute.iso4217                                                                     --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM listini                                                                           --
+    LEFT JOIN valute ON valute.id = listini.id_valuta                                    --
+    LEFT JOIN anagrafica AS a1 ON a1.id = listini.id_emittente                           --
+  ;                                                                                      --
 
 -- | 090000017401
 
