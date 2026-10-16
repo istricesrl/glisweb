@@ -1981,8 +1981,8 @@ ALTER TABLE `iva`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `codice` (`codice`),
 	ADD KEY `aliquota` (`aliquota`),
-	ADD KEY `timestamp_archiviazione` (`timestamp_archiviazione`),
-	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`);
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `indice` (`id`,`codice`,`nome`,`aliquota`,`data_archiviazione`);
 
 -- | 030000016001
 

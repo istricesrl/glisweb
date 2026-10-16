@@ -3543,13 +3543,15 @@ CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 -- | 090000016000
 
 -- iva_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW iva_view AS
 	SELECT
 		iva.id,
-		iva.aliquota,
-		iva.nome,
 		iva.codice,
-		iva.timestamp_archiviazione,
+		iva.nome,
+		iva.aliquota,
+		iva.descrizione,
+		iva.data_archiviazione,
 		iva.nome AS __label__
 	FROM
 		iva

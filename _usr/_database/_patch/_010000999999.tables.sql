@@ -3235,15 +3235,24 @@ CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
 -- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene le aliquote IVA
--- verifica: 2021-09-23 16:52 Fabio Mosti
-CREATE TABLE IF NOT EXISTS `iva` (
-  `id` bigint(20) NOT NULL,
-  `aliquota` decimal(5,2) NOT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `descrizione` text DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `timestamp_archiviazione` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- questa tabella contiene le aliquote IVA che documenti, prezzi, reparti, carrelli e spedizioni citano; per le aliquote
+-- a zero il codice è la natura dell'operazione della fattura elettronica ( N1 … N7 con le sottovoci ), per le altre è
+-- vuoto
+--
+-- il contenuto ha un vincolo normativo forte: le righe sono quelle dei dati di base del framework, che si tengono
+-- allineate alle specifiche della fattura elettronica e si aggiornano periodicamente sui deploy; un'aliquota che la
+-- norma non ammette più non si cancella, perché la citano i documenti già emessi: si archivia con data_archiviazione
+-- e note_archiviazione, e le tendine dei documenti smettono di proporla
+CREATE TABLE IF NOT EXISTS `iva` (                            --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                             -- natura dell'operazione per la fattura elettronica
+  `nome` char(255) DEFAULT NULL,                              -- nome dell'aliquota
+  `aliquota` decimal(5,2) NOT NULL,                           -- percentuale dell'aliquota
+  `descrizione` text DEFAULT NULL,                            -- descrizione estesa dell'aliquota, col riferimento normativo
+  `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione dell'aliquota
+  `note_archiviazione` text DEFAULT NULL                       -- motivo dell'archiviazione dell'aliquota
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000016200
 
