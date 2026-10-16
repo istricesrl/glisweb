@@ -118,7 +118,7 @@
      * Su un deploy che non pubblica niente - il catalogo e' un'anagrafica interna e la tabella
      * pubblicazioni e' vuota - ogni riga ha id_tipologia_pubblicazione NULL, quindi il filtro
      * presettato sui pubblicati svuota l'elenco e la maschera si apre su "nessun dato trovato".
-     * E' successo su bernispa il 16/09/2026, dove il cliente ha letto l'elenco vuoto come un
+     * E' successo su un deploy il 16/09/2026, dove il cliente ha letto l'elenco vuoto come un
      * guasto e ha segnalato l'anagrafica articoli come irraggiungibile. Dove le pubblicazioni
      * ci sono, il comportamento non cambia di una virgola.
      */

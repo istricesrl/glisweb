@@ -146,7 +146,7 @@
     // gia' ma copriva la sola riga dell'indirizzo, e quella sotto leggeva cap, comune e provincia
     // di un array vuoto. Tre notice, e un notice qui basta a rompere il PDF - TCPDF non puo' piu'
     // mandare il file quando qualcosa e' gia' uscito, ed e' il motivo per cui invece del documento
-    // arrivavano poche centinaia di byte che il lettore rifiuta. Visto su bernispa il 15/09/2026,
+    // arrivavano poche centinaia di byte che il lettore rifiuta. Visto su un deploy il 15/09/2026,
     // dove l'anagrafica dell'azienda emittente non ha nessuna riga in `anagrafica_indirizzi`.
     //
     // Le righe dell'indirizzo si saltano quando non c'e' niente da scriverci, invece di stampare

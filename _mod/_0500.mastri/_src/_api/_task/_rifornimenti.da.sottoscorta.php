@@ -20,14 +20,13 @@
      * gia' a catalogo e mai usata: cosi' i rifornimenti restano distinguibili con una WHERE dalle
      * missioni di prelievo, che sono di tipologia 34 ).
      *
-     * Il documento di richiesta non e' un orpello burocratico: la maschera /prelievi legge le
-     * righe di una missione con INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
-     * ( src/inc/macro/missione.php ), quindi una riga senza documento non comparirebbe MAI
-     * all'operatore. E le righe devono essere di tipologia 7 con id_genitore NULL, che e' quello
-     * che la stessa macro cerca come "riga da prelevare".
+     * Il documento di richiesta non e' un orpello burocratico: chi mostra all'operatore le righe di
+     * una missione le legge con INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento,
+     * quindi una riga senza documento non comparirebbe MAI. E le righe devono essere di tipologia 7
+     * con id_genitore NULL, che e' la convenzione della "riga da prelevare".
      *
-     * ATTENZIONE al sezionale della richiesta, che si lascia NULL di proposito: il task
-     * missioni.da.liste.prelievo.php gira OGNI MINUTO e cerca i documenti di tipologia 7 con un
+     * ATTENZIONE al sezionale della richiesta, che si lascia NULL di proposito: un task che
+     * genera missioni dalle liste di prelievo cerca tipicamente i documenti di tipologia 7 con un
      * dato sezionale. Con un sezionale valorizzato scambierebbe la richiesta di rifornimento per
      * una lista di prelievo e le genererebbe sopra una seconda missione, di tipologia 34.
      *
@@ -47,20 +46,22 @@
      * rifornire sta su documenti.id_mastro_provenienza / id_mastro_destinazione della missione.
      * Ne discende che serve UNA MISSIONE PER UBICAZIONE DI DESTINAZIONE ( una testata porta una
      * destinazione sola ), il che per l'operatore e' anche piu' sensato: una missione, un viaggio.
-     * La maschera /prelievi legge la destinazione dalla testata e ci scrive sopra la riga di
+     * La maschera di prelievo legge la destinazione dalla testata e ci scrive sopra la riga di
      * evasione, che e' il movimento vero.
      *
      * idempotenza
      * -----------
      * Un documento di richiesta per magazzino per giro, con codice deterministico
-     * RIF-<sigla>-<Ymd>-<turno> ( turno N a mezzanotte, G a mezzogiorno ). documenti.codice e'
+     * RIF-<sigla>-<Ymd>-<turno>: e' il formato standard, con due giri al giorno ( turno N per
+     * quello prima di mezzogiorno, G per quello dopo ). documenti.codice e'
      * UNIQUE, quindi se il documento c'e' gia' il giro per quel magazzino si salta: rilanciare il
      * task a mano nello stesso mezzogiorno non crea niente di nuovo.
      *
      * configurazione: $cf['automazioni']['profile']['sottoscorta'], cioe' il ramo dell'ambiente
-     * corrente. Default in src/config/700.automazioni.php, interruttori per ambiente in
-     * src/config.json sotto "automazioni.profiles", cutoff_id in
-     * var/spool/automazioni/sottoscorta.cutoff.id ( non si deploya ).
+     * corrente: i valori li dichiara il progetto nella sua configurazione, gli interruttori per
+     * ambiente stanno in src/config.json sotto "automazioni.profiles", il cutoff_id in
+     * var/spool/automazioni/sottoscorta.cutoff.id ( non si deploya ). prefisso_stoccaggio e'
+     * facoltativo: senza, il ripiego di trovaUbicazioneBulk() non privilegia nessuna ubicazione.
      *
      */
 
@@ -293,7 +294,7 @@
                     $cf['mysql']['connection'],
                     $riga,
                     $esclusi,
-                    $cf['automazioni']['profile']['sottoscorta']['prefisso_stoccaggio']
+                    ( isset( $cf['automazioni']['profile']['sottoscorta']['prefisso_stoccaggio'] ) ) ? $cf['automazioni']['profile']['sottoscorta']['prefisso_stoccaggio'] : NULL
                 );
 
                 $mancante = $riga['mancante'];

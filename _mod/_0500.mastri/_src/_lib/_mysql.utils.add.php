@@ -647,9 +647,9 @@
      * ( mastri_articoli ), confezionamento ( metadati_articoli ). Di documenti ne scrive una sola,
      * creaMissioneRifornimento, e lo fa in fondo alla catena.
      *
-     * Arrivano dal deploy bernispa, dove sono nate il 08-16/09/2026 in src/lib/mysql.utils.add.php.
-     * Il prefisso di stoccaggio e i mastri esclusi restano parametri con un default, non costanti:
-     * la nomenclatura delle ubicazioni e' di progetto, non dello standard.
+     * Il prefisso di stoccaggio e i mastri esclusi restano parametri, non costanti: la
+     * nomenclatura delle ubicazioni e' di progetto, non dello standard. Il prefisso non ha un
+     * default: senza prefisso dichiarato il ripiego non privilegia nessuna ubicazione per nome.
      */
 
 
@@ -770,12 +770,12 @@
     // codice: tutto quello che viene dopo - le check function, il confronto ordinato/prelevato,
     // la riga scritta - continua a ragionare in pezzi come ha sempre fatto.
     //
-    // Il moltiplicatore di risolviCodiceArticolo() ha la precedenza e SPEGNE il selettore: se
-    // l'operatore ha scansionato il barcode di una confezione, il codice battuto porta gia' con
-    // se' la propria unita' ( '20' sono 20 confezioni di quel barcode ) e applicare anche
-    // conf_qta moltiplicherebbe due volte. Le due conversioni non sono la stessa cosa - una viene
-    // da __report_barcode_qta__, l'altra dal metadato conf_qta - e a comandare e' il codice
-    // battuto, che e' l'unica cosa che l'operatore ha davvero in mano.
+    // Un moltiplicatore che arriva dal codice battuto ha la precedenza e SPEGNE il selettore: se
+    // l'operatore ha scansionato il barcode di una confezione, il codice porta gia' con se' la
+    // propria unita' ( '20' sono 20 confezioni di quel barcode ) e applicare anche conf_qta
+    // moltiplicherebbe due volte. Le due conversioni non sono la stessa cosa - una viene dal
+    // barcode, l'altra dal metadato conf_qta - e a comandare e' il codice battuto, che e'
+    // l'unica cosa che l'operatore ha davvero in mano. Chi risolve il barcode e' il chiamante.
     //
     // E' fail-closed: se si chiede la conversione su un articolo che il cliente non ha
     // dichiarato NON si ripiega sui pezzi. Un 20 preso per 20 pezzi invece che per 20 scatole e'
@@ -812,8 +812,9 @@
     //      quel momento la giacenza registrata fosse zero: e' anagrafica, non fotografia.
     //
     //   2. altrimenti si guarda dove il pezzo si trova ADESSO ( __report_giacenza_magazzini__ ),
-    //      preferendo le aree di stoccaggio - i 10 mastri "STOCCAGGIO AREA 300/400/500", che
-    //      sono il bulk vero del magazzino - e poi qualunque altra ubicazione con giacenza.
+    //      preferendo le aree di stoccaggio - i mastri il cui nome comincia col prefisso
+    //      dichiarato dal progetto, che sono il bulk vero del magazzino - e poi qualunque altra
+    //      ubicazione con giacenza. Senza prefisso si guarda solo la giacenza.
     //      A parita' di categoria vince la piu' capiente: rifornire dalla catasta piu' grande
     //      e' quello che farebbe l'operatore, e riduce le probabilita' di doverci tornare.
     //
@@ -827,7 +828,7 @@
     //
     // Ritorna array( 'id_mastro', 'codice', 'giacenza' ) oppure NULL se non c'e' da nessuna parte:
     // e' il "se possibile" della richiesta del cliente, e chi chiama ne fa un motivo da mostrare.
-    function trovaUbicazioneBulk( $conn, $idArticolo, $idMastroSottoscorta, $esclusi = array(), $prefisso = 'STOCCAGGIO ' ) {
+    function trovaUbicazioneBulk( $conn, $idArticolo, $idMastroSottoscorta, $esclusi = array(), $prefisso = NULL ) {
 
         // i mastri da non toccare mai: quello da rifornire piu' quelli di transito
         $esclusi[] = $idMastroSottoscorta;
@@ -867,11 +868,11 @@
                     INNER JOIN mastri ON mastri.id = giacenza.id_mastro
                     WHERE giacenza.id_articolo = ?
                       AND giacenza.totale_proprio > 0' . $filtroEsclusi . '
-                    ORDER BY ( mastri.nome LIKE ? ) DESC, giacenza.totale_proprio DESC, mastri.codice ASC
+                    ORDER BY ' . ( ( ! empty( $prefisso ) ) ? '( mastri.nome LIKE ? ) DESC, ' : '' ) . 'giacenza.totale_proprio DESC, mastri.codice ASC
                     LIMIT 1',
-                array(
-                    array( 's' => $idArticolo ),
-                    array( 's' => $prefisso . '%' )
+                array_merge(
+                    array( array( 's' => $idArticolo ) ),
+                    ( ! empty( $prefisso ) ) ? array( array( 's' => $prefisso . '%' ) ) : array()
                 )
             );
         }
@@ -905,10 +906,10 @@
      * @param $conn         connessione MySQL
      * @param $riga         la riga da valutare
      * @param $esclusi      id di mastri da non considerare come bulk
-     * @param $prefisso     prefisso delle collocazioni di stoccaggio
+     * @param $prefisso     prefisso delle collocazioni di stoccaggio ( NULL: nessuna preferenza )
      * @return              la riga arricchita
      */
-    function valutaRigaRifornimento( $conn, $riga, $esclusi = array(), $prefisso = 'STOCCAGGIO ' ) {
+    function valutaRigaRifornimento( $conn, $riga, $esclusi = array(), $prefisso = NULL ) {
 
         $mancante = ( ! empty( $riga['scorta_massima'] ) ? $riga['scorta_massima'] : $riga['scorta_minima'] ) - $riga['giacenza'];
 
@@ -960,7 +961,7 @@
      *
      * Tre cose da NON cambiare senza sapere cosa si tocca:
      *  - UNA MISSIONE PER DESTINAZIONE: la testata porta una sola id_mastro_destinazione, e la
-     *    maschera /prelievi legge da li' dove scaricare la merce;
+     *    maschera di prelievo legge da li' dove scaricare la merce;
      *  - LE RIGHE NASCONO SENZA MASTRI: su documenti_articoli i due mastri sono un movimento
      *    gia' avvenuto, non un'intenzione, e updateReportGiacenzaMagazzini() li somma senza
      *    guardare tipologia o missione. Scriverli qui sposterebbe la merce sulla carta;
@@ -1033,8 +1034,8 @@
             return $esito;
         }
 
-        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera
-        // /prelievi riconosce una riga da evadere; id_documento valorizzato perche' senza
+        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera di
+        // prelievo riconosce una riga da evadere; id_documento valorizzato perche' senza
         // documento la stessa maschera non la vedrebbe affatto ( INNER JOIN )
         foreach( $righe as $riga ) {
 

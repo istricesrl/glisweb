@@ -1784,7 +1784,7 @@
      * c'entra niente: `generaContenutiDocumento()` e undici file di stampa di `_0400.documenti`,
      * e `anagraficaGetIdSedeLegale()` il checkout dell'ecommerce.
      *
-     * Su un deploy che monta un'anagrafica diversa - bernispa ha `AN000.anagrafica` e non
+     * Su un deploy che monta un'anagrafica diversa - p.es. `AN000.anagrafica` e non
      * `0010.anagrafica` - quelle chiamate morivano tutte con "Call to undefined function", dal CMS
      * come da `/print/`, e nessuno se n'era accorto perche' li' i documenti si stampano dal
      * gestionale. Un modulo che dipende dalle funzioni di un altro modulo e' il difetto; la cura
@@ -1792,7 +1792,7 @@
      * `mail`, `anagrafica_indirizzi`, `ruoli_indirizzi` - stia nel core.
      *
      * Le sei funzioni `*AnagraficaViewStatic*` NON sono venute qui: quelle mantengono la vista
-     * materializzata dell'anagrafica, che e' roba del modulo, e su bernispa le definisce
+     * materializzata dell'anagrafica, che e' roba del modulo, e dove c'e' le definisce
      * `AN000.anagrafica`. Portarle qui le farebbe collidere.
      */
     /**

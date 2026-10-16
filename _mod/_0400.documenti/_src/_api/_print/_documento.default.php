@@ -22,7 +22,7 @@
      * generazione legge tutto il documento dal database per conto di chi non e' ancora stato
      * autorizzato, e non e' gratis. Il secondo, peggiore: se la generazione muore — su un deploy
      * mancava anagraficaGetLogo(), che stava dentro un modulo non installato — il rifiuto non
-     * arriva mai, perche' il codice che lo scrive sta sotto. Segnalato da BERNI il 15/09.
+     * arriva mai, perche' il codice che lo scrive sta sotto. Segnalato il 15/09.
      *
      * Per autorizzare non serve il documento intero: bastano il destinatario e il token, quindi
      * si legge una riga sola. generaContenutiDocumento() resta dov'e', ma dopo il cancello.
@@ -128,7 +128,7 @@
      * l'hanno detto anche altri". Tre difetti distinti, tutti su queste righe.
      *
      * 1. LA APP MOSTRA PIÙ DI QUANTO LA STAMPA AUTORIZZI. L'elenco ricevute dell'area soci
-     *    ( `src/inc/macro/app.documenti.php` ) filtra per `$_SESSION['__settings__']['id_anagrafica']`,
+     *    del progetto filtra per `$_SESSION['__settings__']['id_anagrafica']`,
      *    cioè per il familiare scelto nella tendina della navbar; il controllo qui sotto invece
      *    confrontava il destinatario con `$_SESSION['account']['id_anagrafica']`, cioè con
      *    l'intestatario dell'account. Un genitore vedeva in elenco le ricevute del figlio e

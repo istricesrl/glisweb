@@ -493,7 +493,7 @@
         foreach( $r['doc']['missione']['righe'] as &$row ) {
 
             // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
-            // + id_missione. La nota distesa e' in src/inc/macro/missione.php.
+            // + id_missione: e' la convenzione con cui le scrive la maschera di prelievo.
             $row['qta_prelevata'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',
@@ -1096,8 +1096,8 @@
      * NOTA sulla quantita': la riga del DDT riporta la quantita' ORDINATA della riga di lista, non
      * quella realmente prelevata (che sarebbe la somma delle righe figlie con id_genitore
      * valorizzato e id_tipologia 4). Su una missione chiusa e completa i due valori coincidono, ma
-     * src/inc/macro/chiusura.missione.php:65-67 si limita ad avvisare quando le quantita' non
-     * tornano e non impedisce la chiusura: su una missione chiusa parziale il DDT sovradichiara la
+     * la chiusura di una missione puo' limitarsi ad avvisare quando le quantita' non tornano,
+     * senza impedirla: su una missione chiusa parziale il DDT sovradichiara la
      * merce. Scelta deliberata di non cambiarlo qui.
      *
      * @param   integer $idMissione     documenti.id della missione (id_tipologia 34)
@@ -1129,7 +1129,7 @@
         }
 
         // la missione deve essere chiusa: "missione completata" significa timestamp_chiusura
-        // valorizzato, che e' cio' che scrive src/inc/macro/missione.php alla chiusura del
+        // valorizzato, che e' cio' che scrive la maschera di prelievo alla chiusura del
         // prelievo. Senza questa guardia il cron genererebbe DDT per missioni ancora in corso.
         if( empty( $missione['timestamp_chiusura'] ) && $forza !== true ) {
             $status['err'][] = 'la missione ' . $missione['codice'] . ' non e\' chiusa: DDT non generato';
@@ -1289,4 +1289,36 @@
 
         return $status;
 
+    }
+
+    /**
+     * restituisce l'id della tipologia di riga che ha il flag dato, oppure NULL
+     *
+     * I flag sono se_dettaglio, se_evasione, se_raggruppamento, se_somma, se_alternativa. Una riga
+     * figlia di un'altra ( documenti_articoli.id_genitore ) dice che cosa e' rispetto alla madre con
+     * la sua tipologia: la dettaglia, la evade o la raggruppa con altre. Il codice legge il flag e
+     * non l'id, come fa con i flag di tipologie_documenti, perche' gli id possono cambiare da deploy
+     * a deploy ( la patch standard del 13/10/2026 da' 5 e 6 al dettaglio e all'evasione solo se sono
+     * liberi ). Il nome del flag non arriva mai dalla richiesta, ma lo si controlla lo stesso perche'
+     * finisce dentro la query.
+     *
+     * @param $conn         connessione MySQL
+     * @param $flag         il nome del flag di tipologie_documenti_articoli
+     * @return              l'id della tipologia, oppure NULL
+     */
+    if( ! function_exists( 'idTipologiaRigaDaFlag' ) ) {
+        function idTipologiaRigaDaFlag( $conn, $flag ) {
+
+            if( ! in_array( $flag, array( 'se_dettaglio', 'se_evasione', 'se_raggruppamento', 'se_somma', 'se_alternativa' ) ) ) {
+                return NULL;
+            }
+
+            $id = mysqlSelectValue(
+                $conn,
+                'SELECT id FROM tipologie_documenti_articoli WHERE ' . $flag . ' = 1 ORDER BY id LIMIT 1'
+            );
+
+            return ( empty( $id ) ) ? NULL : $id;
+
+        }
     }

@@ -25,7 +25,7 @@
      * WMS, e' in _usr/_test/_fake/_wms.php.
      *
      * vedi:
-     * - "Job con protocollo WebService 1.11", Modula ( var/20261001-modula-documentazione/ nel deploy bernispa )
+     * - "Job con protocollo WebService 1.11", Modula ( documentazione del fornitore )
      *
      */
 
