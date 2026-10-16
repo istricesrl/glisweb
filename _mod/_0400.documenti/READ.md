@@ -44,7 +44,9 @@ Attenzione:
 - il nome del file è l'oggetto del documento, che contiene il numero: due documenti **senza numero** della stessa
   tipologia e data si sovrascrivono il file a vicenda;
 - gli endpoint che chiedono `GESTIONE_DOCUMENTI` ( ddt, ordine, nota di credito, offerta, documento ) lo chiedono anche
-  a chi porta il token `t` del documento: col solo token passano fattura, proforma, ricevuta e copertina;
+  a chi porta il token `t` del documento: col solo token passano fattura, proforma, ricevuta e copertina. Per questo
+  l'invio via mail dalla scheda del documento ( `_documenti.form.invio.php` ) non passa dall'endpoint: genera
+  l'allegato con `generaDocumentoPdf()` nella sessione di chi invia, e se la stampa fallisce non accoda la mail;
 - `$cnf['attivita'] = false` dice a `_documento.default.php` di non annotare l'attività, che annota
   `generaDocumentoPdf()` a file scritto: gli endpoint che non lo impostano continuano ad annotarla lì.
 

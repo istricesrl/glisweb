@@ -1,13 +1,11 @@
 <?php
 
     /**
-     * applicazione delle configurazioni di uso comune
+     * attivazione delle configurazioni del modulo Modula
      *
-     * questo file attualmente non è utilizzato nel modulo base ma può essere usato nei moduli o nelle personalizzazioni
-     *
-     *
-     *
-     *
+     * Fa il merge della configurazione letta da config.json e shadow.json sui default dichiarati in
+     * _030.common.php e aggancia il profilo dell'ambiente corrente, da cui le funzioni del modulo leggono
+     * sempre: $cf['modula']['profile'], mai $cf['modula']['<chiave>'].
      *
      */
 
@@ -18,3 +16,6 @@
 
     // collegamento all'array $ct
     $ct['modula'] = &$cf['modula'];
+
+    // link al profilo corrente
+    $cf['modula']['profile'] = &$cf['modula']['profiles'][ SITE_STATUS ];

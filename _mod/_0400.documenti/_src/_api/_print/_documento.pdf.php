@@ -6,9 +6,10 @@
      * Stampa un documento di qualunque tipologia col modello che la tipologia dichiara in stampa_pdf ( o quello del
      * genitore, o il generico ): e' lo stesso giro degli endpoint specifici, descritto in _documento.output.php.
      *
-     * Il parametro n chiede di salvare il PDF in un percorso preciso, relativo alla radice del deploy: lo usa
-     * _inc/_macro/_documenti.form.invio.php per preparare l'allegato della mail. In quel caso il percorso viene
-     * rifiutato se esce dalla radice, e l'uscita e' un JSON col percorso salvato.
+     * Il parametro n chiede di salvare il PDF in un percorso preciso, relativo alla radice del deploy: il percorso
+     * viene rifiutato se esce dalla radice, e l'uscita e' un JSON col percorso salvato. Fino al 15/10/2026 lo usava
+     * _inc/_macro/_documenti.form.invio.php per preparare l'allegato della mail; ora la macro chiama direttamente
+     * generaDocumentoPdf(), perche' gira gia' nella sessione di chi invia.
      *
      * @file
      *

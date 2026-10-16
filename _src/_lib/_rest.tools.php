@@ -40,8 +40,9 @@
      * MIME_X_WWW_FORM_URLENCODED   | tipo di contenuto application/x-www-form-urlencoded
      * 
      * La libreria legge inoltre, se definite, le costanti REST_CONNECTTIMEOUT (tempo massimo per la connessione, default
-     * 3 secondi), REST_TIMEOUT (tempo massimo per la risposta, default 5 secondi) e REST_SSL_VERIFY (verifica del
-     * certificato del server, default true), che non definisce.
+     * 3 secondi), REST_TIMEOUT (tempo massimo per la risposta, default 5 secondi), REST_SSL_VERIFY (verifica del
+     * certificato del server, default true) e REST_LOG_SECRETS (scrittura in chiaro nel log rest di password, secret e
+     * token, default false), che non definisce.
      * 
      * funzioni
      * ========
@@ -56,6 +57,7 @@
      * restCall()                       | esegue una chiamata REST
      * restGetValue()                   | preleva un valore da una chiamata REST
      * restGetString()                  | preleva un valore singolo da una chiamata REST
+     * restMaskSecrets()                | maschera password, secret e token prima di scriverli nel log
      * 
      * dipendenze
      * ==========
@@ -76,6 +78,7 @@
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
      * 2026-09-25       | Fabio Mosti          | invio dei dati in XML con MIME_APPLICATION_XML
+     * 2026-10-15       | Fabio Mosti          | password, secret e token mascherati nel log rest
      * 
      * licenza
      * =======
@@ -132,8 +135,8 @@
      * viene usata l'autenticazione HTTP del tipo $auth, altrimenti se c'è $token viene inviato l'header
      * Authorization: Bearer. Gli header vanno passati come array nome => valore. I redirect non vengono seguiti.
      * 
-     * La richiesta e la risposta vengono scritte nel log rest, compresi i dati inviati (e quindi anche eventuali
-     * credenziali contenute nei dati); le risposte con codice diverso da 2xx o con errore cURL vengono registrate con
+     * La richiesta e la risposta vengono scritte nel log rest, compresi i dati inviati, ma con i valori di password,
+     * secret e token sostituiti da *** ( si veda restMaskSecrets() ); le risposte con codice diverso da 2xx o con errore cURL vengono registrate con
      * livello LOG_ERR. La funzione non segnala gli errori con il valore restituito: per sapere com'è andata il chiamante
      * deve leggere $status (0 se il server non ha risposto) ed $error. In caso di errore di rete la risposta è false,
      * che decodificato come JSON diventa NULL.
@@ -297,7 +300,14 @@
         }
 
         // log
-        logger( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
+        //
+        // Il corpo della chiamata nel log serve per il debug e resta, ma i valori delle chiavi che contengono
+        // credenziali escono mascherati: fino al 2026-10-15 la chiamata del token di Modula ( corpo urlencoded )
+        // lasciava nel log rest la password in chiaro, e il token nella risposta. Per vedere tutto in chiaro durante
+        // una sessione di debug si definisce in un runlevel la costante REST_LOG_SECRETS a true; la si legge a ogni
+        // chiamata, come le altre costanti REST_*.
+        $logSecrets = defined( 'REST_LOG_SECRETS' ) && REST_LOG_SECRETS;
+        logger( 'invio a ' . ( ( $logSecrets ) ? $url : restMaskSecrets( $url ) ) . ' (' . $method . ') dati: ' . print_r( ( $logSecrets ) ? $data : restMaskSecrets( $data ), true ), 'rest' );
 
         // impostazione del tipo di dati accettato
         if( ! empty( $answertype ) ) {
@@ -335,10 +345,12 @@
         // var_dump( $data );
 
         // log
+        $logUrl = ( $logSecrets ) ? $url : restMaskSecrets( $url );
+        $logResult = ( $logSecrets ) ? $result : restMaskSecrets( $result );
         if( ! empty( $error ) || substr( $status, 0, 1 ) != 2 ) {
-            logger( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' , LOG_ERR );
+            logger( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $logUrl . ' (' . $method . '): ' . serialize( $logResult ), 'rest' , LOG_ERR );
         } else {
-            logger( 'risposta ' . $status . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' );
+            logger( 'risposta ' . $status . ' ricevuta da ' . $logUrl . ' (' . $method . '): ' . serialize( $logResult ), 'rest' );
         }
 
         // chiusura della richiesta
@@ -416,5 +428,77 @@
         $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN );
 
         return $r;
+
+    }
+
+    /**
+     * maschera password, secret e token prima di scriverli nel log
+     * 
+     * Questa funzione restituisce una copia dei dati in cui i valori delle chiavi che contengono credenziali sono
+     * sostituiti da ***, e tutto il resto è lasciato com'è: serve a restCall() per scrivere nel log rest la richiesta e
+     * la risposta, che per il debug servono intere, senza lasciarci password e token in chiaro.
+     * 
+     * Una chiave contiene credenziali se nel nome ( senza distinzione fra maiuscole e minuscole, e dopo urldecode() )
+     * compare pass, pasw, pwd, secret, apikey o api_key, oppure se finisce per token: quindi password, client_secret,
+     * access_token, refreshToken e login[password] sì, token_type e expires_in no.
+     * 
+     * I dati possono essere:
+     * 
+     * tipo                         | trattamento
+     * -----------------------------|--------------------------------------------------------------
+     * array                        | le chiavi vengono controllate ricorsivamente
+     * stringa                      | vengono riconosciute le coppie chiave/valore in JSON ( "chiave": valore ), in
+     *                              | query string o corpo urlencoded ( chiave=valore ) e in XML ( <chiave>valore</chiave> )
+     * qualsiasi altro valore       | restituito com'è
+     * 
+     * Un valore vuoto resta vuoto, perché nel debug sapere che una credenziale non è stata inviata è utile quanto
+     * saperne il valore.
+     * 
+     * @param       mixed       $data           i dati da mascherare
+     * 
+     * @return      mixed                       i dati con i valori delle credenziali sostituiti da ***
+     * 
+     */
+    function restMaskSecrets( $data ) {
+
+        // riconoscimento delle chiavi che contengono credenziali
+        $secret = function( $k ) {
+            $k = strtolower( urldecode( $k ) );
+            return preg_match( '/pass|pasw|pwd|secret|api_?key|token\]?$/', $k ) === 1;
+        };
+
+        // array
+        if( is_array( $data ) ) {
+            foreach( $data as $k => $v ) {
+                if( $secret( $k ) && ! is_array( $v ) && $v !== '' && $v !== NULL ) {
+                    $data[ $k ] = '***';
+                } else {
+                    $data[ $k ] = restMaskSecrets( $v );
+                }
+            }
+            return $data;
+        }
+
+        // altri valori che non sono stringhe
+        if( ! is_string( $data ) ) {
+            return $data;
+        }
+
+        // JSON: "chiave": "valore" oppure "chiave": valore non stringa
+        $data = preg_replace_callback( '/("([^"\\\\]*)"\s*:\s*)("(?:[^"\\\\]|\\\\.)*"|[^\s,}\]"]+)/', function( $m ) use ( $secret ) {
+            return ( $secret( $m[2] ) && $m[3] !== '""' && $m[3] !== 'null' ) ? $m[1] . '"***"' : $m[0];
+        }, $data );
+
+        // query string e corpo urlencoded: chiave=valore
+        $data = preg_replace_callback( '/(^|[?&])([^=&?\s]+)=([^&\s]*)/', function( $m ) use ( $secret ) {
+            return ( $secret( $m[2] ) && $m[3] !== '' ) ? $m[1] . $m[2] . '=***' : $m[0];
+        }, $data );
+
+        // XML: <chiave>valore</chiave>
+        $data = preg_replace_callback( '/<([A-Za-z_][\w.:-]*)(\s[^>]*)?>([^<]+)<\/\1>/', function( $m ) use ( $secret ) {
+            return ( $secret( $m[1] ) ) ? '<' . $m[1] . $m[2] . '>***</' . $m[1] . '>' : $m[0];
+        }, $data );
+
+        return $data;
 
     }
