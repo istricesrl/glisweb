@@ -3291,17 +3291,23 @@ CREATE TABLE IF NOT EXISTS `job` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione licenze e software
+-- funzione: dice a quali software si applica una licenza
+--
+-- questa tabella mette in relazione molti a molti licenze e software, ed e' l'anello centrale della catena
+-- software -> licenze_software -> licenze -> chiavi: un software puo' essere coperto da piu' licenze e una licenza
+-- puo' coprire piu' software, mentre le chiavi appartengono alla licenza. Nel framework latest nessuna parte la legge;
+-- in oldstable la scrive il form delle licenze del modulo V900.software. Il gruppo software va rivisto per intero
+-- quando si crea il modulo software di latest.
 --
 CREATE TABLE IF NOT EXISTS `licenze_software` (
-  `id` bigint(20) NOT NULL,
-  `id_licenza` bigint(20) DEFAULT NULL,
-  `id_software` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_licenza` bigint(20) DEFAULT NULL,                         -- chiave esterna per la licenza
+  `id_software` bigint(20) DEFAULT NULL,                        -- chiave esterna per il software
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000016800

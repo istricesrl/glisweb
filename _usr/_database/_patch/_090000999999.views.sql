@@ -3640,18 +3640,23 @@ CREATE OR REPLACE VIEW licenze_view AS
 
 -- licenze_software_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-16 15:30 Chiara GDL
-CREATE OR REPLACE VIEW licenze_software_view AS
+-- verifica: 2026-10-16 punto 6, riga 88
+CREATE OR REPLACE VIEW `licenze_software_view` AS
 	SELECT
 		licenze_software.id,
+		licenze_software.ordine,
 		licenze_software.id_licenza,
 		licenze_software.id_software,
 		licenze_software.id_account_inserimento,
 		licenze_software.id_account_aggiornamento,
-		concat( licenze.nome, ' | ', software.nome ) AS __label__
+		CONCAT(
+			licenze.nome,
+			' | ',
+			software.nome
+		) AS __label__
 	FROM licenze_software
-		LEFT JOIN software ON software.id = licenze_software.id_software
 		LEFT JOIN licenze ON licenze.id = licenze_software.id_licenza
+		LEFT JOIN software ON software.id = licenze_software.id_software
 ;
 
 -- | 090000016800

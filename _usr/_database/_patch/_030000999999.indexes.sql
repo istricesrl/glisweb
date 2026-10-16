@@ -2011,15 +2011,16 @@ ALTER TABLE `job` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- licenze_software
 -- tipologia: tabella gestita
--- verifica: 2021-11-16 15:30 Chiara GDL
+-- verifica: 2026-10-16 punto 6, riga 88
 ALTER TABLE `licenze_software`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_licenza`,`id_software`),
-	ADD KEY `id_licenza` (`id_licenza`), 
-	ADD KEY `id_software` (`id_software`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `id_software` (`id_software`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_licenza`,`id_software`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_licenza`,`id_software`);
 
 -- | 030000016701
 
