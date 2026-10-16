@@ -782,6 +782,10 @@ CREATE TABLE IF NOT EXISTS `attivita_asset` (                   --
 -- che per un audio non hanno senso; era sparita nel riallineamento del 2026-03-02 ed è stata rimessa il 2026-09-25
 -- insieme a ruoli_audio, perché aggiungiAudio() e i form dei moduli la usano
 --
+-- NOTA un media può appartenere a ciascuno degli altri tre ( matrice dei media, decisa il 2026-10-16 ): per questo
+-- l'audio ha id_file, id_video e id_immagine; la colonna sta sempre sul media che appartiene e punta a quello a cui
+-- appartiene
+--
 -- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un audio non ha senso senza il suo oggetto, e
 -- se l'oggetto viene cancellato le sue righe se ne vanno con lui
 --
@@ -809,6 +813,8 @@ CREATE TABLE IF NOT EXISTS `audio` (                            --
   `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti descritta
   `id_edificio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'edificio descritto
   `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
+  `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
+  `id_immagine` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immagine descritta
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'audio
   `path` char(255) DEFAULT NULL,                                  -- percorso del file audio
   `embed` enum('html5','vimeo','youtube') DEFAULT NULL,           -- piattaforma dell'audio incorporato
@@ -2843,6 +2849,9 @@ CREATE TABLE IF NOT EXISTS `file` (                             --
   `id_mail_out` bigint(20) DEFAULT NULL,                          -- chiave esterna per la mail in uscita a cui il file è allegato
   `id_mail_sent` bigint(20) DEFAULT NULL,                         -- chiave esterna per la mail inviata a cui il file è allegato
   `id_attivita` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'attività descritta
+  `id_audio` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'audio descritto
+  `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
+  `id_immagine` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immagine descritta
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo del file
   `path` char(255) DEFAULT NULL,                                  -- percorso del file
   `url` char(255) DEFAULT NULL,                                   -- URL del file
@@ -2960,54 +2969,67 @@ CREATE TABLE IF NOT EXISTS `iban` (                             --
 
 -- immagini
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le immagini caricate nel sistema
--- 
--- questa tabella contiene le immagini caricate nel sistema, con le informazioni relative al percorso, al nome e alle
--- entità a cui sono associate
+-- funzione: contiene le immagini collegate agli oggetti delle tabelle principali
 --
-CREATE TABLE IF NOT EXISTS `immagini` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `id_ruolo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'immagine
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associata l'immagine
-  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associata l'immagine
-  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associata l'immagine
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associata l'immagine
-  `id_marchio` bigint(20) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associata l'immagine
-  `id_pagina` bigint(20) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associata l'immagine
-  `id_notizia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la notizia a cui è associata l'immagine
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di notizie a cui è associata l'immagine
-  `id_annuncio` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'annuncio a cui è associata l'immagine
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di annunci a cui è associata l'immagine
-  `id_risorsa` bigint(20) DEFAULT NULL,                          -- chiave esterna per la risorsa a cui è associata l'immagine
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di risorse a cui è associata l'immagine
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto a cui è associata l'immagine
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di progetti a cui è associata l'immagine
-  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo a cui è associata l'immagine
-  `id_edificio` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'edificio a cui è associata l'immagine
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile a cui è associata l'immagine
-  `id_contratto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contratto a cui è associata l'immagine
-  `id_rinnovo` bigint(20) DEFAULT NULL,                          -- chiave esterna per il rinnovo a cui è associata l'immagine
-  `id_valutazione` bigint(20) DEFAULT NULL,                      -- chiave esterna per la valutazione a cui è associata l'immagine
-  `id_file` bigint(20) DEFAULT NULL,                             -- chiave esterna per il file a cui è associata l'immagine
-  `id_banner` bigint(20) DEFAULT NULL,                           -- chiave esterna per il banner a cui è associata l'immagine
-  `id_contatto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il contatto a cui è associata l'immagine
-  `id_video` bigint(20) DEFAULT NULL,                            -- chiave esterna per il video a cui è associata l'immagine
-  `id_lingua` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lingua dell'immagine
-  `nome` char(255) DEFAULT NULL,                              -- nome dell'immagine
-  `orientamento` enum('L','P','S') DEFAULT NULL,              -- orientamento dell'immagine: L=landscape, P=portrait, S=square
-  `taglio` char(64) DEFAULT NULL,                             -- taglio dell'immagine
-  `path` char(255) DEFAULT NULL,                              -- percorso dell'immagine
-  `path_alternativo` char(255) DEFAULT NULL,                  -- percorso alternativo dell'immagine
-  `token` char(128) DEFAULT NULL,                             -- token per il lock dell'immagine
-  `timestamp_scalamento` int(11) DEFAULT NULL,                -- timestamp dell'ultimo scalamento
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'immagine
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'immagine
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file ), che collegano un
+-- media a un oggetto di una tabella principale; ogni riga descrive un oggetto solo, indicato da una delle chiavi
+-- esterne id_*, ed è qualificata dalla lingua e dal ruolo che il media ha per quell'oggetto; lo stesso file può
+-- descrivere più oggetti, e per questo le chiavi uniche sono una per oggetto e non una globale sul path
+--
+-- NOTA un media può appartenere a ciascuno degli altri tre ( matrice dei media, decisa il 2026-10-16 ): per questo
+-- l'immagine ha id_file, id_audio e id_video ( la copertina di un audio o di un video, l'anteprima di un file ); la
+-- colonna sta sempre sul media che appartiene e punta a quello a cui appartiene
+--
+-- NOTA path_alternativo, orientamento, taglio, token e timestamp_scalamento sono colonne proprie delle immagini: le
+-- usano lo scalamento ( _images.resize.php del modulo _IM000.immagini ) e aggiungiDati() in _mysql.utils.php
+--
+-- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un'immagine non ha senso senza il suo oggetto, e
+-- se l'oggetto viene cancellato le sue righe se ne vanno con lui
+--
+CREATE TABLE IF NOT EXISTS `immagini` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione dell'immagine
+  `nome` char(255) DEFAULT NULL,                                  -- nome dell'immagine
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica descritta
+  `id_annuncio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'annuncio descritto
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto descritto
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo descritto
+  `id_lingua` bigint(20) DEFAULT NULL,                            -- chiave esterna per la lingua dell'immagine
+  `id_contatto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il contatto descritto
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo descritto
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto descritto
+  `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto descritto
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile descritto
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina descritta
+  `id_file` bigint(20) DEFAULT NULL,                              -- chiave esterna per il file descritto
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
+  `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria notizie descritta
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria annunci descritta
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti descritta
+  `id_edificio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'edificio descritto
+  `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
+  `id_rinnovo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il rinnovo descritto
+  `id_banner` bigint(20) DEFAULT NULL,                            -- chiave esterna per il banner descritto
+  `id_audio` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'audio descritto
+  `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
+  `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'immagine
+  `token` char(128) DEFAULT NULL,                                 -- token per il lock dell'immagine durante lo scalamento
+  `path` char(255) DEFAULT NULL,                                  -- percorso dell'immagine
+  `path_alternativo` char(255) DEFAULT NULL,                      -- percorso alternativo dell'immagine
+  `orientamento` enum('L','P','S') DEFAULT NULL,                  -- orientamento: L=landscape, P=portrait, S=square
+  `taglio` char(64) DEFAULT NULL,                                 -- taglio dell'immagine
+  `timestamp_scalamento` int(11) DEFAULT NULL,                    -- timestamp dell'ultimo scalamento
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015700
 
@@ -5251,7 +5273,10 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_file` tinyint(1) DEFAULT NULL,
+  `se_immagini` tinyint(1) DEFAULT NULL,
+  `se_video` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034250
@@ -5347,7 +5372,10 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_mail` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_documenti` tinyint(1) DEFAULT NULL
+  `se_documenti` tinyint(1) DEFAULT NULL,
+  `se_audio` tinyint(1) DEFAULT NULL,
+  `se_immagini` tinyint(1) DEFAULT NULL,
+  `se_video` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034600
@@ -5379,7 +5407,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
   `se_immobili` tinyint(1) DEFAULT NULL,                         -- se immobili
-  `se_file` tinyint(1) DEFAULT NULL,                         -- se immobili
+  `se_audio` tinyint(1) DEFAULT NULL,                            -- se audio
+  `se_file` tinyint(1) DEFAULT NULL,                             -- se file
   `se_video` tinyint(1) DEFAULT NULL                             -- se video
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
@@ -5546,7 +5575,10 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_categorie_annunci` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL
+  `se_immobili` tinyint(1) DEFAULT NULL,
+  `se_audio` tinyint(1) DEFAULT NULL,
+  `se_file` tinyint(1) DEFAULT NULL,
+  `se_immagini` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000036000
@@ -7133,7 +7165,9 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_indirizzo` bigint(20) DEFAULT NULL,
   `id_edificio` bigint(20) DEFAULT NULL,
   `id_immobile` bigint(20) DEFAULT NULL,
-  `id_valutazione` bigint(20) DEFAULT NULL, 
+  `id_valutazione` bigint(20) DEFAULT NULL,
+  `id_audio` bigint(20) DEFAULT NULL,
+  `id_immagine` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,

@@ -1056,6 +1056,8 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_categoria_progetti,
 		audio.id_edificio,
 		audio.id_valutazione,
+		audio.id_video,
+		audio.id_immagine,
 		audio.id_ruolo,
 		ruoli_audio.nome AS ruolo,
 		audio.path,
@@ -3145,6 +3147,9 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_mail_out,
 		file.id_mail_sent,
 		file.id_attivita,
+		file.id_audio,
+		file.id_video,
+		file.id_immagine,
 		file.id_ruolo,
 		ruoli_file.nome AS ruolo,
 		file.path,
@@ -3256,60 +3261,60 @@ CREATE OR REPLACE VIEW `iban_view` AS
 -- | 090000015600
 
 -- immagini_view
-CREATE OR REPLACE VIEW `immagini_view` AS                       --
-	SELECT                                                      --
-		immagini.id,                                            --
-		immagini.id_anagrafica,                                 --
-		immagini.id_pagina,                                     --
-		immagini.id_file,                                       --
-		immagini.id_prodotto,                                   --
-		immagini.id_articolo,                                   --
-		immagini.id_categoria_prodotti,                         --
-		immagini.id_marchio,                         --
-		immagini.id_risorsa,                                    --
-		immagini.id_categoria_risorse,                          --
-		immagini.id_notizia,                                    --
-		immagini.id_annuncio,                                   --
-		immagini.id_categoria_notizie,                          --
-		immagini.id_categoria_annunci,                          --
-		immagini.id_progetto,                                   --
-		immagini.id_categoria_progetti,                         --
-		immagini.id_indirizzo,                                  --
-		immagini.id_edificio,                                   --
-		immagini.id_immobile,                                   --
-		immagini.id_contratto,                                  --
-        immagini.id_valutazione,                                --
-		immagini.id_banner,                                     --
-        immagini.id_rinnovo,                                    --
-        immagini.id_video,                                    --
-		immagini.id_lingua,                                     --
-		lingue.nome AS lingua,                                  --
-		immagini.id_ruolo,                                      --
-		ruoli_immagini.nome AS ruolo,                           --
-		immagini.ordine,                                        --
-		immagini.orientamento,                                  --
-		immagini.taglio,                                        --
-		immagini.nome,                                          --
-		immagini.path,                                          --
-		immagini.path_alternativo,                              --
-		immagini.token,                                         --
-		immagini.timestamp_scalamento,                          --
-		immagini.id_account_inserimento,                        --
-		immagini.id_account_aggiornamento,                      --
-		concat(                                                 --
-			ruoli_immagini.nome,                                --
-			' # ',                                              --
-			immagini.ordine,                                    --
-			' / ',                                              --
-			immagini.nome,                                      --
-			' / ',                                              --
-			immagini.path                                       --
-		) AS __label__                                          -- etichetta per le tendine e le liste
-	FROM immagini                                               --
-		LEFT JOIN lingue                                        --
-            ON lingue.id = immagini.id_lingua                   --
-		LEFT JOIN ruoli_immagini                                --
-            ON ruoli_immagini.id = immagini.id_ruolo            --
+CREATE OR REPLACE VIEW `immagini_view` AS
+	SELECT
+		immagini.id,
+		immagini.ordine,
+		immagini.nome,
+		immagini.id_anagrafica,
+		immagini.id_annuncio,
+		immagini.id_prodotto,
+		immagini.id_articolo,
+		immagini.id_lingua,
+		lingue.nome AS lingua,
+		immagini.id_contatto,
+		immagini.id_indirizzo,
+		immagini.id_progetto,
+		immagini.id_contratto,
+		immagini.id_immobile,
+		immagini.id_pagina,
+		immagini.id_file,
+		immagini.id_categoria_prodotti,
+		immagini.id_marchio,
+		immagini.id_risorsa,
+		immagini.id_categoria_risorse,
+		immagini.id_notizia,
+		immagini.id_categoria_notizie,
+		immagini.id_categoria_annunci,
+		immagini.id_categoria_progetti,
+		immagini.id_edificio,
+		immagini.id_valutazione,
+		immagini.id_rinnovo,
+		immagini.id_banner,
+		immagini.id_audio,
+		immagini.id_video,
+		immagini.id_ruolo,
+		ruoli_immagini.nome AS ruolo,
+		immagini.token,
+		immagini.path,
+		immagini.path_alternativo,
+		immagini.orientamento,
+		immagini.taglio,
+		immagini.timestamp_scalamento,
+		immagini.id_account_inserimento,
+		immagini.id_account_aggiornamento,
+		concat(
+			ruoli_immagini.nome,
+			' # ',
+			immagini.ordine,
+			' / ',
+			immagini.nome,
+			' / ',
+			immagini.path
+		) AS __label__
+	FROM immagini
+		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
+		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;                                                               --
 
 -- | 090000015701
@@ -5937,6 +5942,9 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_risorse,
 		ruoli_audio.se_categorie_risorse,
 		ruoli_audio.se_immobili,
+		ruoli_audio.se_file,
+		ruoli_audio.se_immagini,
+		ruoli_audio.se_video,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;
@@ -6017,6 +6025,9 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_mail,
 		ruoli_file.se_immobili,
 		ruoli_file.se_documenti,
+		ruoli_file.se_audio,
+		ruoli_file.se_immagini,
+		ruoli_file.se_video,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -6044,7 +6055,8 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_risorse,                              --
 		ruoli_immagini.se_categorie_risorse,                    --
 		ruoli_immagini.se_immobili,                             --
-		ruoli_immagini.se_file,                             --
+		ruoli_immagini.se_audio,                                --
+		ruoli_immagini.se_file,                                 --
 		ruoli_immagini.se_video,                             --
 	 	ruoli_immagini_path(                                    --
             ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
@@ -6177,6 +6189,9 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
 		ruoli_video.se_immobili,
+		ruoli_video.se_audio,
+		ruoli_video.se_file,
+		ruoli_video.se_immagini,
 	 	ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
@@ -7575,6 +7590,8 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_edificio,
 		video.id_immobile,
         video.id_valutazione,
+		video.id_audio,
+		video.id_immagine,
 		ruoli_video.nome AS ruolo,
 		video.ordine,
 		video.nome,
