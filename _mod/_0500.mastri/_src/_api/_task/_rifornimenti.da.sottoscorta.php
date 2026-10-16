@@ -40,7 +40,7 @@
      * fare" sposterebbe la merce sulla carta nell'istante in cui si crea la missione: l'articolo
      * risulterebbe subito rifornito, non verrebbe piu' segnalato, e al prelievo vero si
      * muoverebbe una seconda volta. E' esattamente il motivo per cui le righe delle liste di
-     * prelievo che arrivano da SAM non hanno mastri, e li scrivono solo le righe di evasione
+     * prelievo che arrivano dal gestionale esterno non hanno mastri, e li scrivono solo le righe di evasione
      * prodotte dalle maschere.
      *
      * Quindi le righe di rifornimento nascono SENZA mastri, e la coppia bulk -> ubicazione da
@@ -147,7 +147,7 @@
             }
 
             // risolvo il magazzino per denominazione e non per id: gli id degli indirizzi non
-            // coincidono fra DEV, TEST e PROD, mentre le denominazioni arrivano tutte da SAM
+            // coincidono fra DEV, TEST e PROD, mentre le denominazioni arrivano tutte dal gestionale esterno
             $magazzino = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT anagrafica.id AS id_anagrafica, anagrafica_indirizzi.id AS id_indirizzo
