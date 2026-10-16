@@ -3167,31 +3167,37 @@ CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene gli indirizzi
+-- funzione: contiene i luoghi, cioè gli indirizzi come posti fisici
 --
--- questa tabella contiene gli indirizzi, con le informazioni relative alla tipologia, al comune, alla località,
--- all'indirizzo, al civico, al CAP, alle note, alla latitudine e alla longitudine
+-- questa tabella è l'ultimo livello della geografia ( stati, regioni, provincie, comuni ) e la testa della catena
+-- delle costruzioni ( edifici, immobili, vani ); è il luogo, mentre il recapito di un'anagrafica sta in
+-- anagrafica_indirizzi, che può puntare qui con id_indirizzo; il blocco dell'indirizzo e quello della
+-- geolocalizzazione hanno lo stesso ordine e gli stessi tipi del recapito, e la geolocalizzazione la fa il modulo
+-- _GE000.geolocalizzazione
 --
-CREATE TABLE IF NOT EXISTS `indirizzi` (                      --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia dell'indirizzo
-  `id_comune` bigint(20) DEFAULT NULL,                           -- chiave esterna per il comune
-  `localita` char(128) DEFAULT NULL,                          -- località
-  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo
+-- NOTA la chiave unica ( id_comune, indirizzo, civico, cap ) non protegge dai doppioni quando una colonna è NULL,
+-- e il civico spesso sta dentro indirizzo
+--
+CREATE TABLE IF NOT EXISTS `indirizzi` (
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                     -- chiave esterna per la tipologia dell'indirizzo
+  `indirizzo` char(255) DEFAULT NULL,                         -- indirizzo
   `civico` char(16) DEFAULT NULL,                             -- civico
+  `id_comune` bigint(20) DEFAULT NULL,                        -- chiave esterna per il comune
+  `localita` char(128) DEFAULT NULL,                          -- località
   `cap` char(11) DEFAULT NULL,                                -- CAP
-  `id_zona` bigint(20) DEFAULT NULL,                             -- chiave esterna per la zona, assegnata dal CAP ( zone_cap )
   `note` text DEFAULT NULL,                                   -- note sull'indirizzo
   `latitudine` decimal(11,7) DEFAULT NULL,                    -- latitudine
   `longitudine` decimal(11,7) DEFAULT NULL,                   -- longitudine
-  `token` char(128) DEFAULT NULL,                             -- token per il lock dell'indirizzo
+  `token` char(128) DEFAULT NULL,                             -- token per il lock della riga durante la geolocalizzazione
   `timestamp_geolocalizzazione` int(11) DEFAULT NULL,         -- timestamp dell'ultima geolocalizzazione
   `note_geolocalizzazione` text DEFAULT NULL,                 -- note sulla geolocalizzazione dell'indirizzo
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'indirizzo
+  `id_zona` bigint(20) DEFAULT NULL,                          -- chiave esterna per la zona, assegnata dal CAP ( zone_cap )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'indirizzo
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'indirizzo
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'indirizzo
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015850
 

@@ -3494,6 +3494,7 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 		indirizzi.longitudine,
 		indirizzi.token,
 		indirizzi.timestamp_geolocalizzazione,
+		indirizzi.id_zona,
 		indirizzi.id_account_inserimento,
 		indirizzi.id_account_aggiornamento,
 		concat_ws(
