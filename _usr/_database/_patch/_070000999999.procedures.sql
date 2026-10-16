@@ -8157,6 +8157,142 @@ CREATE
 
 END;
 
+-- | 070000056850
+
+-- tipologie_vani_path
+DROP FUNCTION IF EXISTS `tipologie_vani_path`;
+
+-- | 070000056851
+
+-- tipologie_vani_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_vani_path`( `p1` BIGINT( 20 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_vani_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_vani.id_genitore,
+				tipologie_vani.nome
+			FROM tipologie_vani
+			WHERE tipologie_vani.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000056860
+
+-- tipologie_vani_path_check
+DROP FUNCTION IF EXISTS `tipologie_vani_path_check`;
+
+-- | 070000056861
+
+-- tipologie_vani_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_vani_path_check`( `p1` BIGINT( 20 ), `p2` BIGINT( 20 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 bigint( 20 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_vani_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_vani.id_genitore
+			FROM tipologie_vani
+			WHERE tipologie_vani.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000056870
+
+-- tipologie_vani_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_vani_path_find_ancestor`;
+
+-- | 070000056871
+
+-- tipologie_vani_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_vani_path_find_ancestor`( `p1` BIGINT( 20 ) ) RETURNS BIGINT( 20 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_vani_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 bigint( 20 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_vani.id_genitore,
+				tipologie_vani.id
+			FROM tipologie_vani
+			WHERE tipologie_vani.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000056900
 
 -- tipologie_veicoli_path

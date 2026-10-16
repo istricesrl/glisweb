@@ -430,6 +430,7 @@ ALTER TABLE `audio`
 	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
@@ -604,7 +605,7 @@ ALTER TABLE `caratteristiche`
 	ADD KEY `se_articoli` (`se_articoli`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`se_prodotti`,`se_articoli`,`se_immobili`,`se_edifici`,`se_indirizzi`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`se_prodotti`,`se_articoli`,`se_immobili`,`se_edifici`,`se_indirizzi`,`se_vani`);
 
 -- | 030000002901
 
@@ -1166,6 +1167,7 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_lingua`),
 	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_lingua`),
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_lingua`),
+	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_lingua`),
 	ADD UNIQUE KEY `unica_annuncio` (`id_annuncio`,`id_lingua`),
 	ADD UNIQUE KEY `unica_categoria_annunci` (`id_categoria_annunci`,`id_lingua`),
 	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_lingua`),
@@ -1703,6 +1705,7 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_todo` (`id_todo`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_documento` (`id_documento`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`),
@@ -1818,6 +1821,7 @@ ALTER TABLE `immagini`
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
@@ -1853,11 +1857,9 @@ ALTER TABLE `immagini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000015700
 
 -- immobili
--- tipologia: tabella gestita
--- verifica: 2022-04-27 12:20 Chiara GDL
 ALTER TABLE `immobili`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`, `nome`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`,`scala`,`piano`,`interno`,`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_edificio` (`id_edificio`),
@@ -1868,19 +1870,14 @@ ALTER TABLE `immobili`
 	ADD KEY `catasto_foglio` (`catasto_foglio`),
 	ADD KEY `catasto_particella` (`catasto_particella`),
 	ADD KEY `catasto_sub` (`catasto_sub`),
-	ADD KEY `catasto_categoria` (`catasto_categoria`),
-	ADD KEY `catasto_classe` (`catasto_classe`),
-	ADD KEY `catasto_consistenza` (`catasto_consistenza`),
-	ADD KEY `catasto_superficie` (`catasto_superficie`),
-	ADD KEY `catasto_rendita` (`catasto_rendita`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_edificio`);
 
 -- | 030000015701
 
 -- immobili
--- tipologia: tabella gestita
-ALTER TABLE `immobili`  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `immobili` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015710
 
@@ -2454,6 +2451,7 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_rinnovo` (`id_rinnovo`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_tipologia_attivita` (`id_tipologia_attivita`,`id_lingua`,`nome`),
@@ -4700,6 +4698,24 @@ ALTER TABLE `tipologie_url`
 -- tipologie_url
 ALTER TABLE `tipologie_url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000056850
+
+-- tipologie_vani
+ALTER TABLE `tipologie_vani`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+
+-- | 030000056851
+
+-- tipologie_vani
+ALTER TABLE `tipologie_vani` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000056900
 
 -- tipologie_veicoli
@@ -4880,6 +4896,44 @@ ALTER TABLE `valute`
 -- valute
 ALTER TABLE `valute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000063200
+
+-- vani
+ALTER TABLE `vani`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_immobile`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_immobile`);
+
+-- | 030000063201
+
+-- vani
+ALTER TABLE `vani` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000063250
+
+-- vani_caratteristiche
+ALTER TABLE `vani_caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_vano`,`id_caratteristica`,`id_lingua`),
+	ADD KEY `id_vano` (`id_vano`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_vano`,`id_caratteristica`,`id_lingua`,`se_assente`);
+
+-- | 030000063251
+
+-- vani_caratteristiche
+ALTER TABLE `vani_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000063500
 
 -- taglie
@@ -4938,6 +4992,7 @@ ALTER TABLE `video`
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_vano` (`id_vano`),
 	ADD KEY `id_valutazione` (`id_valutazione`),
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 

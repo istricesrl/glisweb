@@ -1044,6 +1044,7 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_indirizzo,
 		audio.id_progetto,
 		audio.id_immobile,
+		audio.id_vano,
 		audio.id_pagina,
 		audio.id_file,
 		audio.id_categoria_prodotti,
@@ -1282,6 +1283,7 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.se_immobili,
 		caratteristiche.se_edifici,
 		caratteristiche.se_indirizzi,
+		caratteristiche.se_vani,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -2033,6 +2035,7 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 		contenuti.id_indirizzo,                                 --
 		contenuti.id_edificio,                                  --
 		contenuti.id_immobile,                                  --
+		contenuti.id_vano,                                      --
 		contenuti.id_notizia,                                   --
 		contenuti.id_annuncio,                                  --
 		contenuti.id_categoria_notizie,                         --
@@ -3126,6 +3129,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_contratto,
 		file.id_todo,
 		file.id_immobile,
+		file.id_vano,
 		file.id_mailing,
 		file.id_documento,
 		file.id_pagina,
@@ -3277,6 +3281,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_progetto,
 		immagini.id_contratto,
 		immagini.id_immobile,
+		immagini.id_vano,
 		immagini.id_pagina,
 		immagini.id_file,
 		immagini.id_categoria_prodotti,
@@ -3319,22 +3324,22 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 
 -- | 090000015701
 
--- immobili_view
+-- immobili
 -- tipologia: tabella gestita
--- verifica: 2022-04-27 12:20 Chiara GDL
+-- verifica: 2026-10-16 punto 6, riga 81
 CREATE OR REPLACE VIEW immobili_view AS
 	SELECT
 		immobili.id,
 		immobili.id_tipologia,
 		tipologie_immobili.nome AS tipologia,
-		immobili.id_edificio,
-		immobili.nome,
 		immobili.codice,
+		immobili.nome,
+		immobili.id_edificio,
 		edifici.id_indirizzo,
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -3353,32 +3358,23 @@ CREATE OR REPLACE VIEW immobili_view AS
 		immobili.catasto_consistenza,
 		immobili.catasto_superficie,
 		immobili.catasto_rendita,
+		(
+			SELECT group_concat( zone_path( zone_indirizzi.id_zona ) SEPARATOR ' | ' )
+			FROM zone_indirizzi
+			WHERE zone_indirizzi.id_indirizzo = indirizzi.id
+		) AS zone,
 		immobili.id_account_inserimento,
 		immobili.id_account_aggiornamento,
-		MAX(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
-		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
-		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
-		group_concat( DISTINCT zone_path( zone.id ) SEPARATOR ' | ' ) AS zone,
 		concat_ws(
 			' ',
-			tipologie_immobili.nome, 
-			coalesce(
-			concat('scala ', immobili.scala), 
-			''
-			), 
-			coalesce(
-			concat('piano ', immobili.piano), 
-			''
-			), 
-			coalesce(
-			concat('int. ', immobili.interno), 
-			''
-			),
+			tipologie_immobili.nome,
+			coalesce( concat( 'scala ', immobili.scala ), '' ),
+			coalesce( concat( 'piano ', immobili.piano ), '' ),
+			coalesce( concat( 'int. ', immobili.interno ), '' ),
 			tipologie_edifici.nome,
 			edifici.nome,
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -3391,19 +3387,8 @@ CREATE OR REPLACE VIEW immobili_view AS
 		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
 		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
-		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
-		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN regioni ON regioni.id = provincie.id_regione
-		LEFT JOIN stati ON stati.id = regioni.id_stato	
-		LEFT JOIN contratti ON contratti.id_immobile = immobili.id
-		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
-		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
-		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
-		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id  AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
-	GROUP BY immobili.id, contratti.id, contratti_anagrafica.id_contratto
 ;
 
 -- | 090000015711
@@ -4334,6 +4319,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_indirizzo,
 		metadati.id_edificio,
 		metadati.id_immobile,
+		metadati.id_vano,
 		metadati.id_contratto,
         metadati.id_valutazione,
         metadati.id_rinnovo,
@@ -7261,6 +7247,23 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 	FROM tipologie_url                                        --
 ;                                                             --
 
+-- | 090000056850
+
+-- tipologie_vani_view
+CREATE OR REPLACE VIEW `tipologie_vani_view` AS                --
+	SELECT                                                    --
+		tipologie_vani.id,                                     --
+		tipologie_vani.id_genitore,                            --
+		tipologie_vani.ordine,                                 --
+		tipologie_vani.nome,                                   --
+		tipologie_vani.html_entity,                            --
+		tipologie_vani.font_awesome,                           --
+		tipologie_vani.id_account_inserimento,                 --
+		tipologie_vani.id_account_aggiornamento,               --
+		tipologie_vani_path( tipologie_vani.id ) AS __label__   -- etichetta per le tendine e le liste
+	FROM tipologie_vani                                        --
+;                                                             --
+
 -- | 090000056900
 
 -- tipologie_veicoli_view
@@ -7511,6 +7514,74 @@ CREATE OR REPLACE VIEW `valute_view` AS
 	FROM valute
 ;
 
+-- | 090000063201
+
+-- vani
+-- tipologia: tabella gestita
+-- verifica: 2026-10-16 punto 6, riga 81
+CREATE OR REPLACE VIEW vani_view AS
+	SELECT
+		vani.id,
+		vani.id_tipologia,
+		tipologie_vani.nome AS tipologia,
+		vani.codice,
+		vani.nome,
+		vani.id_immobile,
+		concat_ws(
+			' ',
+			tipologie_immobili.nome,
+			immobili.codice,
+			immobili.nome,
+			coalesce( concat( 'scala ', immobili.scala ), '' ),
+			coalesce( concat( 'piano ', immobili.piano ), '' ),
+			coalesce( concat( 'int. ', immobili.interno ), '' ),
+			edifici.nome
+		) AS immobile,
+		vani.superficie,
+		vani.id_account_inserimento,
+		vani.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_vani.nome,
+			vani.nome,
+			'/',
+			tipologie_immobili.nome,
+			immobili.codice,
+			immobili.nome,
+			edifici.nome
+		) AS __label__
+	FROM vani
+		LEFT JOIN tipologie_vani ON tipologie_vani.id = vani.id_tipologia
+		LEFT JOIN immobili ON immobili.id = vani.id_immobile
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+;
+
+-- | 090000063251
+
+-- vani_caratteristiche_view
+CREATE OR REPLACE VIEW `vani_caratteristiche_view` AS
+	SELECT
+		vani_caratteristiche.id,
+		vani_caratteristiche.ordine,
+		vani_caratteristiche.id_vano,
+		vani_caratteristiche.id_caratteristica,
+		vani_caratteristiche.id_lingua,
+		caratteristiche.nome AS caratteristica,
+		vani_caratteristiche.valore,
+		vani_caratteristiche.note,
+		vani_caratteristiche.se_assente,
+		vani_caratteristiche.id_account_inserimento,
+		vani_caratteristiche.id_account_aggiornamento,
+		concat(
+			vani_caratteristiche.id_vano,
+			' / ',
+			caratteristiche.nome
+		) AS __label__
+	FROM vani_caratteristiche
+		LEFT JOIN caratteristiche ON caratteristiche.id = vani_caratteristiche.id_caratteristica
+;
+
 -- | 090000063500
 
 -- taglie_view
@@ -7589,6 +7660,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_indirizzo,
 		video.id_edificio,
 		video.id_immobile,
+		video.id_vano,
         video.id_valutazione,
 		video.id_audio,
 		video.id_immagine,

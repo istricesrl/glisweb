@@ -815,6 +815,7 @@ CREATE TABLE IF NOT EXISTS `audio` (                            --
   `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
   `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
   `id_immagine` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immagine descritta
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano descritto
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'audio
   `path` char(255) DEFAULT NULL,                                  -- percorso del file audio
   `embed` enum('html5','vimeo','youtube') DEFAULT NULL,           -- piattaforma dell'audio incorporato
@@ -1042,6 +1043,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (                  --
   `se_immobili` tinyint(1) DEFAULT NULL,                          -- flag per le caratteristiche assegnabili agli immobili
   `se_edifici` tinyint(1) DEFAULT NULL,                           -- flag per le caratteristiche assegnabili agli edifici
   `se_indirizzi` tinyint(1) DEFAULT NULL,                         -- flag per le caratteristiche assegnabili agli indirizzi
+  `se_vani` tinyint(1) DEFAULT NULL,                            -- flag per le caratteristiche assegnabili ai vani
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -1961,6 +1963,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id_progetto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il progetto
   `id_categoria_progetti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria dei progetti
   `id_banner` bigint(20) DEFAULT NULL,                             -- chiave esterna per il banner
+  `id_vano` bigint(20) DEFAULT NULL,                             -- chiave esterna per il vano
   `path_custom` char(255) DEFAULT NULL,                         -- path custom
   `url_custom` char(255) DEFAULT NULL,                          -- URL custom
   `rewrite_custom` char(255) DEFAULT NULL,                      -- rewrite custom
@@ -2852,6 +2855,7 @@ CREATE TABLE IF NOT EXISTS `file` (                             --
   `id_audio` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'audio descritto
   `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
   `id_immagine` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immagine descritta
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano descritto
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo del file
   `path` char(255) DEFAULT NULL,                                  -- percorso del file
   `url` char(255) DEFAULT NULL,                                   -- URL del file
@@ -3018,6 +3022,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                         --
   `id_banner` bigint(20) DEFAULT NULL,                            -- chiave esterna per il banner descritto
   `id_audio` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'audio descritto
   `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano descritto
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'immagine
   `token` char(128) DEFAULT NULL,                                 -- token per il lock dell'immagine durante lo scalamento
   `path` char(255) DEFAULT NULL,                                  -- percorso dell'immagine
@@ -3037,32 +3042,39 @@ CREATE TABLE IF NOT EXISTS `immagini` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i immobili
+-- funzione: contiene gli immobili, cioè le unità ( appartamenti, uffici, negozi, magazzini ) dentro gli edifici
+-- entità: questa tabella corrisponde all'entità immobile
 --
-CREATE TABLE IF NOT EXISTS `immobili` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `scala` char(32) DEFAULT NULL,
-  `piano` char(64) DEFAULT NULL,
-  `interno` char(8) DEFAULT NULL,
-  `campanello` char(128) DEFAULT NULL,
-  `catasto_foglio` char(255) DEFAULT NULL,
-  `catasto_particella` char(255) DEFAULT NULL,
-  `catasto_sub` char(255) DEFAULT NULL,
-  `catasto_categoria` char(255) DEFAULT NULL,
-  `catasto_classe` char(255) DEFAULT NULL,
-  `catasto_consistenza` char(255) DEFAULT NULL,
-  `catasto_superficie` char(255) DEFAULT NULL,
-  `catasto_rendita` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella è un livello della catena della geografia fisica, che va dall'indirizzo ai vani passando per edifici
+-- e immobili; un immobile sta in un edificio, che non si può cancellare finché contiene immobili ( NO ACTION ), e
+-- scala, piano, interno e campanello lo collocano al suo interno; i campi catasto_* ne portano i dati catastali; un
+-- immobile si divide in vani ( vani ), e un mastro di magazzino può essere collocato a uno qualsiasi dei livelli
+-- della catena ( indirizzo, edificio, immobile, vano )
+--
+CREATE TABLE IF NOT EXISTS `immobili` (                         --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di immobile
+  `codice` char(32) DEFAULT NULL,                               -- codice dell'immobile
+  `nome` char(255) DEFAULT NULL,                                -- nome dell'immobile
+  `id_edificio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio che contiene l'immobile
+  `scala` char(32) DEFAULT NULL,                                -- scala
+  `piano` char(64) DEFAULT NULL,                                -- piano
+  `interno` char(8) DEFAULT NULL,                               -- interno
+  `campanello` char(128) DEFAULT NULL,                          -- nome sul campanello
+  `catasto_foglio` char(255) DEFAULT NULL,                      -- foglio catastale
+  `catasto_particella` char(255) DEFAULT NULL,                  -- particella catastale
+  `catasto_sub` char(255) DEFAULT NULL,                         -- subalterno catastale
+  `catasto_categoria` char(255) DEFAULT NULL,                   -- categoria catastale
+  `catasto_classe` char(255) DEFAULT NULL,                      -- classe catastale
+  `catasto_consistenza` char(255) DEFAULT NULL,                 -- consistenza catastale
+  `catasto_superficie` char(255) DEFAULT NULL,                  -- superficie catastale
+  `catasto_rendita` char(255) DEFAULT NULL,                     -- rendita catastale
+  `note` text DEFAULT NULL,                                     -- note sull'immobile
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000015710
 
@@ -3863,6 +3875,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `id_carrello` bigint(20) DEFAULT NULL,
   `id_tipologia_corrispondenza` bigint(20) DEFAULT NULL,
   `id_peso_tipologie_corrispondenza` bigint(20) DEFAULT NULL,
+  `id_vano` bigint(20) DEFAULT NULL,
   `id_stato` bigint(20) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `testo` text DEFAULT NULL,
@@ -6840,6 +6853,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000056850
+
+-- tipologie_vani
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di vani
+--
+-- questa tabella contiene le tipologie di vani
+--
+CREATE TABLE IF NOT EXISTS `tipologie_vani` (             --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000056900
 
 -- tipologie_veicoli
@@ -7074,6 +7110,62 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000063200
+
+-- vani
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i vani degli immobili ( stanze, locali, aree )
+-- entità: questa tabella corrisponde all'entità vano
+--
+-- questa tabella è l'ultimo livello della catena della geografia fisica, che va dall'indirizzo ai vani passando per
+-- edifici e immobili ( decisione del 16/10/2026 ); un vano appartiene a un immobile e sparisce con lui ( CASCADE ), e
+-- la sua tipologia viene da tipologie_vani; un mastro di magazzino o un luogo possono essere collocati in un vano, e se
+-- il vano viene cancellato restano senza collocazione ( SET NULL ) invece di sparire
+--
+CREATE TABLE IF NOT EXISTS `vani` (                             --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di vano
+  `codice` char(32) DEFAULT NULL,                               -- codice del vano
+  `nome` char(255) DEFAULT NULL,                                -- nome del vano
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile che contiene il vano
+  `superficie` decimal(16,2) DEFAULT NULL,                      -- superficie del vano in metri quadrati
+  `note` text DEFAULT NULL,                                     -- note sul vano
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000063250
+
+-- vani_caratteristiche
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega un vano alle sue caratteristiche
+--
+-- questa tabella collega un vano all'albero delle caratteristiche ( caratteristiche ) e ne porta il valore; è gemella
+-- di immobili_caratteristiche ( decisione del 16/10/2026 ): il valore è per lingua, quindi id_lingua fa parte della
+-- chiave unica, e se_assente dichiara che la caratteristica non c'è; le caratteristiche proponibili sono quelle con
+-- caratteristiche.se_vani
+--
+CREATE TABLE IF NOT EXISTS `vani_caratteristiche` (             --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000063500
 
 -- taglie
@@ -7168,6 +7260,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_valutazione` bigint(20) DEFAULT NULL,
   `id_audio` bigint(20) DEFAULT NULL,
   `id_immagine` bigint(20) DEFAULT NULL,
+  `id_vano` bigint(20) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
