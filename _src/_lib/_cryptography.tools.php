@@ -51,77 +51,79 @@
      * questa funzione crittografa una stringa
      * 
      * Questa funzione crittografa una stringa tramite una chiave di crittografia data, utilizzando la libreria OpenSSL.
+     * Il risultato è autenticato: IV casuale a ogni chiamata, AES-128-CTR e HMAC-SHA256 su IV e testo cifrato, con
+     * chiavi di cifratura e di firma derivate da $k. Fino al 30/09/2026 l'IV era fisso e mancava il MAC, e chi aveva
+     * in mano un testo cifrato poteva riscriverne il contenuto senza conoscere la chiave; i testi cifrati col formato
+     * vecchio non vengono più accettati da decryptString().
      * 
      * @param       string      $s      la stringa da crittografare
      * @param       string      $k      la chiave di crittografia
      * 
-     * @return      string              la stringa crittografata
+     * @return      string              la stringa crittografata ( base64 di IV, testo cifrato e MAC )
      * 
      */
     function encryptString( $s, $k ) {
 
-        // debug
-        // echo "stringa di partenza: " . $s . PHP_EOL;
-
         // metodo di cifratura
-        $crypt = "AES-128-CTR";
+        $crypt = 'AES-128-CTR';
 
-        // ...
-        $ivl = openssl_cipher_iv_length( $crypt );
+        // chiavi di cifratura e di firma derivate dalla chiave data
+        $ek = hash_hmac( 'sha256', 'encrypt', $k, true );
+        $mk = hash_hmac( 'sha256', 'mac', $k, true );
 
-        // opzioni
-        $options = 0;
-
-        // ...
-        $eiv = '1234567891011121';
+        // IV casuale
+        $iv = random_bytes( openssl_cipher_iv_length( $crypt ) );
 
         // cifratura della stringa
-        $se = openssl_encrypt( $s, $crypt, $k, $options, $eiv );
+        $se = openssl_encrypt( $s, $crypt, $ek, OPENSSL_RAW_DATA, $iv );
 
-        // debug
-        // echo "stringa cifrata: " . $se . PHP_EOL;
+        // firma di IV e testo cifrato
+        $mac = hash_hmac( 'sha256', $iv . $se, $mk, true );
 
         // restituisco la stringa cifrata
-        return $se;
+        return base64_encode( $iv . $se . $mac );
 
     }
 
     /**
      * questa funzione decrittografa una stringa
      * 
-     * Questa funzione decrittografa una stringa crittografata tramite una chiave di crittografia data, utilizzando la libreria OpenSSL.
+     * Questa funzione decrittografa una stringa crittografata da encryptString() con la stessa chiave; se la stringa
+     * non è nel formato atteso o il MAC non torna ( stringa alterata, chiave diversa, formato precedente al
+     * 30/09/2026 ) restituisce false senza decifrare niente.
      * 
      * @param       string      $s      la stringa da decrittografare
      * @param       string      $k      la chiave di crittografia
      * 
-     * @return      string              la stringa decrittografata
+     * @return      string|bool         la stringa decrittografata, oppure false
      * 
      */
     function decryptString( $s, $k ) {
 
-        // debug
-        // echo "stringa cifrata: " . $s . PHP_EOL;
-
         // metodo di cifratura
-        $crypt = "AES-128-CTR";
-
-        // ...
+        $crypt = 'AES-128-CTR';
         $ivl = openssl_cipher_iv_length( $crypt );
 
-        // opzioni
-        $options = 0;
+        // chiavi di cifratura e di firma derivate dalla chiave data
+        $ek = hash_hmac( 'sha256', 'encrypt', $k, true );
+        $mk = hash_hmac( 'sha256', 'mac', $k, true );
 
-        // ...
-        $div = '1234567891011121';
+        // scompongo la stringa in IV, testo cifrato e MAC
+        $raw = base64_decode( (string) $s, true );
+        if( $raw === false || strlen( $raw ) < $ivl + 32 ) {
+            return false;
+        }
+        $iv = substr( $raw, 0, $ivl );
+        $se = substr( $raw, $ivl, -32 );
+        $mac = substr( $raw, -32 );
 
-        // decifratura della stringa
-        $ds = openssl_decrypt( $s, $crypt, $k, $options, $div );
-
-        // debug
-        // echo "stringa decifrata: " . $ds . PHP_EOL;
+        // verifico la firma prima di decifrare
+        if( ! hash_equals( hash_hmac( 'sha256', $iv . $se, $mk, true ), $mac ) ) {
+            return false;
+        }
 
         // restituisco la stringa decifrata
-        return $ds;
+        return openssl_decrypt( $se, $crypt, $ek, OPENSSL_RAW_DATA, $iv );
 
     }
 
