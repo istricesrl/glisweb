@@ -4017,24 +4017,30 @@ CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
 
 -- | 010000020800
 
--- mastri_veicoli
+-- mastri_tipologie_veicoli
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene la relazione molti a molti tra mastri e veicoli
+-- funzione: contiene la relazione molti a molti tra mastri e tipologie di veicoli
 --
--- questa tabella contiene la relazione molti a molti tra mastri e veicoli, con le chiavi esterne per il mastro
--- e per il veicolo e le note sull'associazione
+-- questa tabella dice con quali tipi di mezzo si raggiunge un mastro di magazzino ( p.es. una collocazione servita
+-- dal macchinino o dalla gabbia ): associa a un mastro una TIPOLOGIA di veicolo, non un veicolo; la leggono la
+-- scheda veicoli dei magazzini e i report di giacenza, per dire con che mezzi si arriva a una collocazione. Una
+-- coppia mastro / tipologia compare una volta sola
+-- NOTA qui id_tipologia non e' la tipologia della riga ma una chiave della relazione, verso l'unico classificatore
+-- che la tabella collega: per questo ha il nome generico, sta dopo ordine ed e' CASCADE, come id_categoria in
+-- coupon_categorie_prodotti e nelle tabelle *_categorie
 --
-CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (                         --
-    `id` bigint(20) NOT NULL,                                        -- chiave primaria
-    `id_mastro` bigint(20) DEFAULT NULL,                                  -- chiave esterna per il mastro
-    `id_tipologia` bigint(20) DEFAULT NULL,                                  -- chiave esterna per il veicolo
-    `note` text DEFAULT NULL,                                     -- note sull'associazione
-    `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'associazione
-    `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-    `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'associazione
-    `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (         --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine della tipologia fra quelle del mastro
+  `id_mastro` bigint(20) DEFAULT NULL,                          -- chiave esterna per il mastro
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di veicolo ( tipologie_veicoli )
+  `note` text DEFAULT NULL,                                     -- note sull'associazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000021000
@@ -5232,6 +5238,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_articoli` (
 --
 CREATE TABLE IF NOT EXISTS `relazioni_categorie_progetti` (
   `id` bigint(20) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_categoria` bigint(20) DEFAULT NULL,
   `id_ruolo` bigint(20) DEFAULT NULL,
   `id_categoria_collegata` bigint(20) DEFAULT NULL,

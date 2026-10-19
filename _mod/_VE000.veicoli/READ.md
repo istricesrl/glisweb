@@ -36,7 +36,8 @@ del database, alle voci `veicoli` e `tipologie_veicoli`.
 > **nota** — `veicoli`, `tipologie_veicoli` e `mastri_tipologie_veicoli` hanno chiave primaria,
 > AUTO_INCREMENT e indici dal 29/09/2026 ( `_030000999999.indexes.sql`, e per i deploy esistenti
 > `_202609291500.chiavi.primarie.sql` ); fino ad allora le maschere non potevano inserire righe nuove.
-> Vincoli sulle chiavi esterne non ce ne sono, come per le altre tabelle dei mastri. Dove una tabella
+> Le chiavi esterne sono nel `_060000999999.constraints.sql` ( in `mastri_tipologie_veicoli` verso il mastro e la
+> tipologia sono CASCADE, e la tabella ha `ordine` dal 19/10/2026 ). Dove una tabella
 > aveva già id ripetuti la patch non aggiunge la chiave e lo dice: i doppioni vanno risolti a mano.
 
 ## pagine

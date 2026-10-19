@@ -2431,10 +2431,12 @@ ALTER TABLE `mastri_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mastri_tipologie_veicoli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_mastro`,`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_mastro` (`id_mastro`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_mastro`,`id_tipologia`);
 
 -- | 030000020801
 
@@ -3325,6 +3327,7 @@ ALTER TABLE `relazioni_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-03 11:12 Chiara GDL
 ALTER TABLE `relazioni_categorie_progetti`
 	ADD PRIMARY KEY (`id`), 
+	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unico` (`id_categoria`,`id_ruolo`, `id_categoria_collegata`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_categoria` (`id_categoria`),

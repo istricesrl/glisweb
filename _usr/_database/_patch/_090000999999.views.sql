@@ -126,6 +126,7 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
 	SELECT                                                    --
 		anagrafica_categorie.id,                              --
+		anagrafica_categorie.ordine,                          --
 		anagrafica_categorie.id_anagrafica,                   --
 		coalesce(                                         	  --
 			a1.denominazione,                             	  --
@@ -4276,6 +4277,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
     SELECT
         mastri_tipologie_veicoli.id,
+        mastri_tipologie_veicoli.ordine,
         mastri_tipologie_veicoli.id_mastro,
         mastri_path( mastri_tipologie_veicoli.id_mastro ) AS mastro,
         mastri_tipologie_veicoli.id_tipologia,
@@ -4285,6 +4287,7 @@ CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
             ORDER BY tipologie_veicoli_path( altre.id_tipologia )
             SEPARATOR ', '
         ) AS tipologie,
+        mastri_tipologie_veicoli.note,
         mastri_tipologie_veicoli.id_account_inserimento,
         mastri_tipologie_veicoli.id_account_aggiornamento,
         concat_ws(
@@ -5723,6 +5726,7 @@ CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
 CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS
 	SELECT
 	relazioni_categorie_progetti.id,
+	relazioni_categorie_progetti.ordine,
 	relazioni_categorie_progetti.id_ruolo,
 	relazioni_categorie_progetti.id_categoria,
 	relazioni_categorie_progetti.id_categoria_collegata,
@@ -6000,6 +6004,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 	SELECT
 		risorse_categorie.id,
+		risorse_categorie.ordine,
 		risorse_categorie.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_categorie.id_categoria,
