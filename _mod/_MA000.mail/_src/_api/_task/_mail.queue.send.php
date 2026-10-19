@@ -53,7 +53,9 @@
      *
      * Dopo la copia i file collegati alla mail ( `file.id_mail_out` ) passano alla mail inviata ( `file.id_mail_sent` ),
      * prima di cancellare la riga da `mail_out`, il cui vincolo ON DELETE SET NULL li staccherebbe dalla mail. Fino al
-     * 2026-09-30 non si faceva, e la linguetta file della mail inviata era sempre vuota.
+     * 2026-09-30 non si faceva, e la linguetta file della mail inviata era sempre vuota. Allo stesso modo, se il modulo
+     * mailing è attivo, i destinatari di un mailing ( `mailing_mail.id_mail_out` ) passano alla mail inviata
+     * ( `mailing_mail.id_mail_sent` ): le due chiavi dicono se la mail di un destinatario è in coda o è partita.
      *
      * Il task è la copia nel modulo `MA000.mail` di quello del core ( `_src/_api/_task/_mail.queue.send.php` ), e la chiama
      * la scheda strumenti della mail in uscita ( `mail.out.form.tools` ): le due copie vanno tenute uguali, cambia solo
@@ -409,6 +411,26 @@
 
 				// log
 				logWrite( 'file collegati alla mail #' . $mail['id'] . ' spostati sulla mail inviata: ' . intval( $s4 ), 'mail' );
+
+				// RELAZIONI CON IL MODULO MAILING
+				if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) || in_array( "ML000.mailing", $cf['mods']['active']['array'] ) ) {
+
+					// sposto il destinatario del mailing sulla mail inviata
+					// NOTA come per i file va fatto prima del DELETE, che con il vincolo ON DELETE SET NULL azzera
+					// mailing_mail.id_mail_out; timestamp_invio l'ha già scritta l'aggiornamento dopo l'invio, così una mail
+					// partita ma rimasta in coda con COPIA_FALLITA risulta comunque inviata
+					$s5 = mysqlQuery(
+						$cf['mysql']['connection'],
+						'UPDATE mailing_mail SET id_mail_sent = id_mail_out, id_mail_out = NULL WHERE id_mail_out = ?',
+						array(
+							array( 's' => $mail['id'] )
+						)
+					);
+
+					// log
+					logWrite( 'destinatari del mailing collegati alla mail #' . $mail['id'] . ' spostati sulla mail inviata: ' . intval( $s5 ), 'mailing' );
+
+				}
 
 				// elimino la mail inviata dalla coda delle mail in uscita
 				$s3 = mysqlQuery(

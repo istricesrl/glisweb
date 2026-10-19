@@ -3783,21 +3783,35 @@ CREATE TABLE IF NOT EXISTS `mailing_liste` (                    --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione mailing e mail
+-- funzione: contiene i destinatari di un mailing e lo stato della loro mail
 --
-CREATE TABLE IF NOT EXISTS `mailing_mail` (
-  `id` bigint(20) NOT NULL,
-  `id_mailing` bigint(20) DEFAULT NULL,
-  `id_mail` bigint(20) DEFAULT NULL,
-  `id_mail_out` bigint(20) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_generazione` int(11) DEFAULT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ogni riga dice che un mailing ( mailing ) va a un indirizzo ( mail ) e ne segue la mail: il task che genera l'elenco
+-- dei destinatari la scrive dagli iscritti alle liste del mailing ( mailing_liste ), un indirizzo una volta sola; il
+-- task che genera le mail la blocca col token, compone la mail, la accoda e scrive timestamp_generazione e id_mail_out;
+-- la coda, a invio riuscito, scrive timestamp_invio e sposta la riga dalla mail in coda a quella inviata
+--
+-- NOTA lo stato della mail si legge dalle due chiavi: id_mail_out valorizzata è una mail in coda, id_mail_sent
+-- valorizzata una mail inviata, tutte e due vuote una mail ancora da generare; la coda ripunta la riga prima di
+-- togliere la mail da mail_out, come fa per i file, e il reinvio fa il passaggio inverso
+--
+-- NOTA il doppio invio di un mailing allo stesso indirizzo lo impedisce questa tabella, con la chiave unica
+-- ( id_mailing, id_mail ) e il controllo sull'indirizzo del task che genera l'elenco
+--
+CREATE TABLE IF NOT EXISTS `mailing_mail` (                     --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_mail` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'indirizzo del destinatario
+  `id_mailing` bigint(20) DEFAULT NULL,                         -- chiave esterna per il mailing
+  `id_mail_out` bigint(20) DEFAULT NULL,                        -- chiave esterna per la mail in coda, finché non parte
+  `id_mail_sent` bigint(20) DEFAULT NULL,                       -- chiave esterna per la mail inviata
+  `token` char(128) DEFAULT NULL,                               -- token per il lock della riga durante la generazione
+  `timestamp_generazione` int(11) DEFAULT NULL,                 -- timestamp della generazione della mail
+  `timestamp_invio` int(11) DEFAULT NULL,                       -- timestamp dell'invio della mail
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000020200
 

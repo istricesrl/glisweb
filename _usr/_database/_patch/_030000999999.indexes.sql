@@ -2301,20 +2301,21 @@ ALTER TABLE `mailing_liste` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mailing_mail
 ALTER TABLE `mailing_mail`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica_mail` (`id_mailing`, `id_mail`),
+	ADD UNIQUE KEY `unica_mail` (`id_mailing`,`id_mail`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_mailing` (`id_mailing`),
-	ADD KEY `id_mail`(`id_mail`),
 	ADD KEY `id_mail_out` (`id_mail_out`),
-	ADD KEY `token` (`token`), 
+	ADD KEY `id_mail_sent` (`id_mail_sent`),
+	ADD KEY `token` (`token`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
-	
+	ADD KEY `indice` (`id`,`ordine`,`id_mail`,`id_mailing`,`id_mail_out`,`id_mail_sent`,`token`);
 
 -- | 030000019101
 
 -- mailing_mail
-ALTER TABLE `mailing_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;	
+ALTER TABLE `mailing_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000020200
 

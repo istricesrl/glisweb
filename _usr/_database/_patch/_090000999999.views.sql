@@ -4061,28 +4061,35 @@ CREATE OR REPLACE VIEW mailing_liste_view AS                                    
 -- | 090000019101
 
 -- mailing_mail_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `mailing_mail_view` AS
-	SELECT
-		mailing_mail.id,
-		mailing_mail.id_mailing,
-		mailing.nome AS mailing,
-		mailing_mail.id_mail,
-		mail.indirizzo AS mail,
-		mail.id_anagrafica,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		mailing_mail.id_mail_out,
-		mailing_mail.timestamp_generazione,
-		from_unixtime( mailing_mail.timestamp_generazione, '%Y-%m-%d' ) AS data_ora_generazione,
-		mailing_mail.timestamp_invio,
-		from_unixtime( mailing_mail.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
-		concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
-	FROM mailing_mail
-		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
-		INNER JOIN mail ON mail.id = mailing_mail.id_mail
-		LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
-;
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW mailing_mail_view AS                                              --
+  SELECT                                                                                 --
+    mailing_mail.id,                                                                     --
+    mailing_mail.ordine,                                                                 --
+    mailing_mail.id_mail,                                                                --
+    mail.indirizzo AS mail,                                                              --
+    mail.id_anagrafica,                                                                  --
+    coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,  --
+    mailing_mail.id_mailing,                                                             --
+    mailing.nome AS mailing,                                                             --
+    mailing_mail.id_mail_out,                                                            --
+    mailing_mail.id_mail_sent,                                                           --
+    mailing_mail.timestamp_generazione,                                                  --
+    from_unixtime( mailing_mail.timestamp_generazione, '%Y-%m-%d %H:%i' ) AS data_ora_generazione,--
+    mailing_mail.timestamp_invio,                                                        --
+    from_unixtime( mailing_mail.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,   --
+    mailing_mail.id_account_inserimento,                                                 --
+    mailing_mail.id_account_aggiornamento,                                               --
+    concat(                                                                              --
+      mailing.nome,                                                                      --
+      ' / ',                                                                             --
+      mail.indirizzo                                                                     --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM mailing_mail                                                                      --
+    LEFT JOIN mailing ON mailing.id = mailing_mail.id_mailing                            --
+    LEFT JOIN mail ON mail.id = mailing_mail.id_mail                                     --
+    LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica                             --
+  ;                                                                                      --
 
 -- | 090000020200
 

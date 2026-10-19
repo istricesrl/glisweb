@@ -77,7 +77,8 @@ sola lettura anche i consensi registrati sui singoli indirizzi della persona.
    ( se è stato revocato dopo la preparazione toglie la riga e passa oltre ), compone la mail e la mette in
    coda con la data di invio del mailing e con `ordine` 10, così le mail transazionali ( `ordine` NULL ) passano
    prima anche quando il mailing ha migliaia di righe;
-4. la coda di `_MA000.mail` la spedisce e scrive `mailing_mail.timestamp_invio`.
+4. la coda di `_MA000.mail` la spedisce, scrive `mailing_mail.timestamp_invio` e sposta la riga da `id_mail_out` a
+   `id_mail_sent`: la prima valorizzata vuol dire mail in coda, la seconda mail partita ( il reinvio fa l'inverso ).
 
 > **attenzione** — `_genera.mail.php` va schedulato a mano sul deploy, come gli altri task: una riga nella
 > tabella `task` con percorso `_mod/_ML000.mailing/_src/_api/_task/_genera.mail.php`. Chi passa da

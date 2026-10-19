@@ -10,7 +10,8 @@
      * La riga viene marcata con il token del task, copiata in `mail_out` con lo stesso ID e cancellata da `mail_sent`; i
      * file collegati alla mail inviata ( `file.id_mail_sent` ) vengono collegati a quella in coda, prima della
      * cancellazione, il cui vincolo ON DELETE SET NULL azzera poi `file.id_mail_sent`: è il passaggio inverso di quello
-     * che fa il task di invio. Nella coda il token, l'ora della marcatura ( `timestamp_elaborazione` ), i tentativi e la
+     * che fa il task di invio. Lo stesso vale per i destinatari di un mailing ( `mailing_mail.id_mail_sent` torna
+     * `id_mail_out`, e `timestamp_invio` si azzera ), se il modulo mailing è attivo. Nella coda il token, l'ora della marcatura ( `timestamp_elaborazione` ), i tentativi e la
      * data prevista vengono azzerati: la copia porterebbe con sé il token di questo giro, che la escluderebbe da tutte le
      * modalità di evasione, e la data di invio effettiva, che è già passata. Fino al 2026-09-29 il token non veniva
      * azzerato e la mail rimessa in coda non ripartiva mai. Se la copia fallisce la riga resta fra le inviate, senza
@@ -110,6 +111,20 @@
                     array( 's' => $mail['id'] )
                 )
             );
+
+            // RELAZIONI CON IL MODULO MAILING
+            if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) || in_array( "ML000.mailing", $cf['mods']['active']['array'] ) ) {
+
+                // riporto il destinatario del mailing sulla mail in coda, che non risulta più inviata
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE mailing_mail SET id_mail_out = id_mail_sent, id_mail_sent = NULL, timestamp_invio = NULL WHERE id_mail_sent = ?',
+                    array(
+                        array( 's' => $mail['id'] )
+                    )
+                );
+
+            }
 
             // elimino la mail dalla tabella delle mail inviate
             mysqlQuery(
