@@ -71,14 +71,6 @@ aggiungono solo i nuovi, nessuno riceve la mail due volte.
 In fondo a ogni mail viene aggiunta da sola la frase *ricevi questa mail perché sei iscritto alla nostra
 newsletter; per non riceverla più clicca qui*.
 
-## il follow-up
-<!-- @pubblico: operatore, amministratore -->
-<!-- @pagina: mailing.form.promemoria -->
-
-Se c'è il modulo delle attività, la linguetta **follow-up** del mailing permette di programmare, per ogni
-destinatario che ha un'anagrafica, un'attività da fare qualche giorno dopo l'invio ( per esempio una
-telefonata ): si sceglie il tipo di attività, il responsabile, il titolo, quanti giorni aspettare e un testo.
-
 ## esportare una lista
 <!-- @pubblico: operatore, amministratore -->
 <!-- @pagina: mailing.tools -->

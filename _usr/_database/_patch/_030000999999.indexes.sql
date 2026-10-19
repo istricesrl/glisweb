@@ -2271,7 +2271,7 @@ ALTER TABLE `mailing`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`);
+	ADD KEY `indice` (`id`,`nome`,`timestamp_invio`);
 
 -- | 030000019001
 

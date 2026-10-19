@@ -290,25 +290,27 @@
                 );
 
                 // follow-up
-                if( ! empty( $row['promemoria_id_tipologia'] ) && ! empty( $row['id_destinatario'] ) ) {
+                // NOTA le colonne promemoria_* sono uscite dal canone il 19/10/2026: i follow-up generati dal mailing
+                // sono da riprogettare ( TODO.md di glisdev ), il blocco resta commentato fino ad allora
+                // if( ! empty( $row['promemoria_id_tipologia'] ) && ! empty( $row['id_destinatario'] ) ) {
 
-                    // inserisco il follow-up
-                    $status['id_follow_up'] = mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id_tipologia' => $row['promemoria_id_tipologia'],
-                            'id_cliente' => $row['id_destinatario'],
-                            'id_mail' => $invio,
-                            'id_mailing' => $row['id'],
-                            'id_anagrafica_programmazione' => $row['promemoria_id_anagrafica_programmazione'],
-                            'nome' => $row['promemoria_nome'],
-                            'note_programmazione' => $row['promemoria_note_programmazione'],
-                            'data_programmazione' => date( 'Y-m-d', strtotime( '+' . $row['promemoria_giorni_programmazione'] . ' days', $row['timestamp_invio'] ) )
-                        ),
-                        'attivita'
-                    );
+                //     // inserisco il follow-up
+                //     $status['id_follow_up'] = mysqlInsertRow(
+                //         $cf['mysql']['connection'],
+                //         array(
+                //             'id_tipologia' => $row['promemoria_id_tipologia'],
+                //             'id_cliente' => $row['id_destinatario'],
+                //             'id_mail' => $invio,
+                //             'id_mailing' => $row['id'],
+                //             'id_anagrafica_programmazione' => $row['promemoria_id_anagrafica_programmazione'],
+                //             'nome' => $row['promemoria_nome'],
+                //             'note_programmazione' => $row['promemoria_note_programmazione'],
+                //             'data_programmazione' => date( 'Y-m-d', strtotime( '+' . $row['promemoria_giorni_programmazione'] . ' days', $row['timestamp_invio'] ) )
+                //         ),
+                //         'attivita'
+                //     );
 
-                }
+                // }
 
             }
 

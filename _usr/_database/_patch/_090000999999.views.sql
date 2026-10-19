@@ -4021,16 +4021,16 @@ CREATE OR REPLACE VIEW `mail_status_view` AS
 -- | 090000019001
 
 -- mailing_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 CREATE OR REPLACE VIEW `mailing_view` AS
 	SELECT
-	mailing.id,
-	mailing.nome,
-	mailing.timestamp_invio,
-	mailing.id_account_inserimento,
-	mailing.id_account_aggiornamento,
-	mailing.nome AS __label__
+		mailing.id,
+		mailing.nome,
+		mailing.note,
+		mailing.timestamp_invio,
+		from_unixtime( mailing.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
+		mailing.id_account_inserimento,
+		mailing.id_account_aggiornamento,
+		mailing.nome AS __label__
 	FROM mailing
 ;
 

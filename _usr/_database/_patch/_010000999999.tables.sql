@@ -3730,23 +3730,29 @@ CREATE TABLE IF NOT EXISTS `mail_status` (                    --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i mailing
+-- funzione: contiene gli invii dei mailing
 --
-CREATE TABLE IF NOT EXISTS `mailing` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `promemoria_id_tipologia` bigint(20) DEFAULT NULL,
-  `promemoria_id_anagrafica_programmazione` bigint(20) DEFAULT NULL,
-  `promemoria_nome` char(255) DEFAULT NULL,
-  `promemoria_giorni_programmazione` int(11) DEFAULT NULL,
-  `promemoria_note_programmazione` text DEFAULT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene la testata di ogni invio di newsletter: il nome, la data prevista e le note;
+-- le liste a cui va stanno in mailing_liste, i destinatari generati in mailing_mail, il testo e gli
+-- allegati in contenuti e file; la gestisce il modulo ML000.mailing, e i task _genera.elenco.destinatari.php
+-- e _genera.mail.php la trasformano in mail accodate in mail_out
+--
+-- NOTA timestamp_invio e' l'invio previsto, da cui parte la coda; l'invio effettivo di ogni destinatario
+-- sta in mailing_mail.timestamp_invio
+--
+-- NOTA i follow-up commerciali generati da un mailing ( le colonne promemoria_*, uscite il 19/10/2026 )
+-- sono da riprogettare, vedi il TODO.md di glisdev
+--
+CREATE TABLE IF NOT EXISTS `mailing` (                        --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome del mailing
+  `note` text DEFAULT NULL,                                   -- note sul mailing
+  `timestamp_invio` int(11) DEFAULT NULL,                     -- timestamp dell'invio previsto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000019050
 

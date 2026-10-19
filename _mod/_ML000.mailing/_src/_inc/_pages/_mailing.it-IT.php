@@ -67,9 +67,11 @@
     );
 
     // RELAZIONI CON IL MODULO ATTIVITA
-    if( in_array( "AT000.attivita", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'mailing.form.invio', $p['mailing.form']['etc']['tabs'], 'mailing.form.promemoria' );
-    }
+    // NOTA i follow-up generati dal mailing ( colonne promemoria_* ) sono usciti dal canone il 19/10/2026 e sono
+    // da riprogettare ( TODO.md di glisdev ); la linguetta resta commentata fino ad allora
+    // if( in_array( "AT000.attivita", $cf['mods']['active']['array'] ) ) {
+    //     arrayInsertBefore( 'mailing.form.invio', $p['mailing.form']['etc']['tabs'], 'mailing.form.promemoria' );
+    // }
 
     // RELAZIONI CON IL MODULO CONTENUTI
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
@@ -81,18 +83,18 @@
         arrayInsertBefore( 'mailing.form.tools', $p['mailing.form']['etc']['tabs'], 'mailing.form.file' );
     }
 
-    // gestione follow-up mailing
-    $p['mailing.form.promemoria'] = array(
-        'sitemap'           => false,
-        'icon'              => '<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',
-        'title'             => array( $l        => 'follow-up' ),
-        'h1'                => array( $l        => 'follow-up' ),
-        'parent'            => array( 'id'      => 'mailing.view' ),
-        'template'          => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'mailing.form.promemoria.twig' ),
-        'macro'             => array( $m . '_src/_inc/_macro/_mailing.form.promemoria.php' ),
-        'auth'              => array( 'groups'  => array(   'roots' ) ),
-        'etc'               => array( 'tabs'    => 'mailing.form' )
-    );
+    // gestione follow-up mailing ( commentata, vedi sopra )
+    // $p['mailing.form.promemoria'] = array(
+    //     'sitemap'           => false,
+    //     'icon'              => '<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',
+    //     'title'             => array( $l        => 'follow-up' ),
+    //     'h1'                => array( $l        => 'follow-up' ),
+    //     'parent'            => array( 'id'      => 'mailing.view' ),
+    //     'template'          => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'mailing.form.promemoria.twig' ),
+    //     'macro'             => array( $m . '_src/_inc/_macro/_mailing.form.promemoria.php' ),
+    //     'auth'              => array( 'groups'  => array(   'roots' ) ),
+    //     'etc'               => array( 'tabs'    => 'mailing.form' )
+    // );
 
     // gestione invio mailing
     $p['mailing.form.invio'] = array(
