@@ -1049,6 +1049,7 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_file,
 		audio.id_categoria_prodotti,
 		audio.id_marchio,
+		audio.id_categoria_marchi,
 		audio.id_risorsa,
 		audio.id_categoria_risorse,
 		audio.id_notizia,
@@ -1632,6 +1633,35 @@ CREATE OR REPLACE VIEW categorie_annunci_view AS
 	GROUP BY categorie_annunci.id
 ;
 
+-- | 090000003500
+
+-- categorie_marchi_view
+CREATE OR REPLACE VIEW categorie_marchi_view AS
+	SELECT
+		categorie_marchi.id,
+		categorie_marchi.id_genitore,
+		categorie_marchi.ordine,
+		categorie_marchi.codice,
+		categorie_marchi.nome,
+		categorie_marchi.template,
+		categorie_marchi.schema_html,
+		categorie_marchi.tema_css,
+		categorie_marchi.se_sitemap,
+		categorie_marchi.se_cacheable,
+		categorie_marchi.id_sito,
+		categorie_marchi.id_pagina,
+		categorie_marchi.data_archiviazione,
+		count( c1.id ) AS figli,
+		count( marchi_categorie.id ) AS membri,
+		categorie_marchi.id_account_inserimento,
+		categorie_marchi.id_account_aggiornamento,
+		categorie_marchi_path( categorie_marchi.id ) AS __label__
+	FROM categorie_marchi
+		LEFT JOIN categorie_marchi AS c1 ON c1.id_genitore = categorie_marchi.id
+		LEFT JOIN marchi_categorie ON marchi_categorie.id_categoria = categorie_marchi.id
+	GROUP BY categorie_marchi.id
+;
+
 -- | 090000003700
 
 -- categorie_notizie_view
@@ -2024,6 +2054,7 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 		contenuti.id_categoria_prodotti,                        --
 		contenuti.id_caratteristica,                            --
 		contenuti.id_marchio,                                   --
+		contenuti.id_categoria_marchi,                          --
 		contenuti.id_file,                                      --
 		contenuti.id_immagine,                                  --
 		contenuti.id_video,                                     --
@@ -3161,6 +3192,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_pagina,
 		file.id_categoria_prodotti,
 		file.id_marchio,
+		file.id_categoria_marchi,
 		file.id_risorsa,
 		file.id_categoria_risorse,
 		file.id_notizia,
@@ -3313,6 +3345,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_file,
 		immagini.id_categoria_prodotti,
 		immagini.id_marchio,
+		immagini.id_categoria_marchi,
 		immagini.id_risorsa,
 		immagini.id_categoria_risorse,
 		immagini.id_notizia,
@@ -3866,6 +3899,7 @@ CREATE OR REPLACE VIEW macro_view AS                                            
     macro.id_articolo,                                                                   --
     macro.id_categoria_prodotti,                                                         --
     macro.id_marchio,                                                                    --
+    macro.id_categoria_marchi,                                                           --
     macro.id_notizia,                                                                    --
     macro.id_annuncio,                                                                   --
     macro.id_categoria_notizie,                                                          --
@@ -4097,13 +4131,45 @@ CREATE OR REPLACE VIEW mailing_mail_view AS                                     
 CREATE OR REPLACE VIEW `marchi_view` AS
 	SELECT
 		marchi.id,
+		marchi.nome,
 		marchi.id_produttore,
 		produttori.denominazione AS produttore,
-		marchi.nome,
+		marchi.note,
+		marchi.template,
+		marchi.schema_html,
+		marchi.tema_css,
+		marchi.se_sitemap,
+		marchi.se_cacheable,
+		marchi.id_sito,
+		marchi.id_pagina,
 		marchi.data_archiviazione,
+		marchi.id_account_inserimento,
+		marchi.id_account_aggiornamento,
 		marchi.nome AS __label__
 	FROM marchi
-	LEFT JOIN anagrafica AS produttori ON produttori.id = marchi.id_produttore
+		LEFT JOIN anagrafica AS produttori ON produttori.id = marchi.id_produttore
+;
+
+-- | 090000020400
+
+-- marchi_categorie_view
+CREATE OR REPLACE VIEW `marchi_categorie_view` AS
+	SELECT
+		marchi_categorie.id,
+		marchi_categorie.ordine,
+		marchi_categorie.id_marchio,
+		marchi.nome AS marchio,
+		marchi_categorie.id_categoria,
+		categorie_marchi_path( marchi_categorie.id_categoria ) AS categoria,
+		marchi_categorie.id_account_inserimento,
+		marchi_categorie.id_account_aggiornamento,
+		concat(
+			marchi.nome,
+			' / ',
+			categorie_marchi_path( marchi_categorie.id_categoria )
+		) AS __label__
+	FROM marchi_categorie
+		LEFT JOIN marchi ON marchi.id = marchi_categorie.id_marchio
 ;
 
 -- | 090000020601
@@ -4323,6 +4389,8 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
 		menu.id_lingua,                                         --
 		menu.id_pagina,                                         --
 		menu.id_categoria_prodotti,                             --
+		menu.id_marchio,                                        --
+		menu.id_categoria_marchi,                               --
 		menu.id_categoria_notizie,                              --
 		menu.id_categoria_annunci,                              --
 		menu.id_categoria_risorse,                              --
@@ -4382,6 +4450,8 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_prodotto,
 		metadati.id_articolo,
 		metadati.id_categoria_prodotti,
+		metadati.id_marchio,
+		metadati.id_categoria_marchi,
 		metadati.id_notizia,
 		metadati.id_annuncio,
 		metadati.id_categoria_notizie,
@@ -5458,6 +5528,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
 		pubblicazioni.id_categoria_progetti,                    --
 		pubblicazioni.id_banner,                                --
 		pubblicazioni.id_marchio,                               --
+		pubblicazioni.id_categoria_marchi,                      --
 		pubblicazioni.timestamp_inizio,                         --
 		pubblicazioni.timestamp_fine,                           --
 		concat_ws(                                              --
@@ -6001,6 +6072,7 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_articoli,
 		ruoli_audio.se_categorie_prodotti,
 		ruoli_audio.se_marchi,
+		ruoli_audio.se_categorie_marchi,
 		ruoli_audio.se_notizie,
 		ruoli_audio.se_categorie_notizie,
 		ruoli_audio.se_annunci,
@@ -6084,6 +6156,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_articoli,
 		ruoli_file.se_categorie_prodotti,
 		ruoli_file.se_marchi,
+		ruoli_file.se_categorie_marchi,
 		ruoli_file.se_notizie,
 		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
@@ -6116,6 +6189,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_articoli,                             --
 		ruoli_immagini.se_categorie_prodotti,                   --
 		ruoli_immagini.se_marchi,                   --
+		ruoli_immagini.se_categorie_marchi,                   --
 		ruoli_immagini.se_notizie,                              --
 		ruoli_immagini.se_categorie_notizie,                    --
 		ruoli_immagini.se_risorse,                              --
@@ -6248,6 +6322,7 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_articoli,
 		ruoli_video.se_categorie_prodotti,
 		ruoli_video.se_marchi,
+		ruoli_video.se_categorie_marchi,
 		ruoli_video.se_notizie,
 		ruoli_video.se_categorie_notizie,
 		ruoli_video.se_annunci,
@@ -7752,6 +7827,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_articolo,
 		video.id_categoria_prodotti,
 		video.id_marchio,
+		video.id_categoria_marchi,
 		video.id_risorsa,
 		video.id_categoria_risorse,
 		video.id_notizia,

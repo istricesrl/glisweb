@@ -550,6 +550,145 @@ CREATE
 
 END;
 
+-- | 070000003500
+
+-- categorie_marchi_path
+DROP FUNCTION IF EXISTS `categorie_marchi_path`;
+
+-- | 070000003501
+
+-- categorie_marchi_path
+-- verifica: 2021-06-01 18:34 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_marchi_path`( `p1` BIGINT( 20 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_marchi_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_marchi.id_genitore,
+				categorie_marchi.nome
+			FROM categorie_marchi
+			WHERE categorie_marchi.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000003510
+
+-- categorie_marchi_path_check
+DROP FUNCTION IF EXISTS `categorie_marchi_path_check`;
+
+-- | 070000003511
+
+-- categorie_marchi_path_check
+-- verifica: 2021-06-01 18:35 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_marchi_path_check`( `p1` BIGINT( 20 ), `p2` BIGINT( 20 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 bigint( 20 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_marchi_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				categorie_marchi.id_genitore
+			FROM categorie_marchi
+			WHERE categorie_marchi.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000003520
+
+-- categorie_marchi_path_find_ancestor
+DROP FUNCTION IF EXISTS `categorie_marchi_path_find_ancestor`;
+
+-- | 070000003521
+
+-- categorie_marchi_path_find_ancestor
+-- verifica: 2021-05-23 18:35 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_marchi_path_find_ancestor`( `p1` BIGINT( 20 ) ) RETURNS BIGINT( 20 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 bigint( 20 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_marchi_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 bigint( 20 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_marchi.id_genitore,
+				categorie_marchi.id
+			FROM categorie_marchi
+			WHERE categorie_marchi.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000003700
 
 -- categorie_notizie_path

@@ -805,6 +805,7 @@ CREATE TABLE IF NOT EXISTS `audio` (                            --
   `id_file` bigint(20) DEFAULT NULL,                              -- chiave esterna per il file descritto
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
   `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di marchi descritta
   `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
   `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
   `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
@@ -1329,7 +1330,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (               --
 --
 -- gli annunci si associano alle categorie tramite annunci_categorie, anche a piu' d'una. Ogni categoria genera una
 -- pagina del sito, quindi porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito,
--- id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso modello ( annunci, notizie, prodotti,
+-- id_pagina ) ed e' una delle sei tabelle categorie_* che seguono lo stesso modello ( annunci, marchi, notizie, prodotti,
 -- progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e vista ).
 --
 -- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
@@ -1338,6 +1339,47 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (               --
 -- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
 -- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
 CREATE TABLE IF NOT EXISTS `categorie_annunci` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della categoria
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della categoria va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della categoria si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
+
+-- | 010000003500
+
+-- categorie_marchi
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle categorie dei marchi
+--
+-- i marchi si associano alle categorie tramite marchi_categorie, anche a piu' d'una, e le categorie sono l'albero
+-- di navigazione delle pagine dei marchi. Ogni categoria genera una pagina del sito ( modulo prodotti, da scrivere:
+-- TODO di glisdev ), quindi porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable,
+-- id_sito, id_pagina ) ed e' una delle sei tabelle categorie_* che seguono lo stesso modello ( annunci, marchi,
+-- notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e vista ).
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_marchi` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
@@ -1369,8 +1411,8 @@ CREATE TABLE IF NOT EXISTS `categorie_annunci` (                  --
 --
 -- le notizie si associano alle categorie tramite notizie_categorie, anche a piu' d'una. Ogni categoria genera una
 -- pagina del sito ( modulo notizie, _310.pages.php ), quindi porta il blocco web ( template, schema_html, tema_css,
--- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso
--- modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
+-- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle sei tabelle categorie_* che seguono lo stesso
+-- modello ( annunci, marchi, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
 -- vista ).
 --
 -- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
@@ -1410,8 +1452,8 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (                  --
 --
 -- i prodotti si associano alle categorie tramite prodotti_categorie, anche a piu' d'una. Ogni categoria genera una
 -- pagina del sito ( modulo prodotti, _310.pages.php ), quindi porta il blocco web ( template, schema_html, tema_css,
--- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso
--- modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
+-- se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle sei tabelle categorie_* che seguono lo stesso
+-- modello ( annunci, marchi, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e
 -- vista ).
 --
 -- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
@@ -1451,7 +1493,7 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (                 --
 --
 -- i progetti si associano alle categorie tramite progetti_categorie, anche a piu' d'una. Ogni categoria puo' generare
 -- una pagina del sito, quindi porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito,
--- id_pagina ) ed e' una delle cinque tabelle categorie_* che seguono lo stesso modello ( annunci, notizie, prodotti,
+-- id_pagina ) ed e' una delle sei tabelle categorie_* che seguono lo stesso modello ( annunci, marchi, notizie, prodotti,
 -- progetti, risorse: stesse colonne, indici, chiavi esterne, funzioni _path e vista ).
 --
 -- NOTA e' l'unica delle cinque con dei flag di dominio ( se_ordinario, se_straordinario, se_disciplina, se_classe,
@@ -1500,8 +1542,8 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (                --
 --
 -- le risorse si associano alle categorie tramite risorse_categorie, anche a piu' d'una. Ogni categoria genera una
 -- pagina del sito ( oggi solo il modulo legacy 3500.risorse, _310.pages.php ), quindi porta il blocco web ( template,
--- schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle cinque tabelle categorie_*
--- che seguono lo stesso modello ( annunci, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi
+-- schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) ed e' una delle sei tabelle categorie_*
+-- che seguono lo stesso modello ( annunci, marchi, notizie, prodotti, progetti, risorse: stesse colonne, indici, chiavi
 -- esterne, funzioni _path e vista ).
 --
 -- NOTA id_pagina e' la pagina sotto cui si appende la categoria nell'albero del sito; id_sito non ha chiave esterna
@@ -1942,6 +1984,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (                        --
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria dei prodotti
   `id_caratteristica` bigint(20) DEFAULT NULL,                     -- chiave esterna per la caratteristica
   `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi
   `id_file` bigint(20) DEFAULT NULL,                               -- chiave esterna per il file
   `id_immagine` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'immagine
   `id_video` bigint(20) DEFAULT NULL,                              -- chiave esterna per il video
@@ -2864,6 +2907,7 @@ CREATE TABLE IF NOT EXISTS `file` (                             --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina descritta
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
   `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di marchi descritta
   `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
   `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
   `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
@@ -3042,6 +3086,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                         --
   `id_file` bigint(20) DEFAULT NULL,                              -- chiave esterna per il file descritto
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
   `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di marchi descritta
   `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
   `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
   `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
@@ -3537,6 +3582,7 @@ CREATE TABLE IF NOT EXISTS `macro` (                            --
   `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la categoria dei prodotti
   `id_marchio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il marchio
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di marchi
   `id_notizia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la notizia
   `id_annuncio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'annuncio
   `id_categoria_notizie` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria delle notizie
@@ -3820,18 +3866,59 @@ CREATE TABLE IF NOT EXISTS `mailing_mail` (                     --
 -- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene i marchi dei prodotti
-CREATE TABLE IF NOT EXISTS `marchi` (
-  `id` bigint(20) NOT NULL,
-  `id_produttore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
-  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- un marchio raccoglie i prodotti che lo portano ( prodotti.id_marchio ) e puo' indicare il produttore in anagrafica.
+-- Ogni marchio genera una pagina del sito, e le pagine dei marchi si organizzano nell'albero di navigazione delle
+-- categorie_marchi tramite marchi_categorie; per questo il marchio porta il blocco web ( template, schema_html,
+-- tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) come le altre entita' che generano pagine.
+--
+-- NOTA id_pagina e' la pagina sotto cui si appende il marchio nell'albero del sito; id_sito non ha chiave esterna
+-- perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- NOTA oggi nessun modulo genera le pagine dei marchi: lo schema c'e', il codice ( _310.pages.php del modulo
+-- prodotti e la gestione delle categorie dei marchi ) e' nel TODO di glisdev.
+CREATE TABLE IF NOT EXISTS `marchi` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                                  -- nome del marchio
+  `id_produttore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica del produttore
+  `note` text DEFAULT NULL,                                       -- note sul marchio
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina del marchio
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina del marchio va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina del marchio si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
+
+-- | 010000020400
+
+-- marchi_categorie
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa molti a molti i marchi alle categorie dei marchi
+--
+-- questa tabella contiene le associazioni molti a molti tra i marchi e le categorie_marchi, cioe' l'albero di
+-- navigazione in cui si organizzano le pagine dei marchi; le categorie fanno parte della scheda del marchio, quindi
+-- la chiave verso marchi si segue
+--
+CREATE TABLE IF NOT EXISTS `marchi_categorie` (               --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_marchio` bigint(20) DEFAULT NULL,                       -- chiave esterna per il marchio
+  `id_categoria` bigint(20) DEFAULT NULL,                     -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000020600
 
@@ -3957,6 +4044,8 @@ CREATE TABLE IF NOT EXISTS `menu` (                             --
   `id_lingua` bigint(20) DEFAULT NULL,                             -- chiave esterna per la lingua della voce di menu
   `id_pagina` bigint(20) DEFAULT NULL,                             -- chiave esterna per la pagina collegata alla voce di menu
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria di prodotti collegata alla voce di menu
+  `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio collegato alla voce di menu
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi collegata alla voce di menu
   `id_categoria_notizie` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di notizie collegata alla voce di menu
   `id_categoria_annunci` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di annunci collegata alla voce di menu
   `id_categoria_risorse` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di risorse collegata alla voce di menu
@@ -4014,6 +4103,8 @@ CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato al metadato
   `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato al metadato
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,
+  `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio collegato al metadato
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi collegata al metadato
   `id_notizia` bigint(20) DEFAULT NULL,
   `id_annuncio` bigint(20) DEFAULT NULL,
   `id_categoria_notizie` bigint(20) DEFAULT NULL,
@@ -4904,6 +4995,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
   `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- ID della categoria progetti
   `id_banner` bigint(20) DEFAULT NULL,                           -- ID del banner
   `id_marchio` bigint(20) DEFAULT NULL,                          -- ID del marchio
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                 -- ID della categoria di marchi
   `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
   `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio pubblicazione
   `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine pubblicazione
@@ -5449,6 +5541,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
   `se_marchi` tinyint(1) DEFAULT NULL,
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_annunci` tinyint(1) DEFAULT NULL,
@@ -5548,6 +5641,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
   `se_marchi` tinyint(1) DEFAULT NULL,
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -5584,6 +5678,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_articoli` tinyint(1) DEFAULT NULL,                        -- se articoli
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- se categorie prodotti
   `se_marchi` tinyint(1) DEFAULT NULL,                          -- se marchi
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,                -- se categorie marchi
   `se_notizie` tinyint(1) DEFAULT NULL,                         -- se notizie
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
@@ -5751,6 +5846,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
   `se_marchi` tinyint(1) DEFAULT NULL,
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_annunci` tinyint(1) DEFAULT NULL,
@@ -7441,6 +7537,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_articolo` bigint(20) DEFAULT NULL,
   `id_categoria_prodotti` bigint(20) DEFAULT NULL,
   `id_marchio` bigint(20) DEFAULT NULL,
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,
   `id_risorsa` bigint(20) DEFAULT NULL,
   `id_categoria_risorse` bigint(20) DEFAULT NULL,
   `id_notizia` bigint(20) DEFAULT NULL,

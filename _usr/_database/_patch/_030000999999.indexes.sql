@@ -435,6 +435,7 @@ ALTER TABLE `audio`
 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`),
@@ -823,6 +824,26 @@ ALTER TABLE `categorie_annunci`
 -- categorie_annunci
 ALTER TABLE `categorie_annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003500
+
+-- categorie_marchi
+ALTER TABLE `categorie_marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`);
+
+-- | 030000003501
+
+-- categorie_marchi
+ALTER TABLE `categorie_marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003700
 
 -- categorie_notizie
@@ -1151,6 +1172,7 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`),
 	ADD UNIQUE KEY `unica_caratteristica` (`id_caratteristica`,`id_lingua`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_lingua`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_lingua`),
 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_lingua`),
 	ADD UNIQUE KEY `unica_immagine` (`id_immagine`,`id_lingua`),
 	ADD UNIQUE KEY `unica_video` (`id_video`,`id_lingua`),
@@ -1730,6 +1752,7 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`),
@@ -1846,6 +1869,7 @@ ALTER TABLE `immagini`
 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_ruolo`,`id_lingua`,`path`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`),
@@ -2171,6 +2195,7 @@ ALTER TABLE `macro`
 	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`macro`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`macro`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`macro`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`macro`),
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`macro`),
 	ADD UNIQUE KEY `unica_annuncio` (`id_annuncio`,`macro`),
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`macro`),
@@ -2324,13 +2349,34 @@ ALTER TABLE `marchi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_produttore` (`id_produttore`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_produttore`,`id_sito`,`id_pagina`);
 
 -- | 030000020201
 
 -- marchi
 ALTER TABLE `marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000020400
+
+-- marchi_categorie
+ALTER TABLE `marchi_categorie`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_marchio`,`id_categoria`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_marchio`,`id_categoria`,`ordine`);
+
+-- | 030000020401
+
+-- marchi_categorie
+ALTER TABLE `marchi_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000020600
 
@@ -2414,12 +2460,16 @@ ALTER TABLE `menu`
  	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_pagina`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_categoria_marchi` (`id_categoria_marchi`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
@@ -2458,6 +2508,8 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_lingua`,`nome`),
+	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_lingua`,`nome`),
@@ -3113,6 +3165,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_banner` (`id_banner`),
 	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_categoria_marchi` (`id_categoria_marchi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 	
@@ -5034,6 +5087,7 @@ ALTER TABLE `video`
 	ADD KEY `id_vano` (`id_vano`),
 	ADD KEY `id_valutazione` (`id_valutazione`),
 	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_categoria_marchi` (`id_categoria_marchi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
