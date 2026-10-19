@@ -3700,20 +3700,23 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (                        --
 -- e una verifica si paga una volta per tutta la durata della cache; la scrivono e la leggono le
 -- funzioni di _src/_lib/_emailable.utils.php
 --
+-- NOTA la tabella la scrive il server e non un utente, quindi id_account_inserimento e
+-- id_account_aggiornamento restano NULL; la scala dei verdetti sta in tipologie_mail_status
+--
 CREATE TABLE IF NOT EXISTS `mail_status` (                    --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
-  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo mail verificato, normalizzato in minuscolo (chiave logica)
-  `dominio` char(128) DEFAULT NULL,                           -- dominio dell'indirizzo, per le statistiche per dominio
   `id_tipologia` bigint(20) DEFAULT NULL,                     -- chiave esterna per lo stato dell'indirizzo (tipologie_mail_status)
+  `indirizzo` char(255) DEFAULT NULL,                         -- indirizzo mail verificato, normalizzato in minuscolo (chiave logica)
+  `dominio` char(255) DEFAULT NULL,                           -- dominio dell'indirizzo, per le statistiche per dominio
   `stato` char(32) DEFAULT NULL,                              -- stato grezzo restituito dal servizio di verifica (state)
   `motivo` char(64) DEFAULT NULL,                             -- motivo grezzo restituito dal servizio di verifica (reason)
   `punteggio` int(11) DEFAULT NULL,                           -- punteggio restituito dal servizio di verifica (score, da 0 a 100)
+  `tentativi` int(11) DEFAULT 0,                              -- numero di verifiche tentate sull'indirizzo
+  `note` text DEFAULT NULL,                                   -- note sulla verifica
   `se_accept_all` tinyint(1) DEFAULT NULL,                    -- flag che indica se il server accetta qualunque indirizzo
   `se_ruolo` tinyint(1) DEFAULT NULL,                         -- flag che indica se e' un indirizzo di ruolo (info@, ufficio@)
   `se_temporanea` tinyint(1) DEFAULT NULL,                    -- flag che indica se e' una casella usa e getta
   `se_gratuita` tinyint(1) DEFAULT NULL,                      -- flag che indica se e' una casella su dominio gratuito
-  `note` text DEFAULT NULL,                                   -- note sulla verifica
-  `tentativi` int(11) DEFAULT 0,                              -- numero di verifiche tentate sull'indirizzo
   `timestamp_verifica` int(11) DEFAULT NULL,                  -- timestamp dell'ultima verifica andata a buon fine, regola la scadenza della cache
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento

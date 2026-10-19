@@ -3993,18 +3993,20 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 CREATE OR REPLACE VIEW `mail_status_view` AS
 	SELECT
 		mail_status.id,
-		mail_status.indirizzo,
-		mail_status.dominio,
 		mail_status.id_tipologia,
 		tipologie_mail_status.nome AS tipologia,
+		mail_status.indirizzo,
+		mail_status.dominio,
 		mail_status.stato,
 		mail_status.motivo,
 		mail_status.punteggio,
+		mail_status.tentativi,
 		mail_status.se_accept_all,
 		mail_status.se_ruolo,
 		mail_status.se_temporanea,
 		mail_status.se_gratuita,
-		mail_status.tentativi,
+		mail_status.timestamp_verifica,
+		from_unixtime( mail_status.timestamp_verifica, '%Y-%m-%d %H:%i' ) AS data_ora_verifica,
 		mail_status.id_account_inserimento,
 		mail_status.id_account_aggiornamento,
 		concat_ws(
