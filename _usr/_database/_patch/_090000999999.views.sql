@@ -4241,10 +4241,13 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		mastri_path( mastri_articoli.id_mastro ) AS mastro,
 		mastri_articoli.id_articolo,
 		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		mastri_articoli.id_ruolo,
+		ruoli_mastri.nome AS ruolo,
 		mastri_articoli.scorta_minima,
 		mastri_articoli.scorta_massima,
 		mastri_articoli.id_udm,
 		udm.sigla AS udm,
+		mastri_articoli.note,
 		mastri_articoli.id_account_inserimento,
 		mastri_articoli.id_account_aggiornamento,
 		concat_ws(
@@ -4255,6 +4258,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 	FROM mastri_articoli
 		LEFT JOIN articoli ON articoli.id = mastri_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN ruoli_mastri ON ruoli_mastri.id = mastri_articoli.id_ruolo
 		LEFT JOIN udm ON udm.id = mastri_articoli.id_udm
 ;
 

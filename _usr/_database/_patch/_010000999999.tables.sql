@@ -3984,29 +3984,34 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: collega gli articoli ai mastri di magazzino in cui sono collocati, con le soglie di scorta
+-- funzione: collega gli articoli ai mastri di magazzino, col ruolo della collocazione e le soglie di scorta
 --
--- questa tabella dice quali articoli stanno in quale ubicazione di magazzino e, se l'ubicazione e'
--- sorvegliata, sotto quale giacenza va rifornita ( scorta_minima ) e fin dove si riempie
--- ( scorta_massima ); le soglie sono scritte nell'unita' id_udm, e dove id_udm e' vuoto
--- nell'unita' inventariale dell'articolo. La legge il task
--- _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php; lo schema e' quello del deploy
--- in cui il sottoscorta e' nato, portato a bigint come il resto dei file di base
+-- questa tabella dice in quali ubicazioni di magazzino sta un articolo e che parte fa ciascuna per lui:
+-- il ruolo ( ruoli_mastri ) distingue p.es. il mastro in cui l'articolo va collocato di preferenza, quello
+-- di prelievo preferenziale e quello di stoccaggio preferenziale; quando l'articolo si vende lo si preleva
+-- normalmente dal mastro di prelievo, e quando questo va sotto scorta lo si riassortisce trasferendo merce
+-- dal mastro di stoccaggio; se l'ubicazione e' sorvegliata, scorta_minima dice sotto quale giacenza va
+-- rifornita e scorta_massima fin dove si riempie, nell'unita' id_udm o, dove id_udm e' vuoto, nell'unita'
+-- inventariale dell'articolo; una coppia mastro / articolo compare una volta sola
+--
+-- NOTA il ruolo si cerca per nome e non per id ( trovaUbicazioneBulk() del modulo 0500.mastri cerca
+-- 'stoccaggio' ), perche' i file di base non caricano righe in ruoli_mastri e gli id cambiano fra deploy;
+-- le soglie le legge il task _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php
 --
 CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine della collocazione fra quelle dell'articolo
   `codice` char(32) DEFAULT NULL,                               -- codice della collocazione
-  `id_ruolo` bigint(20) DEFAULT NULL,                              -- ruolo della collocazione
-  `id_mastro` bigint(20) DEFAULT NULL,                             -- chiave esterna per il mastro ( l'ubicazione )
-  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
+  `id_mastro` bigint(20) DEFAULT NULL,                          -- chiave esterna per il mastro ( l'ubicazione )
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo della collocazione ( ruoli_mastri )
   `scorta_minima` decimal(21,2) DEFAULT NULL,                   -- sotto questa giacenza l'ubicazione va rifornita; NULL = nessuna soglia
   `scorta_massima` decimal(21,2) DEFAULT NULL,                  -- fin qui si riempie rifornendo; NULL = fino alla scorta minima
-  `id_udm` bigint(20) DEFAULT NULL,                                -- chiave esterna per l'unita' di misura in cui sono scritte le soglie
+  `id_udm` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'unita' di misura in cui sono scritte le soglie
   `note` text DEFAULT NULL,                                     -- note sulla collocazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la collocazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la collocazione
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la collocazione
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la collocazione
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 

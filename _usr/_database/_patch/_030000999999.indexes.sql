@@ -2409,15 +2409,16 @@ ALTER TABLE `mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mastri_articoli
 ALTER TABLE `mastri_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
+	ADD UNIQUE KEY `unica` (`id_mastro`,`id_articolo`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_mastro` (`id_mastro`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_udm` (`id_udm`),
-	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_mastro`,`id_articolo`,`scorta_minima`,`scorta_massima`);
+	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_mastro`,`id_articolo`,`id_ruolo`);
 
 -- | 030000020701
 
