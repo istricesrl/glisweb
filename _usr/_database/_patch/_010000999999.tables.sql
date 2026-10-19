@@ -3926,28 +3926,57 @@ CREATE TABLE IF NOT EXISTS `marchi_categorie` (               --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i mastri contabili
+-- funzione: contiene i mastri e i conti, cioè i contenitori di tutto ciò che il framework conta
+-- entità: questa tabella corrisponde all'entità mastro
 --
--- questa tabella contiene i mastri contabili, con le informazioni principali
+-- un mastro è un contenitore in cui si conta qualcosa: articoli in un magazzino, ore in un registro, denaro in un
+-- conto, crediti in un borsellino; cosa si conta lo dice la tipologia ( tipologie_mastri, coi flag se_magazzino,
+-- se_registro, se_conto, se_credito ), e i movimenti stanno nelle tabelle che spostano quantità da un mastro di
+-- provenienza a uno di destinazione ( le righe dei documenti, attivita, pagamenti, crediti ); la tabella è ricorsiva
+-- perché i mastri si articolano ad albero anche molto profondo ( un magazzino con le sue aree, scaffali e ripiani,
+-- un piano dei conti ), e le giacenze di un mastro comprendono quelle dei suoi discendenti; l'identità di un mastro
+-- è il codice, unico in tutta la tabella, mentre il nome è libero e può ripetersi fra fratelli ( p.es. quando
+-- descrive la tipologia merceologica di uno scaffale ); un mastro può appartenere a un'anagrafica, a un account o
+-- a un progetto ( il registro ore di una persona, il borsellino di crediti di un account, il magazzino di una
+-- commessa ), e un magazzino può essere collocato nello spazio; un mastro dismesso si archivia e non si cancella,
+-- perché i movimenti che lo puntano devono restare leggibili
+--
+-- NOTA è forse la tabella più legata all'applicazione di tutto il framework: giacenze, movimentazioni, report e
+-- viste statiche dipendono dalla sua struttura, e la logica di calcolo è comune a tutte le tipologie e appartiene
+-- al modulo dei mastri; ogni modifica va pensata per tutte le famiglie insieme
+--
+-- NOTA un magazzino si colloca in due modi: id_anagrafica_indirizzi lo mette nella sede di un'anagrafica ( il
+-- recapito, che non si può cancellare finché un mastro lo usa ), mentre id_indirizzo, id_edificio, id_immobile e
+-- id_vano lo collocano su un livello della catena della geografia fisica, fino alla stanza ( p.es. lo scaffale di
+-- una biblioteca ); i mastri che non sono magazzini di solito non hanno collocazione
+--
+-- NOTA prefisso_modula e codice_modula sono i codici del mastro nel magazzino verticale Modula, letti dal modulo
+-- standard di integrazione con Modula; hanno la lunghezza dei codici di quel sistema
 --
 CREATE TABLE IF NOT EXISTS `mastri` (                           --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna ricorsiva per il mastro genitore
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia del mastro
-  `codice` char(32) DEFAULT NULL,                               -- codice del mastro
-  `prefisso_modula` char(64) DEFAULT NULL,                      -- prefisso per il codice modula
-  `codice_modula` char(64) DEFAULT NULL,                        -- codice modula
-  `id_anagrafica_indirizzi` bigint(20) DEFAULT NULL,               -- chiave esterna per l'anagrafica indirizzi collegata al mastro
-  `id_anagrafica` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al mastro
-  `id_account` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'account collegato al mastro
-  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al mastro
-  `nome` char(64) DEFAULT NULL,                                 -- nome del mastro
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il mastro che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia del mastro
+  `codice` char(32) DEFAULT NULL,                               -- codice del mastro, unico
+  `nome` char(255) DEFAULT NULL,                                -- nome del mastro
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica a cui appartiene il mastro
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account a cui appartiene il mastro
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto a cui appartiene il mastro
+  `id_anagrafica_indirizzi` bigint(20) DEFAULT NULL,            -- chiave esterna per la sede dell'anagrafica dove si trova il mastro
+  `id_indirizzo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'indirizzo dove si trova il mastro
+  `id_edificio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio dove si trova il mastro
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile dove si trova il mastro
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano dove si trova il mastro
+  `prefisso_modula` char(64) DEFAULT NULL,                      -- prefisso del mastro nel magazzino Modula
+  `codice_modula` char(64) DEFAULT NULL,                        -- codice del mastro nel magazzino Modula
   `note` text DEFAULT NULL,                                     -- note sul mastro
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il mastro
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il mastro
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato il mastro
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il mastro
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
 -- | 010000020700
 
