@@ -3427,18 +3427,23 @@ CREATE TABLE IF NOT EXISTS `listini` (                          --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione listini e clienti
+-- funzione: dice a quali clienti si applica un listino
 --
-CREATE TABLE IF NOT EXISTS `listini_clienti` (
-  `id` bigint(20) NOT NULL,
-  `id_listino` bigint(20) DEFAULT NULL,
-  `id_cliente` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ogni riga applica un listino ( listini ) a un cliente ( anagrafica ); è una delle regole con cui i listini collegano
+-- i prezzi agli articoli, accanto a quella per zona ( listini_zone ): quando il listino di un carrello si sceglie in
+-- automatico, il listino del cliente intestatario ( o dell'anagrafica dell'account collegato ) vince su quello della
+-- zona e sul default; se un cliente ha più listini vale il primo per ordine
+--
+CREATE TABLE IF NOT EXISTS `listini_clienti` (                  --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- priorità del listino fra quelli dello stesso cliente
+  `id_listino` bigint(20) DEFAULT NULL,                         -- chiave esterna per il listino
+  `id_cliente` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica del cliente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000017490
 

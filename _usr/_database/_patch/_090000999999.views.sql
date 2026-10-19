@@ -3758,36 +3758,34 @@ CREATE OR REPLACE VIEW listini_view AS                                          
 
 -- listini_clienti_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-24 18:20 Fabio Mosti
-CREATE OR REPLACE VIEW `listini_clienti_view` AS
-	SELECT
-		listini_clienti.id,
-		listini_clienti.id_listino,
-		concat( listini.nome, ' ', valute.iso4217 ) AS listino,
-		listini_clienti.id_cliente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
-		listini_clienti.ordine,
-		listini_clienti.id_account_inserimento,
-		listini_clienti.id_account_aggiornamento,
-		concat(
-			listini.nome,
-			' ',
-			valute.iso4217,
-			' / ',
-			coalesce(
-				a1.denominazione,
-				concat(
-					a1.cognome,
-					' ',
-					a1.nome
-				), ''
-			)
-		) AS __label__
-	FROM listini_clienti
-		LEFT JOIN listini ON listini.id = listini_clienti.id_listino
-		LEFT JOIN valute ON valute.id = listini.id_valuta
-		LEFT JOIN anagrafica AS a1 ON a1.id = listini_clienti.id_cliente
-;
+CREATE OR REPLACE VIEW listini_clienti_view AS                                           --
+  SELECT                                                                                 --
+    listini_clienti.id,                                                                  --
+    listini_clienti.ordine,                                                              --
+    listini_clienti.id_listino,                                                          --
+    listini.codice AS listino_codice,                                                    --
+    concat( listini.nome, ' ', valute.iso4217 ) AS listino,                              --
+    listini_clienti.id_cliente,                                                          --
+    coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,     --
+    a1.nome AS cliente_nome,                                                             --
+    a1.cognome AS cliente_cognome,                                                       --
+    a1.denominazione AS cliente_denominazione,                                           --
+    a1.codice_fiscale AS cliente_codice_fiscale,                                         --
+    a1.codice AS cliente_codice,                                                         --
+    listini_clienti.id_account_inserimento,                                              --
+    listini_clienti.id_account_aggiornamento,                                            --
+    concat(                                                                              --
+      listini.nome,                                                                      --
+      ' ',                                                                               --
+      valute.iso4217,                                                                    --
+      ' / ',                                                                             --
+      coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )               --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM listini_clienti                                                                   --
+    LEFT JOIN listini ON listini.id = listini_clienti.id_listino                         --
+    LEFT JOIN valute ON valute.id = listini.id_valuta                                    --
+    LEFT JOIN anagrafica AS a1 ON a1.id = listini_clienti.id_cliente                     --
+  ;                                                                                      --
 
 -- | 090000017491
 

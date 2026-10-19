@@ -2102,21 +2102,19 @@ ALTER TABLE `listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000017400
 
 -- listini_clienti
--- tipologia: tabella gestita
--- verifica: 2021-09-24 18:15 Fabio Mosti
 ALTER TABLE `listini_clienti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_listino`,`id_cliente`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_cliente` (`id_cliente`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_listino`,`id_cliente`);
 
 -- | 030000017401
 
 -- listini_clienti
--- tipologia: tabella gestita
 ALTER TABLE `listini_clienti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000017490
