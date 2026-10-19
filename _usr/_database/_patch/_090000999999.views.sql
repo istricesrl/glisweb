@@ -3791,29 +3791,29 @@ CREATE OR REPLACE VIEW listini_clienti_view AS                                  
 
 -- listini_zone_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-24 18:20 Fabio Mosti
-CREATE OR REPLACE VIEW `listini_zone_view` AS
-	SELECT
-		listini_zone.id,
-		listini_zone.id_listino,
-		concat( listini.nome, ' ', valute.iso4217 ) AS listino,
-		listini_zone.id_zona,
-		zone.nome AS zona,
-		listini_zone.ordine,
-		listini_zone.id_account_inserimento,
-		listini_zone.id_account_aggiornamento,
-		concat(
-			listini.nome,
-			' ',
-			valute.iso4217,
-			' / ',
-			zone.nome
-		) AS __label__
-	FROM listini_zone
-		LEFT JOIN listini ON listini.id = listini_zone.id_listino
-		LEFT JOIN valute ON valute.id = listini.id_valuta
-		LEFT JOIN zone ON zone.id = listini_zone.id_zona
-;
+CREATE OR REPLACE VIEW listini_zone_view AS                                              --
+  SELECT                                                                                 --
+    listini_zone.id,                                                                     --
+    listini_zone.ordine,                                                                 --
+    listini_zone.id_listino,                                                             --
+    listini.codice AS listino_codice,                                                    --
+    concat( listini.nome, ' ', valute.iso4217 ) AS listino,                              --
+    listini_zone.id_zona,                                                                --
+    zone.nome AS zona,                                                                   --
+    listini_zone.id_account_inserimento,                                                 --
+    listini_zone.id_account_aggiornamento,                                               --
+    concat(                                                                              --
+      listini.nome,                                                                      --
+      ' ',                                                                               --
+      valute.iso4217,                                                                    --
+      ' / ',                                                                             --
+      zone.nome                                                                          --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM listini_zone                                                                      --
+    LEFT JOIN listini ON listini.id = listini_zone.id_listino                            --
+    LEFT JOIN valute ON valute.id = listini.id_valuta                                    --
+    LEFT JOIN zone ON zone.id = listini_zone.id_zona                                     --
+  ;                                                                                      --
 
 -- | 090000018001
 

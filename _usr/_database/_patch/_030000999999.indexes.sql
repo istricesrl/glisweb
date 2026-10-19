@@ -2123,11 +2123,12 @@ ALTER TABLE `listini_clienti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `listini_zone`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_listino`,`id_zona`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_zona` (`id_zona`),
-	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_listino`,`id_zona`);
 
 -- | 030000017491
 
