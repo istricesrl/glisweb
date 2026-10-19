@@ -36,7 +36,7 @@
         } elseif( isset( $_REQUEST['__chiudi___esito'] ) && $_REQUEST['__chiudi___esito'] == 0 ) {
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE attivita SET data_attivita = NULL, timestamp_archiviazione = unix_timestamp(), timestamp_aggiornamento = unix_timestamp() 
+                'UPDATE attivita SET data_attivita = NULL, data_archiviazione = now(), timestamp_aggiornamento = unix_timestamp() 
                 WHERE id = ?',
                 array(
                     array( 's' => $_REQUEST['__chiudi___id_attivita'] )
@@ -47,7 +47,7 @@
     } elseif( isset( $_REQUEST['__archivia___id_attivita'] ) ) {
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE attivita SET timestamp_archiviazione = unix_timestamp(), timestamp_aggiornamento = unix_timestamp() 
+            'UPDATE attivita SET data_archiviazione = now(), timestamp_aggiornamento = unix_timestamp() 
             WHERE id = ?',
             array(
                 array( 's' => $_REQUEST['__archivia___id_attivita'] )
@@ -118,7 +118,7 @@
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'
 */
-        'timestamp_archiviazione' => 'archiviazione',
+        'data_archiviazione' => 'archiviazione',
         'discipline' => 'discipline',
         'id_progetto' => 'ID corso',
         'progetto' => 'corso',
@@ -142,7 +142,7 @@
         'nome' => 'text-left',
         'id_progetto' => 'd-none',
         'progetto' => 'text-left',
-        'timestamp_archiviazione' => 'd-none',
+        'data_archiviazione' => 'd-none',
         'discipline' => 'text-left',
         'luogo' => 'd-none',
         'ora_inizio' => 'd-none',
@@ -218,12 +218,12 @@
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 33;
 
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] ) ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] = 1;
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NN'] = NULL;
-    } elseif( empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] ) ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] = NULL;
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NN'] = 1;
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NL'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NL'] = 1;
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NN'] = NULL;
+    } elseif( empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NL'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NL'] = NULL;
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_archiviazione']['NN'] = 1;
     }
 
     // macro di default
@@ -265,7 +265,7 @@
                             .'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
                     }
 
-                    if( empty( $row['timestamp_archiviazione'] ) ) {
+                    if( empty( $row['data_archiviazione'] ) ) {
                         $onclick = "$('#__archivia___id_attivita').val('".$row['id']."'); $('#archivia_attivita').modal('show');";
                         $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-archive"></i></a>';
                     }

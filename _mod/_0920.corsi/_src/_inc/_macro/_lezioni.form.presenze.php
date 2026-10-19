@@ -53,7 +53,7 @@
         'anagrafica' => 'text-left',
         'id_progetto' => 'd-none',
         'progetto' => 'text-left',
-        'timestamp_archiviazione' => 'd-none',
+        'data_archiviazione' => 'd-none',
         'discipline' => 'text-left',
         NULL => 'nowrap'
     );
