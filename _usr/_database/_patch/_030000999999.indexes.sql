@@ -1816,10 +1816,11 @@ ALTER TABLE `gruppi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `iban`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`iban`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`intestazione`,`iban`);
+	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`intestazione`,`iban`);
 
 -- | 030000015401
 
@@ -2196,11 +2197,12 @@ ALTER TABLE `macro` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mail`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`indirizzo`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_anagrafica`,`indirizzo`,`se_notifiche`,`se_pec`);
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`id_ruolo`,`indirizzo`,`se_notifiche`,`se_pec`);
 
 -- | 030000018601
 

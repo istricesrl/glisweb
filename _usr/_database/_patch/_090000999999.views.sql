@@ -3264,6 +3264,7 @@ CREATE OR REPLACE VIEW `gruppi_view` AS
 CREATE OR REPLACE VIEW `iban_view` AS
 	SELECT
 		iban.id,
+		iban.ordine,
 		iban.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		iban.intestazione,
@@ -3884,32 +3885,38 @@ CREATE OR REPLACE VIEW macro_view AS                                            
 -- | 090000018600
 
 -- mail_view
-CREATE OR REPLACE VIEW `mail_view` AS                         --
-	SELECT                                                    --
-		mail.id,                                              --
-		mail.id_anagrafica,                                   --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat( a1.cognome, ' ', a1.nome ), ''            --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		mail.indirizzo,                                       --
-		mail.se_notifiche,                                    --
-		mail.se_pec,                                          --
-		mail.server,                                          --
-		mail.id_account_inserimento,                          --
-		mail.id_account_aggiornamento,                        --
-		concat(                                               --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ), ''        --
-            ),                                                --
-			' ',                                              --
-			mail.indirizzo                                    --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM mail                                                 --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = mail.id_anagrafica                     --
-;                                                             --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `mail_view` AS
+	SELECT
+		mail.id,
+		mail.ordine,
+		mail.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		mail.id_ruolo,
+		ruoli_mail.nome AS ruolo,
+		mail.indirizzo,
+		mail.server,
+		mail.note,
+		mail.se_notifiche,
+		mail.se_pec,
+		mail.id_account_inserimento,
+		mail.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				)
+			),
+			mail.indirizzo
+		) AS __label__
+	FROM mail
+		LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+		LEFT JOIN ruoli_mail ON ruoli_mail.id = mail.id_ruolo
+;
 
 -- | 090000018800
 

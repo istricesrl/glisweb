@@ -2985,8 +2985,12 @@ CREATE TABLE IF NOT EXISTS `gruppi` (                         --
 -- NOTA la chiave esterna verso l'anagrafica è CASCADE: un conto non ha senso senza la sua anagrafica; lo stesso
 -- conto non si registra due volte sulla stessa anagrafica ( chiave unica su id_anagrafica e iban )
 --
+-- NOTA il conto di default di un'anagrafica è il primo nell'ordine ( ORDER BY ordine IS NULL, ordine, id ),
+-- decisione del 2026-10-19 comune ai recapiti dell'anagrafica ( mail, telefoni, iban )
+--
 CREATE TABLE IF NOT EXISTS `iban` (                             --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine del conto fra quelli dell'anagrafica, il primo è quello di default
   `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica titolare del conto
   `intestazione` char(255) DEFAULT NULL,                          -- intestazione del conto
   `iban` char(34) DEFAULT NULL,                                   -- codice IBAN del conto
@@ -3555,25 +3559,40 @@ CREATE TABLE IF NOT EXISTS `macro` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene gli indirizzi mail collegati alle anagrafiche
+-- funzione: contiene gli indirizzi mail delle anagrafiche
 --
--- questa tabella contiene gli indirizzi mail collegati alle anagrafiche, con le informazioni relative al ruolo
--- dell'indirizzo, alle notifiche, alla PEC, al server di posta e alle
--- 
-CREATE TABLE IF NOT EXISTS `mail` (                           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_ruolo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il ruolo dell'indirizzo mail
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è collegata la mail
-  `indirizzo` char(128) DEFAULT NULL,                         -- indirizzo mail
-  `note` char(128) DEFAULT NULL,                              -- note sull'indirizzo mail
-  `se_notifiche` tinyint(1) DEFAULT NULL,                     -- se l'indirizzo mail è utilizzato per le notifiche
-  `se_pec` tinyint(1) DEFAULT NULL,                           -- se l'indirizzo mail è una PEC
-  `server` char(128) DEFAULT NULL,                            -- server di posta in uscita (SMTP)
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella contiene gli indirizzi mail di un'anagrafica, una riga per indirizzo, col ruolo dell'indirizzo
+-- ( ruoli_mail ) e i flag per le notifiche e la PEC; è il recapito a cui fanno riferimento l'account ( account.id_mail ),
+-- la PEC per lo SDI ( anagrafica.id_pec_sdi ), la posta in uscita ( mail_out, mail_sent ), i consensi e il mailing
+--
+-- NOTA una mail può non avere anagrafica: gli iscritti alla newsletter dal sito o importati entrano come solo
+-- indirizzo; la chiave unica su id_anagrafica e indirizzo non li protegge dai doppioni, perché due NULL per MySQL
+-- non sono uguali
+--
+-- NOTA la mail di default di un'anagrafica è la prima nell'ordine ( ORDER BY ordine IS NULL, ordine, id ); lo stesso
+-- vale dentro un filtro: la PEC di default è la prima fra quelle con se_pec, e così per le notifiche ( decisione del
+-- 2026-10-19, comune ai recapiti dell'anagrafica: mail, telefoni, iban )
+--
+-- NOTA la colonna server è il server SMTP da usare per spedire da questo indirizzo, pensato per la posta interna;
+-- l'invio dal server della casella è ancora da implementare
+--
+-- NOTA la chiave esterna verso l'anagrafica è CASCADE: una mail non ha senso senza la sua anagrafica
+--
+CREATE TABLE IF NOT EXISTS `mail` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine dell'indirizzo fra quelli dell'anagrafica, il primo è quello di default
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica a cui appartiene l'indirizzo
+  `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'indirizzo ( generica, amministrazione… )
+  `indirizzo` char(255) DEFAULT NULL,                             -- indirizzo mail
+  `server` char(128) DEFAULT NULL,                                -- server SMTP da usare per spedire da questo indirizzo
+  `note` char(128) DEFAULT NULL,                                  -- note sull'indirizzo
+  `se_notifiche` tinyint(1) DEFAULT NULL,                         -- se l'indirizzo riceve le notifiche
+  `se_pec` tinyint(1) DEFAULT NULL,                               -- se l'indirizzo è una PEC
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito l'indirizzo
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato l'indirizzo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000018800
 
