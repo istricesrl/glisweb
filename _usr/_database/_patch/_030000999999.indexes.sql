@@ -2214,11 +2214,13 @@ ALTER TABLE `mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mail_out
 ALTER TABLE `mail_out`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
-	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_mailing` (`id_mailing`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`); 
+	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_mailing`,`tentativi`,`token`,`timestamp_invio`); 
 
 -- | 030000018801
 
@@ -2230,11 +2232,13 @@ ALTER TABLE `mail_out` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- mail_sent
 ALTER TABLE `mail_sent`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
-	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_mailing` (`id_mailing`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_mailing`,`tentativi`,`token`,`timestamp_invio`);
 
 -- | 030000018901
 

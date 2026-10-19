@@ -3563,7 +3563,7 @@ CREATE TABLE IF NOT EXISTS `macro` (                            --
 --
 -- questa tabella contiene gli indirizzi mail di un'anagrafica, una riga per indirizzo, col ruolo dell'indirizzo
 -- ( ruoli_mail ) e i flag per le notifiche e la PEC; è il recapito a cui fanno riferimento l'account ( account.id_mail ),
--- la PEC per lo SDI ( anagrafica.id_pec_sdi ), la posta in uscita ( mail_out, mail_sent ), i consensi e il mailing
+-- la PEC per lo SDI ( anagrafica.id_pec_sdi ), i consensi e il mailing
 --
 -- NOTA una mail può non avere anagrafica: gli iscritti alla newsletter dal sito o importati entrano come solo
 -- indirizzo; la chiave unica su id_anagrafica e indirizzo non li protegge dai doppioni, perché due NULL per MySQL
@@ -3598,83 +3598,94 @@ CREATE TABLE IF NOT EXISTS `mail` (                             --
 
 -- mail_out
 -- tipologia: tabella gestita
--- tipolgia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le mail in uscita
+-- funzione: contiene la coda delle mail da inviare
 --
--- questa tabella contiene le mail in uscita, con le informazioni relative al mittente, ai destinatari,
--- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+-- questa tabella è la coda della posta in uscita: ci scrive queueMail() ( _src/_lib/_mail.tools.php ), e il form di
+-- back-end del modulo MA000.mail; il task mail.queue.send prende una riga alla volta marcandola col token, la invia
+-- e la sposta in mail_sent; se l'invio fallisce conta il tentativo e la riprogramma un'ora per tentativo più avanti
 --
-CREATE TABLE IF NOT EXISTS `mail_out` (
-  `id` bigint(20) NOT NULL,
-  `id_mail` bigint(20) DEFAULT NULL,
-  `id_mailing` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) DEFAULT NULL,
-  `destinatari` text DEFAULT NULL,
-  `destinatari_cc` text DEFAULT NULL,
-  `destinatari_bcc` text DEFAULT NULL,
-  `oggetto` char(254) DEFAULT NULL,
-  `corpo` text DEFAULT NULL,
-  `allegati` text DEFAULT NULL,
-  `headers` text DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
-  `host` char(254) DEFAULT NULL,
-  `port` char(6) DEFAULT NULL,
-  `user` char(254) DEFAULT NULL,
-  `password` char(254) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT 0,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA mail_out e mail_sent devono avere le stesse colonne nello stesso ordine: lo spostamento è un
+-- REPLACE INTO mail_sent SELECT * FROM mail_out ( e il resend un INSERT INTO mail_out SELECT * FROM mail_sent ), quindi
+-- ogni modifica di schema si fa identica e insieme sulle due tabelle
+--
+-- NOTA il token, oltre al lock del task, porta due stati: COPIA_FALLITA ( la mail è partita ma la copia in mail_sent
+-- non è riuscita, va sistemata a mano ) e TROPPI_TENTATIVI ( raggiunto $cf['mail']['tentativi_massimi'] )
+--
+-- NOTA le credenziali SMTP non stanno qui: server è la chiave della configurazione; le colonne host, port, user,
+-- password e id_mail sono uscite dal canone il 2026-10-19 ( mai scritte né lette ); il doppio invio di un mailing
+-- lo impedisce mailing_mail, non questa tabella
+--
+CREATE TABLE IF NOT EXISTS `mail_out` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- priorità di invio: NULL prima ( transazionali ), poi in ordine crescente ( il mailing scrive 10 )
+  `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per il mailing da cui viene la mail
+  `mittente` char(254) DEFAULT NULL,                              -- mittente, serializzato ( array indirizzo => nome )
+  `destinatari` text DEFAULT NULL,                                -- destinatari, serializzati ( array indirizzo => nome )
+  `destinatari_cc` text DEFAULT NULL,                             -- destinatari in copia, serializzati
+  `destinatari_bcc` text DEFAULT NULL,                            -- destinatari in copia nascosta, serializzati
+  `oggetto` char(254) DEFAULT NULL,                               -- oggetto della mail
+  `corpo` text DEFAULT NULL,                                      -- corpo della mail ( HTML )
+  `allegati` text DEFAULT NULL,                                   -- allegati, serializzati ( array nome => percorso )
+  `headers` text DEFAULT NULL,                                    -- header aggiuntivi, serializzati
+  `server` char(128) DEFAULT NULL,                                -- chiave del server SMTP in $cf['smtp']['servers'], NULL per il server del profilo
+  `tentativi` int(11) DEFAULT 0,                                  -- tentativi di invio falliti
+  `token` char(128) DEFAULT NULL,                                 -- token di lock del task di invio, o stato COPIA_FALLITA / TROPPI_TENTATIVI
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                  -- timestamp della marcatura con il token
+  `timestamp_composizione` int(11) DEFAULT NULL,                  -- timestamp di composizione della mail
+  `timestamp_invio` int(11) DEFAULT NULL,                         -- timestamp di invio: invio previsto; NULL vuol dire appena possibile
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000018900
 
 -- mail_sent
 -- tipologia: tabella gestita
--- tipolgia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
 -- funzione: contiene le mail inviate
 --
--- questa tabella contiene le mail inviate, con le informazioni relative al mittente, ai destinatari,
--- all'oggetto, al corpo, agli allegati, al server di invio e allo stato di invio
+-- questa tabella è l'archivio delle mail inviate: ci arrivano dal task mail.queue.send, che le sposta da mail_out
+-- dopo l'invio; mail.queue.resend fa il percorso inverso per rispedirle
 --
-CREATE TABLE IF NOT EXISTS `mail_sent` (
-  `id` bigint(20) NOT NULL,
-  `id_mail` bigint(20) DEFAULT NULL,
-  `id_mailing` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) DEFAULT NULL,
-  `destinatari` text DEFAULT NULL,
-  `destinatari_cc` text DEFAULT NULL,
-  `destinatari_bcc` text DEFAULT NULL,
-  `oggetto` char(254) DEFAULT NULL,
-  `corpo` text DEFAULT NULL,
-  `allegati` text DEFAULT NULL,
-  `headers` text DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
-  `host` char(254) DEFAULT NULL,
-  `port` char(6) DEFAULT NULL,
-  `user` char(254) DEFAULT NULL,
-  `password` char(254) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT 0,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA mail_out e mail_sent devono avere le stesse colonne nello stesso ordine: lo spostamento è un
+-- REPLACE INTO mail_sent SELECT * FROM mail_out ( e il resend un INSERT INTO mail_out SELECT * FROM mail_sent ), quindi
+-- ogni modifica di schema si fa identica e insieme sulle due tabelle
+--
+-- NOTA il token, oltre al lock del task, porta due stati: COPIA_FALLITA ( la mail è partita ma la copia in mail_sent
+-- non è riuscita, va sistemata a mano ) e TROPPI_TENTATIVI ( raggiunto $cf['mail']['tentativi_massimi'] )
+--
+-- NOTA le credenziali SMTP non stanno qui: server è la chiave della configurazione; le colonne host, port, user,
+-- password e id_mail sono uscite dal canone il 2026-10-19 ( mai scritte né lette ); il doppio invio di un mailing
+-- lo impedisce mailing_mail, non questa tabella
+--
+CREATE TABLE IF NOT EXISTS `mail_sent` (                        --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- priorità di invio: NULL prima ( transazionali ), poi in ordine crescente ( il mailing scrive 10 )
+  `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per il mailing da cui viene la mail
+  `mittente` char(254) DEFAULT NULL,                              -- mittente, serializzato ( array indirizzo => nome )
+  `destinatari` text DEFAULT NULL,                                -- destinatari, serializzati ( array indirizzo => nome )
+  `destinatari_cc` text DEFAULT NULL,                             -- destinatari in copia, serializzati
+  `destinatari_bcc` text DEFAULT NULL,                            -- destinatari in copia nascosta, serializzati
+  `oggetto` char(254) DEFAULT NULL,                               -- oggetto della mail
+  `corpo` text DEFAULT NULL,                                      -- corpo della mail ( HTML )
+  `allegati` text DEFAULT NULL,                                   -- allegati, serializzati ( array nome => percorso )
+  `headers` text DEFAULT NULL,                                    -- header aggiuntivi, serializzati
+  `server` char(128) DEFAULT NULL,                                -- chiave del server SMTP in $cf['smtp']['servers'], NULL per il server del profilo
+  `tentativi` int(11) DEFAULT 0,                                  -- tentativi di invio falliti
+  `token` char(128) DEFAULT NULL,                                 -- token di lock del task di invio, o stato COPIA_FALLITA / TROPPI_TENTATIVI
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                  -- timestamp della marcatura con il token
+  `timestamp_composizione` int(11) DEFAULT NULL,                  -- timestamp di composizione della mail
+  `timestamp_invio` int(11) DEFAULT NULL,                         -- timestamp di invio: invio effettivo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000018950
 

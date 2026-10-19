@@ -1153,19 +1153,17 @@ ALTER TABLE `mail`
 
 -- mail_out
 ALTER TABLE `mail_out`
-    ADD CONSTRAINT `mail_out_ibfk_01_nofollow`                FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_out_ibfk_98_nofollow`                FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_out_ibfk_99_nofollow`                FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_out_ibfk_02_nofollow`                              FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `mail_out_ibfk_01_nofollow`                  FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`)                                  ON DELETE SET NULL  ON UPDATE SET NULL,
+    ADD CONSTRAINT `mail_out_ibfk_98_nofollow`                  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`)                      ON DELETE SET NULL  ON UPDATE SET NULL,
+    ADD CONSTRAINT `mail_out_ibfk_99_nofollow`                  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`)                    ON DELETE SET NULL  ON UPDATE SET NULL;
 
 -- | 060000018900
 
 -- mail_sent
 ALTER TABLE `mail_sent`
-    ADD CONSTRAINT `mail_sent_ibfk_01_nofollow`               FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_sent_ibfk_98_nofollow`               FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_sent_ibfk_99_nofollow`               FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `mail_sent_ibfk_02_nofollow`                             FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `mail_sent_ibfk_01_nofollow`                 FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`)                                  ON DELETE SET NULL  ON UPDATE SET NULL,
+    ADD CONSTRAINT `mail_sent_ibfk_98_nofollow`                 FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`)                      ON DELETE SET NULL  ON UPDATE SET NULL,
+    ADD CONSTRAINT `mail_sent_ibfk_99_nofollow`                 FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`)                    ON DELETE SET NULL  ON UPDATE SET NULL;
 
 -- | 060000018950
 

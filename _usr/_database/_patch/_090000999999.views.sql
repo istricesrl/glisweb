@@ -3924,10 +3924,9 @@ CREATE OR REPLACE VIEW `mail_view` AS
 CREATE OR REPLACE VIEW `mail_out_view` AS
 	SELECT
 		mail_out.id,
-		mail_out.id_mail,
-		mail_out.id_mailing,
 		mail_out.ordine,
-		mail_out.timestamp_composizione,
+		mail_out.id_mailing,
+		mailing.nome AS mailing,
 		mail_out.mittente,
 		mail_out.destinatari,
 		mail_out.destinatari_cc,
@@ -3936,14 +3935,12 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 		mail_out.allegati,
 		mail_out.headers,
 		mail_out.server,
-		mail_out.host,
-		mail_out.port,
-		mail_out.user,
-		mail_out.password,
-		mail_out.token,
 		mail_out.tentativi,
+		mail_out.token,
+		mail_out.timestamp_elaborazione,
+		mail_out.timestamp_composizione,
 		mail_out.timestamp_invio,
-		from_unixtime( mail_out.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		from_unixtime( mail_out.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
 		mail_out.id_account_inserimento,
 		mail_out.id_account_aggiornamento,
 		concat(
@@ -3953,6 +3950,7 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 			if( mail_out.token = 'TROPPI_TENTATIVI', concat( ' ( ferma dopo ', mail_out.tentativi, ' tentativi )' ), '' )
 		) AS __label__
 	FROM mail_out
+		LEFT JOIN mailing ON mailing.id = mail_out.id_mailing
 ;
 
 -- | 090000018900
@@ -3961,10 +3959,9 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 CREATE OR REPLACE VIEW `mail_sent_view` AS
 	SELECT
 		mail_sent.id,
-		mail_sent.id_mail,
-		mail_sent.id_mailing,
 		mail_sent.ordine,
-		mail_sent.timestamp_composizione,
+		mail_sent.id_mailing,
+		mailing.nome AS mailing,
 		mail_sent.mittente,
 		mail_sent.destinatari,
 		mail_sent.destinatari_cc,
@@ -3973,14 +3970,12 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 		mail_sent.allegati,
 		mail_sent.headers,
 		mail_sent.server,
-		mail_sent.host,
-		mail_sent.port,
-		mail_sent.user,
-		mail_sent.password,
-		mail_sent.token,
 		mail_sent.tentativi,
+		mail_sent.token,
+		mail_sent.timestamp_elaborazione,
+		mail_sent.timestamp_composizione,
 		mail_sent.timestamp_invio,
-		from_unixtime( mail_sent.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		from_unixtime( mail_sent.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
 		mail_sent.id_account_inserimento,
 		mail_sent.id_account_aggiornamento,
 		concat(
@@ -3989,6 +3984,7 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 			mail_sent.oggetto
 		) AS __label__
 	FROM mail_sent
+		LEFT JOIN mailing ON mailing.id = mail_sent.id_mailing
 ;
 
 -- | 090000018901
