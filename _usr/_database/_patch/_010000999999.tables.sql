@@ -3760,17 +3760,22 @@ CREATE TABLE IF NOT EXISTS `mailing` (                        --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione mailing e liste
+-- funzione: contiene le liste a cui va un mailing
 --
-CREATE TABLE IF NOT EXISTS `mailing_liste` (
-  `id` bigint(20) NOT NULL,
-  `id_mailing` bigint(20) DEFAULT NULL,
-  `id_lista` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ogni riga dice che un mailing ( mailing ) va a una lista ( liste ); le righe nascono dal form del mailing, dove le
+-- liste si aggiungono come sotto-elenco, e il task che genera l'elenco dei destinatari le legge per trascrivere in
+-- mailing_mail gli iscritti di tutte le liste del mailing, un indirizzo una volta sola anche se sta in più liste
+--
+CREATE TABLE IF NOT EXISTS `mailing_liste` (                    --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_lista` bigint(20) DEFAULT NULL,                           -- chiave esterna per la lista
+  `id_mailing` bigint(20) DEFAULT NULL,                         -- chiave esterna per il mailing
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000019100
 

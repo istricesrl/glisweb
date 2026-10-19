@@ -2284,10 +2284,12 @@ ALTER TABLE `mailing` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mailing_liste`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`),
-	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_lista`,`id_mailing`);
 
 -- | 030000019051
 

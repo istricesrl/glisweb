@@ -4037,16 +4037,26 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 -- | 090000019051
 
 -- mailing_liste_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `mailing_liste_view` AS
-	SELECT
-	mailing_liste.id,
-	mailing_liste.id_lista,
-	mailing_liste.id_mailing,
-	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
-	FROM mailing_liste
-;
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW mailing_liste_view AS                                             --
+  SELECT                                                                                 --
+    mailing_liste.id,                                                                    --
+    mailing_liste.ordine,                                                                --
+    mailing_liste.id_lista,                                                              --
+    liste.nome AS lista,                                                                 --
+    mailing_liste.id_mailing,                                                            --
+    mailing.nome AS mailing,                                                             --
+    mailing_liste.id_account_inserimento,                                                --
+    mailing_liste.id_account_aggiornamento,                                              --
+    concat(                                                                              --
+      mailing.nome,                                                                      --
+      ' / ',                                                                             --
+      liste.nome                                                                         --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM mailing_liste                                                                     --
+    LEFT JOIN liste ON liste.id = mailing_liste.id_lista                                 --
+    LEFT JOIN mailing ON mailing.id = mailing_liste.id_mailing                           --
+  ;                                                                                      --
 
 -- | 090000019101
 
