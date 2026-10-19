@@ -3856,28 +3856,30 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 
 -- macro_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-24 19:40 Fabio Mosti
-CREATE OR REPLACE VIEW `macro_view` AS
-	SELECT
-		macro.id,
-		macro.id_pagina,
-		macro.id_prodotto,
-		macro.id_articolo,
-		macro.id_categoria_prodotti,
-		macro.id_notizia,
-		macro.id_annuncio,
-		macro.id_categoria_notizie,
-		macro.id_categoria_annunci,
-		macro.id_risorsa,
-		macro.id_categoria_risorse,
-		macro.id_progetto,
-		macro.id_categoria_progetti,
-		macro.id_pianificazione,
-		macro.ordine,
-		macro.macro,
-		macro.macro AS __label__
-	FROM macro
-;
+CREATE OR REPLACE VIEW macro_view AS                                                     --
+  SELECT                                                                                 --
+    macro.id,                                                                            --
+    macro.ordine,                                                                        --
+    macro.id_pagina,                                                                     --
+    macro.id_prodotto,                                                                   --
+    macro.id_articolo,                                                                   --
+    macro.id_categoria_prodotti,                                                         --
+    macro.id_marchio,                                                                    --
+    macro.id_notizia,                                                                    --
+    macro.id_annuncio,                                                                   --
+    macro.id_categoria_notizie,                                                          --
+    macro.id_categoria_annunci,                                                          --
+    macro.id_risorsa,                                                                    --
+    macro.id_categoria_risorse,                                                          --
+    macro.id_progetto,                                                                   --
+    macro.id_categoria_progetti,                                                         --
+    macro.id_pianificazione,                                                             --
+    macro.macro,                                                                         --
+    macro.id_account_inserimento,                                                        --
+    macro.id_account_aggiornamento,                                                      --
+    macro.macro AS __label__                                                             -- etichetta per le tendine e le liste
+  FROM macro                                                                             --
+  ;                                                                                      --
 
 -- | 090000018600
 

@@ -3512,34 +3512,42 @@ CREATE TABLE IF NOT EXISTS `luoghi` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le macro associate alle entità
+-- funzione: associa script PHP ( macro ) alle pagine generate dagli oggetti
 --
--- questa tabella contiene le macro associate alle entità del sistema, per l'inserimento dinamico di contenuti
--- nelle pagine, nei prodotti, negli articoli, nelle notizie, negli annunci,
--- nelle risorse, nei progetti e nelle pianificazioni
+-- ogni riga associa a un oggetto in grado di generare una pagina il percorso di una macro PHP, che viene eseguita
+-- quando la pagina si apre; è il modo di dare una macro a una pagina che nasce dal database invece che da un file
+-- di _inc/_pages/; gli oggetti sono le entità pubblicabili ( pagine, prodotti, articoli, marchi, notizie, annunci,
+-- risorse, progetti ) e le loro categorie, più le pianificazioni; un oggetto può avere più macro, nell'ordine dato
+-- da ordine, e la stessa macro una volta sola
+--
+-- NOTA le chiavi esterne verso gli oggetti sono CASCADE: una macro non ha senso senza la pagina del suo oggetto, e
+-- se l'oggetto viene cancellato le sue righe se ne vanno con lui
+-- NOTA oggi a runtime le macro si leggono solo per le pagine ( aggiungiMacro() con id_pagina, dal modulo PA000 ); la
+-- lettura per gli altri oggetti arriverà con le loro pagine
 --
 CREATE TABLE IF NOT EXISTS `macro` (                            --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,
-  `id_pianificazione` bigint(20) DEFAULT NULL, 
-  `ordine` int(11) DEFAULT NULL,
-  `macro` char(255) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di esecuzione fra le macro dello stesso oggetto
+  `id_pagina` bigint(20) DEFAULT NULL,                          -- chiave esterna per la pagina
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la categoria dei prodotti
+  `id_marchio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il marchio
+  `id_notizia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la notizia
+  `id_annuncio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'annuncio
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria delle notizie
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria degli annunci
+  `id_risorsa` bigint(20) DEFAULT NULL,                         -- chiave esterna per la risorsa
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria delle risorse
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,              -- chiave esterna per la categoria dei progetti
+  `id_pianificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per la pianificazione
+  `macro` char(255) DEFAULT NULL,                               -- percorso della macro PHP, relativo a DIR_BASE ( es. src/inc/macro/home.php )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000018600
 
