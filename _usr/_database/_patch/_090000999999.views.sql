@@ -3817,16 +3817,20 @@ CREATE OR REPLACE VIEW listini_zone_view AS                                     
 
 -- | 090000018001
 
--- luoghi_view
+-- luoghi
 -- tipologia: tabella gestita
--- verifica: 2021-09-24 18:49 Fabio Mosti
+-- verifica: 2026-10-19 punto 6, riga 95
 CREATE OR REPLACE VIEW `luoghi_view` AS
 	SELECT
 		luoghi.id,
 		luoghi.id_genitore,
+		luoghi.id_tipologia,
+		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
+		luoghi.nome,
 		luoghi.id_indirizzo,
 		concat_ws(
 			' ',
+			tipologie_indirizzi.nome,
 			indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
@@ -3834,17 +3838,16 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
-		luoghi.id_tipologia,
-		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
 		luoghi.id_edificio,
-		luoghi.id_immobile,	
-		luoghi.url,	
-		luoghi.nome,
+		luoghi.id_immobile,
+		luoghi.id_vano,
+		luoghi.url,
 		luoghi.id_account_inserimento,
 		luoghi.id_account_aggiornamento,
 		luoghi_path( luoghi.id ) AS __label__
 	FROM luoghi
 		LEFT JOIN indirizzi ON indirizzi.id = luoghi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;

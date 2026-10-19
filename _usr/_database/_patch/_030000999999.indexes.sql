@@ -2138,18 +2138,22 @@ ALTER TABLE `listini_zone` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000018000
 
 -- luoghi
+-- tipologia: tabella gestita
+-- verifica: 2026-10-19 punto 6, riga 95
 ALTER TABLE `luoghi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `id_indirizzo` (`id_indirizzo`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_edificio` (`id_edificio`), 
-	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_edificio` (`id_edificio`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_vano` (`id_vano`),
 	ADD KEY `url` (`url`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,  `id_tipologia`,`id_edificio`, `id_immobile`,`nome`);
+	ADD KEY `indice` (`id`, `id_genitore`, `id_tipologia`, `nome`, `id_indirizzo`, `id_edificio`, `id_immobile`, `id_vano`);
 
 -- | 030000018001
 

@@ -3475,23 +3475,36 @@ CREATE TABLE IF NOT EXISTS `listini_zone` (                     --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i luoghi
+-- funzione: contiene i luoghi, cioè gli spazi dove si svolgono attività e todo
+-- entità: questa tabella corrisponde all'entità luogo
 --
-CREATE TABLE IF NOT EXISTS `luoghi` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `url` char(255) DEFAULT NULL, 
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- un luogo è uno spazio con un nome, così come lo intende chi organizza il lavoro ( una palestra, un'aula, una sala
+-- riunioni, un'area esterna ): è il "dove" di attivita, todo e pianificazioni, che lo puntano con id_luogo; la
+-- tabella è ricorsiva perché gli spazi si organizzano ad albero ( una palestra con le sue sale ), e id_genitore
+-- punta al luogo che contiene questo; il nome è unico fra i fratelli, perché due luoghi con lo stesso nome sotto lo
+-- stesso genitore sarebbero un doppione; un luogo può essere collocato su uno qualsiasi dei livelli della catena
+-- della geografia fisica ( indirizzo, edificio, immobile, vano ), tutti facoltativi, e se il livello puntato viene
+-- cancellato il luogo resta
+--
+-- NOTA la colonna url serve ai luoghi che non sono fisici ( p.es. la tipologia "online" ): contiene il link della
+-- stanza virtuale dove si svolge l'attività
+--
+CREATE TABLE IF NOT EXISTS `luoghi` (                           --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il luogo che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di luogo
+  `nome` char(255) DEFAULT NULL,                                -- nome del luogo
+  `id_indirizzo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'indirizzo dove si trova il luogo
+  `id_edificio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'edificio dove si trova il luogo
+  `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile dove si trova il luogo
+  `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano dove si trova il luogo
+  `url` char(255) DEFAULT NULL,                                 -- link del luogo virtuale
+  `note` text DEFAULT NULL,                                     -- note sul luogo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il luogo
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il luogo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
 -- | 010000018200
 
