@@ -636,6 +636,17 @@ contiene `dev/`, non la document root. È lo stesso che usa il cron notturno
 `/etc/cron.daily/manutenzione-siti`: allinearsi a quello evita che l'aggiornamento manuale e quello
 automatico si rincorrano.
 
+**⚠ L'aggiornamento automatico va solo sui `dev/`; produzione e test si aggiornano a mano ( Fabio,
+19/10/2026 ).** Il cron notturno e la ridistribuzione dopo un push ( il giro di riallineamento )
+aggiornano **soltanto** la cartella `dev/` dei deploy che hanno `update.branch.conf`. `stable/` ( la
+produzione ) e gli stage di test **non si aggiornano mai da un automatismo**: niente cron, niente
+ciclo in uno script, niente "già che ci sono" durante un giro. Si aggiornano lanciando a mano lo script
+della loro cartella ( `/var/www/<deploy>/stable/_src/_sh/_gw.upgrade.sh <branch>` ), quando lo fa Fabio
+o quando lo autorizza lui **per quella volta**: un aggiornamento in produzione in orario di lavoro si
+vede, e il momento lo sceglie lui. Di conseguenza uno `stable/` con una versione più vecchia del `dev/`
+è lo stato normale, non un'anomalia: nei controlli "a pari" vuol dire **`dev/` a pari con il branch**, e
+lo scarto di `stable/` si riferisce come informazione, non come cosa da chiudere.
+
 Il repository da cui si scarica è `glisweb`, a meno che `update.repository.conf`, accanto a
 `update.branch.conf`, non dica `glisdev` ( oppure il terzo argomento, che vince sul file: il secondo è
 il profilo del database ). Ammessi solo questi due nomi; un nome diverso ferma lo script prima del
