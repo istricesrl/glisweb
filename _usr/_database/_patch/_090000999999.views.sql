@@ -4916,17 +4916,33 @@ CREATE OR REPLACE VIEW `offerte_view` AS
 -- | 090000022301
 
 -- orari_view
+-- tipologia: tabella gestita
+-- le fasce orarie con la tipologia di contratto, la periodicità e il giorno; l'etichetta dice tipologia, giorno e
+-- fascia, perché il nome è facoltativo
 CREATE OR REPLACE VIEW `orari_view` AS
 	SELECT
 		orari.id,
 		orari.nome,
 		orari.id_tipologia_contratti,
+		tipologie_contratti_path( orari.id_tipologia_contratti ) AS tipologia_contratti,
 		orari.id_periodicita,
+		periodicita.nome AS periodicita,
 		orari.id_giorno,
+		giorni.nome AS giorno,
 		orari.ora_inizio,
 		orari.ora_fine,
-		orari.nome AS __label__
+		orari.note,
+		orari.id_account_inserimento,
+		orari.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_contratti_path( orari.id_tipologia_contratti ),
+			giorni.nome,
+			concat_ws( '-', orari.ora_inizio, orari.ora_fine )
+		) AS __label__
 	FROM orari
+		LEFT JOIN periodicita ON periodicita.id = orari.id_periodicita
+		LEFT JOIN giorni ON giorni.id = orari.id_giorno
 ;
 
 -- | 090000022401

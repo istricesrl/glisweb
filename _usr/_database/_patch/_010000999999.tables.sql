@@ -4543,24 +4543,33 @@ CREATE TABLE IF NOT EXISTS `notizie_categorie` (              --
 
 -- orari
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i orari
+-- funzione: contiene le fasce orarie di validità di un oggetto, oggi delle tipologie di contratto
 --
-CREATE TABLE IF NOT EXISTS `orari` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `id_tipologia_contratti` bigint(20) DEFAULT NULL,
-  `id_periodicita` bigint(20) DEFAULT NULL,
-  `id_giorno` bigint(20) DEFAULT NULL,
-  `ora_inizio` time NULL,
-  `ora_fine` time NULL,
-  `note` text NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene le fasce orarie in cui vale una tipologia di contratto, tipicamente un abbonamento; ogni
+-- riga è un giorno della settimana ( id_giorno, dalla tabella giorni ) con l'ora di inizio e l'ora di fine, e una
+-- tipologia ha tante righe quante sono le sue fasce; le righe appartengono alla tipologia, quindi la chiave verso
+-- tipologie_contratti si segue ( la scheda della tipologia le legge come sotto-elenco ) e le cancella con lei
+--
+-- NOTA orari è per le ore quello che periodi è per le date: oggi le fasce sono solo delle tipologie di contratto, ma
+-- la tabella può essere associata anche ad altri oggetti, con una colonna per ogni oggetto, e per questo il nome
+-- resta generico; id_periodicita oggi vale sempre settimanale, ed è la colonna che permette fasce non settimanali
+--
+CREATE TABLE IF NOT EXISTS `orari` (                          --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome facoltativo della fascia oraria
+  `id_tipologia_contratti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di contratto a cui vale la fascia
+  `id_periodicita` bigint(20) DEFAULT NULL,                      -- chiave esterna per la periodicità con cui la fascia si ripete
+  `id_giorno` bigint(20) DEFAULT NULL,                           -- chiave esterna per il giorno della settimana
+  `ora_inizio` time NULL,                                     -- ora di inizio della fascia
+  `ora_fine` time NULL,                                       -- ora di fine della fascia
+  `note` text NULL,                                           -- note sulla fascia oraria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la fascia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la fascia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000022400
 
