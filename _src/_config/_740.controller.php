@@ -157,7 +157,9 @@
      * 
      * L'importazione vera e propria viene fatta leggendo i dati tramite csvFile2array() e aggiungendo il campo
      * speciale __method__ che contiene l'azione da eseguire; dopodiché il pacchetto dati viene aggiunto alla $_REQUEST
-     * per la successiva elaborazione da parte della controller (vedi _src/_config/_750.controller.php).
+     * per la successiva elaborazione da parte della controller (vedi _src/_config/_750.controller.php), che dopo averlo
+     * scritto sposta il file in done/. Un file con più di $cf['import']['righe'] righe di dati ( 1000 se non è impostato )
+     * non si elabora in una volta: si spezza con csvFileSplit() in parti che restano nello spool, e l'originale va in done/.
      * 
      * firma per l'autorizzazione
      * --------------------------
@@ -218,6 +220,24 @@
             // debug
             // print_r( readFromFile( $f ) );
             // die();
+
+            // un file troppo lungo per una richiesta sola si spezza in parti accanto a lui, che i giri successivi del cron
+            // elaborano una alla volta ( la collisione di tabelle qui sotto tiene in coda le altre ), e l'originale va
+            // intatto in done/; elaborato tutto insieme, il timeout della richiesta lo interrompeva a metà ( il 20/10/2026
+            // su utensilerialughese 4.500 comuni su 20.130 ). La soglia si cambia con $cf['import']['righe']
+            $righe = ( isset( $cf['import']['righe'] ) ) ? $cf['import']['righe'] : 1000;
+            if( count( (array) readFromFile( $f ) ) - 1 > $righe && csvFileSplit( $f, $righe ) ) {
+
+                // archivio l'originale
+                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
+
+                // status
+                $cf['import']['info'][] = 'file ' . basename( $f ) . ' spezzato in parti da ' . $righe . ' righe';
+
+                // le parti le prende il prossimo giro
+                continue;
+
+            }
 
             // elaboro i dati
             if( ! isset( $_REQUEST[ $table ] ) ) {
@@ -285,19 +305,10 @@
 
                 }
 
-                // archivio il file solo adesso, che tutte le sue righe sono state accodate
-                //
-                // ATTENZIONE, quello che questo spostamento NON copre: la scrittura vera sul
-                // database avviene piu' avanti nella richiesta, quando la controller() elabora
-                // $_REQUEST, quindi un timeout in QUELLA fase perde comunque le righe. Coprirlo
-                // del tutto vuol dire archiviare dopo che la controller ha finito, che e' un
-                // altro punto del ciclo di vita della richiesta. Qui si chiude la finestra della
-                // lettura, che e' quella che si puo' chiudere senza spostare l'archiviazione
-                // fuori da questo runlevel.
-                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
-
-                // status
-                $cf['import']['info'][] = 'archiviato file ' . basename( $f ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
+                // il file NON si archivia qui: la scrittura vera sul database la fa la controller() in
+                // _750.controller.php, ed e' li' che il file passa in done/, dopo. Archiviato qui, un timeout
+                // durante la scrittura perdeva le righe non ancora scritte senza lasciare traccia
+                $cf['import']['archiviare'][] = $f;
 
             } else {
 

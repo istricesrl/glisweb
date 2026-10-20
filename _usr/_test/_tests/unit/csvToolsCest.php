@@ -135,6 +135,14 @@ class csvToolsCest
         $I->see("2 => string 'val3' (length=4)");
     }
 
+    // csvFileSplit() -> deve spezzare il CSV in parti ordinate, ognuna con l'intestazione, senza toccare l'originale
+    public function csvFileSplit(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_csv.tools/_csvFileSplit.01.php');
+        $I->see('boolean true');
+        $I->dontSee('boolean false');
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {

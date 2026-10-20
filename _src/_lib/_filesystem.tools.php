@@ -964,7 +964,8 @@
      * copia un file
      * 
      * Questa funzione copia un file da una posizione all'altra. Se il file di provenienza è remoto,
-     * utilizza cURL per scaricarlo.
+     * utilizza cURL per scaricarlo; una risposta HTTP d'errore ( 400 o più ) conta come download fallito,
+     * e il file di destinazione non viene scritto.
      * 
      * @param       string      $f1     il percorso del file da copiare
      * @param       string      $f2     il percorso di destinazione del file
@@ -1004,7 +1005,14 @@
             curl_setopt( $ch, CURLOPT_TIMEOUT, 2 );
             $data = curl_exec( $ch );
             $error = curl_error( $ch );
+            $code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
             curl_close( $ch );
+
+            // una risposta d'errore del server non è il file: senza questo controllo si salvava la pagina
+            // del 404 al posto del file, e chi lo leggeva dopo ( p.es. l'importazione ) la prendeva per buona
+            if( empty( $error ) && $code >= 400 ) {
+                $error = 'HTTP ' . $code;
+            }
 
             // se il download è andato a buon fine
             if( empty( $error ) ) {

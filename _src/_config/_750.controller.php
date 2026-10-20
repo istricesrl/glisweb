@@ -314,6 +314,29 @@
     unset( $v );
 
     /**
+     * archiviazione dei file importati
+     * ================================
+     * I file CSV che _740.controller.php ha accodato in $_REQUEST passano in done/ solo qui, dopo che la controller()
+     * ha scritto le loro righe: se la richiesta muore prima, il file resta nello spool e il cron lo riprende al giro
+     * dopo. Ripreso, il file si rielabora da capo: le righe con l'id si riscrivono uguali, quelle in POST senza id si
+     * possono duplicare; per questo _740.controller.php spezza i file lunghi, così che una parte stia in una richiesta.
+     * 
+     */
+
+    // archivio i file
+    if( ! empty( $cf['import']['archiviare'] ) ) {
+        foreach( $cf['import']['archiviare'] as $archiviare ) {
+
+            // sposto il file
+            moveFile( $archiviare, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
+
+            // status
+            $cf['import']['info'][] = 'archiviato file ' . basename( $archiviare ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
+
+        }
+    }
+
+    /**
      * collegamenti e scorciatoie
      * ==========================
      * 

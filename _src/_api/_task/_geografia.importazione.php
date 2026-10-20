@@ -53,7 +53,9 @@
 
     // scarico i CSV
     foreach( $status['files'] as $file ) {
-        copyFile( $file, DIR_VAR_SPOOL_IMPORT . '/' . basename( $file ) );
+        if( ! copyFile( $file, DIR_VAR_SPOOL_IMPORT . '/' . basename( $file ) ) ) {
+            $status['err'][] = 'impossibile scaricare ' . $file;
+        }
     }
 
     // rimappaggio dei riferimenti ai luoghi archiviati

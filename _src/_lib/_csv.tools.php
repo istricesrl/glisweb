@@ -117,6 +117,7 @@
      * guessCsvSeparator()          | individua il separatore di un file CSV
      * csvRow2array()               | converte una riga contenente una stringa CSV in un array associativo
      * csvRow2vector()              | converte una riga contenente una stringa CSV in un array non associativo
+     * csvFileSplit()               | spezza un file CSV in più file con al massimo un dato numero di righe
      * 
      * alias di funzioni inseriti per retrocompatibilità
      * -------------------------------------------------
@@ -819,6 +820,58 @@
         $t = array_map( 'trim', $t );
 
         return $t;
+
+    }
+
+    /**
+     * spezza un file CSV in più file più piccoli
+     * 
+     * Questa funzione legge un file CSV e lo riscrive in più file di al massimo $n righe di dati ciascuno, ripetendo in
+     * ognuno la riga di intestazione; i file nuovi si chiamano come l'originale con .parte.NNNN prima dell'estensione,
+     * così che sort() li metta in ordine, e vengono scritti nella cartella $d o, se non è indicata, in quella del file
+     * originale, che non viene toccato. Le righe sono quelle di readFromFile(), le stesse che legge csvFile2array().
+     * 
+     * @param       string      $f      il file da spezzare
+     * @param       integer     $n      il numero massimo di righe di dati per file
+     * @param       string      $d      la cartella in cui scrivere i file
+     * 
+     * @return      mixed               l'array dei file scritti, oppure false in caso di errore
+     * 
+     */
+    function csvFileSplit( $f, $n, $d = NULL ) {
+
+        // log
+        logger( 'divisione file CSV: ' . $f . ' in parti da ' . $n . ' righe', 'csv' );
+
+        // leggo il file come array di righe
+        $a = readFromFile( $f );
+
+        // se il file non si legge o il numero di righe non è valido
+        if( $a === false || (int) $n < 1 ) {
+            return false;
+        }
+
+        // cartella di destinazione
+        if( empty( $d ) ) {
+            $d = dirname( getFullPath( $f ) ) . '/';
+        }
+
+        // intestazione e righe di dati, senza le righe vuote
+        $h = array_shift( $a );
+        $a = array_values( array_filter( $a, 'strlen' ) );
+
+        // scrivo le parti
+        $r = array();
+        foreach( array_chunk( $a, (int) $n ) as $i => $righe ) {
+            $p = $d . basename( $f, '.csv' ) . '.parte.' . sprintf( '%04d', $i + 1 ) . '.csv';
+            if( ! overwriteToFile( $h . PHP_EOL . implode( PHP_EOL, $righe ) . PHP_EOL, $p ) ) {
+                return false;
+            }
+            $r[] = $p;
+        }
+
+        // restituisco i file scritti
+        return $r;
 
     }
 

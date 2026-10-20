@@ -265,7 +265,7 @@ class filesystemToolsCest
     // copyFile() -> deve copiare un file in un percorso dato
     public function copyFileToFile(UnitTester $I)
     {
-        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.02.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
     }
@@ -273,7 +273,7 @@ class filesystemToolsCest
     // copyFile() -> deve copiare un file remoto in una cartella data
     public function copyFileFromRemoteToFolder(UnitTester $I)
     {
-        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.03.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
     }
@@ -281,7 +281,15 @@ class filesystemToolsCest
     // copyFile() -> deve copiare un file remoto in un percorso dato
     public function copyFileFromRemoteToFile(UnitTester $I)
     {
-        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.01.php');
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.04.php');
+        $I->see('boolean true');
+        $I->dontSee('boolean false');
+    }
+
+    // copyFile() -> una risposta HTTP d'errore non deve diventare il file
+    public function copyFileFromRemoteNotFound(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_copyFile.05.php');
         $I->see('boolean true');
         $I->dontSee('boolean false');
     }
