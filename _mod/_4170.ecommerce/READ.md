@@ -30,12 +30,12 @@
 
   Fra gli esempi del framework è presente una struttura elementare che riproduce questo schema, costituita dai file:
 
-  - _usr/_examples/_ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
-  - _usr/_examples/_ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
-  - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
-  - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
-  - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
-  - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.php che simula la pagina di esito generico del pagamento
 
   Il processo standard si può quindi sintetizzare in uno schema:
 

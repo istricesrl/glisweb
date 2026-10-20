@@ -3,7 +3,7 @@
     /**
      * strumenti della newsletter
      *
-     * Importazione degli iscritti da CSV ( nel formato del modello `_usr/_examples/_csv/iscritti.import.csv` o in
+     * Importazione degli iscritti da CSV ( nel formato del modello `_usr/_examples/_lib/_csv.tools/iscritti.import.csv` o in
      * quello esportato da MailChimp ) ed esportazione degli iscritti di una lista. Erano gli strumenti della vista
      * liste di `_7000.mailing`.
      *

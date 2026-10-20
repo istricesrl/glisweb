@@ -126,7 +126,7 @@ contatto e chiama la controller `_src/_inc/_controllers/_form/_newsletter.php`. 
 ## i file del modulo
 
 ### /_mod/_ML000.mailing/_src/_api/_job/_importazione.iscritti.php
-Job di importazione degli iscritti da CSV ( modello in `/_usr/_examples/_csv/iscritti.import.csv` ): crea o
+Job di importazione degli iscritti da CSV ( modello in `/_usr/_examples/_lib/_csv.tools/iscritti.import.csv` ): crea o
 ritrova anagrafica, indirizzo e liste, e iscrive l'indirizzo. Indirizzo, lista e iscrizione si cercano prima
 di inserirli, quindi reimportare lo stesso file non crea doppioni.
 

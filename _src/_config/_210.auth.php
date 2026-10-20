@@ -106,7 +106,7 @@
      * ---------
      * 
      * NOTA per login via JWT, mandare { "id": "<idAccount>", "user": "<username>" }
-     * vedi _usr/_examples/_jwt/_jwt.write.01.php
+     * vedi _usr/_examples/_lib/_jwt.tools/_jwt.write.01.php
      * 
      * 
      * 
