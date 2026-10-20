@@ -13,6 +13,9 @@
 -- ( polmasi prod: 8 articoli, errore 1406 sul ripopolamento ): diventa varchar(512). Per i deploy
 -- gia' arrivati al 1202 lo fa _202610041203.
 --
+-- il ripopolamento della statica non sta qui ma nel blocco 1204 di _202610041203: un blocco e' una
+-- query sola, e ALTER + REPLACE nello stesso blocco davano 1064 ( eurosnodi crm dev, 20/10/2026 ).
+--
 -- ⚠ I deploy con una articoli_view di progetto ( utensilerialughese: usr/database/patch/202609281100 ) dopo
 -- questa patch hanno la vista dello standard: va seguita da una patch di progetto che rimetta la loro.
 
@@ -194,8 +197,5 @@ ALTER TABLE `articoli_view_static`
 -- | 202610041202
 
 ALTER TABLE `articoli_view_static` MODIFY `nome` varchar(512) DEFAULT NULL;
-
-REPLACE INTO `articoli_view_static` ( `id_tipologia_pubblicazione`, `pubblicazione`, `tipologia_listino`, `id`, `codice`, `id_prodotto`, `prodotto`, `ordine`, `ean`, `isbn`, `id_reparto`, `id_taglia`, `id_colore`, `id_periodicita`, `periodicita`, `id_tipologia_rinnovo`, `tipologia_rinnovo`, `larghezza`, `lunghezza`, `altezza`, `id_udm_dimensioni`, `udm_dimensioni`, `peso`, `id_udm_peso`, `udm_peso`, `volume`, `id_udm_volume`, `udm_volume`, `capacita`, `id_udm_capacita`, `udm_capacita`, `durata`, `id_udm_durata`, `udm_durata`, `nome`, `id_categorie`, `categorie`, `prezzi`, `data_archiviazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `__label__` )
-	SELECT `id_tipologia_pubblicazione`, `pubblicazione`, `tipologia_listino`, `id`, `codice`, `id_prodotto`, `prodotto`, `ordine`, `ean`, `isbn`, `id_reparto`, `id_taglia`, `id_colore`, `id_periodicita`, `periodicita`, `id_tipologia_rinnovo`, `tipologia_rinnovo`, `larghezza`, `lunghezza`, `altezza`, `id_udm_dimensioni`, `udm_dimensioni`, `peso`, `id_udm_peso`, `udm_peso`, `volume`, `id_udm_volume`, `udm_volume`, `capacita`, `id_udm_capacita`, `udm_capacita`, `durata`, `id_udm_durata`, `udm_durata`, `nome`, `id_categorie`, `categorie`, `prezzi`, `data_archiviazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `__label__` FROM `articoli_view`;
 
 -- | FINE
