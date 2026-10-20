@@ -2688,9 +2688,10 @@ ALTER TABLE `metadati_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- modalita_pagamento
 ALTER TABLE `modalita_pagamento`
- 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
-	ADD UNIQUE KEY `nome` (`nome`,`codice`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `codice_sdi` (`codice_sdi`),
+	ADD KEY `indice` (`id`,`nome`,`codice_sdi`);
 
 -- | 030000021901
 

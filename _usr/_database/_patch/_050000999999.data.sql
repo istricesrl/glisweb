@@ -358,32 +358,34 @@ INSERT INTO `listini` (`id`, `id_genitore`, `id_tipologia`, `id_valuta`, `codice
 -- | 050000021900
 
 -- modalita_pagamento
-INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
-(1,	        'MP01',	        'contanti'),
-(2,	        'MP02',	        'assegno'),
-(3,	        'MP03',	        'assegno circolare'),
-(4,	        'MP04',	        'contanti presso tesoreria'),
-(5,	        'MP05',	        'bonifico'),
-(6,	        'MP06',	        'vaglia cambiario'),
-(7,	        'MP07',	        'bollettino bancario'),
-(8,	        'MP08',	        'carta di credito'),
-(9,	        'MP09',	        'RID'),
-(10,	    'MP10',	        'RID utenze'),
-(11,	    'MP11',	        'RID veloce'),
-(12,	    'MP12',	        'RIBA'),
-(13,	    'MP13',	        'MAV'),
-(14,	    'MP14',	        'quietanza erario stato'),
-(15,	    'MP15',	        'giroconto su conti di contabilità speciale'),
-(16,	    'MP16',	        'domiciliazione bancaria'),
-(17,	    'MP17',	        'domiciliazione postale'),
-(18,	    'MP18',         'bollettino di c/c postale'),
-(19,        'MP19',         'SEPA Direct Debit' ),
-(20,        'MP20',         'SEPA Direct Debit CORE' ),
-(21,        'MP21',         'SEPA Direct Debit B2B' ),
-(22,        'MP22',         'Trattenuta su somme già riscosse' ),
-(23,        'MP08',         'bancomat' ),
-(24,        'MP08',         'paypal' ),
-(25,        'MP23',         'PagoPA' );
+-- i codici ModalitaPagamento delle specifiche tecniche della fattura elettronica, piu' le varianti operative di MP08
+-- ( bancomat, paypal ); gli id non si cambiano
+INSERT IGNORE INTO `modalita_pagamento` (`id`, `nome`, `codice_sdi`) VALUES
+(1,		'contanti',		'MP01'),
+(2,		'assegno',		'MP02'),
+(3,		'assegno circolare',	'MP03'),
+(4,		'contanti presso tesoreria',	'MP04'),
+(5,		'bonifico',		'MP05'),
+(6,		'vaglia cambiario',	'MP06'),
+(7,		'bollettino bancario',	'MP07'),
+(8,		'carta di credito',	'MP08'),
+(9,		'RID',		'MP09'),
+(10,	'RID utenze',		'MP10'),
+(11,	'RID veloce',		'MP11'),
+(12,	'RIBA',		'MP12'),
+(13,	'MAV',		'MP13'),
+(14,	'quietanza erario stato',	'MP14'),
+(15,	'giroconto su conti di contabilità speciale',	'MP15'),
+(16,	'domiciliazione bancaria',	'MP16'),
+(17,	'domiciliazione postale',	'MP17'),
+(18,	'bollettino di c/c postale',	'MP18'),
+(19,	'SEPA Direct Debit',	'MP19'),
+(20,	'SEPA Direct Debit CORE',	'MP20'),
+(21,	'SEPA Direct Debit B2B',	'MP21'),
+(22,	'Trattenuta su somme già riscosse',	'MP22'),
+(23,	'bancomat',		'MP08'),
+(24,	'paypal',		'MP08'),
+(25,	'PagoPA',		'MP23');
 
 -- | 050000023600
 

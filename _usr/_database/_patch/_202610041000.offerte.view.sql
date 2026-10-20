@@ -458,7 +458,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		coalesce( pagamenti.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
 		pagamenti.codice,
 		pagamenti.id_modalita_pagamento,
-		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
+		concat(modalita_pagamento.codice_sdi, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
 		pagamenti.ordine,
 		pagamenti.nome,

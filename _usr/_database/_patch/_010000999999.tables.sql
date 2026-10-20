@@ -4390,17 +4390,23 @@ CREATE TABLE IF NOT EXISTS `metadati_prodotti` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le modalità di pagamento
--- entità: questa tabella corrisponde all'entità modalità di pagamento
+-- funzione: contiene le modalita' di pagamento della fattura elettronica
 --
--- questa tabella contiene le modalità di pagamento, con le informazioni relative al nome, al provider e al codice
+-- le modalita' con cui si paga un documento, ognuna col codice ModalitaPagamento ( MP01 - MP23 ) che la fattura
+-- elettronica scrive nel blocco DatiPagamento; la cita una riga di pagamento in pagamenti.id_modalita_pagamento e il
+-- modello di una pianificazione in pianificazioni.model_id_modalita_pagamento, e la scelgono da una tendina i form dei
+-- pagamenti, dell'anagrafica e dei modelli di pianificazione.
 --
-CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `provider` char(64) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: le righe sono modalita' operative, piu' fini del codice SdI: carta di credito, bancomat e paypal sono tutte
+-- MP08, quindi codice_sdi si ripete e la chiave e' il nome. L'elenco lo carica il 050 con id fissi, e gli id non si
+-- cambiano perche' alcuni moduli li scrivono nel codice ( 1 contanti, 5 bonifico, 23 bancomat, 24 paypal ). Il legame
+-- fra un provider di pagamento e la sua modalita' sta nella configurazione ( ecommerce.profile.provider.<nome>.modalita ),
+-- non qui. Quando escono nuove specifiche della fattura elettronica l'elenco va ricontrollato e aggiornato con una patch.
+CREATE TABLE IF NOT EXISTS `modalita_pagamento` (               --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) NOT NULL,                                      -- nome della modalita' di pagamento
+  `codice_sdi` char(32) NOT NULL                                  -- codice ModalitaPagamento della fattura elettronica
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000021950
 

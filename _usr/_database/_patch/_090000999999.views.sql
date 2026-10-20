@@ -4730,15 +4730,16 @@ CREATE OR REPLACE VIEW `metadati_prodotti_view` AS
 
 -- | 090000021900
 
--- modalita_pagamento
+-- modalita_pagamento_view
+-- tipologia: tabella standard
+-- funzione: espone le modalita' di pagamento con l'etichetta codice SdI - nome per le tendine
 CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
-    SELECT
-    modalita_pagamento.id,
-    modalita_pagamento.nome,
-    modalita_pagamento.codice,
-    modalita_pagamento.provider,
-    concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
-    FROM modalita_pagamento
+	SELECT
+		modalita_pagamento.id,
+		modalita_pagamento.nome,
+		modalita_pagamento.codice_sdi,
+		concat( modalita_pagamento.codice_sdi, ' - ', modalita_pagamento.nome ) AS __label__
+	FROM modalita_pagamento
 ;
 
 -- | 090000021951
@@ -4979,7 +4980,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		coalesce( pagamenti.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
 		pagamenti.codice,
 		pagamenti.id_modalita_pagamento,
-		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
+		concat(modalita_pagamento.codice_sdi, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
 		pagamenti.ordine,
 		pagamenti.nome,
