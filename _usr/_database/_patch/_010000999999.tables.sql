@@ -4577,26 +4577,38 @@ CREATE TABLE IF NOT EXISTS `orari` (                          --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i turni di lavoro e di disponibilita' di un contratto
+-- funzione: contiene i turni di lavoro e di disponibilita' di un contratto di lavoro
 --
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
--- bigint: la usano i moduli _0600.contratti e _1000.produzione, e non e' la tabella orari
+-- questa tabella contiene i turni settimanali di un contratto di lavoro, una fascia oraria per riga: per ogni turno e
+-- giorno della settimana le fasce di lavoro ( se_lavoro ), ciascuna legata a un costo orario del contratto
+-- ( costi_contratti ), e quelle di disponibilita' ( se_disponibile ), in cui la persona puo' essere chiamata. Insieme a
+-- costi_contratti definisce il perimetro dei contratti di lavoro: dalle fasce di lavoro e dai loro costi si ricavano le
+-- ore teoriche dei cartellini e la quadratura delle ore di produzione. Fa parte della gestione del personale, che oggi
+-- vive nei moduli legacy _0600.contratti, _1000.produzione, _8100.cartellini e _0200.attivita e passera' al modulo
+-- risorse umane di latest. Non e' la tabella orari, che contiene le fasce di validita' delle tipologie di contratto.
+--
+-- NOTA: turno numera le settimane di una rotazione ( 1 se il contratto ha un turno solo ); id_giorno vuoto vuol dire
+-- tutti i giorni, ed e' cosi' che _1000.produzione legge le fasce di disponibilita'. Un costo usato da qualche fascia
+-- non si puo' cancellare ( ibfk_02_nofollow NO ACTION ): prima si spostano le fasce su un altro costo.
+--
+-- NOTA: ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), dove era
+-- int; qui e' portata a bigint come il resto del canone.
 --
 CREATE TABLE IF NOT EXISTS `orari_contratti` (
-  `id` bigint(20) NOT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `turno` int(11) DEFAULT '1',
-  `id_giorno` bigint(20) DEFAULT NULL,
-  `ora_inizio` time DEFAULT NULL,
-  `ora_fine` time DEFAULT NULL,
-  `id_costo` bigint(20) DEFAULT NULL,
-  `se_lavoro` tinyint(1) DEFAULT '1',
-  `se_disponibile` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_contratto` bigint(20) DEFAULT NULL,                       -- chiave esterna per il contratto
+  `turno` int(11) DEFAULT '1',                                  -- numero del turno nella rotazione
+  `id_giorno` bigint(20) DEFAULT NULL,                          -- chiave esterna per il giorno della settimana ( vuoto = tutti )
+  `ora_inizio` time DEFAULT NULL,                               -- ora di inizio della fascia
+  `ora_fine` time DEFAULT NULL,                                 -- ora di fine della fascia
+  `id_costo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il costo orario del contratto
+  `se_lavoro` tinyint(1) DEFAULT '1',                           -- flag fascia di lavoro
+  `se_disponibile` tinyint(1) DEFAULT NULL,                     -- flag fascia di disponibilita'
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000022800
 

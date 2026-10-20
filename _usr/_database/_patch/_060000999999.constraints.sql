@@ -1484,7 +1484,7 @@ ALTER TABLE `orari`
 -- orari_contratti
 ALTER TABLE `orari_contratti`
     ADD CONSTRAINT `orari_contratti_ibfk_01`                  FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `orari_contratti_ibfk_02_nofollow`         FOREIGN KEY (`id_costo`) REFERENCES `costi_contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `orari_contratti_ibfk_02_nofollow`         FOREIGN KEY (`id_costo`) REFERENCES `costi_contratti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `orari_contratti_ibfk_03_nofollow`                       FOREIGN KEY (`id_giorno`) REFERENCES `giorni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `orari_contratti_ibfk_98_nofollow`                       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `orari_contratti_ibfk_99_nofollow`                       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

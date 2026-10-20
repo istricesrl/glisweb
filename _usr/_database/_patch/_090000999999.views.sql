@@ -4948,25 +4948,34 @@ CREATE OR REPLACE VIEW `orari_view` AS
 -- | 090000022401
 
 -- orari_contratti_view
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
+-- tipologia: tabella gestita
+-- le fasce dei turni di un contratto di lavoro col giorno e la tipologia di attivita' INPS del costo; l'etichetta dice
+-- turno, giorno e fascia
 CREATE OR REPLACE VIEW `orari_contratti_view` AS
 	SELECT
 		orari_contratti.id,
 		orari_contratti.id_contratto,
 		orari_contratti.turno,
 		orari_contratti.id_giorno,
+		giorni.nome AS giorno,
 		orari_contratti.ora_inizio,
 		orari_contratti.ora_fine,
 		orari_contratti.id_costo,
+		tipologie_attivita_inps.nome AS costo,
 		orari_contratti.se_lavoro,
 		orari_contratti.se_disponibile,
-		concat(
-			'turno ', orari_contratti.turno, ' ',
-			orari_contratti.id_giorno, ' ',
-			orari_contratti.ora_inizio, ' ',
-			orari_contratti.ora_fine
+		orari_contratti.id_account_inserimento,
+		orari_contratti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			concat( 'turno ', orari_contratti.turno ),
+			giorni.nome,
+			concat_ws( '-', orari_contratti.ora_inizio, orari_contratti.ora_fine )
 		) AS __label__
 	FROM orari_contratti
+		LEFT JOIN giorni ON giorni.id = orari_contratti.id_giorno
+		LEFT JOIN costi_contratti ON costi_contratti.id = orari_contratti.id_costo
+		LEFT JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = costi_contratti.id_tipologia
 ;
 
 -- | 090000022801

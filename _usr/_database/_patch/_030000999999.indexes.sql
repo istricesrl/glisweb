@@ -2783,8 +2783,8 @@ ALTER TABLE `orari` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- orari_contratti
 ALTER TABLE `orari_contratti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unico_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`),
-	ADD UNIQUE KEY `unico_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
+	ADD UNIQUE KEY `unica_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`),
+	ADD UNIQUE KEY `unica_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
 	ADD KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_giorno` (`id_giorno`),
 	ADD KEY `id_costo` (`id_costo`),
@@ -2792,7 +2792,8 @@ ALTER TABLE `orari_contratti`
 	ADD KEY `se_disponibile` (`se_disponibile`),
 	ADD KEY `turno` (`turno`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`id_costo`,`se_lavoro`,`se_disponibile`);
 
 -- | 030000022401
 
