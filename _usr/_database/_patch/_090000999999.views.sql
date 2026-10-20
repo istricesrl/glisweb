@@ -1634,6 +1634,27 @@ CREATE OR REPLACE VIEW categorie_annunci_view AS
 	GROUP BY categorie_annunci.id
 ;
 
+-- | 090000003400
+
+-- categorie_conversazioni_view
+CREATE OR REPLACE VIEW categorie_conversazioni_view AS
+	SELECT
+		categorie_conversazioni.id,
+		categorie_conversazioni.id_genitore,
+		categorie_conversazioni.ordine,
+		categorie_conversazioni.codice,
+		categorie_conversazioni.nome,
+		count( c1.id ) AS figli,
+		count( conversazioni_categorie.id ) AS membri,
+		categorie_conversazioni.id_account_inserimento,
+		categorie_conversazioni.id_account_aggiornamento,
+		categorie_conversazioni_path( categorie_conversazioni.id ) AS __label__
+	FROM categorie_conversazioni
+		LEFT JOIN categorie_conversazioni AS c1 ON c1.id_genitore = categorie_conversazioni.id
+		LEFT JOIN conversazioni_categorie ON conversazioni_categorie.id_categoria = categorie_conversazioni.id
+	GROUP BY categorie_conversazioni.id
+;
+
 -- | 090000003500
 
 -- categorie_marchi_view
@@ -2325,6 +2346,28 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 		concat_ws( ' - ', conversazioni_account.id_conversazione, conversazioni_account.id_account, ruoli_conversazioni.nome ) AS __label__
 	FROM conversazioni_account
 		LEFT JOIN ruoli_conversazioni ON ruoli_conversazioni.id = conversazioni_account.id_ruolo
+;
+
+-- | 090000007701
+
+-- conversazioni_categorie_view
+CREATE OR REPLACE VIEW `conversazioni_categorie_view` AS
+	SELECT
+		conversazioni_categorie.id,
+		conversazioni_categorie.ordine,
+		conversazioni_categorie.id_conversazione,
+		conversazioni.nome AS conversazione,
+		conversazioni_categorie.id_categoria,
+		categorie_conversazioni_path( conversazioni_categorie.id_categoria ) AS categoria,
+		conversazioni_categorie.id_account_inserimento,
+		conversazioni_categorie.id_account_aggiornamento,
+		concat(
+			conversazioni.nome,
+			' / ',
+			categorie_conversazioni_path( conversazioni_categorie.id_categoria )
+		) AS __label__
+	FROM conversazioni_categorie
+		LEFT JOIN conversazioni ON conversazioni.id = conversazioni_categorie.id_conversazione
 ;
 
 -- | 090000007801

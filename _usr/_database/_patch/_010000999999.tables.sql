@@ -1360,6 +1360,36 @@ CREATE TABLE IF NOT EXISTS `categorie_annunci` (                  --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
+-- | 010000003400
+
+-- categorie_conversazioni
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene l albero delle categorie delle conversazioni
+--
+-- le conversazioni si associano alle categorie tramite conversazioni_categorie, anche a piu' d'una; l'albero serve a
+-- organizzare le conversazioni per argomento, p.es. le sezioni di un forum. E' un classificatore sul modello di
+-- categorie_anagrafica, non genera pagine: non ha il blocco web delle sei categorie_* che le generano.
+--
+-- NOTA se un giorno il forum diventa pubblico, con le pagine delle categorie nel sito, la tabella prende il blocco
+-- web e l'archiviazione del modello delle categorie_* che generano pagine; il passaggio e' solo additivo.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le categorie di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `categorie_conversazioni` (           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la categoria genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della categoria, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della categoria
+  `note` text DEFAULT NULL,                                       -- note sulla categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
+
 -- | 010000003500
 
 -- categorie_marchi
@@ -2180,6 +2210,29 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000007700
+
+-- conversazioni_categorie
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: associa molti a molti le conversazioni alle categorie delle conversazioni
+--
+-- questa tabella contiene le associazioni molti a molti tra le conversazioni e le categorie_conversazioni, p.es. le
+-- discussioni di un forum e le sezioni in cui stanno; un solo classificatore, quindi la chiave verso la categoria ha il
+-- nome generico id_categoria. Come le altre tabelle della famiglia, nessun form la legge come sotto-elenco.
+--
+CREATE TABLE IF NOT EXISTS `conversazioni_categorie` (        --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_conversazione` bigint(20) DEFAULT NULL,                 -- chiave esterna per la conversazione
+  `id_categoria` bigint(20) DEFAULT NULL,                     -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000007800
 

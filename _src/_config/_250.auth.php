@@ -1180,6 +1180,12 @@
         'conversazioni_account' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'conversazioni_categorie' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'categorie_conversazioni' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'tipologie_anagrafica' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),

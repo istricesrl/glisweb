@@ -824,6 +824,24 @@ ALTER TABLE `categorie_annunci`
 -- categorie_annunci
 ALTER TABLE `categorie_annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000003400
+
+-- categorie_conversazioni
+ALTER TABLE `categorie_conversazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`);
+
+-- | 030000003401
+
+-- categorie_conversazioni
+ALTER TABLE `categorie_conversazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000003500
 
 -- categorie_marchi
@@ -1306,6 +1324,24 @@ ALTER TABLE `conversazioni_account`
 -- conversazioni_account
 -- tipologia: tabella gestita
 ALTER TABLE `conversazioni_account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000007700
+
+-- conversazioni_categorie
+ALTER TABLE `conversazioni_categorie`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_categoria`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_conversazione` (`id_conversazione`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_conversazione`,`id_categoria`);
+
+-- | 030000007701
+
+-- conversazioni_categorie
+ALTER TABLE `conversazioni_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000007800
 
