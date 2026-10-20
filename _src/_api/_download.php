@@ -459,6 +459,18 @@
 
         }
 
+        // chiusura dei buffer di output
+        //
+        // ATTENZIONE: il bootstrap apre ob_start( 'ob_gzhandler' ), e senza chiuderlo readfile()
+        // non manda a blocchi al client ma accumula l'intero file nel buffer, che poi va anche
+        // compresso: il picco di memoria torna quello del file intero, e sopra il memory_limit
+        // ( 128M su DEV, file da ~64 MB in su ) il worker muore dopo aver mandato gli header,
+        // cioe' un 200 con zero byte. Un file binario compresso al volo non guadagna niente, e
+        // il Content-Length qui sotto vale per il file, non per la sua versione gzip.
+        while( ob_get_level() > 0 ) {
+            ob_end_clean();
+        }
+
         // header
         header( 'content-type: ' . $mimetype );
 

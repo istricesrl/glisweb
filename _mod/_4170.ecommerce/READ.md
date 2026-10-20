@@ -403,6 +403,32 @@ if( carrelloForm.checkValidity() ) {
 
   [...] se necessario aggiungere un ramo in _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.esito.php
 
+  la gestione dei carrelli nel back end
+  =====================================
+
+  la vista dei carrelli
+  ---------------------
+  La vista ( pagina *carrelli.view*, macro _mod/_4170.ecommerce/_src/_inc/_macro/_carrelli.view.php ) mostra per ogni carrello il
+  cliente ( *cliente_nome*, *cliente_cognome*, *cliente_mail* di carrelli_view, cioè l'intestatario o, se manca, il destinatario ),
+  le date di inserimento, conferma, pagamento ed evasione, l'esito del pagamento ( *status_pagamento* ), il totale e il sito, ed è
+  ordinata dal carrello più recente. I filtri di default mostrano solo i carrelli confermati e non ancora evasi.
+
+  Un deploy che vuole altri filtri di default, o altre colonne, copia la macro in mod/4170.ecommerce/src/inc/macro/carrelli.view.alt.php
+  e la modifica: la versione .alt.php viene eseguita al posto dello standard, che quindi non gira due volte. Le linguette della vista
+  e della scheda si cambiano dal file delle pagine del deploy, reimpostando $p['carrelli.view']['etc']['tabs'] e
+  $p['carrelli.form']['etc']['tabs'].
+
+  la scheda del carrello
+  ----------------------
+  La scheda ( pagina *carrelli.form*, template _mod/_4170.ecommerce/_src/_templates/_athena/carrelli.form.html ) mostra, oltre ai
+  dati anagrafici e di contatto, quelli che il front end raccoglie: codice fiscale, partita IVA, PEC e codice SDI dell'intestatario,
+  codice fiscale, partita IVA, data e luogo di nascita del destinatario, comune e stato di entrambi, e il coupon applicato. I metadati
+  del carrello stanno nella sezione *dati aggiuntivi*.
+
+  Il template deve usare solo colonne della tabella carrelli: un campo che non c'è fa fallire con l'errore 1054 l'intero salvataggio,
+  in silenzio. Fino al 2026-10-19 la scheda mostrava *note_pagamento*, che è una colonna di pagamenti, e nessun salvataggio andava a buon
+  fine; le note di fatturazione, che il front end raccoglie, sono un metadato e non una colonna.
+
   correlazioni fra il modulo e-commerce e gli altri moduli
   ========================================================
 

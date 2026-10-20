@@ -12,6 +12,16 @@
 
 	$ct['etc']['select']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM articoli_view' );
 
+    // tendina mesi
+	foreach( range( 1, 12 ) as $mese ) {
+	    $ct['etc']['select']['mesi'][] = array('id' => $mese, '__label__' => int2month( $mese ) );
+	}
+
+    // tendina giorni
+	foreach( range( 1, 31 ) as $giorno ) {
+	    $ct['etc']['select']['giorni'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
+	}
+
 	// tendina dei siti gestiti dall'installazione, per poter attribuire un sito ai carrelli creati dal backend
 	$ct['etc']['select']['siti'] = array();
 

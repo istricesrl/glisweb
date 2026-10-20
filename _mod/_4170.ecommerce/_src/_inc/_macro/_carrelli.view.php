@@ -15,15 +15,19 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'carrelli.form';
 
-    // campi della vista
+    // campi della vista; il cliente e' l'intestatario o, se manca, il destinatario ( carrelli_view )
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'intestazione' => 'intestazione',
+	    'cliente_nome' => 'nome',
+	    'cliente_cognome' => 'cognome',
+	    'cliente_mail' => 'e-mail',
 	    'data_ora_inserimento' => 'inserito',
 	    'data_ora_checkout' => 'confermato',
 	    'data_ora_pagamento' => 'pagato',
 	    'provider_pagamento' => 'tramite',
+	    'status_pagamento' => 'esito',
 	    'prezzo_lordo_finale' 	=> 'totale ordine',
+	    'id_sito' => 'sito',
 	    'data_ora_evasione' => 'evaso',
 #		'gruppi_attribuzione' => 'attribuzione automatica'
 	);
@@ -31,9 +35,13 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    'intestazione' => 'text-left',
+	    'cliente_nome' => 'text-left',
+	    'cliente_cognome' => 'text-left',
+	    'cliente_mail' => 'text-left',
 	    'provider_pagamento' => 'd-none',
+	    'status_pagamento' => 'text-center',
 	    'prezzo_lordo_finale' 	=> 'text-right',
+	    'id_sito' => 'text-left',
 #	    'gruppi' 	=> 'text-left'
 	);
 
@@ -47,6 +55,9 @@
     $ct['view']['__filters__']['timestamp_checkout']['NL'] = -1;
     // $ct['view']['__filters__']['timestamp_pagamento']['NL'] = -1;
     $ct['view']['__filters__']['timestamp_evasione']['NL'] = 1;
+
+	// ordinamento di default, i carrelli piu' recenti in cima
+	$ct['view']['__sort__']['id'] = 'DESC';
 
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

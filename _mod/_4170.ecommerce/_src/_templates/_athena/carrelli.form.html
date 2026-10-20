@@ -78,6 +78,17 @@
 
             <div class="form-group form-row">
                 <div class="col-12 col-md">
+                    <span class="label-top">comune</span>
+                    {{ frm.selectBox( table, '', '', 'intestazione_id_comune', 'comune', '', request, '', '', '', '', '', '', '', 'comuni', 'intestazione_id_comune', page, pages, ietf, 'comuni' ) }}
+                </div>
+                <div class="col-12 col-md-4">
+                    <span class="label-top">stato</span>
+                    {{ frm.selectBox( table, '', '', 'intestazione_id_stato', 'stato', '', request, '', '', '', '', '', '', '', 'stati', 'intestazione_id_stato', page, pages, ietf, 'stati' ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
                     <span class="label-top">telefono</span>
                     {{ frm.input( table, '', '', 'intestazione_telefono', '', '', request ) }}
                 </div>
@@ -88,6 +99,25 @@
                 <div class="col-12 col-md">
                     <span class="label-top">e-mail</span>
                     {{ frm.input( table, '', '', 'intestazione_mail', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">codice fiscale</span>
+                    {{ frm.input( table, '', '', 'intestazione_codice_fiscale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">partita IVA</span>
+                    {{ frm.input( table, '', '', 'intestazione_partita_iva', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">PEC</span>
+                    {{ frm.input( table, '', '', 'intestazione_pec', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">codice SDI</span>
+                    {{ frm.input( table, '', '', 'intestazione_sdi', '', '', request ) }}
                 </div>
             </div>
 <!--
@@ -155,6 +185,17 @@
 
             <div class="form-group form-row">
                 <div class="col-12 col-md">
+                    <span class="label-top">comune</span>
+                    {{ frm.selectBox( table, '', '', 'destinatario_id_comune', 'comune', '', request, '', '', '', '', '', '', '', 'comuni', 'destinatario_id_comune', page, pages, ietf, 'comuni' ) }}
+                </div>
+                <div class="col-12 col-md-4">
+                    <span class="label-top">stato</span>
+                    {{ frm.selectBox( table, '', '', 'destinatario_id_stato', 'stato', '', request, '', '', '', '', '', '', '', 'stati', 'destinatario_id_stato', page, pages, ietf, 'stati' ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
                     <span class="label-top">telefono</span>
                     {{ frm.input( table, '', '', 'destinatario_telefono', '', '', request ) }}
                 </div>
@@ -165,6 +206,41 @@
                 <div class="col-12 col-md">
                     <span class="label-top">e-mail</span>
                     {{ frm.input( table, '', '', 'destinatario_mail', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">codice fiscale</span>
+                    {{ frm.input( table, '', '', 'destinatario_codice_fiscale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">partita IVA</span>
+                    {{ frm.input( table, '', '', 'destinatario_partita_iva', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    <span class="label-top">giorno di nascita</span>
+                    {{ frm.select( table, '', '', 'destinatario_giorno_nascita', '', etc.select.giorni, request ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">mese</span>
+                    {{ frm.select( table, '', '', 'destinatario_mese_nascita', '', etc.select.mesi, request ) }}
+                </div>
+                <div class="col col-md-1">
+                    <span class="label-top">anno</span>
+                    {{ frm.input( table, '', '', 'destinatario_anno_nascita', '', '', request ) }}
+                </div>
+                <div class="w-100 d-block d-md-none m-0"></div>
+                <div class="col-12 col-md">
+                    <span class="label-top">comune di nascita</span>
+                    {{ frm.selectBox( table, '', '', 'destinatario_id_comune_nascita', 'comune', '', request, '', '', '', '', '', '', '', 'comuni', 'destinatario_id_comune_nascita', page, pages, ietf, 'comuni' ) }}
+                </div>
+                <div class="col-12 col-md-4">
+                    <span class="label-top">stato di nascita</span>
+                    {{ frm.selectBox( table, '', '', 'destinatario_id_stato_nascita', 'stato', '', request, '', '', '', '', '', '', '', 'stati', 'destinatario_id_stato_nascita', page, pages, ietf, 'stati' ) }}
                 </div>
             </div>
 
@@ -197,6 +273,21 @@
                 <div class="col-12 col-md">
                     <span class="label-top">totale lordo finale</span>
                     {{ frm.input( table, '', '', 'prezzo_lordo_finale', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md-4">
+                    <span class="label-top">codice coupon</span>
+                    {{ frm.input( table, '', '', 'codice_coupon', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">sconto coupon %</span>
+                    {{ frm.input( table, '', '', 'sconto_percentuale_coupon', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">sconto coupon €</span>
+                    {{ frm.input( table, '', '', 'sconto_valore_coupon', '', '', request ) }}
                 </div>
             </div>
 
@@ -239,11 +330,8 @@
                     {{ frm.input( table, '', '', 'status_pagamento', '', '', request ) }}
                 </div>
             </div>
-            <div class="form-row">
-                <div class="col-1 col-md" >
-                    <span class="label-top">note conferma e pagamento</span>{{ frm.textarea( table, '', '', 'note_pagamento', '', 3, request ) }}
-                </div>
-            </div>
+            {# note_pagamento e' una colonna di pagamenti, non di carrelli: dal 24/07/2024 il campo faceva fallire
+               con l'errore 1054 ogni salvataggio della scheda, quindi e' stato tolto ( 19/10/2026 ) #}
 
         </fieldset>
 
