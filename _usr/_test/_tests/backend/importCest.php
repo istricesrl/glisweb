@@ -33,6 +33,13 @@
         // un CSV oltre la soglia si spezza in parti, e ogni parte si archivia solo dopo essere stata scritta
         public function importazioneSpezzata( BackendTester $I ) {
 
+            global $cf;
+
+            // senza la chiave _740.controller.php scarta ogni riga per chiave di sicurezza mancante
+            if( empty( $cf['auth']['import']['secret'] ) ) {
+                $I->markTestSkipped( 'il deploy non ha auth.import.secret' );
+            }
+
             $righe = array( 'nome' );
             for( $i = 1; $i <= self::RIGHE; $i++ ) {
                 $righe[] = 'TEST-E2E-import-' . $i;
