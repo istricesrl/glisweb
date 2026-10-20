@@ -4652,6 +4652,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_file,
 		metadati.id_documento,
 		metadati.id_documenti_articoli,
+		metadati.id_asset,
 		metadati.id_progetto,
 		metadati.id_categoria_progetti,
 		metadati.id_indirizzo,
@@ -4659,22 +4660,23 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_immobile,
 		metadati.id_vano,
 		metadati.id_contratto,
-        metadati.id_valutazione,
-        metadati.id_rinnovo,
-        metadati.id_tipologia_attivita,
+		metadati.id_valutazione,
+		metadati.id_rinnovo,
+		metadati.id_attivita,
+		metadati.id_tipologia_attivita,
 		metadati.id_banner,
 		metadati.id_pianificazione,
+		metadati.id_todo,
 		metadati.id_tipologia_todo,
 		metadati.id_tipologia_contratti,
-		metadati.id_account_inserimento,
-		metadati.id_account_aggiornamento,
+		metadati.id_carrello,
+		metadati.id_tipologia_corrispondenza,
+		metadati.id_peso_tipologie_corrispondenza,
 		metadati.nome,
 		metadati.testo,
-		concat(
-			metadati.nome,
-			':',
-			metadati.testo
-		) AS __label__
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat_ws( ' ', metadati.nome, concat( '( ', lingue.ietf, ' )' ), ':', metadati.testo ) AS __label__
 	FROM metadati
 		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
 ;

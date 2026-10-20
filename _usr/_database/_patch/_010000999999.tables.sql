@@ -4278,61 +4278,70 @@ CREATE TABLE IF NOT EXISTS `messaggi_account` (
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i metadati per le entità del sistema
+-- funzione: contiene i metadati ( coppie nome/valore ) degli oggetti delle tabelle principali
 --
--- questa tabella contiene i metadati per le entità del sistema, come pagine, prodotti, articoli, notizie, annunci,
--- risorse, progetti, indirizzi, edifici, immobili, contratti, valut
--- azioni, rinnovi, attività, todo, banner, pianificazioni, carrelli, tipologie di corrispondenza e stati
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file, contenuti, metadati ),
+-- che collegano qualcosa a un oggetto di una tabella principale; qui sono dati liberi nella forma nome => valore,
+-- per le informazioni che non hanno una colonna loro: parametri di pagine e template, impostazioni di corsi,
+-- prodotti e carrelli, dati di integrazione; ogni riga è un metadato di un oggetto solo, indicato dalla sua
+-- chiave esterna id_*, eventualmente in una lingua; aggiungiMetadati() li legge e metadati2associativeArray() li
+-- trasforma in array, usando il carattere | nel nome per i livelli ( p.es. abbonamento|discipline )
+--
+-- NOTA le chiavi esterne verso gli oggetti sono CASCADE: un metadato non ha senso senza il suo oggetto
+-- NOTA le chiavi uniche sono ( id_<oggetto>, id_lingua, nome ) e proteggono solo i metadati in lingua: con
+-- id_lingua NULL, che è il caso normale, due righe con lo stesso nome non collidono; alcune chiavi usano
+-- di proposito più righe con lo stesso nome per un elenco di valori, e chi scrive un valore singolo deve
+-- aggiornare la riga esistente invece di aggiungerne una
 --
 CREATE TABLE IF NOT EXISTS `metadati` (                         --
   `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_lingua` bigint(20) DEFAULT NULL,                             -- chiave esterna per la lingua del metadato
-  `id_anagrafica` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata al metadato
-  `id_account` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'account collegato al metadato
-  `id_pagina` bigint(20) DEFAULT NULL,                             -- chiave esterna per la pagina collegata al metadato
-  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto collegato al metadato
-  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo collegato al metadato
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio collegato al metadato
-  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi collegata al metadato
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,
-  `id_immagine` bigint(20) DEFAULT NULL,
-  `id_video` bigint(20) DEFAULT NULL,
-  `id_audio` bigint(20) DEFAULT NULL,
-  `id_file` bigint(20) DEFAULT NULL,
-  `id_documento` bigint(20) DEFAULT NULL,
-  `id_documenti_articoli` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL, 
-  `id_valutazione` bigint(20) DEFAULT NULL,
-  `id_rinnovo` bigint(20) DEFAULT NULL,
-  `id_attivita` bigint(20) DEFAULT NULL,
-  `id_tipologia_attivita` bigint(20) DEFAULT NULL,
-  `id_banner` bigint(20) DEFAULT NULL,
-  `id_pianificazione` bigint(20) DEFAULT NULL,
-  `id_todo` bigint(20) DEFAULT NULL,
-  `id_tipologia_todo` bigint(20) DEFAULT NULL,
-  `id_tipologia_contratti` bigint(20) DEFAULT NULL,
-  `id_carrello` bigint(20) DEFAULT NULL,
-  `id_tipologia_corrispondenza` bigint(20) DEFAULT NULL,
-  `id_peso_tipologie_corrispondenza` bigint(20) DEFAULT NULL,
-  `id_vano` bigint(20) DEFAULT NULL,
-  `id_stato` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id_lingua` bigint(20) DEFAULT NULL,                             -- chiave esterna per la lingua del metadato, NULL se non dipende dalla lingua
+  `id_anagrafica` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica
+  `id_account` bigint(20) DEFAULT NULL,                            -- chiave esterna per l'account
+  `id_pagina` bigint(20) DEFAULT NULL,                             -- chiave esterna per la pagina
+  `id_prodotto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il prodotto
+  `id_articolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'articolo
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria dei prodotti
+  `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi
+  `id_notizia` bigint(20) DEFAULT NULL,                            -- chiave esterna per la notizia
+  `id_annuncio` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'annuncio
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria delle notizie
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria degli annunci
+  `id_risorsa` bigint(20) DEFAULT NULL,                            -- chiave esterna per la risorsa
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria delle risorse
+  `id_immagine` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'immagine
+  `id_video` bigint(20) DEFAULT NULL,                              -- chiave esterna per il video
+  `id_audio` bigint(20) DEFAULT NULL,                              -- chiave esterna per l'audio
+  `id_file` bigint(20) DEFAULT NULL,                               -- chiave esterna per il file
+  `id_documento` bigint(20) DEFAULT NULL,                          -- chiave esterna per il documento
+  `id_documenti_articoli` bigint(20) DEFAULT NULL,                 -- chiave esterna per la riga di documento
+  `id_asset` bigint(20) DEFAULT NULL,                              -- chiave esterna per l'asset
+  `id_progetto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il progetto
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria dei progetti
+  `id_indirizzo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'indirizzo
+  `id_edificio` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'edificio
+  `id_immobile` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'immobile
+  `id_vano` bigint(20) DEFAULT NULL,                               -- chiave esterna per il vano
+  `id_contratto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il contratto
+  `id_valutazione` bigint(20) DEFAULT NULL,                        -- chiave esterna per la valutazione
+  `id_rinnovo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il rinnovo
+  `id_attivita` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'attività
+  `id_tipologia_attivita` bigint(20) DEFAULT NULL,                 -- chiave esterna per la tipologia di attività
+  `id_banner` bigint(20) DEFAULT NULL,                             -- chiave esterna per il banner
+  `id_pianificazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la pianificazione
+  `id_todo` bigint(20) DEFAULT NULL,                               -- chiave esterna per il todo
+  `id_tipologia_todo` bigint(20) DEFAULT NULL,                     -- chiave esterna per la tipologia di todo
+  `id_tipologia_contratti` bigint(20) DEFAULT NULL,                -- chiave esterna per la tipologia di contratti
+  `id_carrello` bigint(20) DEFAULT NULL,                           -- chiave esterna per il carrello
+  `id_tipologia_corrispondenza` bigint(20) DEFAULT NULL,           -- chiave esterna per la tipologia di corrispondenza
+  `id_peso_tipologie_corrispondenza` bigint(20) DEFAULT NULL,      -- chiave esterna per il peso della tipologia di corrispondenza
+  `nome` char(255) DEFAULT NULL,                                   -- nome del metadato, con | per i livelli
+  `testo` text DEFAULT NULL,                                       -- valore del metadato
+  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito il metadato
+  `timestamp_inserimento` int(11) DEFAULT NULL,                    -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato il metadato
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                   -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000021810
