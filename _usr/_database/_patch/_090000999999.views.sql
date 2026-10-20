@@ -4744,22 +4744,24 @@ CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
 
 -- | 090000021951
 
--- modalita_spedizione
+-- modalita_spedizione_view
+-- tipologia: tabella assistita
+-- verifica: 2026-10-20 punto 6, riga 115
 CREATE OR REPLACE VIEW `modalita_spedizione_view` AS
 	SELECT
 		modalita_spedizione.id,
 		modalita_spedizione.id_tipologia,
 		modalita_spedizione.id_zona,
 		zone.nome AS zona,
-		modalita_spedizione.id_categoria_prodotti,
-		modalita_spedizione.id_prodotto,
-		modalita_spedizione.id_articolo,
-		modalita_spedizione.lotto_spedizione,
-		modalita_spedizione.importo_netto,
 		modalita_spedizione.id_valuta,
 		valute.utf8 AS valuta,
+		modalita_spedizione.id_prodotto,
+		modalita_spedizione.id_articolo,
 		modalita_spedizione.id_iva,
 		iva.nome AS iva,
+		modalita_spedizione.id_categoria_prodotti,
+		modalita_spedizione.lotto_spedizione,
+		modalita_spedizione.importo_netto,
 		modalita_spedizione.giorni_spedizione,
 		modalita_spedizione.giorni_consegna,
 		concat( zone.nome, ' - ', coalesce( prodotti.codice, articoli.codice, modalita_spedizione.id_prodotto, modalita_spedizione.id_articolo ) ) AS __label__

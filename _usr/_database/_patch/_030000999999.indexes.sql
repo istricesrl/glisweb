@@ -2703,20 +2703,21 @@ ALTER TABLE `modalita_pagamento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- modalita_spedizione
 ALTER TABLE `modalita_spedizione`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_zona` (`id_zona`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_valuta` (`id_valuta`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
 	ADD KEY `lotto_spedizione` (`lotto_spedizione`),
 	ADD KEY `importo_netto` (`importo_netto`),
-	ADD KEY `id_valuta` (`id_valuta`),
-	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `giorni_spedizione` (`giorni_spedizione`),
 	ADD KEY `giorni_consegna` (`giorni_consegna`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`importo_netto`);
 
 -- | 030000021951
 

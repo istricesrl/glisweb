@@ -4414,29 +4414,36 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (               --
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le modalita' e i costi di spedizione
+-- funzione: contiene i costi e i tempi di spedizione per zona e, se serve, per categoria, prodotto o articolo
 --
--- questa tabella contiene i costi e i tempi di spedizione per tipologia, zona e, se serve, per categoria,
--- prodotto o articolo
+-- ogni riga è una regola di spedizione per una zona ( zone ): senza categoria, prodotto né articolo vale per tutta la
+-- zona, con uno dei tre si restringe a quell'oggetto, e per un articolo vale la regola più specifica che c'è, nell'ordine
+-- articolo, prodotto, categoria del prodotto, zona; l'importo vale per un lotto di lotto_spedizione pezzi, e il carrello
+-- ( carrelli.costo_spedizione_* ) lo somma riga per riga o una volta per ordine, secondo la politica dell'e-commerce
 --
-CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `lotto_spedizione` int(11) DEFAULT NULL,
-  `importo_netto` decimal(16,2) DEFAULT NULL,
-  `id_valuta` bigint(20) DEFAULT NULL,
-  `id_iva` bigint(20) DEFAULT NULL,
-  `giorni_spedizione` int(11) DEFAULT NULL,
-  `giorni_consegna` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA id_tipologia ( tipologie_spedizioni ) è previsto per distinguere più modalità sulla stessa zona, p.es. standard
+-- ed espressa, da scegliere nel carrello; oggi nessun codice la legge
+-- NOTA le chiavi verso zona, categoria, prodotto e articolo sono CASCADE: la riga è una regola di quell'oggetto, e con
+-- SET NULL la regola di un articolo cancellato diventerebbe in silenzio una regola di tutta la zona
+--
+CREATE TABLE IF NOT EXISTS `modalita_spedizione` (                --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia di spedizione
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona di destinazione
+  `id_valuta` bigint(20) DEFAULT NULL,                            -- chiave esterna per la valuta dell'importo
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto a cui si limita la regola
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo a cui si limita la regola
+  `id_iva` bigint(20) DEFAULT NULL,                               -- chiave esterna per l'aliquota IVA della spedizione
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di prodotti a cui si limita la regola
+  `lotto_spedizione` int(11) DEFAULT NULL,                        -- pezzi che viaggiano con un solo importo di spedizione
+  `importo_netto` decimal(16,2) DEFAULT NULL,                     -- importo netto della spedizione di un lotto
+  `giorni_spedizione` int(11) DEFAULT NULL,                       -- giorni per la spedizione ( TTS )
+  `giorni_consegna` int(11) DEFAULT NULL,                         -- giorni per la consegna ( TTC )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000022000
 
