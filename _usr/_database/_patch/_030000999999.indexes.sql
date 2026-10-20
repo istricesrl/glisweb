@@ -2728,11 +2728,13 @@ ALTER TABLE `modalita_spedizione` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 
 -- notizie
 ALTER TABLE `notizie`
- 	ADD PRIMARY KEY (`id`),
+	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_sito` (`id_sito`),
- 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
- 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`id_sito`,`id_pagina`);
 
 -- | 030000022001
 

@@ -4453,26 +4453,37 @@ CREATE TABLE IF NOT EXISTS `modalita_spedizione` (                --
 -- struttura: tabella base
 -- funzione: contiene le notizie del sito
 --
--- questa tabella contiene le notizie del sito, con le informazioni principali
+-- una notizia e' un contenuto collocato e delimitato nel tempo di pubblicazione: non solo le notizie in senso stretto
+-- ma tutti i contenuti a tempo ( post di blog, comunicati e simili ). Il testo e gli altri contenuti stanno in
+-- contenuti ( contenuti.id_notizia ), la finestra di uscita in pubblicazioni ( pubblicazioni.id_notizia ), e le
+-- categorie in notizie_categorie. Ogni notizia genera una pagina del sito sotto ciascuna delle sue categorie, e la
+-- prima categoria da' il canonical ( _310.pages.php del modulo notizie ); per questo porta il blocco web ( template,
+-- schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) come le altre entita' che generano pagine.
 --
-CREATE TABLE IF NOT EXISTS `notizie` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del documento
-  `note_archiviazione` text DEFAULT NULL,                     -- note per l'archiviazione del documento
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA id_pagina e' la pagina sotto cui si appende la notizia nell'albero del sito quando non e' sotto una
+-- categoria; id_sito non ha chiave esterna perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- NOTA oggi il modulo notizie genera le pagine solo sotto le categorie: la lettura di id_pagina per le notizie senza
+-- categoria e' nel TODO di glisdev.
+CREATE TABLE IF NOT EXISTS `notizie` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della notizia
+  `nome` char(255) DEFAULT NULL,                                  -- titolo della notizia
+  `note` text DEFAULT NULL,                                       -- note sulla notizia
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della notizia
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della notizia va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della notizia si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000022100
 
