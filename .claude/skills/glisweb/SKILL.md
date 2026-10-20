@@ -140,6 +140,14 @@ senza aspettare il cron della notte ( vedi `riferimenti/cinque-file.md` ).
 `### Da chiedergli alla prossima occasione` della persona giusta, con data e voce di origine. Una
 domanda rimasta solo in conversazione muore col `/clear`, e il dialogo col cliente perde continuità.
 
+⚠ **`### Aspettiamo noi` contiene solo ciò che domani qualcuno deve scrivere o fare per quella
+persona**: lo legge l'assistente generale ( `chat-progetti.py --aperte` ) e ogni voce stantia diventa
+un falso "da mandare" davanti a Fabio. La voce si riscrive **a ogni messaggio mandato o ricevuto**, non
+a fine lavoro ( mandata la risposta, si chiude o passa in `### Aspetta lui` ); si chiude subito quando
+l'assistente generale o Fabio dicono che la cosa è fatta; e **a ogni apertura di sessione** si ripassano
+quelle più vecchie di 7 giorni contro la posta e il `DONE.md`. Regola del 20/10/2026, dettaglio in
+`riferimenti/cinque-file.md`.
+
 ⚠ **Un `TODO.md` si pota, e la pulizia ha una procedura sua**: quando l'utente chiede di "pulire le
 todo", di fare il triage del TODO o di capire cosa è già chiuso, si legge **`riferimenti/pulizia-todo.md`**
 e si applicano i verdetti con **`bin/applica-triage.py`** ( prova a secco, poi `--applica` ), mai a mano.

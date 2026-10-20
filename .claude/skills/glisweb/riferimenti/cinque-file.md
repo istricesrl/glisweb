@@ -362,6 +362,22 @@ sciogliere, la domanda va nel `CHAT.md`, nella sezione `### Da chiedergli alla p
 della persona giusta, **nello stesso turno**. Il dettaglio sta in *"Quando nasce una domanda per il
 cliente"*, più sotto.
 
+⚠ **"Aspettiamo noi" vuol dire che domani qualcuno deve scrivere o fare qualcosa per quella
+persona**, e nient'altro. Regola data dall'assistente generale il **20/10/2026**: le voci `- [ ]`
+di quella sezione le legge `chat-progetti.py --aperte` e diventano, davanti a Fabio, **comunicazioni
+da mandare**. Quel giorno la metà erano stantie — già evase, o ferme in attesa dell'altro e mai
+spostate — e Fabio se le è ritrovate come palla nostra. Quattro regole:
+
+1. **la voce si riscrive a ogni messaggio mandato o ricevuto**, non a fine lavoro: mandata la
+   risposta, la voce esce da `### Aspettiamo noi` — chiusa, o spostata in `### Aspetta lui` se
+   ora tocca a lui;
+2. **una voce che non è più "da fare per lui domani" non resta lì**, nemmeno "per memoria": la
+   memoria sta negli *Ultimi scambi* e nel `DONE.md`;
+3. **quando l'assistente generale o Fabio dicono che una cosa è fatta**, la voce si chiude nello
+   stesso turno;
+4. **a ogni apertura di sessione** si ripassano le voci di `### Aspettiamo noi` più vecchie di
+   **7 giorni**, e per ognuna si controlla nella posta o nel `DONE.md` se è ancora vera.
+
 #### Una sezione per conversazione e destinatario
 
 Non un blocco unico, e non più "un progetto, un interlocutore": **una sezione `##` per persona**.
