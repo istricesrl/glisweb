@@ -34,6 +34,7 @@ ALTER TABLE `account`
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_affiliazione` (`id_affiliazione`),
 	ADD KEY `id_url` (`id_url`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -221,6 +222,25 @@ ALTER TABLE `anagrafica_indirizzi`
 
 -- anagrafica_indirizzi
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000000920
+
+-- anagrafica_organizzazioni
+ALTER TABLE `anagrafica_organizzazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_organizzazione`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`id_organizzazione`,`id_ruolo`);
+
+-- | 030000000921
+
+-- anagrafica_organizzazioni
+ALTER TABLE `anagrafica_organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000940
 
@@ -2805,14 +2825,14 @@ ALTER TABLE `orari_contratti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- organizzazioni
 ALTER TABLE `organizzazioni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_genitore`,`id_anagrafica`,`id_ruolo`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`id_anagrafica`,`id_ruolo`);
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_anagrafica`);
 
 -- | 030000022801
 

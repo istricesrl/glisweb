@@ -23,6 +23,10 @@ CREATE OR REPLACE VIEW account_view AS                        --
 		mail.indirizzo AS mail,                               -- indirizzo email
 		account.id_affiliazione,                              --
 		contratti.codice AS codice_affiliazione,              -- codice del contratto di affiliazione
+		account.id_organizzazione,                            --
+		organizzazioni_path(                                  --
+            account.id_organizzazione                         --
+        ) AS organizzazione,                                  -- percorso del nodo dell'organizzazione
 		account.username,                                     --
 		account.password,                                     --
 		account.se_attivo,                                    --
@@ -324,6 +328,38 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
             ON provincie.id = comuni.id_provincia             --
     GROUP BY anagrafica_indirizzi.id                          --
 ;                                                             --
+
+-- | 090000000921
+
+-- anagrafica_organizzazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-20 Fabio Mosti
+--
+-- vista di anagrafica_organizzazioni: chi sta in quale nodo, con quale ruolo
+--
+CREATE OR REPLACE VIEW `anagrafica_organizzazioni_view` AS
+	SELECT
+		anagrafica_organizzazioni.id,
+		anagrafica_organizzazioni.ordine,
+		anagrafica_organizzazioni.id_anagrafica,
+		coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		anagrafica_organizzazioni.id_organizzazione,
+		organizzazioni_path( anagrafica_organizzazioni.id_organizzazione ) AS organizzazione,
+		anagrafica_organizzazioni.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		anagrafica_organizzazioni.note,
+		anagrafica_organizzazioni.id_account_inserimento,
+		anagrafica_organizzazioni.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			organizzazioni_path( anagrafica_organizzazioni.id_organizzazione ),
+			coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
+	FROM anagrafica_organizzazioni
+		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_organizzazioni.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = anagrafica_organizzazioni.id_ruolo
+;
 
 -- | 090000000941
 
@@ -4982,27 +5018,24 @@ CREATE OR REPLACE VIEW `orari_contratti_view` AS
 
 -- organizzazioni_view
 -- tipologia: tabella gestita
--- verifica: 2021-10-01 13:10 Fabio Mosti
+-- verifica: 2026-10-20 Fabio Mosti
+--
+-- vista dei nodi delle organizzazioni; l'etichetta e' il percorso del nodo nell'albero ( organizzazioni_path )
+--
 CREATE OR REPLACE VIEW `organizzazioni_view` AS
 	SELECT
 		organizzazioni.id,
 		organizzazioni.id_genitore,
 		organizzazioni.ordine,
+		organizzazioni.nome,
 		organizzazioni.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		organizzazioni.id_ruolo,
-		ruoli_anagrafica.nome AS ruolo,
+		organizzazioni.note,
 		organizzazioni.id_account_inserimento,
 		organizzazioni.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			organizzazioni_path( organizzazioni.id ),
-			ruoli_anagrafica.nome,
-			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
-		) AS __label__
+		organizzazioni_path( organizzazioni.id ) AS __label__
 	FROM organizzazioni
 		LEFT JOIN anagrafica AS a1 ON a1.id = organizzazioni.id_anagrafica
-		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = organizzazioni.id_ruolo
 ;
 
 -- | 090000023100

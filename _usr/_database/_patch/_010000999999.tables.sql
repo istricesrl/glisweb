@@ -150,6 +150,7 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
   `id_mail` bigint(20) DEFAULT NULL,                             -- chiave esterna per la mail collegata all'account
   `id_affiliazione` bigint(20) DEFAULT NULL,                     -- chiave esterna (contratti) che associa un dato account a un contratto di affiliazione
   `id_url` bigint(20) DEFAULT NULL,                              -- chiave esterna (url) che associa un dato account a un URL
+  `id_organizzazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per il nodo dell'organizzazione a cui appartiene l'account
   `username` char(64) DEFAULT NULL,                           -- nome utente per il login
   `password` char(128) DEFAULT NULL,                          -- password (hash) per il login
   `se_attivo` tinyint(1) DEFAULT NULL,                        -- flag che indica se l'account è attivo o meno
@@ -166,6 +167,9 @@ CREATE TABLE IF NOT EXISTS `account` (                        --
 --
 -- NOTA la password si salva con password_hash() ( passwordHash() in _src/_lib/_cryptography.tools.php ); i vecchi hash MD5
 -- restano validi e vengono ricalcolati al primo login riuscito
+--
+-- NOTA id_organizzazione colloca l'account in un nodo di organizzazioni, come gruppi.id_organizzazione per i gruppi:
+-- serve a segmentare gli accessi per parti dell'organizzazione; non e' ancora letta dal codice ( decisione del 20/10/2026 )
 
 -- | 010000000120
 
@@ -407,6 +411,34 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (           --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000000920
+
+-- anagrafica_organizzazioni
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega le anagrafiche ai nodi delle organizzazioni, con un ruolo
+--
+-- questa tabella dice chi sta in quale nodo di una struttura organizzata ( organizzazioni ) e con quale ruolo
+-- ( titolare, direttore, dipendente, referente... ); i ruoli proponibili sono quelli con
+-- ruoli_anagrafica.se_organizzazioni; insieme a organizzazioni descrive l'organigramma
+--
+-- NOTA la chiave unica e' ( id_anagrafica, id_organizzazione, id_ruolo ): la stessa anagrafica puo' avere piu'
+-- ruoli nello stesso nodo; le note precisano il ruolo nel caso specifico ( decisione del 20/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `anagrafica_organizzazioni` (        --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_organizzazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per il nodo dell'organizzazione
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000000940
 
@@ -4616,18 +4648,27 @@ CREATE TABLE IF NOT EXISTS `orari_contratti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le organizzazioni
+-- funzione: descrive una struttura organizzata come un albero di nodi
 --
--- questa tabella contiene le organizzazioni, con le informazioni principali
+-- ogni riga e' un nodo di una struttura organizzata qualsiasi ( un'azienda coi suoi reparti e uffici, un ente, una
+-- rete di sedi, un'associazione ) e id_genitore la appende al nodo che la contiene; e' una delle basi del CRM
+-- strutturato, perche' permette di mappare anche strutture complesse, e serve anche a descrivere l'organigramma
+-- interno dell'azienda coi suoi ruoli, reparti e uffici; le persone si associano ai nodi con un ruolo tramite
+-- anagrafica_organizzazioni, gli account e i gruppi tramite account.id_organizzazione e gruppi.id_organizzazione,
+-- che servono a segmentare gli accessi per parti dell'organizzazione; la corrispondenza registra l'ufficio che
+-- spedisce ( corrispondenza.id_organizzazione_mittente )
+--
+-- NOTA id_anagrafica e' facoltativa e indica l'ente che il nodo rappresenta ( la societa' alla radice, una
+-- controllata ), non chi ci lavora; e' una ricorsiva della famiglia dei classificatori, quindi il nome e' unico
+-- fra i figli dello stesso genitore ( decisione del 20/10/2026 )
 --
 CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna ricorsiva per l'organizzazione genitore
-  `id_anagrafica` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'anagrafica collegata all'organizzazione
-  `id_ruolo` bigint(20) DEFAULT NULL,                              -- chiave esterna per il ruolo dell'organizzazione
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `nome` char(128) DEFAULT NULL,                                -- nome dell'organizzazione
-  `note` text DEFAULT NULL,                                     -- note sull'organizzazione
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna ricorsiva per il nodo che contiene questo
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione fra i nodi fratelli
+  `nome` char(255) DEFAULT NULL,                                -- nome del nodo ( reparto, ufficio, sede, ente )
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'ente che il nodo rappresenta, se c'e'
+  `note` text DEFAULT NULL,                                     -- note sul nodo
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'organizzazione
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'organizzazione
