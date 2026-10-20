@@ -14,6 +14,9 @@
      *   recidiva: un IP che si fa bandire di nuovo sale di gradino;
      * - senza chiavi reCAPTCHA, o se Google non dà un punteggio, lo sblocco non avviene.
      *
+     * Toglie anche il bando della lista globale ( securityGlobalBan() ), ma solo per questo deploy e fino alla sua
+     * scadenza: la lista la decide il dataserver.
+     *
      * Ogni tentativo finisce nel registro degli attacchi dell'IP, e il resoconto notturno
      * ( _src/_api/_task/_security.clean.php ) mette gli sblocchi fra gli allarmi.
      *
@@ -21,7 +24,8 @@
 
     // bando dell'IP corrente
     $ban = DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'];
-    $_REQUEST['__sblocco__']['__bandito__'] = ( file_exists( $ban ) && filemtime( $ban ) > time() );
+    $globale = securityGlobalBan();
+    $_REQUEST['__sblocco__']['__bandito__'] = ( ( file_exists( $ban ) && filemtime( $ban ) > time() ) || $globale > 0 );
 
     // tentativo di sblocco
     if( $_REQUEST['__sblocco__']['__bandito__'] && isset( $_REQUEST['__sblocco__']['__recaptcha_token__'] ) ) {
@@ -36,8 +40,13 @@
 
         // sblocco, al massimo uno per intervallo
         if( $spam['status'] == 'score' && $spam['score'] >= 0.5 && rateLimitCheck( 'security.sblocco.riuscito', 1, SECURITY_UNBAN_INTERVAL ) ) {
-            securityLog( 'sblocco con verifica umana, punteggio ' . $spam['score'] . ', motivo del bando: ' . trim( (string) @file_get_contents( $ban ) ) );
+            securityLog( 'sblocco con verifica umana, punteggio ' . $spam['score'] . ', motivo del bando: ' . ( ( $globale > 0 ) ? 'lista globale ' : '' ) . trim( (string) @file_get_contents( $ban ) ) );
             @unlink( $ban );
+            if( $globale > 0 && checkPath( DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN ) ) {
+                $sbloccato = DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $_SERVER['REMOTE_ADDR'] );
+                file_put_contents( $sbloccato, date( 'Y-m-d H:i:s' ) . PHP_EOL );
+                touch( $sbloccato, time() + $globale );
+            }
             $_REQUEST['__sblocco__']['__bandito__'] = false;
             $_REQUEST['__sblocco__']['__esito__']['testo'] = array(
                 'it-IT' => 'accesso sbloccato, puoi tornare al sito',

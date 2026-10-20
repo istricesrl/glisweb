@@ -6,7 +6,8 @@
      * verifica il firewall di _src/_inc/_macro/_security.php: la richiesta malevola bloccata, quella innocua che
      * passa, la regola in osservazione che registra senza bloccare, il bando a gradini in var/spool/security/ban/,
      * gli indirizzi da non bandire ( la macchina stessa, allowed.hosts.conf, i crawler verificati col DNS ) e la
-     * pagina di sblocco, l'unica che un IP bandito riesce ad aprire
+     * pagina di sblocco, l'unica che un IP bandito riesce ad aprire; il 403 di Apache che passa dal firewall con
+     * l'ErrorDocument, e la lista globale dei bandi letta dalla copia locale
      *
      * le richieste partono dalla macchina stessa, che il firewall non bandisce mai: le prove sul bando quindi non
      * passano da HTTP, ma chiamano securityBan() e securitySpared() con un REMOTE_ADDR finto preso da 192.0.2.0/24
@@ -124,6 +125,49 @@
 
             unset( $_SERVER['REDIRECT_STATUS'], $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'] );
             http_response_code( 200 );
+
+        }
+
+        // l'IP della lista globale e' bandito finche' la riga non scade, o finche' non si sblocca
+        public function listaGlobale( FrontendTester $I ) {
+
+            // copia locale finta, che non va riscaricata durante il test; quella vera si rimette a posto alla fine
+            checkPath( DIR_VAR_SPOOL_SECURITY_GLOBAL );
+            $copia = ( file_exists( FILE_SECURITY_GLOBAL_BANS ) ) ? array( file_get_contents( FILE_SECURITY_GLOBAL_BANS ), filemtime( FILE_SECURITY_GLOBAL_BANS ) ) : NULL;
+            $lock = ( file_exists( FILE_SECURITY_GLOBAL_BANS_LOCK ) ) ? array( file_get_contents( FILE_SECURITY_GLOBAL_BANS_LOCK ), filemtime( FILE_SECURITY_GLOBAL_BANS_LOCK ) ) : NULL;
+            file_put_contents( FILE_SECURITY_GLOBAL_BANS_LOCK, 'TEST-E2E' . PHP_EOL );
+            file_put_contents( FILE_SECURITY_GLOBAL_BANS,
+                '# lista di prova' . PHP_EOL .
+                self::RETE . '4 ' . ( time() + 3600 ) . ' 2 TEST-E2E' . PHP_EOL .
+                self::RETE . '5 ' . ( time() - 60 ) . ' 2 TEST-E2E' . PHP_EOL
+            );
+
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '4';
+            $I->assertEqualsWithDelta( 3600, securityGlobalBan(), 5 );
+
+            // un prefisso dell'indirizzo non e' l'indirizzo
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '40';
+            $I->assertEquals( 0, securityGlobalBan() );
+
+            // la riga scaduta non conta
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '5';
+            $I->assertEquals( 0, securityGlobalBan() );
+
+            // lo sblocco con la verifica umana vale fino alla scadenza del bando globale
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '4';
+            checkPath( DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN );
+            touch( DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . self::RETE . '4', time() + 3600 );
+            $I->assertEquals( 0, securityGlobalBan() );
+
+            // copia locale e lock com'erano
+            foreach( array( FILE_SECURITY_GLOBAL_BANS => $copia, FILE_SECURITY_GLOBAL_BANS_LOCK => $lock ) as $f => $c ) {
+                if( $c === NULL ) {
+                    unlink( $f );
+                } else {
+                    file_put_contents( $f, $c[0] );
+                    touch( $f, $c[1] );
+                }
+            }
 
         }
 
@@ -251,7 +295,8 @@
             foreach( array_merge(
                 glob( DIR_VAR_SPOOL_SECURITY . self::RETE . '*.log' ),
                 glob( DIR_VAR_SPOOL_SECURITY_BAN . self::RETE . '*' ),
-                glob( DIR_VAR_SPOOL_SECURITY . 'limiti/*/' . self::RETE . '*.log' )
+                glob( DIR_VAR_SPOOL_SECURITY . 'limiti/*/' . self::RETE . '*.log' ),
+                glob( DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . self::RETE . '*' )
             ) as $file ) {
                 unlink( $file );
             }

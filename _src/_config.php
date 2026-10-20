@@ -612,7 +612,127 @@
             }
         }
 
+        // segnalazione alla lista globale dei bandi, a risposta già scritta
+        register_shutdown_function( 'securityReport', $m, $d );
+
         return 'bandito per ' . $d . ' secondi';
+
+    }
+
+    /**
+     * questa funzione segnala il bando dell'IP corrente alla lista globale dei bandi del dataserver
+     *
+     * Il dataserver ( SECURITY_DATASERVER ) raccoglie i bandi di tutti i deploy e ne fa la lista globale che legge
+     * securityGlobalBan(): così un IP bandito da un deploy non deve farsi bandire da capo in ognuno degli altri. Segnala
+     * solo il deploy che ha il token in FILE_SECURITY_DATASERVER_TOKEN; senza token, o senza cURL, non fa niente. La
+     * chiamata ha un timeout di SECURITY_DATASERVER_TIMEOUT secondi e il suo esito non cambia niente per la richiesta in
+     * corso: securityBan() la registra come funzione di shutdown, e un fallimento finisce solo nel registro dell'IP.
+     *
+     * @param   string  $m          il motivo del bando
+     * @param   int     $d          la durata del bando in secondi
+     *
+     * @return  void
+     *
+     */
+    function securityReport( $m, $d ) {
+
+        // token del deploy
+        $t = ( file_exists( FILE_SECURITY_DATASERVER_TOKEN ) ) ? trim( (string) @file_get_contents( FILE_SECURITY_DATASERVER_TOKEN ) ) : '';
+        if( empty( $t ) || ! function_exists( 'curl_init' ) ) {
+            return;
+        }
+
+        // segnalazione
+        $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
+        curl_setopt_array( $c, array(
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => json_encode( array(
+                'ip'        => $_SERVER['REMOTE_ADDR'],
+                'regola'    => $m,
+                'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
+                'durata'    => (int) $d
+            ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
+            CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+            CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+        ) );
+        $r = curl_exec( $c );
+        $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+        curl_close( $c );
+
+        // il fallimento si annota e basta
+        if( $s != 200 ) {
+            securityLog( 'segnalazione del bando al dataserver non riuscita, HTTP ' . $s . ' ' . substr( trim( (string) $r ), 0, 200 ) );
+        }
+
+    }
+
+    /**
+     * questa funzione dice se l'IP corrente è nella lista globale dei bandi, e per quanto
+     *
+     * La lista la decide il dataserver ( SECURITY_DATASERVER, bandi.php ): un IP per riga, "ip scadenza_epoch n_deploy
+     * regola", le righe che cominciano con # sono commenti. Non c'è un cron, perché sugli hosting condivisi spesso
+     * manca: la copia locale FILE_SECURITY_GLOBAL_BANS si riscarica quando l'ultimo tentativo è più vecchio di
+     * SECURITY_GLOBAL_REFRESH secondi, da una richiesta sola, quella che prende il lock FILE_SECURITY_GLOBAL_BANS_LOCK;
+     * le altre non aspettano e usano la copia che c'è. La data di ultima modifica della copia è quella che ha dato il
+     * dataserver, e va nell'If-Modified-Since; quella del lock è l'ultimo tentativo, che ci scrive dentro il suo esito.
+     *
+     * Se il download fallisce resta la copia vecchia, e le righe scadute non contano; senza cURL la lista non si legge.
+     * Un IP che si è sbloccato con la verifica umana ( _src/_inc/_macro/_security.sblocco.php ) ha un file in
+     * DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN fino alla scadenza del bando globale, e per questo deploy non è più bandito.
+     *
+     * @return  int                 i secondi che mancano alla fine del bando globale, 0 se l'IP non è bandito
+     *
+     */
+    function securityGlobalBan() {
+
+        // copia locale da rinnovare
+        $t = @filemtime( FILE_SECURITY_GLOBAL_BANS_LOCK );
+        if( ( $t === false || $t < time() - SECURITY_GLOBAL_REFRESH ) && function_exists( 'curl_init' ) && checkPath( DIR_VAR_SPOOL_SECURITY_GLOBAL ) ) {
+            $h = @fopen( FILE_SECURITY_GLOBAL_BANS_LOCK, 'c' );
+            if( $h !== false && flock( $h, LOCK_EX | LOCK_NB ) ) {
+                clearstatcache();
+                if( filesize( FILE_SECURITY_GLOBAL_BANS_LOCK ) == 0 || filemtime( FILE_SECURITY_GLOBAL_BANS_LOCK ) < time() - SECURITY_GLOBAL_REFRESH ) {
+                    $c = curl_init( SECURITY_DATASERVER . 'bandi.php' );
+                    curl_setopt_array( $c, array(
+                        CURLOPT_HTTPHEADER      => ( file_exists( FILE_SECURITY_GLOBAL_BANS ) ) ? array( 'If-Modified-Since: ' . gmdate( 'D, d M Y H:i:s', filemtime( FILE_SECURITY_GLOBAL_BANS ) ) . ' GMT' ) : array(),
+                        CURLOPT_FILETIME        => true,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+                        CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+                    ) );
+                    $r = curl_exec( $c );
+                    $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+                    $lm = curl_getinfo( $c, CURLINFO_FILETIME );
+                    curl_close( $c );
+                    // la copia nuova si scrive a parte e si rinomina, perché le altre richieste la leggono senza lock
+                    if( $s == 200 && is_string( $r ) && file_put_contents( DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.tmp', $r ) !== false && rename( DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.tmp', FILE_SECURITY_GLOBAL_BANS ) ) {
+                        touch( FILE_SECURITY_GLOBAL_BANS, ( $lm > 0 ) ? $lm : time() );
+                    }
+                    ftruncate( $h, 0 );
+                    fwrite( $h, date( 'Y-m-d H:i:s' ) . ' HTTP ' . $s . PHP_EOL );
+                }
+                flock( $h, LOCK_UN );
+            }
+            if( $h !== false ) {
+                fclose( $h );
+            }
+        }
+
+        // l'IP nella copia locale, con la sua scadenza
+        $ip = $_SERVER['REMOTE_ADDR'];
+        if( ! file_exists( FILE_SECURITY_GLOBAL_BANS ) || ! preg_match( '/^' . preg_quote( $ip, '/' ) . '\s+(\d+)/mi', (string) @file_get_contents( FILE_SECURITY_GLOBAL_BANS ), $m ) || $m[1] <= time() ) {
+            return 0;
+        }
+
+        // sbloccato con la verifica umana
+        $u = DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $ip );
+        if( file_exists( $u ) && filemtime( $u ) > time() ) {
+            return 0;
+        }
+
+        return $m[1] - time();
 
     }
 
@@ -932,6 +1052,8 @@
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
     define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL'             , DIR_BASE . 'var/spool/security/globale/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN'       , DIR_BASE . 'var/spool/security/globale/sbloccati/' );
     define( 'DIR_VAR_SPOOL_SIGNUP'                      , DIR_BASE . 'var/spool/signup/' );
 
     // file autoload per caricare le librerie con composer
@@ -946,6 +1068,11 @@
     define( 'FILE_FIREWALL_RULES'                       , DIR_ETC_SECURITY . '_firewall.rules.conf' );
     define( 'FILE_FIREWALL_RULES_CUSTOM'                , DIR_BASE . 'etc/security/firewall.rules.conf' );
     define( 'FILE_ALLOWED_HOSTS'                        , DIR_BASE . 'etc/security/allowed.hosts.conf' );
+
+    // file della lista globale dei bandi: il token per segnalare al dataserver, la copia locale e il suo lock
+    define( 'FILE_SECURITY_DATASERVER_TOKEN'            , DIR_BASE . 'etc/secret/dataserver.token' );
+    define( 'FILE_SECURITY_GLOBAL_BANS'                 , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.txt' );
+    define( 'FILE_SECURITY_GLOBAL_BANS_LOCK'            , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.lock' );
 
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );

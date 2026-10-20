@@ -7,7 +7,8 @@
      * firewall regge anche senza questo task, perché i bandi scaduti li toglie lui a ogni nuovo bando; qui si fa il
      * resto:
      *
-     * - si tolgono i bandi scaduti in var/spool/security/ban/, che Apache altrimenti continuerebbe a respingere;
+     * - si tolgono i bandi scaduti in var/spool/security/ban/, che Apache altrimenti continuerebbe a respingere, e gli
+     *   sblocchi scaduti della lista globale in var/spool/security/globale/sbloccati/;
      * - si cancellano i registri di rateLimitCheck() in var/spool/security/limiti/ fermi da più di
      *   SECURITY_RECIDIVE_TTL, la finestra più lunga che vi si usa;
      * - si cancellano i registri degli IP, i resoconti e i registri migrati più vecchi di SECURITY_LOG_TTL;
@@ -43,6 +44,13 @@
     foreach( scandir2array( DIR_VAR_SPOOL_SECURITY_BAN ) as $f ) {
         if( filemtime( DIR_VAR_SPOOL_SECURITY_BAN . $f ) < time() && @unlink( DIR_VAR_SPOOL_SECURITY_BAN . $f ) ) {
             $status['bandi']++;
+        }
+    }
+
+    // sblocchi scaduti della lista globale
+    foreach( glob( DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . '*' ) as $f ) {
+        if( filemtime( $f ) < time() ) {
+            @unlink( $f );
         }
     }
 

@@ -60,7 +60,8 @@
      *   regola in testa al .htaccess, che respinge l'IP bandito senza far partire PHP;
      * - \<ip\>.log: il registro degli attacchi, con ogni richiesta bloccata, ogni bando e ogni sblocco;
      * - limiti/firewall/\<ip\>.log e limiti/firewall.bandi.\<n\>/\<ip\>.log: i punti e i bandi, registri di rateLimitCheck();
-     * - resoconti/\<data\>.txt: i resoconti del task notturno _src/_api/_task/_security.clean.php.
+     * - resoconti/\<data\>.txt: i resoconti del task notturno _src/_api/_task/_security.clean.php;
+     * - globale/: la copia locale della lista globale dei bandi, il suo lock e gli sblocchi ( vedi sotto ).
      *
      * Il vecchio registro banned.hosts.conf, se c'è, viene migrato alla prima richiesta e rinominato. Dietro un proxy o
      * un CDN REMOTE_ADDR è l'indirizzo del proxy: va attivato mod_remoteip, che lo corregge sia per PHP sia per Apache.
@@ -78,6 +79,19 @@
      * _src/_inc/_pages/_security.*.php ): con una verifica reCAPTCHA toglie il bando, al massimo una volta ogni
      * SECURITY_UNBAN_INTERVAL secondi. Ogni sblocco è un falso positivo segnalato da solo, e il resoconto notturno lo
      * mette fra gli allarmi.
+     *
+     *
+     * la lista globale dei bandi
+     * ==========================
+     *
+     * I deploy non si scambiano i bandi da soli: lo stesso scanner va bandito da capo in ognuno. Per questo c'è la lista
+     * globale del dataserver ( SECURITY_DATASERVER ), che decide lui quali IP ci entrano ( banditi da almeno due deploy
+     * in un giorno, o con un indizio certo ) e per quanto. Ogni deploy la legge ( securityGlobalBan(), che ne tiene una
+     * copia in var/spool/security/globale/ e la rinnova ogni SECURITY_GLOBAL_REFRESH secondi senza bisogno di cron ) e
+     * tratta l'IP che c'è dentro come bandito, con un 429; i deploy che hanno il token in etc/secret/dataserver.token
+     * segnalano anche i propri bandi ( securityReport() ). Gli indirizzi da non bandire vengono prima della lista, e la
+     * pagina di sblocco toglie anche il bando globale, per questo deploy. Se il dataserver non risponde, o manca cURL,
+     * il firewall lavora come senza lista: con la copia vecchia, o senza.
      *
      *
      * limiti di frequenza
@@ -131,6 +145,17 @@
         define( 'SECURITY_LOG_TTL', 7776000 );
     }
 
+    // dataserver della lista globale dei bandi, timeout delle sue chiamate e intervallo fra due download della lista
+    if( ! defined( 'SECURITY_DATASERVER' ) ) {
+        define( 'SECURITY_DATASERVER', 'https://dataserver.istricesrl.com/firewall/' );
+    }
+    if( ! defined( 'SECURITY_DATASERVER_TIMEOUT' ) ) {
+        define( 'SECURITY_DATASERVER_TIMEOUT', 2 );
+    }
+    if( ! defined( 'SECURITY_GLOBAL_REFRESH' ) ) {
+        define( 'SECURITY_GLOBAL_REFRESH', 300 );
+    }
+
     // percorsi che, se rispondono 404, sono quelli che cerca uno scanner: script, copie, configurazioni e i file
     // nascosti che contano; un punto dopo la barra da solo no, perché un'immagine senza nome è un asset rotto
     define( 'SECURITY_PROBE_PATHS'                      , '/(\.(php\d?|phtml|asp|aspx|jsp|cgi|pl|env|git|svn|sql|bak|old|ini|ya?ml|swp)$)|\/\.(env|git|svn|hg|aws|ssh|htaccess|htpasswd|DS_Store|vscode|idea)(\/|$)/i' );
@@ -165,6 +190,15 @@
     if( file_exists( $banned ) && filemtime( $banned ) > time() && ! preg_match( SECURITY_UNBAN_PATHS, strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) {
         http_response_code( 429 );
         header( 'Retry-After: ' . ( filemtime( $banned ) - time() ) );
+        header( 'Content-type: text/plain; charset=utf-8' );
+        die( 'accesso sospeso, per sbloccarlo: /sblocco-accesso.it-IT.html' . PHP_EOL . 'access suspended, to unlock it: /unlock-access.en-GB.html' );
+    }
+
+    // l'IP della lista globale dei bandi è bandito anche qui, tranne sulla pagina che lo sblocca e se è fra quelli da non
+    // bandire, che vengono sempre prima
+    if( ! preg_match( SECURITY_UNBAN_PATHS, strtok( $_SERVER['REQUEST_URI'], '?' ) ) && ( $globale = securityGlobalBan() ) > 0 && securitySpared() == '' ) {
+        http_response_code( 429 );
+        header( 'Retry-After: ' . $globale );
         header( 'Content-type: text/plain; charset=utf-8' );
         die( 'accesso sospeso, per sbloccarlo: /sblocco-accesso.it-IT.html' . PHP_EOL . 'access suspended, to unlock it: /unlock-access.en-GB.html' );
     }
