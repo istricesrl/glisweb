@@ -150,6 +150,22 @@
 
         }
 
+        // l'header gliswebAuthKey non fa entrare e non rimanda indietro la chiave ( il login via API key non e' finito )
+        public function apiKeyChiusa( BackendTester $I ) {
+
+            global $cf;
+
+            $raw = NULL;
+            $status = NULL;
+            $chiave = 'TEST-E2E-chiave';
+
+            restCall( rtrim( $cf['site']['url'], '/' ) . '/admin.it-IT.html', METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_TEXT_PLAIN, $status, array( 'gliswebAuthKey' => $chiave ), NULL, NULL, $error, NULL, CURLAUTH_BASIC, $raw );
+
+            $I->assertEquals( 501, $status );
+            $I->assertStringNotContainsString( $chiave, (string) $raw );
+
+        }
+
         // un gruppo non staff entra, ma la dashboard gli resta negata
         public function diniegoPerGruppo( BackendTester $I ) {
 

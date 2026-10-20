@@ -199,7 +199,10 @@
             $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
 
             // die( 'token file trovato: ' . $tokenFile );
-            die( 'token redis trovato: ' . $httpHeaders['gliswebAuthKey'] );
+
+            // NOTA il login via API key non è finito e non è mai stato provato: il ramo resta chiuso, senza rimandare indietro la chiave
+            http_response_code( 501 );
+            die( 'login via API key non disponibile' );
 
             // ...
             if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
