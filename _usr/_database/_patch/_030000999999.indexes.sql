@@ -1595,6 +1595,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_destinatario` (`id_destinatario`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_lotto` (`id_lotto`),
 	ADD KEY `id_matricola` (`id_matricola`),
 	ADD KEY `id_udm` (`id_udm`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
@@ -2160,6 +2161,28 @@ ALTER TABLE `listini_zone`
 -- listini_zone
 ALTER TABLE `listini_zone` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000017800
+
+-- lotti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-20 punto 6, riga 108
+ALTER TABLE `lotti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_articolo`,`codice`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `data_scadenza` (`data_scadenza`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`,`id_articolo`,`id_produttore`,`data_scadenza`);
+
+-- | 030000017801
+
+-- lotti
+ALTER TABLE `lotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000018000
 
 -- luoghi
@@ -2446,15 +2469,21 @@ ALTER TABLE `mastri_tipologie_veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- | 030000021000
 
 -- matricole
+-- tipologia: tabella gestita
+-- verifica: 2026-10-20 punto 6, riga 108
 ALTER TABLE `matricole`
- 	ADD PRIMARY KEY (`id`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_articolo`,`matricola`),
 	ADD UNIQUE KEY `unica_scadenza` (`id_articolo`,`data_scadenza`),
+	ADD KEY `matricola` (`matricola`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_lotto` (`id_lotto`),
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_produttore` (`id_produttore`),
-	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_condizione` (`id_condizione`),
- 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
- 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`matricola`,`nome`,`id_articolo`,`id_lotto`,`id_marchio`,`id_produttore`);
 
 -- | 030000021001
 

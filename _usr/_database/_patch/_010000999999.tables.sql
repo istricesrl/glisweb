@@ -2633,7 +2633,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- - testata: id_genitore, id_tipologia, id_tipologia_documento, ordine, codice, nome
 -- - documenti: id_documento, data, id_missione, id_packing_list
 -- - anagrafiche: id_emittente, id_destinatario
--- - articolo: id_articolo, id_prodotto, id_matricola, id_udm, quantita_prevista, quantita
+-- - articolo: id_articolo, id_prodotto, id_lotto, id_matricola, id_udm, quantita_prevista, quantita
 -- - magazzino: id_mastro_provenienza, id_mastro_destinazione, id_collo
 -- - importi: id_listino, costi, prezzi, importi, sconti, se_ritenuta
 -- - commercio: id_carrello, id_carrelli_articoli, id_rinnovo
@@ -2643,7 +2643,9 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- - audit
 --
 -- NOTA il movimento lo fa la riga: i mastri di provenienza e di destinazione della testata del documento sono solo il
--- default delle righe che vi si aggiungono, e la giacenza si calcola per mastro, articolo e matricola
+-- default delle righe che vi si aggiungono, e la giacenza si calcola per mastro, articolo, lotto e matricola
+--
+-- NOTA una riga ha un solo lotto e una sola matricola; se ha la matricola, id_lotto è quello della matricola
 --
 -- NOTA una riga può esistere senza documento, e il documento le si può assegnare dopo; id_tipologia_documento dice il
 -- tipo di documento atteso dalla riga, e le viste usano coalesce( id_tipologia_documento, documenti.id_tipologia )
@@ -2676,7 +2678,8 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_destinatario` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica destinataria, se diversa da quella del documento
   `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo
   `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto, per le righe che non indicano l'articolo
-  `id_matricola` bigint(20) DEFAULT NULL,                         -- chiave esterna per la matricola ( la giacenza si calcola per mastro, articolo e matricola )
+  `id_lotto` bigint(20) DEFAULT NULL,                             -- chiave esterna per il lotto ( la giacenza si calcola per mastro, articolo, lotto e matricola )
+  `id_matricola` bigint(20) DEFAULT NULL,                         -- chiave esterna per la matricola
   `id_udm` bigint(20) DEFAULT NULL,                               -- chiave esterna per l'unità di misura
   `quantita_prevista` decimal(9,2) DEFAULT NULL,                  -- quantità prevista
   `quantita` decimal(9,2) DEFAULT NULL,                           -- quantità movimentata
@@ -3518,6 +3521,40 @@ CREATE TABLE IF NOT EXISTS `listini_zone` (                     --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000017800
+
+-- lotti
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i lotti degli articoli, cioè gli insiemi di pezzi prodotti insieme con lo stesso codice
+-- entità: questa tabella corrisponde all'entità lotto
+--
+-- un lotto è un insieme di pezzi dello stesso articolo prodotti o confezionati insieme, riconosciuto dal codice che gli
+-- dà il produttore ( quello stampato in etichetta ), unico per articolo, con le sue date di produzione e di scadenza;
+-- le righe di documento lo dichiarano con id_lotto, una riga un lotto ( una consegna presa da due lotti sono due
+-- righe ), e la giacenza e i movimenti si calcolano per mastro, articolo, lotto e matricola: così si sa dove è andato
+-- un lotto e quanto ne resta in ogni mastro, p.es. per un richiamo; un pezzo con numero di serie può appartenere a un
+-- lotto ( matricole.id_lotto ), e allora la riga che lo movimenta porta il lotto della matricola; l'articolo dice
+-- cos'è il lotto, quindi non si cancella un articolo che ha lotti
+--
+-- NOTA nei moduli legacy i lotti sono ancora matricole automatiche per articolo e scadenza ( vedi matricole )
+--
+CREATE TABLE IF NOT EXISTS `lotti` (                            --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                               -- codice del lotto assegnato dal produttore, unico per articolo
+  `nome` char(255) DEFAULT NULL,                                -- nome del lotto
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo del lotto
+  `id_produttore` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica del produttore, se diverso da quello del prodotto
+  `note` text DEFAULT NULL,                                     -- note sul lotto
+  `data_produzione` date DEFAULT NULL,                          -- data di produzione o di confezionamento del lotto
+  `data_scadenza` date DEFAULT NULL,                            -- data di scadenza del lotto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il lotto
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il lotto
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
+
 -- | 010000018000
 
 -- luoghi
@@ -4049,25 +4086,37 @@ CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le matricole degli articoli
+-- funzione: contiene le matricole, cioè i singoli pezzi di un articolo riconosciuti dal numero di serie
+-- entità: questa tabella corrisponde all'entità matricola
 --
--- questa tabella contiene le matricole degli articoli, con le informazioni principali
+-- una matricola è un esemplare fisico preciso di un articolo, riconosciuto dal suo numero di serie ( matricola, unico
+-- per articolo ): serve a seguire il percorso di quel pezzo fra i mastri ( la giacenza e i movimenti si calcolano per
+-- mastro, articolo, lotto e matricola ) e a collegarlo ad attività, progetti, todo e valutazioni; l'articolo dice
+-- cos'è la matricola, quindi non si cancella un articolo che ha matricole; un pezzo può venire da un lotto
+-- ( id_lotto ), e allora la riga di documento che lo movimenta porta il lotto della matricola e non un altro; marchio
+-- e produttore servono quando sono diversi da quelli del prodotto ( p.es. un pezzo OEM ), la condizione è lo stato di
+-- quel pezzo, la scadenza quella del pezzo ( garanzia, revisione )
 --
-CREATE TABLE IF NOT EXISTS `matricole` (
-  `id` bigint(20) NOT NULL,
-  `id_marchio` bigint(20) DEFAULT NULL,
-  `id_produttore` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_condizione` bigint(20) DEFAULT NULL,
-  `matricola` char(128) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `data_scadenza` date DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA la UNIQUE unica_scadenza ( id_articolo, data_scadenza ) è dei moduli legacy: con matricole.scadenze acceso le
+-- righe di documento creano una "matricola automatica" per articolo e scadenza, che fa da lotto, e la ritrovano grazie
+-- a questa chiave; resta finché quei moduli sono vivi, poi i lotti stanno solo in lotti e la chiave cade
+--
+CREATE TABLE IF NOT EXISTS `matricole` (                        --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `matricola` char(128) DEFAULT NULL,                           -- numero di serie, unico per articolo
+  `nome` char(255) DEFAULT NULL,                                -- nome della matricola
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo di cui la matricola è un esemplare
+  `id_lotto` bigint(20) DEFAULT NULL,                           -- chiave esterna per il lotto da cui viene la matricola
+  `id_marchio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il marchio, se diverso da quello del prodotto
+  `id_produttore` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica del produttore, se diverso da quello del prodotto
+  `id_condizione` bigint(20) DEFAULT NULL,                      -- chiave esterna per la condizione del pezzo
+  `note` text DEFAULT NULL,                                     -- note sulla matricola
+  `data_scadenza` date DEFAULT NULL,                            -- data di scadenza del pezzo ( garanzia, revisione )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la matricola
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la matricola
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
 
 -- | 010000021600
 

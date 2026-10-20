@@ -2963,6 +2963,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.importo_netto_totale,
 		documenti_articoli.sconto_percentuale,
 		documenti_articoli.sconto_valore,
+		documenti_articoli.id_lotto,
+		lotti.codice AS lotto,
 		documenti_articoli.id_matricola,
 		matricole.matricola AS matricola,
 		documenti_articoli.id_rinnovo,
@@ -2970,7 +2972,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		colli.codice AS codice_collo,
 		colli.nome AS nome_collo,
         colli.ordine AS ordine_collo,
-		matricole.data_scadenza,
+		coalesce( lotti.data_scadenza, matricole.data_scadenza ) AS data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
         documenti.data_archiviazione,
@@ -3007,6 +3009,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
+		LEFT JOIN lotti ON lotti.id = documenti_articoli.id_lotto
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
@@ -3850,6 +3853,74 @@ CREATE OR REPLACE VIEW listini_zone_view AS                                     
     LEFT JOIN zone ON zone.id = listini_zone.id_zona                                     --
   ;                                                                                      --
 
+-- | 090000017801
+
+-- lotti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-20 punto 6, riga 108
+CREATE OR REPLACE VIEW `lotti_view` AS
+	SELECT
+		lotti.id,
+		lotti.codice,
+		lotti.nome,
+		lotti.id_articolo,
+		concat_ws(
+			' ',
+			articoli.id,
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS articolo,
+		lotti.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		lotti.note,
+		lotti.data_produzione,
+		lotti.data_scadenza,
+		lotti.id_account_inserimento,
+		lotti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			lotti.codice,
+			'/',
+			articoli.id,
+			'/',
+			prodotti.nome,
+			articoli.nome,
+			concat( 'scad. ', lotti.data_scadenza )
+		) AS __label__
+	FROM lotti
+		LEFT JOIN articoli ON articoli.id = lotti.id_articolo
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN anagrafica AS a1 ON a1.id = lotti.id_produttore
+;
+
 -- | 090000018001
 
 -- luoghi
@@ -4308,14 +4379,12 @@ CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
 
 -- matricole_view
 -- tipologia: tabella gestita
--- verifica: 2021-12-28 16:20 Chiara GDL
+-- verifica: 2026-10-20 punto 6, riga 108
 CREATE OR REPLACE VIEW `matricole_view` AS
 	SELECT
 		matricole.id,
-		matricole.id_produttore,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
-		matricole.id_marchio,
-		marchi.nome AS marchio,
+		matricole.matricola,
+		matricole.nome,
 		matricole.id_articolo,
 		concat_ws(
 			' ',
@@ -4346,11 +4415,18 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 				''
 			)
 		) AS articolo,
+		matricole.id_lotto,
+		lotti.codice AS lotto,
+		matricole.id_marchio,
+		marchi.nome AS marchio,
+		matricole.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		matricole.id_condizione,
 		condizioni.nome AS condizione,
-		matricole.matricola,
+		matricole.note,
 		matricole.data_scadenza,
-		matricole.nome,
+		matricole.id_account_inserimento,
+		matricole.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			matricole.matricola,
@@ -4385,15 +4461,16 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 			concat( 'scad. ', matricole.data_scadenza )
 		) AS __label__
 	FROM matricole
-		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
-		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
-		LEFT JOIN articoli ON articoli.id = id_articolo
+		LEFT JOIN articoli ON articoli.id = matricole.id_articolo
 		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
 		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
 		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN lotti ON lotti.id = matricole.id_lotto
+		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
 		LEFT JOIN condizioni ON condizioni.id = matricole.id_condizione
 ;
 
