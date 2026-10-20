@@ -21,7 +21,7 @@ class localizationToolsCest
     public function string2utf8(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_localization.tools/_string2utf8.01.php');
-        $I->see("'èéòàìù'");
+        $I->see('"èéòàìù"');
         $I->see("UTF-8");
     }
 

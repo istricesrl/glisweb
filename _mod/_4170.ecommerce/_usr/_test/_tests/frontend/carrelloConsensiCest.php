@@ -32,10 +32,11 @@
 
             $nome = $I->grabTestName( 'consensi' );
 
-            $I->amOnPage( '/?' . http_build_query( array(
+            // la pagina del carrello e non la home: dove / e' rediretta il redirect arriva prima dei controller del carrello
+            $I->amOnPageId( 'carrello', array(
                 '__carrello__' => array( 'intestazione_nome' => $nome ),
                 '__consensi__' => array( '__carrello__' => array( 'PRIVACY_POLICY' => array( 'value' => 1 ) ) )
-            ) ) );
+            ) );
 
             $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             if( empty( $id ) ) {

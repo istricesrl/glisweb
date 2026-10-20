@@ -55,7 +55,7 @@
         // una richiesta innocua passa
         public function richiestaInnocua( FrontendTester $I ) {
 
-            $I->assertEquals( 200, $this->scarica( '/?' . \Helper\Glisweb::RECORD_PREFIX . uniqid() . '=1', $raw ) );
+            $I->assertTrue( $this->passa( $this->scarica( '/?' . \Helper\Glisweb::RECORD_PREFIX . uniqid() . '=1', $raw ) ) );
 
         }
 
@@ -64,7 +64,7 @@
 
             $marcatore = \Helper\Glisweb::RECORD_PREFIX . uniqid();
 
-            $I->assertEquals( 200, $this->scarica( '/?' . $marcatore . '=1', $raw, array( 'User-Agent' => 'feroxbuster/2.10' ) ) );
+            $I->assertTrue( $this->passa( $this->scarica( '/?' . $marcatore . '=1', $raw, array( 'User-Agent' => 'feroxbuster/2.10' ) ) ) );
 
             $this->sorgente( $marcatore, $riga );
             $I->assertStringContainsString( 'osservazione per la regola', $riga );
@@ -228,7 +228,24 @@
                 @unlink( DIR_VAR_SPOOL_SECURITY_BAN . $ip );
             }
 
-            $I->assertEquals( 200, $this->scarica( '/', $raw ) );
+            $I->assertTrue( $this->passa( $this->scarica( '/', $raw ) ) );
+
+        }
+
+        /**
+         * dice se una richiesta e' passata dal firewall
+         *
+         * la home di un deploy non risponde per forza 200: dove / e' rediretta ( p.es. verso /admin ) arriva un 3xx, e
+         * anche quello vuol dire che il firewall ha lasciato passare la richiesta; il firewall blocca con 400, 403 e 429
+         *
+         * @param       int         $status         lo status HTTP della risposta
+         *
+         * @return      bool                        true se la richiesta e' passata
+         *
+         */
+        protected function passa( $status ) {
+
+            return $status >= 200 && $status < 400;
 
         }
 

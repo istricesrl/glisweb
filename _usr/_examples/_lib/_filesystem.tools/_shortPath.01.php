@@ -11,7 +11,7 @@
     require '../../../../_src/_config.php';
 
     // percorso
-    $f = '/var/www/glisdev.istricesrl.com/dev/src/config.json';
+    $f = DIR_BASE . 'src/config.json';
 
     // output
     var_dump( $f );

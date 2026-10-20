@@ -32,10 +32,11 @@
             $nome = $I->grabTestName( 'metadati' );
             $metadato = $I->grabTestName( 'non_dichiarato' );
 
-            $I->amOnPage( '/?' . http_build_query( array( '__carrello__' => array(
+            // la pagina del carrello e non la home: dove / e' rediretta il redirect arriva prima dei controller del carrello
+            $I->amOnPageId( 'carrello', array( '__carrello__' => array(
                 'intestazione_nome' => $nome,
                 '__metadati__' => array( $metadato => 'valore' )
-            ) ) ) );
+            ) ) );
 
             $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             if( empty( $id ) ) {

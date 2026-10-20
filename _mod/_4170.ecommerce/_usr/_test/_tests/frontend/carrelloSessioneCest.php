@@ -30,7 +30,8 @@
         // apre un carrello dal browser e ne restituisce l'id
         protected function apriCarrello( FrontendTester $I, $nome, $parametri = array() ) {
 
-            $I->amOnPage( '/?' . http_build_query( array( '__carrello__' => array_merge( $parametri, array( 'intestazione_nome' => $nome ) ) ) ) );
+            // la pagina del carrello e non la home: dove / e' rediretta il redirect arriva prima dei controller del carrello
+            $I->amOnPageId( 'carrello', array( '__carrello__' => array_merge( $parametri, array( 'intestazione_nome' => $nome ) ) ) );
 
             $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             if( empty( $id ) ) {
@@ -53,7 +54,7 @@
 
             // sessione nuova col carrello vuoto, a cui resta legato il carrello chiuso
             $I->resetCookie( 'PHPSESSID' );
-            $I->amOnPage( '/' );
+            $I->amOnPageId( 'carrello' );
             $I->updateInDatabase( 'carrelli', array( 'id' => $idChiuso, 'session' => $I->grabCookie( 'PHPSESSID' ) ) );
 
             // secondo carrello dallo stesso browser
