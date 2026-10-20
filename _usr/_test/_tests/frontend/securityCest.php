@@ -90,6 +90,43 @@
 
         }
 
+        // il 403 di Apache passa dal firewall attraverso l'ErrorDocument, che risponde 403 con la sua pagina
+        public function erroreDocument403( FrontendTester $I ) {
+
+            $I->assertEquals( 403, $this->scarica( '/composer.json?' . \Helper\Glisweb::RECORD_PREFIX . uniqid() . '=1', $raw ) );
+            $I->assertStringContainsString( 'accesso negato', $raw );
+
+        }
+
+        // il 403 di Apache dà punti, tre sui percorsi da scanner, e nessuno col referer dello stesso sito
+        public function punti403( FrontendTester $I ) {
+
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '3';
+            $_SERVER['REDIRECT_STATUS'] = '403';
+            $_SERVER['HTTP_HOST'] = 'example.com';
+            $_SERVER['HTTP_REFERER'] = 'https://example.com/admin/';
+            $_SERVER['REQUEST_URI'] = '/.env';
+            http_response_code( 403 );
+
+            // col referer interno niente punti, anche dopo molti 403
+            for( $i = 0; $i < SECURITY_SCORE_LIMIT; $i++ ) {
+                securityOutcome();
+            }
+            $I->assertFileDoesNotExist( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'] );
+
+            // senza referer bastano quattro 403 su un percorso da scanner
+            unset( $_SERVER['HTTP_REFERER'] );
+            for( $i = 0; $i < 4; $i++ ) {
+                securityOutcome();
+            }
+            $I->assertFileExists( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'] );
+            $I->assertStringContainsString( '403 su percorsi da scanner', file_get_contents( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'] ) );
+
+            unset( $_SERVER['REDIRECT_STATUS'], $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'] );
+            http_response_code( 200 );
+
+        }
+
         // la macchina stessa e gli indirizzi di allowed.hosts.conf non si bandiscono, gli altri si'
         public function indirizziAmmessi( FrontendTester $I ) {
 

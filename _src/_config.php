@@ -623,17 +623,29 @@
      * sarebbe un collegamento rotto del sito: un 404 qualsiasi no, perché favicon, immagini e librerie vecchie chieste
      * senza referer bandivano migliaia di utenti veri ( simulazione sui log di PROD, 30/09/2026 ).
      *
+     * Conta anche il 403 che Apache dà prima di PHP ( ModSecurity, i blocchi del .htaccess ), che arriva qui
+     * dall'ErrorDocument 403 con REDIRECT_STATUS: un punto, tre se il percorso è da scanner, niente col referer interno,
+     * perché ModSecurity ha falsi positivi noti sui salvataggi dei CMS e un redattore non deve finire bandito.
+     *
      * @return  void
      *
      */
     function securityOutcome() {
 
-        if( http_response_code() == 404
-            && ! ( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 )
-            && preg_match( SECURITY_PROBE_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) ) {
+        // un referer dello stesso sito è un collegamento rotto o un utente al lavoro, non uno scanner
+        $interno = ( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 );
+        $probe = ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( SECURITY_PROBE_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) );
+
+        if( http_response_code() == 404 && ! $interno && $probe ) {
             $e = securityBan( 3, '404 su percorsi da scanner' );
             if( ! empty( $e ) ) {
                 securityLog( '404 su percorsi da scanner, ' . $e );
+            }
+        } elseif( http_response_code() == 403 && isset( $_SERVER['REDIRECT_STATUS'] ) && $_SERVER['REDIRECT_STATUS'] == '403' && ! $interno ) {
+            $m = ( $probe ) ? '403 su percorsi da scanner' : '403 di Apache';
+            $e = securityBan( ( $probe ) ? 3 : 1, $m );
+            if( ! empty( $e ) ) {
+                securityLog( $m . ', ' . $e );
             }
         }
 

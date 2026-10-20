@@ -22,6 +22,11 @@ Options -MultiViews
 # sblocco ( security.sblocco, _src/_inc/_pages/_security.*.php )
 ErrorDocument 429 "<!doctype html><meta charset='utf-8'><title>accesso sospeso</title><p>Dal tuo indirizzo sono arrivate richieste che il sito considera un attacco, e l'accesso è sospeso per un po'. Se sei una persona, <a href='/sblocco-accesso.it-IT.html'>sblocca l'accesso</a>.</p><p>Requests from your address look like an attack, so access is suspended for a while. If you are a person, <a href='/unlock-access.en-GB.html'>unlock access</a>.</p>"
 
+# le richieste che Apache respinge con un 403 prima di PHP ( ModSecurity, i blocchi qui sotto ) passano dal firewall
+# applicativo, che le vede attraverso REDIRECT_URL e REDIRECT_STATUS e dà i punti all'IP ( _src/_api/_security.403.php );
+# dove ModSecurity non c'è vale lo stesso per i 403 di Apache
+ErrorDocument 403 /_src/_api/_security.403.php
+
 # dichiaro il tipo MIME del webp
 # il webp non e' in /etc/mime.types, quindi senza questa riga Apache serve i .webp senza
 # Content-Type e i browser non li trattano come immagini. Sta qui, fuori dal blocco

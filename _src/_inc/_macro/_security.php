@@ -18,7 +18,9 @@
      * - ogni regola attiva che scatta blocca la richiesta e dà all'IP il suo peso in punti;
      * - l'IP viene bandito quando arriva a SECURITY_SCORE_LIMIT punti in SECURITY_SCORE_WINDOW secondi, e il bando
      *   dura di più se ci ricasca entro SECURITY_RECIDIVE_TTL ( i gradini sono in SECURITY_BAN_STEPS );
-     * - alla fine della richiesta anche un 404 su un percorso da scanner dà punti ( securityOutcome() ).
+     * - alla fine della richiesta anche un 404 su un percorso da scanner dà punti ( securityOutcome() );
+     * - anche le richieste che Apache respinge con un 403 prima di PHP ( ModSecurity, i blocchi del .htaccess ) danno
+     *   punti: l'ErrorDocument 403 del .htaccess le manda a _src/_api/_security.403.php, che passa solo da qui.
      *
      * Le funzioni stanno in _src/_config.php ( securityRules(), securityCheck(), securityBan() e le altre ), perché
      * questo file gira prima delle librerie; i punti sono un canale di rateLimitCheck().
@@ -203,3 +205,11 @@
 
     // l'esito della richiesta si guarda alla fine
     register_shutdown_function( 'securityOutcome' );
+
+    // il 403 di Apache ( ModSecurity, le regole del .htaccess ) arriva qui dall'ErrorDocument, con la richiesta originale
+    // in REQUEST_URI: i punti li dà securityOutcome(), e il resto del framework non serve
+    if( isset( $_SERVER['REDIRECT_STATUS'] ) && $_SERVER['REDIRECT_STATUS'] == '403' ) {
+        http_response_code( 403 );
+        header( 'Content-type: text/plain; charset=utf-8' );
+        die( 'accesso negato' . PHP_EOL . 'access denied' );
+    }
