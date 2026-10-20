@@ -5,7 +5,7 @@
      *
      * verifica le strade con cui si entra nel back-end e quelle con cui non si deve entrare: il form di login con
      * credenziali giuste e sbagliate, l'account disattivato, il logout, la rigenerazione dell'id di sessione, il
-     * token JWT, gli header HTTP Basic e Bearer, il diniego per gruppo e il giro di reimpostazione della password
+     * token JWT, gli header HTTP Basic e Bearer, l'API key, il diniego per gruppo e il giro di reimpostazione della password
      *
      * il login dal form si puo' provare perche' per la durata della suite il reCAPTCHA e' spento ( vedi l'helper
      * Glisweb ); gli header HTTP Basic e Bearer il browser non li sa mandare, quindi quelle prove passano da
@@ -150,19 +150,24 @@
 
         }
 
-        // l'header gliswebAuthKey non fa entrare e non rimanda indietro la chiave ( il login via API key non e' finito )
-        public function apiKeyChiusa( BackendTester $I ) {
+        // login con l'API key rilasciata da api/login, nell'header gliswebAuthKey; una chiave inventata o malformata non entra
+        public function loginApiKey( BackendTester $I ) {
 
             global $cf;
 
+            $account = $I->grabTestAccount( 'roots' );
+
             $raw = NULL;
             $status = NULL;
-            $chiave = 'TEST-E2E-chiave';
 
-            restCall( rtrim( $cf['site']['url'], '/' ) . '/admin.it-IT.html', METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_TEXT_PLAIN, $status, array( 'gliswebAuthKey' => $chiave ), NULL, NULL, $error, NULL, CURLAUTH_BASIC, $raw );
+            restCall( rtrim( $cf['site']['url'], '/' ) . '/api/login', METHOD_POST, array( '__login__' => array( 'user' => $account['username'], 'pasw' => $account['password'] ) ), MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $status, array(), NULL, NULL, $error, NULL, CURLAUTH_BASIC, $raw );
 
-            $I->assertEquals( 501, $status );
-            $I->assertStringNotContainsString( $chiave, (string) $raw );
+            $risposta = json_decode( (string) $raw, true );
+            $I->assertMatchesRegularExpression( '/^[0-9a-f]{32}$/', (string) ( $risposta['token'] ?? '' ), 'api/login non ha rilasciato la chiave' );
+
+            $I->assertStringNotContainsString( 'id="formLogin"', $this->scarica( '/admin.it-IT.html', NULL, NULL, NULL, array( 'gliswebAuthKey' => $risposta['token'] ) ) );
+            $I->assertStringContainsString( 'id="formLogin"', $this->scarica( '/admin.it-IT.html', NULL, NULL, NULL, array( 'gliswebAuthKey' => str_repeat( '0', 32 ) ) ) );
+            $I->assertStringContainsString( 'id="formLogin"', $this->scarica( '/admin.it-IT.html', NULL, NULL, NULL, array( 'gliswebAuthKey' => 'TEST-E2E-chiave' ) ) );
 
         }
 
@@ -254,14 +259,14 @@
          * @return      string                      l'HTML della risposta
          *
          */
-        protected function scarica( $pagina, $user = NULL, $pasw = NULL, $token = NULL ) {
+        protected function scarica( $pagina, $user = NULL, $pasw = NULL, $token = NULL, $headers = array() ) {
 
             global $cf;
 
             $raw = NULL;
             $status = NULL;
 
-            restCall( rtrim( $cf['site']['url'], '/' ) . $pagina, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_TEXT_PLAIN, $status, array(), $user, $pasw, $error, $token, CURLAUTH_BASIC, $raw );
+            restCall( rtrim( $cf['site']['url'], '/' ) . $pagina, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_TEXT_PLAIN, $status, $headers, $user, $pasw, $error, $token, CURLAUTH_BASIC, $raw );
 
             return (string) $raw;
 

@@ -182,56 +182,59 @@
      * login via API key
      * =================
      * 
+     * la chiave si ottiene da api/login ( /_src/_api/_user.php ) e vale un'ora; si manda nell'header gliswebAuthKey
+     * e porta al blocco di esecuzione del login l'utente e l'hash della sua password, come il token JWT
      * 
      */
 
     // intercetto l'header gliswebAuthKey
+    // NOTA la chiave la rilascia /_src/_api/_user.php al login via API e la scrive su Redis per un'ora, col prefisso apikey.
+    // perché una chiave qualsiasi della cache non valga come API key; il formato è controllato prima di leggere, così
+    // un header costruito a mano non può scegliere la chiave da leggere
     if( array_key_exists( 'gliswebAuthKey', $httpHeaders ) ) {
 
-        // TODO leggere il token da Redis
+        // utente associato alla chiave
+        $apiKeyUser = NULL;
 
-        // $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
+        // leggo la chiave da Redis
+        if( preg_match( '/^[0-9a-f]{32}$/', $httpHeaders['gliswebAuthKey'] ) && ! empty( $cf['redis']['connection'] ) ) {
+            $apiKeyUser = redisRead( $cf['redis']['connection'], 'apikey.' . $httpHeaders['gliswebAuthKey'] );
+        }
 
-        // if( file_exists( $tokenFile ) ) {
+        // se la chiave è valida
+        if( ! empty( $apiKeyUser ) && is_string( $apiKeyUser ) ) {
 
-            // ...
-            // $apiKeyUser = trim( file_get_contents( $tokenFile ) );
-            $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
+            // log
+            logger( 'login via API key per user ' . $apiKeyUser, 'auth' );
 
-            // die( 'token file trovato: ' . $tokenFile );
-
-            // NOTA il login via API key non è finito e non è mai stato provato: il ramo resta chiuso, senza rimandare indietro la chiave
-            http_response_code( 501 );
-            die( 'login via API key non disponibile' );
-
-            // ...
-            if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
-
-                $_REQUEST['__login__']['user'] = $apiKeyUser;
-                $cf['auth']['jwt']['pass'] = $cf['auth']['accounts'][ $apiKeyUser ]['password'];
-
+            // account dei file di configurazione o del database
+            if( isset( $cf['auth']['accounts'][ $apiKeyUser ]['password'] ) ) {
+                $apiKeyPass = $cf['auth']['accounts'][ $apiKeyUser ]['password'];
             } else {
-
-                $userData = mysqlSelectRow(
+                $apiKeyPass = mysqlSelectValue(
                     $cf['mysql']['connection'],
-                    'SELECT username, password FROM account WHERE username = ?',
+                    'SELECT password FROM account WHERE username = ?',
                     array(
-                    array( 's' => $apiKeyUser )
+                        array( 's' => $apiKeyUser )
                     )
                 );
-
-                $_REQUEST['__login__']['user'] = $userData['username'];
-                $cf['auth']['jwt']['pass'] = $userData['password'];
-
-                // die( print_r( $userData, true ) );
-
             }
 
-        // } else {
+            // il login vero lo fa il blocco di esecuzione qui sotto, con l'hash già verificato come per il token JWT
+            if( ! empty( $apiKeyPass ) ) {
+                $_REQUEST['__login__']['user'] = $apiKeyUser;
+                $cf['auth']['jwt']['pass'] = $apiKeyPass;
+                if( ! defined( 'LOGIN_VIA_HTTP_HEADER' ) ) {
+                    define( 'LOGIN_VIA_HTTP_HEADER', true );
+                }
+            }
 
-            // die( 'token file non trovato: ' . $tokenFile );
+        } else {
 
-        // }
+            // log
+            logger( 'API key non valida o scaduta', 'auth', LOG_ERR );
+
+        }
 
     }
 
