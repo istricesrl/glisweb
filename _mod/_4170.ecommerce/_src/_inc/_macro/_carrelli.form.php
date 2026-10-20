@@ -12,6 +12,9 @@
 
 	$ct['etc']['select']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM articoli_view' );
 
+    // tendina lingue, per i metadati
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][] = array('id' => $mese, '__label__' => int2month( $mese ) );
