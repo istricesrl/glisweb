@@ -4124,30 +4124,46 @@ CREATE TABLE IF NOT EXISTS `matricole` (                        --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le voci di menu del sito
+-- funzione: contiene le voci di menu dei siti
 --
--- questa tabella contiene le voci di menu del sito, con le informazioni principali
+-- ogni riga è una voce di menu: lega un oggetto in grado di generare una pagina a uno dei menu dichiarati dal
+-- template ( colonna menu ), con l'etichetta nella lingua della voce, la posizione, l'ancora, il target e la
+-- strategia per le sottopagine; gli oggetti sono le entità pubblicabili ( pagine, prodotti, marchi, notizie,
+-- annunci, risorse, progetti ) e le loro categorie; le voci si leggono con aggiungiMenu() e diventano navigazione
+-- con buildMenu(); in GlisWeb la voce di menu è un attributo della pagina, non il contrario
+--
+-- NOTA le chiavi esterne verso gli oggetti sono CASCADE: una voce di menu non ha senso senza la pagina del suo
+-- oggetto, e se l'oggetto viene cancellato le sue voci se ne vanno con lui
+-- NOTA sottopagine vale SHOW_IF_ACTIVE ( default, anche NULL: le sottovoci si espandono quando la voce è nel
+-- percorso della pagina attiva ), NEVER_SHOW ( mai ) o ALWAYS_SHOW ( sempre ); conta solo per le pagine con figli
+-- NOTA oggi a runtime le voci si leggono per pagine, categorie di prodotti e categorie di notizie; la lettura per
+-- gli altri oggetti arriverà con le loro pagine
 --
 CREATE TABLE IF NOT EXISTS `menu` (                             --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_lingua` bigint(20) DEFAULT NULL,                             -- chiave esterna per la lingua della voce di menu
-  `id_pagina` bigint(20) DEFAULT NULL,                             -- chiave esterna per la pagina collegata alla voce di menu
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria di prodotti collegata alla voce di menu
-  `id_marchio` bigint(20) DEFAULT NULL,                            -- chiave esterna per il marchio collegato alla voce di menu
-  `id_categoria_marchi` bigint(20) DEFAULT NULL,                   -- chiave esterna per la categoria di marchi collegata alla voce di menu
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di notizie collegata alla voce di menu
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di annunci collegata alla voce di menu
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di risorse collegata alla voce di menu
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria di progetti collegata alla voce di menu
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione della voce di menu
-  `menu` char(32) DEFAULT NULL,                                 -- nome del menu a cui appartiene la voce
-  `nome` char(128) DEFAULT NULL,                                -- nome della voce di menu
-  `target` char(16) DEFAULT NULL,                               -- target del link della voce di menu
-  `ancora` char(64) DEFAULT NULL,                               -- ancora del link della voce di menu
-  `sottopagine` char(32) DEFAULT NULL,                          -- se la voce di menu deve mostrare le sottopagine della pagina collegata
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la voce di menu
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine della voce nel suo menu
+  `nome` char(255) DEFAULT NULL,                                -- etichetta della voce di menu, nella lingua della voce
+  `id_pagina` bigint(20) DEFAULT NULL,                          -- chiave esterna per la pagina collegata alla voce di menu
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato alla voce di menu
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la categoria di prodotti collegata alla voce di menu
+  `id_marchio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il marchio collegato alla voce di menu
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria di marchi collegata alla voce di menu
+  `id_notizia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la notizia collegata alla voce di menu
+  `id_annuncio` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'annuncio collegato alla voce di menu
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di notizie collegata alla voce di menu
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di annunci collegata alla voce di menu
+  `id_risorsa` bigint(20) DEFAULT NULL,                         -- chiave esterna per la risorsa collegata alla voce di menu
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di risorse collegata alla voce di menu
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto collegato alla voce di menu
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,              -- chiave esterna per la categoria di progetti collegata alla voce di menu
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua della voce di menu
+  `menu` char(32) DEFAULT NULL,                                 -- nome del menu del template a cui appartiene la voce
+  `ancora` char(64) DEFAULT NULL,                               -- ancora aggiunta al link della voce
+  `target` char(16) DEFAULT NULL,                               -- attributo target del link della voce ( _blank )
+  `sottopagine` char(32) DEFAULT NULL,                          -- strategia per le sottopagine: SHOW_IF_ACTIVE, NEVER_SHOW, ALWAYS_SHOW
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la voce di menu
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la voce di menu
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la voce di menu
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 

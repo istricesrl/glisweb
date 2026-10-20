@@ -2494,25 +2494,27 @@ ALTER TABLE `matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- menu
 ALTER TABLE `menu`
- 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_pagina`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_marchi` (`id_categoria_marchi`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_annuncio` (`id_annuncio`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_categoria_annunci` (`id_categoria_annunci`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_lingua`,`menu`,`nome`,`ancora`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
 	ADD KEY `id_lingua` (`id_lingua`),
-	ADD KEY `id_pagina` (`id_pagina`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-	ADD KEY `id_marchio` (`id_marchio`),
-	ADD KEY `id_categoria_marchi` (`id_categoria_marchi`),
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
-	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
-	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
-	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
- 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
- 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `menu` (`menu`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`nome`,`id_lingua`,`menu`);
 
 -- | 030000021601
 

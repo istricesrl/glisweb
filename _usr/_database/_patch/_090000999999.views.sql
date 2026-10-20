@@ -4477,39 +4477,65 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 -- | 090000021600
 
 -- menu_view
-CREATE OR REPLACE VIEW `menu_view` AS                           --
-    SELECT                                                      --
-		menu.id,                                                --
-		pagine.id_sito,                                    		--
-		menu.id_lingua,                                         --
-		menu.id_pagina,                                         --
-		menu.id_categoria_prodotti,                             --
-		menu.id_marchio,                                        --
-		menu.id_categoria_marchi,                               --
-		menu.id_categoria_notizie,                              --
-		menu.id_categoria_annunci,                              --
-		menu.id_categoria_risorse,                              --
-		menu.id_categoria_progetti,                             --
-		menu.ordine,                                            --
-		menu.menu,                                              --
-		menu.nome,                                              --
-		menu.target,                                            --
-		menu.ancora,                                            --
-		menu.sottopagine,                                       --
-		menu.id_account_inserimento,                            --
-		menu.id_account_aggiornamento,                          --
-		concat_ws(                                              --
-			' / ',                                              --
-			menu.menu,                                          --
-			menu.ordine,                                        --
-			lingue.ietf,                                        --
-			menu.nome                                           --
-		) AS __label__                                          -- etichetta per le tendine e le liste
-    FROM menu                                                   --
-		INNER JOIN lingue                                       --
-            ON lingue.id = menu.id_lingua                       --
-		LEFT JOIN pagine ON pagine.id = menu.id_pagina         	--
-;                                                               --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW menu_view AS                                                      --
+  SELECT                                                                                 --
+    menu.id,                                                                             --
+    menu.ordine,                                                                         --
+    menu.nome,                                                                           --
+    menu.id_pagina,                                                                      --
+    menu.id_prodotto,                                                                    --
+    menu.id_categoria_prodotti,                                                          --
+    menu.id_marchio,                                                                     --
+    menu.id_categoria_marchi,                                                            --
+    menu.id_notizia,                                                                     --
+    menu.id_annuncio,                                                                    --
+    menu.id_categoria_notizie,                                                           --
+    menu.id_categoria_annunci,                                                           --
+    menu.id_risorsa,                                                                     --
+    menu.id_categoria_risorse,                                                           --
+    menu.id_progetto,                                                                    --
+    menu.id_categoria_progetti,                                                          --
+    coalesce(                                                                            --
+      t01.id_sito,                                                                       --
+      t02.id_sito,                                                                       --
+      t03.id_sito,                                                                       --
+      t04.id_sito,                                                                       --
+      t05.id_sito,                                                                       --
+      t06.id_sito,                                                                       --
+      t07.id_sito,                                                                       --
+      t08.id_sito,                                                                       --
+      t09.id_sito,                                                                       --
+      t10.id_sito,                                                                       --
+      t11.id_sito,                                                                       --
+      t12.id_sito,                                                                       --
+      t13.id_sito                                                                        --
+    ) AS id_sito,                                                                        --
+    menu.id_lingua,                                                                      --
+    lingue.ietf,                                                                         --
+    menu.menu,                                                                           --
+    menu.ancora,                                                                         --
+    menu.target,                                                                         --
+    menu.sottopagine,                                                                    --
+    menu.id_account_inserimento,                                                         --
+    menu.id_account_aggiornamento,                                                       --
+    concat_ws( ' / ', menu.menu, menu.ordine, lingue.ietf, menu.nome ) AS __label__      -- etichetta per le tendine e le liste
+  FROM menu                                                                              --
+    LEFT JOIN lingue ON lingue.id = menu.id_lingua                                       --
+    LEFT JOIN pagine AS t01 ON t01.id = menu.id_pagina                                   --
+    LEFT JOIN prodotti AS t02 ON t02.id = menu.id_prodotto                               --
+    LEFT JOIN categorie_prodotti AS t03 ON t03.id = menu.id_categoria_prodotti           --
+    LEFT JOIN marchi AS t04 ON t04.id = menu.id_marchio                                  --
+    LEFT JOIN categorie_marchi AS t05 ON t05.id = menu.id_categoria_marchi               --
+    LEFT JOIN notizie AS t06 ON t06.id = menu.id_notizia                                 --
+    LEFT JOIN annunci AS t07 ON t07.id = menu.id_annuncio                                --
+    LEFT JOIN categorie_notizie AS t08 ON t08.id = menu.id_categoria_notizie             --
+    LEFT JOIN categorie_annunci AS t09 ON t09.id = menu.id_categoria_annunci             --
+    LEFT JOIN risorse AS t10 ON t10.id = menu.id_risorsa                                 --
+    LEFT JOIN categorie_risorse AS t11 ON t11.id = menu.id_categoria_risorse             --
+    LEFT JOIN progetti AS t12 ON t12.id = menu.id_progetto                               --
+    LEFT JOIN categorie_progetti AS t13 ON t13.id = menu.id_categoria_progetti           --
+  ;                                                                                      --
 
 -- | 090000021701
 
