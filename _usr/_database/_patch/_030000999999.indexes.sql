@@ -2748,10 +2748,11 @@ ALTER TABLE `notizie_categorie`
  	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_notizia`,`id_categoria`),
 	ADD KEY `id_notizia` (`id_notizia`),
-	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria` (`id_categoria`),
- 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
- 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria`,`ordine`);
 
 -- | 030000022201
 
@@ -5414,8 +5415,10 @@ ALTER TABLE `notizie_anagrafica`
 	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_notizia`,`id_anagrafica`,`id_ruolo`);
 
 -- | 030000999013
 

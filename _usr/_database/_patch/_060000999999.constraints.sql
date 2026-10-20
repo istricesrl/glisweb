@@ -1454,7 +1454,7 @@ ALTER TABLE `notizie`
 
 -- notizie_anagrafica
 ALTER TABLE `notizie_anagrafica`
-    ADD CONSTRAINT `notizie_anagrafica_ibfk_01_nofollow`    FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `notizie_anagrafica_ibfk_01`             FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `notizie_anagrafica_ibfk_02_nofollow`    FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `notizie_anagrafica_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `notizie_anagrafica_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1467,8 +1467,7 @@ ALTER TABLE `notizie_categorie`
     ADD CONSTRAINT `notizie_categorie_ibfk_01`                FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `notizie_categorie_ibfk_02_nofollow`       FOREIGN KEY (`id_categoria`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `notizie_categorie_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `notizie_categorie_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `notizie_categorie_ibfk_03_nofollow`                     FOREIGN KEY (`id_annuncio`) REFERENCES `annunci` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `notizie_categorie_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000022300
 

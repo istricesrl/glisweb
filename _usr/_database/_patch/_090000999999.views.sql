@@ -4808,34 +4808,33 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 CREATE OR REPLACE VIEW `notizie_anagrafica_view` AS
 	SELECT
 		notizie_anagrafica.id,
+		notizie_anagrafica.ordine,
 		notizie_anagrafica.id_notizia,
 		notizie.nome AS notizia,
 		notizie_anagrafica.id_anagrafica,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		notizie_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome AS ruolo,
-		notizie_anagrafica.ordine,
+		notizie_anagrafica.note,
 		notizie_anagrafica.id_account_inserimento,
 		notizie_anagrafica.id_account_aggiornamento,
-		concat(                                               --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ),           --
-                ''                                            --
-            ),                                                --
-			' / ',                                            --
-			notizie.nome                                 --
-		) AS __label__         
+		concat_ws(
+			' / ',
+			notizie.nome,
+			coalesce( anagrafica.denominazione, concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
 	FROM notizie_anagrafica
 		LEFT JOIN notizie ON notizie.id = notizie_anagrafica.id_notizia
-		LEFT JOIN anagrafica AS a1 ON a1.id = notizie_anagrafica.id_anagrafica
+		LEFT JOIN anagrafica ON anagrafica.id = notizie_anagrafica.id_anagrafica
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = notizie_anagrafica.id_ruolo
-	GROUP BY notizie_anagrafica.id
 ;
 
 -- | 090000022201
 
 -- notizie_categorie_view
+-- tipologia: tabella gestita
+-- le associazioni fra notizie e categorie, col percorso completo della categoria; modello di annunci_categorie_view
 CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 	SELECT
 		notizie_categorie.id,

@@ -4491,41 +4491,53 @@ CREATE TABLE IF NOT EXISTS `notizie` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione le notizie e le anagrafiche, con il ruolo di ciascuna
-CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: collega una notizia alle anagrafiche che vi hanno un ruolo
+--
+-- questa tabella collega una notizia alle anagrafiche che vi hanno avuto un ruolo ( autore, traduttore, redattore,
+-- intervistatore, intervistato... ); i ruoli proponibili sono quelli con ruoli_anagrafica.se_notizie
+--
+-- NOTA la chiave unica e' ( id_notizia, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli;
+-- le note precisano il ruolo nel caso specifico ( decisione del 20/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_notizia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la notizia
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000022200
 
 -- notizie_categorie
 -- tipologia: tabella gestita
--- rango: tabella secondaria
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene le categorie associate alle notizie e agli annunci
+-- funzione: associa molti a molti le notizie alle categorie delle notizie
 --
--- questa tabella contiene le categorie associate alle notizie e agli annunci, con le informazioni relative
--- all'ordine di visualizzazione
+-- questa tabella contiene le associazioni molti a molti tra le notizie e le categorie_notizie; una notizia può
+-- stare in più categorie, e ordine ne stabilisce la sequenza; le categorie fanno parte della scheda della notizia,
+-- quindi la chiave verso notizie si segue ( il form del modulo notizie le legge come sotto-elenco ), mentre quella
+-- verso categorie_notizie no; è il modello di annunci_categorie
 --
-CREATE TABLE IF NOT EXISTS `notizie_categorie` (
-  `id` bigint(20) NOT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA fino al 2026-10-20 la tabella aveva anche id_annuncio, residuo di quando notizie e annunci condividevano la
+-- stessa tabella di categorie; gli annunci hanno annunci_categorie, e la colonna è uscita dal canone
+--
+CREATE TABLE IF NOT EXISTS `notizie_categorie` (              --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_notizia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la notizia
+  `id_categoria` bigint(20) DEFAULT NULL,                        -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000022300
 
