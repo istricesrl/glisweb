@@ -2524,17 +2524,41 @@ ALTER TABLE `menu` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000021700
 
 -- messaggi
+-- tipologia: tabella gestita
 ALTER TABLE `messaggi`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_conversazione` (`id_conversazione`), 
+	ADD KEY `id_account` (`id_account`), 
+	ADD KEY `timestamp_invio` (`timestamp_invio`), 
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_invio`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_conversazione`,`timestamp_invio`,`timestamp_lettura`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000021701
 
 -- messaggi
 ALTER TABLE `messaggi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021750
+
+-- messaggi_account
+-- tipologia: tabella gestita
+ALTER TABLE `messaggi_account`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_messaggio`,`id_account`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_messaggio` (`id_messaggio`),
+	ADD KEY `timestamp_lettura` (`timestamp_lettura`), 
+	ADD KEY `indice` (`id`,`ordine`,`id_account`,`id_messaggio`,`timestamp_lettura`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000021751
+
+-- messaggi_account
+-- tipologia: tabella gestita
+ALTER TABLE `messaggi_account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021800
 

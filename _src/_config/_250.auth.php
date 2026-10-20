@@ -1171,6 +1171,9 @@
         'messaggi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'messaggi_account' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'conversazioni' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),

@@ -4171,20 +4171,52 @@ CREATE TABLE IF NOT EXISTS `menu` (                             --
 
 -- messaggi
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i messaggi
+-- funzione: contiene i messaggi delle conversazioni
+--
+-- questa tabella contiene un messaggio per riga. Il messaggio appartiene alla conversazione ( conversazioni ) e muore
+-- con lei; id_account e' l'autore, che non coincide per forza con l'account di inserimento ( un import, un
+-- amministratore ). La lettura non sta qui ma in messaggi_account, una riga per ogni account che ha letto il messaggio,
+-- cosi' il modello regge la chat uno a uno come la chat di gruppo e il forum.
+--
+-- NOTA: la chiave verso conversazioni e' CASCADE ( il messaggio non ha senso senza la conversazione ), quella verso
+-- l'autore SET NULL ( cancellare un account non deve portarsi via la storia della conversazione ).
 --
 CREATE TABLE IF NOT EXISTS `messaggi` (
-  `id` bigint(20) NOT NULL,
-  `id_conversazione` bigint(20) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `timestamp_lettura` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_conversazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la conversazione a cui appartiene il messaggio
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account autore del messaggio
+  `testo` text DEFAULT NULL,                                    -- testo del messaggio
+  `timestamp_invio` int(11) DEFAULT NULL,                       -- timestamp di invio del messaggio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000021750
+
+-- messaggi_account
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: contiene le letture dei messaggi, cioe' quale account ha letto quale messaggio e quando
+--
+-- questa tabella mette in relazione messaggi e account: ogni riga e' un account che ha letto un messaggio, con il
+-- momento della lettura. In una chat di gruppo o in un forum ogni partecipante ha la sua riga, quindi lo stato di
+-- lettura e' per partecipante e non per messaggio.
+--
+CREATE TABLE IF NOT EXISTS `messaggi_account` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account che ha letto il messaggio
+  `id_messaggio` bigint(20) DEFAULT NULL,                       -- chiave esterna per il messaggio letto
+  `timestamp_lettura` int(11) DEFAULT NULL,                     -- timestamp di lettura del messaggio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000021800

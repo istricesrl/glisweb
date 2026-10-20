@@ -4541,20 +4541,44 @@ CREATE OR REPLACE VIEW menu_view AS                                             
 
 -- messaggi_view
 -- tipologia: tabella gestita
--- verifica: 2022-04-26 17:32 Chiara GDL
 CREATE OR REPLACE VIEW `messaggi_view` AS
 	SELECT
 		messaggi.id,
 		messaggi.id_conversazione,
+		conversazioni.nome AS conversazione,
+		messaggi.id_account,
+		account.username AS account,
 		messaggi.testo,
 		messaggi.timestamp_invio,
-		messaggi.timestamp_lettura,
 		messaggi.id_account_inserimento,
 		messaggi.timestamp_inserimento,
 		messaggi.id_account_aggiornamento,
 		messaggi.timestamp_aggiornamento,
-		concat( 'messaggio #', messaggi.id )AS __label__
+		concat_ws( ' - ', conversazioni.nome, account.username, from_unixtime( messaggi.timestamp_invio, '%Y-%m-%d %H:%i' ) ) AS __label__
 	FROM messaggi
+		LEFT JOIN conversazioni ON conversazioni.id = messaggi.id_conversazione
+		LEFT JOIN account ON account.id = messaggi.id_account
+;
+
+-- | 090000021751
+
+-- messaggi_account_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `messaggi_account_view` AS
+	SELECT
+		messaggi_account.id,
+		messaggi_account.ordine,
+		messaggi_account.id_account,
+		account.username AS account,
+		messaggi_account.id_messaggio,
+		messaggi_account.timestamp_lettura,
+		messaggi_account.id_account_inserimento,
+		messaggi_account.timestamp_inserimento,
+		messaggi_account.id_account_aggiornamento,
+		messaggi_account.timestamp_aggiornamento,
+		concat_ws( ' - ', messaggi_account.id_messaggio, account.username, from_unixtime( messaggi_account.timestamp_lettura, '%Y-%m-%d %H:%i' ) ) AS __label__
+	FROM messaggi_account
+		LEFT JOIN account ON account.id = messaggi_account.id_account
 ;
 
 -- | 090000021800
