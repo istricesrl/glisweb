@@ -15,7 +15,7 @@
 
     // dati del database del deploy
     $c = $cf['mysql']['connection'];
-    $k = mysqlPatchCurrentDb( DIR_BASE );
+    $k = mysqlPatchCurrentSchema( DIR_BASE );
     $f = mysqlPatchFiles( DIR_BASE );
 
     // livello vero: il database del deploy è al canone

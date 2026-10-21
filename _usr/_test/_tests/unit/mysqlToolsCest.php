@@ -8,11 +8,11 @@ class mysqlToolsCest
     {
     }
 
-    // mysqlPatchCurrentDb() -> deve restituire il livello di _etc/_current.db, e zero dove il file non c'è
-    public function mysqlPatchCurrentDb(UnitTester $I)
+    // mysqlPatchCurrentSchema() -> deve restituire il livello di _etc/_current.schema, e zero dove il file non c'è
+    public function mysqlPatchCurrentSchema(UnitTester $I)
     {
-        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPatchCurrentDb.01.php');
-        $I->see('string(12) "' . trim( strtok( file_get_contents( DIR_BASE . '_etc/_current.db' ), "\n" ) ) . '"');
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPatchCurrentSchema.01.php');
+        $I->see('string(12) "' . trim( strtok( file_get_contents( DIR_BASE . '_etc/_current.schema' ), "\n" ) ) . '"');
         $I->see('string(12) "000000000000"');
     }
 

@@ -147,7 +147,7 @@
      * -----------------------------------------|---------------------------------------------------------------
      * mysqlPatchFiles()                        | restituisce i file di patch, standard e custom, nell'ordine di applicazione
      * mysqlPatchLevel()                        | restituisce il livello di patch del database
-     * mysqlPatchCurrentDb()                    | restituisce il livello del canone
+     * mysqlPatchCurrentSchema()                | restituisce il livello del canone
      * mysqlPatchCheck()                        | verifica che al database si possano applicare le patch
      * mysqlPatchRead()                         | legge dai file le patch da applicare sopra un livello
      * mysqlPatchApply()                        | applica le patch e le registra in __patch__, fermandosi al primo errore
@@ -2398,7 +2398,7 @@
     /**
      * restituisce il livello del canone
      *
-     * Questa funzione legge da _etc/_current.db il livello del canone, cioè l'id dell'ultima patch assorbita nei file
+     * Questa funzione legge da _etc/_current.schema il livello del canone, cioè l'id dell'ultima patch assorbita nei file
      * base _0N0000999999.*.sql all'ultimo rilascio maggiore o minore, quando la coda delle patch datate è stata svuotata.
      * Un database con un livello più basso è anteriore al canone: le patch che lo ci avrebbero portato non ci sono più.
      * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'. Il livello sta
@@ -2410,11 +2410,11 @@
      * @return      string              il livello del canone, '000000000000' se non è dichiarato
      *
      */
-    function mysqlPatchCurrentDb($b)
+    function mysqlPatchCurrentSchema($b)
     {
 
         // leggo il livello dal file
-        $k = (file_exists($b . '_etc/_current.db')) ? trim(strtok(file_get_contents($b . '_etc/_current.db'), "\n")) : '';
+        $k = (file_exists($b . '_etc/_current.schema')) ? trim(strtok(file_get_contents($b . '_etc/_current.schema'), "\n")) : '';
 
         // un livello vale solo se è di dodici cifre
         return (preg_match('/^[0-9]{12}$/', $k)) ? $k : '000000000000';
@@ -2438,7 +2438,7 @@
      *
      * @param       object      $c      la connessione mysqli
      * @param       string      $l      il livello di patch del database, di mysqlPatchLevel()
-     * @param       string      $k      il livello del canone, di mysqlPatchCurrentDb()
+     * @param       string      $k      il livello del canone, di mysqlPatchCurrentSchema()
      * @param       array       $f      i file di patch, di mysqlPatchFiles()
      * @param       string      $e      la variabile in cui scrivere il motivo del rifiuto, modificata sul posto
      *
