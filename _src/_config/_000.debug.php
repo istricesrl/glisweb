@@ -68,7 +68,11 @@
      * ============================
      * Le costanti DEVELOPEMENT, TESTING e PRODUCTION sono utilizzate per tenere traccia dello status del
      * deploy corrente; è possibile configurare facilmente altri status dichiarando in custom le relative
-     * costanti (ad esempio DBTESTING, UNSTABLE o PREPRODUCTION eccetera). Agli stati del deploy si collegano
+     * costanti (ad esempio DBTESTING, UNSTABLE o PREPRODUCTION eccetera). Il framework non conta sul numero ne' sul
+     * nome degli stati, con una sola regola: e' di produzione ogni stato il cui nome comincia per PROD (PROD, ma
+     * anche PRODSITO o PRODWMS), e i controlli che proteggono la produzione lo verificano sul prefisso, non
+     * sull'uguaglianza. Uno stato custom va dichiarato anche nei rami per stato che il framework definisce solo
+     * per DEV, TEST e PROD (debug, twig, cache e cosi' via), copiandoli da quello che gli fa da modello. Agli stati del deploy si collegano
      * le dichiarazioni di molte variabili (vedi oltre) consentendo di fatto di modificare il comportamento
      * del deploy semplicemente modificandone lo status.
      *

@@ -141,6 +141,6 @@
      */
 
     // disattivazione della chiave privata durante i test
-    if( SITE_STATUS != PRODUCTION && file_exists( DIR_VAR . 'test/recaptcha.off' ) && filemtime( DIR_VAR . 'test/recaptcha.off' ) > time() - 3600 ) {
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION && file_exists( DIR_VAR . 'test/recaptcha.off' ) && filemtime( DIR_VAR . 'test/recaptcha.off' ) > time() - 3600 ) {
         unset( $cf['google']['profile']['recaptcha']['keys']['private'] );
     }

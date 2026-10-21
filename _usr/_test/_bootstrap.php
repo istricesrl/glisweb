@@ -80,8 +80,8 @@
         session_write_close();
     }
 
-    // niente test in produzione
-    if( SITE_STATUS == PRODUCTION ) {
+    // niente test in produzione ( ogni stato che comincia per PROD )
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) == PRODUCTION ) {
         fwrite( STDERR, 'il sito ' . $testHost . ' e\' in produzione, i test non si eseguono' . PHP_EOL );
         exit( 1 );
     }

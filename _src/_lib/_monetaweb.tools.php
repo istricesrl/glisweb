@@ -145,7 +145,7 @@
           // certificato non valido ) lo dice esplicitamente con la chiave ssl_verify a false nel profilo del provider
           // ( $cf['ecommerce']['profiles'][ DEVELOPEMENT | TESTING ]['provider']['monetaweb']['ssl_verify'] ); in
           // PRODUCTION la chiave si ignora e il certificato si verifica comunque.
-          $sslVerify = ( isset( $k['ssl_verify'] ) && $k['ssl_verify'] === false && SITE_STATUS !== PRODUCTION ) ? false : true;
+          $sslVerify = ( isset( $k['ssl_verify'] ) && $k['ssl_verify'] === false && substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) !== PRODUCTION ) ? false : true;
 
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $k['init_api']);

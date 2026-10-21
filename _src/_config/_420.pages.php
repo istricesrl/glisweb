@@ -94,8 +94,8 @@
      * 
      */
 
-    // attivo i comandi di una lettera soltanto per DEV e TEST
-    if( SITE_STATUS != PRODUCTION ) {
+    // attivo i comandi di una lettera soltanto fuori produzione ( produzione e' ogni stato che comincia per PROD )
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION ) {
 
         // forzatura del template corrente per one-char parameter debug
         if( isset( $_REQUEST['t'] ) ) {

@@ -106,7 +106,7 @@
 
     // controllo del livello di report
     echo '[ -- ] livello di report: ' . reportLvl2string( REPORT_CURRENT_LEVEL ) . ' (' . REPORT_CURRENT_LEVEL . ')' . PHP_EOL;
-    if( $cf['site']['status'] == 'PROD' ) {
+    if( substr( $cf['site']['status'], 0, strlen( PRODUCTION ) ) == PRODUCTION ) {
         // NB: il livello di report è una maschera di bit e non una scala come il livello di log, per cui il vecchio
         // confronto REPORT_CURRENT_LEVEL > 2 era vero per qualsiasi valore ( anche per il default E_USER_WARNING );
         // si segnalano invece i livelli sotto l'avviso, cioè notice, strict e deprecated ( E_STRICT è scritto col suo
@@ -119,7 +119,7 @@
 
     // controllo del livello di log
     echo '[ -- ] livello di log: ' . logLvl2string( LOG_CURRENT_LEVEL ) . ' (' . LOG_CURRENT_LEVEL . ')' . PHP_EOL;
-    if( $cf['site']['status'] == 'PROD' ) {
+    if( substr( $cf['site']['status'], 0, strlen( PRODUCTION ) ) == PRODUCTION ) {
         if( LOG_CURRENT_LEVEL > LOG_WARNING ) {
             echo '[WARN] livello di log alto per un ambiente di produzione, un I/O disco eccessivo può rallentare il framework' . PHP_EOL;
         }

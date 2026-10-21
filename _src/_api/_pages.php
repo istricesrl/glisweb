@@ -1051,7 +1051,7 @@
         // aggiungo all'output le macro incluse
         // solo in sviluppo: sono percorsi assoluti del disco, e il 04/10/2026 uno scanner li ha letti
         // nell'HTML pubblico per sapere quali file chiedere a _download.php
-        if( SITE_STATUS === DEVELOPEMENT ) {
+        if( substr( SITE_STATUS, 0, strlen( DEVELOPEMENT ) ) === DEVELOPEMENT ) {
             foreach( $includes as $include ) {
                 echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
             }
@@ -1275,8 +1275,8 @@
      * 
      */
 
-    // i parametri di una lettera sono riservati a DEV e TEST
-    if( SITE_STATUS != PRODUCTION ) {
+    // i parametri di una lettera sono riservati agli stati che non sono di produzione ( che non cominciano per PROD )
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION ) {
 
         // rivelazione dei dati
         if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
