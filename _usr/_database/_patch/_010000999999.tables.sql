@@ -4845,7 +4845,8 @@ CREATE TABLE IF NOT EXISTS `periodicita` (                    --
 -- questa tabella contiene gli scaglioni di peso della corrispondenza cartacea ( p.es. fino a 20 grammi, da 21 a 50 ):
 -- ogni scaglione appartiene a una tipologia e, insieme al formato, determina la tariffa. La tabella appartiene al
 -- modulo corrispondenza.
--- NOTA gli estremi dello scaglione sono in grammi, come dice il nome delle colonne
+-- NOTA gli estremi dello scaglione sono in grammi, come dice il nome delle colonne; grammi_max NULL vuol dire senza
+-- limite superiore ( p.es. "oltre 2kg" ), mai 0. Il nome dello scaglione è unico dentro la sua tipologia
 --
 CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (  --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria

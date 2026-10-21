@@ -2929,6 +2929,7 @@ ALTER TABLE `periodicita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- pesi_tipologie_corrispondenza
 ALTER TABLE `pesi_tipologie_corrispondenza`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`grammi_min`,`grammi_max`),
