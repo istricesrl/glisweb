@@ -232,7 +232,7 @@
         } else {
 
             // log
-            logger( 'API key non valida o scaduta', 'auth', LOG_ERR );
+            logger( 'API key non valida o scaduta', 'auth', LOG_WARNING );
 
         }
 
@@ -441,7 +441,7 @@
                     $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                     // log
-                    logger( 'password errata per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                    logger( 'password errata per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                 }
 
@@ -771,7 +771,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                         // log
-                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                     }
 
@@ -874,7 +874,7 @@
         } else {
 
             // log
-            logger( 'check anti spam al login fallito per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+            logger( 'check anti spam al login fallito per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
         }
 

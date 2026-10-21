@@ -45,7 +45,7 @@
 # deploy, non solo qui. Fino a che non erano risolte questo script non fotografava niente:
 #
 # 1. IL LOGIN COL POST DEL FORM LO RIFIUTA L'ANTI-SPAM. Dove reCAPTCHA v3 e' configurato, una
-#    POST di __login__[user]/__login__[pasw] senza token finisce in var/log/auth.err con
+#    POST di __login__[user]/__login__[pasw] senza token finisce in var/log/auth.warning con
 #    "check anti spam al login fallito per token non ricevuto", e la sessione non si apre. La
 #    via che funziona e' HTTP Basic: _src/_config/_210.auth.php intercetta PHP_AUTH_USER /
 #    PHP_AUTH_PW, definisce LOGIN_VIA_HTTP_HEADER e su quella costante il controllo anti-spam

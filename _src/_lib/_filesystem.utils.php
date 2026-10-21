@@ -21,7 +21,9 @@
 
         if( $encoding != false ) {
 
-            if( $encoding != 'UTF-8' ) {
+            // NOTA con 'auto' mb_detect_encoding() prova ASCII prima di UTF-8, e un testo tutto ASCII ( p.es. la mail di
+            // reset della password ) risulta 'ASCII': è già UTF-8 valido, quindi non è un'anomalia e non va convertito
+            if( $encoding != 'UTF-8' && $encoding != 'ASCII' ) {
 
                 logWrite( 'encoding non UTF-8 per ' . $t, 'details/localization', LOG_ERR );
 

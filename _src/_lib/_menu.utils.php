@@ -197,7 +197,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
                         // log
                             if( empty( $mv['label'] ) ) {
-                            logWrite( 'voce vuota: ' . $k . ' -> ' . $menu . ': ' . $key, 'menu', LOG_ERR );
+                            logWrite( 'voce vuota: ' . $k . ' -> ' . $menu . ': ' . $key, 'menu', LOG_WARNING );
                             }
 
                         // costruisco la voce corrente

@@ -909,7 +909,7 @@
                 // stato di default, a meno che un controller before non abbia segnalato un errore
                 $sg = ( isset( $i['__status__'] ) && $i['__status__'] >= 400 && $i['__status__'] !== $sb );
                 if( $sg ) {
-                    logWrite( "controller before ha bloccato $t/$a con stato " . $i['__status__'], 'controller', LOG_ERR );
+                    logWrite( "controller before ha bloccato $t/$a con stato " . $i['__status__'], 'controller', LOG_WARNING );
                 } else {
                     $i['__status__'] = 200;
                 }
@@ -1130,7 +1130,7 @@
 
                     // log
                     if( $sg ) {
-                        logWrite("nessuna azione intrapresa per l'entità $t: bloccata da un controller con stato " . $i['__status__'], 'controller', LOG_ERR);
+                        logWrite("nessuna azione intrapresa per l'entità $t: bloccata da un controller con stato " . $i['__status__'], 'controller', LOG_WARNING);
                     } else {
                         logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
                     }

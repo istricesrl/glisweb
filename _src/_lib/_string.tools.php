@@ -915,8 +915,8 @@
      * testa e in coda, elimina le sequenze di byte che non sono UTF-8 valido, sostituisce con uno spazio i caratteri di
      * controllo ( ASCII e Unicode, compresi gli spazi e i separatori invisibili ) e infine riduce a un solo spazio ogni
      * sequenza di caratteri di spaziatura. Ogni passo che modifica davvero la stringa viene registrato nel log
-     * details/csv/cleanstring, a LOG_ERR per i primi due e a LOG_INFO per la riduzione degli spazi; la nota nel corpo della
-     * funzione spiega perché.
+     * details/csv/cleanstring a LOG_INFO, perché è normalizzazione dei dati e non un errore del sistema; le note nel corpo
+     * della funzione spiegano perché.
      *
      * @param       string      $string     la stringa da ripulire
      *
@@ -943,6 +943,10 @@
          * Adesso ogni passo dichiara soltanto cio' che ha cambiato davvero. Il trim non e' un
          * errore e non si logga; la normalizzazione degli spazi doppi e' normalizzazione e non
          * un'anomalia di codifica, quindi scende a LOG_INFO.
+         *
+         * Dal 2026-10-21 scendono a LOG_INFO anche i primi due passi: un byte non UTF-8 o un
+         * carattere di controllo in un CSV sono dati sporchi che la funzione ripulisce come deve,
+         * non un errore del sistema, e a LOG_ERR riempivano i controlli dei log dei deploy.
          */
         $s = trim( $string );
 
@@ -950,7 +954,7 @@
         $s = iconv( "UTF-8", "UTF-8//IGNORE", $s );
 
         if( $s !== $p ) {
-            logWrite( $p . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+            logWrite( $p . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_INFO );
         }
 
         /**
@@ -969,14 +973,14 @@
         $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2\x80[\x80-\x8F]|\xE2\x80[\xA8-\xAF]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
 
         if( $s !== $p ) {
-            logWrite( $p . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+            logWrite( $p . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_INFO );
         }
 
         /*
         $s = preg_replace( '/[\x00-\x1F\x80-\xFF]/', '', $s );
 
         if( $s != $string ) {
-            logWrite( $string . ' pulito (rimozione caratteri speciali step 2) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+            logWrite( $string . ' pulito (rimozione caratteri speciali step 2) a ' . $s, 'details/csv/cleanstring', LOG_INFO );
         }
         */
 

@@ -61,7 +61,7 @@
 
         // log
         // logWrite('esito del controllo antispam: ' . $spamScore . '/' . (($spamCheck == true) ? 'OK' : 'NO'), 'cart');
-        logWrite('esito del controllo antispam: ' . ( ( $spam['score'] === NULL ) ? 'n/d' : $spam['score'] ) . '/' . (($spam['check'] == true) ? 'OK' : 'NO') . ' (' . ( $spam['status'] ?? 'senza dettaglio' ) . ')', 'cart', LOG_ERR);
+        logWrite('esito del controllo antispam: ' . ( ( $spam['score'] === NULL ) ? 'n/d' : $spam['score'] ) . '/' . (($spam['check'] == true) ? 'OK' : 'NO') . ' (' . ( $spam['status'] ?? 'senza dettaglio' ) . ')', 'cart', ( ( $spam['check'] == true ) ? LOG_INFO : LOG_WARNING ) );
 
         // debug
         // var_dump( $spamScore );
@@ -414,7 +414,7 @@
                     array( array( 's' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) )
                 );
                 if( empty( $idArticolo ) ) {
-                    logWrite( 'articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                    logWrite( 'articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
                 }
                 $_REQUEST['__carrello__']['__articolo__']['id_articolo'] = $idArticolo;
             }
@@ -431,7 +431,7 @@
                             array( array( 's' => $item['id_articolo'] ) )
                         );
                         if( empty( $idArticolo ) ) {
-                            logWrite( 'articolo ' . $item['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                            logWrite( 'articolo ' . $item['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
                             continue;
                         }
                         $key = ( (string) $key === (string) $item['id_articolo'] ) ? $idArticolo : $key;
@@ -452,7 +452,7 @@
                         'SELECT id FROM articoli WHERE id = ?',
                         array( array( 's' => $dati['id_articolo'] ) )
                     ) ) {
-                        logWrite( 'articolo ' . $dati['id_articolo'] . ' inesistente, tolto dalla sessione del carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                        logWrite( 'articolo ' . $dati['id_articolo'] . ' inesistente, tolto dalla sessione del carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
                         unset( $_SESSION['carrello']['articoli'][ $key ] );
                     }
                 }

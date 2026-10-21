@@ -171,7 +171,7 @@
     }
 
     // log
-    logWrite( print_r( $result, true ), 'details/paypal-advanced/listener/capture', LOG_ERR );
+    logWrite( print_r( $result, true ), 'details/paypal-advanced/listener/capture', LOG_DEBUG );
 
     // TODO restituire l'URL di redirect
     buildJson( $result );

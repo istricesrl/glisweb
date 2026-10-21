@@ -61,7 +61,7 @@
 
             $I->seeInDatabase( 'pagamenti', array( 'id_coupon' => $coupon, 'coupon_valore' => 50 ) );
 
-            $residuo = $I->grabFromDatabase( 'SELECT coupon_residuo FROM coupon_view WHERE id = ?', array( $coupon ) );
+            $residuo = $I->grabFromDatabase( 'SELECT coupon.sconto_fisso - coalesce( ( SELECT sum( coupon_valore ) FROM pagamenti WHERE id_coupon = coupon.id AND id_documento IS NOT NULL ), 0 ) FROM coupon WHERE coupon.id = ?', array( $coupon ) );
             $I->assertEquals( 0, (float) $residuo, 'coupon rimborsato con nota di credito ancora spendibile' );
 
         }

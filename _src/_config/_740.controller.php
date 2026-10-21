@@ -102,7 +102,7 @@
                         foreach( $cf['import']['programmati'] as $programmato ) {
 
                             // log
-                            logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_ERR );
+                            logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_DEBUG );
 
                             // sposto il file nella cartella di importazione
                             $r = moveFile( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
@@ -196,7 +196,7 @@
             // if( file_exists( $f ) ) {
         
             // ...
-            logWrite( 'importo: ' . $f, 'import', LOG_ERR );
+            logWrite( 'importo: ' . $f, 'import', LOG_INFO );
 
             // ...
             // if( filemtime( $f ) < strtotime( '-1 minutes' ) ) {
@@ -313,7 +313,7 @@
             } else {
 
                 // il file NON viene archiviato: resta nello spool e il cron ci riprova
-                logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_ERR );
+                logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_DEBUG );
 
             }
 
