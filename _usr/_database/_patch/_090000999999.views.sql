@@ -5144,23 +5144,29 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 -- | 090000023200
 
 -- pagine_view
-CREATE OR REPLACE VIEW `pagine_view` AS						  --
-	SELECT													  --
-		pagine.id,							  				  --
-		pagine.id_genitore,								  	  --
-		pagine.id_sito,									  	  --
-		pagine.nome,										  --
-		pagine.template,									  --
-		pagine.schema_html,								  	  --
-		pagine.tema_css,									  --
-		pagine.id_contenuti,							  	  --
-		pagine.se_sitemap,								  	  --
-		pagine.se_cacheable,							  	  --
-		pagine.data_archiviazione,                            --
-		pagine.id_account_inserimento,					  	  --
-		pagine.id_account_aggiornamento,					  --
-		pagine_path( pagine.id ) AS __label__			  	  -- etichetta per le tendine e le liste
-	FROM pagine										  		  --
+CREATE OR REPLACE VIEW pagine_view AS
+	SELECT
+		pagine.id,
+		pagine.id_genitore,
+		pagine.ordine,
+		pagine.codice,
+		pagine.nome,
+		pagine.note,
+		pagine.id_pagina_contenuti,
+		pagine.template,
+		pagine.schema_html,
+		pagine.tema_css,
+		pagine.se_sitemap,
+		pagine.se_cacheable,
+		pagine.id_sito,
+		pagine.data_archiviazione,
+		count( p1.id ) AS figli,
+		pagine.id_account_inserimento,
+		pagine.id_account_aggiornamento,
+		pagine_path( pagine.id ) AS __label__
+	FROM pagine
+		LEFT JOIN pagine AS p1 ON p1.id_genitore = pagine.id
+	GROUP BY pagine.id
 ;
 
 -- | 090000023501

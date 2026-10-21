@@ -2873,16 +2873,18 @@ ALTER TABLE `pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- pagine
 ALTER TABLE `pagine`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `id_contenuti` (`id_contenuti`),
+	ADD KEY `id_pagina_contenuti` (`id_pagina_contenuti`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_sito`,`nome`,`template`,`schema_html`,`tema_css`,`se_sitemap`,`se_cacheable`,`id_contenuti`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`);
 
 -- | 030000023201
 

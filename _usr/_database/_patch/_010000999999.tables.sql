@@ -4730,30 +4730,54 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene le pagine del sito
+-- funzione: contiene l albero delle pagine dei siti
 --
--- questa tabella contiene le pagine del sito, con le informazioni principali
+-- e' la tabella principale del CMS: ogni riga e' una pagina pubblicata su uno dei siti del deploy, e le pagine formano
+-- un albero ( id_genitore ) che e' lo scheletro del sito. Le altre tabelle che generano pagine ( le sei categorie_*,
+-- prodotti, marchi, notizie, annunci, risorse, progetti ) si appendono a questo albero con id_pagina e ne copiano il
+-- modello: stessa testa ricorsiva, stesso blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable,
+-- id_sito ), stesso trio di funzioni _path. Il testo della pagina sta in contenuti ( una riga per lingua, id_pagina ),
+-- la pubblicazione e la sua finestra temporale in pubblicazioni, i permessi in __acl_pagine__; la legge il modulo
+-- pagine ( _310.pages.php per l'albero, _420.pages.php per contenuti, media e javascript ).
 --
-CREATE TABLE IF NOT EXISTS `pagine` (                           --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna ricorsiva per la pagina genitore
-  `id_sito` bigint(20) DEFAULT NULL,                               -- chiave esterna per il sito collegato alla pagina
-  `nome` char(255) DEFAULT NULL,                                -- nome della pagina
-  `note` text DEFAULT NULL,                                     -- note sulla pagina
-  `template` char(255) DEFAULT NULL,                            -- template della pagina
-  `schema_html` char(128) DEFAULT NULL,                         -- schema HTML della pagina
-  `tema_css` char(32) DEFAULT NULL,                             -- tema CSS della pagina
-  `javascript` text NULL,                                       -- javascript della pagina
-  `id_contenuti` bigint(20) DEFAULT NULL,                          -- chiave esterna per i contenuti della pagina
-  `se_sitemap` tinyint(1) DEFAULT NULL,                         -- se la pagina deve essere inclusa nella sitemap
-  `se_cacheable` tinyint(1) DEFAULT NULL,                       -- se la pagina è cacheable
-  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
-  `note_archiviazione` text NULL,                               -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+-- NOTA ordine e' l'ordine predefinito della pagina fra le sorelle; la pubblicazione ha un suo ordine, che vince quando
+-- c'e' ( COALESCE( pubblicazioni.ordine, pagine.ordine ) ). Oggi il codice legge solo pubblicazioni.ordine.
+--
+-- NOTA id_pagina_contenuti serve a non copiare a mano testi identici fra piu' pagine ( p.es. la pagina contatti comune
+-- ai siti di un multisito ): se e' valorizzata, la pagina prende i contenuti dalla pagina indicata, in tutte le lingue,
+-- e chi li aggiorna li aggiorna una volta sola. Punta a una pagina e non a una riga di contenuti perche' i contenuti
+-- sono una riga per lingua. La chiave esterna blocca la cancellazione della pagina sorgente finche' qualcuno la usa.
+-- Il supporto nel codice ( _420.pages.php ) e' da scrivere.
+--
+-- NOTA javascript contiene lo script proprio della pagina, che il template emette nel suo blocco javascript: sta qui e
+-- non dentro i contenuti perche' chi scrive i testi non lo tocchi per sbaglio.
+--
+-- NOTA id_sito non ha chiave esterna perche' i siti sono definiti nella configurazione, non nel database.
+--
+-- ATTENZIONE all'indice unico ( id_genitore, nome ): in MySQL i NULL non fanno mai conflitto su un indice unico, quindi
+-- NON protegge le pagine di radice, che id_genitore ce l'hanno NULL.
+CREATE TABLE IF NOT EXISTS `pagine` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la pagina genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine predefinito fra le pagine sorelle
+  `codice` char(32) DEFAULT NULL,                                 -- codice della pagina, chiave stabile per gli import
+  `nome` char(255) DEFAULT NULL,                                  -- nome della pagina
+  `note` text DEFAULT NULL,                                       -- note sulla pagina
+  `id_pagina_contenuti` bigint(20) DEFAULT NULL,                  -- chiave esterna per la pagina da cui prendere i contenuti
+  `javascript` text DEFAULT NULL,                                 -- script proprio della pagina
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina va nella sitemap
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina si puo' mettere in cache
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000023500
 
