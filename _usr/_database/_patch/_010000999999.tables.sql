@@ -4816,19 +4816,23 @@ CREATE TABLE IF NOT EXISTS `periodi` (                         --
 -- | 010000023600
 
 -- periodicita
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le periodicita, espresse in giorni
-CREATE TABLE IF NOT EXISTS `periodicita` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `giorni` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le periodicità con cui si ripetono pianificazioni, abbonamenti, rinnovi e orari
+--
+-- le cadenze, da giornaliera ad annuale, caricate dai file di base; dicono ogni quanto si ripete una cosa e le usano
+-- le pianificazioni, gli articoli venduti come abbonamento o tesseramento, i rinnovi, gli orari e i progetti. La
+-- tabella fa parte del framework col suo contenuto: non si modifica dalle interfacce, e per questo non ha la coda
+-- di audit.
+-- NOTA gli id non sono arbitrari: creazionePianificazione() di _src/_lib/_cron.utils.php ci fa sopra uno switch
+-- ( 1 giorni, 2 settimane, 3-8 mesi con la mappa $mesi, 8 l'unica annuale ) e i form delle pianificazioni li
+-- confrontano direttamente, quindi gli id non si cambiano
+CREATE TABLE IF NOT EXISTS `periodicita` (                    --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria, cablata nel motore delle pianificazioni
+  `nome` char(255) DEFAULT NULL,                              -- nome della periodicità
+  `giorni` int(11) DEFAULT NULL                               -- durata indicativa in giorni, usata per ordinarle
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000023700
 
