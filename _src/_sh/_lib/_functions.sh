@@ -729,3 +729,53 @@ function gw-gradino() {
     return 0
 
 }
+
+#
+# Chiama un task del framework sul sito di destinazione di un deploy, via HTTP.
+#
+# Serve dove sulla destinazione non c'e' una shell, cioe' nei deploy via FTP: le patch del database
+# le applica il task /task/mysql.patch del sito stesso, con le stesse regole di _mysql.upgrade.sh
+# ( stesse funzioni mysqlPatch...() ), e la cache dei contenuti la svuota /task/memcache.clean.
+# L'autenticazione e' quella di deploy-invalidate-caches(): HTTP Basic con DST_AUTH_USER e
+# DST_AUTH_PASS del file properties, passate a curl dallo standard input. L'account deve avere il
+# privilegio del task ( GESTIONE_MYSQL per le patch, GESTIONE_CACHE per la cache ).
+#
+# $1 il task, con l'eventuale query string ( es. "mysql.patch", "memcache.clean?deploy=1" )
+#
+# restituisce 0 se il task ha risposto 2xx, 1 se ha risposto con un errore, 2 se mancano DST_URL
+# o le credenziali e la chiamata non si e' fatta
+#
+function deploy-task-http() {
+
+    local TASK="$1"
+
+    if [ -z "$DST_URL" ] || [ -z "$DST_AUTH_USER" ] || [ -z "$DST_AUTH_PASS" ]; then
+        echo "ATTENZIONE: DST_URL, DST_AUTH_USER o DST_AUTH_PASS non indicati, /task/$TASK NON chiamato"
+        return 2
+    fi
+
+    echo "chiamo $DST_URL/task/$TASK"
+
+    if printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 600 -K - "$DST_URL/task/$TASK"; then
+        return 0
+    fi
+
+    echo "ERRORE: /task/$TASK ha risposto con un errore ( un 403 vuol dire che a DST_AUTH_USER manca il privilegio )"
+    return 1
+
+}
+
+#
+# Esegue dei comandi lftp sulla destinazione FTP di un deploy.
+#
+# La password arriva a lftp dalla variabile LFTP_PASSWORD ( --env-password ) e non dalla riga di
+# comando, dove finirebbe nella lista dei processi. I comandi si fermano al primo errore
+# ( cmd:fail-exit ), cosi' l'esito di lftp e' quello dell'ultimo comando eseguito.
+#
+# $1 i comandi lftp, separati da punto e virgola
+#
+function deploy-lftp() {
+
+    LFTP_PASSWORD="$FTP_PASSWORD" lftp --env-password -u "$FTP_USER" -e "set cmd:fail-exit yes; $1; quit" "$DST_HOST"
+
+}

@@ -177,6 +177,38 @@ else
 
     fi
 
+    ## scp e gcloud passano da rsync via ssh
+    #
+    # Fino al 21/10/2026 i rami scp e gcloud stampavano il comando senza eseguirlo, e scp -r avrebbe
+    # comunque copiato la cartella DENTRO la destinazione invece di sostituirne il contenuto. Tutti e
+    # due vogliono una shell sulla destinazione, quindi possono usare il ramo rsync remoto, che ha la
+    # copia per il rollback, le patch del database, il controllo e il rollback: un ramo solo, invece di
+    # tre copie piu' povere. Per gcloud, `gcloud compute config-ssh` scrive in ~/.ssh/config l'alias
+    # <istanza>.<zona>.<progetto> con la chiave di gcloud, e da li' ssh e rsync funzionano come verso
+    # qualunque host. Va fatto prima del controllo qui sotto, che senza DST_HOST ripiega sul locale
+    case "$DST_CMD" in
+        "scp")
+            echo "scp: la copia si fa con rsync via ssh"
+            DST_CMD="rsync"
+        ;;
+        "gcloud")
+            if [ -z "$GCP_INSTANCE" -o -z "$GCP_PROJECT" -o -z "$GCP_ZONE" ]; then
+                echo "parametri di accesso Google Cloud mancanti, impossibile effettuare il deploy"
+                exit 1
+            fi
+            if ! gcloud compute config-ssh --project "$GCP_PROJECT" --quiet > /dev/null; then
+                echo "ERRORE: gcloud compute config-ssh non riuscito, impossibile effettuare il deploy"
+                exit 1
+            fi
+            echo "gcloud: la copia si fa con rsync via ssh verso $GCP_INSTANCE.$GCP_ZONE.$GCP_PROJECT"
+            DST_HOST="$GCP_INSTANCE.$GCP_ZONE.$GCP_PROJECT"
+            SSH_PRIVATE="${SSH_PRIVATE:-$HOME/.ssh/google_compute_engine}"
+            SSH_PUBLIC="${SSH_PUBLIC:-$HOME/.ssh/google_compute_engine.pub}"
+            SSH_USER="${SSH_USER:-$( whoami )}"
+            DST_CMD="rsync"
+        ;;
+    esac
+
     ## host di destinazione
     if [ -n "$DST_HOST" ]; then
 
@@ -208,81 +240,77 @@ else
         "lftp")
 
             # se sono settati i parametri per l'accesso
-            if [ -n "$FTP_USER" -a -n "$FTP_PASSWORD" ]; then
+            if [ -n "$FTP_USER" -a -n "$FTP_PASSWORD" -a -n "$DST_HOST" ]; then
+
+                # Fino al 21/10/2026 questo ramo stampava il comando senza eseguirlo. Ora segue lo schema
+                # del ramo rsync per quanto l'FTP lo consente: non c'e' una shell sulla destinazione,
+                # quindi la copia per il rollback si scarica in locale, le patch del database le applica
+                # il task /task/mysql.patch del sito via HTTP, e le cache si svuotano con lftp e col task
+                if ! command -v lftp > /dev/null; then
+                    echo "ERRORE: lftp non e' installato su questa macchina, impossibile effettuare il deploy"
+                    exit 1
+                fi
 
                 ## file e cartelle da escludere dal deploy
-                for i in $SET_EXCLUDE; do
-                    EXCLUDE="$EXCLUDE --exclude $i"
+                # come glob e non come --exclude, che in lftp e' un'espressione regolare: "var" avrebbe
+                # escluso anche _src/_lib/_variabili.php. Ogni voce vale sia come file sia come cartella
+                for i in $SET_EXCLUDE usr/pages/test _usr/_pages/_test; do
+                    EXCLUDE="$EXCLUDE --exclude-glob ${i%/} --exclude-glob ${i%/}/"
                 done
 
-                ## esito dei test automatici ( vedi il ramo rsync )
-                EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
-
                 # informazioni
-                echo "accesso FTP: $FTP_USER"
-                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
+                echo "accesso FTP: $FTP_USER@$DST_HOST"
 
-                # comando
-                CMD="lftp -e \"mirror $EXCLUDE -R $SRC_PATH $DST_PATH; quit\" -u $FTP_USER,$FTP_PASSWORD $DST_HOST"
+                # copia della destinazione per il rollback, scaricata in locale
+                SNAPSHOT="$( dirname "$SRC_PATH" )/var/$( date '+%Y%m%d%H%M%S' )-deploy-$DST_STAGE"
+                mkdir -p "$SNAPSHOT"
+                if ! deploy-lftp "mirror $EXCLUDE $DST_PATH $SNAPSHOT"; then
+                    echo "ATTENZIONE: copia della destinazione non riuscita, un rollback andrebbe fatto a mano"
+                    SNAPSHOT=""
+                fi
+                echo "copia per il rollback: ${SNAPSHOT:-NON RIUSCITA}"
 
-                # informazioni
-                echo "comando: $CMD"
+                # registro dei deploy
+                echo "lftp mirror -R $EXCLUDE $SRC_PATH $DST_PATH" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
 
                 # deploy
-                # $CMD
+                if ! deploy-lftp "mirror -R $EXCLUDE $SRC_PATH $DST_PATH"; then
+                    echo "ERRORE: deploy su $DST_HOST fallito, i file NON sono stati copiati o lo sono stati solo in parte"
+                    exit 1
+                fi
+
+                # cache su filesystem della destinazione; una cartella gia' vuota non e' un errore
+                deploy-lftp "glob -a rm -r -f $DST_PATH/var/cache/*" > /dev/null 2>&1
+
+                # patch del database via HTTP e controllo; senza credenziali le patch non si applicano
+                # e lo si dice ( esito 2 ), con un errore si torna indietro
+                deploy-task-http "mysql.patch"
+                ESITO_PATCH=$?
+                if [ $ESITO_PATCH -eq 1 ] || ! deploy-check ""; then
+                    if [ -n "$SNAPSHOT" ] && deploy-lftp "mirror -R $EXCLUDE $SNAPSHOT $DST_PATH"; then
+                        echo "ERRORE: deploy su $DST_HOST annullato, la destinazione e' tornata alla versione precedente"
+                    else
+                        echo "ERRORE: deploy su $DST_HOST fallito e rollback non riuscito, la destinazione va sistemata a mano"
+                    fi
+                    exit 1
+                fi
+
+                # cache dei contenuti
+                deploy-task-http "memcache.clean?deploy=1"
+
+                echo "deploy completato su $DST_HOST"
 
             else
 
                 # informazioni
-                echo "parametri di accesso FTP mancanti, impossibile effettuare il deploy"
+                echo "parametri di accesso FTP mancanti ( FTP_USER, FTP_PASSWORD, DST_HOST ), impossibile effettuare il deploy"
 
                 # uscita
                 exit 1
 
             fi
-
             ;;
-
-        "scp")
-
-            # se sono settati i parametri per l'accesso
-            if [ -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
-
-                # informazioni
-                echo "accesso SSH: $SSH_USER"
-                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
-                echo "ATTENZIONE! questo tipo di deploy non supporta l'esclusione dei file e delle cartelle dal deploy"
-
-                # comando
-                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
-
-                # informazioni
-                echo "comando: $CMD"
-
-                # backup
-                # $CMD
-
-                # comando
-                CMD="scp -r $SRC_PATH $SSH_USER@$DST_HOST:$DST_PATH"
-
-                # informazioni
-                echo "comando: $CMD"
-
-                # deploy
-                # $CMD
-
-            else
-
-                # informazioni
-                echo "parametri di accesso SSH mancanti, impossibile effettuare il deploy"
-
-                # uscita
-                exit 1
-
-            fi
-
-            ;;
-
         "rsync")
 
             ## file e cartelle da escludere dal deploy
@@ -294,6 +322,15 @@ else
             # appartiene alla macchina dove i test sono girati ( _codeception.run.sh ): copiato altrove
             # mostrerebbe sul target l'esito di un altro ambiente, quindi non viaggia mai
             EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
+
+            ## un host senza i parametri SSH e' un errore, non un deploy locale
+            # fino al 21/10/2026 il ramo locale qui sotto si prendeva anche quando DST_HOST c'era ma mancava
+            # uno dei parametri SSH: si copiava in locale, su questa macchina, nel percorso che era della
+            # destinazione remota
+            if [ -n "$DST_HOST" ] && [ -z "$SSH_USER" -o -z "$SSH_PRIVATE" -o -z "$SSH_PUBLIC" ]; then
+                echo "parametri di accesso SSH mancanti ( SSH_USER, SSH_PRIVATE, SSH_PUBLIC ) per $DST_HOST, impossibile effettuare il deploy"
+                exit 1
+            fi
 
             ## host di destinazione
             if [ -n "$DST_HOST" -a -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
@@ -545,37 +582,6 @@ else
 
                 # informazioni
                 echo "deploy completato su $DST_PATH"
-
-            fi
-
-            ;;
-
-        "gcloud")
-
-            # se sono settati i parametri per l'accesso
-            if [ -n "$GCP_INSTANCE" -a -n "$GCP_PROJECT" -a -n "$GCP_ZONE" ]; then
-
-                # informazioni
-                echo "deploy GCP su: $GCP_ZONE/$GCP_PROJECT"
-                echo "ATTENZIONE! questo tipo di deploy non supporta il backup remoto prima del deploy"
-                echo "ATTENZIONE! questo tipo di deploy non supporta l'esclusione dei file e delle cartelle dal deploy"
-
-                # comando
-                CMD="gcloud compute scp --recurse $SRC_PATH $GCP_INSTANCE:$DST_PATH --project $GCP_PROJECT --zone $GCP_ZONE"
-
-                # informazioni
-                echo "comando: $CMD"
-
-                # deploy
-                # $CMD
-
-            else
-
-                # informazioni
-                echo "parametri di accesso Google Cloud mancanti, impossibile effettuare il deploy"
-
-                # uscita
-                exit 1
 
             fi
 
