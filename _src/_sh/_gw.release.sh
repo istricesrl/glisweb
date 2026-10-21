@@ -19,7 +19,7 @@
 # sul posto, e nella copia di lavoro romperebbero gli hard link con glisdev.
 #
 # Le release minori e maggiori NON passano da qui: si fanno a mano, con la release branch, perche'
-# assorbono le patch del database nei file base e aggiornano _etc/_current.canon ( capitolo 300 ).
+# assorbono le patch del database nei file base e aggiornano _etc/_current.db ( capitolo 300 ).
 #
 # uso: _gw.release.sh [ --si ]
 #

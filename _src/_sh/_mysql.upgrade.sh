@@ -181,7 +181,7 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
 
     // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch: lo si lascerebbe a meta'
     $motivo = NULL;
-    if( ! mysqlPatchCheck( $cn, $patchLevel, mysqlPatchCanon( $docroot . '/' ), mysqlPatchFiles( $docroot . '/' ), $motivo ) ) {
+    if( ! mysqlPatchCheck( $cn, $patchLevel, mysqlPatchCurrentDb( $docroot . '/' ), mysqlPatchFiles( $docroot . '/' ), $motivo ) ) {
         echo '  ERRORE: ' . $motivo . PHP_EOL;
         exit( 1 );
     }

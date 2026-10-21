@@ -70,7 +70,7 @@
     // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch
     $files = mysqlPatchFiles( $docroot );
     $reason = NULL;
-    if( ! mysqlPatchCheck( $cn, $level, mysqlPatchCanon( $docroot ), $files, $reason ) ) {
+    if( ! mysqlPatchCheck( $cn, $level, mysqlPatchCurrentDb( $docroot ), $files, $reason ) ) {
         echo '  ERRORE: ' . $reason . PHP_EOL;
         exit( 2 );
     }

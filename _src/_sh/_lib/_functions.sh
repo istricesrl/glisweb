@@ -619,7 +619,7 @@ function deploy-check() {
 # A ogni release minore o maggiore le patch datate della linea vecchia vengono assorbite nei file base
 # e tolte ( capitolo 300 ): un database che non le aveva applicate tutte resta sotto il livello del
 # canone, e mysqlPatchCheck() rifiuta di aggiornarlo. Le patch che gli mancano esistono ancora, nella
-# release da cui la linea nuova e' partita: la seconda riga di _etc/_current.canon dice quale tag.
+# release da cui la linea nuova e' partita: la seconda riga di _etc/_current.db dice quale tag.
 #
 # Questa funzione legge il livello del database ( dalla prova a vuoto di _mysql.upgrade.sh ), e finche'
 # sta sotto il canone risale la catena: scarica lo zip del tag di passaggio, ne legge il canone, e se
@@ -647,7 +647,7 @@ function gw-gradino() {
     local LIVELLO CANONE TAG ZIP CARTELLA FILE
     local LAVORO="$( dirname "$( pwd )" )/var/$( date '+%Y%m%d%H%M%S' )-gradino"
     local CATENA=()
-    local CANONI="./_etc/_current.canon"
+    local CANONI="./_etc/_current.db"
 
     # livello del database, dalla prova a vuoto: senza livello leggibile ci pensa _mysql.upgrade.sh a dirlo
     LIVELLO=$( ./_src/_sh/_mysql.upgrade.sh $STATO 2>/dev/null | sed -n 's/.*livello di patch attuale: \([0-9]\{12\}\).*/\1/p' | head -1 )
@@ -691,7 +691,7 @@ function gw-gradino() {
 
         CARTELLA="$LAVORO/$REPO-$TAG"
         CATENA=( "$CARTELLA" "${CATENA[@]}" )
-        CANONI="$CARTELLA/_etc/_current.canon"
+        CANONI="$CARTELLA/_etc/_current.db"
 
     done
 

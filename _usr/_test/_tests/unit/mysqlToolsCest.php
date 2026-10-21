@@ -8,11 +8,11 @@ class mysqlToolsCest
     {
     }
 
-    // mysqlPatchCanon() -> deve restituire il livello di _etc/_current.canon, e zero dove il file non c'è
-    public function mysqlPatchCanon(UnitTester $I)
+    // mysqlPatchCurrentDb() -> deve restituire il livello di _etc/_current.db, e zero dove il file non c'è
+    public function mysqlPatchCurrentDb(UnitTester $I)
     {
-        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPatchCanon.01.php');
-        $I->see('string(12) "' . trim( file_get_contents( DIR_BASE . '_etc/_current.canon' ) ) . '"');
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPatchCurrentDb.01.php');
+        $I->see('string(12) "' . trim( strtok( file_get_contents( DIR_BASE . '_etc/_current.db' ), "\n" ) ) . '"');
         $I->see('string(12) "000000000000"');
     }
 
