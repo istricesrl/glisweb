@@ -419,7 +419,7 @@
             if( empty( $altezza ) || empty( $larghezza ) ) {
 
             // log
-                logWrite( 'file danneggiato: ' . $fs, 'image', LOG_ERR );
+                logWrite( 'file danneggiato: ' . $fs, 'image', LOG_WARNING );
 
             // restituisco false
                 return false;

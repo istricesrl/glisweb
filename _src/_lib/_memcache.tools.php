@@ -356,7 +356,7 @@
 
         // validazione connessione
         if (!is_object($conn)) {
-            logWrite('connessione al server assente o non valida per il flush', 'memcache');
+            logWrite('connessione al server assente o non valida per il flush', 'memcache', LOG_ERR);
             return false;
         }
 

@@ -261,7 +261,7 @@
 
     // fuori da var/ si nega
     if( ! $percorsoValido ) {
-        logger( 'download negato fuori da var/: ' . $_REQUEST['__download__'], 'security', LOG_ERR );
+        logger( 'download negato fuori da var/: ' . $_REQUEST['__download__'], 'security', LOG_WARNING );
         http_response_code( 403 );
         header( 'Content-Type: text/plain; charset=utf-8' );
         die( 'accesso negato' );

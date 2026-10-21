@@ -135,7 +135,10 @@
 
     // impostazioni aggiuntive per PRODUCTION
     $cf['debug'][ PRODUCTION ]                                  = $cf['debug'][ DEVELOPEMENT ];
-    $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_ERR;
+    // PRODUCTION scrive anche i warning ( 2026-10-21 ): un evento sta al livello della sua gravità vera, e le anomalie
+    // gestite ( pagamenti non completati, richieste respinte da una regola ) servono anche in produzione; finiscono
+    // nei file *.warning e lasciano i *.err ai guasti
+    $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_WARNING;
     $cf['debug'][ PRODUCTION ]['display']                       = false;
 
     /**

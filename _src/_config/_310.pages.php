@@ -223,7 +223,7 @@
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logger( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+            logger( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_INFO );
         }
 
         // array delle pagine

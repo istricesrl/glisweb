@@ -30,7 +30,7 @@
 
 		// NOTA senza destinatari il risultato resterebbe NULL, che il task di invio legge come un successo
 		    if( empty( $to ) ) {
-				logWrite( 'invio senza destinatari', 'ehiweb', LOG_ERR );
+				logWrite( 'invio senza destinatari', 'ehiweb', LOG_WARNING );
 				return false;
 		    }
 
@@ -56,7 +56,7 @@
 
 		// destinatario senza cifre
 		    if( $to === false ) {
-				logWrite( 'destinatario senza cifre', 'ehiweb', LOG_ERR );
+				logWrite( 'destinatario senza cifre', 'ehiweb', LOG_WARNING );
 				return false;
 		    }
 
@@ -96,7 +96,7 @@
 				logWrite( 'SMS inviato: ' . $result, 'ehiweb', LOG_NOTICE );
 				return true;
 		    } else {
-				logWrite( 'fallito invio a ' . $to . ': ' . $result, 'ehiweb', LOG_CRIT );
+				logWrite( 'fallito invio a ' . $to . ': ' . $result, 'ehiweb', LOG_ERR );
 				return false;
 		    }
 

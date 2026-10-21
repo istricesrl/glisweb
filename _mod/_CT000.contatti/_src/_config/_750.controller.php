@@ -166,7 +166,7 @@
             } else {
 
                 // log
-                logger( 'blocco contatti ricevuto per modulo NON DEFINITO ' . $k, 'contatti', LOG_ERR );
+                logger( 'blocco contatti ricevuto per modulo NON DEFINITO ' . $k, 'contatti', LOG_WARNING );
 
             }
 

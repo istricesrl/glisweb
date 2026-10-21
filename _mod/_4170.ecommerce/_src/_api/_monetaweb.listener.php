@@ -203,7 +203,7 @@
 					}
 
 					// log
-					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'monetaweb', LOG_ERR );
+					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'monetaweb', LOG_WARNING );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );
 
                 break;
@@ -220,7 +220,7 @@
 	} else {
 
 	    // log
-		logWrite( 'trackid mancante, campi ricevuti: ' . implode( ', ', array_keys( $_REQUEST ) ), 'monetaweb', LOG_ERR );
+		logWrite( 'trackid mancante, campi ricevuti: ' . implode( ', ', array_keys( $_REQUEST ) ), 'monetaweb', LOG_WARNING );
 
 	}
 

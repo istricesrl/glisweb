@@ -629,7 +629,7 @@
         }
 
         // log
-        logger( 'privilegi insufficienti per il task ' . ( $_SERVER['REQUEST_URI'] ?? '' ) . ' ( richiesto: ' . ( $p ?? 'sessione autenticata' ) . ' )', 'security', LOG_ERR );
+        logger( 'privilegi insufficienti per il task ' . ( $_SERVER['REQUEST_URI'] ?? '' ) . ' ( richiesto: ' . ( $p ?? 'sessione autenticata' ) . ' )', 'security', LOG_WARNING );
 
         // risposta
         http_response_code( 403 );

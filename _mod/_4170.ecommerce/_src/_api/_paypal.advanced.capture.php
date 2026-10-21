@@ -46,7 +46,7 @@
         if( empty( $idCarrello ) ) {
 
             // log
-            logWrite( 'cattura rifiutata: nessun carrello in sessione per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_ERR );
+            logWrite( 'cattura rifiutata: nessun carrello in sessione per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_WARNING );
 
             // log
             appendToFile(

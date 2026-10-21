@@ -79,7 +79,7 @@
 
                 // un nome non interpretabile non deve restare fermo in silenzio
                 if( $quando === false ) {
-                    logWrite( 'nome di cartella programmata non valido, la elaboro subito: ' . $programmata, 'import', LOG_ERR );
+                    logWrite( 'nome di cartella programmata non valido, la elaboro subito: ' . $programmata, 'import', LOG_WARNING );
                     $quando = '00000000000000';
                 }
 
@@ -110,7 +110,7 @@
                             // status
                             if( $r === true ) {
                                 $cf['import']['info'][] = 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
-                                logWrite( 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
+                                logWrite( 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_DEBUG );
                             } else {
                                 $cf['import']['info'][] = 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
                                 logWrite( 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
@@ -499,7 +499,7 @@
                     } else {
 
                         // log
-                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'image' );
+                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'image', LOG_ERR );
 
                         // pulizia databare
                         mysqlQuery(
@@ -520,7 +520,7 @@
             } else {
 
                 // log
-                logger( 'impossibile associare il file: ' . $f, 'image' );
+                logger( 'impossibile associare il file: ' . $f, 'image', LOG_ERR );
 
                 // sposto il file fuori dalle scatole
                 moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );

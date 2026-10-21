@@ -387,7 +387,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
         } else {
 
         // log
-            logWrite( 'impossibile generare le bandiere per il cambio lingua', 'localization' );
+            logWrite( 'impossibile generare le bandiere per il cambio lingua', 'localization', LOG_WARNING );
 
         }
 

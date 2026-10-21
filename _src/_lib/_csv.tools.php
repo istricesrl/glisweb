@@ -783,10 +783,10 @@
         // se le intestazioni sono meno dei campi, aggiungo le intestazioni mancanti come guessN...guessN+x
         if( count( $h ) < count( $t ) ) {
             $h = array_merge( $h, array_map( function( $x ) { return 'guess' . $x; }, range( 1, count( $t ) - count( $h ) ) ) );
-            logger( 'intestazioni mancanti: ' . print_r( $h, true ) . ' per i dati: ' . print_r( $t, true ), 'csv', LOG_ERR );
+            logger( 'intestazioni mancanti: ' . print_r( $h, true ) . ' per i dati: ' . print_r( $t, true ), 'csv', LOG_WARNING );
         } elseif( count( $h ) > count( $t ) ) {
             $h = array_slice( $h, 0, count( $t ) );
-            logger( 'intestazioni in eccesso: ' . print_r( $h, true ) . ' per i dati: ' . print_r( $t, true ), 'csv', LOG_ERR );
+            logger( 'intestazioni in eccesso: ' . print_r( $h, true ) . ' per i dati: ' . print_r( $t, true ), 'csv', LOG_WARNING );
         }
 
         $t = array_combine( $h, $t );

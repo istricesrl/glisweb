@@ -40,7 +40,7 @@
         $totalChunks    = $_SERVER['HTTP_X_CHUNK_TOTAL'];
 
         // log
-        logWrite( 'inizio caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'uploader', LOG_NOTICE );
+        logWrite( 'inizio caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'uploader', LOG_INFO );
 
         // nome del file scritto
         $collisionCounter = time();
@@ -128,12 +128,12 @@
             fclose( $h );
 
             // log
-            logWrite( 'completato caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+            logWrite( 'completato caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_DEBUG );
 
         } else {
 
             // log
-            logWrite( 'caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+            logWrite( 'caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_DEBUG );
 
         }
 

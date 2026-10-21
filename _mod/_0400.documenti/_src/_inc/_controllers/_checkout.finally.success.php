@@ -319,7 +319,7 @@
                         } else {
 
                             // debug
-                            logWrite( 'impossibile trovare una sede per il merchant #' . $cf['ecommerce']['profile']['merchant'], 'documenti', LOG_CRIT );
+                            logWrite( 'impossibile trovare una sede per il merchant #' . $cf['ecommerce']['profile']['merchant'], 'documenti', LOG_ERR );
 
                         }
 

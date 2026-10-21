@@ -23,7 +23,7 @@
 	$status = array();
 
     // log
-	logWrite( 'inizio creazione pianificazione', 'pianificazione', LOG_ERR );
+	logWrite( 'inizio creazione pianificazione', 'pianificazione', LOG_INFO );
 
     if( isset($_REQUEST) && !empty($_REQUEST['__data__'])  ){
 

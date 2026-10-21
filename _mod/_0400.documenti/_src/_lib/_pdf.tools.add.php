@@ -1388,7 +1388,7 @@
         // un modello senza funzione ripiega sul generico, ma lo si dice: e' quasi sempre un refuso in stampa_pdf
         if( empty( $modello ) || ! function_exists( $funzione ) ) {
             if( ! empty( $modello ) ) {
-                logWrite( 'modello di stampa ' . $modello . ' senza la funzione ' . $funzione . ', uso il generico', 'documenti', LOG_ERR );
+                logWrite( 'modello di stampa ' . $modello . ' senza la funzione ' . $funzione . ', uso il generico', 'documenti', LOG_WARNING );
             }
             $funzione = 'generaDocumentoGenericoPdf';
         }

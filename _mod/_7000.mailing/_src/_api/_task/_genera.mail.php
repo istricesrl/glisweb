@@ -152,7 +152,7 @@
 		$row['mtk'] = md5( $row['id_mail'].$row['indirizzo'] );
 
 		// log
-		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
 		// inizializzo il template
 		$tpl = array(
@@ -161,7 +161,7 @@
 		);
 
 		// log
-		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // prelevo i contenuti
 		$cnts = mysqlQuery(
@@ -173,7 +173,7 @@
 		);
 
 		// log
-		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // debug
         // var_dump( $cnts );
@@ -222,7 +222,7 @@
 		// die();
 
 		// log
-		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // debug
         // die( print_r( $tpl, true ) );

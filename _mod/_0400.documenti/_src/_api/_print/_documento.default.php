@@ -90,7 +90,7 @@
          */
         http_response_code( 403 );
 
-        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_ERR );
+        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_WARNING );
 
         dieText('autorizzazioni insufficienti a visualizzare il documento');
 

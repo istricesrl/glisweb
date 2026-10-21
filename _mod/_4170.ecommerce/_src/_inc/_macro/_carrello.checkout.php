@@ -56,6 +56,6 @@ ini_set("display_errors", 1);
 
     } else {
 
-        logWrite("nessun ID carrello trovato al checkout", "carrelli", LOG_ERR);
+        logWrite("nessun ID carrello trovato al checkout", "carrelli", LOG_WARNING);
 
     }

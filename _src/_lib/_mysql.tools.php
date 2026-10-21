@@ -588,7 +588,7 @@
 
             // log
             if ($tElapsed > 0.5) {
-                logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
+                logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_WARNING);
                 logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
             }
 
@@ -761,7 +761,7 @@
 
                     // log
                     if ($tElapsed > 0.5) {
-                        logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
+                        logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_WARNING);
                         logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
                     }
 

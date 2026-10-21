@@ -49,7 +49,7 @@
             timerCheck( $cf['speed'], '-> fine scrittura cache pagine' );
 
             // log
-            logger( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
+            logger( 'struttura delle pagine scritta in cache', 'speed', LOG_INFO );
 
         } else {
 

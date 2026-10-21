@@ -42,7 +42,7 @@
     if( isset( $_SESSION['account']['username'] ) ) {
 
         // log
-        logger( 'login via API', 'details/auth/' . $_SESSION['account']['username'], LOG_ERR );
+        logger( 'login via API', 'details/auth/' . $_SESSION['account']['username'], LOG_INFO );
 
         // risposta
         $reply = ( isset( $_SESSION['account'] ) ) ? array_diff_key( $_SESSION['account'], array( 'permissions' => '', 'privilegi' => '', 'password' => '' ) ) : array( 'err' => 'login errato', 'status' => 'KO' );

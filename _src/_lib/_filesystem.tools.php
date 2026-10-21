@@ -1026,7 +1026,7 @@
             } else {
 
                 // log
-                logger( 'impossibile scaricare ' . $f1 . ' (' . $error . ')', 'filesystem' );
+                logger( 'impossibile scaricare ' . $f1 . ' (' . $error . ')', 'filesystem', LOG_ERR );
 
             }
 

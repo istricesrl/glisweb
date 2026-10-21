@@ -40,7 +40,7 @@
             // in inserimento il file è sempre obbligatorio
             if( empty( $d['path'] ) ) {
 
-                logWrite( "inserimento di $t bloccato: campo path assente o vuoto", 'controller', LOG_ERR );
+                logWrite( "inserimento di $t bloccato: campo path assente o vuoto", 'controller', LOG_WARNING );
 
                 $i['__status__'] = 422;
                 $a = NULL;
@@ -56,7 +56,7 @@
             // hanno e non devono essere bloccate
             if( array_key_exists( 'path', $d ) && empty( $d['path'] ) ) {
 
-                logWrite( "aggiornamento di $t bloccato: campo path svuotato", 'controller', LOG_ERR );
+                logWrite( "aggiornamento di $t bloccato: campo path svuotato", 'controller', LOG_WARNING );
 
                 $i['__status__'] = 422;
                 $a = NULL;

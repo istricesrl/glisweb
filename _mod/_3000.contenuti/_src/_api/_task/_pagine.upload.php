@@ -320,7 +320,7 @@
                                                         $fail++;
                                                         $error = error_get_last();
                                                         $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ') errore: ' . $error['message'];
-                                                        logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL . ' errore: ' . $error['message'], 'details/ftp.'.$base.'.fail' );
+                                                        logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL . ' errore: ' . $error['message'], 'details/ftp.'.$base.'.fail', LOG_ERR );
                                                         $esito = 'KO';
                                                     } else {
                                                         //$fail++;

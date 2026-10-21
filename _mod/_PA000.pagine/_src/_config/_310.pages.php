@@ -27,7 +27,7 @@
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite( 'struttura delle pagine NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
+            logWrite( 'struttura delle pagine NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO );
         }
 
         // recupero le pagine dal database

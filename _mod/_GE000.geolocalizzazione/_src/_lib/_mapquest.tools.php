@@ -157,7 +157,7 @@
 
     	    } else {
 
-    		logWrite( 'nessuna chiave Mapquest impostata per lo stage corrente', 'geocode', LOG_CRIT );
+    		logWrite( 'nessuna chiave Mapquest impostata per lo stage corrente', 'geocode', LOG_ERR );
 
     		return false;
 

@@ -36,7 +36,7 @@
 
             $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
-            logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_INFO ); 
             
             if( $result ){
 

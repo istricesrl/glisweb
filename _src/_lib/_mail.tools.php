@@ -94,7 +94,7 @@
      *
      * La cifratura dipende dalla porta: TLS sulla 587, SSL sulla 465, nessuna sulle altre; l'autenticazione SMTP si attiva solo
      * se $user non è vuoto. I destinatari CC e BCC con indirizzo vuoto vengono saltati, gli allegati che non esistono o non si
-     * possono leggere vengono saltati e loggati a LOG_CRIT, e i parametri che non sono array ( la coda contiene davvero valori
+     * possono leggere vengono saltati e loggati a LOG_ERR, e i parametri che non sono array ( la coda contiene davvero valori
      * NULL serializzati ) vengono ignorati. Il mittente è invece obbligatorio: se il suo indirizzo non è valido la mail non
      * viene inviata e la funzione restituisce false.
      *
@@ -103,7 +103,7 @@
      * La passphrase si legge da etc/secret/\<dominio\>/dkim.password.key se c'è ( come stringa, senza gli spazi e l'a capo
      * finali ), altrimenti si usa $dkim_pasw.
      *
-     * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_CRIT nel canale mail
+     * PHPMailer viene creato senza eccezioni: se l'invio fallisce l'errore di PHPMailer viene loggato a LOG_ERR nel canale mail
      * e la funzione restituisce false, e il task della coda rimanda la mail con un tentativo in più; un destinatario, un allegato
      * o un header che PHPMailer rifiuta viene saltato senza interrompere l'invio.
      *
@@ -270,7 +270,7 @@
                     if (file_exists($vAtch) && is_readable($vAtch)) {
                         $mail->AddAttachment($vAtch, basename($vAtch));
                     } else {
-                        logWrite('impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT);
+                        logWrite('impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_ERR);
                     }
                 }
             }
@@ -300,11 +300,11 @@
                     logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
                     logWrite('DKIM: chiave ' . $mail->DKIM_private . ' ' . ( is_readable( $mail->DKIM_private ) ? 'sha256=' . hash_file( 'sha256', $mail->DKIM_private ) : 'NON LEGGIBILE' ), 'dkim', LOG_DEBUG);
                 } else {
-                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_NOTICE);
-                    logWrite('DKIM: ' . $dkimDomain . ' file etc/secret/' . $dkimDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_WARNING);
+                    logWrite('DKIM: ' . $dkimDomain . ' file etc/secret/' . $dkimDomain . '/dkim.private.pem non trovato', 'dkim', LOG_WARNING);
                 }
             } else {
-                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_ERR);
+                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $dkimDomain . ' non impostato', 'dkim', LOG_WARNING);
             }
 
             // invio
@@ -317,7 +317,7 @@
                         $mail->ErrorInfo . ' sending: ' . $oggetto . ' via: ' . $host . ':' . $port .
                         ' to: ' . serialize($to),
                     'mail',
-                    LOG_CRIT
+                    LOG_ERR
                 );
             } else {
                 logWrite(
@@ -333,7 +333,7 @@
 
         } else {
 
-            logWrite('indirizzo mail mittente non valido: ' . $fromMail, 'mail', LOG_CRIT);
+            logWrite('indirizzo mail mittente non valido: ' . $fromMail, 'mail', LOG_ERR);
             return false;
 
         }

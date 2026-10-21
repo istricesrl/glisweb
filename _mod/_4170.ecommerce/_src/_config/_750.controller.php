@@ -336,7 +336,7 @@
                     }
 
                     // log
-                    logWrite( $contenuto, 'privacy', LOG_CRIT );
+                    logWrite( $contenuto, 'privacy', LOG_NOTICE );
 
                     // ID del consenso
                     // NOTA $ck è il codice del consenso ( PRIVACY_POLICY, ... ), carrelli_consensi.id_consenso è l'id della riga di consensi
@@ -785,10 +785,10 @@
                             );
 
                             /**
-                             * Se qualcosa è stato trattenuto lo si dice, e a LOG_ERR: sui deploy in
-                             * produzione il livello di log è ERR, quindi una riga più in basso non
-                             * verrebbe scritta affatto — ed è proprio lì che serve sapere che un
-                             * utente ha provato a togliere dal carrello qualcosa di già pagato.
+                             * Se qualcosa è stato trattenuto lo si dice, a LOG_WARNING: è la regola
+                             * che funziona, non un guasto, e dal 2026-10-21 in produzione il livello
+                             * di log è WARNING, quindi la riga si scrive proprio dove serve sapere che
+                             * un utente ha provato a togliere dal carrello qualcosa di già pagato.
                              */
                             if( ! empty( $righeProtette ) ) {
                                 logWrite(
@@ -797,7 +797,7 @@
                                     . ' dell\'articolo ' . $dati['id_articolo']
                                     . ': hanno pagamenti incassati o documenti emessi',
                                     'cart',
-                                    LOG_ERR
+                                    LOG_WARNING
                                 );
                             }
 
@@ -1147,7 +1147,7 @@
                     // die( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' non utilizzabile' );
 
                     // log
-                    logWrite( 'coupon ' . ( $_SESSION['carrello']['codice_coupon'] ?? $_SESSION['carrello']['id_coupon'] ) . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                    logWrite( 'coupon ' . ( $_SESSION['carrello']['codice_coupon'] ?? $_SESSION['carrello']['id_coupon'] ) . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
 
                     // rimuovo il coupon inutilizzabile
                     $_SESSION['carrello']['id_coupon'] =

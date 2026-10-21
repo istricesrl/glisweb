@@ -35,13 +35,13 @@
         $status['__status__'] = 'OK';
    
        // log
-	    logWrite( 'data inizio eliminazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_ERR );
+	    logWrite( 'data inizio eliminazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_INFO );
 
         if( ! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']=='0'  ){
 
                 $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
-                logWrite( implode(', ', $result), 'todo', LOG_ERR ); 
+                logWrite( implode(', ', $result), 'todo', LOG_INFO ); 
                 
                 if( $result ){
 

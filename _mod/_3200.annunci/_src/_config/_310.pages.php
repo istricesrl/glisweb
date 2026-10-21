@@ -23,7 +23,7 @@
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite( 'struttura delle categorie annunci NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
+            logWrite( 'struttura delle categorie annunci NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO );
         }
 
 	    // recupero le categorie annunci dal database

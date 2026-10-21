@@ -91,7 +91,7 @@
 				);
 
                 if( empty( $id ) ) {
-                    logWrite( "controller before per $t/$a metodo DELETE: codice {$vs['codice']['s']} non trovato", 'controller', LOG_ERR );
+                    logWrite( "controller before per $t/$a metodo DELETE: codice {$vs['codice']['s']} non trovato", 'controller', LOG_WARNING );
                 }
 
 				if( ! in_array( 'id', $ks ) ) {

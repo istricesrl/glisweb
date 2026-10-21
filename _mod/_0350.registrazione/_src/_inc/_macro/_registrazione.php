@@ -300,7 +300,7 @@
                         $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __signup__ per l\'anagrafica #' . $idAnagrafica . ' account #' . $idAccount . ' token #' . $_REQUEST['tk'];
 
                         // log
-                        logWrite( $contenuto, 'privacy', LOG_CRIT );
+                        logWrite( $contenuto, 'privacy', LOG_NOTICE );
 
                         // ID del consenso
                         // NOTA $ck è il codice del consenso ( PRIVACY_POLICY, ... ), anagrafica_consensi.id_consenso è l'id della riga di consensi

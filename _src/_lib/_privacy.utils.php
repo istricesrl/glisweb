@@ -13,7 +13,9 @@
      * __ct__[nomemodulo][__privacy__][CODICECONSENSO]. La controller _mod/_CT000.contatti/_src/_config/_750.controller.php,
      * dopo aver salvato il contatto nella tabella contatti, passa il blocco dati del modulo a associazioneConsensiContatto()
      * che registra i consensi prestati nelle tabelle consensi_contatti e, se l'utente è loggato, anagrafica_consensi. La
-     * legenda dei consensi si trova nella tabella consensi. Per ulteriori dettagli si vedano _mod/_CT000.contatti/READ.md
+     * legenda dei consensi si trova nella tabella consensi. Dal 21/10/2026 la usa anche la controller del modulo legacy
+     * _mod/_0300.contatti, i cui campi sono __consensi__[__contatti__][nomemodulo][CODICECONSENSO][value], quando il modulo
+     * salva il contatto nel database. Per ulteriori dettagli si vedano _mod/_CT000.contatti/READ.md
      * e _usr/_docs/_read/406.howto.privacy.md.
      * 
      * costanti

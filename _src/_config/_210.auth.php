@@ -343,7 +343,7 @@
         } elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
             // log
-            logger( 'check anti spam al login fallito per token non ricevuto', 'auth' );
+            logger( 'check anti spam al login fallito per token non ricevuto', 'auth', LOG_WARNING );
 
             // punteggio di spam
             $cf['session']['spam']['check'] = false;
@@ -591,7 +591,7 @@
                                 }
                             }
                         } else {
-                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
                         }
 
                         // dati anagrafici
@@ -731,7 +731,7 @@
                                 }
                             }
                         } else {
-                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
                         }
 
                         // gruppi di attribuzione automatica dell'utente
@@ -763,7 +763,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_INACTIVE;
 
                         // log
-                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_INFO );
+                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                     } else {
 

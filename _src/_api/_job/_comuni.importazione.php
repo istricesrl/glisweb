@@ -111,7 +111,7 @@
             if( empty( $row['nome_comune'] ) ) {
 
                 // log
-                logWrite( 'nome comune mancante alla riga #' . $widx . ' del job #' . $job['id'], 'job', LOG_ERR );
+                logWrite( 'nome comune mancante alla riga #' . $widx . ' del job #' . $job['id'], 'job', LOG_WARNING );
 
                 // status
                 $job['workspace']['status']['error'][] = 'nome comune non trovato';

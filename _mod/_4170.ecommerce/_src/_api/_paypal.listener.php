@@ -92,7 +92,7 @@
 					}
 
 					// log
-					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['item_number'], 'paypal', LOG_ERR );
+					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['item_number'], 'paypal', LOG_WARNING );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );
 
 				break;
@@ -109,6 +109,6 @@
 	} else {
 
 	    // log
-		logWrite( 'item_number mancante', 'paypal', LOG_ERR );
+		logWrite( 'item_number mancante', 'paypal', LOG_WARNING );
 
 	}

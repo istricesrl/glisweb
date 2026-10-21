@@ -158,7 +158,7 @@
                 // errore fatale nella struttura delle pagine
 
                 // log
-                    logger( 'la pagina ' . $k . ' è malformata e blocca la costruzione della struttura', 'pages', LOG_EMERG );
+                    logger( 'la pagina ' . $k . ' è malformata e blocca la costruzione della struttura', 'pages', LOG_CRIT );
 
                 // debug
                 die( 'PAGINA MALFORMATA: ' . $k . ' -> ' . print_r( $v, true ) );

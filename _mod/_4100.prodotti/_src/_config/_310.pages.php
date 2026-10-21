@@ -23,7 +23,7 @@ if( $cf['contents']['cached'] === false ) {
 
     // log
     if( ! empty( $cf['memcache']['connection'] ) ) {
-        logWrite('struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+        logWrite('struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO);
     }
 
     // recupero le pagine dal database
@@ -221,7 +221,7 @@ if( $cf['contents']['cached'] === false ) {
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite('struttura degli articoli NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+            logWrite('struttura degli articoli NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO);
         }
 
         // gli articoli pubblicati, con la categoria e i dati di pagina del loro prodotto

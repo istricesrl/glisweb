@@ -223,7 +223,7 @@
 
                             // le todo sono comunque state create: segnalo che le view statiche restano indietro
                             $status['err'][] = 'refresh delle view statiche saltato: lock non acquisito entro 30s';
-                            logWrite( 'refresh view statiche saltato: lock non acquisito', 'speed', LOG_ERR );
+                            logWrite( 'refresh view statiche saltato: lock non acquisito', 'speed', LOG_NOTICE );
 
                         }
 

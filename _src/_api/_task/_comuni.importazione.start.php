@@ -115,14 +115,14 @@
         } else {
 
             // debug
-            logWrite( 'impossibile importare i comuni senza una connessione memcache', 'task', LOG_INFO );
+            logWrite( 'impossibile importare i comuni senza una connessione memcache', 'task', LOG_ERR );
 
         }
 
     } else {
 
         // debug
-        logWrite( 'impossibile scaricare il file dei comuni da ' . $status['link'], 'task', LOG_CRIT );
+        logWrite( 'impossibile scaricare il file dei comuni da ' . $status['link'], 'task', LOG_ERR );
 
     }
 

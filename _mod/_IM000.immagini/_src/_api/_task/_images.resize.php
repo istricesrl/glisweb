@@ -178,7 +178,7 @@
             $status['err'][] = 'immagine inesistente ' . $im1;
 
             // log
-            logWrite( 'immagine inesistente ' . $im1, 'image', LOG_ERR );
+            logWrite( 'immagine inesistente ' . $im1, 'image', LOG_WARNING );
             
         }
 

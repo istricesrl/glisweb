@@ -83,14 +83,14 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 		foreach ($to as $key => $value) {
 			$to[$key] = string2smsNumber($value);
 			if ($to[$key] === false) {
-				logWrite('destinatario senza cifre scartato: ' . print_r($value, true), 'skebby', LOG_ERR);
+				logWrite('destinatario senza cifre scartato: ' . print_r($value, true), 'skebby', LOG_WARNING);
 				unset($to[$key]);
 			}
 		}
 
 		// NOTA senza destinatari validi non c'è niente da inviare, e l'invio è fallito
 		if (empty($to)) {
-			logWrite('invio senza destinatari validi', 'skebby', LOG_ERR);
+			logWrite('invio senza destinatari validi', 'skebby', LOG_WARNING);
 			return false;
 		}
 
@@ -139,7 +139,7 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 		if (isset( $result['result']) && $result['result'] == 'OK') {
 			return true;
 		} else {
-			logWrite('fallito invio: ' . print_r($result, true), 'skebby', LOG_CRIT);
+			logWrite('fallito invio: ' . print_r($result, true), 'skebby', LOG_ERR);
 			return false;
 		}
 	} else {

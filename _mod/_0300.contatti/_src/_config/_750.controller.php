@@ -104,7 +104,7 @@
                             logWrite('controller standard trovata per il blocco ' . $k . ': ' . $macro, 'contatti');
                             require $macro;
                         } else {
-                            logWrite('file della controller non trovato per il blocco ' . $k . ': ' . $macro, 'contatti');
+                            logWrite('file della controller non trovato per il blocco ' . $k . ': ' . $macro, 'contatti', LOG_ERR);
                         }
                     }
                 } else {
@@ -141,7 +141,7 @@
                     $timestamp = time();
 
                     // contenuto del consenso
-                    $contenuto = 'il ' . date('d/m/Y', $timestamp) . ' alle ' . date('H:i:s', $timestamp) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __contatti__.' . $k;
+                    $contenuto = 'il ' . date('d/m/Y', $timestamp) . ' alle ' . date('H:i:s', $timestamp) . ((empty($cv['value'])) ? ' non' : NULL) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __contatti__.' . $k;
 
                     // se è stato salvato un contatto nel database
                     if (isset($idCnt) && ! empty($idCnt)) {
@@ -149,13 +149,23 @@
                     }
 
                     // log
-                    logWrite($contenuto, 'privacy', LOG_CRIT);
-
-                    // TODO salvare i log della privacy in spool in modo che non vengano svuotati con gli altri log
-
-                    // TODO salvare il consenso nella tabella contatti_consensi
+                    // NOTA il registro dei consensi è la tabella consensi_contatti, il log è una traccia: senza un contatto salvato
+                    // ( modulo senza backend ) il consenso non si può registrare, e questo è un'anomalia da vedere anche in produzione
+                    logWrite($contenuto, 'privacy', (isset($idCnt) && ! empty($idCnt)) ? LOG_NOTICE : LOG_WARNING);
 
                 }
+
+                // registro i consensi nella tabella consensi_contatti, come fa il modulo _CT000.contatti
+                if (isset($idCnt) && ! empty($idCnt)) {
+                    associazioneConsensiContatto(
+                        array(
+                            '__id_contatto__' => $idCnt,
+                            '__modulo__' => $k,
+                            '__privacy__' => array_map(function ($c) { return ! empty($c['value']); }, $_REQUEST['__consensi__']['__contatti__'][$k])
+                        )
+                    );
+                }
+
             }
 
             // verifico se va registrata una hit di Analytics
@@ -185,7 +195,7 @@
                         )
                     );
                 } elseif (isset($cf['google']['profile']['analytics']['ua'])) {
-                    logWrite('evento Analytics non inviato per il blocco ' . $k . ': manca il secret del Measurement Protocol', 'contatti', LOG_ERR);
+                    logWrite('evento Analytics non inviato per il blocco ' . $k . ': manca il secret del Measurement Protocol', 'contatti', LOG_WARNING);
                 }
             }
 
@@ -289,8 +299,9 @@
              * Il risultato: chi veniva classificato come bot leggeva "controlla la tua
              * casella di posta" davanti a un modulo che non era stato elaborato, e da
              * nessuna parte restava traccia di quante richieste legittime venissero
-             * buttate via. Si logga a LOG_ERR e si dice all'utente che qualcosa non ha
-             * funzionato, che delle due e' l'unica cosa vera.
+             * buttate via. Si logga a LOG_WARNING, perche' e' una regola che funziona e
+             * non un guasto ( in produzione il livello e' WARNING dal 2026-10-21 ), e si
+             * dice all'utente che qualcosa non ha funzionato, che delle due e' l'unica cosa vera.
              */
             logWrite(
                 'blocco ' . $k . ' scartato dal controllo antispam ( score '
@@ -298,7 +309,7 @@
                 . ( isset($v['spam']['status']) ? ', ' . $v['spam']['status'] : '' ) . ' )'
                 . ( isset($v['email']) ? ' per ' . $v['email'] : '' ),
                 'contatti',
-                LOG_ERR
+                LOG_WARNING
             );
 
             // esito dell’operazione

@@ -142,7 +142,7 @@
                 'attenzione: lock della numerazione documenti non acquisito entro 10 secondi, procedo comunque'
                 . ' ( sezionale ' . $sezionale . ', tipologia ' . $idTipologia . ' )',
                 'documenti',
-                LOG_ERR
+                LOG_WARNING
             );
         }
 
