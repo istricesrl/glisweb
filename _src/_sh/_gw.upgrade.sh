@@ -73,6 +73,18 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
+        # il framework si aggiorna solo in dev/: test/ e stable/ lo ricevono da dev/ con _deploy.run.sh,
+        # insieme al codice del progetto che ci e' stato provato sopra. Lo si riconosce dal nome della
+        # cartella e da una dev/ accanto: un'installazione singola ( un hosting senza le cartelle dei
+        # deploy ) si aggiorna da se' come sempre. GW_UPGRADE_FORZA=1 lo fa fare lo stesso
+        STADIO=$( basename "$( pwd )" )
+        if [ "$STADIO" = "test" -o "$STADIO" = "stable" ] && [ -d ../dev ] && [ -z "$GW_UPGRADE_FORZA" ]; then
+            echo "ERRORE: questa e' la cartella $STADIO di un deploy che ha anche dev/: il framework si aggiorna"
+            echo "        in dev/ e arriva qui con _deploy.run.sh $STADIO. Il framework NON viene toccato"
+            echo "        ( GW_UPGRADE_FORZA=1 per farlo lo stesso )"
+            exit 1
+        fi
+
         # repository da cui scaricare il branch
         #
         # alcuni deploy si aggiornano da glisdev invece che da glisweb: lo dice il file
@@ -291,6 +303,48 @@ else
 
         ## permessi
         ./_src/_sh/_lamp.permissions.secure.sh
+
+        ## controllo del sito aggiornato
+        #
+        # fino al 21/10/2026 l'aggiornamento finiva qui comunque andasse, e un framework che mandava il
+        # sito in errore restava installato fino a che qualcuno se ne accorgeva. Se ../update.check.conf
+        # elenca degli URL ( uno per riga ) li si chiede adesso: un errore del server o nessuna risposta
+        # riportano i file _* di prima dal backup fatto all'inizio. Il database non torna indietro: le
+        # patch sono compatibili all'indietro, e il codice di prima gira anche sul database aggiornato
+        if [ -s ../update.check.conf ]; then
+
+            rm -rf ./var/cache/*
+            controlloKO=""
+            for URL in $( grep -v '^\s*#' ../update.check.conf ); do
+                CODE=$( curl -s -o /dev/null -w '%{http_code}' --max-time 60 "$URL" )
+                echo "controllo di $URL: HTTP $CODE"
+                case "$CODE" in
+                    5??|000) controlloKO="1" ;;
+                esac
+            done
+
+            if [ -n "$controlloKO" ]; then
+
+                echo "ERRORE: il sito non risponde dopo l'aggiornamento, rimetto il framework di prima da $BACKUPFILE"
+
+                # stessa sequenza dell'installazione: il vendor non e' nel backup e si conserva
+                rm -rf ../_ext.prev
+                cp -a ./_src/_lib/_ext ../_ext.prev
+                rm -rf ./_*
+                tar -xzf "$BACKUPFILE" --wildcards './_*'
+                rm -rf ./_src/_lib/_ext
+                mv ../_ext.prev ./_src/_lib/_ext
+                ./_src/_sh/_lamp.permissions.secure.sh
+                rm -rf ./var/cache/*
+
+                echo "framework di prima ripristinato: l'aggiornamento e' annullato"
+                exit 1
+
+            fi
+
+        else
+            echo "NOTA: ../update.check.conf assente, nessun controllo del sito dopo l'aggiornamento"
+        fi
 
         ## salvo la data di aggiornamento
         echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf

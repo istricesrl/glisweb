@@ -461,3 +461,154 @@ function disallineamenti-raccogli() {
     echo "disallineamenti: $TOTALE, raccolti in $OUT"
 
 }
+
+#
+# Fotografa la destinazione di un deploy prima di sovrascriverla, per poterla rimettere com'era.
+#
+# Fix 2026-10-21: _backup.run.sh fa il tar della destinazione, ma nessuno lo usava per tornare
+# indietro, e rimettere a mano un tar sopra una produzione rotta non e' un gesto da fare di corsa.
+# Qui si fa una copia per hard link ( rsync --link-dest ): costa quasi niente in spazio e in tempo,
+# e resta intatta anche dopo il deploy, perche' rsync non scrive i file sul posto ma li sostituisce.
+# Si escludono le stesse cose del deploy ( $3 ), cosi' il rollback non tocca var/ e gli altri dati
+# che il deploy non porta. La copia sta in <progetto>/var/<data>-deploy-<stadio>/, fuori dalla
+# document root, e se ne tengono le ultime tre per stadio.
+#
+# $1 percorso della document root di destinazione
+# $2 prefisso di esecuzione remota, opzionale (es. "ssh -i chiave utente@host")
+# $3 le opzioni --exclude del deploy
+#
+# stampa il percorso della copia, vuoto se non e' riuscita
+#
+function deploy-snapshot() {
+
+    local DST="$1"
+    local VIA="$2"
+    local EXC="$3"
+    local SNAP="$( dirname "$DST" )/var/$( date '+%Y%m%d%H%M%S' )-deploy-$( basename "$DST" )"
+
+    local SCRIPT='
+        mkdir -p "$2" || exit 1
+        rsync -a '"$EXC"' --link-dest="$1/" "$1/" "$2/" || exit 1
+        ls -d "$( dirname "$2" )"/*-deploy-"$( basename "$1" )" | sort | head -n -3 | xargs -r rm -rf
+    '
+
+    if [ -n "$VIA" ]; then
+        echo "$SCRIPT" | $VIA "bash -s -- '$DST' '$SNAP'" > /dev/null && echo "$SNAP"
+    else
+        echo "$SCRIPT" | bash -s -- "$DST" "$SNAP" > /dev/null && echo "$SNAP"
+    fi
+
+}
+
+#
+# Rimette una destinazione com'era nella copia fatta da deploy-snapshot().
+#
+# Si torna indietro col solo codice: le patch del database devono essere compatibili all'indietro
+# ( si aggiunge in una release, si toglie in una successiva ), cosi' il codice di prima gira anche
+# sul database appena aggiornato e non si perdono le scritture fatte nel frattempo. Il dump che
+# _mysql.upgrade.sh fa prima delle patch resta nella cartella dei backup del progetto, per il caso
+# di una patch fallita a meta', che si valuta a mano.
+#
+# $1 percorso della document root di destinazione
+# $2 prefisso di esecuzione remota, opzionale
+# $3 percorso della copia
+# $4 le opzioni --exclude del deploy
+#
+function deploy-rollback() {
+
+    local DST="$1"
+    local VIA="$2"
+    local SNAP="$3"
+    local EXC="$4"
+
+    if [ -z "$SNAP" ]; then
+        echo "ERRORE: nessuna copia della destinazione da cui tornare indietro, $DST va sistemata a mano"
+        return 1
+    fi
+
+    echo "rollback di $DST dalla copia $SNAP"
+
+    local SCRIPT='
+        "$1/_src/_sh/_lamp.permissions.open.sh" > /dev/null 2>&1
+        rsync -a --delete '"$EXC"' "$2/" "$1/" || exit 1
+        "$1/_src/_sh/_lamp.permissions.secure.sh" > /dev/null 2>&1
+        rm -rf "$1"/var/cache/*
+    '
+
+    if [ -n "$VIA" ]; then
+        echo "$SCRIPT" | $VIA "bash -s -- '$DST' '$SNAP'"
+    else
+        echo "$SCRIPT" | bash -s -- "$DST" "$SNAP"
+    fi
+
+}
+
+#
+# Applica le patch del database alla destinazione di un deploy.
+#
+# Fix 2026-10-21: il deploy portava in test o in produzione il codice di DEV, con le sue patch in
+# _usr/_database/_patch/, ma non le applicava a nessuno: polmasi PROD era fermo a 202610121100 col
+# DEV a 202610151208, cioe' codice nuovo su un database senza le sue colonne. Le applica qui
+# _mysql.upgrade.sh della destinazione, col profilo della destinazione: legge la configurazione
+# copiata, fa il dump prima, si ferma al primo errore e rifiuta i database anteriori al canone.
+#
+# $1 percorso della document root di destinazione
+# $2 prefisso di esecuzione remota, opzionale ( con l'utente che puo' scrivere i dump )
+# $3 profilo del database della destinazione ( TEST, PROD )
+#
+function deploy-mysql-patch() {
+
+    local DST="$1"
+    local VIA="$2"
+    local PROF="$3"
+
+    if [ -z "$PROF" ]; then
+        echo "ATTENZIONE: profilo del database della destinazione non indicato ( DST_PROFILE ), patch NON applicate"
+        return 0
+    fi
+
+    echo "patch del database su $DST, profilo $PROF"
+
+    if [ -n "$VIA" ]; then
+        $VIA "$DST/_src/_sh/_mysql.upgrade.sh $PROF --si"
+    else
+        "$DST/_src/_sh/_mysql.upgrade.sh" $PROF --si
+    fi
+
+}
+
+#
+# Controlla che la destinazione di un deploy risponda.
+#
+# Chiede la home di DST_URL dalla destinazione stessa, come fa deploy-invalidate-caches(), e fallisce
+# su un errore del server ( 5xx ) o su nessuna risposta: un 404 o un redirect al login vogliono dire
+# che il framework ha risposto. Senza DST_URL il controllo si salta e lo si
+# dice: non si prova a indovinare l'host dal config.json. Sui deploy non girano i test automatici,
+# che scrivono nel database e rifiutano la produzione: quelli girano prima, dove si sviluppa.
+#
+# $1 prefisso di esecuzione remota, opzionale
+#
+function deploy-check() {
+
+    local VIA="$1"
+    local CODE
+
+    if [ -z "$DST_URL" ]; then
+        echo "ATTENZIONE: DST_URL non dichiarato, controllo della destinazione saltato"
+        return 0
+    fi
+
+    if [ -n "$VIA" ]; then
+        CODE=$( $VIA "curl -s -o /dev/null -w '%{http_code}' --max-time 60 '$DST_URL/'" )
+    else
+        CODE=$( curl -s -o /dev/null -w '%{http_code}' --max-time 60 "$DST_URL/" )
+    fi
+
+    echo "controllo di $DST_URL/: HTTP $CODE"
+
+    case "$CODE" in
+        5??|000) return 1 ;;
+        *) return 0 ;;
+    esac
+
+}
