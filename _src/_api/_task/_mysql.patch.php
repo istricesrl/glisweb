@@ -133,6 +133,14 @@
         // log
         logger( 'livello di patch del database -> ' . $patchLevel, 'mysql', LOG_NOTICE );
 
+        // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch: lo si lascerebbe a metà
+        $pReason = NULL;
+        if( ! mysqlPatchCheck( $cf['mysql']['connection'], $patchLevel, mysqlPatchCanon( DIR_BASE ), mysqlPatchFiles( DIR_BASE ), $pReason ) ) {
+            logger( 'patch rifiutate -> ' . $pReason, 'mysql', LOG_ERR );
+            http_response_code( 500 );
+            die( 'patch rifiutate: ' . $pReason );
+        }
+
         // le patch da applicare
         $pWarnings = array();
         $pToApply = mysqlPatchRead( mysqlPatchFiles( DIR_BASE ), $patchLevel, $pWarnings );

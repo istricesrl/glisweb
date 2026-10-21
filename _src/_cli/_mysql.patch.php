@@ -67,8 +67,15 @@
         exit( 2 );
     }
 
-    // lettura e applicazione
+    // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch
     $files = mysqlPatchFiles( $docroot );
+    $reason = NULL;
+    if( ! mysqlPatchCheck( $cn, $level, mysqlPatchCanon( $docroot ), $files, $reason ) ) {
+        echo '  ERRORE: ' . $reason . PHP_EOL;
+        exit( 2 );
+    }
+
+    // lettura e applicazione
     $warnings = array();
     $patches = mysqlPatchRead( $files, $level, $warnings );
     $error = array();

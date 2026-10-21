@@ -147,6 +147,8 @@
      * -----------------------------------------|---------------------------------------------------------------
      * mysqlPatchFiles()                        | restituisce i file di patch, standard e custom, nell'ordine di applicazione
      * mysqlPatchLevel()                        | restituisce il livello di patch del database
+     * mysqlPatchCanon()                        | restituisce il livello del canone
+     * mysqlPatchCheck()                        | verifica che al database si possano applicare le patch
      * mysqlPatchRead()                         | legge dai file le patch da applicare sopra un livello
      * mysqlPatchApply()                        | applica le patch e le registra in __patch__, fermandosi al primo errore
      *
@@ -2391,6 +2393,123 @@
         // livello di patch, o nessuna patch registrata
         $l = mysqli_fetch_row($r);
         return (empty($l[0])) ? '000000000000' : $l[0];
+    }
+
+    /**
+     * restituisce il livello del canone
+     *
+     * Questa funzione legge da _etc/_current.canon il livello del canone, cioè l'id dell'ultima patch assorbita nei file
+     * base _0N0000999999.*.sql all'ultimo rilascio maggiore o minore, quando la coda delle patch datate è stata svuotata.
+     * Un database con un livello più basso è anteriore al canone: le patch che lo ci avrebbero portato non ci sono più.
+     * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'.
+     *
+     * @param       string      $b      la cartella base del deploy, con la barra finale
+     *
+     * @return      string              il livello del canone, '000000000000' se non è dichiarato
+     *
+     */
+    function mysqlPatchCanon($b)
+    {
+
+        // leggo il livello dal file
+        $k = (file_exists($b . '_etc/_current.canon')) ? trim(file_get_contents($b . '_etc/_current.canon')) : '';
+
+        // un livello vale solo se è di dodici cifre
+        return (preg_match('/^[0-9]{12}$/', $k)) ? $k : '000000000000';
+    }
+
+    /**
+     * verifica che al database si possano applicare le patch
+     *
+     * Questa funzione va chiamata dopo mysqlPatchLevel() e prima di mysqlPatchRead(): le patch presuppongono che il
+     * database sia al canone o vuoto, e applicate a un database di un altro tipo lo lasciano a metà. Si ferma in due casi:
+     *
+     * - livello '000000000000' ma tabelle presenti: il database è pieno e non ha mai registrato patch ( o ha perso
+     *   __patch__ ), e i file base gli verrebbero rieseguiti sopra come a un database vuoto;
+     * - livello più basso del canone: il database è anteriore all'ultimo svuotamento della coda, a meno che le patch
+     *   registrate siano esattamente le prime dei file di oggi, cioè una costruzione da zero interrotta a metà, che si
+     *   riprende.
+     *
+     * In entrambi i casi il database va portato al canone passando dal rilascio precedente, o ricostruito, e la funzione
+     * restituisce false col motivo in $e. Le tabelle __patch__ e __rebuild_check__ ( la firma del database di prova di
+     * _database.rebuild.check.sh ) non contano: ci sono anche in un database che sta nascendo.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $l      il livello di patch del database, di mysqlPatchLevel()
+     * @param       string      $k      il livello del canone, di mysqlPatchCanon()
+     * @param       array       $f      i file di patch, di mysqlPatchFiles()
+     * @param       string      $e      la variabile in cui scrivere il motivo del rifiuto, modificata sul posto
+     *
+     * @return      boolean             true se le patch si possono applicare, false altrimenti
+     *
+     */
+    function mysqlPatchCheck($c, $l, $k, $f, &$e = NULL)
+    {
+
+        // database senza patch registrate: si applica tutto solo se è vuoto
+        if ($l === '000000000000') {
+
+            // conto le tabelle, quelle delle patch escluse
+            try {
+                $r = mysqli_query($c, 'SELECT count(*) FROM information_schema.tables WHERE table_schema = database() AND table_name NOT IN ( "__patch__", "__rebuild_check__" )');
+            } catch (mysqli_sql_exception $x) {
+                $r = false;
+            }
+
+            // senza conteggio non si applica niente
+            if ($r === false) {
+                $e = 'impossibile contare le tabelle del database: ' . mysqli_error($c);
+                return false;
+            }
+
+            // un database pieno senza patch non è un database da creare
+            $t = mysqli_fetch_row($r);
+            if ($t[0] > 0) {
+                $e = 'il database ha ' . $t[0] . ' tabelle ma nessuna patch registrata: rieseguirgli i file base lo ' .
+                    'rovinerebbe, va ricostruito';
+                return false;
+            }
+
+            return true;
+        }
+
+        // database al canone o oltre
+        if (strcmp($l, $k) >= 0) {
+            return true;
+        }
+
+        // patch registrate
+        try {
+            $r = mysqli_query($c, 'SELECT id FROM __patch__ ORDER BY id');
+        } catch (mysqli_sql_exception $x) {
+            $r = false;
+        }
+
+        // senza elenco non si applica niente
+        if ($r === false) {
+            $e = 'impossibile leggere le patch registrate: ' . mysqli_error($c);
+            return false;
+        }
+
+        // le patch registrate, e quelle che una costruzione da zero avrebbe applicato fino a quel livello
+        $d = array_column(mysqli_fetch_all($r), 0);
+        $a = array();
+        foreach (mysqlPatchRead($f, '000000000000') as $p) {
+            if (strcmp($p['id'], $l) <= 0) {
+                $a[] = $p['id'];
+            }
+        }
+        sort($a);
+
+        // costruzione da zero interrotta a metà: si riprende
+        if ($d === $a) {
+            return true;
+        }
+
+        // database anteriore al canone
+        $e = 'il database è al livello ' . $l . ', anteriore al canone ' . $k . ': le patch che ce lo portavano sono ' .
+            'state assorbite nei file base, va aggiornato passando dal rilascio precedente o ricostruito';
+        return false;
     }
 
     /**

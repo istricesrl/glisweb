@@ -179,6 +179,13 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
 
     echo '  livello di patch attuale: ' . $patchLevel . PHP_EOL;
 
+    // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch: lo si lascerebbe a meta'
+    $motivo = NULL;
+    if( ! mysqlPatchCheck( $cn, $patchLevel, mysqlPatchCanon( $docroot . '/' ), mysqlPatchFiles( $docroot . '/' ), $motivo ) ) {
+        echo '  ERRORE: ' . $motivo . PHP_EOL;
+        exit( 1 );
+    }
+
     // le patch da applicare, nell'ordine; l'elenco a vuoto ( senza --si ) e' lo stesso che l'esecuzione applichera'
     $segnalazioni = array();
     $daApplicare = mysqlPatchRead( mysqlPatchFiles( $docroot . '/' ), $patchLevel, $segnalazioni );
