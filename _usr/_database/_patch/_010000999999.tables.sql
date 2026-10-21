@@ -4871,109 +4871,111 @@ CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (  --
 -- questa tabella dice ogni quanto ( id_periodicita, cadenza, se_lunedi ... se_domenica ) e fino a quando generare
 -- oggetti della tabella indicata in entita, copiandoli dalle colonne model_* oppure dall'oggetto collegato; le righe
 -- figlie ( id_genitore ) generano gli oggetti collegati a quello del genitore, ad esempio le righe e i pagamenti di
--- una fattura ricorrente; era sparita nel riallineamento del 2026-03-02 ed è stata rimessa il 2026-09-25, perché le
--- colonne id_pianificazione di attivita, documenti, documenti_articoli, macro, metadati, pagamenti, progetti,
--- rinnovi e todo e il modulo _0100.pianificazioni la usano
---
-CREATE TABLE IF NOT EXISTS `pianificazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_todo` bigint(20) DEFAULT NULL,
-  `id_attivita` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_periodicita` bigint(20) DEFAULT NULL,
-  `cadenza` int(11) DEFAULT NULL,
-  `se_lunedi` tinyint(1) DEFAULT NULL,
-  `se_martedi` tinyint(1) DEFAULT NULL,
-  `se_mercoledi` tinyint(1) DEFAULT NULL,
-  `se_giovedi` tinyint(1) DEFAULT NULL,
-  `se_venerdi` tinyint(1) DEFAULT NULL,
-  `se_sabato` tinyint(1) DEFAULT NULL,
-  `se_domenica` tinyint(1) DEFAULT NULL,
-  `schema_ripetizione` int(11) DEFAULT NULL,
-  `data_avvio` date DEFAULT NULL,
-  `data_inizio` date DEFAULT NULL,
-  `data_elaborazione` date DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
-  `data_ultimo_oggetto` date DEFAULT NULL,
-  `giorni_elaborazione` int(11) DEFAULT NULL,
-  `giorni_estensione` int(11) DEFAULT NULL,
-  `data_fine` date DEFAULT NULL,
-  `entita` enum('todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti') DEFAULT NULL,
-  `model_id_anagrafica` bigint(20) DEFAULT NULL,
-  `model_id_anagrafica_programmazione` bigint(20) DEFAULT NULL,
-  `model_id_articolo` bigint(20) DEFAULT NULL,
-  `model_id_attivita` bigint(20) DEFAULT NULL,
-  `model_id_causale` bigint(20) DEFAULT NULL,
-  `model_id_cliente` bigint(20) DEFAULT NULL,
-  `model_id_collo` bigint(20) DEFAULT NULL,
-  `model_id_condizione_pagamento` bigint(20) DEFAULT NULL,
-  `model_id_contatto` bigint(20) DEFAULT NULL,
-  `model_id_coupon` bigint(20) DEFAULT NULL,
-  `model_id_destinatario` bigint(20) DEFAULT NULL,
-  `model_id_documento` bigint(20) DEFAULT NULL,
-  `model_id_emittente` bigint(20) DEFAULT NULL,
-  `model_id_genitore` bigint(20) DEFAULT NULL,
-  `model_id_iban` bigint(20) DEFAULT NULL,
-  `model_id_indirizzo` bigint(20) DEFAULT NULL,
-  `model_id_immobile` bigint(20) DEFAULT NULL,
-  `model_id_licenza` bigint(20) DEFAULT NULL,
-  `model_id_listino` bigint(20) DEFAULT NULL,
-  `model_id_luogo` bigint(20) DEFAULT NULL,
-  `model_id_mastro_destinazione` bigint(20) DEFAULT NULL,
-  `model_id_mastro_provenienza` bigint(20) DEFAULT NULL,
-  `model_id_matricola` bigint(20) DEFAULT NULL,
-  `model_id_modalita_pagamento` bigint(20) DEFAULT NULL,
-  `model_id_prodotto` bigint(20) DEFAULT NULL,
-  `model_id_progetto` bigint(20) DEFAULT NULL,
-  `model_id_reparto` bigint(20) DEFAULT NULL,
-  `model_id_sede_destinatario` bigint(20) DEFAULT NULL,
-  `model_id_sede_emittente` bigint(20) DEFAULT NULL,
-  `model_id_tipologia` bigint(20) DEFAULT NULL,
-  `model_id_todo` bigint(20) DEFAULT NULL,
-  `model_id_trasportatore` bigint(20) DEFAULT NULL,
-  `model_id_udm` bigint(20) DEFAULT NULL,
-  `model_anno_programmazione` year(4) DEFAULT NULL,
-  `model_codice` char(64) DEFAULT NULL,
-  `model_data` date DEFAULT NULL,
-  `model_data_fine` date DEFAULT NULL,
-  `model_data_inizio` date DEFAULT NULL,
-  `model_data_programmazione` date DEFAULT NULL,
-  `model_esigibilita` enum('I','D','S') DEFAULT NULL,
-  `model_importo_netto_totale` char(32) DEFAULT NULL,
-  `model_importo_lordo_totale` char(32) DEFAULT NULL,
-  `model_importo_lordo_finale` char(32) DEFAULT NULL,
-  `model_nome` char(255) DEFAULT NULL,
-  `model_note` text DEFAULT NULL,
-  `model_note_cliente` text DEFAULT NULL,
-  `model_note_programmazione` text DEFAULT NULL,
-  `model_numero` char(32) DEFAULT NULL,
-  `model_ora_inizio_programmazione` time DEFAULT NULL,
-  `model_ora_fine_programmazione` time DEFAULT NULL,
-  `model_ore_programmazione` decimal(5,2) DEFAULT NULL,
-  `model_porto` enum('franco','assegnato','-') DEFAULT NULL,
-  `model_quantita` decimal(9,2) DEFAULT NULL,
-  `model_riferimento` char(255) DEFAULT NULL,
-  `model_sconto_percentuale` decimal(9,2) DEFAULT NULL,
-  `model_sconto_valore` decimal(9,2) DEFAULT NULL,
-  `model_se_automatico` int(1) DEFAULT NULL,
-  `model_sezionale` char(32) DEFAULT NULL,
-  `model_settimana_programmazione` int(11) DEFAULT NULL,
-  `model_specifiche` char(255) DEFAULT NULL,
-  `model_data_scadenza` date DEFAULT NULL,
-  `model_timestamp_scadenza` int(11) DEFAULT NULL,
-  `offset_giorni` int(11) DEFAULT NULL,
-  `offset_fine_mese` int(1) DEFAULT NULL,
-  `workspace` longtext DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- una fattura ricorrente. Gli oggetti li crea il cron attraverso il modulo _PI000.pianificazioni. Il blocco
+-- iterazioni, delay, token e timestamp_elaborazione è quello comune alle automazioni ( job, task, pianificazioni ),
+-- e i collegamenti id_progetto, id_todo, id_attivita, id_contratto e id_anagrafica dicono a chi appartiene la
+-- pianificazione, che muore con lui
+-- NOTA le colonne model_* di testo ( model_codice, model_importo_*, model_nome… ) possono contenere espressioni Twig
+-- rese alla creazione dell'oggetto, per questo model_codice è più largo del codice e gli importi sono char
+CREATE TABLE IF NOT EXISTS `pianificazioni` (                 --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                      -- chiave esterna per la pianificazione genitore ( righe e pagamenti del documento )
+  `id_progetto` bigint(20) DEFAULT NULL,                      -- chiave esterna per il progetto proprietario
+  `id_todo` bigint(20) DEFAULT NULL,                          -- chiave esterna per la todo proprietaria
+  `id_attivita` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'attività proprietaria
+  `id_contratto` bigint(20) DEFAULT NULL,                     -- chiave esterna per il contratto proprietario
+  `id_anagrafica` bigint(20) DEFAULT NULL,                    -- chiave esterna per l'anagrafica collegata
+  `nome` char(255) DEFAULT NULL,                              -- nome della pianificazione
+  `note` text DEFAULT NULL,                                   -- note sulla pianificazione
+  `id_periodicita` bigint(20) DEFAULT NULL,                   -- chiave esterna per la periodicità di ripetizione
+  `cadenza` int(11) DEFAULT NULL,                             -- ogni quante unità della periodicità ( default 1 )
+  `se_lunedi` tinyint(1) DEFAULT NULL,                        -- flag del lunedì per la periodicità settimanale
+  `se_martedi` tinyint(1) DEFAULT NULL,                       -- flag del martedì per la periodicità settimanale
+  `se_mercoledi` tinyint(1) DEFAULT NULL,                     -- flag del mercoledì per la periodicità settimanale
+  `se_giovedi` tinyint(1) DEFAULT NULL,                       -- flag del giovedì per la periodicità settimanale
+  `se_venerdi` tinyint(1) DEFAULT NULL,                       -- flag del venerdì per la periodicità settimanale
+  `se_sabato` tinyint(1) DEFAULT NULL,                        -- flag del sabato per la periodicità settimanale
+  `se_domenica` tinyint(1) DEFAULT NULL,                      -- flag del domenica per la periodicità settimanale
+  `schema_ripetizione` int(11) DEFAULT NULL,                  -- 1 giorno esatto, 2 posizione del giorno nel periodo
+  `data_avvio` date DEFAULT NULL,                             -- da quando il cron la elabora
+  `data_inizio` date DEFAULT NULL,                            -- data del primo oggetto
+  `data_elaborazione` date DEFAULT NULL,                      -- data di lavoro dell'ultima elaborazione completa
+  `timestamp_elaborazione` int(11) DEFAULT NULL,              -- ultima presa in carico, è il timestamp_esecuzione
+  `data_ultimo_oggetto` date DEFAULT NULL,                    -- data dell'ultimo oggetto creato
+  `giorni_elaborazione` int(11) DEFAULT NULL,                 -- giorni di anticipo con cui si creano gli oggetti
+  `giorni_estensione` int(11) DEFAULT NULL,                   -- giorni di allungamento della data di fine
+  `data_fine` date DEFAULT NULL,                              -- ultima data in cui creare oggetti, compresa
+  `entita` enum('todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti') DEFAULT NULL,-- tabella degli oggetti creati
+  `model_id_anagrafica` bigint(20) DEFAULT NULL,              -- modello per la colonna id_anagrafica dell'oggetto creato
+  `model_id_anagrafica_programmazione` bigint(20) DEFAULT NULL,-- modello per la colonna id_anagrafica_programmazione dell'oggetto creato
+  `model_id_articolo` bigint(20) DEFAULT NULL,                -- modello per la colonna id_articolo dell'oggetto creato
+  `model_id_attivita` bigint(20) DEFAULT NULL,                -- modello per la colonna id_attivita dell'oggetto creato
+  `model_id_causale` bigint(20) DEFAULT NULL,                 -- modello per la colonna id_causale dell'oggetto creato
+  `model_id_cliente` bigint(20) DEFAULT NULL,                 -- modello per la colonna id_cliente dell'oggetto creato
+  `model_id_collo` bigint(20) DEFAULT NULL,                   -- modello per la colonna id_collo dell'oggetto creato
+  `model_id_condizione_pagamento` bigint(20) DEFAULT NULL,    -- modello per la colonna id_condizione_pagamento dell'oggetto creato
+  `model_id_contatto` bigint(20) DEFAULT NULL,                -- modello per la colonna id_contatto dell'oggetto creato
+  `model_id_coupon` bigint(20) DEFAULT NULL,                  -- modello per la colonna id_coupon dell'oggetto creato
+  `model_id_destinatario` bigint(20) DEFAULT NULL,            -- modello per la colonna id_destinatario dell'oggetto creato
+  `model_id_documento` bigint(20) DEFAULT NULL,               -- modello per la colonna id_documento dell'oggetto creato
+  `model_id_emittente` bigint(20) DEFAULT NULL,               -- modello per la colonna id_emittente dell'oggetto creato
+  `model_id_genitore` bigint(20) DEFAULT NULL,                -- modello per la colonna id_genitore dell'oggetto creato
+  `model_id_iban` bigint(20) DEFAULT NULL,                    -- modello per la colonna id_iban dell'oggetto creato
+  `model_id_indirizzo` bigint(20) DEFAULT NULL,               -- modello per la colonna id_indirizzo dell'oggetto creato
+  `model_id_immobile` bigint(20) DEFAULT NULL,                -- modello per la colonna id_immobile dell'oggetto creato
+  `model_id_licenza` bigint(20) DEFAULT NULL,                 -- modello per la colonna id_licenza dell'oggetto creato
+  `model_id_listino` bigint(20) DEFAULT NULL,                 -- modello per la colonna id_listino dell'oggetto creato
+  `model_id_luogo` bigint(20) DEFAULT NULL,                   -- modello per la colonna id_luogo dell'oggetto creato
+  `model_id_mastro_destinazione` bigint(20) DEFAULT NULL,     -- modello per la colonna id_mastro_destinazione dell'oggetto creato
+  `model_id_mastro_provenienza` bigint(20) DEFAULT NULL,      -- modello per la colonna id_mastro_provenienza dell'oggetto creato
+  `model_id_matricola` bigint(20) DEFAULT NULL,               -- modello per la colonna id_matricola dell'oggetto creato
+  `model_id_modalita_pagamento` bigint(20) DEFAULT NULL,      -- modello per la colonna id_modalita_pagamento dell'oggetto creato
+  `model_id_prodotto` bigint(20) DEFAULT NULL,                -- modello per la colonna id_prodotto dell'oggetto creato
+  `model_id_progetto` bigint(20) DEFAULT NULL,                -- modello per la colonna id_progetto dell'oggetto creato
+  `model_id_reparto` bigint(20) DEFAULT NULL,                 -- modello per la colonna id_reparto dell'oggetto creato
+  `model_id_sede_destinatario` bigint(20) DEFAULT NULL,       -- modello per la colonna id_sede_destinatario dell'oggetto creato
+  `model_id_sede_emittente` bigint(20) DEFAULT NULL,          -- modello per la colonna id_sede_emittente dell'oggetto creato
+  `model_id_tipologia` bigint(20) DEFAULT NULL,               -- modello per la colonna id_tipologia dell'oggetto creato
+  `model_id_todo` bigint(20) DEFAULT NULL,                    -- modello per la colonna id_todo dell'oggetto creato
+  `model_id_trasportatore` bigint(20) DEFAULT NULL,           -- modello per la colonna id_trasportatore dell'oggetto creato
+  `model_id_udm` bigint(20) DEFAULT NULL,                     -- modello per la colonna id_udm dell'oggetto creato
+  `model_anno_programmazione` year(4) DEFAULT NULL,           -- modello per la colonna anno_programmazione dell'oggetto creato
+  `model_codice` char(64) DEFAULT NULL,                       -- modello per la colonna codice dell'oggetto creato
+  `model_data` date DEFAULT NULL,                             -- modello per la colonna data dell'oggetto creato
+  `model_data_fine` date DEFAULT NULL,                        -- modello per la colonna data_fine dell'oggetto creato
+  `model_data_inizio` date DEFAULT NULL,                      -- modello per la colonna data_inizio dell'oggetto creato
+  `model_data_programmazione` date DEFAULT NULL,              -- modello per la colonna data_programmazione dell'oggetto creato
+  `model_esigibilita` enum('I','D','S') DEFAULT NULL,         -- modello per la colonna esigibilita dell'oggetto creato
+  `model_importo_netto_totale` char(32) DEFAULT NULL,         -- modello per la colonna importo_netto_totale dell'oggetto creato
+  `model_importo_lordo_totale` char(32) DEFAULT NULL,         -- modello per la colonna importo_lordo_totale dell'oggetto creato
+  `model_importo_lordo_finale` char(32) DEFAULT NULL,         -- modello per la colonna importo_lordo_finale dell'oggetto creato
+  `model_nome` char(255) DEFAULT NULL,                        -- modello per la colonna nome dell'oggetto creato
+  `model_note` text DEFAULT NULL,                             -- modello per la colonna note dell'oggetto creato
+  `model_note_cliente` text DEFAULT NULL,                     -- modello per la colonna note_cliente dell'oggetto creato
+  `model_note_programmazione` text DEFAULT NULL,              -- modello per la colonna note_programmazione dell'oggetto creato
+  `model_numero` char(32) DEFAULT NULL,                       -- modello per la colonna numero dell'oggetto creato
+  `model_ora_inizio_programmazione` time DEFAULT NULL,        -- modello per la colonna ora_inizio_programmazione dell'oggetto creato
+  `model_ora_fine_programmazione` time DEFAULT NULL,          -- modello per la colonna ora_fine_programmazione dell'oggetto creato
+  `model_ore_programmazione` decimal(5,2) DEFAULT NULL,       -- modello per la colonna ore_programmazione dell'oggetto creato
+  `model_porto` enum('franco','assegnato','-') DEFAULT NULL,  -- modello per la colonna porto dell'oggetto creato
+  `model_quantita` decimal(9,2) DEFAULT NULL,                 -- modello per la colonna quantita dell'oggetto creato
+  `model_riferimento` char(255) DEFAULT NULL,                 -- modello per la colonna riferimento dell'oggetto creato
+  `model_sconto_percentuale` decimal(9,2) DEFAULT NULL,       -- modello per la colonna sconto_percentuale dell'oggetto creato
+  `model_sconto_valore` decimal(9,2) DEFAULT NULL,            -- modello per la colonna sconto_valore dell'oggetto creato
+  `model_se_automatico` tinyint(1) DEFAULT NULL,              -- modello per la colonna se_automatico dell'oggetto creato
+  `model_sezionale` char(32) DEFAULT NULL,                    -- modello per la colonna sezionale dell'oggetto creato
+  `model_settimana_programmazione` int(11) DEFAULT NULL,      -- modello per la colonna settimana_programmazione dell'oggetto creato
+  `model_specifiche` text DEFAULT NULL,                       -- modello per la colonna specifiche dell'oggetto creato
+  `model_data_scadenza` date DEFAULT NULL,                    -- modello per la colonna data_scadenza dell'oggetto creato
+  `offset_giorni` int(11) DEFAULT NULL,                       -- per i pagamenti, giorni di differimento della scadenza
+  `offset_fine_mese` int(1) DEFAULT NULL,                     -- per i pagamenti, scadenza a fine mese
+  `iterazioni` int(11) DEFAULT NULL,                          -- oggetti per passata, NULL vuol dire 1
+  `delay` int(11) DEFAULT NULL,                               -- secondi minimi fra due iterazioni
+  `token` char(254) DEFAULT NULL,                             -- token di lock della passata in corso
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000024000
