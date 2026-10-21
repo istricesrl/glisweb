@@ -59,8 +59,11 @@ chiede e si ottiene, non è un effetto collaterale.
 Fonte autorevole: **`READ.md` del framework, sezione `/_etc/_current.release e /_etc/_current.version`**.
 Leggila prima di dedurre alcunché dalle date dei file: le due numerazioni dicono cose diverse.
 
-- **`_etc/_current.release`** — `major.minor.bugfix`. Si cambia **a mano**, quando si crea una nuova
-  release branch, quindi si muove di rado;
+- **`_etc/_current.release`** — `major.minor.bugfix`, gitflow dalla 2.0.1: tag `X.Y.z` su `master`, il livello patch
+  con `_src/_sh/_gw.release.sh` dopo i test verdi, minori e maggiori a mano con la release branch;
+- **il framework si aggiorna solo in `dev/`** ( `_gw.upgrade.sh`, da `develop` o da `master` secondo
+  `update.branch.conf` ); `test/` e `stable/` lo ricevono con `_deploy.run.sh`, che applica le patch del DB
+  della destinazione, controlla e torna indietro se qualcosa non va. Dettaglio: capitolo 211 del manuale;
 - **`_etc/_current.version`** — un timestamp (`20260908161248`). Lo scrive il git hook
   `.githooks/pre-commit` **a ogni commit sul repository di sviluppo del framework**, quindi si muove
   quotidianamente ma **solo dove il framework si sviluppa**, non sui deploy dei clienti.
