@@ -90,7 +90,9 @@
         // operazioni di chiusura
         if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
 
-            mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
+            // la procedura attivita_view_static() non esiste piu' da marzo 2026
+            cleanStaticView( $cf['mysql']['connection'], 'attivita' );
+            refreshStaticView( $cf['mysql']['connection'], 'attivita' );
             logWrite( 'aggiornata view statica per download note attive' , 'speed' );
 
             // scrivo la timestamp di completamento

@@ -70,13 +70,18 @@
 	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
 	);
 
-    // tendina destinatari
-	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
-	);
+	/**
+	 * tendina id_destinatari — disattivata il 2026-10-14, il filtro che la usava e' commentato
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: in inc/documenti.view.filters.html il filtro per destinatario e' dentro un commento HTML,
+	 * quindi le `<option>` non venivano mai stampate. Se lo si riattiva, la tendina va ristretta a chi compare
+	 * davvero come destinatario ( `INNER JOIN documenti` ), non riportata all'anagrafica intera.
+	 */
+	$ct['etc']['select']['id_destinatari'] = array();
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

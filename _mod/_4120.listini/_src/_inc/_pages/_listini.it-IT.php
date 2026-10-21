@@ -24,7 +24,7 @@
 	$p['listini.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione listino' ),
 	    'parent'		=> array( 'id'		=> 'listini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.php' ),
@@ -146,7 +146,7 @@
 	$p['prezzi.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione prezzi' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione prezzo' ),
 	    'parent'		=> array( 'id'		=> 'prezzi.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prezzi.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prezzi.form.php' ),
@@ -228,7 +228,7 @@
 	$p['coupon.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione coupon' ),
 	    'parent'		=> array( 'id'		=> 'coupon.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
@@ -253,7 +253,7 @@
 	$p['sconti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione sconti' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sconto' ),
 	    'parent'		=> array( 'id'		=> 'sconti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.form.php' ),
@@ -289,7 +289,7 @@
 	$p['sconti.articoli.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione sconti articoli' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sconto' ),
 	    'parent'		=> array( 'id'		=> 'sconti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.articoli.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.articoli.form.php' ),
@@ -301,7 +301,7 @@
 	$p['sconti.listini.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione sconti listini' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione sconto' ),
 	    'parent'		=> array( 'id'		=> 'sconti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.listini.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.listini.form.php' ),

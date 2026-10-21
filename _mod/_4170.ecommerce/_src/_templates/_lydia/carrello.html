@@ -39,7 +39,7 @@
                     <input type="hidden" name="__carrello__[__articoli__][{{ loop.index }}][id_articolo]" value="{{ dati.id_articolo }}" />
     
                     <td>
-                        {{ dati.id_articolo }}
+                        {{ dati.codice_articolo|default( dati.id_articolo ) }}
                     </td>
 
                     <td>€ {{ dati.prezzo_lordo_totale|number_format(2, ',', '.') }}</td>

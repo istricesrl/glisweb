@@ -22,7 +22,7 @@
      * generazione legge tutto il documento dal database per conto di chi non e' ancora stato
      * autorizzato, e non e' gratis. Il secondo, peggiore: se la generazione muore — su un deploy
      * mancava anagraficaGetLogo(), che stava dentro un modulo non installato — il rifiuto non
-     * arriva mai, perche' il codice che lo scrive sta sotto. Segnalato da BERNI il 15/09.
+     * arriva mai, perche' il codice che lo scrive sta sotto. Segnalato il 15/09.
      *
      * Per autorizzare non serve il documento intero: bastano il destinatario e il token, quindi
      * si legge una riga sola. generaContenutiDocumento() resta dov'e', ma dopo il cancello.
@@ -90,7 +90,7 @@
          */
         http_response_code( 403 );
 
-        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_ERR );
+        logger( 'privilegi insufficienti per la stampa ' . ( $_SERVER['REQUEST_URI'] ?? '' ), 'security', LOG_WARNING );
 
         dieText('autorizzazioni insufficienti a visualizzare il documento');
 
@@ -128,7 +128,7 @@
      * l'hanno detto anche altri". Tre difetti distinti, tutti su queste righe.
      *
      * 1. LA APP MOSTRA PIÙ DI QUANTO LA STAMPA AUTORIZZI. L'elenco ricevute dell'area soci
-     *    ( `src/inc/macro/app.documenti.php` ) filtra per `$_SESSION['__settings__']['id_anagrafica']`,
+     *    del progetto filtra per `$_SESSION['__settings__']['id_anagrafica']`,
      *    cioè per il familiare scelto nella tendina della navbar; il controllo qui sotto invece
      *    confrontava il destinatario con `$_SESSION['account']['id_anagrafica']`, cioè con
      *    l'intestatario dell'account. Un genitore vedeva in elenco le ricevute del figlio e
@@ -167,18 +167,16 @@
     }
 
     // annoto l'attività di stampa
-    $idAttivitaStampa = mysqlInsertRow(
-        $cf['mysql']['connection'],
-        array(
-            'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
-            'id_documento' => $_REQUEST['__documento__'],
-            'data_attivita' => date('Y-m-d'),
-            'nome' => 'stampa documento',
-            'ora_inizio' => date( 'H:i:s' ),
-            'ora_fine' => date( 'H:i:s' )
-        ),
-        'attivita'
-    );
+    // NOTA qui il file non esiste ancora, quindi un'attivita' annotata qui resta anche se la generazione fallisce: gli
+    // endpoint che passano da _documento.output.php ( e _fattura.xml.php ) impostano $cnf['attivita'] a false e la
+    // annotano a file scritto; la si annota qui solo per gli endpoint dei deploy scritti prima di quel canone
+    if( ! isset( $cnf['attivita'] ) || $cnf['attivita'] !== false ) {
+        $idAttivitaStampa = registraStampaDocumento(
+            $_REQUEST['__documento__'],
+            'stampa documento',
+            ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) )
+        );
+    }
 
     // debug
     // die( $idAttivitaStampa );

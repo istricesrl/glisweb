@@ -122,13 +122,17 @@
         'SELECT id, __label__ FROM stati_view ORDER BY __label__'
     );
 
-    // tendina collaboratori
-    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static'
-    );
+    /**
+     * tendina id_anagrafica_collaboratori — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+     *
+     * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+     * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+     * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+     *
+     * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+     * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+     */
+    $ct['etc']['select']['id_anagrafica_collaboratori'] = array();
 
     // tendina anni
     foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
@@ -168,11 +172,17 @@
 
             $row['denominazione'] = implode( ' ', array(  $row['denominazione'], $row['nome'], $row['cognome'] ) );
 
-            $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
-                "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].
-                "&__work__[anagrafica][items][".$row['id']."][label]=".$row['__label__']."', aggiornaBookmarks );";
+            // bookmark: se la riga e' gia' fra i segnalibri il clic la toglie, altrimenti la aggiunge
+            $inBookmark = isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] );
+            if( $inBookmark ) {
+                $onclickBookmark = "$(this).metroWs('/task/bookmark.del?__key__=anagrafica&__item__=" . $row['id'] . "', aggiornaBookmarks );";
+            } else {
+                $onclickBookmark = "$(this).metroWs('/task/bookmark.add?" .
+                    "__work__[anagrafica][items][" . $row['id'] . "][id]=" . $row['id'] .
+                    "&__work__[anagrafica][items][" . $row['id'] . "][label]=" . urlencode( $row['__label__'] ) . "', aggiornaBookmarks );";
+            }
 
-            $buttons = '<a href="#" onclick="'.$onclickBookmark.'"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
+            $buttons = '<a href="#" onclick="'.$onclickBookmark.'"><span class="media-left"><i class="fa fa-bookmark'.( ( $inBookmark ) ? NULL : '-o' ).'"></i></span></a>';
 
             if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';

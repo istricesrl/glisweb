@@ -1,0 +1,55 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/amministrazione.archivio.documenti.form.dati.fiscali.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE BOLLO #}
+            <fieldset>
+                <legend>imposta di bollo</legend>
+
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_bollo_virtuale', 'placeholder': 'bollo assolto in modo virtuale' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">importo del bollo</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_bollo', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# SUBFORM RITENUTE #}
+            {{ sub.ritenute( form.table, 'documenti_ritenute', 'ritenute', site, page, pages, localization.language.ietf, etc, request, session, 'id_documento' ) }}
+
+            {# SUBFORM CONTRIBUTI DI CASSA #}
+            {{ sub.casse( form.table, 'documenti_casse_previdenziali', 'contributi alle casse previdenziali', site, page, pages, localization.language.ietf, etc, request, session, 'id_documento' ) }}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

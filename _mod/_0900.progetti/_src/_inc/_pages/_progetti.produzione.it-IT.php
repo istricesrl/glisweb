@@ -53,7 +53,7 @@
 		$p['progetti.produzione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione progetto' ),
 			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.php' ),
@@ -373,7 +373,7 @@
 		$p['categorie.progetti.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione categoria' ),
 			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),

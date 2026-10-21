@@ -1,4 +1,5 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_lib/_translation.twig' as trn %}
 
 {% extends 'ext/main.html' %}
 
@@ -87,6 +88,11 @@
   {% endfor %}
   <button type="submit">PAGA</button>
 </form>
+
+{% elseif etc.meta.errore %}
+
+<!-- errore del provider di pagamento -->
+<p class="errore-pagamento">{{ trn.tr({ 'w': etc.meta.errore, 'l': ietf, 'v': tr.generic }) }}</p>
 
 {% endif %}
 

@@ -73,7 +73,7 @@ ini_set("display_errors", 1);
 
     $ct['etc']['coupon'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
+        'SELECT coupon.id, coupon.codice, coupon.sconto_fisso, coupon.id_anagrafica, 
             coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
         FROM coupon 
         LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon

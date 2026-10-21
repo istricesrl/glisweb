@@ -35,10 +35,18 @@
         );
 
         // genero il token di autorizzazione
-        $token = md5( time() );
+        // NOTA fino al 25/09/2026 era md5( time() ), che si indovina provando i secondi vicini; ora è casuale, con la stessa
+        // forma di 32 cifre esadecimali
+        $token = bin2hex( random_bytes( 16 ) );
 
         // imposto il token di autorizzazione per il documento
-        mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti SET token = ?', array( array( 's' => $token ) ) );
+        // NOTA fino al 25/09/2026 la query non aveva il WHERE e scriveva lo stesso token su TUTTI i documenti: con quel token
+        // si poteva stampare qualunque documento dell'archivio
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE documenti SET token = ? WHERE id = ?',
+            array( array( 's' => $token ), array( 's' => $_REQUEST['idFattura'] ) )
+        );
 
         // prelevo l'XML
         $x = restCall(
@@ -54,8 +62,14 @@
         // die( '<pre>' . htmlentities( readFromFile( $x['file'], FILE_READ_AS_STRING ) ) . '</pre>' );
 
         // chiamo la funzione archiviumPostInsertAzienda()
+        // NOTA dal 2026-09-29 la stampa valida il file contro lo schema FatturaPA, e a un file non valido, che lo SDI
+        // scarterebbe, risponde con gli errori al posto del percorso; dal 2026-09-30 fra gli errori ci sono anche i
+        // controlli che lo schema non fa ( nota di credito senza fattura collegata, TD24 senza DDT, nature generiche ):
+        // è solo qui, all'invio, che gli errori fermano la fattura, mentre visualizzazione e download la mostrano lo stesso
         if( ! empty( $x['file'] ) ) {
             $status['esito'] = archiviumPostInvioFeAttiva( $idAzienda, $_REQUEST['idFattura'], $x['file'] );
+        } elseif( ! empty( $x['errori'] ) ) {
+            $status['err'] = array_merge( array( 'XML fattura non valido' ), $x['errori'] );
         } else {
             $status['err'][] = 'XML fattura vuoto';        
         }

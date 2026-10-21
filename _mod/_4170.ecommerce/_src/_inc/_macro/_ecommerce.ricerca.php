@@ -16,9 +16,9 @@
             // non trovava nulla.
             $whr .= '
             AND ( 
-                articoli.id LIKE ?
+                articoli.codice LIKE ?
                 OR
-                prodotti.id LIKE ?
+                prodotti.codice LIKE ?
                 OR
                 articoli.nome LIKE ?
                 OR
@@ -49,7 +49,7 @@
         // colonne di giacenza mancanti.
         if( in_array( '0500.mastri', $cf['mods']['active']['array'] ) ) {
 
-            $query = 'SELECT articoli.*, prodotti.nome AS prodotto,
+            $query = 'SELECT articoli.*, prodotti.codice AS codice_prodotto, prodotti.nome AS prodotto,
                 mastri.prefisso_modula, mastri.codice_modula, mastri.id AS id_mastro_provenienza,
                 __report_giacenza_magazzini__.totale_proprio AS giacenza, __report_giacenza_magazzini__.nome AS magazzino
                 FROM articoli
@@ -63,7 +63,7 @@
 
         } else {
 
-            $query = 'SELECT articoli.*, prodotti.nome AS prodotto,
+            $query = 'SELECT articoli.*, prodotti.codice AS codice_prodotto, prodotti.nome AS prodotto,
                 NULL AS id_mastro_provenienza, NULL AS giacenza, NULL AS magazzino
                 FROM articoli
                 INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto

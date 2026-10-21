@@ -282,7 +282,7 @@
                          * italiano e' piu' basso, il che e' una coincidenza e non una garanzia.
                          *
                          * Il tracciato porta `comune`, `provincia` e `stato` — sono le colonne 16,
-                         * 17 e 18 di _usr/_examples/_csv/anagrafica.import.csv, che e' il file che
+                         * 17 e 18 di _usr/_examples/_lib/_csv.tools/anagrafica.import.csv, che e' il file che
                          * definisce il formato — e si usano tutte e tre, con l'ordinamento finale
                          * sull'id a tenere deterministica la scelta quando non bastano.
                          *
@@ -327,7 +327,7 @@
                             // TODO trovo l'indirizzo
                             // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, provincia, stato
                             // e localita: l'elenco completo delle 22 colonne del tracciato sta in
-                            // _usr/_examples/_csv/anagrafica.import.csv
+                            // _usr/_examples/_lib/_csv.tools/anagrafica.import.csv
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
@@ -357,7 +357,7 @@
                             // TODO trovo l'indirizzo
                             // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, provincia, stato
                             // e localita: l'elenco completo delle 22 colonne del tracciato sta in
-                            // _usr/_examples/_csv/anagrafica.import.csv
+                            // _usr/_examples/_lib/_csv.tools/anagrafica.import.csv
                             $idIndirizzo = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
@@ -383,7 +383,7 @@
                             $job['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
 
                             // log
-                            logWrite( 'per anagrafica #' . $idAnagrafica . ' non trovato: ' . $row['comune'] . ' (' . $row['stato'] . ')', 'geografia/comuni', LOG_ERR );
+                            logWrite( 'per anagrafica #' . $idAnagrafica . ' non trovato: ' . $row['comune'] . ' (' . $row['stato'] . ')', 'geografia/comuni', LOG_WARNING );
 
                         }
 

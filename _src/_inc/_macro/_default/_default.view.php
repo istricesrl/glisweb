@@ -62,9 +62,7 @@
     // TODO verificare che questa cosa non crei conflitti con il backurl generato in _default.form.php nelle sotto viste dei form
     if( isset( $ct['view']['etc']['__force_backurl__'] ) ) {
         $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ];
-        $backmd5 = md5( $backurl );
-        $_SESSION['backurls'][ $backmd5 ] = $backurl;
-        $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
+        $ct['page']['backurl'][ LINGUA_CORRENTE ] = backurlRegistra( $backurl );
     }
 
     /**

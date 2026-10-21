@@ -165,7 +165,8 @@
    
 
 
-        $pdf->write1DBarcode($_REQUEST['id'], 'C128', '', '', '', $fnts  ,0.17, $style);
+        // nel codice a barre il codice del coupon, che il terminale di cassa cerca in coupon.codice
+        $pdf->write1DBarcode( ( ! empty( $cp['codice'] ) ) ? $cp['codice'] : $_REQUEST['id'], 'C128', '', '', '', $fnts  ,0.17, $style);
        $pdf -> setXY(0, $pdf -> getY() + $stdsp );
 
 

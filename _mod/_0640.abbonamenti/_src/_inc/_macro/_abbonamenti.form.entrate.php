@@ -51,7 +51,7 @@
  */
         'ora_inizio' => 'oi',
          'ora_fine' => 'of',
-         'timestamp_archiviazione' => 'archiviazione',
+         'data_archiviazione' => 'archiviazione',
          'discipline' => 'discipline',
          'id_progetto' => 'ID corso',
          'progetto' => 'corso',
@@ -78,7 +78,7 @@
          'nome' => 'text-left',
          'id_progetto' => 'd-none',
          'progetto' => 'text-left',
-         'timestamp_archiviazione' => 'd-none',
+         'data_archiviazione' => 'd-none',
          'discipline' => 'text-left',
          'luogo' => 'd-none',
          'ora_inizio' => 'd-none',

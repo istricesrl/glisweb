@@ -18,8 +18,28 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-            {# VIEW PRINCIPALE #}
-            {% include 'inc/view.twig' %}
+            {# SUBFORM CONSENSI #}
+            {{ sub.consensi( form.table, 'anagrafica_consensi', 'consensi', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
+
+            {# CONSENSI REGISTRATI SUI SINGOLI INDIRIZZI #}
+            {% if etc.consensi_indirizzi %}
+            <fieldset>
+                <legend>consensi dei singoli indirizzi mail</legend>
+                <table class="table table-sm">
+                    <thead><tr><th>indirizzo</th><th>consenso</th><th>stato</th><th>data</th><th>note</th></tr></thead>
+                    <tbody>
+                    {% for c in etc.consensi_indirizzi %}
+                        <tr><td>{{ c.indirizzo }}</td><td>{{ c.consenso }}</td><td>{% if c.se_prestato %}prestato{% else %}revocato{% endif %}</td><td class="no-wrap">{{ c.data_consenso }}</td><td>{{ c.note }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </fieldset>
+            {% endif %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
         </form>
     </div>

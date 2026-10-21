@@ -451,7 +451,7 @@
                 {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
                 {% if field.disabled %}disabled{% endif %}
                 {% if field.required %}data-required="true"{% endif %}
-                {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
+                {% if onchange %}onchange="{{ onchange }}"{% endif %}
                 {% if field.default %}default="{{ field.default }}"{% endif %}
                 {% if not field.noempty %}empty{% endif %}>
         </div>
@@ -478,6 +478,9 @@
 
 {# checkbox() - crea un campo HTML checkbox
     Questa macro generica crea un campo HTML checkbox; fa anche da base ad altre funzioni più specifiche e complesse
+    Il valore viaggia in un campo hidden, che porta name e id del campo; la casella visibile non ha name, ha l'id
+    <id>_checkbox ( come in _privacy.twig ) e la label punta a quello, cosi' cliccandola si attiva la casella e
+    i test la trovano senza selettori acrobatici
     TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
 {% macro checkbox( options ) %}
 
@@ -563,21 +566,23 @@
         {% if default %} default="{{ default }}"{% endif %} 
         value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
 
-    {# campo checkbox visibile #}
+    {# campo checkbox visibile; non ha name perche' il valore lo porta il campo hidden, ma ha un id ( come in
+       _privacy.twig ) cosi' la label lo attiva e i test lo trovano #}
     <input type="checkbox"
         {% if field.disabled %}disabled{% endif %}
+        id="{{ id }}_checkbox"
         class="form-check-input {{ class }}"
         {% if vl or ( default and not df ) %}checked{% endif %}>
 
     {# label del checkbox #}
     {% if field.placeholder %}
-    <label class="form-check-label text-start" for="{{ id }}">{{ field.placeholder }}</label>
+    <label class="form-check-label text-start" for="{{ id }}_checkbox">{{ field.placeholder }}</label>
     {% endif %}
 
 {% endmacro checkbox %}
 
-{# checkbox() - crea un campo HTML checkbox
-    Questa macro generica crea un campo HTML checkbox; fa anche da base ad altre funzioni più specifiche e complesse
+{# uploader() - crea un campo per il caricamento di file via AJAX
+    Questa macro crea un campo per il caricamento di file tramite AJAX, con pulsante di selezione e anteprima
     TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
 {% macro uploader( options ) %}
 

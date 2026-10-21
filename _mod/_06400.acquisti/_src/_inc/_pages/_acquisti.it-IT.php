@@ -64,7 +64,6 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_acquisti.archivio.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'acquisti.archivio',
-														// 'acquisti.archivio.reparti.view',
 														'acquisti.archivio.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),

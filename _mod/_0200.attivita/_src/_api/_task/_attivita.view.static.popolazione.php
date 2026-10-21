@@ -1,5 +1,26 @@
 <?php
 
+    /**
+     * popolazione della vista statica attivita_view_static
+     *
+     * Wrapper su syncStaticView() ( _src/_lib/_mysql.tools.php ), che fa il lavoro vero: cerca fino a un lotto
+     * di righe rimaste indietro ( mancanti nella statica, o con i timestamp NULL o piu' vecchi della tabella
+     * base ) e le rigenera. Il nome e il percorso restano quelli di sempre, perche' le pianificazioni dei deploy
+     * e i pulsanti degli strumenti lo chiamano cosi'.
+     *
+     * Gemello di _mod/_AT000.attivita/_src/_api/_task/_attivita.view.static.popolazione.php.
+     *
+     * Chiamata standard: /task/0200.attivita/attivita.view.static.popolazione
+     * Chiamata forzata, che riscrive una riga sola: /task/0200.attivita/attivita.view.static.popolazione?idAttivita=<id>
+     *
+     * Fa parte della corte di task della statica: popolazione ( questo ), pulizia ( righe sparite dalla tabella
+     * base ) e svuotamento ( solo per le emergenze ). Il ricalcolo completo non e' una pianificazione: a
+     * tenere allineata la statica sono i controller e, come rete di sicurezza, questo task a lotti.
+     *
+     * @file
+     *
+     */
+
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    require '../../../../../_src/_config.php';
@@ -8,74 +29,33 @@
     // verifica dei privilegi
     checkTaskPrivilege( 'GESTIONE_MYSQL' );
 
-    // debug
-    // ini_set('display_errors', 1);
-    // ini_set('display_startup_errors', 1);
-    // error_reporting(E_ALL);
-
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
-	// ...
-	if( ! isset( $_REQUEST['idAttivita'] ) ) {
+    // ...
+    if( ! isset( $_REQUEST['idAttivita'] ) ) {
 
-		// trovo una riga da aggiornare
-		$status['aggiornare'] = mysqlSelectRow(
-			$cf['mysql']['connection'],
-			'SELECT attivita.id FROM attivita 
-            LEFT JOIN attivita_view_static ON attivita_view_static.id = attivita.id
-            WHERE
-                ( attivita_view_static.timestamp_inserimento IS NULL OR attivita.timestamp_inserimento > attivita_view_static.timestamp_inserimento )
-                OR
-                ( attivita_view_static.timestamp_aggiornamento IS NULL OR attivita.timestamp_aggiornamento > attivita_view_static.timestamp_aggiornamento )
-                -- OR
-                -- ( greatest( coalesce( attivita.timestamp_inserimento, 0 ), coalesce( attivita.timestamp_aggiornamento, 0 ) ) < unix_timestamp() - 86400 )
-			ORDER BY attivita.id DESC
-			LIMIT 1'
-		);
+        // riallineo un lotto di righe rimaste indietro
+        $status['riallineate'] = syncStaticView( $cf['mysql']['connection'], 'attivita' );
+        $status['modalita'] = 'standard';
 
-/*
-		// ...
-		if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
-			updateReportGiacenzaMagazzini(
-				$status['aggiornare']['id_mastro_destinazione'],
-				$status['aggiornare']['id_articolo'],
-				$status['aggiornare']['id_matricola']
-			);
-		}
-*/
+        // metroLoopWs() ripete la chiamata finche' aggiornare.id non e' vuoto
+        $status['aggiornare']['id'] = ( ! empty( $status['riallineate'] ) ) ? $status['riallineate'] : NULL;
 
-    } elseif( isset( $_REQUEST['idAttivita'] ) ) {
+    } else {
 
-        // scrivo la riga
+        // riscrivo la riga indicata
         $status['aggiornare']['id'] = $_REQUEST['idAttivita'];
         $status['modalita'] = 'forzata';
-
-	}
-
-	// ...
-	if( ! empty( $status['aggiornare']['id'] ) ) {
+        $status['done'] = true;
         refreshStaticView( $cf['mysql']['connection'], 'attivita', $status['aggiornare']['id'] );
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE attivita_view_static SET timestamp_inserimento = unix_timestamp() WHERE id = ? AND timestamp_inserimento IS NULL',
-            array(
-                array( 's' => $status['aggiornare']['id'] )
-            )
-        );
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE attivita_view_static SET timestamp_aggiornamento = unix_timestamp() WHERE id = ? AND timestamp_aggiornamento IS NULL',
-            array(
-                array( 's' => $status['aggiornare']['id'] )
-            )
-        );
-	}
 
-	// debug
+    }
+
+    // debug
     // print_r( $_REQUEST );
 
-	// output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    // output
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

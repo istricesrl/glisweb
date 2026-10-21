@@ -34,9 +34,11 @@
 	}
     */
 
-    if( isset( $_SESSION['__work__']['documenti']['items'] ) ) {
+    // gli allegati messi da parte ( gruppo mailattach dei bookmarks ) si tolgono dalla memoria di lavoro appena la
+    // mail e' stata salvata con i suoi file, altrimenti si riaggiungerebbero a ogni mail nuova della sessione
+    if( isset( $_SESSION['__work__']['mailattach']['items'] ) ) {
         if( isset( $_POST[ $ct['form']['table'] ]['file']) ) {
-            unset( $_SESSION['__work__']['documenti'] );
+            unset( $_SESSION['__work__']['mailattach'] );
         }
     }
 

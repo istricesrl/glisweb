@@ -51,7 +51,7 @@
                 <tbody class="col-12" >
                     {% for riga in etc.documento.documenti_articoli %}
                     <tr>
-                    <td class="text-left">{{ riga.id_articolo }} {% if riga.matricola %} <br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %} <br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
+                    <td class="text-left">{{ riga.codice_articolo|default( riga.id_articolo ) }} {% if riga.matricola %} <br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %} <br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
                     <td class="text-right">{{ riga.reparto }}</td>
                     <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
                     <td class="text-right">{{ riga.quantita }}</td>
@@ -83,7 +83,7 @@
                                 <td class="text-right"><h3>Totale</h3></td>
                                 <td class="text-right"><h3>{{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                             </tr>
-                            {% if etc.documento.coupon %}
+                            {% if etc.documento.id_coupon %}
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>

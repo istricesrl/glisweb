@@ -52,7 +52,19 @@
      * numerato 202403189999; quando Mario aggiornerà il framework e chiamerà il task per applicare le patch,
      * questo file verrà eseguito in quanto successivo al livello corrente 202402112506.
      * 
+     * lettura ed esecuzione
+     * ---------------------
+     * Il task non contiene le regole delle patch: le chiama da _src/_lib/_mysql.tools.php, dove stanno una volta sola
+     * per lui e per gli script _src/_sh/_mysql.upgrade.sh e _src/_sh/_database.rebuild.check.sh. mysqlPatchLevel()
+     * legge il livello da __patch__, mysqlPatchFiles() trova i file, mysqlPatchRead() ne ricava le patch da applicare
+     * ( un blocco per marcatore `-- |`, commenti scartati, id crescenti, l'id `------------` vale la data corrente in
+     * formato YmdHi ) e mysqlPatchApply() le esegue con mysqli, una query per blocco, registrandole in __patch__ e
+     * fermandosi al primo errore. Le regole sono descritte nei docblock di quelle funzioni.
      * 
+     * Fino al 29/09/2026 il task leggeva ed eseguiva da sé, passando da mysqlQuery(): un blocco che cominciava con un
+     * comando che mysqlQuery() non conosceva ( PREPARE, EXECUTE, DEALLOCATE ) non veniva eseguito, senza errore, e il
+     * task lo registrava come fatto; l'id `------------` diventava date( 'YmdHis' ), quattordici caratteri in una
+     * colonna char(12); e l'SQL dopo l'ultimo marcatore di un file si perdeva senza segnalazione.
      * 
      */
 
@@ -101,192 +113,73 @@
     // verifico la connessione
     if( ! empty( $cf['mysql']['connection'] ) ) {
 
+        // l'uscita si trattiene fino alla fine, cosi' in caso di errore si puo' ancora rispondere 500 dopo aver
+        // scritto le patch applicate: un cron o un monitor che guardano solo il codice HTTP se ne accorgono
+        ob_start();
+
         // ...
         header( 'Content-type: text/plain' );
 
-        // creo la tabella di patch se non esiste
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'CREATE TABLE IF NOT EXISTS `__patch__` (
-                `id` char(12) NOT NULL PRIMARY KEY,
-                `patch` text COLLATE utf8_unicode_ci,
-                `timestamp_esecuzione` int(11) DEFAULT NULL,
-                `token` char(128) DEFAULT NULL,
-                `note_esecuzione` text
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
-        );
+        // livello di patch del database
+        $patchLevel = mysqlPatchLevel( $cf['mysql']['connection'] );
 
-        // debug
-        // die( 'creazione della tabella di patch' );
-
-        // cerco l'ultima patch eseguita
-        $patchLevel = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT id AS patch_level FROM __patch__ ORDER BY id DESC LIMIT 1'
-        );
-
-        // patch level di default
-        if( empty( $patchLevel ) ) {
-            $patchLevel = '000000000000';
+        // senza livello non si applica niente: rieseguire tutto su un database in esercizio sarebbe il danno peggiore
+        if( $patchLevel === false ) {
+            logger( 'impossibile leggere il livello di patch: ' . mysqli_error( $cf['mysql']['connection'] ), 'mysql', LOG_ERR );
+            http_response_code( 500 );
+            die( 'impossibile leggere il livello di patch del database' );
         }
 
-        // cerco i patch file
-        $pFiles = getFilteredFileList( DIR_USR_DATABASE_PATCH, '_*.*.sql', false, 'glob2custom' );
+        // log
+        logger( 'livello di patch del database -> ' . $patchLevel, 'mysql', LOG_NOTICE );
 
-        // ordino i patch file per patch level
-        sort( $pFiles );
+        // un database pieno senza patch, o anteriore al canone, non si aggiorna con le patch: lo si lascerebbe a metà
+        $pReason = NULL;
+        if( ! mysqlPatchCheck( $cf['mysql']['connection'], $patchLevel, mysqlPatchCanon( DIR_BASE ), mysqlPatchFiles( DIR_BASE ), $pReason ) ) {
+            logger( 'patch rifiutate -> ' . $pReason, 'mysql', LOG_ERR );
+            http_response_code( 500 );
+            die( 'patch rifiutate: ' . $pReason );
+        }
 
-        // debug
-        // echo 'percorso di ricerca: ' . glob2custom( DIR_USR_DATABASE_PATCH . '_*.*.sql' ) . PHP_EOL;
-        // echo 'patch level: ' . $patchLevel . PHP_EOL;
-        // die( print_r( $pFiles, true ) );
+        // le patch da applicare
+        $pWarnings = array();
+        $pToApply = mysqlPatchRead( mysqlPatchFiles( DIR_BASE ), $patchLevel, $pWarnings );
 
-        // processo un patch file alla volta
-        foreach( $pFiles as $pFile ) {
+        // segnalazioni della lettura ( SQL fuori dalle patch, id non crescenti )
+        foreach( $pWarnings as $pWarning ) {
+            logger( 'lettura delle patch -> ' . $pWarning, 'mysql', LOG_WARNING );
+            echo 'ATTENZIONE ' . $pWarning . PHP_EOL;
+        }
 
-            // ricavo il livello di patch del file dal nome
-            // $pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
-            $pFilePatchLevel = substr( str_replace( '_', '', basename( $pFile ) ), 0, 12 );
+        // applico le patch
+        $pError = array();
+        $pDone = mysqlPatchApply( $cf['mysql']['connection'], $pToApply, $pError );
 
-            // debug
-            // echo 'patch level del file ' . $pFilePatchLevel . PHP_EOL;
-            // echo 'patch level del database ' . $patchLevel . PHP_EOL;
-            // die( 'elaborazione file' );
+        // patch applicate
+        foreach( $pDone as $pPatch ) {
+            logger( 'patch applicata -> ' . $pPatch['id'] . ' ( ' . basename( $pPatch['file'] ) . ' )', 'mysql', LOG_NOTICE );
+            echo 'patch ' . $pPatch['id'] . ' applicata correttamente' . PHP_EOL;
+        }
 
-            // se il livello di patch del file è maggiore di quello del database...
-            if( $pFilePatchLevel > $patchLevel ) {
-
-                // log
-                logger( 'elaborazione file patch -> ' . $pFile, 'mysql', LOG_NOTICE );
-
-                // debug
-                // echo 'prelevo le patch dal file ' . $pFilePatchLevel . PHP_EOL;
-
-                // leggo il file in un array (una riga per elemento)
-                $rows = readFromFile( $pFile );
-
-                // debug
-                // echo 'righe trovate nel file ' . $pFile . ' -> ' . count( $rows ) . PHP_EOL;
-
-                // id della patch
-                $pId = '';
-
-                // patch corrente
-                $pQuery = '';
-                $pComments = '';
-
-                // processo le righe una alla volta
-                foreach( $rows as $row ) {
-
-                    // se la riga inizia con il marcatore, allora ho trovato una patch
-                    if( substr( trim( $row ), 0, 4 ) == '-- |' ) {
-
-                        // se la query che sto ricavando non è vuota...
-                        if( ! empty( trim( $pQuery ) ) ) {
-
-                            // debug
-                            // echo 'eseguo la patch ' . $pId . PHP_EOL;
-
-                            // se l'ID della patch che sto lavorando è maggiore del patch level del database
-                            if( $pId > $patchLevel ) {
-
-                                // log
-                                logger( 'elaborazione patch -> ' . $pId, 'mysql', LOG_NOTICE );
-
-                                // eseguo la patch corrente
-                                $pEx = mysqlQuery(
-                                    $cf['mysql']['connection'],
-                                    $pQuery
-                                );
-
-                                // debug
-                                // echo 'scrivo la patch ' . $pId . PHP_EOL;
-
-                                // risultato dell'esecuzione della patch
-                                $pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
-
-                                // debug
-                                if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-                                    echo $pQuery . PHP_EOL;
-                                    echo $pStatus . PHP_EOL;
-                                    die( 'errore nella patch ' . $pQuery );
-                                } else {
-                                    echo 'patch ' . $pId . ' applicata correttamente' . PHP_EOL;
-                                }
-
-                                // registro l'esecuzione della patch nella tabella __patch__
-                                $rEx = mysqlInsertRow(
-                                    $cf['mysql']['connection'],
-                                    array(
-                                        'id' => $pId,
-                                        'patch' => trim( $pQuery ),
-                                        'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
-                                        'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
-                                    ),
-                                    '__patch__',
-                                    false
-                                );
-
-                                // risultato dell'esecuzione della patch
-                                $pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
-
-                                // debug
-                                if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-                                    die( 'errore nella scrittura di ' . $pId . ' sulla tabella delle patch' );
-                                }
-
-                                // aggiorno il patch level al livello (ID) della patch che ho appena inserito
-                                $patchLevel = $pId;
-
-                            } elseif( $pId == $patchLevel ) {
-
-                                // debug
-                                echo 'patch ' . $pId . ' già eseguita in precedenza' . PHP_EOL;
-
-                            } else {
-
-                                // debug
-                                echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
-
-                            }
-
-                        } else {
-
-                            // debug
-                            if( empty( $pComments ) ) {
-                                echo 'NON eseguo la patch ' . $pId . ' in quanto è vuota' . PHP_EOL;
-                            }
-
-                        }
-
-                        // leggo l'ID della patch
-                        $pId = substr( $row, 5, 12 );
-
-                        // se l'ID della patch è '------------' allora lo imposto alla data corrente
-                        if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
-
-                        // svuoto la query per ricominciare ad aggiungere righe
-                        $pQuery = '';
-                        $pComments = '';
-
-                        // echo 'inizio la lettura della patch ' . $pId . PHP_EOL;
-
-                    } elseif( substr( trim( $row ), 0, 2 ) == '--' ) {
-
-                        // aggiungo la riga corrente alla patch che sto leggendo
-                        $pComments .= $row;
-
-                    } elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
-
-                        // aggiungo la riga corrente alla patch che sto leggendo
-                        $pQuery .= $row . PHP_EOL;
-
-                    }
-
-                }
-
+        // le query in cache possono avere i dati di prima delle patch, e nessun controller le ha invalidate: si
+        // cancellano quelle di tutto il deploy, anche se l'ultima patch e' fallita ( vedi memcacheCleanQueries() )
+        if( ! empty( $pDone ) ) {
+            $pCache = memcacheCleanQueries( true );
+            if( is_array( $pCache ) ) {
+                echo 'cache delle query svuotata: ' . array_sum( $pCache ) . ' chiavi cancellate' . PHP_EOL;
+            } elseif( isset( $cf['memcache']['connection'] ) && is_object( $cf['memcache']['connection'] ) ) {
+                logger( 'patch applicate ma cache delle query non svuotata, chiamare /task/memcache.clean?deploy=1', 'mysql', LOG_WARNING );
+                echo 'ATTENZIONE cache delle query non svuotata, chiamare /task/memcache.clean?deploy=1' . PHP_EOL;
             }
+        }
 
+        // errore
+        if( ! empty( $pError ) ) {
+            $pStatus = 'errore nella patch ' . $pError['id'] . ( ( empty( $pError['file'] ) ) ? '' : ' di ' . basename( $pError['file'] ) ) . ': ' . $pError['errno'] . ' ' . $pError['error'];
+            logger( $pStatus . '§query -> ' . $pError['query'], 'mysql', LOG_ERR );
+            echo $pError['query'] . PHP_EOL;
+            http_response_code( 500 );
+            die( $pStatus . PHP_EOL . 'le patch successive non sono state applicate' );
         }
 
         // ...
@@ -295,21 +188,7 @@
     } else {
 
         // ...
+        http_response_code( 500 );
         die( 'connessione al database non disponibile' );
 
-    }
-
-    // output
-    if( ! defined( 'CRON_RUNNING' ) ) {
-        buildJson(
-            $status, 
-            ENCODING_UTF8,
-            array(
-                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
-                'Pragma' => 'no-cache',
-                'Expires' => '0',
-                'X-Cache-Lifetime' => '0',
-                'X-Proxy-Cache' => 'BYPASS',
-            )
-        );
     }

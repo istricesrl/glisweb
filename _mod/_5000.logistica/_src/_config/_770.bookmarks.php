@@ -4,7 +4,7 @@
      * gruppi di bookmarks della logistica
      *
      * I bookmarks sono la memoria di lavoro volatile del framework ( $_SESSION['__work__'],
-     * API /api/bookmarks, task bookmark.add / bookmark.del / bookmark.toggle ): servono a
+     * API /api/bookmarks, task bookmark.add / bookmark.del ): servono a
      * "portarsi dietro" degli oggetti da una schermata all'altra e a ritrovarseli dove poi
      * servono davvero. Vedi _src/_config/_770.bookmarks.php per il meccanismo.
      *

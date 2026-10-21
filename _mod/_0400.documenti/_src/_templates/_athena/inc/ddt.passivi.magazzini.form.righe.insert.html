@@ -7,7 +7,11 @@
     <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
     {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
     {{ frm.input( view.open.table, '', '', 'data', '', '', '', now|date("Y-m-d"), 'hidden', '', '', 2 ) }}
-    {{ frm.input( view.open.table, '', '', 'id_tipologia', '', '', '', request[ table ].id_tipologia, 'hidden', '', '', 2 ) }}
+    {# NIENTE TIPOLOGIA SULLA RIGA ( fix 2026-10-16 )
+       Qui si passava `request[ table ].id_tipologia`, cioe' la tipologia del DOCUMENTO ( 4 = DDT ).
+       Dal 14/09/2026 `documenti_articoli.id_tipologia` punta a `tipologie_documenti_articoli`, e il 4
+       li' non esiste: la chiave esterna rifiutava l'INSERT e la riga non veniva aggiunta, senza errori
+       a video. La riga inserita al volo non ha tipologia, come nel form completo. #}
     {{ frm.input( view.open.table, '', '', 'id_udm', '', '', '', '1', 'hidden', '', '', 2 ) }}
     <div class="form-row d-print-none">
         <div class="col-4">

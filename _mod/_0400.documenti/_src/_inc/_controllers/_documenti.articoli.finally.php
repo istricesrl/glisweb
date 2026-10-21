@@ -33,8 +33,13 @@
         break;
         case METHOD_DELETE:
 
-            mysqlQuery( $c, 'DELETE FROM documenti_articoli_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
+            // la statica di documenti_articoli non esiste in nessun deploy: la DELETE secca dava 1146 a ogni cancellazione
+            if( ! empty( getStaticView( NULL, $c, 'documenti_articoli' ) ) ) {
+
+                mysqlQuery( $c, 'DELETE FROM documenti_articoli_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+                logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
+
+            }
 
         break;
 

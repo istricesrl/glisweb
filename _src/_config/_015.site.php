@@ -76,6 +76,32 @@
     // debug
     // die( print_r( $cf['sites'], true ) );
 
+    /**
+     * host dei test ricavato dalla cartella
+     * =====================================
+     * Quando _usr/_test/_bootstrap.php non riceve GLISWEB_TEST_HOST ricava l'host dal nome della cartella del deploy
+     * ( costante GLISWEB_TEST_AUTO ); se quel nome e' l'host di produzione di un sito, come su crm.trbitaly.com, i
+     * test girano sull'host DEV dello stesso sito, o in mancanza su quello TEST, o su un altro stato non di produzione. Un host di produzione dato
+     * esplicitamente in GLISWEB_TEST_HOST invece non si cambia, e piu' sotto ferma i test.
+     *
+     */
+
+    // host dei test ricavato dalla cartella
+    if( defined( 'GLISWEB_TEST_AUTO' ) ) {
+        foreach( $cf['sites'] as $testSite ) {
+            foreach( $testSite['domains'] as $prodStatus => $prodDomain ) {
+                if( substr( $prodStatus, 0, strlen( PRODUCTION ) ) == PRODUCTION && ! empty( $prodDomain ) && $_SERVER['HTTP_HOST'] == ( ( empty( $testSite['hosts'][ $prodStatus ] ) ) ? NULL : $testSite['hosts'][ $prodStatus ] . '.' ) . $prodDomain ) {
+                    foreach( array_unique( array_merge( array( DEVELOPEMENT, TESTING ), array_keys( $testSite['domains'] ) ) ) as $testStatus ) {
+                        if( substr( $testStatus, 0, strlen( PRODUCTION ) ) != PRODUCTION && ! empty( $testSite['domains'][ $testStatus ] ) ) {
+                            $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = ( ( empty( $testSite['hosts'][ $testStatus ] ) ) ? NULL : $testSite['hosts'][ $testStatus ] . '.' ) . $testSite['domains'][ $testStatus ];
+                            break 3;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // cerco di ricavare il sito corrente dal dominio
     foreach( $cf['sites'] as $id => &$site ) {
 
@@ -196,6 +222,32 @@
 
     // status del sito
     define( 'SITE_STATUS', $cf['site']['status'] );
+
+    /**
+     * niente test in produzione
+     * =========================
+     * Quando il framework lo avvia _usr/_test/_bootstrap.php ( costante GLISWEB_TEST ) e l'host simulato e' quello
+     * di produzione, ci si ferma qui, prima che i runlevel successivi aprano le connessioni a cache, sessioni e
+     * database: un test non deve nemmeno tentare di collegarsi ai server di produzione. Ci si arriva solo con un host
+     * di produzione dato esplicitamente in GLISWEB_TEST_HOST, o ricavato dalla cartella per un sito che non ha host
+     * DEV ne' TEST; il messaggio elenca gli host non di produzione dei siti, da passare in GLISWEB_TEST_HOST. Di
+     * produzione e' ogni stato il cui nome comincia per PROD ( PROD, ma anche p.es. PRODWMS ).
+     *
+     */
+
+    // niente test in produzione
+    if( defined( 'GLISWEB_TEST' ) && substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) == PRODUCTION ) {
+        $testHosts = array();
+        foreach( $cf['sites'] as $testSite ) {
+            foreach( array_unique( array_merge( array( DEVELOPEMENT, TESTING ), array_keys( $testSite['domains'] ) ) ) as $testStatus ) {
+                if( substr( $testStatus, 0, strlen( PRODUCTION ) ) != PRODUCTION && ! empty( $testSite['domains'][ $testStatus ] ) ) {
+                    $testHosts[] = ( ( empty( $testSite['hosts'][ $testStatus ] ) ) ? NULL : $testSite['hosts'][ $testStatus ] . '.' ) . $testSite['domains'][ $testStatus ];
+                }
+            }
+        }
+        fwrite( STDERR, 'l\'host ' . $_SERVER['HTTP_HOST'] . ' e\' di produzione, i test non si eseguono; impostare GLISWEB_TEST_HOST con un host DEV o TEST' . ( ( empty( $testHosts ) ) ? ' ( nessuno configurato )' : ': ' . implode( ', ', array_unique( $testHosts ) ) ) . PHP_EOL );
+        exit( 1 );
+    }
 
     /**
      * debug del runlevel

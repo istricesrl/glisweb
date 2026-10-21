@@ -19,19 +19,17 @@
 
 {% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
-{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
-{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
+{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
 {% include '_inc/_recaptcha.close.html' %}
 
-{% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.html' %}{% endif %}
-
-{% if criteo.account %}{% include '_inc/_criteo.html' %}{% endif %}
+{% if criteo.profile.account %}{% include '_inc/_criteo.html' %}{% endif %}
 
 {% if page.contents.chartjs %}{% include '_inc/_chartjs.script.html' %}{% endif %}
 
-{% if smartsupp.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
+{% if smartsupp.profile.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
 
 {% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.html' %}{% endif %}
 

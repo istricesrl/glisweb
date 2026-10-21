@@ -24,7 +24,7 @@
 	$p['risorse.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione risorsa' ),
 	    'parent'		=> array( 'id'		=> 'risorse.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.php' ),
@@ -134,7 +134,7 @@
 	$p['categorie.risorse.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione categoria' ),
 	    'parent'		=> array( 'id'		=> 'categorie.risorse.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.risorse.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.php' ),

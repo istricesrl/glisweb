@@ -101,8 +101,8 @@
             // pagamento con Nexi
             case 'nexi':
 
-                // preparazione del totale
-                    $c['prezzo_lordo_finale']               = str_replace( '.', ',', sprintf( '%01.2f', $c['prezzo_lordo_finale'] ) );
+                // NOTA il totale non si prepara qui: nexiGetSecurityKey() lo converte da sé in centesimi partendo dal
+                // valore numerico, per cui non va trasformato prima in stringa con la virgola
 
                 // URL espliciti
                     $k['success_url']                       = ( ! isset( $k['success_url'] ) || empty( $k['success_url'] ) ) ? $cf['contents']['pages'][ $k['success'] ]['url'][ $l ] : $k['success_url'];
@@ -173,9 +173,15 @@
                 // richiedo il PaymentID e l'URL per il redirect
                 $paymentDetails = monetawebGetPaymentDetails( $c, $k );
 
-                // modifico la destinazione del form di riepilogo
-                // $ct['etc']['meta']['action'] = $paymentDetails[3];
-                $ct['etc']['meta']['action'] = $paymentDetails['redirecturl'];
+                // modifico la destinazione del form di riepilogo; se il gateway non ha risposto il template
+                // mostra un errore invece di un form senza destinazione
+                if( ! empty( $paymentDetails['redirecturl'] ) ) {
+                    $ct['etc']['meta']['action'] = $paymentDetails['redirecturl'];
+                } else {
+                    $ct['etc']['meta']['action'] = NULL;
+                    $ct['etc']['meta']['errore'] = 'pagamento_non_disponibile';
+                    logger( 'nessun redirecturl da Monetaweb per il carrello ' . $c['id'], 'monetaweb', LOG_ERR );
+                }
 
                 // debug
                 // die( print_r( $paymentID, true ) );

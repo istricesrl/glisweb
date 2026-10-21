@@ -63,7 +63,7 @@
     $p['contenuti.notizie.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti notizie form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione notizia' ),
         'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.php' ),
@@ -89,6 +89,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE
@@ -138,7 +143,7 @@
     $p['contenuti.tipologie.notizie.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione contenuti tipologie notizie' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione tipologia' ),
         'parent'            => array( 'id'        => 'contenuti.tipologie.notizie.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.tipologie.notizie.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.form.php' ),
@@ -193,7 +198,7 @@
     $p['contenuti.categorie.notizie.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti categorie notizie form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione categoria' ),
         'parent'            => array( 'id'        => 'contenuti.categorie.notizie.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.php' ),
@@ -220,6 +225,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE

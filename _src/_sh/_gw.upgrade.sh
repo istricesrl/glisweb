@@ -73,6 +73,42 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
+        # il framework si aggiorna solo in dev/: test/ e stable/ lo ricevono da dev/ con _deploy.run.sh,
+        # insieme al codice del progetto che ci e' stato provato sopra. Lo si riconosce dal nome della
+        # cartella e da una dev/ accanto: un'installazione singola ( un hosting senza le cartelle dei
+        # deploy ) si aggiorna da se' come sempre. GW_UPGRADE_FORZA=1 lo fa fare lo stesso
+        STADIO=$( basename "$( pwd )" )
+        if [ "$STADIO" = "test" -o "$STADIO" = "stable" ] && [ -d ../dev ] && [ -z "$GW_UPGRADE_FORZA" ]; then
+            echo "ERRORE: questa e' la cartella $STADIO di un deploy che ha anche dev/: il framework si aggiorna"
+            echo "        in dev/ e arriva qui con _deploy.run.sh $STADIO. Il framework NON viene toccato"
+            echo "        ( GW_UPGRADE_FORZA=1 per farlo lo stesso )"
+            exit 1
+        fi
+
+        # repository da cui scaricare il branch
+        #
+        # alcuni deploy si aggiornano da glisdev invece che da glisweb: lo dice il file
+        # update.repository.conf nella root del deploy, accanto a update.branch.conf, oppure il
+        # terzo argomento, che ha la precedenza ( il secondo e' gia' il profilo del database ).
+        # Senza l'uno e l'altro vale glisweb, com'e' sempre stato. Il nome si controlla QUI, prima
+        # del backup, perche' un nome sbagliato non deve toccare niente
+        REPO="glisweb"
+        if [ -n "$3" ]; then
+            REPO="$3"
+        elif [ -s ../update.repository.conf ]; then
+            REPO=$( tr -d '[:space:]' < ../update.repository.conf )
+        fi
+
+        case "$REPO" in
+            glisweb|glisdev)
+                echo "aggiorno dal repository istricesrl/$REPO"
+                ;;
+            *)
+                echo "ERRORE: repository '$REPO' non ammesso ( glisweb o glisdev ), il framework NON viene toccato"
+                exit 1
+                ;;
+        esac
+
         cartellaDisallineamenti="../$DISALLINEAMENTI_SUBDIR/$( date '+%Y%m%d%H%M%S' )/"
 
         echo "inizio il backup"
@@ -149,6 +185,10 @@ else
         # branch da scaricare
         BRANCH=$1
 
+        # profilo del database a cui applicare le patch: in cron non c'e' HTTP_HOST da cui
+        # ricavarlo, quindi si dice; DEV se non lo si dice, come fa il cron del backup notturno
+        STATO=${2:-DEV}
+
         # pulisco il nome del file zip dai prefissi
         BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
         BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
@@ -158,10 +198,10 @@ else
 
         # residui di un tentativo precedente andato male: se restassero, i controlli qui sotto
         # li scambierebbero per il risultato di questo giro e darebbero via libera al rm -rf
-        rm -rf ./glisweb-$BRANCHDIR
+        rm -rf ./$REPO-$BRANCHDIR
         rm -f ./$BRANCHZIP.zip
 
-        # scarico Glisweb
+        # scarico il framework dal repository scelto
         #
         # ATTENZIONE: da qui alla riga del rm -rf ./_* non si distrugge ancora niente, ed e'
         # l'unico momento in cui ci si puo' ancora fermare. Fino al 2026-09-09 non ci si fermava:
@@ -172,7 +212,7 @@ else
         #
         # Ogni controllo qui sotto esce PRIMA del rm -rf, quindi il deploy resta esattamente
         # com'era e riprova al giro successivo.
-        if ! wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip; then
+        if ! wget https://github.com/istricesrl/$REPO/archive/$BRANCH.zip; then
             echo "ERRORE: scaricamento di $BRANCH.zip fallito, il framework NON viene toccato"
             exit 1
         fi
@@ -182,7 +222,7 @@ else
             exit 1
         fi
 
-        # scompatto Glisweb
+        # scompatto il framework
         if ! unzip -qq ./$BRANCHZIP.zip; then
             echo "ERRORE: scompattamento di ./$BRANCHZIP.zip fallito, il framework NON viene toccato"
             exit 1
@@ -190,8 +230,8 @@ else
 
         # controllo che sia davvero un framework e non una pagina di errore rinominata .zip:
         # _src/_config.php e' il bootstrap, senza quello non c'e' niente da installare
-        if [ ! -f ./glisweb-$BRANCHDIR/_src/_config.php ]; then
-            echo "ERRORE: ./glisweb-$BRANCHDIR/ non contiene _src/_config.php, non sembra una"
+        if [ ! -f ./$REPO-$BRANCHDIR/_src/_config.php ]; then
+            echo "ERRORE: ./$REPO-$BRANCHDIR/ non contiene _src/_config.php, non sembra una"
             echo "        distribuzione del framework. Il framework NON viene toccato"
             exit 1
         fi
@@ -206,7 +246,7 @@ else
         rm -rf ./_*
 
         # installo la nuova versione
-        cp -rf ./glisweb-$BRANCHDIR/{.[!.],}* ./
+        cp -rf ./$REPO-$BRANCHDIR/{.[!.],}* ./
 
         # ripristino il vendor salvato (il rm -rf ./_* lo aveva eliminato): cosi'
         # l'autoload esiste gia' anche prima di lanciare composer
@@ -216,7 +256,7 @@ else
         fi
 
         # elimino la vecchia cartella
-        rm -rf ./glisweb-$BRANCHDIR
+        rm -rf ./$REPO-$BRANCHDIR
         rm -rf ./$BRANCHZIP.zip
 
         # installo il .gitignore se è presente un repository .git
@@ -238,8 +278,73 @@ else
             echo "ERRORE: ./_src/_lib/_ext/autoload.php mancante dopo l'aggiornamento"
         fi
 
+        ## patch del database
+        #
+        # il codice nuovo si aspetta il database delle sue patch: fino al 01/10/2026 questo script
+        # aggiornava il codice ogni notte e le patch restavano da lanciare a mano, quindi per un
+        # tempo indefinito il codice girava su un database che non aveva le sue colonne
+        #
+        # _mysql.upgrade.sh applica solo le patch sopra il livello di __patch__, fa il dump prima
+        # di applicare ( e non applica niente se il dump non riesce ), si ferma al primo errore; se
+        # non c'e' niente da applicare esce subito, senza dump. Un fallimento non ferma
+        # l'aggiornamento: lo si dice qui, e la pagina di stato del framework lo segnala finche'
+        # qualcuno non applica la patch
+        #
+        # va PRIMA dei permessi, perche' quello che scrive ( log, dump ) nasca gia' coi permessi giusti
+        if [ -x ./_src/_sh/_mysql.upgrade.sh ]; then
+
+            if ./_src/_sh/_mysql.upgrade.sh $STATO --si; then
+                echo "patch del database applicate"
+            else
+                echo "ATTENZIONE: patch del database non applicate, lanciare a mano _src/_sh/_mysql.upgrade.sh $STATO"
+            fi
+
+        fi
+
         ## permessi
         ./_src/_sh/_lamp.permissions.secure.sh
+
+        ## controllo del sito aggiornato
+        #
+        # fino al 21/10/2026 l'aggiornamento finiva qui comunque andasse, e un framework che mandava il
+        # sito in errore restava installato fino a che qualcuno se ne accorgeva. Se ../update.check.conf
+        # elenca degli URL ( uno per riga ) li si chiede adesso: un errore del server o nessuna risposta
+        # riportano i file _* di prima dal backup fatto all'inizio. Il database non torna indietro: le
+        # patch sono compatibili all'indietro, e il codice di prima gira anche sul database aggiornato
+        if [ -s ../update.check.conf ]; then
+
+            rm -rf ./var/cache/*
+            controlloKO=""
+            for URL in $( grep -v '^\s*#' ../update.check.conf ); do
+                CODE=$( curl -s -o /dev/null -w '%{http_code}' --max-time 60 "$URL" )
+                echo "controllo di $URL: HTTP $CODE"
+                case "$CODE" in
+                    5??|000) controlloKO="1" ;;
+                esac
+            done
+
+            if [ -n "$controlloKO" ]; then
+
+                echo "ERRORE: il sito non risponde dopo l'aggiornamento, rimetto il framework di prima da $BACKUPFILE"
+
+                # stessa sequenza dell'installazione: il vendor non e' nel backup e si conserva
+                rm -rf ../_ext.prev
+                cp -a ./_src/_lib/_ext ../_ext.prev
+                rm -rf ./_*
+                tar -xzf "$BACKUPFILE" --wildcards './_*'
+                rm -rf ./_src/_lib/_ext
+                mv ../_ext.prev ./_src/_lib/_ext
+                ./_src/_sh/_lamp.permissions.secure.sh
+                rm -rf ./var/cache/*
+
+                echo "framework di prima ripristinato: l'aggiornamento e' annullato"
+                exit 1
+
+            fi
+
+        else
+            echo "NOTA: ../update.check.conf assente, nessun controllo del sito dopo l'aggiornamento"
+        fi
 
         ## salvo la data di aggiornamento
         echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf
@@ -329,7 +434,7 @@ else
     else
 
         # sinossi
-        echo "utilizzo: $0 <branch>"
+        echo "utilizzo: $0 <branch> [ DEV | TEST | PROD ] [ glisweb | glisdev ]"
 
     fi
 

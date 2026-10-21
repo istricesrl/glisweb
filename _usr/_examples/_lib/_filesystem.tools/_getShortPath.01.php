@@ -1,0 +1,24 @@
+<?php
+
+    /**
+     * file di esempio per la funzione shortPAth()
+     * 
+     *
+     * 
+     */
+
+    // inclusione del framework
+    require '../../../../_src/_config.php';
+
+    // percorso
+    $f = DIR_BASE . 'src/config.json';
+
+    // output
+    var_dump( $f );
+
+    // percorso assoluto
+    $d = getShortPath( $f );
+
+    // output
+    var_dump( $f );
+    var_dump( $d );

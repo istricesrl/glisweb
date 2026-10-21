@@ -125,6 +125,11 @@
             }
         });
 
+        // le label seguono gli id dei campi, altrimenti nella riga nuova attivano il campo della riga copiata
+        $( base ).find( 'label[for]' ).each( function( i, obj ) {
+            obj.attributes['for'].value = obj.attributes['for'].value.replace( /_[\-0-9]+_/i, '_' + counter + '_' );
+        });
+
         $( base ).find('.ajax-uploader').change( function() {
             $(this).uploader();
         });

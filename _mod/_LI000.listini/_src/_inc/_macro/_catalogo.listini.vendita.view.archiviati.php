@@ -44,7 +44,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array('NN' => true)
+            'data_archiviazione' => array('NN' => true),
+            'id' => array( 'NI' => implode( '|', listiniAcquistoId() ) )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'

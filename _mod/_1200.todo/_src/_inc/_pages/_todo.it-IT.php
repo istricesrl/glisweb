@@ -27,7 +27,7 @@
 		$p['todo.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione todo' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.php' ),
@@ -196,7 +196,7 @@
 		$p['tipologie.todo.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione tipologia' ),
 			'parent'		=> array( 'id'		=> 'tipologie.todo.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.todo.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.todo.form.php' ),
@@ -241,7 +241,7 @@
 		$p['todo.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione todo' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.php' ),
@@ -417,7 +417,7 @@
 		$p['todo.commerciale.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione todo' ),
 			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.php' ),

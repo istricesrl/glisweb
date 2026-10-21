@@ -65,7 +65,7 @@
     $p['account.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione account' ),
         'parent'            => array( 'id'        => 'account.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'account.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_account.form.php' ),
@@ -131,7 +131,7 @@
     $p['gruppi.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione gruppi' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione gruppo' ),
         'parent'            => array( 'id'        => 'gruppi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'gruppi.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_gruppi.form.php' ),

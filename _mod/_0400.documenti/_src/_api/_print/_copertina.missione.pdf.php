@@ -1,47 +1,31 @@
 <?php
 
     /**
+     * stampa PDF: copertina di missione
      *
+     * Endpoint sottile: il PDF lo genera generaDocumentoPdf() ( _src/_lib/_pdf.tools.add.php del modulo ), che legge i
+     * dati con generaContenutiDocumento(), sceglie il modello dalla colonna stampa_pdf della tipologia del documento
+     * ( e in mancanza usa 'copertina.missione' ), salva il file in var/spool/docs/missioni/pdf/ e annota l'attivita' di stampa.
+     * L'uscita verso il browser e i parametri d, f, fi sono descritti in _documento.output.php.
      *
-     *
-     * @todo documentare
+     * Per cambiare l'impaginazione in un deploy non si copia questo file: si scrive un modello custom e lo si
+     * dichiara in tipologie_documenti.stampa_pdf, oppure si forza $cnf['modello'] in un endpoint custom.
      *
      * @file
      *
      */
 
     // inclusione del framework
-	require_once '../../../../../_src/_config.php';
+    require_once '../../../../../_src/_config.php';
 
     // configurazioni specifiche
     $cnf['estensione'] = 'pdf';
-    $cnf['cartella'] = 'fatture';
+    $cnf['cartella'] = 'missioni';
+    $cnf['predefinito'] = 'copertina.missione';
+    $cnf['attivita'] = false;
 
     // inclusione dei dati base
-	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
+    require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
-    // debug
-	// header( 'Content-type: text/plain;' );
-	// die( print_r( $doc, true ) );
-	// die( print_r( $src, true ) );
-	// die( print_r( $dst, true ) );
-
-    // creazione del PDF
-	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
-
-    // ...
-    generaCopertinaMissionePdf( $pdf, $dati );
-
-    // oggetto del documento
-    $dobj = str_replace( ' ', '_' , $dati['doc']['oggetto'] );
-
-    // output
-	if( isset( $_REQUEST['d'] ) ) {
-	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
-	} elseif( isset( $_REQUEST['f'] ) ) {
-	    $pdf->Output( $dobj.'.pdf','F' );				// salva il file localmente
-	} elseif( isset( $_REQUEST['fi'] ) ) {
-	    $pdf->Output( $dobj.'.pdf', 'FI' );				// salva il file localmente e invia l'output al browser
-	} else {
-	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
-	}
+    // generazione, salvataggio e uscita
+    require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.output.php';

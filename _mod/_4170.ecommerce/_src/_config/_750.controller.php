@@ -15,8 +15,32 @@
     // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
     // die();
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+    // STEP 0 - se il carrello della sessione è già chiuso, lo stacco dalla sessione
+    // NOTA questo controllo stava in _760.controller.php, cioè dopo lo STEP 1: la prima richiesta
+    // con __carrello__ dopo la chiusura ( pagamento confermato dal listener ) scriveva sul carrello
+    // chiuso, e i dati di un acquisto nuovo finivano su quello già pagato
+    if( isset( $_SESSION['carrello']['id'] ) ) {
+
+        // se non è impostata la timestamp di checkout, la recupero dal database
+        if( empty( $_SESSION['carrello']['timestamp_checkout'] ) ) {
+            $_SESSION['carrello']['timestamp_checkout'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT timestamp_checkout FROM carrelli WHERE id = ?',
+                array( array( 's' => $_SESSION['carrello']['id'] ) )
+            );
+        }
+
+        // se il carrello corrente è chiuso, lo elimino dalla sessione
+        if( ! empty( $_SESSION['carrello']['timestamp_checkout'] ) ) {
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE carrelli SET session = NULL WHERE id = ?',
+                array( array( 's' => $_SESSION['carrello']['id'] ) )
+            );
+            $_SESSION['carrello'] = array();
+        }
+
+    }
 
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
@@ -26,6 +50,9 @@ ini_set("display_errors", 1);
         // log
         logWrite( 'attivata la controller del carrello', 'cart' );
 
+        // listino, sconti e coupon di riga solo dagli operatori ( vedi filtraRichiestaCarrello() )
+        filtraRichiestaCarrello( $_REQUEST['__carrello__'] );
+
         // debug
         // die( print_r( $_REQUEST['__carrello__'], true ) );
 
@@ -34,7 +61,7 @@ ini_set("display_errors", 1);
 
         // log
         // logWrite('esito del controllo antispam: ' . $spamScore . '/' . (($spamCheck == true) ? 'OK' : 'NO'), 'cart');
-        logWrite('esito del controllo antispam: ' . ( ( $spam['score'] === NULL ) ? 'n/d' : $spam['score'] ) . '/' . (($spam['check'] == true) ? 'OK' : 'NO') . ' (' . ( $spam['status'] ?? 'senza dettaglio' ) . ')', 'cart', LOG_ERR);
+        logWrite('esito del controllo antispam: ' . ( ( $spam['score'] === NULL ) ? 'n/d' : $spam['score'] ) . '/' . (($spam['check'] == true) ? 'OK' : 'NO') . ' (' . ( $spam['status'] ?? 'senza dettaglio' ) . ')', 'cart', ( ( $spam['check'] == true ) ? LOG_INFO : LOG_WARNING ) );
 
         // debug
         // var_dump( $spamScore );
@@ -45,56 +72,8 @@ ini_set("display_errors", 1);
         // if ($spamCheck === true) {
         if ($spam['check'] === true) {
 
-            // registro i consensi
-            if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
-
-                // per ogni consenso...
-                foreach( $_REQUEST['__consensi__']['__carrello__'] as $ck => $cv ) {
-
-                    // timestamp del consenso
-                    $timestamp = time();
-
-                    // contenuto del consenso
-                    $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
-
-                    // se è presente un ID account
-                    if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
-                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_account'];
-                    }
-
-                    // se è presente un ID anagrafica
-                    if( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
-                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_anagrafica'];
-                    }
-
-                    // log
-                    logWrite( $contenuto, 'privacy', LOG_CRIT );
-
-                    // salvo le informazioni nella tabella carrelli_consensi
-                    $prvId = mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id' => NULL,
-                            'id_carrello' => $_SESSION['carrello']['id'],
-                            'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
-                            'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
-                            'id_consenso' => $ck,
-                            'se_prestato' => $cv['value'],
-                            'note' => $contenuto,
-                            'timestamp_consenso' => $timestamp
-                        ),
-                        'carrelli_consensi'
-                    );
-
-                }
-
-            }
-
             // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
             // TODO alcune di queste modifiche dovrebbero essere limitate se l'utente non è root o se non ha i diritti di modifica sulla tabella carrelli
-
-            // controlli da fare
-            $controlloListino = false;
 
             // intestazione del carrello
             if( isset( $_REQUEST['__carrello__']['intestazione_id_anagrafica'] ) ) {
@@ -119,9 +98,6 @@ ini_set("display_errors", 1);
                 // ...
                 if( $zona != $_SESSION['carrello']['id_zona'] ) {
 
-                    // controlli da fare
-                    $controlloListino = false;
-
                     // log
                     logWrite( 'cambio zona carrello da ' . $_SESSION['carrello']['id_zona'] . ' a ' . $zona, 'cart' );
 
@@ -133,39 +109,10 @@ ini_set("display_errors", 1);
             }
 
             // listino del carrello
+            // NOTA arriva dalla richiesta solo da un operatore o se è fra quelli che il sito può scegliere
+            // ( filtraRichiestaCarrello() ); la scelta automatica per cliente e zona è dopo lo STEP 3
             if( isset( $_REQUEST['__carrello__']['id_listino'] ) ) {
-
-                // ...
                 $_SESSION['carrello']['id_listino'] = $_REQUEST['__carrello__']['id_listino'];
-
-                // controlli da fare
-                $controlloListino = false;
-
-            }
-
-            // controllo listino
-            if( $controlloListino === true ) {
-
-                // listino del carrello
-                $listiniZona = mysqlSelectCachedColumn(
-                    $cf['memcache']['connection'],
-                    'id',
-                    $cf['mysql']['connection'],
-                    'SELECT listini.id FROM listini LEFT JOIN listini_zone ON listini_zone.id_listino = listini.id WHERE ( listini_zone.id_zona = ? OR listini_zone IS NULL )',
-                    array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
-                );
-
-                // ...
-                if( ! in_array( $_SESSION['carrello']['id_listino'], $listiniZona ) ) {
-
-                    // log
-                    logWrite( 'cambio listino carrello da ' . $_SESSION['carrello']['id_listino'] . ' a ' . $listiniZona[0], 'cart' );
-
-                    // cambio listino
-                    $_SESSION['carrello']['id_listino'] = $listiniZona[0];
-
-                }
-
             }
 
             // id_sito del carrello. Tre casi, distinti dal campo __carrello__[id_sito]:
@@ -203,8 +150,15 @@ ini_set("display_errors", 1);
                     array( array( 's' => $_SESSION['id'] ) )
                 );
 
-                // se lo trovo, lo resetto
-                if( !empty( $carrelloEsistente ) ){
+                // se lo trovo ed è già chiuso non lo tocco: si libera la session più sotto
+                // NOTA fino al 2026-10-12 qui si cancellava anche un carrello già pagato ( segnalato da gimbe, carrello 34663 )
+                if( ! empty( $carrelloEsistente['timestamp_checkout'] ) ) {
+
+                    logWrite( 'presente a database il carrello chiuso ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', lo stacco dalla sessione' , 'cart' );
+
+                }
+                // se lo trovo aperto, lo resetto
+                elseif( !empty( $carrelloEsistente ) ){
 
                     logWrite( 'presente a database il carrello ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', procedo con il reset' , 'cart' );
 
@@ -242,6 +196,19 @@ ini_set("display_errors", 1);
                 // aggiungo al carrello l'esito del controllo anti spam
                 $_SESSION['carrello']['spam_score'] = $spam['score'];
                 $_SESSION['carrello']['spam_check'] = $spam['check'];
+
+                // il carrello nuovo nasce sempre con un ID nuovo
+                $_SESSION['carrello']['id'] = NULL;
+
+                // libera la session dai carrelli vecchi: è chiave unica, e la ON DUPLICATE di mysqlInsertRow()
+                // riscriverebbe il carrello già chiuso; stessa query del logout in _220.auth.php
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE carrelli SET session = NULL WHERE session = ?',
+                    array(
+                        array( 's' => $_SESSION['carrello']['session'] )
+                    )
+                );
 
                 // inserimento del carrello a database e recupero dell'ID
                 $_SESSION['carrello']['id'] = mysqlInsertRow(
@@ -290,6 +257,119 @@ ini_set("display_errors", 1);
 
             }
 
+            // STEP 3.1 - scelta automatica del listino ( cliente, zona, default )
+            // NOTA solo se è accesa e la richiesta non porta un listino scelto apposta ( da un operatore, o fra quelli
+            // ammessi dal sito ): così il listino forzato dal back end resta; fino al 2026-10-01 qui c'era un controllo
+            // per zona che non scattava mai
+            if( ! empty( $cf['ecommerce']['listini']['automatico'] ) && ! isset( $_REQUEST['__carrello__']['id_listino'] ) ) {
+                $listino = trovaListinoCarrello( $cf['mysql']['connection'], $_SESSION['carrello'] );
+                if( $listino['id'] != ( $_SESSION['carrello']['id_listino'] ?? NULL ) ) {
+                    logWrite( 'listino del carrello ' . ( $_SESSION['carrello']['id'] ?? 'nuovo' ) . ' da ' . ( $_SESSION['carrello']['id_listino'] ?? '-' ) . ' a ' . $listino['id'] . ' ( ' . $listino['motivo'] . ' )', 'cart' );
+                    $_SESSION['carrello']['id_listino'] = $listino['id'];
+                    $_SESSION['carrello']['valuta_utf8'] = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT utf8 FROM valute INNER JOIN listini ON valute.id = listini.id_valuta WHERE listini.id = ?',
+                        array( array( 's' => $_SESSION['carrello']['id_listino'] ) )
+                    );
+                }
+            }
+
+            // STEP 3.2 - registro i metadati
+            // NOTA solo quelli dichiarati in $cf['ecommerce']['fields']['metadati']; il valore vuoto non si scrive, ma '0' sì
+            // ( un metadato binario come "no" è un valore ), e si rileggono in sessione da _710.session.php
+            if( isset( $_REQUEST['__carrello__']['__metadati__'] ) && is_array( $_REQUEST['__carrello__']['__metadati__'] ) ) {
+
+                // per ogni metadato previsto...
+                foreach( $cf['ecommerce']['fields']['metadati'] as $mk => $model ) {
+
+                    // se il metadato è valorizzato
+                    if( isset( $_REQUEST['__carrello__']['__metadati__'][ $mk ] ) && is_scalar( $_REQUEST['__carrello__']['__metadati__'][ $mk ] ) && $_REQUEST['__carrello__']['__metadati__'][ $mk ] !== '' ) {
+
+                        // aggiorno la sessione
+                        $_SESSION['carrello']['metadati'][ $mk ] = $_REQUEST['__carrello__']['__metadati__'][ $mk ];
+
+                        // log
+                        logWrite( 'registro il metadato ' . $mk . ' per il carrello #' . $_SESSION['carrello']['id'], 'cart' );
+
+                        // salvo le informazioni nella tabella metadati
+                        $metaId = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_carrello' => $_SESSION['carrello']['id'],
+                                'id_lingua' => $cf['localization']['language']['id'],
+                                'nome' => $mk,
+                                'testo' => $_SESSION['carrello']['metadati'][ $mk ]
+                            ),
+                            'metadati'
+                        );
+
+                    }
+
+                }
+
+            }
+
+            // STEP 3.3 - registro i consensi
+            // NOTA dopo lo STEP 2, perché su un carrello nuovo prima non c'è ancora $_SESSION['carrello']['id'] e la riga
+            // di carrelli_consensi resterebbe senza carrello; e dopo lo STEP 3, così l'intestazione è quella della richiesta
+            if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
+
+                // per ogni consenso...
+                foreach( $_REQUEST['__consensi__']['__carrello__'] as $ck => $cv ) {
+
+                    // timestamp del consenso
+                    $timestamp = time();
+
+                    // contenuto del consenso
+                    $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
+
+                    // se è presente un ID account
+                    if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
+                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_account'];
+                    }
+
+                    // se è presente un ID anagrafica
+                    if( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
+                        $contenuto .= ' anagrafica #' . $_SESSION['carrello']['intestazione_id_anagrafica'];
+                    }
+
+                    // log
+                    logWrite( $contenuto, 'privacy', LOG_NOTICE );
+
+                    // ID del consenso
+                    // NOTA $ck è il codice del consenso ( PRIVACY_POLICY, ... ), carrelli_consensi.id_consenso è l'id della riga di consensi
+                    $idConsenso = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM consensi WHERE codice = ?',
+                        array( array( 's' => $ck ) )
+                    );
+
+                    // salvo le informazioni nella tabella carrelli_consensi
+                    if( ! empty( $idConsenso ) ) {
+                        $prvId = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_carrello' => $_SESSION['carrello']['id'],
+                                'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
+                                'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
+                                'id_consenso' => $idConsenso,
+                                'se_prestato' => $cv['value'],
+                                'note' => $contenuto,
+                                'timestamp_consenso' => $timestamp
+                            ),
+                            'carrelli_consensi'
+                        );
+                    } else {
+                        logWrite( 'il consenso ' . $ck . ' non esiste nella tabella consensi, non registrato per il carrello #' . $_SESSION['carrello']['id'], 'privacy', LOG_ERR );
+                    }
+
+                }
+
+            }
+
             // debug
             // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
             // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
@@ -303,6 +383,16 @@ ini_set("display_errors", 1);
             $_SESSION['carrello']['sconto_percentuale']         = 0.0;
             $_SESSION['carrello']['sconto_valore']              = 0.0;
 
+            // politica delle spese di spedizione ( vedi $cf['ecommerce']['spedizione'] in _030.common.php )
+            // NOTA le colonne carrelli.costo_spedizione_* ( _202610011840.carrelli.spedizione.sql ) si scrivono solo con la
+            // spedizione per ordine: il carrello si salva chiave per chiave, e con la politica per articolo un deploy che
+            // non ha ancora la patch continua a funzionare
+            $spedizionePerOrdine = ( ( $cf['ecommerce']['spedizione'] ?? 'articolo' ) == 'ordine' );
+            if( $spedizionePerOrdine ) {
+                $_SESSION['carrello']['costo_spedizione_netto'] = 0.0;
+                $_SESSION['carrello']['costo_spedizione_lordo'] = 0.0;
+            }
+
             // TODO aggiungere l'inizializzazione coupon_percentuale e coupon_valore
 
             // inizializzazione calcolatore articoli aggiunti
@@ -312,6 +402,61 @@ ini_set("display_errors", 1);
             // die( print_r( $_SESSION['carrello'], true ) );
             // die( print_r( $_SESSION['carrello']['articoli'], true ) );
             // die( print_r( $_REQUEST['__carrello__']['__articolo__'], true ) );
+
+            // NOTA un id_articolo che non e' un numero e' un codice: link e moduli scritti prima del 02/03/2026, quando
+            // l'id dell'articolo era il suo codice, e i progetti che mandano il codice di proposito. Si traduce nell'id
+            // ( articoli.codice ), una volta sola e prima di tutto il resto, sia per __articolo__ sia per __articoli__;
+            // se il codice non esiste l'articolo non entra nel carrello ( 2026-09-30, __articoli__ dal 2026-10-12 )
+            if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) && ! ctype_digit( (string) $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
+                $idArticolo = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM articoli WHERE codice = ?',
+                    array( array( 's' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) )
+                );
+                if( empty( $idArticolo ) ) {
+                    logWrite( 'articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
+                }
+                $_REQUEST['__carrello__']['__articolo__']['id_articolo'] = $idArticolo;
+            }
+
+            // NOTA per __articoli__ la chiave della riga, quando coincide con l'id_articolo, è anch'essa un codice e va
+            // tradotta con lui, altrimenti la riga entrerebbe in sessione sotto il codice
+            if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+                $articoliTradotti = array();
+                foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => $item ) {
+                    if( isset( $item['id_articolo'] ) && ! ctype_digit( (string) $item['id_articolo'] ) ) {
+                        $idArticolo = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM articoli WHERE codice = ?',
+                            array( array( 's' => $item['id_articolo'] ) )
+                        );
+                        if( empty( $idArticolo ) ) {
+                            logWrite( 'articolo ' . $item['id_articolo'] . ' inesistente, scartato dal carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
+                            continue;
+                        }
+                        $key = ( (string) $key === (string) $item['id_articolo'] ) ? $idArticolo : $key;
+                        $item['id_articolo'] = $idArticolo;
+                    }
+                    $articoliTradotti[ $key ] = $item;
+                }
+                $_REQUEST['__carrello__']['__articoli__'] = $articoliTradotti;
+            }
+
+            // NOTA un articolo che non esiste più nel catalogo non resta in sessione: la sua riga non si può scrivere in
+            // carrelli_articoli, e il carrello mostrerebbe una riga vuota fino al checkout, che si chiuderebbe senza
+            // niente da vendere; anche un codice rimasto in sessione da prima delle traduzioni non è un id, e se ne va
+            if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
+                foreach( $_SESSION['carrello']['articoli'] as $key => $dati ) {
+                    if( ! empty( $dati['id_articolo'] ) && ! mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM articoli WHERE id = ?',
+                        array( array( 's' => $dati['id_articolo'] ) )
+                    ) ) {
+                        logWrite( 'articolo ' . $dati['id_articolo'] . ' inesistente, tolto dalla sessione del carrello #' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
+                        unset( $_SESSION['carrello']['articoli'][ $key ] );
+                    }
+                }
+            }
 
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
@@ -498,7 +643,7 @@ ini_set("display_errors", 1);
                                     $item[ $field ] = $model['default'];
                                 }
                             }
-                            // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
+                            // NOTA listino, sconto e coupon di riga arrivano qui solo dagli operatori: filtraRichiestaCarrello(), in testa alla controller, li toglie dalle richieste degli altri
                             // echo '<pre>' . print_r( $item, true ) . '</pre>';
 
                             if( isset( $_SESSION['carrello']['articoli'][ $key ] ) ) {
@@ -640,10 +785,10 @@ ini_set("display_errors", 1);
                             );
 
                             /**
-                             * Se qualcosa è stato trattenuto lo si dice, e a LOG_ERR: sui deploy in
-                             * produzione il livello di log è ERR, quindi una riga più in basso non
-                             * verrebbe scritta affatto — ed è proprio lì che serve sapere che un
-                             * utente ha provato a togliere dal carrello qualcosa di già pagato.
+                             * Se qualcosa è stato trattenuto lo si dice, a LOG_WARNING: è la regola
+                             * che funziona, non un guasto, e dal 2026-10-21 in produzione il livello
+                             * di log è WARNING, quindi la riga si scrive proprio dove serve sapere che
+                             * un utente ha provato a togliere dal carrello qualcosa di già pagato.
                              */
                             if( ! empty( $righeProtette ) ) {
                                 logWrite(
@@ -652,7 +797,7 @@ ini_set("display_errors", 1);
                                     . ' dell\'articolo ' . $dati['id_articolo']
                                     . ': hanno pagamenti incassati o documenti emessi',
                                     'cart',
-                                    LOG_ERR
+                                    LOG_WARNING
                                 );
                             }
 
@@ -727,6 +872,14 @@ ini_set("display_errors", 1);
                                 array( array( 's' => $dati['id_articolo'] ) )
                             );
 
+                            // il codice dell'articolo, che il carrello mostra: id_articolo e' l'id numerico ( 2026-09-30 )
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['codice_articolo'] = mysqlSelectCachedValue(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                'SELECT codice FROM articoli_view WHERE id = ?',
+                                array( array( 's' => $dati['id_articolo'] ) )
+                            );
+
                             $_SESSION['carrello']['articoli'][ $rowKey ]['categorie'] = mysqlSelectCachedValue(
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
@@ -773,7 +926,8 @@ ini_set("display_errors", 1);
                             }
 
                             // calcolo e applico le spese di spedizione nette per riga
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = calcolaCostoSpedizioneNettoArticolo(
+                            // NOTA con la spedizione per ordine le righe non ne hanno: il costo si calcola una volta sola, dopo i coupon
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = ( $spedizionePerOrdine ) ? 0.0 : calcolaCostoSpedizioneNettoArticolo(
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
                                 $dati['id_articolo'],
@@ -783,7 +937,7 @@ ini_set("display_errors", 1);
                             );
 
                             // calcolo e applico le spese di spedizione lorde per riga
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = calcolaCostoSpedizioneLordoArticolo(
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = ( $spedizionePerOrdine ) ? 0.0 : calcolaCostoSpedizioneLordoArticolo(
                                 $cf['memcache']['connection'],
                                 $cf['mysql']['connection'],
                                 $dati['id_articolo'],
@@ -888,10 +1042,27 @@ ini_set("display_errors", 1);
 
             // TODO se è stato inviato un codice coupon generale per il carrello lo aggiungo alla carrelli_coupon
             // TODO qui gestire l'aggiunta dei coupon a carrelli_coupon
+            // NOTA il cliente digita il codice del coupon ( coupon.codice ), mentre carrelli.id_coupon e le altre
+            // colonne id_coupon contengono coupon.id: prima del 02/03/2026 le due cose coincidevano, perché l'id del
+            // coupon era il codice, e questo blocco scriveva il codice digitato direttamente in id_coupon; da quando
+            // coupon.id è numerico il codice va tradotto nell'id, e il codice resta in carrelli.codice_coupon, che è
+            // anche il campo che il template del carrello rimostra al cliente ( 2026-09-30 )
             if( isset( $_REQUEST['__carrello__']['codice_coupon'] ) ) {
 
-                // ...
-                $_SESSION['carrello']['id_coupon'] = $_REQUEST['__carrello__']['codice_coupon'];
+                // codice digitato, vuoto se il cliente ha tolto il coupon
+                $_SESSION['carrello']['codice_coupon'] = trim( (string) $_REQUEST['__carrello__']['codice_coupon'] );
+
+                // id del coupon con quel codice, vuoto se il codice non esiste
+                $_SESSION['carrello']['id_coupon'] = ( $_SESSION['carrello']['codice_coupon'] === '' ) ? NULL : mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM coupon WHERE codice = ?',
+                    array( array( 's' => $_SESSION['carrello']['codice_coupon'] ) )
+                );
+
+                // un codice vuoto non è un coupon
+                if( $_SESSION['carrello']['codice_coupon'] === '' ) {
+                    $_SESSION['carrello']['codice_coupon'] = NULL;
+                }
 
             } elseif( isset( $_REQUEST['__carrello__']['id_coupon'] ) ) {
 
@@ -901,10 +1072,12 @@ ini_set("display_errors", 1);
             }
 
             // TODO qui fare un ciclo e per ogni coupon calcolare il valore poi incrementare il campo totale_lordo_coupon del carrello
-            if( ! empty( $_SESSION['carrello']['id_coupon'] ) ) {
+            // NOTA si entra anche con un codice digitato che non corrisponde a nessun coupon, perché la verifica qui sotto
+            // lo respinga come inesistente e il cliente ne veda il motivo
+            if( ! empty( $_SESSION['carrello']['id_coupon'] ) || ! empty( $_SESSION['carrello']['codice_coupon'] ) ) {
 
                 // prelevo i dettagli relativi al coupon
-                $coupon = mysqlSelectRow(
+                $coupon = ( empty( $_SESSION['carrello']['id_coupon'] ) ) ? array() : mysqlSelectRow(
                     $cf['mysql']['connection'],
                     'SELECT * FROM coupon WHERE id = ?',
                     array( array( 's' => $_SESSION['carrello']['id_coupon'] ) )
@@ -918,7 +1091,7 @@ ini_set("display_errors", 1);
                 $esitoCoupon = verificaValiditaCoupon(
                     $cf['mysql']['connection'],
                     $coupon,
-                    $_SESSION['carrello']['id_coupon'],
+                    $_SESSION['carrello']['codice_coupon'] ?? NULL,
                     $_SESSION['carrello']
                 );
 
@@ -964,7 +1137,9 @@ ini_set("display_errors", 1);
                     }
 
                     // calcolo il prezzo lordo finale
-                    $_SESSION['carrello']['prezzo_lordo_finale'] = $_SESSION['carrello']['prezzo_lordo_totale'] - $_SESSION['carrello']['sconto_valore_coupon'];
+                    // NOTA il coupon si toglie dal finale delle righe, che comprende sconti e spedizioni per articolo; fino al
+                    // 2026-10-01 il finale si ricalcolava dal totale, e con un coupon le spedizioni per articolo sparivano
+                    $_SESSION['carrello']['prezzo_lordo_finale'] = $_SESSION['carrello']['prezzo_lordo_finale'] - $_SESSION['carrello']['sconto_valore_coupon'];
 
                 } else {
 
@@ -972,10 +1147,11 @@ ini_set("display_errors", 1);
                     // die( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' non utilizzabile' );
 
                     // log
-                    logWrite( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+                    logWrite( 'coupon ' . ( $_SESSION['carrello']['codice_coupon'] ?? $_SESSION['carrello']['id_coupon'] ) . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_WARNING );
 
                     // rimuovo il coupon inutilizzabile
                     $_SESSION['carrello']['id_coupon'] =
+                    $_SESSION['carrello']['codice_coupon'] =
                     $_SESSION['carrello']['sconto_valore_coupon'] =
                     $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
 
@@ -988,8 +1164,29 @@ ini_set("display_errors", 1);
 
                 // rimuovo il coupon inutilizzabile
                 $_SESSION['carrello']['id_coupon'] =
+                $_SESSION['carrello']['codice_coupon'] =
                 $_SESSION['carrello']['sconto_valore_coupon'] =
                 $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
+
+            }
+
+            // STEP 6.5 - spedizione per ordine
+            // NOTA si somma dopo il coupon, che non si applica alla spedizione
+            if( $spedizionePerOrdine && ! empty( $_SESSION['carrello']['articoli'] ) ) {
+
+                // costo della spedizione per la zona del carrello, con l'IVA della prima riga come ripiego
+                $primaRiga = reset( $_SESSION['carrello']['articoli'] );
+                $spedizione = calcolaCostoSpedizioneOrdine(
+                    $cf['mysql']['connection'],
+                    $_SESSION['carrello']['id_zona'] ?? NULL,
+                    $primaRiga['id_iva'] ?? NULL
+                );
+
+                // la scrivo sul carrello e la sommo ai finali
+                $_SESSION['carrello']['costo_spedizione_netto'] = $spedizione['netto'];
+                $_SESSION['carrello']['costo_spedizione_lordo'] = $spedizione['lordo'];
+                $_SESSION['carrello']['prezzo_netto_finale'] += $spedizione['netto'];
+                $_SESSION['carrello']['prezzo_lordo_finale'] += $spedizione['lordo'];
 
             }
 

@@ -36,7 +36,7 @@
                 $cf['mysql']['connection'],
                 array(
                     'id_tipologia' => 3, // nota di credito
-                    'codice' => 'NC-CPN-' . $status['coupon']['id'],
+                    'codice' => substr( 'NC-CPN-' . $status['coupon']['codice'], 0, 32 ),
                     'sezionale' => 'R/'.date('Y'),
                     'numero' => generaProssimoNumeroDocumento( 3, 'R/'.date('Y'), trovaIdAziendaGestita() ),
                     'id_emittente' => trovaIdAziendaGestita(),
@@ -45,7 +45,7 @@
                     'id_sede_destinatario' => trovaIdSedeLegale( $status['coupon']['id_anagrafica'] ),
                     'data' => date('Y-m-d'),
                     'id_coupon' => $status['coupon']['id'],
-                    'nome' => 'nota di credito generata automaticamente per il rimborso del coupon ' . $status['coupon']['id'],
+                    'nome' => 'nota di credito generata automaticamente per il rimborso del coupon ' . $status['coupon']['codice'],
                     'id_condizione_pagamento' => 2, // pagamento alla consegna
                     'esigibilita' => 'I', // immediata
                 ),
@@ -57,22 +57,25 @@
                 $cf['mysql']['connection'],
                 array(
                     'id_documento' => $status['nota_di_credito']['id'],
-                    'codice' => 'R-NC-CPN-' . $status['coupon']['id'],
-                    'nome' => 'rimborso coupon ' . $status['coupon']['id'],
+                    'codice' => substr( 'R-NC-CPN-' . $status['coupon']['codice'], 0, 32 ),
+                    'nome' => 'rimborso coupon ' . $status['coupon']['codice'],
                 ),
                 'documenti_articoli'
             );
 
             // aggiungo un pagamento pagato per la nota di credito
+            // NOTA il pagamento valorizza `coupon_valore` perche' le query del residuo ( coupon_view, cassa, app )
+            // sommano solo quel campo: senza, il coupon gia' rimborsato restava scalabile per intero
             $status['nota_di_credito']['id_pagamento'] = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id_documento' => $status['nota_di_credito']['id'],
                     'id_coupon' => $status['coupon']['id'],
-                    'nome' => 'rimborso coupon ' . $status['coupon']['id'],
-                    'codice' => 'P-NC-CPN-' . $status['coupon']['id'],
+                    'nome' => 'rimborso coupon ' . $status['coupon']['codice'],
+                    'codice' => substr( 'P-NC-CPN-' . $status['coupon']['codice'], 0, 32 ),
                     'importo_lordo_totale' => $status['coupon']['totale_finale'],
                     'importo_lordo_finale' => $status['coupon']['totale_finale'],
+                    'coupon_valore' => $status['coupon']['totale_finale'],
                     'timestamp_pagamento' => time(),
                 ),
                 'pagamenti'

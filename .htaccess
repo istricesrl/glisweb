@@ -17,6 +17,16 @@ Options -Indexes
 # disabilito le MultiViews
 Options -MultiViews
 
+# pagina dell'accesso sospeso per gli IP banditi dal firewall applicativo ( vedi sotto, BANDO DEL FIREWALL APPLICATIVO );
+# è una stringa e non una pagina, così un IP bandito non fa partire PHP a ogni richiesta; rimanda alla pagina di
+# sblocco ( security.sblocco, _src/_inc/_pages/_security.*.php )
+ErrorDocument 429 "<!doctype html><meta charset='utf-8'><title>accesso sospeso</title><p>Dal tuo indirizzo sono arrivate richieste che il sito considera un attacco, e l'accesso è sospeso per un po'. Se sei una persona, <a href='/sblocco-accesso.it-IT.html'>sblocca l'accesso</a>.</p><p>Requests from your address look like an attack, so access is suspended for a while. If you are a person, <a href='/unlock-access.en-GB.html'>unlock access</a>.</p>"
+
+# le richieste che Apache respinge con un 403 prima di PHP ( ModSecurity, i blocchi qui sotto ) passano dal firewall
+# applicativo, che le vede attraverso REDIRECT_URL e REDIRECT_STATUS e dà i punti all'IP ( _src/_api/_security.403.php );
+# dove ModSecurity non c'è vale lo stesso per i 403 di Apache
+ErrorDocument 403 /_src/_api/_security.403.php
+
 # dichiaro il tipo MIME del webp
 # il webp non e' in /etc/mime.types, quindi senza questa riga Apache serve i .webp senza
 # Content-Type e i browser non li trattano come immagini. Sta qui, fuori dal blocco
@@ -37,7 +47,9 @@ AddType image/webp .webp
 </FilesMatch>
 
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
-<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swp|templ|trace|twig)$">
+# ( yaml e yml dal 04/10/2026: src/config.yaml e src/config/ext/config.yaml, con le credenziali dentro,
+# si scaricavano in chiaro; le credenziali vanno in shadow.*, ma il blocco non deve contarci )
+<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swn|swo|swp|templ|trace|twig|xsd|yaml|yml)$">
     Deny from all
 </FilesMatch>
 
@@ -58,6 +70,24 @@ AddType image/webp .webp
 
     # attivazione motore di rewriting
     RewriteEngine on
+
+    ## BANDO DEL FIREWALL APPLICATIVO
+    #
+    # Il firewall applicativo ( _src/_inc/_macro/_security.php ) scrive un file per ogni IP bandito in var/spool/security/ban/,
+    # e qui Apache lo respinge con un 429 prima di far partire PHP: è quello che altrimenti farebbe fail2ban, che non è detto ci
+    # sia. Resta raggiungibile solo la pagina che toglie il bando con la verifica umana. Il bando scaduto lo cancella il
+    # firewall stesso a ogni nuovo bando, e il task _src/_api/_task/_security.clean.php ogni notte. Dietro un proxy o un CDN
+    # REMOTE_ADDR è il proxy: va attivato mod_remoteip.
+    #
+
+    # IP banditi dal firewall applicativo
+    # ( solo alla prima passata, prima delle riscritture; passano la pagina di sblocco e i file statici che esistono, che
+    # le servono e non costano niente: uno script chiamato direttamente lo ferma comunque _security.php )
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteCond %{REQUEST_URI} !^/(sblocco-accesso\.it-IT|unlock-access\.en-GB)\.html$
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/var/spool/security/ban/%{REMOTE_ADDR} -f
+    RewriteRule ^ - [R=429,L]
 
     ## REDIRECT DI SICUREZZA
     # 
@@ -82,6 +112,11 @@ AddType image/webp .webp
     RewriteRule ^var/session/* - [F,L,NC]
     RewriteRule ^var/spool/* - [F,L,NC]
     RewriteRule ^var/work/* - [F,L,NC]
+
+    # macro, controller, definizioni di pagina e contenuti inclusi ( _src/_inc/, src/inc/ e i loro
+    # corrispettivi nei moduli ) si includono da PHP e non si chiamano mai via HTTP: chiamati
+    # direttamente girano senza il framework e rispondono 200 vuoto o 500 ( 04/10/2026 )
+    RewriteRule ^(_?mod/[^/]+/)?_?src/_?inc/ - [F,L,NC]
 
     # REDIRECT APPLICATIVI
     #
@@ -239,12 +274,15 @@ AddType image/webp .webp
     # il file continua a essere servito — a mancare e' solo la riga nel registro.
     # Un .htaccess di sottocartella SENZA direttive rewrite invece non rompe niente:
     # var/gimbeducation/old_fatture/ ne ha uno e i suoi download si registrano regolarmente.
-    RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [B,L,QSA]
+    # il percorso viaggia nella variabile d'ambiente GLIS_DOWNLOAD e non nella query string: un
+    # __download__ in query il client poteva accodarlo o mandarlo chiamando l'API direttamente, e
+    # PHP teneva il suo ( lettura di qualunque file del deploy, fino al 04/10/2026 )
+    RewriteRule ^var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$1,L,QSA]
 
     # gestione dell'API di download per il mailing
     # questa regola reindirizza qualunque richiesta del tipo mailing/<idMailing>/var/<risorsa>
-    RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$2&__mailing__=$1 [B,L,QSA]
-    RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$3&__mailing__=$1&__mailing_dst__=$2 [B,L,QSA]
+    RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$2,E=GLIS_MAILING:$1,L,QSA]
+    RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php [E=GLIS_DOWNLOAD:var/$3,E=GLIS_MAILING:$1,E=GLIS_MAILING_DST:$2,L,QSA]
 
     # proxy Open Street Map
     # questa regola reindirizza le richieste di tipo tiles/<z>/<x>/<y>.png all'API _src/_api/_osm.php (vedi la documentazione relativa per i dettagli)

@@ -59,7 +59,7 @@
     } else {
 
         // debug
-        logWrite( 'impossibile creare il file di test', 'task', LOG_CRIT );
+        logWrite( 'impossibile creare il file di test', 'task', LOG_ERR );
 
         // status
         $status['error'][] = 'impossibile creare il file di test';

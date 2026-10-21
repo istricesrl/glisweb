@@ -24,7 +24,7 @@
 	$p['coupon.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione coupon' ),
 	    'parent'		=> array( 'id'		=> 'coupon.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
@@ -94,7 +94,7 @@
 	$p['listini.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione listino' ),
 	    'parent'		=> array( 'id'		=> 'listini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.php' ),
@@ -133,7 +133,7 @@
 	$p['reparti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione reparto' ),
 	    'parent'		=> array( 'id'		=> 'reparti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_reparti.form.php' ),
@@ -162,7 +162,7 @@
 	$p['coupon.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione coupon' ),
 	    'parent'		=> array( 'id'		=> 'coupon.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),

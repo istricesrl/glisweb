@@ -47,6 +47,29 @@
             $( box ).prop( 'required', true );
         }
 
+        /*
+         * IL REQUIRED DEL BOX NON BASTA ( 09/10/2026 )
+         *
+         * Il valore che parte col form e' quello del campo nascosto, ma il required sta sul box
+         * visibile, e il browser controlla solo che il box non sia vuoto. Basta scrivere qualcosa
+         * senza sceglierlo dall'elenco - il keyup svuota il campo nascosto - e il form parte
+         * senza valore; lo stesso quando si svuota il box e il focusout ci rimette l'etichetta
+         * del valore di prima. E' cosi' che il 29/09 su Lughese una riga d'offerta si e' salvata
+         * senza documento in un modulo che lo dichiarava obbligatorio.
+         *
+         * Il box si dichiara quindi non valido quando ha del testo e il campo nascosto e' vuoto.
+         * Resta un controllo lato client: il rifiuto vero lo deve fare il controller.
+         */
+        var verifica = function() {
+            if( $( select ).attr( 'data-required' ) == 'true' && $( box ).length ) {
+                if( $( box ).val() != '' && ( $( select ).val() == '' || $( select ).val() === null ) ) {
+                    $( box )[0].setCustomValidity( 'scegliere un elemento dall\'elenco' );
+                } else {
+                    $( box )[0].setCustomValidity( '' );
+                }
+            }
+        };
+
         // prelevo il valore corrente
         // NOTA perché .text() e non .html()?
         var current = $( select ).find( 'option:selected' ).text().trim();
@@ -74,6 +97,7 @@
                 if( $( box ).val() == ''){
                     $( box ).val( $( select ).attr( 'placeholder-api' ) );
                 }
+                verifica();
               });
         /* ...fin qui era commentato, perché? */
         } else {
@@ -91,7 +115,8 @@
          */
         var api = $( select ).attr( 'populate-api' );
 
-        if( current != '' && typeof api !== 'undefined' && api != '' ) {
+        // su una <select> senza niente di scelto val() e' null, non '': anche quello e' "niente da ripescare"
+        if( current != null && current != '' && typeof api !== 'undefined' && api != '' ) {
             // alert( 'prelevo #' + current + ' da ' + api );
             console.log( 'prelevo #' + current + ' da ' + api );
             /*
@@ -139,6 +164,18 @@
                         console.log( data );
                         box.val( data.__label__ );
                         $( select ).val( current );
+                        /*
+                         * SU UNA <select> L'ETICHETTA VA ANCHE NELL'<option>
+                         *
+                         * Una <select> con populate-api porta in pagina solo l'<option> del valore
+                         * gia' scelto, senza testo: e' il modo di non spedire migliaia di opzioni
+                         * ( i 7.974 comuni facevano pesare 1,88 MB una pagina di donazione ). Chi
+                         * legge poi option:selected per sapere cosa e' scelto deve trovarci
+                         * l'etichetta, non il vuoto.
+                         */
+                        if( $( select ).is( 'select' ) ) {
+                            $( select ).find( 'option:selected' ).text( data.__label__ );
+                        }
                     } else {
                         box.val( current );
                         console.error( 'selectbox ' + base_id + ': /api/' + api + ' non ha restituito __label__ per ' + current + ', resta il valore' );
@@ -167,8 +204,62 @@
             }
         });
 
+        /*
+         * NAVIGAZIONE DA TASTIERA ( 12/10/2026, gh#13 )
+         *
+         * Con la lista aperta, freccia giu' e freccia su spostano la voce attiva ( classe active ),
+         * ENTER sceglie la voce attiva come farebbe un click, ESC chiude la lista. Si ascolta il
+         * keydown e non il keyup perche' ENTER va fermato prima che il browser mandi il form, e
+         * perche' tenendo premuta una freccia il keydown si ripete e il keyup no.
+         *
+         * Con la lista chiusa i tasti fanno quello che hanno sempre fatto: ENTER manda il form.
+         */
+        var tastiNavigazione = [ 'ArrowDown', 'ArrowUp', 'Enter', 'Escape' ];
+
+        box.keydown( function( e ) {
+
+            if( ! $( lista ).is( ':visible' ) || tastiNavigazione.indexOf( e.key ) < 0 ) {
+                return;
+            }
+
+            var voci = $( lista ).find( 'li' );
+            var attiva = voci.index( voci.filter( '.active' ) );
+
+            if( e.key == 'ArrowDown' || e.key == 'ArrowUp' ) {
+                e.preventDefault();
+                if( voci.length == 0 ) {
+                    return;
+                }
+                if( e.key == 'ArrowDown' ) {
+                    attiva = ( attiva + 1 ) % voci.length;
+                } else {
+                    attiva = ( attiva <= 0 ) ? voci.length - 1 : attiva - 1;
+                }
+                voci.removeClass( 'active' );
+                $( voci[ attiva ] ).addClass( 'active' );
+                voci[ attiva ].scrollIntoView( { block: 'nearest' } );
+            } else if( e.key == 'Enter' ) {
+                e.preventDefault();
+                if( attiva >= 0 ) {
+                    $( voci[ attiva ] ).click();
+                }
+            } else if( e.key == 'Escape' ) {
+                e.preventDefault();
+                $( lista ).hide();
+                $( box ).addClass( 'combobox-base-background' );
+                $( box ).removeClass( 'combobox-active-background' );
+                verifica();
+            }
+
+        });
+
         // faccio il bind della funzione principale di ricerca
         box.keyup( function( e, d ) {
+
+        // i tasti di navigazione li gestisce il keydown: qui svuoterebbero il valore scelto e rifarebbero la ricerca
+        if( typeof d === 'undefined' && tastiNavigazione.indexOf( e.key ) >= 0 ) {
+            return;
+        }
 
         // debug
         // console.log( d );
@@ -182,6 +273,9 @@
             var force = false;
             $( select ).val( '' );
         }
+
+        // il campo nascosto e' stato svuotato: il box non vale finche' non si sceglie
+        verifica();
 
         // debug
         console.log( 'valore della select al click -> ' + $( select ).val() );
@@ -275,26 +369,55 @@
             
                                 var li = '<li value="' + el.id + '"' + classe + '>' + el.__label__ + '</li>';
 
-                
+
                                 lista.append( li );
 
-                                
+                            });
+
+                            /*
+                             * IL BIND SI FA UNA VOLTA SOLA, DOPO AVER RIEMPITO LA LISTA ( 12/10/2026 )
+                             *
+                             * Stava dentro il forEach, quindi a ogni risultato si rifaceva il bind su
+                             * tutti gli <li> gia' in lista: il primo di N risultati si trovava N handler
+                             * sul click. Finche' il click cambiava solo dei valori non si vedeva; da
+                             * quando fa scattare il change ( vedi sotto ) avrebbe lanciato N volte
+                             * l'onchange del campo, autosubmit compreso.
+                             */
                                 lista.find('li').each( function( idxl, li ) {
                                     var opzione = $( li ).html();
                                     var valore = $( li ).attr( 'value' );
                                     $( li ).bind( 'click', function() {
+                                        /*
+                                         * SU UNA <select> L'<option> SCELTA VA CREATA
+                                         *
+                                         * Un input hidden accetta qualunque valore, una <select> solo
+                                         * quelli che ha fra le sue <option>: senza questa riga la scelta
+                                         * fatta dalla lista dell'API la lasciava vuota, e il form partiva
+                                         * senza il campo.
+                                         */
+                                        if( $( select ).is( 'select' ) && $( select ).find( 'option' ).filter( function() { return $( this ).val() == valore; } ).length == 0 ) {
+                                            $( select ).append( new Option( $.parseHTML( opzione )[0].nodeValue, valore ) );
+                                        }
                                         $( select ).val( valore );
+                                        /*
+                                         * IL CHANGE VA FATTO SCATTARE A MANO ( 12/10/2026, gh#13 )
+                                         *
+                                         * Cambiare il valore da script non genera l'evento change, e il
+                                         * campo e' un input hidden su cui l'utente non agisce mai: senza
+                                         * questa riga l'onchange del campo non partiva, e con lui
+                                         * l'autosubmit ( "l'autosubmit non funziona", Silvia su gh#13 ).
+                                         * La tendina statica qui sotto lo ha sempre fatto.
+                                         */
+                                        $( select ).change();
                                         $( box ).val( $.parseHTML( opzione )[0].nodeValue );
                                         $( box ).addClass( 'combobox-base-background' );
                                         $( box ).removeClass( 'combobox-active-background' );
                                         // $( box ).css( 'background-color', '#ffffff' );
                                         $( lista ).hide();
+                                        verifica();
                                         // console.log( 'valore della select al click -> ' + $( select ).val() );
                                     });
                                 });
-    
-
-                            });
 
                             $( lista ).show();
                             $( box ).closest( '.spinner-border' ).hide();
@@ -352,6 +475,7 @@
                     $( box ).removeClass( 'combobox-active-background' );
                     // $( box ).css( 'background-color', '#ffffff' );
                     $( lista ).hide();
+                    verifica();
                     // console.log( 'valore della select al click -> ' + $( select ).val() );
                 });
                 // console.log( 'bind a ' + valore + ' di ' + opzione );

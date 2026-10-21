@@ -41,7 +41,7 @@
         // ...
         $etichette = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT immagini.path, ra.id_articolo, articoli.nome AS articolo
+            'SELECT immagini.path, ra.id_articolo, coalesce( articoli.codice, articoli.id ) AS codice_articolo, articoli.nome AS articolo
                 FROM __report_giacenza_magazzini__ AS ra 
                 INNER JOIN articoli ON articoli.id = ra.id_articolo 
                 INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
@@ -81,7 +81,7 @@
         foreach( $etichette as $etichetta ) {
 
             // ...
-            $fntSizeCodice = ( strlen( $etichetta['id_articolo'] ) < 12 ) ? 22 : ( ( strlen( $etichetta['id_articolo'] ) < 16 ) ? 16 : 14 );
+            $fntSizeCodice = ( strlen( $etichetta['codice_articolo'] ) < 12 ) ? 22 : ( ( strlen( $etichetta['codice_articolo'] ) < 16 ) ? 16 : 14 );
 
             // aggiunta di una pagina
             $pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
@@ -97,7 +97,7 @@
             $pdf->setTextColor( 0, 0, 0 );
             $pdf->SetFillColor(  255, 255, 255 );
             $pdf -> SetFont( 'helvetica', 'B', $fntSizeCodice );
-            $pdf-> Cell( 50, 10, strtoupper( $etichetta['id_articolo'] ), '','', 'C', 1 );
+            $pdf-> Cell( 50, 10, strtoupper( $etichetta['codice_articolo'] ), '','', 'C', 1 );
 
             // descrizione
             $pdf->setTextColor( 0, 0, 0 );

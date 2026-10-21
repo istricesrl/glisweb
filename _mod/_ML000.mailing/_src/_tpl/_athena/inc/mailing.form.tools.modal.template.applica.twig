@@ -1,0 +1,42 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function applica_template() {
+        var template = $( '#__template_____template__' ).val();
+        getws( '/task/ML000.mailing/mailing.template.applica?__template__=' + template + '&__mailing__={{ request[ form.table ].id }}', [], function( data ) {
+            console.log( data );
+            bootstrap.Modal.getOrCreateInstance( document.getElementById( 'applica_template' ) ).hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="applica_template">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">applica un template</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            <label>template</label>
+                            {{ frm.select({ 'field': { 'name': '__template__', 'required': 1 }, 'source': { 'values': etc.select.template }, 'form': { 'table': '__template__' }, 'page': page, 'pages': pages }) }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            mittente, oggetto e testo del template sostituiscono quelli del mailing nelle stesse lingue
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="applica_template();">applica</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

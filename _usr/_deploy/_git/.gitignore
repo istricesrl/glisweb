@@ -7,6 +7,8 @@ etc/latest.release.conf
 etc/latest.version.conf
 /src/ext/shadow.*
 /src/shadow.*
+# il file esterno di _src/_config.php ( DIR_SRC_CONFIG_EXT ) in versione custom sta qui, non in src/ext/
+/src/config/ext/shadow.*
 src/py/*/*/.buildozer/
 src/py/*/*/bin/
 src/py/*/*/include/
@@ -14,6 +16,8 @@ src/py/*/*/lib/
 src/py/*/*/lib64/
 src/py/*/*/share/
 src/py/*/*/lib64
+src/py/*/*/todo/
+src/py/*/*/done/
 tmp/
 var/
 # artefatti standard della root del deploy: ancorati con lo slash
@@ -23,19 +27,21 @@ var/
 /.gitignore
 /.htaccess
 /composer.*
-# robots.* e sitemap.* restano NON ancorati di proposito: oltre ai file
-# di root coprono etc/robots/ e etc/sitemap/, che sono generati da
-# _src/_config/_980.sitemap.php e non vanno versionati.
-robots.*
-sitemap.*
+# robots.* e sitemap.* sono ancorati alla root: il robots.txt di progetto
+# sta in etc/robots/robots.txt, e' scritto a mano e lo serve .htaccess,
+# quindi va versionato; le sitemap generate vanno in var/sitemap/, gia'
+# escluso qui sopra.
+/robots.*
+/sitemap.*
 /*.md
 
 # documentazione: il SORGENTE sta in usr/docs/ ed e' scritto a mano, quindi va versionato;
-# l'output di _src/_sh/_docs.build.sh no, altrimenti ogni rigenerazione produce un diff di
-# migliaia di righe. I marcatori di attivazione stanno in var/, che e' gia' ignorato qui
+# l'output di _src/_sh/_docs.build.sh no ( manuali, quickstart, esito dei test ), altrimenti
+# ogni rigenerazione produce un diff di migliaia di righe. I marcatori di attivazione stanno in var/, che e' gia' ignorato qui
 # sopra ed e' gia' escluso dal deploy: sono per installazione e non vanno propagati.
 usr/pages/manual/
 usr/pages/quickstart/
+usr/pages/test/
 
 # hook spediti dal framework nello zip: si elencano per nome e non come
 # cartella, perche .githooks/ puo contenere anche hook propri del progetto
@@ -50,3 +56,8 @@ usr/pages/quickstart/
 # sovrascrive, non tutta .claude/, perche il progetto cliente puo averci dentro
 # skill proprie o un settings.json suoi, che vanno versionati.
 .claude/skills/glisweb/
+
+# file di swap di vim ( .swp, e .swo/.swn quando lo stesso file e' aperto due volte ):
+# nascono accanto al file aperto e restano li' finche' l'editor non si chiude, quindi
+# su un deploy dove si lavora a mano finiscono nel git status come untracked.
+*.sw[nop]

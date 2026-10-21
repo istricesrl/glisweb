@@ -193,9 +193,12 @@
             if( ! defined( 'DIR_BASE' ) ) {
 
                 // runlevel da saltare
+                // NOTA chi salta un N0 deve saltare anche il suo N5 se questo fa il merge di $cx (es. 370/375),
+                // perché su PHP 8 array_replace_recursive() su un ramo mai dichiarato è un TypeError e la
+                // risposta diventa un 500 vuoto; 190/195 fanno eccezione perché il 195 non legge da $cx
                 $cf['lvls']['skip'] = array(
                     '130', '135', '140', '145', '190',
-                    '300', '310', '320', '330', '340', '345', '360', '365', '370', '380', '385',
+                    '300', '310', '320', '330', '340', '345', '360', '365', '370', '375', '380', '385',
                     '400', '420',
                     '520', '525', '550', '555', '580', '585',
                     '610', '615', '620', '625', '640', '645', '650', '655', '660', '665', '680', '685',
@@ -257,7 +260,7 @@
                     buildJson( $response );
                 break;
                 default:
-                    logger( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . ' ' . $ack . ' -> 406 not acceptable', 'rest', LOG_ERR );
+                    logger( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . ' ' . $ack . ' -> 406 not acceptable', 'rest', LOG_WARNING );
                     http_response_code( 406 );
                 break;
             }

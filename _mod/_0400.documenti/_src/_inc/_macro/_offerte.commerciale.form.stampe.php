@@ -33,6 +33,19 @@
         )
     );
 
+    if( isset( $_REQUEST[ $ct['form']['table'] ] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
+        $ct['page']['contents']['metro']['pdf'][] = array(
+            'target' => '_blank' ,
+            'url' => $base . 'offerta.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'icon' => NULL,
+            'fa' => 'fa-file-pdf-o',
+            'title' => 'stampa PDF',
+            'text' => 'stampa l\'offerta in formato PDF'
+        );
+
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

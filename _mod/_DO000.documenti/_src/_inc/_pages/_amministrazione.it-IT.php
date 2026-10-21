@@ -32,13 +32,7 @@
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-#        'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.view',
-#                                                            'amministrazione.archivio.documenti.articoli.view',
-#                                                            'amministrazione.archivio.documenti.pagamenti.view',
-#                                                            'amministrazione.archivio.documenti.tools' ) ),
-        'etc'                => array( 'tabs'    => 'amministrazione.archivio' ),
-#        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'documenti' ),
-#                                                                            'priority'    => '600' ) ) )
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio' )
     );
 
     // tools archivio amministrazione
@@ -69,7 +63,7 @@
     $p['amministrazione.archivio.documenti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione documento' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.php' ),
@@ -77,12 +71,18 @@
         'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.form',
                                                             'amministrazione.archivio.documenti.form.documenti.articoli',
                                                             'amministrazione.archivio.documenti.form.pagamenti',
+                                                            'amministrazione.archivio.documenti.form.dati.fiscali',
                                                             'amministrazione.archivio.documenti.form.evasione',
                                                             'amministrazione.archivio.documenti.form.relazioni',
                                                             'amministrazione.archivio.documenti.form.archiviazione',
                                                             'amministrazione.archivio.documenti.form.stampe',
                                                             'amministrazione.archivio.documenti.form.tools' ) )
     );
+
+    // RELAZIONI CON IL MODULO PIANIFICAZIONI
+    if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'amministrazione.archivio.documenti.form.relazioni', $p['amministrazione.archivio.documenti.form']['etc']['tabs'], 'amministrazione.archivio.documenti.form.pianificazioni' );
+    }
 
     // tools archivio amministrazione
     $p['amministrazione.archivio.documenti.form.evasione'] = array(
@@ -93,6 +93,19 @@
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.evasione.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.evasione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['amministrazione.archivio.documenti.form.dati.fiscali'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-scale-balanced" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione archivio documenti form dati fiscali' ),
+        'h1'                => array( $l        => 'dati fiscali' ),
+        'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.form.dati.fiscali.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.form.dati.fiscali.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.form' )
     );
@@ -177,7 +190,7 @@
     $p['amministrazione.archivio.documenti.articoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti articoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione riga' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.articoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.articoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php' ),
@@ -230,7 +243,7 @@
     $p['amministrazione.archivio.documenti.pagamenti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'amministrazione archivio documenti pagamenti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione pagamento' ),
         'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.pagamenti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.pagamenti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.pagamenti.form.php' ),

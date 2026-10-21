@@ -18,6 +18,12 @@
      * `sincronizzaIndirizzoInline()` aggiorna tutte le `anagrafica_indirizzi` che lo citano, non
      * solo quella da cui si è arrivati.
      *
+     * Per lo stesso motivo, dopo la sincronizzazione si rigenera nella vista statica anagrafica_view_static la riga
+     * di ogni anagrafica che cita l'indirizzo, con updateAnagraficaViewStatic() del modulo anagrafica attivo: la vista
+     * ricava stato e provincia dal comune dell'indirizzo, e cambiando il comune resterebbero quelli vecchi. Su un
+     * DELETE non si fa niente: le righe di anagrafica_indirizzi se ne vanno in cascata con l'indirizzo, e quando si
+     * arriva qui non dicono più quali anagrafiche lo citavano.
+     *
      * @file
      *
      */
@@ -34,7 +40,22 @@
         case METHOD_UPDATE:
 
             if( ! empty( $d['id'] ) ) {
+
+                // copia inline
                 sincronizzaIndirizzoInline( $d['id'] );
+
+                // vista statica delle anagrafiche che citano l'indirizzo
+                if( function_exists( 'updateAnagraficaViewStatic' ) ) {
+                    foreach( mysqlSelectColumn(
+                        'id_anagrafica',
+                        $c,
+                        'SELECT DISTINCT id_anagrafica FROM anagrafica_indirizzi WHERE id_indirizzo = ? AND id_anagrafica IS NOT NULL',
+                        array( array( 's' => $d['id'] ) )
+                    ) as $idAnagrafica ) {
+                        updateAnagraficaViewStatic( $idAnagrafica );
+                    }
+                }
+
             }
 
         break;

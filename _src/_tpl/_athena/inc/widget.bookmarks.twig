@@ -13,11 +13,11 @@
             </div>{% endfor %}
         </span>
         <span class="pb-3">
-            {% for l,a in s.actions %}<div class="row">
+            {% for l,a in s.actions %}{% if a.url or pages[ a.page ] %}<div class="row">
             <div class="col">
                 <p><button onclick="window.open('{% if a.url %}{{ a.url }}{% else %}{{ pages[ a.page ].url[ localization.language.ietf ] }}{% endif %}','_self');" class="btn btn-secondary btn-sm btn-block">{{ a.label }}</button></p>
             </div>
-        </div>{% endfor %}
+        </div>{% endif %}{% endfor %}
         {% endfor %}
     </div>
 </div>

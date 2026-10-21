@@ -119,7 +119,7 @@
 					}
 
 					// log
-					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'nexi', LOG_ERR );
+					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'nexi', LOG_WARNING );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );
 
 				break;
@@ -136,6 +136,6 @@
 	} else {
 
 	    // log
-		logWrite( 'codTrans mancante', 'nexi', LOG_ERR );
+		logWrite( 'codTrans mancante', 'nexi', LOG_WARNING );
 
 	}

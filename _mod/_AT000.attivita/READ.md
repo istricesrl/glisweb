@@ -18,10 +18,14 @@ Questo task si occupa di popolare la view statica delle attività.
 Questa controller viene eseguita al finally di ogni elaborazione dell'entità attività.
 
 ### /_mod/_AT000.attivita/_src/_inc/_macro/_anagrafica.form.attivita.php
-Questa è la macro della scheda attività della gestione anagrafica.
+Questa è la macro della scheda attività della gestione anagrafica: elenca le attività in cui il
+contatto è il cliente ( `id_cliente` ) e le apre, o ne inserisce di nuove, con la scheda attività
+del modulo, `produzione.attivita.form`.
 
 ### /_mod/_AT000.attivita/_src/_inc/_macro/_anagrafica.form.lavoro.php
-Questa è la macro della scheda lavoro della gestione anagrafica.
+Questa è la macro della scheda lavoro della gestione anagrafica: elenca le attività di cui il
+contatto è esecutore o incaricato ( `id_anagrafica` o `id_anagrafica_programmazione` ) e le apre, o
+ne inserisce di nuove, con la stessa scheda `produzione.attivita.form`.
 
 ### /_mod/_AT000.attivita/_src/_inc/_macro/_produzione.attivita.form.archiviazione.php
 Questa è la macro della scheda archiviazione della gestione attività.
@@ -54,7 +58,10 @@ Questa è la macro della view delle tipologie di attività.
 Qui vengono definite le pagine del modulo attività.
 
 ### /_mod/_AT000.attivita/_src/_inc/_pages/_produzione.it-IT.php
-Qui vengono definite le pagine del modulo attività relative al modulo produzione.
+Qui vengono definite le pagine del modulo attività relative al modulo produzione: la vista
+`produzione.attivita.view` ( voce di menu sotto `produzione` ) con le linguette tipologie, stampe,
+archiviate e azioni, la scheda `produzione.attivita.form` con archiviazione e azioni, e la scheda
+delle tipologie. Ogni pagina è dichiarata una volta sola.
 
 ### /_mod/_AT000.attivita/_src/_lib/_mysql.utils.add.php
 In questa libreria vengono definite funzioni specifiche per le attività da aggiungere a /_src/_lib/_mysql.utils.php.

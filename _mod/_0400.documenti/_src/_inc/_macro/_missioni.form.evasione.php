@@ -104,7 +104,7 @@
     // ...
     $ct['etc']['dati'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+        'SELECT documenti_articoli.id_articolo, articoli.codice AS codice_articolo, sum( quantita ) AS quantita,
             concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
             group_concat( concat( documenti.numero, "/", documenti.sezionale, " del ", documenti.data ) SEPARATOR "|" ) AS documenti
         FROM documenti_articoli 
@@ -121,7 +121,7 @@
     foreach( $ct['etc']['dati'] as &$row ) {
 
         // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
-        // + id_missione. La nota distesa e' in src/inc/macro/missione.php del progetto.
+        // + id_missione: e' la convenzione con cui le scrive la maschera di prelievo.
         $row['qta_prelevata'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',

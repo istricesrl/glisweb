@@ -446,7 +446,7 @@ il meccanismo dei bookmarks
 
 [...] è possibile salvare degli elementi nella memoria di lavoro per utilizzarli come default nelle maschere.
 
-[...] la funzione aggiornaBookmarks(), dichiarata nel file _src/_templates/_athena/src/js/main.js, aggiorna la tendina [...]
+[...] la funzione aggiornaBookmarks(), dichiarata nel file _src/_tpl/_athena/src/js/main.js, aggiorna la tendina [...]
 
 [...] il salvataggio vero e prorio dei bookmarks in sessione avviene nel file _src/_config/_715.session.php
 

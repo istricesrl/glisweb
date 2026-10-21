@@ -65,7 +65,7 @@
 	$p['contratti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione contratto' ),
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.php' ),
@@ -217,7 +217,7 @@
 	$p['tipologie.contratti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione tipologia' ),
 	    'parent'		=> array( 'id'		=> 'tipologie.contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.contratti.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.contratti.form.php' ),
@@ -267,7 +267,7 @@
 	$p['rinnovi.contratti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione rinnovo' ),
 	    'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.form.php' ),
@@ -334,7 +334,7 @@
 	$p['periodi.contratti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione periodo' ),
 	    'parent'		=> array( 'id'		=> 'periodi.contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.contratti.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_periodi.contratti.form.php' ),

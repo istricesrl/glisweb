@@ -193,6 +193,15 @@ else
 
     fi
 
+    ## profilo del database della destinazione, per le patch
+    # dal file properties ( DST_PROFILE ), altrimenti dallo stadio: stable e' PROD, test e' TEST
+    if [ -z "$DST_PROFILE" ]; then
+        case "$DST_STAGE" in
+            "stable") DST_PROFILE="PROD" ;;
+            "test") DST_PROFILE="TEST" ;;
+        esac
+    fi
+
     ## deploy
     case "$DST_CMD" in
 
@@ -205,6 +214,9 @@ else
                 for i in $SET_EXCLUDE; do
                     EXCLUDE="$EXCLUDE --exclude $i"
                 done
+
+                ## esito dei test automatici ( vedi il ramo rsync )
+                EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
 
                 # informazioni
                 echo "accesso FTP: $FTP_USER"
@@ -278,6 +290,11 @@ else
                 EXCLUDE="$EXCLUDE --exclude $i"
             done
 
+            ## esito dei test automatici
+            # appartiene alla macchina dove i test sono girati ( _codeception.run.sh ): copiato altrove
+            # mostrerebbe sul target l'esito di un altro ambiente, quindi non viaggia mai
+            EXCLUDE="$EXCLUDE --exclude usr/pages/test/ --exclude _usr/_pages/_test/"
+
             ## host di destinazione
             if [ -n "$DST_HOST" -a -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
 
@@ -329,8 +346,16 @@ else
                     echo "ATTENZIONE: apertura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): se il deploy non copia i file è questo il motivo"
                 fi
 
+                # copia della destinazione per il rollback, prima di sovrascriverla
+                SNAPSHOT=$( deploy-snapshot "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST" "$EXCLUDE" )
+                echo "copia per il rollback: ${SNAPSHOT:-NON RIUSCITA, un rollback andrebbe fatto a mano}"
+
+                # niente -u: con -u un file piu' recente sul target ( un ritocco a caldo ) viene saltato
+                # in silenzio anche se diverso, e il deploy si dichiara riuscito lasciando sul target una
+                # versione che non e' quella di DEV ( il 01/10/2026 ha lasciato www2 in fatal ); il
+                # --checksum basta a non ricopiare i file identici
                 # comando
-                CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+                CMD="rsync $EXCLUDE -avz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -340,7 +365,7 @@ else
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avuz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
 
                 # esito del deploy
                 RSYNC_STATUS=$?
@@ -386,8 +411,19 @@ else
                     exit 1
                 fi
 
+                # protezioni Basic auth della destinazione
+                deploy-realign-protections "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
+
                 # invalidazione delle cache della destinazione
                 deploy-invalidate-caches "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
+
+                # patch del database della destinazione e controllo: se uno dei due fallisce si torna
+                # al codice di prima, che gira anche sul database aggiornato ( patch compatibili all'indietro )
+                if ! deploy-mysql-patch "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST" "$DST_PROFILE" || ! deploy-check "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"; then
+                    deploy-rollback "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST" "$SNAPSHOT" "$EXCLUDE"
+                    echo "ERRORE: deploy su $DST_HOST annullato, la destinazione e' tornata alla versione precedente ( profilo del database: ${DST_PROFILE:-nessuno}, si dichiara con DST_PROFILE )"
+                    exit 1
+                fi
 
                 # informazioni
                 echo "deploy completato su $DST_HOST"
@@ -443,8 +479,16 @@ else
                     echo "ATTENZIONE: apertura dei permessi su $DST_PATH fallita: se il deploy non copia i file e' questo il motivo"
                 fi
 
+                # copia della destinazione per il rollback, prima di sovrascriverla
+                SNAPSHOT=$( deploy-snapshot "$DST_PATH" "" "$EXCLUDE" )
+                echo "copia per il rollback: ${SNAPSHOT:-NON RIUSCITA, un rollback andrebbe fatto a mano}"
+
+                # niente -u: con -u un file piu' recente sul target ( un ritocco a caldo ) viene saltato
+                # in silenzio anche se diverso, e il deploy si dichiara riuscito lasciando sul target una
+                # versione che non e' quella di DEV ( il 01/10/2026 ha lasciato www2 in fatal ); il
+                # --checksum basta a non ricopiare i file identici
                 # comando
-                CMD="rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH"
+                CMD="rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -454,7 +498,7 @@ else
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
 
                 # esito del deploy
                 RSYNC_STATUS=$?
@@ -485,8 +529,19 @@ else
                     exit 1
                 fi
 
+                # protezioni Basic auth della destinazione
+                deploy-realign-protections "$DST_PATH"
+
                 # invalidazione delle cache della destinazione
                 deploy-invalidate-caches "$DST_PATH"
+
+                # patch del database della destinazione e controllo: se uno dei due fallisce si torna
+                # al codice di prima, che gira anche sul database aggiornato ( patch compatibili all'indietro )
+                if ! deploy-mysql-patch "$DST_PATH" "" "$DST_PROFILE" || ! deploy-check ""; then
+                    deploy-rollback "$DST_PATH" "" "$SNAPSHOT" "$EXCLUDE"
+                    echo "ERRORE: deploy su $DST_PATH annullato, la destinazione e' tornata alla versione precedente ( profilo del database: ${DST_PROFILE:-nessuno}, si dichiara con DST_PROFILE )"
+                    exit 1
+                fi
 
                 # informazioni
                 echo "deploy completato su $DST_PATH"

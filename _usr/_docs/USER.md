@@ -15,11 +15,9 @@ di aprirlo.
 
 ## entrare nell'applicazione
 
-Si accede con nome utente e password dalla pagina di accesso. La sessione resta aperta finché non si
-esce o non scade per inattività.
-
-Chi ha dimenticato la password non può reimpostarla da solo: la richiede a chi amministra
-l'installazione.
+Si accede con nome utente e password dalla pagina di accesso; chi ha dimenticato la password può
+reimpostarla da solo, dal link *password dimenticata?*. Come funziona, quanto dura la sessione e come
+si esce lo spiega il capitolo *entrare e uscire*.
 
 ## com'è fatta una pagina
 
@@ -35,13 +33,8 @@ più rapido di orientarsi in una parte che non si è mai vista:
 | sotto-elenco | elenca gli oggetti che dipendono da quello aperto |
 
 In alto restano sempre la barra con la ricerca e i pulsanti di servizio, fra cui quello che apre
-questo manuale.
-
-## cercare
-
-La ricerca in cima a un elenco filtra le righe man mano che si scrive. I filtri si sommano fra loro,
-e restano attivi finché non si svuotano: se un elenco sembra vuoto, la prima cosa da controllare è
-che non sia rimasto un filtro impostato.
+questo manuale. Elenchi e schede hanno un capitolo ciascuno — *elenchi e ricerche* e *le schede* —,
+e come si stampa lo dice *le stampe*.
 
 ## amministrare gli accessi
 <!-- @pubblico: amministratore -->

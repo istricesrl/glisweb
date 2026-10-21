@@ -9,8 +9,16 @@
      * ============
      * Fa due lavori distinti, che si chiedono con due opzioni diverse perche' hanno rischi diversi:
      *
-     * - `--istat` allinea la tabella `comuni` del database all'elenco ufficiale ISTAT;
-     * - `--export` rigenera i quattro CSV che i deploy scaricano da dataserver.istricesrl.com.
+     * - `--istat` allinea la tabella `comuni` del database all'elenco ufficiale ISTAT, poi archivia i
+     *   comuni soppressi secondo l'elenco ISTAT dei soppressi ( data_archiviazione, note_archiviazione,
+     *   id_successore ) e segnala le province italiane che l'ISTAT non elenca piu';
+     * - `--export` rigenera i quattro CSV che i deploy scaricano da dataserver.istricesrl.com, e i
+     *   quattro dell'archiviazione ( solo le righe archiviate ) per le tabelle che hanno le colonne.
+     *
+     * Il successore e' quello diretto: un comune soppresso in uno a sua volta soppresso punta al
+     * secondo, e la catena la segue chi rimappa i riferimenti ( _geografia.importazione.php ). Un
+     * comune diviso fra piu' successori si archivia senza successore. Per province, regioni e stati
+     * l'ISTAT non da' un elenco dei soppressi: si archiviano a mano, e l'export li pubblica lo stesso.
      *
      * `comuni`, `provincie`, `regioni` e `stati` sono TABELLE STANDARD: il loro contenuto e' parte
      * del framework e i deploy non possono modificarlo, quindi questo script gira solo dove il
@@ -67,6 +75,22 @@
     define( 'GEO_ISTAT_SIGLA', 14 );     // O    sigla automobilistica della provincia
     define( 'GEO_ISTAT_CAT',   20 );     // T    codice catastale
 
+    // elenco ufficiale dei comuni soppressi
+    //
+    // E' uno zip con dentro lo stesso elenco in .csv e in .xls: si legge il .csv, che e' in
+    // latin1 col punto e virgola, perche' non ha bisogno di PhpSpreadsheet. Una riga per evento,
+    // quindi un comune soppresso per scorporo in piu' successori ha piu' righe con la stessa data
+    define( 'GEO_SOPPRESSI_URL', 'https://www.istat.it/storage/codici-unita-amministrative/Elenco-comuni-soppressi.zip' );
+
+    // colonne del file dei soppressi che servono qui, per posizione
+    define( 'GEO_SOPPRESSI_SIGLA',      1 );    // sigla automobilistica al momento della soppressione
+    define( 'GEO_SOPPRESSI_ISTAT',      3 );    // codice del comune soppresso
+    define( 'GEO_SOPPRESSI_NOME',       4 );    // denominazione del comune soppresso
+    define( 'GEO_SOPPRESSI_SCORPORO',   5 );    // valorizzata se il comune e' stato diviso
+    define( 'GEO_SOPPRESSI_DATA',       6 );    // data dell'evento, gg/mm/aaaa
+    define( 'GEO_SOPPRESSI_SUCC',       7 );    // codice del comune in cui e' confluito
+    define( 'GEO_SOPPRESSI_SUCC_NOME',  8 );    // denominazione del comune in cui e' confluito
+
     // le quattro tabelle pubblicate, con le colonne nell'ordine dei CSV storici
     $GEO_TABELLE = array(
         '01.update.stati'     => array( 'stati',     'id,id_continente,nome,nome_esteso,url_riferimento,note,iso31661alpha2,iso31661alpha3,codice_istat,data_archiviazione' ),
@@ -75,8 +99,30 @@
         '04.update.comuni'    => array( 'comuni',    'id,id_provincia,nome,codice_istat,codice_catasto,url_riferimento,note' )
     );
 
+    // l'archiviazione delle quattro tabelle, pubblicata in file a parte
+    //
+    // Non sta nei quattro file storici perche' l'importazione generica ( _740.controller.php )
+    // manda all'UPDATE tutte le colonne del CSV, e un deploy il cui schema non ha ancora queste
+    // colonne risponderebbe 1054 su OGNI riga, perdendo anche l'aggiornamento di nomi e codici.
+    // Separati, li scarica solo chi ha le colonne ( _src/_api/_task/_geografia.importazione.php ),
+    // e vengono dopo i quattro storici, cosi' il successore c'e' gia' quando l'archiviato lo
+    // punta. Si pubblicano solo le righe archiviate: le altre non hanno niente da dire.
+    $GEO_ARCHIVIAZIONE = array(
+        '05.update.stati.archiviazione'     => 'stati',
+        '06.update.regioni.archiviazione'   => 'regioni',
+        '07.update.provincie.archiviazione' => 'provincie',
+        '08.update.comuni.archiviazione'    => 'comuni'
+    );
+
+    // colonne dell'archiviazione, le stesse per le quattro tabelle
+    define( 'GEO_ARCHIVIAZIONE_COLONNE', 'id,data_archiviazione,note_archiviazione,id_successore' );
+
     /**
-     * apre la connessione al database leggendo src/config.json
+     * apre la connessione al database leggendo src/config.json e src/shadow.json
+     *
+     * Le credenziali stanno in src/shadow.json ( è lì che le scrive _gw.config.sh ), il resto in
+     * src/config.json: si fondono come fa il framework, con shadow che vince su config. La porta è
+     * facoltativa, come in _src/_config/_125.mysql.php: senza, il client usa la sua di default.
      *
      * @return  mysqli|bool                 la connessione, false se non si apre
      *
@@ -90,17 +136,22 @@
             return false;
         }
 
-        $cx = json_decode( file_get_contents( $f ), true );
+        $cx = json_decode( file_get_contents( $f ), true ) ?: array();
+
+        // shadow vince su config
+        if( is_readable( GEO_BASE . 'src/shadow.json' ) ) {
+            $cx = array_replace_recursive( $cx, json_decode( file_get_contents( GEO_BASE . 'src/shadow.json' ), true ) ?: array() );
+        }
 
         if( ! isset( $cx['mysql']['servers'] ) || ! is_array( $cx['mysql']['servers'] ) ) {
-            echo 'nessun server MySQL dichiarato in src/config.json' . "\n";
+            echo 'nessun server MySQL dichiarato in src/config.json o src/shadow.json' . "\n";
             return false;
         }
 
         $s = $cx['mysql']['servers'];
         $k = array_key_first( $s );
 
-        $c = @mysqli_connect( $s[$k]['address'], $s[$k]['username'], $s[$k]['password'], $s[$k]['db'] );
+        $c = @mysqli_connect( $s[$k]['address'], $s[$k]['username'], $s[$k]['password'], $s[$k]['db'], ( ( ! empty( $s[$k]['port'] ) ) ? (int) $s[$k]['port'] : NULL ) );
 
         if( ! $c ) {
             echo 'connessione al database fallita' . "\n";
@@ -297,6 +348,248 @@
     }
 
     /**
+     * dice se una tabella geografica ha le colonne dell'archiviazione
+     *
+     * Le colonne entrano nello schema canonico con una patch, e questo script puo' girare prima
+     * che la patch sia arrivata: senza le colonne il confronto si fa lo stesso, perche' in prova
+     * serve sapere cosa cambierebbe, ma non si applica e non si pubblica niente.
+     *
+     * @param   mysqli      $c              la connessione
+     * @param   string      $tabella        nome della tabella
+     *
+     * @return  bool                        true se ci sono tutte e tre
+     *
+     */
+    function geoArchiviazionePresente( $c, $tabella ) {
+
+        $r = mysqli_query( $c, "SHOW COLUMNS FROM " . $tabella . " WHERE Field IN ( 'data_archiviazione', 'note_archiviazione', 'id_successore' )" );
+
+        return $r && mysqli_num_rows( $r ) == 3;
+
+    }
+
+    /**
+     * scarica l'elenco ISTAT dei comuni soppressi e lo restituisce come array di righe
+     *
+     * @return  array|bool                  le righe, intestazione esclusa, false se non si scarica
+     *
+     */
+    function geoSoppressiScarica() {
+
+        $d = @file_get_contents( GEO_SOPPRESSI_URL );
+
+        if( $d === false || strlen( $d ) < 10000 ) {
+            echo 'scaricamento dell\'elenco ISTAT dei soppressi fallito' . "\n";
+            return false;
+        }
+
+        $t = GEO_BASE . 'var/tmp/comuni.soppressi.zip';
+
+        if( ! is_dir( dirname( $t ) ) ) {
+            mkdir( dirname( $t ), 0750, true );
+        }
+
+        file_put_contents( $t, $d );
+
+        // il nome del .csv dentro lo zip cambia con le edizioni: si prende quello che c'e'
+        $csv = false;
+        $z = new ZipArchive;
+
+        if( $z->open( $t ) === true ) {
+            for( $i = 0; $i < $z->numFiles; $i++ ) {
+                if( strtolower( pathinfo( $z->getNameIndex( $i ), PATHINFO_EXTENSION ) ) == 'csv' ) {
+                    $csv = $z->getFromIndex( $i );
+                    break;
+                }
+            }
+            $z->close();
+        }
+
+        unlink( $t );
+
+        if( $csv === false ) {
+            echo 'lo zip dei soppressi non contiene un .csv: il tracciato e\' cambiato' . "\n";
+            return false;
+        }
+
+        $arr = array();
+
+        foreach( preg_split( '/\r\n|\n|\r/', iconv( 'ISO-8859-1', 'UTF-8', $csv ) ) as $l ) {
+            if( trim( $l ) !== '' ) {
+                $arr[] = str_getcsv( $l, ';' );
+            }
+        }
+
+        array_shift( $arr );
+
+        return $arr;
+
+    }
+
+    /**
+     * confronta l'elenco dei soppressi con la tabella comuni e ne ricava l'archiviazione
+     *
+     * Per ogni comune soppresso conta solo l'ULTIMO evento, e da quello si ricavano:
+     *
+     * - data_archiviazione, la data dell'evento;
+     * - id_successore, il comune in cui e' confluito, cercato per codice ISTAT. Puo' essere a sua
+     *   volta archiviato ( A in B, poi B in C ): si punta il successore DIRETTO, e chi rimappa i
+     *   riferimenti segue la catena fino al comune attivo. Resta NULL se il comune e' stato diviso
+     *   fra piu' successori, perche' non c'e' un posto solo in cui mandare i suoi indirizzi;
+     * - note_archiviazione, che si scrive solo se e' vuota, per non perdere quella messa a mano.
+     *
+     * Il comune si cerca per codice ISTAT, e se non c'e' per nome nella provincia. Si salta se il
+     * suo codice e' nell'elenco dei comuni ATTIVI, e se il successore e' lui stesso: e' il caso
+     * delle fusioni che ricodificano un comune lasciandogli il nome ( Sovizzo, da 024103 a 024128 ),
+     * che geoIstatConfronta() ha gia' aggiornato al codice nuovo e che e' vivo.
+     *
+     * @param   mysqli      $c              la connessione
+     * @param   array       $arr            le righe dell'elenco dei soppressi
+     * @param   array       $attivi         i codici ISTAT dell'elenco dei comuni attivi, come chiavi
+     * @param   bool        $colonne        se la tabella ha gia' le colonne dell'archiviazione
+     *
+     * @return  array                       array con le chiavi 'sql', 'archiviati', 'presenti', 'assenti', 'divisi', 'senza_successore'
+     *
+     */
+    function geoSoppressiConfronta( $c, $arr, $attivi, $colonne ) {
+
+        // i nostri comuni italiani, indicizzati come in geoIstatConfronta()
+        $perIstat = array();
+        $perNome  = array();
+        $r = mysqli_query( $c, 'SELECT c.id, c.nome, c.codice_istat, p.sigla, '
+            . ( $colonne ? 'c.data_archiviazione, c.note_archiviazione, c.id_successore' : 'NULL AS data_archiviazione, NULL AS note_archiviazione, NULL AS id_successore' ) . '
+            FROM comuni c
+            JOIN provincie p ON p.id = c.id_provincia
+            JOIN regioni g ON g.id = p.id_regione
+            JOIN stati t ON t.id = g.id_stato
+            WHERE t.nome LIKE "Ital%"' );
+
+        while( $w = mysqli_fetch_assoc( $r ) ) {
+            if( $w['codice_istat'] !== NULL && $w['codice_istat'] !== '' ) {
+                $perIstat[ $w['codice_istat'] ] = $w;
+            }
+            $perNome[ geoNormalizza( $w['nome'] ) . '|' . strtoupper( trim( $w['sigla'] ) ) ] = $w;
+        }
+
+        // per ogni comune soppresso, le righe del suo ultimo evento
+        $eventi = array();
+
+        foreach( $arr as $riga ) {
+
+            $istat = trim( (string)$riga[ GEO_SOPPRESSI_ISTAT ] );
+            $data  = DateTime::createFromFormat( '!d/m/Y', trim( (string)$riga[ GEO_SOPPRESSI_DATA ] ) );
+
+            if( $istat === '' || ! $data ) {
+                continue;
+            }
+
+            $riga['data'] = $data->format( 'Y-m-d' );
+
+            if( ! isset( $eventi[ $istat ] ) || $riga['data'] > $eventi[ $istat ][0]['data'] ) {
+                $eventi[ $istat ] = array( $riga );
+            } elseif( $riga['data'] == $eventi[ $istat ][0]['data'] ) {
+                $eventi[ $istat ][] = $riga;
+            }
+
+        }
+
+        $sql = array();
+        $arc = 0;
+        $gia = 0;
+        $ass = 0;
+        $div = 0;
+        $sen = 0;
+
+        foreach( $eventi as $istat => $righe ) {
+
+            // ancora attivo con questo codice: e' una ricodifica, non una soppressione
+            if( isset( $attivi[ $istat ] ) ) {
+                continue;
+            }
+
+            $nome  = trim( (string)$righe[0][ GEO_SOPPRESSI_NOME ] );
+            $sigla = strtoupper( trim( (string)$righe[0][ GEO_SOPPRESSI_SIGLA ] ) );
+
+            if( isset( $perIstat[ $istat ] ) ) {
+                $noi = $perIstat[ $istat ];
+            } elseif( isset( $perNome[ geoNormalizza( $nome ) . '|' . $sigla ] ) ) {
+                $noi = $perNome[ geoNormalizza( $nome ) . '|' . $sigla ];
+                // trovato per nome, ma e' un comune attivo che si chiama allo stesso modo
+                if( isset( $attivi[ $noi['codice_istat'] ] ) ) {
+                    continue;
+                }
+            } else {
+                // soppresso prima che la tabella lo conoscesse: niente da archiviare
+                $ass++;
+                continue;
+            }
+
+            // i successori dell'ultimo evento, senza ripetizioni
+            $succ = array();
+            foreach( $righe as $riga ) {
+                $s = trim( (string)$riga[ GEO_SOPPRESSI_SUCC ] );
+                if( $s !== '' ) {
+                    $succ[ $s ] = trim( (string)$riga[ GEO_SOPPRESSI_SUCC_NOME ] );
+                }
+            }
+
+            $id = NULL;
+
+            if( count( $succ ) == 1 ) {
+                $s = key( $succ );
+                if( isset( $perIstat[ $s ] ) ) {
+                    $id = $perIstat[ $s ]['id'];
+                } else {
+                    $sen++;
+                }
+            } elseif( count( $succ ) > 1 ) {
+                $div++;
+            }
+
+            // il successore e' lui stesso: ricodificato e ancora vivo
+            if( $id !== NULL && $id == $noi['id'] ) {
+                continue;
+            }
+
+            $elenco = array();
+            foreach( $succ as $s => $n ) {
+                $elenco[] = $n . ' ( ' . $s . ' )';
+            }
+
+            $nota = 'soppresso il ' . date( 'd/m/Y', strtotime( $righe[0]['data'] ) )
+                . ( count( $succ ) > 1 || trim( (string)$righe[0][ GEO_SOPPRESSI_SCORPORO ] ) !== '' ? ', diviso fra ' : ', confluito in ' )
+                . implode( ', ', $elenco )
+                . ' ( fonte ISTAT, elenco dei comuni soppressi )';
+
+            $set = array();
+
+            if( $noi['data_archiviazione'] != $righe[0]['data'] ) {
+                $set[] = "data_archiviazione = '" . $righe[0]['data'] . "'";
+            }
+
+            if( $noi['id_successore'] != $id ) {
+                $set[] = 'id_successore = ' . ( $id === NULL ? 'NULL' : (int)$id );
+            }
+
+            if( $noi['note_archiviazione'] === NULL || $noi['note_archiviazione'] === '' ) {
+                $set[] = "note_archiviazione = '" . mysqli_real_escape_string( $c, $nota ) . "'";
+            }
+
+            if( ! $set ) {
+                $gia++;
+                continue;
+            }
+
+            $sql[] = 'UPDATE comuni SET ' . implode( ', ', $set ) . ' WHERE id = ' . (int)$noi['id'] . ';';
+            $arc++;
+
+        }
+
+        return array( 'sql' => $sql, 'archiviati' => $arc, 'presenti' => $gia, 'assenti' => $ass, 'divisi' => $div, 'senza_successore' => $sen );
+
+    }
+
+    /**
      * applica le query di allineamento in una transazione sola
      *
      * O passano tutte o non ne passa nessuna: un indice unico che scatta a meta' lascerebbe la
@@ -356,17 +649,18 @@
      * @param   string      $f              percorso del file da scrivere
      * @param   string      $tabella        nome della tabella
      * @param   string      $cols           colonne separate da virgola
+     * @param   string      $where          condizione sulle righe da scrivere, facoltativa
      *
      * @return  int                         righe scritte
      *
      */
-    function geoCsvScrivi( $c, $f, $tabella, $cols ) {
+    function geoCsvScrivi( $c, $f, $tabella, $cols, $where = NULL ) {
 
         $h = fopen( $f, 'w' );
 
         fwrite( $h, str_replace( ',', ';', $cols ) . "\n" );
 
-        $r = mysqli_query( $c, 'SELECT ' . $cols . ' FROM ' . $tabella . ' ORDER BY id' );
+        $r = mysqli_query( $c, 'SELECT ' . $cols . ' FROM ' . $tabella . ( $where ? ' WHERE ' . $where : '' ) . ' ORDER BY id' );
         $n = 0;
 
         while( $w = mysqli_fetch_row( $r ) ) {
@@ -493,6 +787,95 @@
 
         }
 
+        // ------------------------------------------------------------------ archiviazione dei soppressi
+
+        echo "archiviazione dei comuni soppressi:\n";
+
+        // i codici dell'elenco dei comuni attivi: un soppresso che ha il codice di un attivo e'
+        // stato ricodificato, non soppresso
+        $attivi = array();
+        foreach( $arr as $riga ) {
+            $attivi[ trim( (string)$riga[ GEO_ISTAT_ISTAT ] ) ] = true;
+        }
+
+        // le province italiane che l'ISTAT non elenca piu', perche' qualcuno le archivi a mano: il
+        // file dei soppressi riguarda solo i comuni, e le province cambiano una volta ogni dieci
+        // anni ( le sarde VS e CI sono confluite in SU nel 2016 )
+        $sigle = array();
+        foreach( $arr as $riga ) {
+            $sigle[ strtoupper( trim( (string)$riga[ GEO_ISTAT_SIGLA ] ) ) ] = true;
+        }
+
+        $r = mysqli_query( $c, 'SELECT p.sigla FROM provincie p
+            JOIN regioni g ON g.id = p.id_regione
+            JOIN stati t ON t.id = g.id_stato
+            WHERE t.nome LIKE "Ital%"' . ( geoArchiviazionePresente( $c, 'provincie' ) ? ' AND p.data_archiviazione IS NULL' : '' ) );
+
+        while( $w = mysqli_fetch_assoc( $r ) ) {
+            if( ! isset( $sigle[ strtoupper( trim( $w['sigla'] ) ) ] ) ) {
+                printf( "  ATTENZIONE: la provincia %s non e' piu' nell'elenco ISTAT e non e' archiviata\n", $w['sigla'] );
+            }
+        }
+
+        $colonne = geoArchiviazionePresente( $c, 'comuni' );
+
+        if( ! $sop = geoSoppressiScarica() ) {
+
+            exit( 1 );
+
+        } else {
+
+            $e = geoSoppressiConfronta( $c, $sop, $attivi, $colonne );
+
+            printf( "  righe dei soppressi            %d\n", count( $sop ) );
+            printf( "  gia' archiviati                %d\n", $e['presenti'] );
+            printf( "  da archiviare o correggere     %d\n", $e['archiviati'] );
+            printf( "  soppressi che non abbiamo      %d\n", $e['assenti'] );
+            printf( "  divisi fra piu' successori     %d\n", $e['divisi'] );
+            printf( "  successore che non abbiamo     %d\n", $e['senza_successore'] );
+
+            if( $secco || ! $colonne ) {
+
+                // senza le colonne lo schema non e' ancora arrivato: si fa vedere cosa
+                // cambierebbe, come in prova, e non si tocca niente
+                $f = GEO_BASE . 'var/geografia/soppressi.' . date( 'YmdHis' ) . '.sql';
+
+                if( ! is_dir( dirname( $f ) ) ) {
+                    mkdir( dirname( $f ), 0750, true );
+                }
+
+                file_put_contents( $f, implode( "\n", $e['sql'] ) . "\n" );
+
+                if( ! $colonne ) {
+                    echo "  la tabella comuni non ha ancora le colonne dell'archiviazione\n";
+                }
+
+                printf( "  prova: %d query scritte in %s, nessuna eseguita\n", count( $e['sql'] ), $f );
+
+            } elseif( ! $e['sql'] ) {
+
+                echo "  niente da archiviare\n";
+
+            } elseif( count( $e['sql'] ) > GEO_SOGLIA_AUTOMATICA && ! $forza ) {
+
+                // la prima volta archivia trent'anni di fusioni e supera la soglia di sicuro: e'
+                // giusto che a farlo sia una persona che ha guardato il dry-run
+                printf( "  FERMO: %d comuni da archiviare, oltre la soglia di %d per un giro automatico\n", count( $e['sql'] ), GEO_SOGLIA_AUTOMATICA );
+                echo "  guardare cosa cambierebbe con --istat --dry-run, poi --istat --forza per applicare\n";
+                exit( 1 );
+
+            } elseif( geoIstatApplica( $c, $e['sql'] ) ) {
+
+                printf( "  applicate: %d comuni archiviati o corretti\n", $e['archiviati'] );
+
+            } else {
+
+                exit( 1 );
+
+            }
+
+        }
+
     }
 
     // ------------------------------------------------------------------ pubblicazione dei CSV
@@ -525,6 +908,20 @@
             $f = $d . $nome . ( $secco ? '.prova' : '' ) . '.csv';
 
             printf( "  %-22s %6d righe -> %s\n", $nome, geoCsvScrivi( $c, $f, $tabella, $cols ), $f );
+
+        }
+
+        foreach( $GEO_ARCHIVIAZIONE as $nome => $tabella ) {
+
+            // finche' lo schema non ha le colonne non c'e' niente da pubblicare
+            if( ! geoArchiviazionePresente( $c, $tabella ) ) {
+                printf( "  %-34s saltato, %s non ha le colonne dell'archiviazione\n", $nome, $tabella );
+                continue;
+            }
+
+            $f = $d . $nome . ( $secco ? '.prova' : '' ) . '.csv';
+
+            printf( "  %-34s %6d righe -> %s\n", $nome, geoCsvScrivi( $c, $f, $tabella, GEO_ARCHIVIAZIONE_COLONNE, 'data_archiviazione IS NOT NULL' ), $f );
 
         }
 

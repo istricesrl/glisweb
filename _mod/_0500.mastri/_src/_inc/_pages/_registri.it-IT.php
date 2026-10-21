@@ -24,7 +24,7 @@
 		$p['registri.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione registro' ),
 			'parent'		=> array( 'id'		=> 'registri.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'registri.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_registri.form.php' ),

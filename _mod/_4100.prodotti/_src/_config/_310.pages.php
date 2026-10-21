@@ -23,13 +23,13 @@ if( $cf['contents']['cached'] === false ) {
 
     // log
     if( ! empty( $cf['memcache']['connection'] ) ) {
-        logWrite('struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+        logWrite('struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO);
     }
 
     // recupero le pagine dal database
     $pgs = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT prodotti.*, prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione 
+        'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ) AS timestamp_pubblicazione, prodotti.*, prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione 
             FROM prodotti 
             LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
             LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria
@@ -38,8 +38,11 @@ if( $cf['contents']['cached'] === false ) {
             WHERE categorie_prodotti.id_sito = ?
             AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
             AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-            AND tipologie_pubblicazioni.se_pubblicato = 1 ',
+            AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 )
+            ORDER BY prodotti_categorie.ordine, prodotti_categorie.id ',
         array(
+            array('s' => time()),
+            array('s' => time()),
             array('s' => SITE_CURRENT),
             array('s' => time()),
             array('s' => time())
@@ -53,16 +56,24 @@ if( $cf['contents']['cached'] === false ) {
     if( is_array( $pgs ) ) {
 
         // canonical
-        $canon = NULL;
+        $canon = array();
 
         // ciclo principale
         foreach( $pgs as $pg ) {
+
+            // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+            $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
             // ID della categoria
             $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
 
             // ID della pagina
             $pid = $cid . '.' . PREFX_PRODOTTI . $pg['id'];
+
+            // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+            if( empty( $canon[ $pg['id'] ] ) ) {
+                $canon[ $pg['id'] ] = $pid;
+            }
             //$pip = PREFX_PRODOTTI . $pg['id_genitore'];
 
             if (empty($pip)) {
@@ -70,7 +81,7 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // ...
-            $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $pid;
+            $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $canon[ $pg['id'] ];
 
             // aggiornamento delle pagine
             if ($pg['timestamp_aggiornamento'] > $cf['contents']['updated']) {
@@ -78,8 +89,8 @@ if( $cf['contents']['cached'] === false ) {
             }
 
             // prelevo i dati dalla cache
-            $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
-            $pgc = memcacheRead($cf['memcache']['connection'], $pid);
+            $age = memcacheGetKeyAge($cf['memcache']['connection'], 'PAGE_' . $pid);
+            $pgc = memcacheRead($cf['memcache']['connection'], 'PAGE_' . $pid);
 
             // default
             $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['scheda']['template'] : $pg['template'];
@@ -95,7 +106,7 @@ if( $cf['contents']['cached'] === false ) {
                     'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                     // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $cid),
-                    'canonical'        => $canon,
+                    'canonical'        => $canon[ $pg['id'] ],
                     'template'        => array(
 #                        'path'    => $cf['prodotti']['pages']['scheda']['template'],
 #                        'schema' => $cf['prodotti']['pages']['scheda']['schema'],
@@ -112,6 +123,13 @@ if( $cf['contents']['cached'] === false ) {
                 aggiungiGruppi(
                     $cf['contents']['pages'][$pid],
                     $pg['id']
+                );
+
+                // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                aggiungiPubblicazione(
+                    $cf['contents']['pages'][$pid],
+                    $pg['id'],
+                    'id_prodotto'
                 );
 
                 aggiungiContenuti(
@@ -160,8 +178,6 @@ if( $cf['contents']['cached'] === false ) {
                 );
 */
 
-                // canonical
-                $canon = $pid;
 
                // scrivo la pagina del prodotto in cache
                memcacheWrite( $cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid] );
@@ -169,6 +185,9 @@ if( $cf['contents']['cached'] === false ) {
             } else {
 
                 $cf['contents']['pages'][$pid] = $pgc;
+
+                // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                $cf['contents']['pages'][$pid]['canonical'] = $canon[ $pg['id'] ];
             }
         }
     }
@@ -202,13 +221,18 @@ if( $cf['contents']['cached'] === false ) {
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite('struttura degli articoli NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+            logWrite('struttura degli articoli NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_INFO);
         }
 
         // gli articoli pubblicati, con la categoria e i dati di pagina del loro prodotto
+        // NOTA la scheda dell'articolo prende dal prodotto template, sitemap e, quando l'articolo non ne ha di suoi, contenuti,
+        // immagini e metadati: per questo la sua data di aggiornamento è la più recente fra quella dell'articolo e quella del
+        // prodotto, altrimenti con la cache delle pagine attiva una modifica al solo prodotto non arrivava alle schede dei suoi
+        // articoli ( 2026-09-25 )
         $art = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT articoli.id, articoli.id_prodotto, articoli.timestamp_aggiornamento,
+            'SELECT ( SELECT max( greatest( coalesce( pp.timestamp_aggiornamento, 0 ), if( pp.timestamp_inizio < ?, pp.timestamp_inizio, 0 ), if( pp.timestamp_fine < ?, pp.timestamp_fine, 0 ) ) ) FROM pubblicazioni AS pp WHERE pp.id_articolo = articoli.id ) AS timestamp_pubblicazione, articoli.id, articoli.id_prodotto,
+                    greatest( coalesce( articoli.timestamp_aggiornamento, 0 ), coalesce( prodotti.timestamp_aggiornamento, 0 ) ) AS timestamp_aggiornamento,
                     prodotti.template, prodotti.schema_html, prodotti.tema_css,
                     prodotti.se_sitemap, prodotti.se_cacheable,
                     prodotti_categorie.id_categoria, tipologie_pubblicazioni.nome AS tipologia_pubblicazione
@@ -221,8 +245,11 @@ if( $cf['contents']['cached'] === false ) {
                 WHERE categorie_prodotti.id_sito = ?
                 AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? )
                 AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? )
-                AND tipologie_pubblicazioni.se_pubblicato = 1 ',
+                AND ( tipologie_pubblicazioni.se_pubblicato = 1 OR tipologie_pubblicazioni.se_anteprima = 1 )
+                ORDER BY prodotti_categorie.ordine, prodotti_categorie.id ',
             array(
+                array('s' => time()),
+                array('s' => time()),
                 array('s' => SITE_CURRENT),
                 array('s' => time()),
                 array('s' => time())
@@ -234,14 +261,25 @@ if( $cf['contents']['cached'] === false ) {
 
         if( is_array( $art ) ) {
 
+            // canonical
+            $canart = array();
+
             foreach( $art as $pg ) {
+
+                // le modifiche alle pubblicazioni e le finestre che si aprono valgono come aggiornamenti della pagina
+                $pg['timestamp_aggiornamento'] = max( $pg['timestamp_aggiornamento'], $pg['timestamp_pubblicazione'] );
 
                 // ID della categoria e della pagina
                 $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
                 $pid = $cid . '.' . PREFX_ARTICOLI . $pg['id'];
 
+                // canonical: la pagina della prima categoria, la stessa per tutte le pagine del contenuto
+                if( empty( $canart[ $pg['id'] ] ) ) {
+                    $canart[ $pg['id'] ] = $pid;
+                }
+
                 // ...
-                $cf['contents']['reverse']['articoli'][ $pg['id'] ] = $pid;
+                $cf['contents']['reverse']['articoli'][ $pg['id'] ] = $canart[ $pg['id'] ];
 
                 // aggiornamento delle pagine
                 if( $pg['timestamp_aggiornamento'] > $cf['contents']['updated'] ) {
@@ -249,8 +287,8 @@ if( $cf['contents']['cached'] === false ) {
                 }
 
                 // prelevo i dati dalla cache
-                $age = memcacheGetKeyAge( $cf['memcache']['connection'], $pid );
-                $pgc = memcacheRead( $cf['memcache']['connection'], $pid );
+                $age = memcacheGetKeyAge( $cf['memcache']['connection'], 'PAGE_' . $pid );
+                $pgc = memcacheRead( $cf['memcache']['connection'], 'PAGE_' . $pid );
 
                 // default: prima il prodotto, poi la configurazione del modulo
                 $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['prodotti']['pages']['articolo']['template'] : $pg['template'];
@@ -265,6 +303,7 @@ if( $cf['contents']['cached'] === false ) {
                         'sitemap'       => ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                         'cacheable'     => ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'        => array( 'id' => $cid ),
+                        'canonical'     => $canart[ $pg['id'] ],
                         'template'      => array(
                             'path'      => $pg['template'],
                             'schema'    => $pg['schema_html'],
@@ -274,6 +313,9 @@ if( $cf['contents']['cached'] === false ) {
                         'etc'           => array( 'note' => array( 'tipologia_pubblicazione' => $pg['tipologia_pubblicazione'] ) ),
                         'macro'         => $cf['prodotti']['pages']['articolo']['macro']
                     );
+
+                    // se è soltanto in anteprima la pagina è riservata al gruppo anteprima
+                    aggiungiPubblicazione( $cf['contents']['pages'][$pid], $pg['id'], 'id_articolo' );
 
                     // i contenuti: prima quelli dell'articolo, se non ne ha quelli del prodotto
                     //
@@ -310,6 +352,9 @@ if( $cf['contents']['cached'] === false ) {
 
                     $cf['contents']['pages'][$pid] = $pgc;
 
+                    // canonical ( quella in cache può essere stata scritta da una versione precedente )
+                    $cf['contents']['pages'][$pid]['canonical'] = $canart[ $pg['id'] ];
+
                 }
 
             }
@@ -331,17 +376,15 @@ if( $cf['contents']['cached'] === false ) {
         $cf['contents']['updated'],
         mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max( prodotti.timestamp_aggiornamento ) AS updated FROM prodotti ' .
+            'SELECT max( greatest( coalesce( prodotti.timestamp_aggiornamento, 0 ), coalesce( pubblicazioni.timestamp_aggiornamento, 0 ), if( pubblicazioni.timestamp_inizio < ?, pubblicazioni.timestamp_inizio, 0 ), if( pubblicazioni.timestamp_fine < ?, pubblicazioni.timestamp_fine, 0 ) ) ) AS updated FROM prodotti ' .
                 'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id ' .
                 'LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria ' .
                 'INNER JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id ' .
-                'WHERE categorie_prodotti.id_sito = ? ' .
-                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
-                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                'WHERE categorie_prodotti.id_sito = ? ',
             array(
-                array('s' => SITE_CURRENT),
                 array('s' => time()),
-                array('s' => time())
+                array('s' => time()),
+                array('s' => SITE_CURRENT)
             )
         )
     );

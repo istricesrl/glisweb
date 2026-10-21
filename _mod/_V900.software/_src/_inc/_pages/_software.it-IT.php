@@ -49,7 +49,7 @@
 	$p['licenze.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione licenza' ),
 	    'parent'		=> array( 'id'		=> 'licenze.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'licenze.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_licenze.form.php' ),
@@ -187,7 +187,7 @@
 	$p['documenti.articoli.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione riga' ),
 	    'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),

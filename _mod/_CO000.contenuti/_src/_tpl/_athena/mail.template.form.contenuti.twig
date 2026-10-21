@@ -104,7 +104,7 @@
             {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             {% endfor %}
 
-            <textarea name="testo" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][testo]">{{ request[ form.table ][ subtable ][ i ].testo }}</textarea>
+            <textarea class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][testo]">{{ request[ form.table ][ subtable ][ i ].testo }}</textarea>
 
             {% endif %}
 

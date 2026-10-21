@@ -163,6 +163,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),        
+        'formati_tipologie_corrispondenza' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'rinnovi' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -203,6 +207,10 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'campagne' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'tipologie_campagne' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
@@ -333,10 +341,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-        // caratteristiche_prodotti e' l'albero vero usato dal modulo prodotti; 'caratteristiche'
-        // qui sopra e' la tabella piatta del framework, che i moduli non usano. Senza questo
-        // permesso l'API REST /api/caratteristiche_prodotti risponde 401 e i campi che si popolano
-        // per ricerca non funzionano
+        // caratteristiche_prodotti e' dal 01/10/2026 una vista sull'albero di 'caratteristiche', con i
+        // nomi di colonna di prima; resta qui perche' i progetti la usano ancora: senza questo permesso
+        // l'API REST /api/caratteristiche_prodotti risponde 401 e i campi che si popolano per ricerca
+        // non funzionano
         'caratteristiche_prodotti' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -356,10 +364,8 @@
             METHOD_GET => array( 'users' )
         ),
         'prezzi' => array(
-            CONTROL_FULL => array( 'roots' )
-        ),          
-        'prodotti_categorie' => array(
-            CONTROL_FULL => array( 'roots' )
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         ),
         'prodotti_caratteristiche' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -598,6 +604,9 @@
         'edifici' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'edifici_anagrafica' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
         'edifici_caratteristiche' => array(
             CONTROL_FULL => array( 'roots' )
         ),
@@ -821,6 +830,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'ruoli_conversazioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'todo' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -1012,6 +1025,14 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'documenti_casse_previdenziali' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'documenti_ritenute' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'relazioni_documenti_articoli' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -1150,10 +1171,19 @@
         'messaggi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'messaggi_account' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'conversazioni' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'conversazioni_account' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'conversazioni_categorie' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'categorie_conversazioni' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'tipologie_anagrafica' => array(
@@ -1168,12 +1198,6 @@
         'righe_offerte' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
-        'offerte_attive' => array(
-            CONTROL_FULL => array( 'roots', 'staff' )
-        ),
-        'righe_offerte_attive' => array(
-            CONTROL_FULL => array( 'roots', 'staff' )
-        ),
         'marchi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
@@ -1186,7 +1210,7 @@
         'mastri_articoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
-        'consensi_anagrafica' => array(
+        'anagrafica_consensi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'consensi_contatti' => array(
@@ -1199,6 +1223,24 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
     );
+
+    /**
+     * tabelle leggibili senza login
+     * =============================
+     *
+     * Chi non è connesso non ha una sessione con dei permessi, quindi il gruppo guests dichiarato
+     * qui sopra non varrebbe per nessuno: una tendina pubblica come quella dei comuni con api = 'comuni'
+     * ( p.es. nei form di registrazione ) riceverebbe 401 da /api/comuni. getAclPermission() concede
+     * all'anonimo il solo METHOD_GET sulle tabelle di questo elenco, e solo se nei permessi qui sopra
+     * il METHOD_GET della tabella comprende guests: servono tutte e due le cose, così un guests
+     * aggiunto per distrazione su un'altra tabella non apre da solo l'API agli anonimi.
+     *
+     * Un progetto che deve pubblicare un'altra tabella la aggiunge in src/config/250.auth.php.
+     *
+     */
+
+    // tabelle di lookup leggibili dagli anonimi
+    $cf['auth']['guests'] = array( 'comuni', 'provincie', 'regioni', 'stati' );
  
     // debug
     // var_dump($cf['auth']['permissions']);

@@ -40,6 +40,21 @@
 
     // configurazioni di default
     // NOTA i default per i campi del carrello sono in 035 commons
+
+    // politica delle spese di spedizione: 'articolo' le calcola riga per riga ( modalita_spedizione per articolo,
+    // prodotto, categoria o zona, a lotti ) e le somma al prezzo finale di ogni riga; 'ordine' le calcola una volta per
+    // carrello, dalla modalita_spedizione della zona senza articolo, prodotto né categoria, in carrelli.costo_spedizione_*;
+    // in tutti e due i casi i documenti del checkout le scrivono in una riga a parte
+    $cf['ecommerce']['spedizione']                  = 'articolo';
+
+    // listini che il sito può scegliere dalla richiesta ( codici o id ); tutti gli altri, come gli sconti e i coupon di
+    // riga, solo chi ha il privilegio GESTIONE_ECOMMERCE ( vedi filtraRichiestaCarrello() )
+    $cf['ecommerce']['listini']['dal_sito']         = array();
+
+    // scelta automatica del listino per i carrelli del sito: il listino del cliente ( listini_clienti ), poi quello della
+    // zona ( listini_zone ), poi il default ( vedi trovaListinoCarrello() ); spenta di default, prima di accenderla su un
+    // deploy si controlla quali clienti hanno un listino assegnato
+    $cf['ecommerce']['listini']['automatico']       = false;
     // $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                         // tipologia di documento da generare di default in cassa
     // $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                 // strategia di generazione dei documenti da usare di default in cassa
 
@@ -124,6 +139,7 @@
                 'merchant_id'   => '004400001',                                                                // ID del commerciante
                 'term_id'       => '44000001',                                                                // ID del terminale
                 'term_passwd'   => 'Password1',                                                                // password del terminale
+                'ssl_verify'    => true,                                                                // verifica del certificato di init_api ( false solo in DEV/TEST )
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_monetaweb.listener.php',            // listener per la conferma di pagamento in background
@@ -222,6 +238,11 @@
      * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/hosted/init/http
      * oppure https://www.monetaonline.it/monetaweb/payment/2/xml (verificare)
      * 
+     * NOTA SU MONETAWEB
+     * la chiamata a init_api verifica il certificato del server; se un ambiente di test del gateway ha un certificato
+     * non valido, nel profilo DEVELOPEMENT o TESTING del deploy che lo usa si mette la chiave ssl_verify del provider
+     * a false; in PRODUCTION la chiave si ignora (vedi monetawebGetPaymentDetails() in _src/_lib/_monetaweb.tools.php)
+     * 
      * 
      */
 
@@ -302,6 +323,12 @@
 
     // TODO occhio la timestamp_checkout dev'essere modificabile solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
 
+    // metadati del carrello accettati da __carrello__[__metadati__]
+    // NOTA lo standard non ne accetta nessuno: ogni progetto dichiara i suoi nel custom, con la stessa forma degli altri
+    // campi, e quelli non dichiarati vengono ignorati per non lasciar scrivere al visitatore righe arbitrarie in metadati
+    $cf['ecommerce']['fields']['metadati']      = array(
+    );
+
     // TODO aggiungere campi per i coupon id_coupon, coupon_percentuale e coupon_valore
     $cf['ecommerce']['fields']['articoli']      = array(
         'id'                            => array( 'tipe' => 'int',      'default' => NULL ),
@@ -313,7 +340,7 @@
         'id_rinnovo'                    => array( 'type' => 'int',      'default' => NULL ),
         'id_progetto'                   => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
-        'id_coupon'                     => array( 'type' => 'string',   'default' => NULL ),
+        'id_coupon'                     => array( 'type' => 'int',      'default' => NULL ),
         'coupon_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
         'coupon_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),

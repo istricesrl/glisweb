@@ -26,11 +26,17 @@
      * 
      */
 
-    // TODO selezionare consensi_moduli in join con consensi e popolare $cf['privacy']['moduli']['consensi']
+    // consensi dei moduli per la lingua corrente, col codice del consenso
+    // NOTA consensi_moduli.id_consenso è l'id della riga di consensi, mentre i form e $cf['privacy']['moduli'][...]['consensi']
+    // usano il codice ( PRIVACY_POLICY, ... ), per cui si passa da consensi; sui deploy di prima di marzo l'id è il codice, e
+    // _202609301700.consensi.sql lo copia in consensi.codice
     $consensi = mysqlCachedQuery(
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT consensi_moduli.* FROM consensi_moduli WHERE consensi_moduli.id_lingua = ?',
+        'SELECT consensi_moduli.*, consensi.codice FROM consensi_moduli '.
+        'INNER JOIN consensi ON consensi.id = consensi_moduli.id_consenso '.
+        'WHERE consensi_moduli.id_lingua = ? '.
+        'ORDER BY consensi_moduli.ordine, consensi_moduli.id',
         array( array( 's' => $cf['localization']['language']['id'] ) )
     );
 
@@ -45,12 +51,13 @@
         foreach( $consensi as $consenso ) {
 
             // aggiungo la richiesta al modulo
-            $cf['privacy']['moduli'][ $consenso['modulo'] ]['consensi'][ $consenso['id_consenso'] ] = array(
+            $cf['privacy']['moduli'][ $consenso['modulo'] ]['consensi'][ $consenso['codice'] ] = array(
                 'informativa' => array( $cf['localization']['language']['ietf'] => $consenso['informativa'] ),
                 'label' => array( $cf['localization']['language']['ietf'] => $consenso['nome'] ),
                 'action' => $consenso['azione'],
                 'page' => $consenso['pagina'],
-                'required' => $consenso['se_richiesto']
+                'required' => $consenso['se_richiesto'],
+                'ordine' => $consenso['ordine']
             );
     
         }

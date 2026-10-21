@@ -136,6 +136,17 @@
             array( array( 's' =>  $o ) )
         );
 
+        // il codice della copia, se c'e', dev'essere libero: prodotti.codice e' UNIQUE e la INSERT IGNORE di
+        // mysqlDuplicateRow() non scriverebbe niente, collegando le righe figlie a un id vuoto
+        $n = ( trim( (string) $n ) === '' ) ? NULL : trim( (string) $n );
+        if( empty( $p ) || ( $n !== NULL && mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM prodotti WHERE codice = ?',
+            array( array( 's' => $n ) )
+        ) ) ) {
+            return false;
+        }
+
         // array delle tabelle da coinvolgere nella duplicazione
         $tbls = array(
             't' => array(
@@ -166,17 +177,20 @@
 
                     ),
                     'f' => array(
+                        'codice' => $n,
                         'nome' => $p['nome'] . ' - duplicata'
                     )
                 )
             )
         );
 
+        // NOTA $o e' l'id del prodotto da duplicare, $n il codice della copia: l'id della copia lo da'
+        // l'AUTO_INCREMENT, perche' dal 02/03/2026 prodotti.id e' numerico e il codice sta in prodotti.codice
         mysqlDuplicateRowRecursive(
             $cf['mysql']['connection'],
             'prodotti',
             $o,
-            $n,
+            NULL,
             $tbls
         );
 
@@ -193,6 +207,17 @@
             'SELECT * FROM articoli WHERE id = ?',
             array( array( 's' =>  $o ) )
         );
+
+        // il codice della copia, se c'e', dev'essere libero: articoli.codice e' UNIQUE e la INSERT IGNORE di
+        // mysqlDuplicateRow() non scriverebbe niente, collegando le righe figlie a un id vuoto
+        $n = ( trim( (string) $n ) === '' ) ? NULL : trim( (string) $n );
+        if( empty( $p ) || ( $n !== NULL && mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM articoli WHERE codice = ?',
+            array( array( 's' => $n ) )
+        ) ) ) {
+            return false;
+        }
 
         // array delle tabelle da coinvolgere nella duplicazione
         $tbls = array(
@@ -224,6 +249,7 @@
 
                     ),
                     'f' => array(
+                        'codice' => $n,
                         'id_prodotto' => $d,
                         'nome' => $p['nome'] . ' - duplicata'
                     )
@@ -231,54 +257,37 @@
             )
         );
 
+        // NOTA $o e' l'id dell'articolo da duplicare, $n il codice della copia, $d l'id del prodotto: come per
+        // duplicaProdotto() l'id della copia lo da' l'AUTO_INCREMENT
         mysqlDuplicateRowRecursive(
             $cf['mysql']['connection'],
             'articoli',
             $o,
-            $n,
+            NULL,
             $tbls
         );
 
     }
 
     /**
-     * cambia il codice di un prodotto o di un articolo portandosi dietro tutto
+     * cambia il codice di un prodotto o di un articolo
      *
-     * PERCHE' NON BASTA UN UPDATE
-     * ===========================
+     * DAL 02/03/2026 IL CODICE NON E' PIU' L'ID
+     * =========================================
      *
-     * prodotti.id e articoli.id sono id naturali, e sono referenziati da una trentina di chiavi
-     * esterne. Solo una parte e' in ON UPDATE CASCADE: le altre sono
-     *
-     *  - ON UPDATE SET NULL  ( contenuti, immagini, file, video, audio, risorse, progetti,
-     *                          matricole, software, tipologie_contratti )
-     *  - NO ACTION           ( documenti_articoli, carrelli_articoli )
-     *
-     * Un "UPDATE prodotti SET id = ..." quindi STACCA IN SILENZIO foto, allegati, testi e URL della
-     * scheda, e viene rifiutato del tutto se quel codice compare in una riga di documento. Su un
-     * archivio con 50.207 righe di preventivo e' un danno che non si vede il giorno stesso.
-     *
-     * COME FUNZIONA INVECE QUESTA
-     * ===========================
-     *
-     * Nell'ordine, dentro una transazione:
-     *
-     *  1. crea la riga nuova, copia di quella vecchia con il codice nuovo;
-     *  2. ripunta TUTTE le righe figlie, tabella per tabella, dal codice vecchio al nuovo;
-     *  3. solo alla fine cancella la riga vecchia, che a quel punto non e' piu' referenziata da
-     *     nessuno e quindi non si porta via niente in cascata.
-     *
-     * E' la regola gia' scritta nel TODO del progetto Lughese: prima si ripunta tutto al
-     * superstite, poi si cancella.
-     *
-     * L'elenco delle tabelle figlie si legge da INFORMATION_SCHEMA e non si scrive a mano: cosi'
-     * una chiave esterna aggiunta domani viene coperta da sola, invece di essere dimenticata.
+     * Fino al riallineamento del 02/03/2026 prodotti.id e articoli.id erano il codice, char( 32 ), e
+     * cambiarlo voleva dire creare la riga nuova, ripuntare dal vecchio al nuovo tutte le righe figlie
+     * lette dalle chiavi esterne, e solo alla fine cancellare la vecchia, dentro una transazione: un
+     * UPDATE dell'id staccava in silenzio foto e allegati ( ON UPDATE SET NULL ) o era rifiutato dalle
+     * righe di documento. Adesso l'id e' numerico e non cambia mai, le righe figlie citano l'id, e il
+     * codice sta in prodotti.codice e articoli.codice ( UNIQUE ): cambiarlo e' un UPDATE di una colonna.
+     * Sui deploy installati prima di marzo ci arriva _usr/_database/_patch/_202609301900.id.numerici.sql.
      *
      * @param   string  $t      la tabella, 'prodotti' o 'articoli'
-     * @param   string  $o      il codice attuale
+     * @param   string  $o      l'id della riga, o il suo codice attuale
      * @param   string  $n      il codice nuovo
      *
-     * @return  array           esito, con il conteggio delle righe spostate per tabella
+     * @return  array           esito
      *
      */
     function rinominaEntita( $t, $o, $n ) {
@@ -287,9 +296,9 @@
 
         $c = $cf['mysql']['connection'];
 
-        $r = array( 'tabella' => $t, 'vecchio' => $o, 'nuovo' => $n, 'spostate' => array(), 'err' => array() );
+        $r = array( 'tabella' => $t, 'vecchio' => $o, 'nuovo' => $n, 'err' => array() );
 
-        // solo le due tabelle a id naturale del catalogo
+        // solo le due tabelle del catalogo
         if( ! in_array( $t, array( 'prodotti', 'articoli' ) ) ) {
             $r['err'][] = 'tabella non gestita: ' . $t;
             return $r;
@@ -299,89 +308,49 @@
         $n = trim( (string) $n );
 
         if( $o === '' || $n === '' ) {
-            $r['err'][] = 'codice di partenza o di arrivo mancante';
+            $r['err'][] = 'riga di partenza o codice di arrivo mancante';
             return $r;
         }
 
-        if( $o === $n ) {
-            $r['err'][] = 'il codice nuovo e quello vecchio sono lo stesso';
-            return $r;
-        }
-
-        // prodotti.id e articoli.id sono char(32)
+        // prodotti.codice e articoli.codice sono char(32)
         if( mb_strlen( $n ) > 32 ) {
             $r['err'][] = 'il codice nuovo supera i 32 caratteri';
             return $r;
         }
 
-        $vecchia = mysqlSelectRow( $c, 'SELECT * FROM ' . $t . ' WHERE id = ?', array( array( 's' => $o ) ) );
+        // la riga: per id se $o e' un numero ( le schede passano request[table].id ), altrimenti per codice
+        $riga = ( ctype_digit( $o ) ) ? mysqlSelectRow( $c, 'SELECT id, codice FROM ' . $t . ' WHERE id = ?', array( array( 's' => $o ) ) ) : NULL;
+        if( empty( $riga ) ) {
+            $riga = mysqlSelectRow( $c, 'SELECT id, codice FROM ' . $t . ' WHERE codice = ?', array( array( 's' => $o ) ) );
+        }
 
-        if( empty( $vecchia ) ) {
-            $r['err'][] = 'il codice ' . $o . ' non esiste in ' . $t;
+        if( empty( $riga ) ) {
+            $r['err'][] = $o . ' non esiste in ' . $t;
             return $r;
         }
 
-        $esiste = mysqlSelectValue( $c, 'SELECT id FROM ' . $t . ' WHERE id = ?', array( array( 's' => $n ) ) );
+        $r['id'] = $riga['id'];
+        $r['vecchio'] = $riga['codice'];
+
+        if( $riga['codice'] === $n ) {
+            $r['err'][] = 'il codice nuovo e quello vecchio sono lo stesso';
+            return $r;
+        }
+
+        $esiste = mysqlSelectValue( $c, 'SELECT id FROM ' . $t . ' WHERE codice = ? AND id <> ?', array( array( 's' => $n ), array( 's' => $riga['id'] ) ) );
 
         if( ! empty( $esiste ) ) {
             $r['err'][] = 'il codice ' . $n . ' e\' gia\' in uso: un cambio codice non fonde due schede';
             return $r;
         }
 
-        // le tabelle figlie, lette dalle chiavi esterne
-        $figlie = mysqlQuery(
-            $c,
-            'SELECT TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE '.
-            'WHERE TABLE_SCHEMA = DATABASE() AND REFERENCED_TABLE_NAME = ? '.
-            'ORDER BY TABLE_NAME, COLUMN_NAME',
-            array( array( 's' => $t ) )
-        );
+        // il codice nuovo; l'id, e con lui ogni riga che lo cita, resta quello
+        mysqlQuery( $c, 'UPDATE ' . $t . ' SET codice = ? WHERE id = ?', array( array( 's' => $n ), array( 's' => $riga['id'] ) ) );
 
-        // transazione: o si sposta tutto, o non si sposta niente
-        mysqli_begin_transaction( $c );
-
-        try {
-
-            // 1. la riga nuova, copia della vecchia
-            $nuova = $vecchia;
-            $nuova['id'] = $n;
-
-            mysqlInsertRow( $c, $nuova, $t );
-
-            // 2. tutte le righe figlie, una tabella per volta
-            foreach( $figlie as $f ) {
-
-                // su UPDATE mysqlQuery() restituisce gia' le righe toccate
-                // ( mysqli_stmt_affected_rows, _src/_lib/_mysql.tools.php riga 483 ): chiedere
-                // mysqli_affected_rows alla CONNESSIONE dopo uno statement preparato torna zero
-                $spostate = mysqlQuery(
-                    $c,
-                    'UPDATE ' . $f['TABLE_NAME'] . ' SET ' . $f['COLUMN_NAME'] . ' = ? WHERE ' . $f['COLUMN_NAME'] . ' = ?',
-                    array( array( 's' => $n ), array( 's' => $o ) )
-                );
-
-                if( $spostate > 0 ) {
-                    $r['spostate'][ $f['TABLE_NAME'] . '.' . $f['COLUMN_NAME'] ] = $spostate;
-                }
-
-            }
-
-            // 3. la riga vecchia, che ormai non e' piu' referenziata da nessuno
-            mysqlQuery( $c, 'DELETE FROM ' . $t . ' WHERE id = ?', array( array( 's' => $o ) ) );
-
-            mysqli_commit( $c );
-
-            $r['fatto'] = true;
-
-        } catch( Exception $e ) {
-
-            mysqli_rollback( $c );
-            $r['err'][] = 'cambio codice annullato: ' . $e->getMessage();
-
-        }
+        $r['fatto'] = true;
 
         // debug
-        logWrite( 'cambio codice ' . $t . ': ' . $o . ' -> ' . $n . ' ' . print_r( $r, true ), 'task', ( empty( $r['err'] ) ) ? LOG_INFO : LOG_ERR );
+        logWrite( 'cambio codice ' . $t . ' #' . $riga['id'] . ': ' . $riga['codice'] . ' -> ' . $n, 'task', LOG_INFO );
 
         return $r;
 

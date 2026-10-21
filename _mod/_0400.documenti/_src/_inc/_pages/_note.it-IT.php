@@ -45,7 +45,7 @@
 		$p['note.credito.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione nota di credito' ),
 			'parent'		=> array( 'id'		=> 'note.credito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.amministrazione.form.php' ),
@@ -55,6 +55,7 @@
 															'note.credito.amministrazione.form.relazioni',
 															'note.credito.amministrazione.form.righe',
 															'note.credito.amministrazione.form.pagamenti',
+															'note.credito.amministrazione.form.dati.fiscali',
 															'note.credito.amministrazione.form.chiusura',
 															'note.credito.amministrazione.form.stampe',
 															'note.credito.amministrazione.form.tools' ) )
@@ -101,11 +102,23 @@
 			'etc'			=> array( 'tabs'	=> $p['note.credito.amministrazione.form']['etc']['tabs'] )
 		);
 
+		// gestione dati fiscali note di credito
+		$p['note.credito.amministrazione.form.dati.fiscali'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'dati fiscali' ),
+			'h1'			=> array( $l		=> 'dati fiscali' ),
+			'parent'		=> array( 'id'		=> 'note.credito.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.dati.fiscali.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.dati.fiscali.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.amministrazione.form']['etc']['tabs'] )
+		);
+
 		// gestione note di credito_righe
 		$p['righe.note.credito.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.note.credito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.note.credito.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.note.credito.amministrazione.form.php' ),
@@ -168,7 +181,7 @@
 		$p['righe.note.credito.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.note.credito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.note.credito.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_righe.note.credito.amministrazione.form.php' ),
@@ -206,7 +219,7 @@
 		$p['note.debito.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione nota di debito' ),
 			'parent'		=> array( 'id'		=> 'note.debito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.debito.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_note.debito.amministrazione.form.php' ),
@@ -246,7 +259,7 @@
 		$p['note.debito.amministrazione.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.note.debito.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.debito.amministrazione.righe.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_note.debito.amministrazione.righe.form.php' ),
@@ -339,7 +352,7 @@
 		$p['note.credito.passive.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione nota di credito' ),
 			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.php' ),
@@ -402,7 +415,7 @@
 		$p['note.credito.passive.amministrazione.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione riga' ),
 			'parent'		=> array( 'id'		=> 'righe.note.credito.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.righe.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.righe.form.php' ),

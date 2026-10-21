@@ -11,8 +11,8 @@
      * che appoggiandosi al cron di sistema garantisce un'elevatissima affidabilità e buone prestazioni.
      * Dal lato del sistema, uno script in /etc/cron.d/ che può essere installato anche tramite il comando
      * _src/_sh/_crontab.install.sh deve richiamare l'API /api/cron del framework ogni minuto. L'API si 
-     * occuperà di controllare sulle tabelle *task* e *job* quali compiti vanno eseguiti e provvederà a 
-     * sbrigarli di conseguenza.
+     * occuperà di controllare sulle tabelle *task*, *job* e *pianificazioni* quali compiti vanno eseguiti e
+     * provvederà a sbrigarli di conseguenza.
      * 
      * task e job
      * ----------
@@ -36,10 +36,11 @@
      * -------------------------------------
      * Ad ogni chiamata, l'API _src/_api/_cron.php ricava dalle tabelle *task* e *job* l'elenco delle cose
      * da fare, utilizzando un meccanismo di lock software basato su token per evitare la concorrenza. Prima
-     * vengono eseguiti i task, e successivamente vengono fatti avanzare i job.
+     * vengono eseguiti i task, successivamente vengono fatti avanzare i job, e infine vengono creati gli oggetti
+     * delle pianificazioni scadute ( si veda la sezione "esecuzione pianificazioni" più sotto ).
      * 
      * Le informazioni rilevanti sul lavoro dell'API vengono salvate rispettivamente sotto le chiavi
-     * $cf['cron']['task'] e $cf['cron']['job'], inoltre un log specifico per la tracciatura degli esiti di
+     * $cf['cron']['task'], $cf['cron']['job'] e $cf['cron']['pianificazioni'], inoltre un log specifico per la tracciatura degli esiti di
      * tali lavorazioni è tenuto in var/log/cron/ e specificamente il dettaglio dell'ultima esecuzione è contenuto
      * in var/log/latest/cron.latest.log.
      * 
@@ -60,6 +61,11 @@
      * tabella task, la cui struttura è simile a quella del file /etc/crontab di Linux. Ogni volta che viene chiamata
      * l'API cron (/api/cron) il framework controlla se ci sono task da eseguire in quel momento, e nel caso
      * provvede ad eseguirli.
+     *
+     * La somiglianza con crontab si ferma ai nomi dei campi: ciascuno contiene un solo valore ( NULL vale "ogni" ),
+     * senza intervalli, liste né passi, e giorno_della_settimana va da 1 ( lunedì ) a 7 ( domenica ) perché si
+     * confronta con date( 'N' ). La domenica è 7 e non 0 come in crontab: un task con 0 non parte mai. È lo stesso
+     * range della tendina del form dei task ( _mod/_0030.strumenti/_src/_inc/_macro/_task.form.php ).
      * 
      * test dei task
      * -------------
@@ -83,10 +89,13 @@
      * I log dei task sono raggruppati per ID del task (con riferimento all'ID che il task ha sulla tabella dei task).
      * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
      * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
-     * log dei task pianificati sono /var/log/task/TASKID.log (che contiene informazioni generali sull'esecuzione del task)
-     * e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica esecuzione
-     * del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e suddiviso
-     * in piccole parti ognuna relativa a una data esecuzione.
+     * log dei task pianificati sono /var/log/task/TASKID.AAAAMM.log (che contiene informazioni generali sull'esecuzione del
+     * task) e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica
+     * esecuzione del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e
+     * suddiviso in piccole parti ognuna relativa a una data esecuzione.
+     *
+     * Il primo ha il mese nel nome come gli altri log del framework, e lo pota chi pota quelli; i secondi sono un file
+     * per iterazione e li pota _src/_api/_task/_log.task.clean.php, che va pianificato.
      * 
      * esecuzione dei job
      * ==================
@@ -236,7 +245,8 @@
             )
         );
 
-        // chiusura esplicita: `build()` termina già lo script, questo è solo un presidio
+        // chiusura esplicita: `build()` stampa l'output ma non termina lo script, ed è questo exit che impedisce di
+        // proseguire con l'esecuzione di task e job senza il lock
         exit;
 
     }
@@ -405,7 +415,7 @@
             }
 
             // log
-            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
+            loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.' . date( 'Ym' ) . '.log' );
 
         }
 
@@ -654,6 +664,147 @@
 
         // log
         logger( 'nessun job trovato', 'cron' );
+
+    }
+
+    /**
+     * esecuzione pianificazioni
+     * =========================
+     * Le pianificazioni sono la terza automazione, dopo task e job: ogni riga della tabella pianificazioni ( quelle
+     * senza id_genitore ) descrive un oggetto da creare a intervalli regolari, e questo blocco crea quelli scaduti.
+     * La forma è quella dei due blocchi qui sopra: si liberano i lock appesi da più di dieci minuti, si bloccano con il
+     * token del cron le pianificazioni da elaborare, si selezionano, e per ciascuna si include il file che fa il lavoro
+     * ( il task pianificazioni.populate del modulo _PI000.pianificazioni, a cui la riga arriva nella variabile
+     * $pianificazione ), poi si rilascia il lock scrivendo timestamp_elaborazione. Il dettaglio di ogni elaborazione va
+     * in $cf['cron']['pianificazioni'][ <id> ]['status'] e nei file var/log/pianificazioni/<id>.log e
+     * var/log/pianificazioni/<id>/<microtime>.log, come per i task.
+     *
+     * Una pianificazione è da elaborare quando è attiva ( data_avvio non successiva a oggi ), non è ancora stata
+     * elaborata oggi ( data_elaborazione ) o è stata modificata dopo l'ultima elaborazione, e non è finita ( elaborata
+     * dopo la sua data di fine, senza estensione ): il file che fa il lavoro scrive data_elaborazione solo quando non
+     * le resta niente da creare, quindi una pianificazione di documenti con più date arretrate torna a ogni passata e ne
+     * crea uno per volta. Le pianificazioni si elaborano in ordine di data del prossimo oggetto, così che i documenti di
+     * pianificazioni diverse vengano numerati in ordine cronologico. La stessa selezione, con LIMIT 1, la fa il task
+     * quando lo si chiama a mano senza id: le due query vanno tenute uguali.
+     *
+     * Il blocco lavora solo se il modulo _PI000.pianificazioni è attivo, perché il lavoro lo fa il suo task; le
+     * pianificazioni del vecchio _0100.pianificazioni, se c'è, restano affidate al suo task nella tabella task.
+     *
+     */
+
+    // le pianificazioni si elaborano solo con il modulo attivo
+    if( in_array( 'PI000.pianificazioni', $cf['mods']['active']['array'] ) ) {
+
+        // provo a recuperare le pianificazioni ferme
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = NULL WHERE token IS NOT NULL AND timestamp_elaborazione < ?',
+            array(
+                array( 's' => strtotime( '-10 minutes' ) )
+            )
+        );
+
+        // metto il lock sulle pianificazioni da elaborare
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = ?, timestamp_elaborazione = ? WHERE
+                id_genitore IS NULL AND token IS NULL AND entita IS NOT NULL AND
+                data_avvio IS NOT NULL AND data_avvio <= ? AND
+                ( data_elaborazione IS NULL OR data_elaborazione < ? OR timestamp_aggiornamento > timestamp_elaborazione ) AND
+                NOT ( data_fine IS NOT NULL AND data_elaborazione > data_fine AND coalesce( giorni_estensione, 0 ) = 0 )',
+            array(
+                array( 's' => $cf['cron']['token'] ),
+                array( 's' => $cf['cron']['time'] ),
+                array( 's' => date( 'Y-m-d', $cf['cron']['time'] ) ),
+                array( 's' => date( 'Y-m-d', $cf['cron']['time'] ) )
+            )
+        );
+
+        // seleziono le pianificazioni a cui ho applicato il lock
+        $cf['cron']['pianificazioni'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT * FROM pianificazioni WHERE token = ? ORDER BY coalesce( data_ultimo_oggetto, data_inizio, data_avvio ) ASC',
+            array(
+                array( 's' => $cf['cron']['token'] )
+            )
+        );
+
+    } else {
+
+        // nessuna pianificazione
+        $cf['cron']['pianificazioni'] = array();
+
+    }
+
+    // verifico se ci sono delle pianificazioni da elaborare
+    if( is_array( $cf['cron']['pianificazioni'] ) && ! empty( $cf['cron']['pianificazioni'] ) ) {
+
+        // log
+        logger( 'pianificazioni trovate: ' . count( $cf['cron']['pianificazioni'] ), 'cron' );
+
+        // ciclo sulle pianificazioni
+        foreach( $cf['cron']['pianificazioni'] as $pianificazione ) {
+
+            // stesso tetto di durata applicato ai task e ai job ( vedi sopra ): le pianificazioni non elaborate
+            // perdono il lock qui sotto e vengono riprese al run successivo
+            if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                // log
+                logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo le pianificazioni alla #' . $pianificazione['id'], 'cron', LOG_WARNING );
+
+                // status
+                $cf['cron']['info'][] = 'pianificazioni interrotte per durata massima del run alla #' . $pianificazione['id'];
+
+                break;
+
+            }
+
+            // log
+            logger( 'elaboro la pianificazione ' . $pianificazione['id'] . ' -> ' . $pianificazione['nome'], 'cron' );
+
+            // ...
+            $status = array();
+
+            // eseguo la pianificazione
+            require DIR_MOD . '_PI000.pianificazioni/_src/_api/_task/_pianificazioni.populate.php';
+
+            // ...
+            $cf['cron']['pianificazioni'][ $pianificazione['id'] ]['status'] = $status;
+
+            // rilascio il lock
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE pianificazioni SET timestamp_elaborazione = ?, token = NULL WHERE id = ?',
+                array(
+                    array( 's' => time() ),
+                    array( 's' => $pianificazione['id'] )
+                )
+            );
+
+            // log
+            loggerLatest( print_r( $status, true ), DIR_VAR_LOG_PIANIFICAZIONI . $pianificazione['id'] . '/' . microtime( true ) . '.log' );
+
+            // log
+            loggerLatest( print_r( $pianificazione, true ), DIR_VAR_LOG_PIANIFICAZIONI . $pianificazione['id'] . '.log' );
+
+        }
+
+        // rilascio il lock delle pianificazioni rimaste indietro per la durata massima del run
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = NULL WHERE token = ?',
+            array(
+                array( 's' => $cf['cron']['token'] )
+            )
+        );
+
+    } else {
+
+        // status
+        $cf['cron']['info'][] = 'nessuna pianificazione trovata';
+
+        // log
+        logger( 'nessuna pianificazione trovata', 'cron' );
 
     }
 

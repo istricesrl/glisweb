@@ -152,7 +152,7 @@
 		$row['mtk'] = md5( $row['id_mail'].$row['indirizzo'] );
 
 		// log
-		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
 		// inizializzo il template
 		$tpl = array(
@@ -161,7 +161,7 @@
 		);
 
 		// log
-		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // prelevo i contenuti
 		$cnts = mysqlQuery(
@@ -173,7 +173,7 @@
 		);
 
 		// log
-		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // debug
         // var_dump( $cnts );
@@ -222,7 +222,7 @@
 		// die();
 
 		// log
-		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_DEBUG );
 
         // debug
         // die( print_r( $tpl, true ) );
@@ -243,7 +243,9 @@
                     '<mailto:'.$cnt['mittente_mail'].'?subject=Unsubscribe%20:%20{'.$row['indirizzo'].'}>,'.
                     '<' . $cf['site']['url'] . 'disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>',
                 'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click'
-            )
+            ),
+            NULL,
+            10          // gli invii massivi passano dopo le transazionali ( ordine NULL ): una newsletter da migliaia di righe non deve far aspettare una conferma
         );
 
         // TODO prelevare i dati dai metadati del mailing e inserirli come dt

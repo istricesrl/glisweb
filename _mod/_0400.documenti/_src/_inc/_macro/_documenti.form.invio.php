@@ -54,61 +54,52 @@
     // se c'è un invio da accodare
     if( isset( $_REQUEST['__invio__']) ) {
 
-        $token = md5( time() );
         $attach = 'tmp/documento.' . $_REQUEST[ $ct['form']['table'] ]['id'] . '.pdf';
 
-        // il token e' la chiave d'accesso usa e getta con cui il generatore del PDF viene chiamato
-        // senza sessione, e va scritto SOLO sul documento che si sta inviando: senza la clausola
-        // WHERE la UPDATE lo riscriveva su tutte le righe di documenti, e il token di un preventivo
-        // diventava una chiave valida per scaricare qualunque altro documento dell'archivio
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE documenti SET token = ? WHERE id = ?',
-            array(
-                array( 's' => $token ),
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
-            )
-        );
+        // NOTA fino al 15/10/2026 il PDF si chiedeva via restCall() a print/0400.documenti/documento.pdf,
+        // senza sessione e con un token usa e getta scritto su documenti.token; da quando l'endpoint
+        // vuole GESTIONE_DOCUMENTI ( 15/09/2026 ) la chiamata prendeva 403 e la mail partiva senza
+        // allegato. La macro gira gia' nella sessione di chi invia, quindi il PDF si genera qui, con la
+        // stessa funzione dell'endpoint, e non serve aprire una chiave d'accesso in piu' sul documento
+        $filePdf = generaDocumentoPdf( $_REQUEST[ $ct['form']['table'] ]['id'], fullPath( $attach ) );
 
-        $x = restCall(
-            $cf['site']['url'] . 'print/0400.documenti/documento.pdf',
-            METHOD_GET,
-            array( '__documento__' => $_REQUEST[ $ct['form']['table'] ]['id'], 'n' => $attach, 't' => $token ),
-            NULL,
-            MIME_APPLICATION_JSON
-        );
+        // senza allegato la mail non si accoda: il motivo lo scrive generaDocumentoPdf() nel log dei documenti
+        if( $filePdf === false ) {
+            logWrite( 'invio del documento #' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' non accodato, stampa non generata', 'documenti', LOG_ERR );
+        } else {
 
-        $mittente = mysqlSelectRow(
-            $cf['mysql']['connection'],
-            'SELECT anagrafica, indirizzo, server FROM mail_view WHERE id = ?',
-            array( array( 's' => $_REQUEST['__invio__']['id_mittente'] ) ) 
-        );
+            $mittente = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT anagrafica, indirizzo, server FROM mail_view WHERE id = ?',
+                array( array( 's' => $_REQUEST['__invio__']['id_mittente'] ) ) 
+            );
 
-        $destinatario = mysqlSelectRow(
-            $cf['mysql']['connection'],
-            'SELECT anagrafica, indirizzo FROM mail_view WHERE id = ?',
-            array( array( 's' => $_REQUEST['__invio__']['id_destinatario'] ) ) 
-        );
+            $destinatario = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT anagrafica, indirizzo FROM mail_view WHERE id = ?',
+                array( array( 's' => $_REQUEST['__invio__']['id_destinatario'] ) ) 
+            );
 
-        queueMail(
-            $cf['mysql']['connection'],
-            strtotime( '+5 minutes' ),
-            array(
-                $mittente['anagrafica'] => $mittente['indirizzo']
-            ),
-            array(
-                $destinatario['anagrafica'] => $destinatario['indirizzo']
-            ),
-            $_REQUEST['__invio__']['oggetto'],
-            $_REQUEST['__invio__']['corpo'],
-            array(),
-            array(),
-            array(
-                'documento' => $attach
-            ),
-            array(),
-            $mittente['server']
-        );
+            queueMail(
+                $cf['mysql']['connection'],
+                strtotime( '+5 minutes' ),
+                array(
+                    $mittente['anagrafica'] => $mittente['indirizzo']
+                ),
+                array(
+                    $destinatario['anagrafica'] => $destinatario['indirizzo']
+                ),
+                $_REQUEST['__invio__']['oggetto'],
+                $_REQUEST['__invio__']['corpo'],
+                array(),
+                array(),
+                array(
+                    'documento' => $attach
+                ),
+                array(),
+                $mittente['server']
+            );
+        }
 
     }
 

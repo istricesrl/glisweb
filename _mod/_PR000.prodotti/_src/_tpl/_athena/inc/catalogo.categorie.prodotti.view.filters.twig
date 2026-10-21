@@ -1,0 +1,21 @@
+<div class="row form-group view-filters d-print-none">
+    <div class="col-12 col-md-auto form-col">
+        <span class="label-top">genitore</span>
+        <select name="__view__[{{ view.id }}][__filters__][id_genitore][EQ]" onchange="$('#pager').val('0'); submit();" class="form-select form-select-sm">
+            <option value="" {% if request.__view__[ view.id ].__filters__.id_genitore.EQ == "" %}selected{% endif %}>tutti</option>
+            {% for genitore in etc.select.id_genitore %}
+            <option value="{{ genitore.id }}" {% if request.__view__[ view.id ].__filters__.id_genitore.EQ == genitore.id %}selected{% endif %}>{{ genitore.__label__ }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col form-col">
+        <span class="label-top">ricerca per parola chiave</span>
+        <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+    </div>
+    <div class="col-auto form-col">
+        <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+        {% if view.insert.path %}
+        <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+        {% endif %}
+    </div>
+</div>

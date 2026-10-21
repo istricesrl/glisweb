@@ -65,8 +65,9 @@ Questi campi vengono elaborati sempre nella controller /_mod/_CT000.contatti/_sr
 automatico tramite la funzione associazioneConsensiContatto() che si occupa di registrare sul database i consensi prestati
 dall'utente.
 
-Le tabelle coinvolte nel processo sono la consensi_anagrafica e la consensi_contatti, che registrano rispettivamente
-i consensi prestati da una specifica anagrafica e quelli prestati tramite un dato modulo contatti. La legenda dei consensi
+Le tabelle coinvolte nel processo sono la anagrafica_consensi e la consensi_contatti, che registrano rispettivamente
+i consensi prestati da una specifica anagrafica ( una riga per consenso, aggiornata a ogni nuovo modulo ) e quelli
+prestati tramite un dato modulo contatti. La legenda dei consensi
 si trova nella tabella consensi.
 
 ## integrazione con reCAPTCHA
@@ -154,6 +155,12 @@ Questa è la macro della pagina di gestione dati della gestione contatti.
 
 ### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.php
 Questa è la macro della pagina di gestione contatti.
+
+### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.privacy.php
+Questa è la macro della linguetta privacy della gestione contatti: elenca in sola lettura le righe di consensi_contatti
+del contatto aperto ( vista consensi_contatti_view, filtrata su id_contatto ) e traduce il valore in consenso prestato /
+non prestato. È costruita sul modello di /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.privacy.php; il
+template è contenuti.contatti.form.privacy.twig, che mostra la vista con inc/view.twig come quello dell'anagrafica.
 
 ### /_mod/_CT000.contatti/_src/_inc/_macro/_contenuti.contatti.form.tools.php
 Questa è la macro della pagina strumenti della gestione contatti.

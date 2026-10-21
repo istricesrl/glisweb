@@ -42,10 +42,6 @@
         // var_dump( $idArticolo );
         // var_dump( $idMatricola );
 
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
-
         $mastri = array();
 
         do {
@@ -651,9 +647,9 @@
      * ( mastri_articoli ), confezionamento ( metadati_articoli ). Di documenti ne scrive una sola,
      * creaMissioneRifornimento, e lo fa in fondo alla catena.
      *
-     * Arrivano dal deploy bernispa, dove sono nate il 08-16/09/2026 in src/lib/mysql.utils.add.php.
-     * Il prefisso di stoccaggio e i mastri esclusi restano parametri con un default, non costanti:
-     * la nomenclatura delle ubicazioni e' di progetto, non dello standard.
+     * Il prefisso di stoccaggio e i mastri esclusi restano parametri, non costanti: la
+     * nomenclatura delle ubicazioni e' di progetto, non dello standard. Il prefisso non ha un
+     * default: senza prefisso dichiarato il ripiego non privilegia nessuna ubicazione per nome.
      */
 
 
@@ -665,43 +661,26 @@
     // sempre nell'unita' inventariale, quindi per quegli articoli e' un numero di fogli, e
     // contarci sopra pezzi da etichettare o da prelevare da' un numero senza senso.
     //
-    // Il cliente dichiara in SAM come si movimenta davvero l'articolo ( articoGST.UM_MovimentazioneFF,
-    // che l'import scrive nel metadato 'um_movimentazione' ) e quanti pezzi stanno in una
-    // confezione ( ConfezionamentoQta1 -> metadato 'conf_qta' ). Sono due metadati, e servono
-    // tutti e due: il primo dice CHE si conta a confezioni, il secondo QUANTO e' grande la
-    // confezione. Uno solo dei due non basta e la funzione risponde di no.
+    // La dichiarazione sta in due metadati dell'articolo, che il progetto popola come vuole ( a
+    // mano o dall'import del suo gestionale ): 'um_movimentazione' dice CHE si conta a confezioni
+    // e in quale unita', 'conf_qta' QUANTO e' grande la confezione. Servono tutti e due: uno solo
+    // non basta e la funzione risponde di no. L'unita' inventariale ( 'umi' ) si legge e si
+    // riporta nell'esito, ma non decide niente: conta la dichiarazione, non l'unita'.
     //
-    // Il campo lo popolano a mano, un articolo per volta, quindi il metadato assente e' la
-    // norma e non un errore: senza, la risposta e' 'a_confezioni' => false e chi chiama torna
-    // a fare quello che faceva prima. Nessuna maschera va scritta come se il dato ci fosse.
+    // Il metadato assente e' la norma e non un errore: senza, la risposta e' 'a_confezioni' => false
+    // e chi chiama torna a fare quello che faceva prima. Nessuna maschera va scritta come se il
+    // dato ci fosse.
     //
-    // Il nome della colonna SAM ( UM_MovimentazioneFF ) dice "FF", e fino al 10/09/2026 questa
-    // funzione pretendeva anche umi = FF: l'accordo di quel mattino era che il campo riguardasse
-    // i soli articoli a foglio. Lo stesso pomeriggio il cliente lo ha popolato su 1.293 articoli,
-    // di cui 499 con umi = N. e um_movimentazione = SC ( scatole ), e ha chiesto perche' la
-    // maschera di prelievo non contasse le scatole. Il vincolo e' quindi caduto: quello che
-    // conta e' la DICHIARAZIONE, non l'unita' inventariale, ed e' il cliente a farla un articolo
-    // per volta. Il nome della colonna resta fuorviante e basta.
+    // Il RESTO non e' un caso di scuola ( 25 fogli su una confezione da 100 ): un pacco aperto e'
+    // comunque un pacco che sta nel collo, quindi 'confezioni' e' arrotondato per eccesso, e
+    // 'intere'/'resto' restano separati per chi volesse dirlo all'operatore.
     //
-    // Il dubbio che aveva motivato il vincolo era che conf_qta non fosse un divisore affidabile
-    // fuori dagli FF. Sul dato dichiarato non regge: sulle righe delle liste di prelievo la
-    // quantita' e' multipla esatta di conf_qta nel 96% dei casi per N./SC ( 4.275 su 4.434 )
-    // contro il 99% per FF/PC ( 2.169 su 2.198 ). La misura di stamattina guardava TUTTE le
-    // righe SC, comprese quelle di articoli che il cliente non ha dichiarato: e' la
-    // dichiarazione a fare da filtro, non l'unita'.
-    //
-    // Il RESTO non e' un caso di scuola: sulla vista delle liste di prelievo 136 righe FF su
-    // 1.346 hanno una quantita' che non e' multipla della confezione ( 25 fogli su una confezione
-    // da 100 ). Un pacco aperto e' comunque un pacco che sta nel collo, quindi conta come una
-    // confezione: 'confezioni' e' arrotondato per eccesso, e 'intere'/'resto' restano separati
-    // per chi volesse dirlo all'operatore.
-    //
-    // 'um_nome' e 'um_nome_singolare' sono la parola da mostrare all'operatore, perche'
-    // um_movimentazione e' un codice SAM ( SC, PC, RS... ) e "20 SC" su un tablet non lo legge
-    // nessuno. La decodifica e' la GEMELLA di trascodifica_um() in
-    // import.categorie.prodotti.articoli.py, che pero' conosce i soli plurali: se si aggiunge un
-    // codice va aggiunto in tutte e due. Un codice che qui non c'e' non e' un errore e non
-    // interrompe niente - si mostra il codice cosi' com'e'.
+    // 'um_nome' e 'um_nome_singolare' sono la parola da mostrare all'operatore al posto del codice
+    // ( "20 SC" su un tablet non lo legge nessuno ). I codici delle unita' di misura sono quelli
+    // del gestionale di ciascun progetto, quindi la decodifica NON sta qui: si dichiara in
+    // $cf['mastri']['udm']['parole'], codice => array( singolare, plurale ), di solito nel ramo
+    // mastri di src/config.json ( vedi _mod/_0500.mastri/_src/_config/_030.common.php ). Un codice
+    // che non c'e' non e' un errore e non interrompe niente: si mostra cosi' com'e'.
     //
     // ATTENZIONE a 'confezioni' contro 'intere': 'confezioni' e' ARROTONDATO PER ECCESSO e serve
     // a contare le etichette ( un pacco aperto e' comunque un pacco che sta nel collo ). Per dire
@@ -712,28 +691,16 @@
     // Ritorna sempre un array, anche per un articolo che non esiste.
     function confezioniArticolo( $conn, $idArticolo, $quantita ) {
 
-        // decodifica delle unita' di misura SAM, singolare e plurale. E' la gemella di
-        // trascodifica_um() in import.categorie.prodotti.articoli.py: un codice nuovo va aggiunto
-        // in tutte e due.
-        //
-        // 'AST' e 'PZ' sono sinonimi di due voci che c'erano gia' ( 'AS' e 'N.' ) e in DB pesano
-        // 176 e 52 articoli. Restano invece senza parola, e si mostrano com'e' il codice, BOX
-        // ( 391 articoli ), BLS ( 79 ), LA ( 47 ), RT ( 2 ) ed ESP ( 1 ): tradurli a naso -
-        // blister? lattine? rotoli? espositori? - vorrebbe dire scrivere in maschera una parola
-        // che nessuno ha mai confermato, e su un'unita' di misura e' il genere di indovinello che
-        // fa prelevare la cosa sbagliata. Vanno chiesti al cliente.
-        $parole = array(
-            'AS'  => array( 'astuccio', 'astucci' ),
-            'AST' => array( 'astuccio', 'astucci' ),
-            'FF'  => array( 'foglio', 'fogli' ),
-            'KG'  => array( 'chilogrammo', 'chilogrammi' ),
-            'MQ'  => array( 'metro quadrato', 'metri quadrati' ),
-            'N.'  => array( 'pezzo', 'pezzi' ),
-            'PC'  => array( 'pacco', 'pacchi' ),
-            'PZ'  => array( 'pezzo', 'pezzi' ),
-            'RS'  => array( 'risma', 'risme' ),
-            'SC'  => array( 'scatola', 'scatole' )
-        );
+        // decodifica delle unita' di misura, dichiarata dal progetto; le chiavi si confrontano in
+        // maiuscolo come i codici letti dai metadati
+        $parole = array();
+        if( ! empty( $GLOBALS['cf']['mastri']['udm']['parole'] ) && is_array( $GLOBALS['cf']['mastri']['udm']['parole'] ) ) {
+            foreach( $GLOBALS['cf']['mastri']['udm']['parole'] as $codice => $nomi ) {
+                if( is_array( $nomi ) && count( $nomi ) >= 2 ) {
+                    $parole[ strtoupper( trim( (string) $codice ) ) ] = array_values( $nomi );
+                }
+            }
+        }
 
         // i tre metadati in una query sola; max() perche' una riga per nome e' quello che ci si
         // aspetta, ma le due convenzioni di scrittura di metadati_articoli ( id_lingua NULL e
@@ -803,12 +770,12 @@
     // codice: tutto quello che viene dopo - le check function, il confronto ordinato/prelevato,
     // la riga scritta - continua a ragionare in pezzi come ha sempre fatto.
     //
-    // Il moltiplicatore di risolviCodiceArticolo() ha la precedenza e SPEGNE il selettore: se
-    // l'operatore ha scansionato il barcode di una confezione, il codice battuto porta gia' con
-    // se' la propria unita' ( '20' sono 20 confezioni di quel barcode ) e applicare anche
-    // conf_qta moltiplicherebbe due volte. Le due conversioni non sono la stessa cosa - una viene
-    // da __report_barcode_qta__, l'altra dal metadato conf_qta - e a comandare e' il codice
-    // battuto, che e' l'unica cosa che l'operatore ha davvero in mano.
+    // Un moltiplicatore che arriva dal codice battuto ha la precedenza e SPEGNE il selettore: se
+    // l'operatore ha scansionato il barcode di una confezione, il codice porta gia' con se' la
+    // propria unita' ( '20' sono 20 confezioni di quel barcode ) e applicare anche conf_qta
+    // moltiplicherebbe due volte. Le due conversioni non sono la stessa cosa - una viene dal
+    // barcode, l'altra dal metadato conf_qta - e a comandare e' il codice battuto, che e'
+    // l'unica cosa che l'operatore ha davvero in mano. Chi risolve il barcode e' il chiamante.
     //
     // E' fail-closed: se si chiede la conversione su un articolo che il cliente non ha
     // dichiarato NON si ripiega sui pezzi. Un 20 preso per 20 pezzi invece che per 20 scatole e'
@@ -845,8 +812,9 @@
     //      quel momento la giacenza registrata fosse zero: e' anagrafica, non fotografia.
     //
     //   2. altrimenti si guarda dove il pezzo si trova ADESSO ( __report_giacenza_magazzini__ ),
-    //      preferendo le aree di stoccaggio - i 10 mastri "STOCCAGGIO AREA 300/400/500", che
-    //      sono il bulk vero del magazzino - e poi qualunque altra ubicazione con giacenza.
+    //      preferendo le aree di stoccaggio - i mastri il cui nome comincia col prefisso
+    //      dichiarato dal progetto, che sono il bulk vero del magazzino - e poi qualunque altra
+    //      ubicazione con giacenza. Senza prefisso si guarda solo la giacenza.
     //      A parita' di categoria vince la piu' capiente: rifornire dalla catasta piu' grande
     //      e' quello che farebbe l'operatore, e riduce le probabilita' di doverci tornare.
     //
@@ -860,7 +828,7 @@
     //
     // Ritorna array( 'id_mastro', 'codice', 'giacenza' ) oppure NULL se non c'e' da nessuna parte:
     // e' il "se possibile" della richiesta del cliente, e chi chiama ne fa un motivo da mostrare.
-    function trovaUbicazioneBulk( $conn, $idArticolo, $idMastroSottoscorta, $esclusi = array(), $prefisso = 'STOCCAGGIO ' ) {
+    function trovaUbicazioneBulk( $conn, $idArticolo, $idMastroSottoscorta, $esclusi = array(), $prefisso = NULL ) {
 
         // i mastri da non toccare mai: quello da rifornire piu' quelli di transito
         $esclusi[] = $idMastroSottoscorta;
@@ -900,11 +868,11 @@
                     INNER JOIN mastri ON mastri.id = giacenza.id_mastro
                     WHERE giacenza.id_articolo = ?
                       AND giacenza.totale_proprio > 0' . $filtroEsclusi . '
-                    ORDER BY ( mastri.nome LIKE ? ) DESC, giacenza.totale_proprio DESC, mastri.codice ASC
+                    ORDER BY ' . ( ( ! empty( $prefisso ) ) ? '( mastri.nome LIKE ? ) DESC, ' : '' ) . 'giacenza.totale_proprio DESC, mastri.codice ASC
                     LIMIT 1',
-                array(
-                    array( 's' => $idArticolo ),
-                    array( 's' => $prefisso . '%' )
+                array_merge(
+                    array( array( 's' => $idArticolo ) ),
+                    ( ! empty( $prefisso ) ) ? array( array( 's' => $prefisso . '%' ) ) : array()
                 )
             );
         }
@@ -938,10 +906,10 @@
      * @param $conn         connessione MySQL
      * @param $riga         la riga da valutare
      * @param $esclusi      id di mastri da non considerare come bulk
-     * @param $prefisso     prefisso delle collocazioni di stoccaggio
+     * @param $prefisso     prefisso delle collocazioni di stoccaggio ( NULL: nessuna preferenza )
      * @return              la riga arricchita
      */
-    function valutaRigaRifornimento( $conn, $riga, $esclusi = array(), $prefisso = 'STOCCAGGIO ' ) {
+    function valutaRigaRifornimento( $conn, $riga, $esclusi = array(), $prefisso = NULL ) {
 
         $mancante = ( ! empty( $riga['scorta_massima'] ) ? $riga['scorta_massima'] : $riga['scorta_minima'] ) - $riga['giacenza'];
 
@@ -993,7 +961,7 @@
      *
      * Tre cose da NON cambiare senza sapere cosa si tocca:
      *  - UNA MISSIONE PER DESTINAZIONE: la testata porta una sola id_mastro_destinazione, e la
-     *    maschera /prelievi legge da li' dove scaricare la merce;
+     *    maschera di prelievo legge da li' dove scaricare la merce;
      *  - LE RIGHE NASCONO SENZA MASTRI: su documenti_articoli i due mastri sono un movimento
      *    gia' avvenuto, non un'intenzione, e updateReportGiacenzaMagazzini() li somma senza
      *    guardare tipologia o missione. Scriverli qui sposterebbe la merce sulla carta;
@@ -1066,8 +1034,8 @@
             return $esito;
         }
 
-        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera
-        // /prelievi riconosce una riga da evadere; id_documento valorizzato perche' senza
+        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera di
+        // prelievo riconosce una riga da evadere; id_documento valorizzato perche' senza
         // documento la stessa maschera non la vedrebbe affatto ( INNER JOIN )
         foreach( $righe as $riga ) {
 

@@ -103,8 +103,10 @@
                 'GESTIONE_IMPORT',
                 'GESTIONE_ANAGRAFICA',
                 'GESTIONE_DOCUMENTI',
+                'GESTIONE_ATTIVITA',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
+                'GESTIONE_PIANIFICAZIONI',
                 'GESTIONE_COMUNICAZIONI',
                 'GESTIONE_CATALOGO',
                 'GESTIONE_ECOMMERCE'
@@ -117,8 +119,10 @@
                 'GESTIONE_CACHE',
                 'GESTIONE_ANAGRAFICA',
                 'GESTIONE_DOCUMENTI',
+                'GESTIONE_ATTIVITA',
                 'GESTIONE_CONTRATTI',
                 'GESTIONE_CORSI',
+                'GESTIONE_PIANIFICAZIONI',
                 'GESTIONE_COMUNICAZIONI',
                 'GESTIONE_CATALOGO',
                 'GESTIONE_ECOMMERCE'
@@ -127,6 +131,11 @@
         'users' => array(
             'id' => NULL,
             'nome' => 'users'
+        ),
+        // chi vede le pagine con una pubblicazione di tipologia anteprima ( vedi aggiungiPubblicazione() )
+        'anteprima' => array(
+            'id' => NULL,
+            'nome' => 'anteprima'
         )
     );
 
@@ -198,6 +207,10 @@
             'id' => NULL,
             'nome' => 'eseguire i task sui documenti contabili'
         ),
+        'GESTIONE_ATTIVITA' => array(
+            'id' => NULL,
+            'nome' => 'eseguire i task sulle attivita\''
+        ),
         'GESTIONE_CONTRATTI' => array(
             'id' => NULL,
             'nome' => 'eseguire i task su contratti, rinnovi, tesseramenti, iscrizioni e abbonamenti'
@@ -205,6 +218,10 @@
         'GESTIONE_CORSI' => array(
             'id' => NULL,
             'nome' => 'eseguire i task su corsi, lezioni, pianificazioni e todo'
+        ),
+        'GESTIONE_PIANIFICAZIONI' => array(
+            'id' => NULL,
+            'nome' => 'gestire le pianificazioni ed eseguire i task che generano gli oggetti pianificati'
         ),
         'GESTIONE_COMUNICAZIONI' => array(
             'id' => NULL,

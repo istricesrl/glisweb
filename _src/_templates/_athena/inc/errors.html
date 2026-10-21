@@ -1,0 +1,14 @@
+{% if etc.errors %}
+<div class="form-row metro">
+    <div class="col-12"><h3>errori</h3></div>
+    <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+            <ul>
+            {% for e in etc.errors %}
+                <li>{{ e }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -69,7 +69,7 @@
 		$p['tesseramenti.form'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'gestione' ),
-			'h1'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione tesseramento' ),
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tesseramenti.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.php' ),
@@ -182,7 +182,7 @@
 		$p['tipologie.tesseramenti.form'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'gestione' ),
-			'h1'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione tipologia' ),
 			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.php' ),

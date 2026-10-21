@@ -50,7 +50,7 @@
     $p['contenuti.archivio.file.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti file form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione file' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.file.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.file.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.file.form.php' ),

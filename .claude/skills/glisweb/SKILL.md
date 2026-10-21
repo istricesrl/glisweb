@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown". Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare anche quando Claude Code avvisa che i file di istruzioni superano il limite ("instruction files add up to … over the 150.0k-char total limit"), quando un CLAUDE.md di progetto cresce o gli si vuole aggiungere una sezione lunga, e quando il contesto della sessione supera i 120k: la sezione "Il contesto costa" e riferimenti/contesto.md dicono come si lavora parsimoniosi e dove vanno le trattazioni. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Vale sui deploy che dichiarano una release in _etc/_current.release: su quelli che non ce l hanno le convenzioni descritte qui non esistono e non vanno applicate ( vedi la sezione "Release e version" ). Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare uno dei cinque file di progetto ( CLAUDE.md, READ.md, TODO.md, DONE.md, CHAT.md ) o il burndown.md, quando si sta per scrivere a un cliente o si riporta una conversazione con lui ( mail, messaggi, telefonate ), e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown", e quando chiede di "pulire le todo", fare il triage o la pulizia del TODO.md, trovare le voci già chiuse o i doppioni ( riferimenti/pulizia-todo.md e bin/applica-triage.py ). Attivare in particolare quando si CHIUDE una voce o si finisce un lavoro: la chiusura non si esaurisce nello spostamento in DONE.md, se è una cosa che il cliente vede o che stava aspettando la stessa riga va anche in CHAT.md, nella sezione "Da dirgli alla prossima occasione", il giorno stesso — vedi la sezione "Quando una voce chiude, il giro non finisce nel DONE.md". Attivare anche quando durante il lavoro nasce una domanda che solo il cliente può sciogliere: va scritta nello stesso turno nel CHAT.md, in "Da chiedergli alla prossima occasione", e non lasciata in conversazione — vedi "Quando nasce una domanda per il cliente". Per i dettagli: i cinque marcatori ([ ] da fare e nel carico, [=] in attesa di un altro e FUORI dal carico, [?] sospesa e FUORI dal carico, [v] fatta, [x] annullata), l'organizzazione del TODO per aree e non per data, i tre flag di urgenza/rilevanza/impatto e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "I cinque file di un progetto" di _etc/_claude/_claude.framework.md. Attivare TASSATIVAMENTE ogni volta che si implementa, modifica o corregge una funzionalità, nello standard o in un progetto: applicazione e test vanno tenuti sempre allineati, la funzionalità nuova nasce col suo test e la modifica aggiorna i test relativi — vedi "TASSATIVO: applicazione e test sempre allineati". Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare anche quando Claude Code avvisa che i file di istruzioni superano il limite ("instruction files add up to … over the 150.0k-char total limit"), quando un CLAUDE.md di progetto cresce o gli si vuole aggiungere una sezione lunga, e quando il contesto della sessione supera i 120k, e quando l'utente chiede "posso chiudere?", "abbiamo finito?", "posso fare clear?" ( si lancia bin/chiusura.py prima di rispondere ): la sezione "Il contesto costa" e riferimenti/contesto.md dicono come si lavora parsimoniosi e dove vanno le trattazioni. Attivare TASSATIVAMENTE quando si cambia, si ruota o si rigenera una password ( root dell'applicazione, DB, SSH, servizi ): va scritta nello stesso turno nel READ.md della root del deploy, nella sezione dell'accesso, e provata col login. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -97,8 +97,10 @@ costa"*.
 In tre righe: **i file di istruzioni restano snelli** ( il `CLAUDE.md` di progetto tiene regole e
 trappole, le trattazioni vanno in `var/personalizzazioni/<area>.md` rimandate dal `READ.md` ); **un
 turno vale il contesto intero** ( comandi raggruppati, script che stampano il risultato, letture
-strette ); **il punto fermo lo dichiara Claude** ( ramo annotato nel TODO e non seguito, `/clear` e
-`/compact` proposti alle soglie ).
+strette ); **il punto fermo lo dichiara Claude, ed è una garanzia** ( alla domanda *"posso chiudere?"* si
+lancia prima `bin/chiusura.py`, che raccoglie i fatti dal disco; `/clear` solo con commit pushati e PROD
+allineata, tutto l'aperto — anche migliorie e osservazioni — già nel TODO, il filo del lavoro a metà in un
+file, niente solo in conversazione; `/compact` alle soglie ).
 
 ## I cinque file di un progetto
 
@@ -109,10 +111,58 @@ destinatario del `CHAT.md`, concorrenza fra sessioni, chiusura di una voce in tr
 **`riferimenti/cinque-file.md`** accanto a questo file: **leggilo prima di scrivere in uno dei cinque**,
 se non l'hai già fatto nella sessione.
 
+**Il `READ.md` del progetto porta gli accessi**, sezione *Accessi e credenziali*: almeno le **credenziali
+di root dell'applicazione**, che servono a provare ogni parte del gestionale ( login, schede, form,
+stampe ) senza chiedere a nessuno; poi DB, Adminer, SSH e servizi esterni. È il primo posto dove
+cercarle, prima del config. **Se le credenziali di root non ci sono, vanno aggiunte**: un `READ.md` senza
+accessi è incompleto. Regola di Fabio del 04/10/2026.
+⚠ **`shadow.json` contiene l'HASH della password, non la password** ( `$2y$…`, `$argon2…`, 60+
+caratteri ): **non si copia mai nel `READ.md` e non si consegna mai a nessuno come password** — il
+05/10/2026 un hash è stato mandato al cliente come password di root. Se la password in chiaro non è
+nel `READ.md`, **se ne genera una nuova** ( `password_hash()` di PHP ), si scrive l'hash in `shadow.json`
+di dev e stable ( copia del vecchio in `var/` prima ), e la password in chiaro va nel `READ.md`; come si usano per le prove è più sotto, in *Le prove sull'applicazione le fa Claude*.
+⚠ **TASSATIVO: chi cambia una password aggiorna il `READ.md` nello stesso turno**, nella sezione
+dell'accesso all'applicazione ( o in quella del servizio toccato: DB, SSH, Adminer ). Lo si fa **prima di
+qualunque altra cosa**, anche quando si tratta di una rotazione di sicurezza, e **per ogni installazione**
+se dev e stable divergono, scrivendo su quali vale. Poi si **prova il login** con la password appena
+scritta: se non entra, il `READ.md` è sbagliato. Regola di Fabio del 06/10/2026: il 04/10 la password di
+root di un dev è stata ruotata senza scriverla, e per due giorni nessuno è più potuto entrare nel proprio
+gestionale.
+
 ⚠ **Chiudere una voce sono tre gesti nello stesso turno**: marcatore `[v]` o `[x]`, trasloco nel
 `DONE.md` con com'è andata e perché, e — se il cliente la vede o l'aspettava — la stessa riga nel
 `CHAT.md`, in `### Da dirgli alla prossima occasione`, **il giorno stesso**. Uno sviluppo finito e non
-comunicato, per il cliente, non è finito.
+comunicato, per il cliente, non è finito. ⚠ Se la voce porta il tag `[gh#N]`, c'è un **quarto gesto**:
+la issue GitHub si chiude **nello stesso turno** con `~/.claude/bin/issue-todo.py -C <deploy> --chiudi`,
+senza aspettare il cron della notte ( vedi `riferimenti/cinque-file.md` ).
+
+⚠ **Una domanda per il cliente si scrive quando nasce**: nello stesso turno va nel `CHAT.md`, in
+`### Da chiedergli alla prossima occasione` della persona giusta, con data e voce di origine. Una
+domanda rimasta solo in conversazione muore col `/clear`, e il dialogo col cliente perde continuità.
+
+⚠ **`### Aspettiamo noi` contiene solo ciò che domani qualcuno deve scrivere o fare per quella
+persona**: lo legge l'assistente generale ( `chat-progetti.py --aperte` ) e ogni voce stantia diventa
+un falso "da mandare" davanti a Fabio. La voce si riscrive **a ogni messaggio mandato o ricevuto**, non
+a fine lavoro ( mandata la risposta, si chiude o passa in `### Aspetta lui` ); si chiude subito quando
+l'assistente generale o Fabio dicono che la cosa è fatta; e **a ogni apertura di sessione** si ripassano
+quelle più vecchie di 7 giorni contro la posta e il `DONE.md`. Regola del 20/10/2026, dettaglio in
+`riferimenti/cinque-file.md`.
+
+⚠ **Un `TODO.md` si pota, e la pulizia ha una procedura sua**: quando l'utente chiede di "pulire le
+todo", di fare il triage del TODO o di capire cosa è già chiuso, si legge **`riferimenti/pulizia-todo.md`**
+e si applicano i verdetti con **`bin/applica-triage.py`** ( prova a secco, poi `--applica` ), mai a mano.
+Nel dubbio la voce resta aperta; i doppioni si uniscono solo dopo averli confrontati uno a uno; una voce
+bloccata da una domanda non ancora mandata resta `[ ]` con la nota che rimanda al `CHAT.md`, e passa a
+`[=]` solo quando la domanda parte.
+
+## Commenti al codice
+
+Come si commenta il framework — testata dei file, docblock di funzione con `@param` allineati, sezioni
+sottolineate, etichette canoniche delle macro, testate degli script di shell e delle macro Twig, i
+marcatori `TODO documentare` / `@todo` / `NOTA` / `⚠` — sta in **`riferimenti/commenti.md`**, ricavato
+dai file già documentati. **Leggilo prima di commentare un file o di sciogliere un `TODO documentare`**.
+Le due regole che si sbagliano di più: il commento dice **perché**, non ripete il codice; e un commit di
+documentazione **non tocca una sola istruzione** ( si verifica confrontando i token al netto dei commenti ).
 
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
@@ -217,22 +267,43 @@ Se da un progetto cliente serve correggere il framework standard, il workflow è
    underscore (es. `src/lib/example.php` per estendere `_src/_lib/_example.php`, vedi tabella overrides nel
    manuale framework). Per fix urgenti che toccano davvero un file `_*`, modificarlo *nel progetto cliente
    stesso*, lì localmente.
-2. **Sincronizzazione notturna**: un job notturno raccoglie le divergenze del progetto cliente rispetto al
-   framework standard e genera un *disallineamento* che confluisce in `glisweb.istricesrl.it`.
-3. **Valutazione**: su `glisweb` un manutentore del framework valuta il disallineamento. Se la modifica è
-   generalizzabile, entra nel codice standard del framework; altrimenti resta una customizzazione del solo
-   progetto cliente (e va consolidata in `src/`/`mod/` del cliente).
-4. **Redistribuzione**: le modifiche accettate vengono committate nel framework e ridistribuite ai
-   progetti cliente al successivo aggiornamento (`composer update` + `_src/_sh/_gw.upgrade.sh` o
-   equivalente).
+2. **Disallineamento subito, non la notte**: appena la modifica al file `_*` funziona sul deploy, si
+   raccoglie il disallineamento a mano, senza aspettare l'aggiornamento notturno:
+   `dev/_src/_sh/_gw.disallineamenti.sh` dalla root del deploy. Produce in `../disallineamenti/<ts>/` il
+   file e il suo `.diff` rispetto allo standard installato.
+3. **Commit e push su glisweb, lo stesso giorno**: il `.diff` si porta su `glisweb.istricesrl.it` (branch
+   `develop`) con la procedura della skill `riallineamento`: **si applicano gli hunk, mai il file intero**,
+   con `stat` degli inode prima e dopo ( glisweb e glisdev condividono i file ), `php -l`/`bash -n`,
+   permessi su entrambi, un commit che spiega il perché e cita il deploy d'origine, push su `develop`. Se
+   la modifica non è generalizzabile, non sale: si sposta in `src/`/`mod/` del progetto. Se si promuove
+   codice che nel progetto vive in un `.add.php`, **lo si toglie dal progetto nello stesso gesto**: il
+   `.add.php` si carica in più dello standard, e al primo aggiornamento ogni pagina va in
+   `Cannot redeclare` ( vedi `_claude.framework.md`, sotto la tabella degli override ). Se tocca
+   autenticazione, permessi, pagamenti o cancellazioni, o toglie righe che a monte esistono, si chiede
+   prima di promuovere.
+4. **Ridistribuzione subito dopo il push**: `./dev/_src/_sh/_gw.upgrade.sh "$(cat update.branch.conf)"`
+   dalla root di **ogni** deploy che ha `update.branch.conf` ( mai su glisweb, glisdev, glistest ). Su
+   ognuno si controlla `_etc/_current.version`, che il `.diff` del file promosso nella nuova cartella
+   `disallineamenti/` sia vuoto o assente, e che `_smoke.curl.sh status /` risponda 200. Solo a quel
+   punto la modifica è davvero fatta.
+
+**⚠ Perché subito ( Fabio, 12/10/2026 ).** L'aggiornamento notturno **reinstalla** l'albero `_*` da
+`develop`: tutto quello che sul deploy non è ancora a monte sparisce dal sito e finisce in
+`disallineamenti/`, dove resta finché qualcuno non lo promuove. Il 09/10 sono stati corretti dei file
+standard su lughese, gimbe, polmasi e bernispa contando sul "ciclo normale"; nessun riallineamento è
+passato prima della notte, l'aggiornamento del 10/10 li ha tolti tutti, e per un fine settimana i deploy
+hanno girato di nuovo coi bug già corretti ( le caratteristiche dei prodotti che non si salvavano, i CSV,
+i vincoli dei form ). Contare sul giro notturno vuol dire perdere la correzione **la notte stessa**.
+Corollario: una modifica allo standard non si dichiara chiusa finché non è su `develop` e ridistribuita.
 
 **Anti-pattern da NON fare mai, da un progetto cliente:**
 
-- SSH/edit/git su `/var/www/glisweb.istricesrl.it/` o `/var/www/glisdev.istricesrl.com/` per "anticipare"
-  un fix che vorresti veder ridistribuito. Bypassi la valutazione, e rischi di propagare modifiche non
-  validate a tutti gli altri progetti cliente.
-- Aprire PR o push diretti verso i repo upstream del framework "perché ho una fix urgente". Il canale
-  corretto è comunque il disallineamento — i manutentori del framework hanno strumenti per fast-track.
+- modificare a mano i file di `/var/www/glisweb.istricesrl.it/` o `/var/www/glisdev.istricesrl.com/`
+  invece di partire dal `.diff` del disallineamento, o copiarci il file intero dal deploy. Si scavalca la
+  valutazione hunk per hunk, si rompono gli hard link e si sovrascrivono le modifiche arrivate nel
+  frattempo da altri deploy: è così che sono nati i revert incrociati.
+- Aprire PR o pushare verso il framework **fuori dal giro** disallineamento → commit e push su glisweb →
+  ridistribuzione. Il giro si fa subito, ma si fa tutto.
 - Toccare gli hard link fra `glisweb` e `glisdev` da un progetto cliente. La gestione degli hard link è
   competenza esclusiva dei manutentori upstream.
 
@@ -273,7 +344,7 @@ Cosa c'è in ciascuna, in una riga:
 | `_etc/` | configurazione di supporto: dizionari di traduzione, liste di sicurezza, robots, Doxygen, release e version |
 | `_src/` | il codice: `_config.php` (bootstrap), `_api/` (entry point HTTP), `_cli/` (entry point da riga di comando), `_config/` (runlevel), `_lib/` (librerie), `_sh/` (script di shell), `_twig/` e `_tpl/` (template) |
 | `_mod/` | i moduli; un modulo è attivo **solo se esiste** la cartella omonima in `mod/` |
-| `_usr/` | quello che non è codice: `_database/_patch/`, `_docs/`, `_examples/`, `_test/` |
+| `_usr/` | quello che non è codice: `_config/` ( modelli di configurazione ), `_database/_patch/`, `_deploy/` ( modelli per il deploy ), `_docs/`, `_examples/` |
 | `var/` | stato locale: log, cache, spool, sitemap, marcatori. **Gitignored, escluso dal deploy** |
 | `tmp/` | temporanei di lavoro, senza aspettativa di sopravvivenza |
 
@@ -458,6 +529,107 @@ Riferimenti tipici a `_claude.framework.md`:
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
 
+### ⚠ Le prove sull'applicazione le fa Claude, loggato, e non le gira a Fabio
+
+Regola stabilita da Fabio il 01/10/2026. Quando un lavoro va verificato **dentro l'applicazione** — una
+scheda dopo una patch del database, una form dopo una modifica, una pagina dietro login — **la prova la fa
+Claude**, e non chiude con "aprila tu dal browser".
+
+- **Le credenziali si leggono dal `READ.md` della root del deploy**, sezione *Accessi e credenziali*
+  ( di solito `### Applicazione` ). Fabio le ha messe lì perché si usino: leggerle per fare il login è
+  autorizzato. Non si ripetono in conversazione e non si scrivono in file versionati: si estraggono
+  dentro lo script che le usa. Gli account in `$cf['auth']['accounts']` del config possono essere
+  vecchi: fa fede il `READ.md`.
+- **Il browser è chromium headless** ( `/usr/bin/chromium`, sui server Debian non c'è playwright ). Il
+  login di glisweb non vuole token CSRF e funziona su **qualunque** pagina, quindi si apre una pagina
+  locale che fa la POST di `__login__[user]` e `__login__[pasw]` direttamente sull'URL da provare.
+  Così ogni prova è un comando solo, e il cookie di sessione non deve sopravvivere fra un avvio e l'altro:
+
+  ```bash
+  timeout 60 chromium --headless --no-sandbox --disable-gpu --virtual-time-budget=15000 \
+      --dump-dom "file://<scratchpad>/login.html" > pagina.dom
+  ```
+
+  La pagina locale va nella scratchpad ( contiene la password ) e si cancella subito dopo. Per una
+  raccolta veloce di status e link basta `curl` con cookie jar, sempre col login sulla POST.
+- **Gli URL non sono `<id-pagina>.it-IT.html`**, ma il percorso dell'albero ( `catalogo/prodotti/gestione.it-IT.html?prodotti[id]=1` ):
+  si ricavano dai link delle pagine di elenco, non si costruiscono dall'id.
+- **Cosa si guarda**: niente form di login nella risposta ( `__login__` assente ), niente *pagina non
+  trovata*, niente `Fatal`/`Warning`/`Notice`/errore Twig, e il contenuto atteso nel testo. Si leggono il
+  testo e i conteggi, non lo screenshot ( vedi *testo prima dello screenshot* ). **Pagine tutte della stessa
+  dimensione vogliono dire che sono tutte la stessa pagina d'errore**.
+- **Si prova in DEV.** In PROD si apre in sola lettura, e una prova che scrive dati si fa solo se Fabio
+  la chiede.
+- ⚠ **"Non ho un account per provare" non è mai una risposta** ( Fabio, 14/10/2026, dopo averlo ripetuto
+  troppe volte ). L'ordine è fisso: **1)** si legge il `READ.md` della root del deploy, *Accessi e
+  credenziali*; **2)** si prova il login **nell'ambiente che serve**: un account può entrare in DEV e non in
+  PROD ( quelli di `account` stanno nel database di ciascun ambiente, solo quelli dello `shadow.json` sono
+  uguali dappertutto se l'hash è lo stesso ); **3)** se non c'è o non entra, **lo si crea** — hash in
+  `shadow.json` di dev e stable come sopra, oppure una riga in `account` col gruppo giusto — e lo si
+  **scrive subito nel `READ.md`**, con l'ambiente in cui vale. Solo dopo si chiude, e si chiude
+  **dopo aver provato**: una verifica rinviata a Fabio "perché mancava l'account" è un lavoro lasciato a metà.
+
+### ⚠ TASSATIVO: applicazione e test sempre allineati
+
+Regola di Fabio del **06/10/2026**, e non ammette eccezioni: **il codice e i suoi test si muovono insieme**,
+nello **standard** come nei **progetti**. Se non lo si fa sempre, i test restano indietro e la batteria smette
+di dire qualcosa.
+
+- **ogni funzionalità nuova nasce col suo test**: una pagina, una maschera, un form, una macro, una libreria,
+  un'API, un job — il lavoro non è finito finché il test non c'è e non passa;
+- **ogni modifica aggiorna i test che la toccano**: se cambia un comportamento, un campo, un messaggio, un
+  percorso, il test si corregge **nello stesso lavoro**, non "dopo";
+- **ogni correzione porta il test che avrebbe preso il bug**: prima lo si scrive e lo si vede fallire, poi si
+  corregge e lo si vede passare;
+- **i test si fanno girare prima di chiudere**: almeno quello toccato, poi la sua suite; un test rosso non si
+  commenta e non si cancella per far tornare il verde, si capisce perché è rosso;
+- **nel commit stanno insieme**: codice e test nello stesso commit, così chi legge la storia li ritrova uniti;
+- se un test proprio non si può scrivere ( servizio esterno, hardware, produzione ), **lo si dice** e la voce
+  va nel `TODO.md` del progetto, area `test automatici`: non si tace.
+
+### ⚠ TASSATIVO: applicazione e documentazione sempre allineati
+
+Regola di Fabio del **06/10/2026**, gemella di quella dei test e come quella senza eccezioni: **il codice e la
+sua documentazione si muovono insieme**, nello **standard** come nel **custom**. Una documentazione che resta
+indietro è peggio di una che manca, perché chi la legge le crede.
+
+- **ogni modifica aggiorna, nello stesso lavoro, tutta la documentazione che la descrive**: i commenti Doxygen
+  del file ( testata e docblock ), il `READ.md` dello sviluppatore, lo `USER.md` se cambia qualcosa che
+  l'utente vede o fa, le quickstart che la mostrano;
+- **la documentazione segue la legge degli underscore**: lo standard si documenta in `_usr/_docs/` o nel
+  `READ.md`/`USER.md` del modulo `_mod/<modulo>/`, il custom allo stesso percorso senza underscore
+  ( `usr/docs/`, `mod/<modulo>/` ) — dettaglio in `riferimenti/documentazione.md`;
+- **prima si cerca dove la cosa è già descritta**: `grep -rn` del nome del file, della funzione, della classe
+  o del campo in `_usr/_docs/`, nei `READ.md`/`USER.md` dei moduli e dei template e nelle quickstart, e si
+  aggiorna **ogni** punto che la cita, non solo il primo che si trova;
+- **una cosa nuova si documenta quando nasce**: una macro, un attributo, una convenzione, un id di servizio
+  che non compare da nessuna parte non esiste per chi viene dopo;
+- **nel commit stanno insieme**: codice e documentazione nello stesso commit;
+- **il giro finisce nei file di progetto**: codice → test → report dei test → documentazione → file di
+  progetto. Quando la documentazione cambia ( un capitolo, un manuale, un PDF, un ambiente su cui si
+  pubblica ) si aggiorna la sezione **Documentazione** del `READ.md` della root del deploy, coi link a
+  portata di clic, e allo stesso modo la sezione **Test automatici** coi link all'esito dei test — regole
+  del 13/10/2026, dettaglio in `riferimenti/cinque-file.md`, "La voce 8" e "La voce 9";
+- se la documentazione proprio non si può scrivere subito, **lo si dice** e la voce va nel `TODO.md` del
+  progetto, area `documentazione`: non si tace.
+
+### I test automatici si scrivono insieme alla feature
+
+Quando una funzionalità del progetto è finita e verificata a mano, **la verifica si fissa in un test**,
+così il prossimo rilascio la ripete da solo. Il capitolo di riferimento è `_usr/_docs/_read/180.test.md`.
+Per lo standard il posto è lo stesso schema con gli underscore: `_usr/_test/_tests/<suite>/` per il nucleo,
+`_mod/<modulo>/_usr/_test/_tests/<suite>/` per un modulo.
+
+1. **Cercare il modello**: `ls _usr/_test/_tests/*/ _mod/*/_usr/_test/_tests/*/` e copiare la forma del Cest
+   più vicino ( maschera di back-end, form di front-end ).
+2. **Scegliere il posto**: `usr/test/tests/<backend|frontend>/<nome>Cest.php` per il progetto,
+   `mod/<modulo>/usr/test/tests/<suite>/` se riguarda un modulo; lo stesso nome di uno standard lo sostituisce.
+3. **Dati**: nomi da `$I->grabTestName()`, pulizia con `$I->deleteTestRecords()` in `_before()` e `_after()`,
+   pagine con `$I->amOnPageId()`, login con `$I->amLoggedInAs( '<gruppo>' )`; il gruppo, se non è `roots`,
+   va nel `gruppi` del `.suite.yml` custom.
+4. **Lanciarlo da solo**: `_src/_sh/_codeception.run.sh backend progetto/<nome>Cest.php`, poi la suite intera.
+5. **Mai in produzione**: il bootstrap la rifiuta, e non si cerca un modo di aggirarlo.
+
 ### 3.1 Come aggiornare il framework in un progetto cliente
 
 Il framework di un deploy cliente si aggiorna **solo** con lo script che il framework stesso spedisce:
@@ -471,6 +643,23 @@ Il branch giusto è quello dichiarato in `update.branch.conf` nella root del dep
 contiene `dev/`, non la document root. È lo stesso che usa il cron notturno
 `/etc/cron.daily/manutenzione-siti`: allinearsi a quello evita che l'aggiornamento manuale e quello
 automatico si rincorrano.
+
+**⚠ L'aggiornamento automatico va solo sui `dev/`; produzione e test si aggiornano a mano ( Fabio,
+19/10/2026 ).** Il cron notturno e la ridistribuzione dopo un push ( il giro di riallineamento )
+aggiornano **soltanto** la cartella `dev/` dei deploy che hanno `update.branch.conf`. `stable/` ( la
+produzione ) e gli stage di test **non si aggiornano mai da un automatismo**: niente cron, niente
+ciclo in uno script, niente "già che ci sono" durante un giro. Si aggiornano lanciando a mano lo script
+della loro cartella ( `/var/www/<deploy>/stable/_src/_sh/_gw.upgrade.sh <branch>` ), quando lo fa Fabio
+o quando lo autorizza lui **per quella volta**: un aggiornamento in produzione in orario di lavoro si
+vede, e il momento lo sceglie lui. Di conseguenza uno `stable/` con una versione più vecchia del `dev/`
+è lo stato normale, non un'anomalia: nei controlli "a pari" vuol dire **`dev/` a pari con il branch**, e
+lo scarto di `stable/` si riferisce come informazione, non come cosa da chiudere.
+
+Il repository da cui si scarica è `glisweb`, a meno che `update.repository.conf`, accanto a
+`update.branch.conf`, non dica `glisdev` ( oppure il terzo argomento, che vince sul file: il secondo è
+il profilo del database ). Ammessi solo questi due nomi; un nome diverso ferma lo script prima del
+backup. Il file lo legge la copia dello script **già installata**, quindi un deploy appena passato alla
+versione che lo conosce cambia repository solo dal giro di aggiornamento successivo.
 
 **Non è un `git pull`, e non lo si sostituisce con git.** Un deploy cliente non è un checkout del
 framework: `_src/`, `_mod/`, `_etc/` e `_usr/` arrivano dallo zip di GitHub, non da git. Se in macchina
@@ -627,6 +816,8 @@ configurazione — è spool.
 | Override di un template Twig | `src/twig/<nome>.twig` |
 | Attivare un modulo standard | creare la cartella `mod/<nome>/` corrispondente a `_mod/_<nome>/` |
 | Smoke test di una pagina | `_src/_sh/_smoke.curl.sh status <url>` |
+| Lanciare i test automatici | `_src/_sh/_codeception.run.sh <unit\|backend\|frontend\|tutte>` |
+| Aggiungere un test del progetto | `usr/test/tests/<suite>/<nome>Cest.php` (vedi `_usr/_docs/_read/180.test.md`) |
 | Aggiornare dipendenze Composer | `composer update` (dalla root del progetto) |
 | Ricostruire la documentazione Doxygen | `_src/_sh/_doxygen.build.sh` |
 | Vedere l'ultima richiesta HTTP | `var/log/latest/run.latest.log` |
@@ -647,6 +838,15 @@ configurazione — è spool.
   export, screenshot, copie di sicurezza e file di appoggio vanno in `<progetto>/var/<sottocartella parlante>/`,
   un livello sopra `dev/` — e `dev/var/` non è un'alternativa, è sempre sotto la document root. Apache serve
   quello che sta lì dentro. Vedi la "Regola fondamentale" sul materiale di progetto in cima a questo file.
+- **Non scrivere in una tabella con una vista statica senza aggiornare la statica.** Una `*_view_static` non
+  deve mai disallinearsi dai dati sottostanti ( regola di Fabio, 03/10/2026 ). Le scritture via PHP la
+  aggiornano da sole ( `mysqlInsertRow` → `update<X>ViewStatic` / `refreshStaticView()` ); **importatori,
+  travasi, script SQL e Python e ogni scrittura diretta** devono aggiornare, sulle righe che toccano, le
+  statiche che quelle righe influenzano ( `refreshStaticView( $c, $tabella, $id_o_array_di_id )` e
+  `cleanStaticView()` per le righe sparite, oppure lo stesso `REPLACE INTO … SELECT … WHERE id IN (…)` ).
+  Il ricalcolo completo di una statica e' **solo per le emergenze**, mai una pianificazione: in produzione,
+  con decine o centinaia di migliaia di righe, costa troppo. Caso che l'ha fatta nascere: bernispa connor, le
+  statiche mai rigenerate dopo gli import SQL hanno svuotato la tendina fornitori di ricezione e ddt-fornitori.
 - **Non committare `shadow.*` files.** Contengono credenziali. Sono già coperti dal `.gitignore` del framework
   e dovrebbero esserlo anche dal `.gitignore` del progetto cliente.
 - **Non mettere credenziali in `config.yaml`.** Quel file è committato — usa `shadow.yaml` per ogni cosa
@@ -689,7 +889,7 @@ progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.frame
   controlla `stat` ( inode e `Links:` ), come per ogni file standard: in alcuni deploy il framework è
   hard-linked con altre istanze (vedi `_claude.framework.md` sezione hard link).
 - **Il `SKILL.md` tiene le regole e i rimandi, le trattazioni stanno in `riferimenti/`** ( cinque file,
-  contesto, documentazione, job, migrazioni ), lette quando servono: il file del framework, che è nel
+  contesto, documentazione, commenti, job, migrazioni, pulizia delle todo ), lette quando servono: il file del framework, che è nel
   preambolo di ogni sessione, ne tiene solo l'essenziale. Una sezione nuova e lunga va lì, non qui.
 - Per testare la skill end-to-end: `mkdir /tmp/test-glisweb && cd /tmp/test-glisweb && git clone <repo> .` poi
   `bash .claude/skills/glisweb/bootstrap.sh` e verifica struttura creata + idempotenza.

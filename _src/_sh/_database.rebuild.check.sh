@@ -13,11 +13,15 @@
 # ricostruito da li'. Questo script rende quell'errore impossibile da non vedere.
 #
 # COSA RIPORTA:
-#   1. gli errori incontrati applicando i patch, con file e riga;
+#   1. il primo errore incontrato applicando i patch, con file e patch ( ci si ferma li', come il
+#      task: l'applicazione e' quella di _src/_lib/_mysql.tools.php, la stessa di un deploy );
 #   2. le divergenze fra lo schema ricostruito e quello vero, in tre gruppi:
 #      - solo nei patch      ( dichiarato e mai creato: di solito un patch che non gira )
 #      - solo nel database   ( esiste ma nessuno lo dichiara: la fonte di verita' e' altrove )
 #      - colonne diverse     ( stesso oggetto, forma diversa )
+#   3. le statiche <t>_view_static dei patch che non hanno le colonne della loro <t>_view, nello
+#      stesso ordine ( si riempiono con REPLACE ... SELECT *, quindi conta la posizione ); con
+#      --inventario anche le colonne dello stesso nome e tipo diverso, che non fanno fallire.
 #
 # La seconda parte e' anche l'inventario di quanto i patch coprano davvero lo schema.
 #
@@ -28,9 +32,23 @@
 #   --server       server su cui costruire il database di prova, se diverso da quello del
 #                  profilo. Serve un utente con CREATE / DROP DATABASE: l'utente applicativo
 #                  di solito ha i privilegi sul solo database del progetto.
-#   --prova        nome del database di prova ( default: <database>__rebuild )
+#   --prova        nome del database di prova ( default: <database>__rebuild ); deve finire
+#                  anch'esso con __rebuild
 #   --inventario   elenca tutti gli oggetti divergenti invece del solo riepilogo
 #   --tieni        non cancella il database di prova alla fine ( per guardarci dentro )
+#
+# IL DATABASE DI PROVA E' USA-E-GETTA, E LO SCRIPT LO GARANTISCE. Fino al 29/09/2026 lo script
+# faceva `DROP DATABASE IF EXISTS` sul nome ricevuto con --prova, all'inizio e alla fine: bastava
+# passargli per sbaglio il nome del database vero perche' lo distruggesse. Ora cancella soltanto
+# un database che ha creato lui, e lo riconosce da due firme insieme:
+#
+#   - il nome finisce con __rebuild ( --prova con un altro nome viene rifiutato );
+#   - dentro c'e' la tabella __rebuild_check__, che lo script crea subito dopo il database e che
+#     il confronto ignora.
+#
+# Un database che porta il nome giusto ma non la tabella e' di qualcun altro: lo script si
+# rifiuta di toccarlo e si ferma. Rifiuta anche qualunque nome coincida con il database di uno
+# dei server dichiarati in mysql.servers ( config e shadow ), qualunque sia il suffisso.
 
 RL="../../"
 cd $(dirname "$0")
@@ -43,7 +61,7 @@ if [ -z "$1" ]; then
 fi
 
 python3 - "$( pwd )" "$@" <<'PYTHON'
-import glob, io, json, os, re, subprocess, sys, tempfile
+import json, os, re, subprocess, sys
 
 docroot = sys.argv[1]
 args    = sys.argv[2:]
@@ -73,6 +91,21 @@ VERO  = servers[ nomi[0] ]
 BANCO = dict( servers[ SERVER ] ) if SERVER else dict( VERO )
 banco_db = PROVA or ( VERO[ 'db' ] + '__rebuild' )
 
+# le due firme del database usa-e-getta: il suffisso del nome e la tabella marcatore
+SUFFISSO = '__rebuild'
+MARCA    = '__rebuild_check__'
+
+# il nome finisce dentro backtick e apici: si accettano solo caratteri che non ne escano
+if not re.match( r'^[A-Za-z0-9_]+$', banco_db ):
+    print( 'ERRORE: nome del database di prova non valido: %s' % banco_db ); sys.exit( 1 )
+if not banco_db.endswith( SUFFISSO ) or banco_db == SUFFISSO:
+    print( 'ERRORE: il database di prova deve chiamarsi <qualcosa>%s, non %s' % ( SUFFISSO, banco_db ) )
+    print( '  ( e\' la firma che lo rende riconoscibile come usa-e-getta )' ); sys.exit( 1 )
+configurati = sorted( set( s.get( 'db' ) for s in servers.values() if s.get( 'db' ) ) )
+if banco_db in configurati:
+    print( 'ERRORE: %s e\' il database di un server dichiarato in mysql.servers: non lo uso come banco' % banco_db )
+    sys.exit( 1 )
+
 def cli( s, db = None, extra = None ):
     c = [ 'mysql', '-h', s.get( 'address' ) or '127.0.0.1', '-P', str( s.get( 'port' ) or 3306 ),
           '-u', s.get( 'username' ) or 'root' ] + ( extra or [] )
@@ -89,7 +122,8 @@ def oggetti( s, db ):
         "SELECT c.table_name, t.table_type, group_concat( c.column_name ORDER BY c.ordinal_position ) "
         "FROM information_schema.columns c JOIN information_schema.tables t "
         "ON t.table_schema = c.table_schema AND t.table_name = c.table_name "
-        "WHERE c.table_schema = database() GROUP BY c.table_name, t.table_type;" )
+        "WHERE c.table_schema = database() AND c.table_name <> '%s' "
+        "GROUP BY c.table_name, t.table_type;" % MARCA )
     d = {}
     for riga in out.split( '\n' ):
         if riga.count( '\t' ) >= 2:
@@ -97,75 +131,88 @@ def oggetti( s, db ):
             d[ nome ] = ( 'vista' if tipo == 'VIEW' else 'tabella', colonne.split( ',' ) )
     return d
 
+# colonne con il tipo, in ordine, delle sole viste <t>_view e delle loro statiche <t>_view_static
+def colonne_viste( s, db ):
+    _, out, _ = sql( s, db,
+        "SELECT table_name, column_name, column_type FROM information_schema.columns "
+        "WHERE table_schema = database() "
+        "AND ( table_name LIKE '%\\_view' OR table_name LIKE '%\\_view\\_static' ) "
+        "ORDER BY table_name, ordinal_position;" )
+    d = {}
+    for riga in out.split( '\n' ):
+        if riga.count( '\t' ) >= 2:
+            nome, colonna, tipo = riga.split( '\t', 2 )
+            d.setdefault( nome, [] ).append( ( colonna, tipo ) )
+    return d
+
 print( 'ricostruzione dello schema dai patch' )
 print( '  profilo %s, database vero: %s su %s' % ( stato, VERO[ 'db' ], VERO.get( 'address' ) ) )
 print( '  banco di prova: %s su %s' % ( banco_db, BANCO.get( 'address' ) ) )
 
-rc, _, err = sql( BANCO, None, 'DROP DATABASE IF EXISTS `%s`; CREATE DATABASE `%s` '
-                  'DEFAULT CHARACTER SET utf8;' % ( banco_db, banco_db ) )
+def esiste( db ):
+    rc, out, err = sql( BANCO, None, "SELECT count(*) FROM information_schema.schemata "
+                                     "WHERE schema_name = '%s';" % db )
+    if rc != 0:
+        print( '  ERRORE: non riesco a interrogare il server del banco: %s' % err.strip()[:300] ); sys.exit( 1 )
+    return out.strip() != '0'
+
+def usa_e_getta( db ):
+    """Vero solo se il database porta la tabella marcatore che questo script crea insieme a lui."""
+    rc, out, _ = sql( BANCO, None, "SELECT count(*) FROM information_schema.tables "
+                                   "WHERE table_schema = '%s' AND table_name = '%s';" % ( db, MARCA ) )
+    return rc == 0 and out.strip() == '1'
+
+def butta( db ):
+    # si ricontrolla la firma anche qui: il DROP non parte mai su un database che non e' del banco
+    if usa_e_getta( db ):
+        sql( BANCO, None, 'DROP DATABASE `%s`;' % db )
+    else:
+        print( '  ATTENZIONE: %s non porta piu\' la tabella %s, non lo cancello' % ( db, MARCA ) )
+
+# un banco lasciato in piedi da un giro precedente ( --tieni ) si ricrea; qualunque altro no
+if esiste( banco_db ):
+    if not usa_e_getta( banco_db ):
+        print( '  ERRORE: %s esiste gia\' e non l\'ha creato questo script ( manca la tabella %s ):'
+               % ( banco_db, MARCA ) )
+        print( '  non lo tocco. Scegliere un altro nome con --prova, oppure cancellarlo a mano se e\' davvero da buttare.' )
+        sys.exit( 1 )
+    print( '  il banco di un giro precedente viene ricreato' )
+    butta( banco_db )
+
+rc, _, err = sql( BANCO, None, 'CREATE DATABASE `%s` DEFAULT CHARACTER SET utf8; '
+                  'CREATE TABLE `%s`.`%s` ( `database_vero` varchar( 64 ), `creato` datetime ); '
+                  "INSERT INTO `%s`.`%s` VALUES ( '%s', now() );"
+                  % ( banco_db, banco_db, MARCA, banco_db, MARCA, VERO[ 'db' ].replace( "'", '' ) ) )
 if rc != 0:
     print( '  ERRORE: non riesco a creare il database di prova: %s' % err.strip()[:300] )
     print( '  ( serve un utente con CREATE DATABASE: usare --server per indicarne un altro )' )
     sys.exit( 1 )
 
-# i patch, nell'ordine: prima lo standard, poi il progetto
-files = sorted( glob.glob( os.path.join( docroot, '_usr/_database/_patch/*.sql' ) ) ) \
-      + sorted( glob.glob( os.path.join( docroot,  'usr/database/patch/*.sql' ) ) )
-if not files:
-    print( '  ERRORE: nessun file di patch trovato' ); sys.exit( 1 )
-
-def blocchi( percorso ):
-    """Spezza un file di patch come fa il task _mysql.patch.php: le righe si accumulano fino al
-    marcatore di livello successivo ( "-- | 070000002900" ) e ogni blocco vale UNA query. E' il
-    motivo per cui questi file non hanno DELIMITER: le funzioni con i punti e virgola interni
-    non sono mai passate da un client che spezzi sul punto e virgola. Dare il file in pasto a
-    `mysql` produce infatti centinaia di errori fasulli ( "Undeclared variable", "END IF" )."""
-    fuori, corrente = [], []
-    for riga in io.open( percorso, encoding = 'utf-8', errors = 'replace' ):
-        if riga.strip()[:4] == '-- |':
-            if ''.join( corrente ).strip():
-                fuori.append( ''.join( corrente ) )
-            corrente = []
-        else:
-            corrente.append( riga )
-    if ''.join( corrente ).strip():
-        fuori.append( ''.join( corrente ) )
-    return [ b for b in fuori if [ l for l in b.split( '\n' ) if l.strip() and not l.strip().startswith( '--' ) ] ]
-
-errori = 0
-print( '\napplicazione dei patch ( %d file )' % len( files ) )
+# i patch si applicano con le funzioni mysqlPatch...() di _src/_lib/_mysql.tools.php, le stesse del
+# task _mysql.patch.php e di _mysql.upgrade.sh, tramite _src/_cli/_mysql.patch.php: l'ordine dei file
+# ( prima lo standard, poi il progetto ), un blocco per marcatore `-- |` eseguito come UNA query, la
+# registrazione in __patch__ e l'arresto al primo errore sono quelli di un deploy vero. Fino al
+# 29/09/2026 questo script aveva un suo spezzatore e dava i blocchi al client `mysql` con --force e
+# DELIMITER: proseguiva dopo gli errori, e non vedeva i blocchi che il task saltava o registrava
+# senza eseguirli. Ora un errore ferma l'applicazione, e il confronto che segue e' su uno schema
+# parziale: va letto sapendolo.
+print( '\napplicazione dei patch' )
 env = dict( os.environ, MYSQL_PWD = BANCO.get( 'password' ) or '' )
-for f in files:
-    parti = blocchi( f )
-    # Il delimitatore serve SOLO ai blocchi con un corpo composto ( funzioni, procedure,
-    # trigger ): la' i punti e virgola interni spezzerebbero lo statement. Gli altri si
-    # scrivono come sono - avvolgerli tutti fa fallire quelli che portano un commento in
-    # coda al punto e virgola.
-    pezzi = []
-    for b in parti:
-        b = b.strip()
-        composto = re.search( r'\b(FUNCTION|PROCEDURE|TRIGGER)\b', b, re.I ) and re.search( r'\bBEGIN\b', b, re.I )
-        if composto:
-            corpo = b[:-1] if b.endswith( ';' ) else b
-            pezzi.append( 'DELIMITER $$\n%s$$\nDELIMITER ;\n' % corpo )
-        else:
-            pezzi.append( b if b.endswith( ';' ) else b + ';' )
-    with tempfile.NamedTemporaryFile( mode = 'w', suffix = '.sql', delete = False, encoding = 'utf-8' ) as t:
-        t.write( '\n'.join( pezzi ) )
-        tmp = t.name
-    try:
-        r = subprocess.run( cli( BANCO, banco_db, [ '--force' ] ), stdin = open( tmp ),
-                            env = env, capture_output = True, text = True )
-    finally:
-        os.unlink( tmp )
-    righe = [ l for l in r.stderr.split( '\n' ) if l.startswith( 'ERROR' ) ]
-    print( '  %-46s %3d blocchi, %s' % ( os.path.basename( f ), len( parti ),
-                                         'OK' if not righe else '%d errori' % len( righe ) ) )
-    for l in righe[:8]:
-        print( '      %s' % l[:200] )
-    if len( righe ) > 8:
-        print( '      ... e altri %d' % ( len( righe ) - 8 ) )
-    errori += len( righe )
+r = subprocess.run( [ 'php', os.path.join( docroot, '_src/_cli/_mysql.patch.php' ),
+                      BANCO.get( 'address' ) or '127.0.0.1', str( BANCO.get( 'port' ) or 3306 ),
+                      BANCO.get( 'username' ) or 'root', banco_db ],
+                    cwd = docroot, env = env, capture_output = True, text = True )
+sys.stdout.write( r.stdout )
+if r.stderr.strip():
+    print( '      %s' % r.stderr.strip()[:600] )
+errori = 0 if r.returncode == 0 else 1
+if r.returncode == 2:
+    print( '  ERRORE: patch non applicate, niente da confrontare' )
+    if not TIENI:
+        butta( banco_db )
+    sys.exit( 1 )
+if errori:
+    print( '  ATTENZIONE: le patch si sono fermate al primo errore, il confronto qui sotto e\' su uno schema parziale' )
 
 # confronto
 ric  = oggetti( BANCO, banco_db )
@@ -174,6 +221,25 @@ vero = oggetti( VERO, VERO[ 'db' ] )
 solo_patch = sorted( set( ric ) - set( vero ) )
 solo_db    = sorted( set( vero ) - set( ric ) )
 diverse    = sorted( n for n in set( ric ) & set( vero ) if ric[ n ][1] != vero[ n ][1] )
+
+# statiche e viste: le statiche si riempiono con REPLACE INTO <t>_view_static SELECT * FROM <t>_view,
+# quindi conta l'ordine; si confrontano nome e posizione insieme e si segnala la prima posizione in
+# cui divergono. Il controllo e' sullo schema ricostruito dai patch, cioe' sul canone, non sul
+# database vero. I tipi diversi a parita' di nome sono solo un avviso ( in --inventario ).
+ricv      = colonne_viste( BANCO, banco_db )
+statiche  = {}
+tipi      = {}
+for st in sorted( n for n in ricv if n.endswith( '_view_static' ) ):
+    vi = st[ : -len( '_static' ) ]
+    if vi not in ricv: continue
+    a, b = [ c for c, _ in ricv[ vi ] ], [ c for c, _ in ricv[ st ] ]
+    if a != b:
+        i = next( ( k for k in range( min( len( a ), len( b ) ) ) if a[ k ] != b[ k ] ), min( len( a ), len( b ) ) )
+        statiche[ st ] = ( i + 1, a[ i ] if i < len( a ) else '-', b[ i ] if i < len( b ) else '-',
+                           sorted( set( a ) - set( b ) ), sorted( set( b ) - set( a ) ) )
+    tv, ts = dict( ricv[ vi ] ), dict( ricv[ st ] )
+    t = [ '%s %s/%s' % ( c, tv[ c ], ts[ c ] ) for c in a if c in ts and tv[ c ] != ts[ c ] ]
+    if t: tipi[ st ] = t
 
 def conta( elenco, fonte ):
     t = len( [ n for n in elenco if fonte[ n ][0] == 'tabella' ] )
@@ -185,6 +251,7 @@ print( '  nel database vero     : %3d tabelle, %3d viste' % conta( list( vero ),
 print( '  solo nei patch        : %3d tabelle, %3d viste   ( dichiarati e non creati )' % conta( solo_patch, ric ) )
 print( '  solo nel database     : %3d tabelle, %3d viste   ( creati e non dichiarati )' % conta( solo_db, vero ) )
 print( '  stesso nome, forma diversa: %d' % len( diverse ) )
+print( '  statiche disallineate alla vista ( nei patch ): %d, con tipi diversi: %d' % ( len( statiche ), len( tipi ) ) )
 
 if INVENTARIO:
     for titolo, elenco, fonte in ( ( 'SOLO NEI PATCH', solo_patch, ric ),
@@ -203,12 +270,24 @@ if INVENTARIO:
             else:
                 print( '  %-8s %s' % ( fonte[ n ][0], n ) )
 
+if INVENTARIO and statiche:
+    print( '\nSTATICHE DISALLINEATE ALLA VISTA ( %d )' % len( statiche ) )
+    for n, ( pos, cv, cs, manca, avanza ) in sorted( statiche.items() ):
+        note = [ 'posizione %d: vista %s, statica %s' % ( pos, cv, cs ) ]
+        if manca:  note.append( 'mancano: '  + ','.join( manca ) )
+        if avanza: note.append( 'in piu\': ' + ','.join( avanza ) )
+        print( '  %-44s %s' % ( n, '; '.join( note )[:160] ) )
+
+if INVENTARIO and tipi:
+    print( '\nSTATICHE CON TIPI DIVERSI DALLA VISTA ( %d, non bloccante: colonna vista/statica )' % len( tipi ) )
+    for n, t in sorted( tipi.items() ):
+        print( '  %-44s %s' % ( n, '; '.join( t )[:160] ) )
 if TIENI:
     print( '\n  il database di prova %s e\' stato lasciato in piedi' % banco_db )
 else:
-    sql( BANCO, None, 'DROP DATABASE IF EXISTS `%s`;' % banco_db )
+    butta( banco_db )
 
-print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti'
-       % ( errori, len( solo_db ), len( diverse ) ) )
-sys.exit( 1 if ( errori or diverse ) else 0 )
+print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti, %d statiche disallineate'
+       % ( errori, len( solo_db ), len( diverse ), len( statiche ) ) )
+sys.exit( 1 if ( errori or diverse or statiche ) else 0 )
 PYTHON

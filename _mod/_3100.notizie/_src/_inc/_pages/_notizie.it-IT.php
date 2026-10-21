@@ -25,7 +25,7 @@
 	$p['notizie.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione notizia' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php' ),
@@ -189,7 +189,7 @@
 	$p['categorie.notizie.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione categoria' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.php' ),

@@ -19,9 +19,11 @@
      * 
      * meccanismo di generazione della sitemap
      * =======================================
-     * Il meccanismo con cui viene generata la sitemap è abbastanza semplice, tutte le pagine del sito presenti nell'array $cf['contents']['pages']
-     * vengono elaborate e, se il flag 'sitemap' è impostato a true, aggiunte alla sitemap. Si noti che questo processo è ripetuto per ognuna delle
-     * lingue attive nel sito, il che genera una sitemap multilingua.
+     * Il meccanismo con cui viene generata la sitemap è abbastanza semplice, tutte le pagine del sito presenti nell'array
+     * $cf['contents']['pages'] vengono elaborate e, se il flag 'sitemap' è impostato a true, aggiunte alla sitemap. Sono
+     * escluse le pagine che dichiarano come canonical una pagina diversa da sé stesse ( p.es. la scheda di un prodotto vista
+     * da una categoria secondaria ), perché in sitemap vanno solo gli URL canonici. Si noti che questo processo è ripetuto per
+     * ognuna delle lingue attive nel sito, il che genera una sitemap multilingua.
      * 
      * Le sitemap elaborate e completate vengono salvate in /var/sitemap/ e fornite ai client su richiesta tramite una regola di .htaccess:
      * 
@@ -88,23 +90,18 @@
         // inizializzo l'array degli URL
         $url = array();
 
-        // inizializzo l'oggetto XML
-        $xml = new XMLWriter();
-
-        // specifico il file di destinazione
-        $xml->openURI( $sitemapFile );
-
-        // inizio il documento
-        $xml->startDocument( '1.0', 'UTF-8' );
-
-        // attivo l'indentazione
-        $xml->setIndent( true );
-        $xml->setIndentString( '  ' );
-
-        // root element
-        $xml->startElement( 'urlset' );
-        $xml->writeAttribute( 'xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9' );
-        $xml->writeAttribute( 'xmlns:xhtml', 'http://www.w3.org/1999/xhtml' );
+        // root element, in forma di array per array2xml()
+        // NOTA fino al 2026-09-25 la sitemap veniva scritta con XMLWriter; array2xml() produce lo stesso file byte per byte
+        // ( verificato su pagine multilingua, monolingua e su una sitemap vuota ), salvo una " nuda in un <loc>, che XMLWriter
+        // scriveva &quot; e array2xml() lascia com'è: per l'XML è lo stesso testo, e un URL valido non la contiene
+        $map = array(
+            'urlset' => array(
+                '@' => array(
+                    'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+                    'xmlns:xhtml' => 'http://www.w3.org/1999/xhtml'
+                )
+            )
+        );
 
         // scorro l'elenco delle pagine
         foreach( $cf['localization']['languages'] as $lang ) {
@@ -118,8 +115,8 @@
                 // latest
                 loggerLatest( 'pagina elaborata: ' . $id, FILE_LATEST_SITEMAP );
 
-                // verifico se la pagina va nella sitemap
-                if( isset( $page['sitemap'] ) && $page['sitemap'] == true ) {
+                // verifico se la pagina va nella sitemap: una pagina che dichiara canonical un'altra pagina ne è un doppione, e in sitemap va solo la canonical
+                if( isset( $page['sitemap'] ) && $page['sitemap'] == true && ( empty( $page['canonical'] ) || $page['canonical'] == $id ) ) {
 
                     // latest
                     loggerLatest( 'sitemap true per: ' . $id, FILE_LATEST_SITEMAP );
@@ -130,11 +127,8 @@
                         // latest
                         loggerLatest( 'match: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT, FILE_LATEST_SITEMAP );
 
-                        // inizio l'elemento <url>
-                        $xml->startElement( 'url' );
-
-                        // scrivo in un solo passaggio l'elemento <loc>
-                        $xml->writeElement( 'loc', $page['url'][ $lang['ietf'] ] );
+                        // elemento <url> con il suo <loc>
+                        $node = array( 'loc' => $page['url'][ $lang['ietf'] ] );
 
                         // aggiungo l'URL
                         $url[] = $page['url'][ $lang['ietf'] ];
@@ -143,23 +137,21 @@
                         if( count( $cf['localization']['languages'] ) > 1 ) {
                             foreach( $cf['localization']['languages'] as $linklang ) {
 
-                            // inizio l'elemento <xhtml:link>
-                                $xml->startElementNs( 'xhtml', 'link', NULL );
-
-                            // attributi di <xhtml:link>
-                                $xml->writeAttribute( 'rel', 'alternate' );
-                                $xml->writeAttribute( 'hreflang', $linklang['ietf'] );
-                                $xml->writeAttribute( 'href', $page['url'][ $linklang['ietf'] ] );
-
-                            // chiudo l'elemento <xhtml:link>
-                                $xml->endElement();
+                            // elemento <xhtml:link> con i suoi attributi
+                                $node['xhtml:link'][] = array(
+                                    '@' => array(
+                                        'rel' => 'alternate',
+                                        'hreflang' => $linklang['ietf'],
+                                        'href' => $page['url'][ $linklang['ietf'] ]
+                                    )
+                                );
 
                             }
 
                         }
 
-                        // chiudo l'elemento <url>
-                        $xml->endElement();
+                        // aggiungo l'elemento <url>
+                        $map['urlset']['url'][] = $node;
 
                     } else {
 
@@ -179,14 +171,8 @@
 
         }
 
-        // fine del root element
-        $xml->endElement();
-
-        // fine del document
-        $xml->endDocument();
-
         // scrittura su file
-        $xml->flush();
+        array2xml( $map, getShortPath( $sitemapFile ) );
 
         // timer
         timerCheck( $cf['speed'], 'fine scrittura sitemap XML' );

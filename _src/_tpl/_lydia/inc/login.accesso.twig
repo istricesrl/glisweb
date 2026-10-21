@@ -1,30 +1,46 @@
 {# LIBRERIE #}
-{% import '_lib/_navigation.twig' as nav %}
 {% import '_lib/_default.twig' as cms %}
-{% import '_lib/_privacy.twig' as prv %}
+{% import '_lib/_translation.twig' as trn %}
 
 <!-- file {{ _self }} -->
 <form action="{{ page.path[ localization.language.ietf ] }}" class="" id="formLogin" method="post">
-	{% for e,d in request %}{% if d.id %}
-	<input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
-	<input type="hidden" name="{{ e }}[__method__]" value="get">
-	{% endif %}{% endfor %}
-	<fieldset>
-	    <legend>accesso utenti registrati</legend>
-	    <div class="form-group form-row">
-		<label class="d-none d-md-block col-md-4 col-form-label">username</label>
-		<div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
-	    </div>
-	    <div class="form-group form-row">
-		<label class="d-none d-md-block col-md-4 col-form-label">password</label>
-		<div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
-	    </div>
-	    <div class="form-group form-row">
-			<div class="col">{{ cms.formButton( 'login', 'button', 'btn-secondary btn-sm btn-block bottone-registrazione', '', '', '', 'formLogin', google.profile.recaptcha, '__login__', '' ) }}</div>
-	    </div>
-	    <div class="form-group form-row">
-		<div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a></div>
-	    </div>
-	</fieldset>
+
+    {# CAMPI MANTENUTI AL LOGIN #}
+    {% for e,d in request %}{% if d.id %}
+    <input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
+    <input type="hidden" name="{{ e }}[__method__]" value="get">
+    {% endif %}{% endfor %}
+
+    {# MODULO DI LOGIN #}
+    <fieldset>
+        <legend>{{ trn.trw({ 'w': 'accesso_utenti_registrati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'accesso utenti registrati' }) }}</legend>
+
+        {# MODULO PRINCIPALE #}
+        <div class="form-group form-row">
+            <label class="d-none d-md-block col-md-4 col-form-label">{{ trn.trw({ 'w': 'username', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'username' }) }}</label>
+            <div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="{{ trn.trw({ 'w': 'username', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'username' }) }}"></div>
+        </div>
+        <div class="form-group form-row">
+            <label class="d-none d-md-block col-md-4 col-form-label">{{ trn.trw({ 'w': 'password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password' }) }}</label>
+            <div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="{{ trn.trw({ 'w': 'password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password' }) }}"></div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col-12">{{ cms.formButton( { 'field': { 'text': trn.trw({ 'w': 'login', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'login' }) }, 'form': { 'id': 'formLogin', 'table': '__login__' }, 'recaptcha': google.profile.recaptcha } ) }}</div>
+        </div>
+
+        {# RECUPERO PASSWORD #}
+        <div class="form-group form-row">
+            <div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">{{ trn.trw({ 'w': 'password_dimenticata', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password dimenticata' }) }}?</a></div>
+        </div>
+
+        {# REGISTRAZIONE NUOVO UTENTE #}
+        {% if '0350.registrazione' in mods.active.array %}
+        <div class="form-group form-row">
+            <div class="col-12"><a href="{{ pages['registrazione'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">{{ trn.trw({ 'w': 'registrati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'registrati' }) }}</a></div>
+        </div>
+        {% endif %}
+
+    </fieldset>
+
 </form>
 <!-- fine file {{ _self }} -->

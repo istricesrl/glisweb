@@ -89,7 +89,7 @@
                         {{ riga.collocazione }}
                     </td>
                     <td>
-                        {{ riga.id_articolo }}
+                        {{ riga.codice_articolo|default( riga.id_articolo ) }}
                         {{ riga.descrizione }}
                     </td>
                     <td>

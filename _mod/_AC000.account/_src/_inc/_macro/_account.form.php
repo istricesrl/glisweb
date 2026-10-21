@@ -71,7 +71,9 @@
                                 'WHERE account_view.id = ?',
                             array( array('s' =>  $_REQUEST[ $ct['etc']['table'] ]['id'] ) ) );
     // creo il token
-        $tk = md5( $account['username'].$account['password'] );
+        // NOTA fino al 30/09/2026 era md5( username . password ): viaggiando nel link della mail esponeva un hash
+        // della password; il token non viene verificato da nessuna pagina, quindi basta che sia casuale, come in _registrazione.php
+        $tk = bin2hex( random_bytes( 16 ) );
     // invio la mail con il link e il token
         queueMailFromTemplate(
             $cf['mysql']['connection'],
@@ -98,7 +100,9 @@
                                 'WHERE account_view.id = ?',
                             array( array('s' =>  $_REQUEST[ $ct['etc']['table'] ]['id'] ) ) );
     // creo il token
-        $tk = md5( $account['username'].$account['password'] );
+        // NOTA fino al 30/09/2026 era md5( username . password ): viaggiando nel link della mail esponeva un hash
+        // della password; il token non viene verificato da nessuna pagina, quindi basta che sia casuale, come in _registrazione.php
+        $tk = bin2hex( random_bytes( 16 ) );
     // invio la mail con il link e il token
         queueMailFromTemplate(
             $cf['mysql']['connection'],

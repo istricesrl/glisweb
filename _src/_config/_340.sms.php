@@ -32,8 +32,8 @@
     );
 
     /**
-     * PRELIEVO DEI TEMPLATE MAIL DAL DATABASE
-     * =======================================
+     * PRELIEVO DEI TEMPLATE SMS DAL DATABASE
+     * ======================================
      * 
      * 
      * 
@@ -70,17 +70,17 @@
                 array( array( 's' => $tpl['id'] ) )
             );
 
-            /* TODO sistemare perché la struttura è sbagliata
             // ciclo sui contenuti
+            // NOTA fino al 2026-09-30 questo ciclo era commentato, e leggeva destinatario_numero invece di destinatari_numero:
+            // i testi salvati nella linguetta contenuti dei template SMS non arrivavano a queueSmsFromTemplate(); il tipo del
+            // template sta al primo livello, come per le mail in _350.mail.php, e non dentro la lingua
             foreach( $cnts as $cnt ) {
                 $cf['sms']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
-                    'type' => 'twig',
-                    'from' => array( $cnt['mittente_nome'] => $cnt['mittente_numero'] ),
-                    'to' => $cnt['destinatario_numero'],
+                    'from' => array( $cnt['mittente_nome'] ?? '' => $cnt['mittente_numero'] ?? '' ),
+                    'to' => $cnt['destinatari_numero'] ?? '',
                     'testo' => $cnt['testo']
                 );
             }
-            */
 
         }
 

@@ -58,6 +58,10 @@ echo "lavoro su: $(pwd)"
 find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d      -exec chmod 2775 {} +
 find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f      -exec chmod 664 {} +
 find ./$SUB/            \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh' -exec chmod 775 {} +
+# gli hook versionati e gli script delle skill non finiscono in .sh: senza il bit di esecuzione git salta i primi
+# in silenzio e vede modificati i secondi ( il bit e' registrato nell'indice ), vedi secure.sh
+find ./$SUB/.githooks            -type f      -exec chmod ug+x {} + 2>/dev/null
+find ./$SUB/.claude/skills/*/bin -type f      -exec chmod ug+x {} + 2>/dev/null
 
 ## cambio proprietario
 chown -R www-data:www-data ./$SUB/

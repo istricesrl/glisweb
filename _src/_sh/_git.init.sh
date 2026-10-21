@@ -23,7 +23,8 @@ if [ ! -d "./.git" ]; then
     git init
 
     ## copio il file .gitignore
-    cp _usr/_config/_git/.gitignore.dev .gitignore
+    # e' lo stesso che _gw.upgrade.sh ricopia a ogni aggiornamento: un file solo, cosi' i due non divergono
+    cp _usr/_deploy/_git/.gitignore .gitignore
 
     ## aggiungo i file
     git add .

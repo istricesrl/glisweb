@@ -318,10 +318,12 @@
 
                             // ID progetto
                             if( ! empty( $idTipologiaProgetto ) ) {
+                                // NOTA codice_progetto va in progetti.codice: l'id e' numerico dal 02/03/2026, lo da'
+                                // l'AUTO_INCREMENT o, se il progetto c'e' gia', lo si ritrova per codice
                                 $idProgetto = mysqlInsertRow(
                                     $cf['mysql']['connection'],
                                     array(
-                                        'id' => $job['riga']['codice_progetto'],
+                                        'codice' => $job['riga']['codice_progetto'],
                                         'id_tipologia' => $idTipologiaProgetto,
                                         'nome' => $job['riga']['nome_progetto'],
                                         'note' => $job['riga']['note_progetto'],
@@ -330,7 +332,10 @@
                                         'ore_previste' => ( ( isset( $job['riga']['ore_previste'] ) ) ? $job['riga']['ore_previste'] : NULL ),
                                         'id_cliente' => $idAnagrafica
                                     ),
-                                    'progetti'
+                                    'progetti',
+                                    true,
+                                    false,
+                                    array( 'codice' )
                                 );
 
                                 // status

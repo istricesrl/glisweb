@@ -67,8 +67,10 @@
                     INNER JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id AND categorie_anagrafica_path_check( anagrafica_categorie.id_categoria, ? ) 
                     INNER JOIN categorie_anagrafica ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
                     INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_anagrafica = anagrafica.id
-                    INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
-                    INNER JOIN comuni ON comuni.id = indirizzi.id_comune
+                    ' . ( ( anagraficaIndirizziInline() )
+                        ? 'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune'
+                        : 'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+                    INNER JOIN comuni ON comuni.id = indirizzi.id_comune' ) . '
                     INNER JOIN provincie ON provincie.id = comuni.id_provincia
                     INNER JOIN regioni ON regioni.id = provincie.id_regione
                     WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )

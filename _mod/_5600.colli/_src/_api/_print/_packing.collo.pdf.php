@@ -50,7 +50,7 @@
     // carico le righe del documento
     $doc['righe']['grezze'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli_view.*, articoli.peso, count(agg.id) AS aggregate, 
+        'SELECT documenti_articoli_view.*, articoli.peso, articoli.codice AS codice_articolo, count(agg.id) AS aggregate, 
         udm.sigla AS udm FROM documenti_articoli_view 
         LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm 
         LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id LEFT JOIN articoli ON articoli.id = documenti_articoli_view.id_articolo 
@@ -112,21 +112,7 @@
     // die( print_r( $src, true ) );
 
     // recupero i dati della sede dell'emittente
-    $sri = mysqlSelectRow(
-        $cf['mysql']['connection'],
-        'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
-        'comuni.nome AS comune, provincie.sigla AS provincia, '.
-        'stati.iso31661alpha2 AS sigla_stato '.
-        'FROM anagrafica_indirizzi '.
-        'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-        'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-        'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
-        'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-        'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-        'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
-        array( array( 's' => $src['id'] ) )
-    );
+    $sri = sedeStampabileAnagrafica( $src['id'] );
 
     // indirizzo fiscale
     if( empty($sri) ){
@@ -159,21 +145,7 @@
     $dst['denominazione_fiscale'] = trim( $dst['nome'] . ' ' . $dst['cognome'] . ' ' . $dst['denominazione'] );
 
     // recupero i dati della sede dell'emittente
-    $dsi = mysqlSelectRow(
-        $cf['mysql']['connection'],
-        'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
-        'comuni.nome AS comune, provincie.sigla AS provincia, '.
-        'stati.iso31661alpha2 AS sigla_stato '.
-        'FROM anagrafica_indirizzi '.
-        'LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-        'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-        'LEFT JOIN comuni ON comuni.id = indirizzi.id_comune '.
-        'LEFT JOIN provincie ON provincie.id = comuni.id_provincia '.
-        'LEFT JOIN regioni ON regioni.id = provincie.id_regione '.
-        'LEFT JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
-        array( array( 's' => $dst['id'] ) )
-    );
+    $dsi = sedeStampabileAnagrafica( $dst['id'], false, true );
 
 	if( empty($dsi) ){
 		// die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
@@ -396,11 +368,12 @@
 			// scrivo in grassetto le righe che sono aggregazioni di righe
 			if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
 
-            $row['articolo'] = trim( str_replace( $row['id_articolo'], '', $row['articolo'] ), ' /' );
+            $row['codice_articolo'] = ( ! empty( $row['codice_articolo'] ) ) ? $row['codice_articolo'] : $row['id_articolo'];
+            $row['articolo'] = trim( str_replace( $row['codice_articolo'], '', $row['articolo'] ), ' /' );
 
             //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
 #	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 3, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 3, $trh, $row['codice_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->MultiCell( $col * 8, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 #	$pdf->Cell( $col * 2, $trh, ($row['peso']*$row['quantita']) . ' kg', $brdc, 0, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento

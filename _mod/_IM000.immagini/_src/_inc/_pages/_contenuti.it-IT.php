@@ -50,7 +50,7 @@
     $p['contenuti.archivio.immagini.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti immagini form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione immagine' ),
         'parent'            => array( 'id'        => 'contenuti.archivio.immagini.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.immagini.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.immagini.form.php' ),

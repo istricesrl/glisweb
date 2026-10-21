@@ -26,7 +26,7 @@
 	);
 
     // aggiunta al carrello
-	if( in_array( "E300.modula", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "I0200.modula", $cf['mods']['active']['array'] ) ) {
 
 		$ct['page']['contents']['metro']['ecommerce'][] = array(
 			'ws' => 'http://localhost:5000/modula',

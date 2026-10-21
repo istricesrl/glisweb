@@ -56,12 +56,17 @@
 
     // tendina destinatari
 	// TODO le fatture di ciclo passivo devono poter essere indirizzate solo alle aziende gestite
-	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
-	);
+	/**
+	 * tendina id_destinatari — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_destinatari'] = array();
 
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){

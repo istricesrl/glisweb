@@ -37,14 +37,14 @@
         ),
         'class' => array(
             'id' => 'd-none',
-            '__label__' => 'no-wrap text-start',
+            '__label__' => 'text-start no-wrap',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array('NL' => true)
+            'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
@@ -90,12 +90,13 @@
      */
 
     // elaborazione righe
-    foreach ($ct['view']['data'] as &$row) {
-        if (is_array($row)) {
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
 
             $buttons = [];
 
-            $row[NULL] = implode($buttons);
+            $row[ NULL ] = implode( $buttons );
 
         }
+
     }

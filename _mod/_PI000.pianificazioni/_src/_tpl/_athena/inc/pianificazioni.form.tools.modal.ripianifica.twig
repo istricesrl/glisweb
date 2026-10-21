@@ -1,0 +1,44 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function ripianifica_pianificazione() {
+        var data = $('#__ripianifica_____data__').val();
+        getws('/task/PI000.pianificazioni/pianificazioni.ripianifica?id={{ request[ form.table ].id }}&data='+data, [], function(data) {
+            console.log(data);
+            const modalEl = document.getElementById('ripianifica_pianificazione');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="ripianifica_pianificazione">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ripianifica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            gli oggetti dalla data indicata in poi non ancora lavorati vengono cancellati e ricreati secondo i parametri attuali della pianificazione; i documenti non vengono mai cancellati, i nuovi partono dopo l'ultimo esistente
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="__ripianifica_____data__">ripianifica dal</label>
+                            <input type="date" class="form-control form-control-sm" id="__ripianifica_____data__" value="{{ 'now'|date('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="ripianifica_pianificazione();">ripianifica</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

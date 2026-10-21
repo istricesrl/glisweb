@@ -44,6 +44,9 @@
         'SELECT id, iso4217 as __label__ FROM valute'
     );
 
+    // tendina emittenti: un listino di vendita è emesso da una delle aziende gestite
+    $ct['etc']['select']['emittenti'] = tendinaAziendeGestite();
+
  //   print_r($ct['etc']['select']['valute']);
 
     // macro di default

@@ -115,7 +115,7 @@
 	$p['agenda.todo.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione todo' ),
 	    'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.todo.form.php' ),

@@ -149,9 +149,34 @@
 
         $backDecoded = trim( $_REQUEST['b'] );
         $backToURL = decryptString( $backDecoded, $cf['auth']['gimbe']['key'] );
-        $arrayBack = unserialize( $backToURL );
 
-        if( is_array( $arrayBack ) ) {
+        // deserializzo senza istanziare oggetti: il token arriva dall'utente
+        $arrayBack = is_string( $backToURL ) ? unserialize( $backToURL, array( 'allowed_classes' => false ) ) : false;
+
+        // la destinazione deve essere http/https su un dominio dei siti del deploy, altrimenti è un open redirect
+        // che si porta dietro il JWT dell'utente
+        $backHostOk = false;
+        if( is_array( $arrayBack ) && isset( $arrayBack['dstUrl'] ) && is_string( $arrayBack['dstUrl'] ) ) {
+            $backScheme = strtolower( (string) parse_url( $arrayBack['dstUrl'], PHP_URL_SCHEME ) );
+            $backHost = strtolower( (string) parse_url( $arrayBack['dstUrl'], PHP_URL_HOST ) );
+            if( in_array( $backScheme, array( 'http', 'https' ) ) && ! empty( $backHost ) ) {
+                foreach( $cf['sites'] as $backSite ) {
+                    // i domini sono per profilo, e gli alias sono a loro volta un array per profilo
+                    $backDomains = array();
+                    foreach( array( (array) ( $backSite['domains'] ?? array() ), (array) ( $backSite['alias']['domains'] ?? array() ) ) as $backList ) {
+                        array_walk_recursive( $backList, function( $d ) use ( &$backDomains ) { $backDomains[] = $d; } );
+                    }
+                    foreach( $backDomains as $backDomain ) {
+                        $backDomain = strtolower( trim( (string) $backDomain ) );
+                        if( ! empty( $backDomain ) && ( $backHost === $backDomain || substr( $backHost, - ( strlen( $backDomain ) + 1 ) ) === '.' . $backDomain ) ) {
+                            $backHostOk = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if( $backHostOk === true ) {
 
             if( isset( $arrayBack['dstUrl'] ) ) {
 

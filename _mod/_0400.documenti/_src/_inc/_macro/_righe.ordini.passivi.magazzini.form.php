@@ -53,12 +53,12 @@
 	    'SELECT id, __label__ FROM udm_view'
 	);
 
-    // tendina iva
+    // tendina iva ( senza le aliquote archiviate )
 	$ct['etc']['select']['id_iva'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM iva_view '
+	    'SELECT id, __label__ FROM iva_view WHERE timestamp_archiviazione IS NULL'
 	);
 
     // tendina valute
@@ -70,11 +70,16 @@
 	);
 
 	// tendina reparti
+	// NOTA solo i reparti con un'aliquota IVA non archiviata ( come quelle con la natura generica N6, che lo SDI scarta ); il
+	// reparto della riga resta nella tendina anche se archiviato, segnato, perché salvando il form non vada perso
 	$ct['etc']['select']['id_reparti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM reparti_view '
+	    'SELECT reparti_view.id, concat( reparti_view.__label__, if( iva.timestamp_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
+	    'FROM reparti_view LEFT JOIN iva ON iva.id = reparti_view.id_iva '.
+	    'WHERE iva.timestamp_archiviazione IS NULL OR reparti_view.id = ?',
+	    array( array( 's' => ( isset( $_REQUEST[ $ct['form']['table'] ]['id_reparto'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_reparto'] : NULL ) )
 	);
 
 	// tendina listini
@@ -147,13 +152,17 @@
 	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
 	);
 
-    // tendina destinatari
-	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static '
-	);
+	/**
+	 * tendina id_destinatari — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE: sui deploy con l'anagrafica grande ( Polmasi:
+	 * oltre 55.000 righe ) supera il tetto di 1 MB di memcached, la scrittura in cache fallisce
+	 * con l'errore 37 e la query si rifa' a ogni apertura della pagina.
+	 *
+	 * Non serviva: nei template di questa pagina il campo e' reso da `frm.selectBox()` con l'api
+	 * `anagrafica`, che non stampa le `<option>` e cerca via REST ( _src/_js/_lib/_selectbox.js ).
+	 */
+	$ct['etc']['select']['id_destinatari'] = array();
 
 	$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],

@@ -66,7 +66,7 @@
 	$p['attesa.form'] = array(
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'gestione' ),
-		'h1'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione attesa' ),
 		'parent'		=> array( 'id'		=> 'attesa.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attesa.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_attesa.form.php' ),

@@ -72,18 +72,10 @@
             $v = $cache[ $email ];
 
             // un verdetto senza stato grezzo ( p.es. importato da un gestionale ) si legge dalla tipologia
-            if( ! empty( $v['stato'] ) ) {
-                $stato = $v['stato'];
-            } elseif( isset( $v['se_recapitabile'] ) && $v['se_recapitabile'] !== NULL && empty( $v['se_recapitabile'] ) ) {
-                $stato = 'undeliverable';
-            } else {
-                $stato = 'unknown';
-            }
-
             $result = array(
                 'status'       => 'OK',
                 'cache'        => true,
-                'state'        => $stato,
+                'state'        => mailStatusState( $v ),
                 'reason'       => $v['motivo'],
                 'score'        => $v['punteggio'],
                 'accept_all'   => ( $v['se_accept_all'] === NULL ) ? NULL : (bool) $v['se_accept_all'],

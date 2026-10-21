@@ -104,6 +104,59 @@
 
             break;
 
+            case 3:
+
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . 'nota.credito.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa una copia di cortesia della nota di credito in formato PDF'
+                );
+
+            break;
+
+            case 6:
+
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . 'offerta.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa l\'offerta in formato PDF'
+                );
+
+            break;
+
+            case 7:
+
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . 'ordine.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa l\'ordine in formato PDF'
+                );
+
+            break;
+
+            default:
+
+                // le altre tipologie usano il modello dichiarato in tipologie_documenti.stampa_pdf, o quello del genitore
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . 'documento.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa il documento in formato PDF'
+                );
+
+            break;
+
         }
 
     }

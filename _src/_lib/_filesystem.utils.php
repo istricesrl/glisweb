@@ -21,22 +21,24 @@
 
         if( $encoding != false ) {
 
-            if( $encoding != 'UTF-8' ) {
+            // NOTA con 'auto' mb_detect_encoding() prova ASCII prima di UTF-8, e un testo tutto ASCII ( p.es. la mail di
+            // reset della password ) risulta 'ASCII': è già UTF-8 valido, quindi non è un'anomalia e non va convertito
+            if( $encoding != 'UTF-8' && $encoding != 'ASCII' ) {
 
-                logWrite( 'encoding non UTF-8 per ' . $t, 'details/localization', LOG_ERR );
+                logWrite( 'encoding non UTF-8 per ' . $t, 'details/localization', LOG_INFO );
 
                 $utf8t = @iconv( $encoding, 'UTF-8', $t );
 
                 if( ! empty( $utf8t ) ) {
                     $t = $utf8t;
                 } else {
-                    logWrite( 'errore di iconv() da ' . $encoding . ' a UTF-8 per ' . $t, 'details/localization', LOG_ERR );
+                    logWrite( 'errore di iconv() da ' . $encoding . ' a UTF-8 per ' . $t, 'details/localization', LOG_WARNING );
                 }
 
             }
 
         } else {
-            logWrite( 'encoding non trovato per ' . $t, 'details/localization', LOG_ERR );
+            logWrite( 'encoding non trovato per ' . $t, 'details/localization', LOG_WARNING );
         }
 
         // var_dump( $t );
@@ -79,7 +81,7 @@
 
         // log
         foreach ($errors as $error) {
-            logWrite( $error->code, 'details/xml', LOG_ERR );
+            logWrite( $error->code, 'details/xml', LOG_WARNING );
         }
 
         // if( property_exists( $doc, 'documentElement') ) {
@@ -88,7 +90,15 @@
 
         // } else {
 
-            $output = $dom->saveXML();
+            // salvo i nodi del documento uno per uno, saltando le istruzioni di elaborazione: la dichiarazione
+            // XML anteposta al testo per forzare la codifica in loadHTML() resterebbe nel documento come nodo,
+            // e saveXML() del documento intero ne aggiungerebbe un'altra in testa, una in più a ogni passaggio
+            $output = '';
+            foreach( $dom->childNodes as $node ) {
+                if( $node->nodeType != XML_PI_NODE ) {
+                    $output .= $dom->saveXML( $node ) . PHP_EOL;
+                }
+            }
 
             // logWrite( 'proprietà documentElement non trovata', 'details/domdocument', LOG_ERR );
 

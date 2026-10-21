@@ -68,36 +68,20 @@
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
-        header('Content-Type: text/html; charset=utf-8');
+        header('Content-Type: application/xml; charset=utf-8');
         header('Content-Disposition: attachment; filename='.$filename);
 
-        // inizializzo l'oggetto XML
-		$xml = new XMLWriter();
-
-	    // specifico il file di destinazione
-		$xml->openURI( DIR_TMP . microtime( true ) . '.xml' );
-
-	    // inizio il documento
-		$xml->startDocument( '1.0', 'UTF-8' );
-
-	    // attivo l'indentazione
-		$xml->setIndent( true );
-		$xml->setIndentString( '  ' );
-
-	    // root element
-		$xml->startElement( 'Fornitura' );
+        // root element, in forma di array per array2xml()
+        // NOTA fino al 2026-09-25 il tracciato veniva scritto con XMLWriter; array2xml() produce lo stesso file byte per byte
+        // ( verificato con più dipendenti, un solo movimento, nessun dipendente, & < > nei codici e & < > " negli attributi );
+        // l'unica differenza possibile è una " nel testo di un elemento, che XMLWriter scriveva &quot;, stesso testo per l'XML
+        $fornitura = array( 'Fornitura' => array() );
 
         // esportazione
         foreach( $attivita as $dipendente => $giornate ) {
 
-            // inizio nuovo dipendente
-            $xml->startElement( 'Dipendente' );
-            $xml->writeAttribute( 'CodAziendaUfficiale', $cf['zucchetti']['profile']['azienda'] );
-            $xml->writeAttribute( 'CodDipendenteUfficiale', sprintf( '%07d', $dipendente ) );
-
             // attività del dipendente
-            $xml->startElement( 'Movimenti' );
-            $xml->writeAttribute( 'GenerazioneAutomaticaDaTeorico', 'N' );
+            $movimenti = array( '@' => array( 'GenerazioneAutomaticaDaTeorico' => 'N' ) );
 
             // elenco attività del dipendente per giornata
             foreach( $giornate as $giornata => $codici ) {
@@ -106,56 +90,41 @@
                 foreach( $codici as $codice => $lavoro ) {
 
                     // spacchetto le ore in ore e minuti
-                    $aLavoro = explode( ',', sprintf( '%0.2f', trim( str_replace( ',', '.', $lavoro ) ), ' ' ) );
+                    // NOTA %0.2F non segue la locale e usa sempre il punto: con %0.2f e la virgola i minuti tornavano giusti solo
+                    // dove la locale mette la virgola ( PHP 7 con it_IT ), altrove 7,75 ore diventavano 7 ore e 0 minuti ( 2026-09-25 )
+                    $aLavoro = explode( '.', sprintf( '%0.2F', trim( str_replace( ',', '.', $lavoro ) ) ) );
                     $ore = sprintf( '%0d', ( $aLavoro[0] ) );
                     $minuti = sprintf( '%0d', ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0 );
 
-                    // inizio nodo attività
-                    $xml->startElement( 'Movimento' );
-
-                    // CodGiustificativoUfficiale
-                    $xml->writeElement( 'CodGiustificativoUfficiale', $codice );
-
-                    // Data
-                    $xml->writeElement( 'Data', $giornata );
-
-                    // NumOre
-                    $xml->writeElement( 'NumOre', $ore );
-
-                    // NumMinuti
-                    $xml->writeElement( 'NumMinuti', $minuti );
-                    
-                    // GiornoDiRiposo
-                    // $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
-
-                    // GiornoChiusuraStraordinari
-                    // $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
-
-                    // fine nodo attività
-                    $xml->endElement();
+                    // nodo attività
+                    $movimenti['Movimento'][] = array(
+                        'CodGiustificativoUfficiale' => $codice,
+                        'Data' => $giornata,
+                        'NumOre' => $ore,
+                        'NumMinuti' => $minuti
+                        // 'GiornoDiRiposo' => '', // TODO
+                        // 'GiornoChiusuraStraordinari' => '', // TODO
+                    );
 
                 }
 
             }
 
-            // fine attività del dipendente
-            $xml->endElement();
-
-            // fine del dipendente
-            if( $dipendente !== NULL ) {
-                $xml->endElement();
-            }
+            // nuovo dipendente
+            $fornitura['Fornitura']['Dipendente'][] = array(
+                '@' => array(
+                    'CodAziendaUfficiale' => $cf['zucchetti']['profile']['azienda'],
+                    'CodDipendenteUfficiale' => sprintf( '%07d', $dipendente )
+                ),
+                'Movimenti' => $movimenti
+            );
 
         }
-        
-	    // fine del root element
-		$xml->endElement();
 
-	    // fine del document
-		$xml->endDocument();
-
-	    // scrittura su file
-		$xml->flush();
+        // output del tracciato
+        // NOTA fino al 2026-09-25 il file veniva scritto in DIR_TMP e non arrivava mai al client, che riceveva gli header del
+        // download e un corpo vuoto; all'origine ( commit 760a119f0 ) XMLWriter scriveva su php://output
+        echo array2xml( $fornitura );
 
 	} else {
 

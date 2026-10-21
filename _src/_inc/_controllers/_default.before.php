@@ -29,6 +29,14 @@
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
 
+		// l'aggiornamento prende l'ora del salvataggio
+		// NOTA i form mandano timestamp_aggiornamento da un campo nascosto valorizzato con l'ora di APERTURA del form: se la
+		// cache delle pagine veniva ricostruita mentre il form era aperto, CONTENTS_PAGES_CACHED risultava più recente
+		// dell'aggiornamento e la modifica non si vedeva finché non si svuotava la cache ( 2026-09-25 )
+		    if( isset( $vs['timestamp_aggiornamento'] ) ) {
+			$vs['timestamp_aggiornamento']['s'] = time();
+		    }
+
 		// elaboro l'array dei valori
             foreach( $vs as $vKey => $vVal ) {
 

@@ -106,7 +106,7 @@
      * ---------
      * 
      * NOTA per login via JWT, mandare { "id": "<idAccount>", "user": "<username>" }
-     * vedi _usr/_examples/_jwt/_jwt.write.01.php
+     * vedi _usr/_examples/_lib/_jwt.tools/_jwt.write.01.php
      * 
      * 
      * 
@@ -182,53 +182,59 @@
      * login via API key
      * =================
      * 
+     * la chiave si ottiene da api/login ( /_src/_api/_user.php ) e vale un'ora; si manda nell'header gliswebAuthKey
+     * e porta al blocco di esecuzione del login l'utente e l'hash della sua password, come il token JWT
      * 
      */
 
     // intercetto l'header gliswebAuthKey
+    // NOTA la chiave la rilascia /_src/_api/_user.php al login via API e la scrive su Redis per un'ora, col prefisso apikey.
+    // perché una chiave qualsiasi della cache non valga come API key; il formato è controllato prima di leggere, così
+    // un header costruito a mano non può scegliere la chiave da leggere
     if( array_key_exists( 'gliswebAuthKey', $httpHeaders ) ) {
 
-        // TODO leggere il token da Redis
+        // utente associato alla chiave
+        $apiKeyUser = NULL;
 
-        // $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
+        // leggo la chiave da Redis
+        if( preg_match( '/^[0-9a-f]{32}$/', $httpHeaders['gliswebAuthKey'] ) && ! empty( $cf['redis']['connection'] ) ) {
+            $apiKeyUser = redisRead( $cf['redis']['connection'], 'apikey.' . $httpHeaders['gliswebAuthKey'] );
+        }
 
-        // if( file_exists( $tokenFile ) ) {
+        // se la chiave è valida
+        if( ! empty( $apiKeyUser ) && is_string( $apiKeyUser ) ) {
 
-            // ...
-            // $apiKeyUser = trim( file_get_contents( $tokenFile ) );
-            $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
+            // log
+            logger( 'login via API key per user ' . $apiKeyUser, 'auth' );
 
-            // die( 'token file trovato: ' . $tokenFile );
-            die( 'token redis trovato: ' . $httpHeaders['gliswebAuthKey'] );
-
-            // ...
-            if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
-
-                $_REQUEST['__login__']['user'] = $apiKeyUser;
-                $cf['auth']['jwt']['pass'] = $cf['auth']['accounts'][ $apiKeyUser ]['password'];
-
+            // account dei file di configurazione o del database
+            if( isset( $cf['auth']['accounts'][ $apiKeyUser ]['password'] ) ) {
+                $apiKeyPass = $cf['auth']['accounts'][ $apiKeyUser ]['password'];
             } else {
-
-                $userData = mysqlSelectRow(
+                $apiKeyPass = mysqlSelectValue(
                     $cf['mysql']['connection'],
-                    'SELECT username, password FROM account WHERE username = ?',
+                    'SELECT password FROM account WHERE username = ?',
                     array(
-                    array( 's' => $apiKeyUser )
+                        array( 's' => $apiKeyUser )
                     )
                 );
-
-                $_REQUEST['__login__']['user'] = $userData['username'];
-                $cf['auth']['jwt']['pass'] = $userData['password'];
-
-                // die( print_r( $userData, true ) );
-
             }
 
-        // } else {
+            // il login vero lo fa il blocco di esecuzione qui sotto, con l'hash già verificato come per il token JWT
+            if( ! empty( $apiKeyPass ) ) {
+                $_REQUEST['__login__']['user'] = $apiKeyUser;
+                $cf['auth']['jwt']['pass'] = $apiKeyPass;
+                if( ! defined( 'LOGIN_VIA_HTTP_HEADER' ) ) {
+                    define( 'LOGIN_VIA_HTTP_HEADER', true );
+                }
+            }
 
-            // die( 'token file non trovato: ' . $tokenFile );
+        } else {
 
-        // }
+            // log
+            logger( 'API key non valida o scaduta', 'auth', LOG_WARNING );
+
+        }
 
     }
 
@@ -308,6 +314,18 @@
             // punteggio di spam
             $cf['session']['spam']['check'] = true;
 
+        } elseif( ! empty( $cf['auth']['jwt']['pass'] ) ) {
+
+            // Qui si arriva con l'hash dell'account già letto dal framework, e non da un form: da un token JWT
+            // con la firma verificata, oppure dall'autologin dopo la conferma della registrazione. Senza
+            // questo ramo, con reCAPTCHA configurato, il login finiva nel "token non ricevuto" qui sotto.
+
+            // log
+            logger( 'check anti spam al login saltato per login con hash già verificato', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = true;
+
         } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
             // log
@@ -325,7 +343,7 @@
         } elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
             // log
-            logger( 'check anti spam al login fallito per token non ricevuto', 'auth' );
+            logger( 'check anti spam al login fallito per token non ricevuto', 'auth', LOG_WARNING );
 
             // punteggio di spam
             $cf['session']['spam']['check'] = false;
@@ -423,7 +441,7 @@
                     $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                     // log
-                    logger( 'password errata per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                    logger( 'password errata per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                 }
 
@@ -573,7 +591,7 @@
                                 }
                             }
                         } else {
-                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
                         }
 
                         // dati anagrafici
@@ -713,7 +731,7 @@
                                 }
                             }
                         } else {
-                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                            logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
                         }
 
                         // gruppi di attribuzione automatica dell'utente
@@ -745,7 +763,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_INACTIVE;
 
                         // log
-                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_INFO );
+                        logger( 'UTENTE INATTIVO, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                     } else {
 
@@ -753,7 +771,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                         // log
-                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
                     }
 
@@ -856,7 +874,7 @@
         } else {
 
             // log
-            logger( 'check anti spam al login fallito per ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
+            logger( 'check anti spam al login fallito per ' . $_REQUEST['__login__']['user'], 'auth', LOG_WARNING );
 
         }
 

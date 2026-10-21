@@ -42,7 +42,7 @@
     if( isset( $_SESSION['account']['username'] ) ) {
 
         // log
-        logger( 'login via API', 'details/auth/' . $_SESSION['account']['username'], LOG_ERR );
+        logger( 'login via API', 'details/auth/' . $_SESSION['account']['username'], LOG_INFO );
 
         // risposta
         $reply = ( isset( $_SESSION['account'] ) ) ? array_diff_key( $_SESSION['account'], array( 'permissions' => '', 'privilegi' => '', 'password' => '' ) ) : array( 'err' => 'login errato', 'status' => 'KO' );
@@ -50,10 +50,8 @@
         // ...
         $reply['token'] = bin2hex( openssl_random_pseudo_bytes( 16 )) ;
 
-        // ...
-        // TODO scrivere questa cosa su Redis impostando un TTL di un'ora
-        // writeToFile( $_SESSION['account']['username'], 'etc/secure/tokens/' . $reply['token'] );
-        redisWrite( $cf['redis']['connection'], $reply['token'], $_SESSION['account']['username'], 3600 );
+        // la chiave vale un'ora, e si usa nell'header gliswebAuthKey ( vedi _210.auth.php )
+        redisWrite( $cf['redis']['connection'], 'apikey.' . $reply['token'], $_SESSION['account']['username'], 3600 );
 
     } else {
 

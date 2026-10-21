@@ -1,9 +1,47 @@
 {# LIBRERIE #}
-{% import '_lib/_navigation.twig' as nav %}
 {% import '_lib/_default.twig' as cms %}
 
+{# CAROSELLO DELLE IMMAGINI DI TESTATA
+    Le immagini col ruolo carousel scorrono da sole ogni 3,5 secondi ( carousel di Bootstrap 4 ); le frecce e gli
+    indicatori compaiono solo se le immagini sono più di una. Titolo, sottotitolo e cappello dell'immagine diventano la
+    didascalia; se l'immagine ha il metadato link diventa un collegamento. La libreria _default.twig non ha una macro
+    per il carosello, quindi il markup è qui e le singole immagini le disegna cms.image(). #}
 <!-- file {{ _self }} -->
 {% if page.contents.images.carousel|length > 0 %}
-{{ cms.carousel( page, localization.language.ietf, site, 'carousel-main', 3500, image, 'carousel' ) }}
+<div id="carousel-main" class="carousel slide carousel-main" data-ride="carousel" data-interval="3500">
+    {% if page.contents.images.carousel|length > 1 %}
+    <ol class="carousel-indicators">
+        {% for ordine, img in page.contents.images.carousel %}
+        <li data-target="#carousel-main" data-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+    <div class="carousel-inner">
+        {% for ordine, img in page.contents.images.carousel %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+            {% if img.metadati.link %}<a href="{{ img.metadati.link[ localization.language.ietf ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
+            {{ cms.image( { 'source': { 'ruolo': 'carousel', 'ordine': ordine, 'ietf': localization.language.ietf }, 'site': site, 'page': page, 'image': image } ) }}
+            {% if img.h1[ localization.language.ietf ] or img.h2[ localization.language.ietf ] or img.cappello[ localization.language.ietf ] %}
+            <div class="carousel-caption">
+                {% if img.h1[ localization.language.ietf ] %}<h1>{{ img.h1[ localization.language.ietf ]|raw }}</h1>{% endif %}
+                {% if img.h2[ localization.language.ietf ] %}<h2>{{ img.h2[ localization.language.ietf ]|raw }}</h2>{% endif %}
+                {% if img.cappello[ localization.language.ietf ] %}<p>{{ img.cappello[ localization.language.ietf ]|raw }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% if img.metadati.link %}</a>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% if page.contents.images.carousel|length > 1 %}
+    <a class="carousel-control-prev" href="#carousel-main" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">precedente</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel-main" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">successiva</span>
+    </a>
+    {% endif %}
+</div>
 {% endif %}
 <!-- fine file {{ _self }} -->

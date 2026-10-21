@@ -77,7 +77,7 @@
     $p['catalogo.prodotti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo prodotti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione prodotto' ),
         'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.php' ),
@@ -109,22 +109,15 @@
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.video' );
     }
 
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.audio' );
+    }
+
     // RELAZIONI CON IL MODULO FILE
     if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.prodotti.form.relazioni', $p['catalogo.prodotti.form']['etc']['tabs'], 'catalogo.prodotti.form.file' );
     }
-
-    // tools archivio produzione
-    $p['catalogo.prodotti.form.categorie'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'catalogo prodotti form categorie' ),
-        'h1'                => array( $l        => 'categorie' ),
-        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.categorie.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.categorie.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
-    );
 
     // tools archivio produzione
     $p['catalogo.prodotti.form.caratteristiche'] = array(
@@ -262,7 +255,7 @@
     $p['catalogo.categorie.prodotti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo categorie prodotti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione categoria' ),
         'parent'            => array( 'id'        => 'catalogo.categorie.prodotti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.categorie.prodotti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.categorie.prodotti.form.php' ),
@@ -289,6 +282,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.categorie.prodotti.form.archiviazione', $p['catalogo.categorie.prodotti.form']['etc']['tabs'], 'catalogo.categorie.prodotti.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE
@@ -350,7 +348,7 @@
     $p['catalogo.articoli.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo articoli form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione articolo' ),
         'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.php' ),
@@ -377,6 +375,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE
@@ -508,7 +511,7 @@
     $p['catalogo.marchi.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'catalogo marchi form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione marchio' ),
         'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.php' ),
@@ -540,6 +543,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'catalogo.marchi.form.archiviazione', $p['catalogo.marchi.form']['etc']['tabs'], 'catalogo.marchi.form.audio' );
     }
 
     // tools archivio produzione
@@ -579,4 +587,30 @@
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.prodotti.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+    // vista caratteristiche
+    $p['catalogo.caratteristiche.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo caratteristiche' ),
+        'h1'                => array( $l        => 'caratteristiche' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.caratteristiche.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.caratteristiche.view' ) ),
+        'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'caratteristiche' ),
+                                                                            'priority'    => '300' ) ) )
+    );
+
+    // gestione caratteristiche
+    $p['catalogo.caratteristiche.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'catalogo caratteristiche form' ),
+        'h1'                => array( $l        => 'gestione caratteristica' ),
+        'parent'            => array( 'id'        => 'catalogo.caratteristiche.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.caratteristiche.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.caratteristiche.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'catalogo.caratteristiche.form' ) )
     );

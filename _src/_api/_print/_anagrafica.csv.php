@@ -96,7 +96,7 @@
 			}
 
 			$fp = fopen('php://output', 'wb');
-			foreach ($csv as $line) {fputcsv($fp, $line, ',');}
+			foreach ($csv as $line) {fputcsv($fp, $line, ',', '"', '\\');}
 			fclose($fp);
 
 

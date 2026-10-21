@@ -45,7 +45,7 @@
         ),
         '__restrict__' => array(
             'data_archiviazione' => array('NL' => true),
-            'id_emittente' => array('NI' => implode( '|', array_column( tendinaAziendeGestite() ?? [], 'id' ) ) )
+            'id_emittente' => array( 'NN' => true, 'NI' => implode( '|', array_column( tendinaAziendeGestite() ?: array(), 'id' ) ) )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'

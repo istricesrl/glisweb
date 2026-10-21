@@ -62,7 +62,7 @@
     $p['contenuti.contatti.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti contatti form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione contatto' ),
         'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.php' ),
@@ -95,32 +95,6 @@
         'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.privacy.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.privacy.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'contenuti.contatti.form' )
-    );
-
-    // tools archivio produzione
-    $p['contenuti.contatti.form.archiviazione'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'archiviazione contenuti contatti form' ),
-        'h1'                => array( $l        => 'archiviazione' ),
-        'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.archiviazione.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.archiviazione.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'contenuti.contatti.form' )
-    );
-
-    // tools archivio produzione
-    $p['contenuti.contatti.form.tools'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'azioni contenuti contatti form' ),
-        'h1'                => array( $l        => 'azioni' ),
-        'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.contatti.form' )
     );

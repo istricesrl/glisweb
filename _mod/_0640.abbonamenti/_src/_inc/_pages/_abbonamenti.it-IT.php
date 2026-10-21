@@ -67,7 +67,7 @@
 		$p['abbonamenti.form'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'gestione' ),
-			'h1'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione abbonamento' ),
 			'parent'			=> array( 'id'		=> 'abbonamenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_abbonamenti.form.php' ),
@@ -206,7 +206,7 @@
 		$p['tipologie.abbonamenti.form'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'gestione' ),
-			'h1'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione tipologia' ),
 			'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.abbonamenti.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.php' ),

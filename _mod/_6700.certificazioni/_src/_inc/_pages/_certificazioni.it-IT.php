@@ -26,7 +26,7 @@
 	$p['certificazioni.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione certificazione' ),
 	    'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.form.php' ),
@@ -68,7 +68,7 @@
 	$p['anagrafica.certificazioni.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione certificazione' ),
 		'parent'		=> array( 'id'		=> 'anagrafica.certificazioni.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.certificazioni.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.php' ),
@@ -176,7 +176,7 @@
 	$p['tipologie.certificazioni.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione tipologia' ),
 	    'parent'		=> array( 'id'		=> 'tipologie.certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.certificazioni.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.certificazioni.form.php' ),
@@ -243,7 +243,7 @@
 	$p['anagrafica.certificazioni.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione certificazione' ),
 		'parent'		=> array( 'id'		=> 'anagrafica.certificazioni.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.certificazioni.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.php' ),

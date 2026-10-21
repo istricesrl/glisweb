@@ -267,9 +267,9 @@ class Schema( object ):
         #   vista e statica divergono di una colonna. Una statica senza la sua vista non è
         #   un errore, è un deploy che quella vista non ce l'ha.
         #
-        #   ⚠ Una differenza sola, e voluta: il task del framework
-        #   ( _src/_api/_task/_mysql.view.static.refresh.php ) svuota con TRUNCATE, qui si
-        #   usa DELETE. TRUNCATE provoca un COMMIT implicito, e tutto il giro di questo
+        #   ⚠ Qui si svuota con DELETE e non con TRUNCATE, come faceva il vecchio task
+        #   _mysql.view.static.refresh.php ( tolto il 2026-09-30 ). TRUNCATE provoca un
+        #   COMMIT implicito, e tutto il giro di questo
         #   strumento è una transazione sola: con TRUNCATE in mezzo, un errore successivo
         #   non tornerebbe più indietro.
 

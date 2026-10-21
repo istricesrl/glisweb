@@ -63,7 +63,7 @@
     $p['contenuti.pagine.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti pagine form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione pagina' ),
         'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.php' ),
@@ -91,6 +91,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO AUDIO
+    if( in_array( "AU000.audio", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.audio' );
     }
 
     // RELAZIONI CON IL MODULO FILE
@@ -154,6 +159,32 @@
         'etc'                => array( 'tabs'    => 'contenuti.archivio' )
     );
 
+    // gestione voci di menu
+    $p['contenuti.menu.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'contenuti menu form' ),
+        'h1'                => array( $l        => 'gestione menu' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.menu.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.menu.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.menu.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'contenuti.menu.form',
+                                                            'contenuti.menu.form.tools' ) )
+    );
+
+    // tools voci di menu
+    $p['contenuti.menu.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni contenuti menu form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.menu.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.menu.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.menu.form' )
+    );
+
     // tools archivio contenuti
     $p['contenuti.redirect.view'] = array(
         'sitemap'            => false,
@@ -170,7 +201,7 @@
     $p['contenuti.redirect.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'contenuti redirect form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione redirect' ),
         'parent'            => array( 'id'        => 'contenuti.redirect.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.redirect.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.redirect.form.php' ),

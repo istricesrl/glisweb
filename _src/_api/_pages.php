@@ -484,6 +484,14 @@
          */
         $ct['page']['macro'] = array();
 
+    } elseif( getPageContext( $ct['page'] ) !== true ) {
+
+        // switch dello schema per le schede che richiedono un contesto che manca ( 2026-09-29 ): come per i
+        // permessi niente macro, perche' fra quelle delle schede ce ne sono che scrivono; vedi getPageContext()
+        $contextSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'context.twig' ) ) ? 'context.twig' : 'context.html';
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['context'] ) ) ? $ct['page']['template']['context'] : $contextSchema;
+        $ct['page']['macro'] = array();
+
     }
 
     // switch dello schema in caso di schema non specificato
@@ -646,15 +654,20 @@
      * 
      * NOTA questa cosa viene fatta qui perché l'index potrebbe essere modificato dalle macro
      * 
+     * La scrittura era stata commentata il 2026-03-26, quando l'indice piatto di memcacheWrite() è stato rinominato da
+     * __INDEX__ a CACHE_INDEX e le due strutture si sarebbero sovrascritte a vicenda; l'indice per tabella ha ora una
+     * chiave sua, CACHE_QUERY_INDEX ( 2026-09-24 ). Si scrive solo se è cambiato, come si faceva prima, e solo se c'è una
+     * connessione: senza l'estensione Memcached memcacheRead() non può nemmeno valorizzare il suo codice di errore.
+     * 
      */
 
     // scrittura dell'indice della cache
-    // if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
-    //     memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-    // }
+    if( ! empty( $cf['memcache']['connection'] ) && $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_QUERY_INDEX' ) ) {
+        memcacheWrite( $cf['memcache']['connection'], 'CACHE_QUERY_INDEX', $cf['memcache']['index'] );
+    }
 
     // timer
-    // timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+    timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     /**
      * ricerca delle favicons
@@ -1036,8 +1049,12 @@
         echo PHP_EOL;
 
         // aggiungo all'output le macro incluse
-        foreach( $includes as $include ) {
-            echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+        // solo in sviluppo: sono percorsi assoluti del disco, e il 04/10/2026 uno scanner li ha letti
+        // nell'HTML pubblico per sapere quali file chiedere a _download.php
+        if( substr( SITE_STATUS, 0, strlen( DEVELOPEMENT ) ) === DEVELOPEMENT ) {
+            foreach( $includes as $include ) {
+                echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+            }
         }
 
         // rendering del template in base al tipo
@@ -1258,8 +1275,8 @@
      * 
      */
 
-    // i parametri di una lettera sono riservati a DEV e TEST
-    if( SITE_STATUS != PRODUCTION ) {
+    // i parametri di una lettera sono riservati agli stati che non sono di produzione ( che non cominciano per PROD )
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION ) {
 
         // rivelazione dei dati
         if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {

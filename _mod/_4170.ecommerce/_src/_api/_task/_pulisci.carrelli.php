@@ -75,6 +75,6 @@
         )'
     );
 
-    logWrite( 'pulizia dei carrelli vuoti: ' . intval( $carrelliDaPulire ) . ' righe cancellate', 'cart', LOG_ERR );
+    logWrite( 'pulizia dei carrelli vuoti: ' . intval( $carrelliDaPulire ) . ' righe cancellate', 'cart', LOG_INFO );
 
     buildJson( array( 'status' => 'ok', 'cancellati' => intval( $carrelliDaPulire ) ) );

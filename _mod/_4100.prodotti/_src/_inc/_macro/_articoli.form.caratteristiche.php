@@ -24,17 +24,15 @@
 
     // tendina caratteristiche
     //
-    // la vista e' caratteristiche_prodotti_view e non caratteristiche_view: sono due tabelle
-    // diverse, e la chiave esterna articoli_caratteristiche.id_caratteristica punta a
-    // caratteristiche_prodotti. Leggendo da caratteristiche_view la tendina restava vuota su
-    // qualunque deploy che non popoli anche la tabella caratteristiche, e senza tendina la scheda
-    // non permette di assegnare nessuna caratteristica all'articolo. E' la stessa vista che usa
-    // gia' la scheda gemella del prodotto, _prodotti.form.caratteristiche.php
+    // l'albero delle caratteristiche, con il percorso come etichetta. Fino al 01/10/2026 stava in caratteristiche_prodotti
+    // e la chiave esterna di articoli_caratteristiche puntava li' sui deploy che lo usavano e a caratteristiche nei file
+    // di base, per cui la tendina proponeva caratteristiche che il database poteva rifiutare; ora l'albero e'
+    // caratteristiche e caratteristiche_prodotti e' una vista su di essa ( patch _202610011700.caratteristiche.albero.sql )
 	$ct['etc']['select']['caratteristiche'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM caratteristiche_prodotti_view'
+        'SELECT id, __label__ FROM caratteristiche_view'
     );
     
 	// tendina icona per caratteristica/opzione presente o meno

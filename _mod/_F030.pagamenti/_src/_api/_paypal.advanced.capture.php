@@ -73,7 +73,7 @@
         if( empty( $pagamento['id'] ) ) {
 
             // log
-            logWrite( 'cattura rifiutata: nessun pagamento per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_ERR );
+            logWrite( 'cattura rifiutata: nessun pagamento per l\'ordine ' . $_REQUEST['id'], 'paypal', LOG_WARNING );
 
             // log
             appendToFile(

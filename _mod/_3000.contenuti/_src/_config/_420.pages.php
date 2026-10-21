@@ -19,9 +19,9 @@
      */
 
     // debug
-    ini_set( 'display_errors', 1 );
-    ini_set( 'display_startup_errors', 1 );
-    error_reporting( E_ALL );
+    // ini_set( 'display_errors', 1 );
+    // ini_set( 'display_startup_errors', 1 );
+    // error_reporting( E_ALL );
 
     // verifico se è presente una pagina
 	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
@@ -32,13 +32,15 @@
             $joinValue = $cf['contents']['page']['id'];
             $joinTable = 'pagine';
             $subPages = true;
+            $subPrefix = NULL;
 
         } elseif( isset( $cf['contents']['page']['metadati']['id_categoria_prodotti'] ) ) {
 
             $joinField = 'id_categoria_prodotti';
             $joinValue = $cf['contents']['page']['metadati']['id_categoria_prodotti'];
             $joinTable = 'categorie_prodotti';
-            $subPages = true;
+            $subPages = defined( 'PREFX_CATEGORIE_PRODOTTI' );
+            $subPrefix = ( $subPages ) ? PREFX_CATEGORIE_PRODOTTI : NULL;
 
         } elseif( isset( $cf['contents']['page']['metadati']['id_articolo'] ) ) {
 
@@ -69,7 +71,8 @@
             $joinField = 'id_categoria_notizie';
             $joinValue = $cf['contents']['page']['metadati']['id_categoria_notizie'];
             $joinTable = 'categorie_notizie';
-            $subPages = true;
+            $subPages = defined( 'PREFX_CATEGORIE_NOTIZIE' );
+            $subPrefix = ( $subPages ) ? PREFX_CATEGORIE_NOTIZIE : NULL;
 
         } elseif( isset( $cf['contents']['page']['metadati']['id_notizia'] ) ) {
 
@@ -83,7 +86,8 @@
             $joinField = 'id_categoria_risorse';
             $joinValue = $cf['contents']['page']['metadati']['id_categoria_risorse'];
             $joinTable = 'categorie_risorse';
-            $subPages = true;
+            $subPages = defined( 'PREFX_CATEGORIE_RISORSE' );
+            $subPrefix = ( $subPages ) ? PREFX_CATEGORIE_RISORSE : NULL;
 
         } elseif( isset( $cf['contents']['page']['metadati']['id_risorsa'] ) ) {
 
@@ -98,6 +102,7 @@
             $joinValue = $cf['contents']['page']['id'];
             $joinTable = 'pagine';
             $subPages = true;
+            $subPrefix = NULL;
             
         }
 
@@ -214,6 +219,16 @@
         // timer
         timerCheck( $cf['speed'], '-> fine inserimento video' );
 
+        // aggiungo gli audio
+        aggiungiAudio(
+            $cf['contents']['page'],
+            $joinValue,
+            $joinField
+        );
+
+        // timer
+        timerCheck( $cf['speed'], '-> fine inserimento audio' );
+
         // aggiungo i file
         aggiungiFile(
             $cf['contents']['page'],
@@ -256,10 +271,19 @@
                 // assegno i sotto contenuti
                 foreach( $subCnt as $sc ) {
 
+                    // chiave della sotto pagina (le pagine di categoria hanno il prefisso, vedi i rispettivi 310)
+                    $sid = $subPrefix . $sc['id'];
+
+                    // salto le sotto pagine che non sono state caricate (non pubblicate o fuori finestra)
+                    if( ! isset( $cf['contents']['pages'][ $sid ] ) ) {
+                        logger( 'sotto pagina ' . $sid . ' della pagina ' . $cf['contents']['page']['id'] . ' non caricata, salto', 'pagine', LOG_DEBUG );
+                        continue;
+                    }
+
                     // assegno i contenuti
                     foreach( array( 'abstract', 'cappello' ) as $k ) {
-                        if( empty( $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
-                            $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] =
+                        if( empty( $cf['contents']['pages'][ $sid ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
+                            $cf['contents']['pages'][ $sid ][ $k ][ $cf['localization']['language']['ietf'] ] =
                                 "{% import '_bin/_default.html' as cms %}\n\n".
                                 "{% import 'bin/default.html' as def %}\n\n".
                                 $sc[ $k ];

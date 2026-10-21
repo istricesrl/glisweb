@@ -10,7 +10,7 @@
     }
 
     // verifica dei privilegi
-    checkTaskPrivilege( 'GESTIONE_CORSI' );
+    checkTaskPrivilege( 'GESTIONE_ATTIVITA' );
 
 
     // debug

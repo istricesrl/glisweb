@@ -1,9 +1,32 @@
-{# LIBRERIE #}
-{% import '_lib/_navigation.twig' as nav %}
-{% import '_lib/_default.twig' as cms %}
-
+{# IMMAGINE FISSA DI TESTATA
+    La prima immagine col ruolo jumbotron fa da sfondo a un jumbotron di Bootstrap 4, con sopra i testi presi dai
+    metadati della pagina: jt_h3, jt_h1 ( collegamento se c'è jt_h1_href ), jt_h2, jt_content e il pulsante jt_action
+    che porta a jt_href. La libreria _default.twig non ha una macro per il jumbotron, quindi il markup è qui; è la
+    parte a tutta larghezza della vecchia macro jumbotron() di _src/_html/_bin/_default.html. #}
 <!-- file {{ _self }} -->
 {% if page.contents.images.jumbotron|length > 0 %}
-{{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+{% set jt = page.contents.images.jumbotron|first %}
+{% set lang = localization.language.ietf %}
+<div id="jumbotronId" class="jumbotron" style="background-image: url('{{ site.root }}{% if jt.path is iterable %}{{ jt.path[ lang ] }}{% else %}{{ jt.path }}{% endif %}'); background-size: cover; background-position: center;">
+    <div class="container">
+        <div class="row">
+            <div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
+                {% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ]|raw }}</h3>{% endif %}
+                {% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}">{% endif %}
+                {% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ]|raw }}</h1>{% endif %}
+                {% if page.metadati.jt_h1_href %}</a>{% endif %}
+                {% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ]|raw }}</h2>{% endif %}
+                {% if page.metadati.jt_content[ lang ] %}
+                <div class="contents">
+                    {{ page.metadati.jt_content[ lang ]|raw }}
+                    {% if page.metadati.jt_action[ lang ] %}
+                    <p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 <!-- fine file {{ _self }} -->

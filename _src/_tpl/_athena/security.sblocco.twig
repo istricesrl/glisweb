@@ -1,0 +1,32 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# SCHEMA ESTESO #}
+{% extends 'ext/login.twig' %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+<div class="row p-0 m-0 flex-fill align-items-center justify-content-center">
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-12 col-md-6 col-lg-4 px-5 form-login" id="formSblocco" method="post">
+        <fieldset>
+            <legend>{{ page.h1[ localization.language.ietf ] }}</legend>
+            <div class="form-group row">
+                <div class="col-12 text-center col-form-static">{{ request.__sblocco__.__esito__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            {% if request.__sblocco__.__bandito__ %}
+            <div class="form-group row">
+                <div class="d-grid gap-2 col-12">
+                    {{ cms.formButton( { 'field': { 'text': ( localization.language.ietf == 'it-IT' ) ? 'sblocca l\'accesso' : 'unlock access' }, 'form': { 'id': 'formSblocco', 'table': '__sblocco__' }, 'recaptcha': google.profile.recaptcha } ) }}
+                </div>
+            </div>
+            {% else %}
+            <div class="form-group row">
+                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">home page</a></div>
+            </div>
+            {% endif %}
+        </fieldset>
+    </form>
+</div>
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

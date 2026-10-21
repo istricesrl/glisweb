@@ -31,12 +31,10 @@
     );
     
     // tendina tipologia embed
-	$ct['etc']['select']['embed'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM embed_view  WHERE se_audio = 1'
-	); 
+    // i valori dell'enum embed di audio e video, che ha preso il posto della tabella embed ( 2026-09-25 )
+	$ct['etc']['select']['embed'] = array(
+	    array( 'id' => 'html5', '__label__' => 'HTML5' ),
+	);
 
 
     // macro di default per l'entità anagrafica

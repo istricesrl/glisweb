@@ -35,26 +35,26 @@
             $status['__status__'] = 'OK';
     
             // log
-            logWrite( 'data inizio generazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_ERR );
+            logWrite( 'data inizio generazione '.$_REQUEST['__di__'].' '.$_REQUEST['__df__'], 'todo', LOG_DEBUG );
 
             // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
             if( $_REQUEST['__g__'] != '' ) {
             
-                $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__'] );
-                //die(print_r($restult));  
+                $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__'] );
+                //die(print_r($result));  
 
             } else {
             
-                $restult = createDateRangeArray($_REQUEST['__di__'],$_REQUEST['__df__']);
+                $result = createDateRangeArray($_REQUEST['__di__'],$_REQUEST['__df__']);
             
             }
 
-            logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_DEBUG ); 
             
             // die( print_r( $status, true ) );
 
-            if( $restult ) {
+            if( $result ) {
 
                 // se vanno eliminate le chiusure
                 if( isset( $_REQUEST['__periodi__'] ) && ! empty( $_REQUEST['__periodi__'] ) ){
@@ -76,7 +76,7 @@
                         foreach( $chiusure as $c ){
                             $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
                             $status['dateSalt'] = array_merge( $status['dateSalt'], $range );
-                            // $restult = array_diff($restult, $range);
+                            // $result = array_diff($result, $range);
                         }
                         
                     }
@@ -86,8 +86,8 @@
                 }
 
                 $status['__status__'] = 'Pianificazione completata';
-                $status['date'] = $restult;
-                $status['n'] = count($restult);
+                $status['date'] = $result;
+                $status['n'] = count($result);
 
                 // if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) && ! empty( $_REQUEST['__a__'] )  ) {
                 if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) ) {
@@ -107,10 +107,17 @@
                         }
                     }
 
-                    // creazione todo [andrebbe fatto un job?]
-                    foreach( $restult as $data ) {
+                    // Fix 2026-10-15: senza istruttore ( né sul corso né in __a__ ) la stringa vuota finiva
+                    // in todo.id_anagrafica e attivita.id_anagrafica_programmazione, colonne intere: errore
+                    // 1366 e attività non creata. La lezione senza istruttore si scrive con NULL.
+                    if( empty( $resp ) ) {
+                        $resp = NULL;
+                    }
 
-                        logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_ERR ); 
+                    // creazione todo [andrebbe fatto un job?]
+                    foreach( $result as $data ) {
+
+                        logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_DEBUG ); 
 
                         if( in_array( $data, $status['dateSalt'] ) ) {
                             $idTipo = 17;
@@ -139,7 +146,7 @@
                             $attivita['id'] = mysqlQuery( $cf['mysql']['connection'], 
                             'INSERT INTO attivita (id_anagrafica_programmazione, id_luogo, id_todo, id_progetto, ora_inizio_programmazione, ora_fine_programmazione, data_programmazione, id_tipologia) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                                 array(  
-                                    array( 's' => $_REQUEST['__a__'] ),
+                                    array( 's' => ( empty( $_REQUEST['__a__'] ) ? NULL : $_REQUEST['__a__'] ) ),
                                     array( 's' => $_REQUEST['__l__'] ), 
                                     array( 's' => $todo['id'] ),                             
                                     array( 's' => $_REQUEST['progetto'] ), 
@@ -216,7 +223,7 @@
 
                             // le todo sono comunque state create: segnalo che le view statiche restano indietro
                             $status['err'][] = 'refresh delle view statiche saltato: lock non acquisito entro 30s';
-                            logWrite( 'refresh view statiche saltato: lock non acquisito', 'speed', LOG_ERR );
+                            logWrite( 'refresh view statiche saltato: lock non acquisito', 'speed', LOG_NOTICE );
 
                         }
 

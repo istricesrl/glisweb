@@ -217,6 +217,12 @@
      * `$couponOk = true` ): un coupon scaduto restava spendibile a tempo indeterminato e un
      * codice inesistente veniva comunque salvato su carrelli.id_coupon.
      *
+     * Il coupon si identifica con coupon.id, che è quello che carrelli.id_coupon e coupon_articoli.id_coupon
+     * contengono; $codice è il codice digitato dal cliente ( coupon.codice ) e serve solo a dire di quale coupon
+     * si parla. Fino al 2026-09-30 le due query qui sotto confrontavano id_coupon con il codice, che coincideva con
+     * l'id solo prima del 02/03/2026, quando coupon.id era il codice: con l'id numerico il controllo di uso singolo
+     * non trovava mai gli utilizzi precedenti e quello sugli articoli vincolati non trovava mai i vincoli.
+     *
      * Regole applicate, nell'ordine:
      * -# il codice deve esistere in tabella coupon
      * -# la validità non deve essere ancora iniziata ( timestamp_inizio, NULL = nessun limite )
@@ -230,7 +236,7 @@
      *
      * @param   resource    connessione     connessione mysql
      * @param   array       coupon          riga della tabella coupon ( vuota se non esiste )
-     * @param   string      codice          codice inserito dall'utente
+     * @param   string      codice          codice inserito dall'utente ( coupon.codice ), solo descrittivo
      * @param   array       carrello        $_SESSION['carrello']
      *
      * @return  array( 'ok' => bool, 'errore' => 'inesistente' | 'non_ancora_valido' | 'scaduto'
@@ -282,7 +288,7 @@
                            OR ( provider_pagamento = 'contanti' AND timestamp_checkout IS NOT NULL ) )",
                         array(
                             array( 's' => isset( $carrello['id'] ) ? $carrello['id'] : 0 ),
-                            array( 's' => $codice ),
+                            array( 's' => $coupon['id'] ),
                             array( 's' => $mail ),
                             array( 's' => $mail ),
                             array( 's' => $cfis ),
@@ -304,7 +310,7 @@
                 $vincoli = mysqlQuery(
                     $connessione,
                     'SELECT id_articolo, gruppo_alternative FROM coupon_articoli WHERE id_coupon = ?',
-                    array( array( 's' => $codice ) )
+                    array( array( 's' => $coupon['id'] ) )
                 );
 
                 // nessun vincolo censito: il coupon resta utilizzabile
@@ -402,3 +408,157 @@
         return !empty($sconto);
 
     }
+
+    /**
+     * toglie dalla richiesta del carrello i campi che solo un operatore può impostare
+     *
+     * Il listino del carrello, il listino delle righe, lo sconto delle righe e i coupon delle righe si accettano dalla
+     * richiesta solo da chi ha il privilegio GESTIONE_ECOMMERCE ( l'operatore nella scheda carrello del back end o in
+     * cassa ). Da tutti gli altri si tolgono e si registra una riga nel log cart, così nessuno può mettersi da solo un
+     * listino, uno sconto o il coupon di un altro. Fa eccezione il listino del carrello o della riga, se è fra quelli che
+     * $cf['ecommerce']['listini']['dal_sito'] ( codici o id ) lascia scegliere al sito. Fino al 2026-10-01 tutti questi
+     * campi si accettavano da chiunque: sconto_valore di riga, per esempio, restava quello inviato se lo sconto percentuale
+     * era zero, e id_coupon di riga usava il residuo di qualunque coupon. Allo stesso modo si tolgono id e session del
+     * carrello, che decide la controller: fino al 2026-10-12 chi li passava poteva far riscrivere un carrello altrui o già
+     * pagato dalla ON DUPLICATE di mysqlInsertRow().
+     *
+     * @param  array   $r  la richiesta del carrello, $_REQUEST['__carrello__'], modificata sul posto
+     *
+     * @return array       i campi tolti, per il log e per le prove
+     */
+    function filtraRichiestaCarrello( &$r ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // campi tolti
+        $tolti = array();
+
+        // chi ha il privilegio può impostare tutto
+        if( ! is_array( $r ) || getPrivilege( 'GESTIONE_ECOMMERCE' ) === true ) {
+            return $tolti;
+        }
+
+        // listini che il sito può scegliere
+        $ammessi = array();
+        foreach( (array) ( $cf['ecommerce']['listini']['dal_sito'] ?? array() ) as $l ) {
+            $id = risolviListino( $cf['memcache']['connection'] ?? NULL, $cf['mysql']['connection'], $l );
+            if( ! empty( $id ) ) {
+                $ammessi[] = $id;
+            }
+        }
+
+        // un listino dalla richiesta passa solo se è fra quelli ammessi
+        $listinoAmmesso = function( $v ) use ( $ammessi ) {
+            return ( $v === NULL || $v === '' || in_array( (int) $v, $ammessi, true ) );
+        };
+
+        // id e session del carrello: li decide la controller, altrimenti la ON DUPLICATE di mysqlInsertRow() fa
+        // riscrivere un carrello altrui ( o già pagato ) a chi ne conosce l'id o la session
+        foreach( array( 'id', 'session' ) as $campo ) {
+            if( array_key_exists( $campo, $r ) ) {
+                $tolti[] = $campo . '=' . ( is_scalar( $r[ $campo ] ) ? $r[ $campo ] : '...' );
+                unset( $r[ $campo ] );
+            }
+        }
+
+        // listino del carrello
+        if( array_key_exists( 'id_listino', $r ) && ! $listinoAmmesso( $r['id_listino'] ) ) {
+            $tolti[] = 'id_listino=' . $r['id_listino'];
+            unset( $r['id_listino'] );
+        }
+
+        // riga aggiunta da una scheda prodotto
+        if( isset( $r['__articolo__'] ) && is_array( $r['__articolo__'] ) ) {
+            if( array_key_exists( 'id_listino', $r['__articolo__'] ) && ! $listinoAmmesso( $r['__articolo__']['id_listino'] ) ) {
+                $tolti[] = '__articolo__[id_listino]=' . $r['__articolo__']['id_listino'];
+                unset( $r['__articolo__']['id_listino'] );
+            }
+        }
+
+        // righe
+        if( isset( $r['__articoli__'] ) && is_array( $r['__articoli__'] ) ) {
+            foreach( $r['__articoli__'] as $k => &$riga ) {
+                if( ! is_array( $riga ) ) {
+                    continue;
+                }
+                if( array_key_exists( 'id_listino', $riga ) && ! $listinoAmmesso( $riga['id_listino'] ) ) {
+                    $tolti[] = '__articoli__[' . $k . '][id_listino]=' . $riga['id_listino'];
+                    unset( $riga['id_listino'] );
+                }
+                foreach( array( 'sconto_percentuale', 'sconto_valore', 'id_coupon', 'coupon_percentuale', 'coupon_valore' ) as $campo ) {
+                    if( array_key_exists( $campo, $riga ) ) {
+                        $tolti[] = '__articoli__[' . $k . '][' . $campo . ']=' . ( is_scalar( $riga[ $campo ] ) ? $riga[ $campo ] : '...' );
+                        unset( $riga[ $campo ] );
+                    }
+                }
+            }
+            unset( $riga );
+        }
+
+        // log
+        if( ! empty( $tolti ) ) {
+            logWrite( 'campi riservati agli operatori tolti dalla richiesta del carrello ' . ( $_SESSION['carrello']['id'] ?? 'nuovo' ) . ': ' . implode( ', ', $tolti ), 'cart', LOG_WARNING );
+        }
+
+        return $tolti;
+
+    }
+
+    /**
+     * sceglie il listino di un carrello: cliente, zona, default
+     *
+     * Con $cf['ecommerce']['listini']['automatico'] acceso la controller del carrello usa questa funzione per i carrelli
+     * del sito: il primo listino assegnato al cliente ( listini_clienti, per ordine, dell'anagrafica intestataria del
+     * carrello o di quella dell'account collegato ), poi il primo assegnato alla zona del carrello ( listini_zone, per
+     * ordine ), poi il default del campo id_listino ( $cf['ecommerce']['fields']['carrello'] ). I listini archiviati
+     * non si scelgono.
+     *
+     * @param  object  $c         la connessione al database
+     * @param  array   $carrello  il carrello
+     *
+     * @return array              id del listino e motivo della scelta ( cliente, zona, default )
+     */
+    function trovaListinoCarrello( $c, $carrello ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // il cliente: l'intestatario del carrello o l'anagrafica dell'account collegato
+        $cliente = ( ! empty( $carrello['intestazione_id_anagrafica'] ) ) ? $carrello['intestazione_id_anagrafica'] : ( $_SESSION['account']['id_anagrafica'] ?? NULL );
+
+        // listino del cliente
+        if( ! empty( $cliente ) ) {
+            $l = mysqlSelectValue( $c,
+                'SELECT listini_clienti.id_listino FROM listini_clienti
+                INNER JOIN listini ON listini.id = listini_clienti.id_listino AND listini.data_archiviazione IS NULL
+                WHERE listini_clienti.id_cliente = ?
+                ORDER BY listini_clienti.ordine IS NULL, listini_clienti.ordine, listini_clienti.id
+                LIMIT 1',
+                array( array( 's' => $cliente ) )
+            );
+            if( ! empty( $l ) ) {
+                return array( 'id' => (int) $l, 'motivo' => 'cliente' );
+            }
+        }
+
+        // listino della zona
+        if( ! empty( $carrello['id_zona'] ) ) {
+            $l = mysqlSelectValue( $c,
+                'SELECT listini_zone.id_listino FROM listini_zone
+                INNER JOIN listini ON listini.id = listini_zone.id_listino AND listini.data_archiviazione IS NULL
+                WHERE listini_zone.id_zona = ?
+                ORDER BY listini_zone.ordine IS NULL, listini_zone.ordine, listini_zone.id
+                LIMIT 1',
+                array( array( 's' => $carrello['id_zona'] ) )
+            );
+            if( ! empty( $l ) ) {
+                return array( 'id' => (int) $l, 'motivo' => 'zona' );
+            }
+        }
+
+        // default
+        return array( 'id' => $cf['ecommerce']['fields']['carrello']['id_listino']['default'] ?? 1, 'motivo' => 'default' );
+
+    }
+

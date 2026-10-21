@@ -24,7 +24,7 @@
 		$p['conti.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione' ),
-			'h1'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione conto' ),
 			'parent'		=> array( 'id'		=> 'conti.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'conti.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_conti.form.php' ),

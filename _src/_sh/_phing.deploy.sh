@@ -7,7 +7,7 @@
 # di esse nella cartella ./usr/deploy/phing/ con estensione .properties. Il nome del file senza estensione sarà il nome con
 # cui questo script identificherà ogni specifica destinazione.
 #
-# Per creare il file di configurazione della destinazione si può partire dal file di esempio _usr/_examples/_phing/build.properties
+# Per creare il file di configurazione della destinazione si può partire dal file di esempio _usr/_examples/_config/_deploy/build.properties
 # e modificarlo in base alle proprie necessità seguendo le indicazioni dei commenti.
 #
 

@@ -165,14 +165,20 @@
                 }
 
                 // trovo l'ID del prodotto
+                // NOTA la colonna id del file e' il codice del prodotto: va in prodotti.codice, e l'id numerico
+                // si ritrova per codice ( quarto argomento di mysqlInsertRow() ) o lo da' l'AUTO_INCREMENT; senza
+                // codice non si cerca, perche' la ricerca per codice vuoto troverebbe un prodotto qualsiasi senza codice
                 $idProdotto = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
-                        'id' => $job['riga']['id'],
+                        'codice' => ( ( ! empty( $job['riga']['id'] ) ) ? $job['riga']['id'] : NULL ),
                         'id_tipologia' => $idTipologia,
                         'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL )
                     ),
-                    'prodotti'
+                    'prodotti',
+                    true,
+                    false,
+                    ( ( ! empty( $job['riga']['id'] ) ) ? array( 'codice' ) : array() )
                 );
 
                 // se il prodotto è stato inserito correttamente...
@@ -236,15 +242,19 @@
                         // status
                         $job['status']['info'][] = 'inserimento articolo ' . $job['riga']['id_articolo'] . ' / ' . $job['riga']['nome_articolo'] . ' per la riga ' . $job['corrente'];
 
-                        // trovo l'ID del prodotto
+                        // trovo l'ID dell'articolo
+                        // NOTA come per il prodotto: la colonna id_articolo del file e' il codice dell'articolo
                         $idArticolo = mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
-                                'id' => $job['riga']['id_articolo'],
+                                'codice' => ( ( ! empty( $job['riga']['id_articolo'] ) ) ? $job['riga']['id_articolo'] : NULL ),
                                 'id_prodotto' => $idProdotto,
                                 'nome' => ( ( isset( $job['riga']['nome_articolo'] ) ) ? $job['riga']['nome_articolo'] : NULL )
                             ),
-                            'articoli'
+                            'articoli',
+                            true,
+                            false,
+                            ( ( ! empty( $job['riga']['id_articolo'] ) ) ? array( 'codice' ) : array() )
                         );
 
                         // ...

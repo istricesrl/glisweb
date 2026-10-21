@@ -47,6 +47,16 @@
 	    'SELECT id, __label__ FROM regimi_view'
 	);
 
+	// tendine per l'iscrizione al REA ( IscrizioneREA della fattura elettronica )
+	$ct['etc']['select']['socio_unico'] = array(
+	    array( 'id' => 'SU', '__label__' => 'socio unico' ),
+	    array( 'id' => 'SM', '__label__' => 'più soci' )
+	);
+	$ct['etc']['select']['stato_liquidazione'] = array(
+	    array( 'id' => 'LN', '__label__' => 'non in liquidazione' ),
+	    array( 'id' => 'LS', '__label__' => 'in liquidazione' )
+	);
+
 	// tendina PEC
 	$ct['etc']['select']['pec'] = mysqlQuery(
 	    $cf['mysql']['connection'],

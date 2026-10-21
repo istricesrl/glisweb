@@ -1361,12 +1361,106 @@
 
     }
 
+    /**
+     * pubblica l'esito dell'ultima esecuzione dei test automatici
+     *
+     * _codeception.run.sh lascia ogni esecuzione in var/spool/test/<data e ora>/, con un esito.md che
+     * la riassume; qui si pubblica l'ultima — esito e report HTML di Codeception — a un indirizzo fisso,
+     * con in coda l'elenco delle esecuzioni precedenti ancora in spool. Chiesto da Fabio il 13/10/2026:
+     * i risultati dei test si referenziano nel READ.md del deploy come la documentazione, quindi devono
+     * stare a un clic, e non in una cartella da aprire via SSH.
+     *
+     * Si pubblicano SOLO esito.md e i *.report.html: i *.fail.html e *.fail.png sono le pagine del
+     * deploy al momento del fallimento, con i dati veri, e restano in var/. Le pagine di un giro
+     * precedente vengono tolte prima di copiare le nuove, cosi' il report di una suite che stavolta
+     * non e' girata non resta li' a far credere il contrario.
+     *
+     * @param   string      $destinazione   cartella di pubblicazione, relativa alla document root
+     * @param   array       $opzioni        chiavi titolo, secco
+     *
+     * @return  int                         numero di file pubblicati
+     *
+     */
+    function docsBuildTest( $destinazione, $opzioni ) {
+
+        $esecuzioni = glob( DOCS_BASE . 'var/spool/test/*/esito.md' );
+
+        if( ! $esecuzioni ) {
+            echo "  nessuna esecuzione con esito in var/spool/test/\n";
+            return 0;
+        }
+
+        rsort( $esecuzioni );
+
+        $ultima = dirname( array_shift( $esecuzioni ) );
+
+        // le precedenti: una riga per esecuzione, con la data e l'esito che il loro esito.md dichiara
+        $precedenti = '';
+
+        foreach( $esecuzioni as $e ) {
+            $esito = ( preg_match( '/^- esito: (.*)$/m', file_get_contents( $e ), $m ) ) ? $m[1] : 'non dichiarato';
+            $nome  = basename( dirname( $e ) );
+            $precedenti .= '- ' . preg_replace( '/^(....)(..)(..)(..)(..)(..)$/', '$3/$2/$1 $4:$5:$6', $nome ) . ': ' . $esito . "\n";
+        }
+
+        if( $precedenti ) {
+            $precedenti = "\n## esecuzioni precedenti\n\n"
+                        . "I risultati completi stanno in `var/spool/test/<data e ora>/`, per 30 giorni.\n\n"
+                        . $precedenti;
+        }
+
+        $html = docsMarkdown2Html( file_get_contents( $ultima . '/esito.md' ) . $precedenti );
+
+        if( $html === false ) {
+            echo "  libreria di conversione non disponibile, non pubblico niente\n";
+            return 0;
+        }
+
+        $css = ( $f = docsBuildPath( '_usr/_docs/_etc/_page.css' ) ) ? file_get_contents( $f ) : '';
+
+        $pagina = docsRenderPage( $html, array(), array(
+            'titolo'      => $opzioni['titolo'],
+            'descrizione' => $opzioni['titolo'],
+            'kicker'      => 'test automatici',
+            'sottotitolo' => $opzioni['titolo'],
+            'css'         => $css,
+            'altrove'     => docsBuildAltrove( $destinazione )
+        ) );
+
+        $report = glob( $ultima . '/*.report.html' );
+
+        if( $opzioni['secco'] ) {
+            echo "  [prova] $destinazione/index.html, esito.md e " . count( $report ) . " report da " . basename( $ultima ) . "\n";
+            return 0;
+        }
+
+        if( ! is_dir( DOCS_BASE . $destinazione ) ) {
+            mkdir( DOCS_BASE . $destinazione, 0750, true );
+        }
+
+        foreach( glob( DOCS_BASE . $destinazione . '/*.report.html' ) as $vecchio ) {
+            unlink( $vecchio );
+        }
+
+        foreach( $report as $r ) {
+            copy( $r, DOCS_BASE . $destinazione . '/' . basename( $r ) );
+        }
+
+        copy( $ultima . '/esito.md', DOCS_BASE . $destinazione . '/esito.md' );
+        file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
+
+        echo "  pubblicata l'esecuzione " . basename( $ultima ) . " in $destinazione/ ( " . count( $report ) . " report )\n";
+
+        return count( $report ) + 2;
+
+    }
+
     // ------------------------------------------------------------------ esecuzione
 
-    $opt = getopt( '', array( 'user', 'dev', 'quickstart', 'standard', 'all', 'dry-run' ) );
+    $opt = getopt( '', array( 'user', 'dev', 'quickstart', 'standard', 'test', 'all', 'dry-run' ) );
 
     if( ! $opt ) {
-        fwrite( STDERR, "uso: _docs.build.sh [--user] [--dev] [--quickstart] [--standard] [--all] [--dry-run]\n" );
+        fwrite( STDERR, "uso: _docs.build.sh [--user] [--dev] [--quickstart] [--standard] [--test] [--all] [--dry-run]\n" );
         exit( 1 );
     }
 
@@ -1462,6 +1556,19 @@
             'secco'    => $secco
         ) );
 
+    }
+
+    // l'esito dei test automatici segue la stessa legge della documentazione: quello dello standard,
+    // sui deploy del framework, e' pubblico come il manuale dello standard; quello di un progetto
+    // descrive un cliente e sta dietro la stessa protezione del suo manuale. Nessuno dei due viaggia
+    // col deploy ( _deploy.run.sh li esclude ): l'esito appartiene alla macchina dove i test sono girati
+    if( $tutto || isset( $opt['test'] ) ) {
+        echo "esito dei test automatici:\n";
+        if( docsBuildPath( 'var/docs.build.conf' ) ) {
+            docsBuildTest( '_usr/_pages/_test', array( 'titolo' => 'test automatici GlisWeb', 'secco' => $secco ) );
+        } elseif( docsBuildProtezione( 'usr/pages/test', 'test automatici' ) ) {
+            docsBuildTest( 'usr/pages/test', array( 'titolo' => 'test automatici', 'secco' => $secco ) );
+        }
     }
 
     // la pagina di disimpegno: un indirizzo solo — /doc — da mandare a chi deve documentarsi,

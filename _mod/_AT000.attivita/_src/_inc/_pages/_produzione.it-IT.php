@@ -16,12 +16,6 @@
     // modulo di questo file
     $m = DIR_MOD . '_AT000.attivita/';
 
-    /* RELAZIONI CON IL MODULO PRODUZIONE
-    if( in_array( "01000.produzione", $cf['mods']['active']['array'] ) ) {
-        arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.attivita' );
-        arrayInsertSeq( 'produzione.attivita', $p['produzione']['etc']['tabs'], 'produzione.tipologie.attivita' );
-    }*/
-
     // tools archivio produzione
     $p['produzione.attivita.view'] = array(
         'sitemap'            => false,
@@ -65,20 +59,6 @@
         'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
     );
 
-    // produzione attivita view stampe
-    $p['produzione.attivita.stampe'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'produzione attivita stampe' ),
-        'h1'                => array( $l        => 'stampe' ),
-        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.stampe.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
-    );
-
-
     // tools archivio produzione
     $p['produzione.attivita.view.archiviate'] = array(
         'sitemap'            => false,
@@ -109,7 +89,7 @@
     $p['produzione.attivita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'produzione attivita form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione attività' ),
         'parent'            => array( 'id'        => 'produzione.attivita.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'produzione.attivita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.form.php' ),
@@ -118,6 +98,11 @@
                                                             'produzione.attivita.form.archiviazione',
                                                             'produzione.attivita.form.tools' ) )
     );
+
+    // RELAZIONI CON IL MODULO PIANIFICAZIONI
+    if( in_array( "PI000.pianificazioni", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'produzione.attivita.form.archiviazione', $p['produzione.attivita.form']['etc']['tabs'], 'produzione.attivita.form.pianificazioni' );
+    }
 
     // tools archivio produzione
     $p['produzione.attivita.form.archiviazione'] = array(
@@ -146,22 +131,10 @@
     );
 
     // tools archivio produzione
-    $p['produzione.tipologie.attivita.view'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'produzione tipologie attivita' ),
-        'h1'                => array( $l        => 'tipologie attivita' ),
-        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
-    );
-
-    // tools archivio produzione
     $p['produzione.tipologie.attivita.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'produzione tipologie attivita form' ),
-        'h1'                => array( $l        => 'gestione' ),
+        'h1'                => array( $l        => 'gestione tipologia' ),
         'parent'            => array( 'id'        => 'produzione.tipologie.attivita.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'produzione.tipologie.attivita.form.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.form.php' ),

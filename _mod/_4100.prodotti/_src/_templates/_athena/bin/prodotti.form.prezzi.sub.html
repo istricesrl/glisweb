@@ -38,7 +38,11 @@
             <div class="col-10 col-md">
                 <span class="label-top">% su articoli</span>
                 {{ frm.input( table, subtable, i, 'sconto_articoli', '', '', request, '', '', '', '', disabled ) }}
-            </div>           
+            </div>
+            <div class="col-10 col-md">
+                <span class="label-top">% provvigione</span>
+                {{ frm.input( table, subtable, i, 'provvigione_percentuale', '', '', request, '', '', '', '', disabled ) }}
+            </div>
             <div class="col col-md-auto">
                 <span class="label-top">iva</span>
                 {{ frm.select( table, subtable, i, 'id_iva', '', etc.select.iva, request, '', '', '', '', '', disabled ) }}

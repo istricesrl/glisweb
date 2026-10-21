@@ -48,7 +48,7 @@
 	$p['ticket.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione ticket' ),
 	    'parent'		=> array( 'id'		=> 'ticket.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ticket.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_ticket.form.php' ),
@@ -144,7 +144,7 @@
 	$p['attivita.ticket.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione attivita' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione attività' ),
 	    'parent'		=> array( 'id'		=> 'ticket.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.ticket.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.ticket.form.php' ),

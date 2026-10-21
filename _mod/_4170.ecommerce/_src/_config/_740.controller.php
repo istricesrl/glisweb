@@ -69,15 +69,20 @@
 
                     foreach( $_SESSION['carrello']['articoli'] as $riga ) {
 
-                        $anagrafica = mysqlSelectRow(
+                        // ( fix 2026-09-28 ) era `SELECT * FROM anagrafica_view WHERE id = ?` per usarne
+                        // solo la __label__: col segnaposto la condizione non entra nella vista, che si
+                        // materializza per intero ( 13 s in produzione su polmasi, per ogni riga del
+                        // carrello, 100-300 documenti al giorno ); con l'id scritto 0,02 s. Si resta
+                        // sulla vista viva e non sulla statica perche' la __label__ della statica puo'
+                        // avere un'altra forma e cambierebbe il nome dei documenti
+                        $anagrafica = mysqlSelectLabel(
                             $cf['mysql']['connection'],
-                            'SELECT * FROM anagrafica_view WHERE id = ?',
-                            array(
-                                array( 's' => $riga['destinatario_id_anagrafica'] )
-                            )
+                            'anagrafica',
+                            '_view',
+                            $riga['destinatario_id_anagrafica']
                         );
 
-                        $nome = 'documento creato automaticamente per il carrello #' . $_SESSION['carrello']['id'] . ' anagrafica ' . $anagrafica['__label__'];
+                        $nome = 'documento creato automaticamente per il carrello #' . $_SESSION['carrello']['id'] . ' anagrafica ' . $anagrafica;
                         $sezionale = 'C/' . date('Y');
                         $emittente = trovaIdAziendaGestita();
                         $numero = generaProssimoNumeroDocumento( $_REQUEST['ck_cassa'], $sezionale, $emittente );
@@ -98,16 +103,33 @@
     
                         // die( $nome . PHP_EOL );
 
+                        // la riga dell'articolo, senza la spedizione, che va in una riga a parte
                         mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
                                 'id_documento' => $idDocumento,
                                 'id_articolo' => $riga['id_articolo'],
-                                'importo_netto_totale' => $riga['prezzo_netto_finale'],
+                                'importo_netto_totale' => $riga['prezzo_netto_finale'] - ( $riga['costo_spedizione_netto'] ?? 0 ),
                                 'nome' => 'riga automatica da carrello #' . $_SESSION['carrello']['id']
                             ),
                             'documenti_articoli'
                         );
+
+                        // reparto dell'articolo, per l'aliquota della riga di spedizione
+                        $idReparto = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id_reparto FROM articoli WHERE id = ?',
+                            array( array( 's' => $riga['id_articolo'] ) )
+                        );
+
+                        // spedizione della riga ( politica 'articolo' ) e, sul primo documento, quella dell'ordine ( 'ordine' )
+                        $spedizioneNetto = ( $riga['costo_spedizione_netto'] ?? 0 );
+                        $spedizioneLordo = ( $riga['costo_spedizione_lordo'] ?? 0 );
+                        if( empty( $ct['carrello']['documenti'] ) ) {
+                            $spedizioneNetto += ( $_SESSION['carrello']['costo_spedizione_netto'] ?? 0 );
+                            $spedizioneLordo += ( $_SESSION['carrello']['costo_spedizione_lordo'] ?? 0 );
+                        }
+                        aggiungiRigaSpedizioneDocumento( $cf['mysql']['connection'], $idDocumento, $spedizioneNetto, $spedizioneLordo, $idReparto );
 
                         $ct['carrello']['documenti'][] = $idDocumento;
 

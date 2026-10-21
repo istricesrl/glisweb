@@ -115,7 +115,7 @@
     $p['catalogo.archivio.prezzi.form'] = array(
         'sitemap'        => false,
         'title'            => array( $l        => 'catalogo archivio prezzi form' ),
-        'h1'            => array( $l        => 'gestione' ),
+        'h1'            => array( $l        => 'gestione prezzo' ),
         'parent'        => array( 'id'        => 'catalogo.archivio.prezzi.view' ),
         'template'        => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.archivio.prezzi.form.twig' ),
         'macro'            => array( $m . '_src/_inc/_macro/_catalogo.archivio.prezzi.form.php' ),

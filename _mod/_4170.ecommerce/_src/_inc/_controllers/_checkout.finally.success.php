@@ -128,7 +128,7 @@
                 ),
                 strtotime( '-1 minute' ),
                 array(
-                    implode( ' ', $carrello['intestazione_nome'], $carrello['intestazione_cognome'], $carrello['intestazione_denominazione'] ) => $carrello['intestazione_mail']
+                    '{{ dt.intestazione_nome }} {{ dt.intestazione_cognome }} {{ dt.intestazione_denominazione }}' => '{{ dt.intestazione_mail }}'
                 ),
                 $linguaMail
             );

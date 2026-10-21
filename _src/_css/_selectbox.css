@@ -58,6 +58,11 @@ ul.combobox-dropdown li:hover {
     background-color: #dddddd;
 }
 
+/* voce attiva nella navigazione da tastiera ( _selectbox.js ) */
+ul.combobox-dropdown li.active {
+    background-color: #bbbbbb;
+}
+
 div.combobox-container > .spinner-border {
     position: absolute;
     right: 0.5em;

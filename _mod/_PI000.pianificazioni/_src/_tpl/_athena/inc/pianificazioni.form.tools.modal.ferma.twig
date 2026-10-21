@@ -1,0 +1,51 @@
+{% import '_lib/_form.twig' as frm %}
+
+<script>
+    function ferma_pianificazione() {
+        var data = $('#__ferma_____data__').val();
+        var pulisci = $('#__ferma_____pulisci__').is(':checked') ? 1 : 0;
+        getws('/task/PI000.pianificazioni/pianificazioni.stop?id={{ request[ form.table ].id }}&data='+data+'&pulisci='+pulisci, [], function(data) {
+            console.log(data);
+            const modalEl = document.getElementById('ferma_pianificazione');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.hide();
+            location.reload();
+        });
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="ferma_pianificazione">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ferma pianificazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                        <div class="col">
+                            la pianificazione non creerà più oggetti dopo la data indicata, che diventa la sua data di fine
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="__ferma_____data__">data di fine</label>
+                            <input type="date" class="form-control form-control-sm" id="__ferma_____data__" value="{{ 'now'|date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-check">
+                            <input type="checkbox" class="form-check-input" id="__ferma_____pulisci__">
+                            <label class="form-check-label" for="__ferma_____pulisci__">cancella gli oggetti già creati dopo quella data ( mai i documenti )</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="ferma_pianificazione();">ferma</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">annulla</button>
+            </div>
+        </div>
+    </div>
+</div>

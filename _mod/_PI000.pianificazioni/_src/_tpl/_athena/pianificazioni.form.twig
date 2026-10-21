@@ -1,0 +1,138 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# CAMPI HIDDEN SPECIALI: GLI OGGETTI A CUI LA PIANIFICAZIONE È COLLEGATA #}
+            {{ frm.input({ 'field': { 'name': 'id_contratto', 'type': 'hidden' }, 'request': request, 'form': form, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_progetto', 'type': 'hidden' }, 'request': request, 'form': form, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_todo', 'type': 'hidden' }, 'request': request, 'form': form, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_attivita', 'type': 'hidden' }, 'request': request, 'form': form, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_anagrafica', 'type': 'hidden' }, 'request': request, 'form': form, 'page': page }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">entità</span>
+                        {{ frm.select({ 'field': { 'name': 'entita', 'required': 1 }, 'source': { 'values': etc.select.entita }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# RIPETIZIONE #}
+            <fieldset>
+                <legend>ripetizione <small>ogni quanto viene creato un oggetto</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">periodicità</span>
+                        {{ frm.select({ 'field': { 'name': 'id_periodicita', 'required': 1, 'autosubmit': 1 }, 'source': { 'values': etc.select.periodicita }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-6 col-md-1 form-col">
+                        <span class="label-top">ogni</span>
+                        {{ frm.input({ 'field': { 'name': 'cadenza', 'type': 'number', 'default': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    {% if request[ form.table ].id_periodicita >= 3 %}
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">schema</span>
+                        {{ frm.select({ 'field': { 'name': 'schema_ripetizione' }, 'source': { 'values': etc.select.schema_ripetizione }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if request[ form.table ].id_periodicita == 2 %}
+                <div class="form-group row">
+                    {% for giorno, etichetta in { 'se_lunedi': 'lunedì', 'se_martedi': 'martedì', 'se_mercoledi': 'mercoledì', 'se_giovedi': 'giovedì', 'se_venerdi': 'venerdì', 'se_sabato': 'sabato', 'se_domenica': 'domenica' } %}
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': giorno, 'placeholder': etichetta }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+            </fieldset>
+
+            {# DATE #}
+            <fieldset>
+                <legend>date <small>la data di fine è compresa; senza data di fine la pianificazione non si ferma</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">attiva dal</span>
+                        {{ frm.input({ 'field': { 'name': 'data_avvio', 'type': 'date', 'required': 1, 'default': 'now'|date('Y-m-d') }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">primo oggetto il</span>
+                        {{ frm.input({ 'field': { 'name': 'data_inizio', 'type': 'date', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">fino al</span>
+                        {{ frm.input({ 'field': { 'name': 'data_fine', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-2 form-col">
+                        <span class="label-top">crea con anticipo di (giorni)</span>
+                        {{ frm.input({ 'field': { 'name': 'giorni_elaborazione', 'type': 'number', 'default': 0 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-2 form-col">
+                        <span class="label-top">rinnova di (giorni)</span>
+                        {{ frm.input({ 'field': { 'name': 'giorni_estensione', 'type': 'number' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                {% if request[ form.table ].id %}
+                <div class="form-group row">
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">ultimo oggetto creato</span>
+                        {{ frm.input({ 'field': { 'name': 'data_ultimo_oggetto', 'type': 'date', 'disabled': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-6 col-md-auto form-col">
+                        <span class="label-top">elaborata al</span>
+                        {{ frm.input({ 'field': { 'name': 'data_elaborazione', 'type': 'date', 'disabled': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+                {% endif %}
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

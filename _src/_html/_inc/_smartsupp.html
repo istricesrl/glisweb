@@ -1,2 +1,25 @@
-{% if smartsupp.key %}
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> DELLA CHAT SMARTSUPP PRIMA DELLA CHIUSURA DEL TAG <body>
+    È il codice di installazione di Smartsupp: dichiara la chiave del widget e carica il loader in
+    modo asincrono. La chiave è quella del profilo corrente ( _src/_config/_690.smartsupp.php ) e il
+    widget parte solo col consenso al cookie Smartsupp, dichiarato in privacy.cookie.terzi.analitici
+    come quello di Facebook #}
+
+{% if smartsupp.profile.key %}
+{% if privacy.cookie.terzi.analitici.Smartsupp.consenso == 'ok' %}
+<script>
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = '{{ smartsupp.profile.key }}';
+    window.smartsupp||(function(d) {
+        var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+        s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+        c.type='text/javascript';c.charset='utf-8';c.async=true;
+        c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+    })(document);
+</script>
+{% else %}
+<!-- profilo Smartsupp settato, consenso {% if privacy.cookie.terzi.analitici.Smartsupp.consenso %}negato{% else %}non prestato{% endif %} -->
+{% endif %}
+{% else %}
+<!-- chiave Smartsupp non settata -->
 {% endif %}

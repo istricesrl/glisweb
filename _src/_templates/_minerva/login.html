@@ -10,19 +10,19 @@
         <legend>login</legend>
         <div class="form-group form-row row">
             <label class="d-none d-md-block col-md col-form-label">username</label>
-            <div class="col-12 col-md"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+            <div class="col-12 col-md"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username" autocomplete="username" required></div>
         </div>
         <div class="form-group form-row row">
             <label class="d-none d-md-block col-md col-form-label">password</label>
-            <div class="col-12 col-md"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+            <div class="col-12 col-md"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password" autocomplete="current-password" required></div>
         </div>
         <!--
         <div class="form-group form-row">
-        <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+        <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm w-100">login</button></div>
         </div>
         -->
         <div class="form-group form-row row">
-            <div class="d-grid gap-2 col-12">{{ cms.formButton( 'login', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formLogin', google.profile.recaptcha, '__login__', '' ) }}</div>
+            <div class="d-grid gap-2 col-12">{{ cms.formButton( 'login', 'button', 'btn btn-secondary btn-sm w-100', '', '', '', 'formLogin', google.profile.recaptcha, '__login__', '' ) }}</div>
         </div>
     </fieldset>
 </form>

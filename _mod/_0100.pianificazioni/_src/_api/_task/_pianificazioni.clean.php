@@ -77,18 +77,11 @@
 						$status['delete'] = 0;
 					}
 
-                    // se ho eliminato righe, inserisco una richiesta di ripopolamento delle statiche
+                    // se ho eliminato righe, aggiorno le statiche coinvolte
                     if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){
                         foreach( $status['statiche'] as $s ){
-                            mysqlQuery(
-                                $cf['mysql']['connection'],
-                                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-                                array(
-                                    array( 's' => $s ),
-                                    array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php'),
-                                    array( 's' => time() )
-                                )
-                            );
+                            cleanStaticView( $cf['mysql']['connection'], $s );
+                            refreshStaticView( $cf['mysql']['connection'], $s );
                         }
                     }
                     

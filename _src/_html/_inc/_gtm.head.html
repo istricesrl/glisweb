@@ -2,7 +2,7 @@
 {# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE TAG MANAGER ALL'INTERNO DEL TAG <head> #}
 
 {% if google.profile.gtm.property %}
-{% if google.profile.gtm.anonymous or privacy.cookie.terzi.analitici.identificativi.GoogleTagManager.consenso == 'ok' %}
+{% if google.profile.gtm.anonymous or privacy.cookie.terzi.analitici.GoogleTagManager.consenso == 'ok' %}
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -10,7 +10,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','{{ google.profile.gtm.property }}');
 </script>
 {% else %}
-<!-- profilo GTM settato {{ google.profile.gtm.anonymous }}/{{ privacy.cookie.terzi.analitici.identificativi.Googlegtm.consenso }} -->
+<!-- profilo GTM settato {% if google.profile.gtm.anonymous %}anonimo{% else %}identificativo{% endif %}/{% if privacy.cookie.terzi.analitici.GoogleTagManager.consenso %}consenso negato{% else %}consenso non prestato{% endif %} -->
 {% endif %}
 {% else %}
 <!-- profilo GTM non settato -->

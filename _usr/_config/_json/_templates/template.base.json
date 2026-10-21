@@ -17,19 +17,10 @@
       }
     }
   },
-  "auth": {
-    "accounts": {
-      "root": {
-        "password": "%password di root%"
-      }
-    }
-  },
   "debug": {
     "%stage del sito%": {
-      "*" : {
-        "log": { "lvl": "%livello di log da 1 a 7%" },
-        "report": { "lvl": "%livello di report 2 o 32767%" }
-      }
+      "log": { "lvl": "%livello di log da 1 a 7%" },
+      "report": { "lvl": "%livello di report 2 o 32767%" }
     }
   },
   "mysql": {
@@ -37,8 +28,6 @@
       "default": {
         "address": "%indirizzo IP del server MySQL%",
         "port": "%porta del server MySQL%",
-        "username": "%nome utente del server MySQL%",
-        "password": "%password del server MySQL%",
         "db": "%nome del database MySQL%"
       }
     },

@@ -51,6 +51,9 @@
      * caricare i file non nella cartella DIR_VAR_SPOOL_IMPORT, ma nella sotto cartella
      * DIR_VAR_SPOOL_IMPORT_TODO, e all'interno di questa in una sotto cartella il cui nome
      * rispetti il formato YmdHis (ad esempio 20231025123000 per il 25 ottobre 2023 alle 12:30:00).
+     * Il nome è normalizzato con string2YmdHis(), che tollera i minuti senza zero iniziale e i minuti
+     * a 60 o 61 senza riporto sull'ora; un nome non interpretabile viene elaborato subito, con un
+     * errore nel log di importazione.
      * 
      * Per il naming dei file da caricare, si veda più avanti la sezione "gestione blocchi dati correnti".
      * 
@@ -71,8 +74,17 @@
             // cerco le cartelle programmate nel passato
             foreach( $cf['import']['programmati'] as $programmata ) {
 
-                // se la cartella è programmata nel passato
-                if( basename( $programmata ) <= date('YmdHis') ) {
+                // normalizzo il nome della cartella, che i gestionali a volte generano storto
+                $quando = string2YmdHis( basename( $programmata ) );
+
+                // un nome non interpretabile non deve restare fermo in silenzio
+                if( $quando === false ) {
+                    logWrite( 'nome di cartella programmata non valido, la elaboro subito: ' . $programmata, 'import', LOG_WARNING );
+                    $quando = '00000000000000';
+                }
+
+                // se la cartella è programmata nel passato ( confronto fra stringhe, <= le confronterebbe come numeri )
+                if( strcmp( $quando, date('YmdHis') ) <= 0 ) {
 
                     // log
                     logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import' );
@@ -90,7 +102,7 @@
                         foreach( $cf['import']['programmati'] as $programmato ) {
 
                             // log
-                            logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_ERR );
+                            logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_DEBUG );
 
                             // sposto il file nella cartella di importazione
                             $r = moveFile( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
@@ -98,7 +110,7 @@
                             // status
                             if( $r === true ) {
                                 $cf['import']['info'][] = 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
-                                logWrite( 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
+                                logWrite( 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_DEBUG );
                             } else {
                                 $cf['import']['info'][] = 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
                                 logWrite( 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
@@ -145,7 +157,9 @@
      * 
      * L'importazione vera e propria viene fatta leggendo i dati tramite csvFile2array() e aggiungendo il campo
      * speciale __method__ che contiene l'azione da eseguire; dopodiché il pacchetto dati viene aggiunto alla $_REQUEST
-     * per la successiva elaborazione da parte della controller (vedi _src/_config/_750.controller.php).
+     * per la successiva elaborazione da parte della controller (vedi _src/_config/_750.controller.php), che dopo averlo
+     * scritto sposta il file in done/. Un file con più di $cf['import']['righe'] righe di dati ( 1000 se non è impostato )
+     * non si elabora in una volta: si spezza con csvFileSplit() in parti che restano nello spool, e l'originale va in done/.
      * 
      * firma per l'autorizzazione
      * --------------------------
@@ -182,7 +196,7 @@
             // if( file_exists( $f ) ) {
         
             // ...
-            logWrite( 'importo: ' . $f, 'import', LOG_ERR );
+            logWrite( 'importo: ' . $f, 'import', LOG_INFO );
 
             // ...
             // if( filemtime( $f ) < strtotime( '-1 minutes' ) ) {
@@ -206,6 +220,24 @@
             // debug
             // print_r( readFromFile( $f ) );
             // die();
+
+            // un file troppo lungo per una richiesta sola si spezza in parti accanto a lui, che i giri successivi del cron
+            // elaborano una alla volta ( la collisione di tabelle qui sotto tiene in coda le altre ), e l'originale va
+            // intatto in done/; elaborato tutto insieme, il timeout della richiesta lo interrompeva a metà ( il 20/10/2026
+            // su utensilerialughese 4.500 comuni su 20.130 ). La soglia si cambia con $cf['import']['righe']
+            $righe = ( isset( $cf['import']['righe'] ) ) ? $cf['import']['righe'] : 1000;
+            if( count( (array) readFromFile( $f ) ) - 1 > $righe && csvFileSplit( $f, $righe ) ) {
+
+                // archivio l'originale
+                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
+
+                // status
+                $cf['import']['info'][] = 'file ' . basename( $f ) . ' spezzato in parti da ' . $righe . ' righe';
+
+                // le parti le prende il prossimo giro
+                continue;
+
+            }
 
             // elaboro i dati
             if( ! isset( $_REQUEST[ $table ] ) ) {
@@ -273,24 +305,15 @@
 
                 }
 
-                // archivio il file solo adesso, che tutte le sue righe sono state accodate
-                //
-                // ATTENZIONE, quello che questo spostamento NON copre: la scrittura vera sul
-                // database avviene piu' avanti nella richiesta, quando la controller() elabora
-                // $_REQUEST, quindi un timeout in QUELLA fase perde comunque le righe. Coprirlo
-                // del tutto vuol dire archiviare dopo che la controller ha finito, che e' un
-                // altro punto del ciclo di vita della richiesta. Qui si chiude la finestra della
-                // lettura, che e' quella che si puo' chiudere senza spostare l'archiviazione
-                // fuori da questo runlevel.
-                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
-
-                // status
-                $cf['import']['info'][] = 'archiviato file ' . basename( $f ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
+                // il file NON si archivia qui: la scrittura vera sul database la fa la controller() in
+                // _750.controller.php, ed e' li' che il file passa in done/, dopo. Archiviato qui, un timeout
+                // durante la scrittura perdeva le righe non ancora scritte senza lasciare traccia
+                $cf['import']['archiviare'][] = $f;
 
             } else {
 
                 // il file NON viene archiviato: resta nello spool e il cron ci riprova
-                logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_ERR );
+                logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_DEBUG );
 
             }
 
@@ -400,11 +423,21 @@
             }
 
             // verifico che l'oggetto collegato esista
+            // NOTA nel nome del file c'e' il codice ( prodotti.codice, articoli.codice ): dal 02/03/2026 l'id e'
+            // numerico, e nella riga dell'immagine va l'id; un numero che non e' un codice vale come id
             $check = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT id FROM ' . $table . ' WHERE id = ?',
+                'SELECT id FROM ' . $table . ' WHERE codice = ?',
                 array( array( 's' => $codice ) )
             );
+
+            if( empty( $check ) && ctype_digit( (string) $codice ) ) {
+                $check = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM ' . $table . ' WHERE id = ?',
+                    array( array( 's' => $codice ) )
+                );
+            }
 
             // se l'oggetto esiste
             if( ! empty( $check ) ) {
@@ -433,7 +466,7 @@
                     'timestamp_inserimento' => time()
                 );
 
-                $riga[ $field ] = $codice;
+                $riga[ $field ] = $check;
 
                 // debug
                 // die( print_r( $riga, true ) );
@@ -466,7 +499,7 @@
                     } else {
 
                         // log
-                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'image' );
+                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'image', LOG_ERR );
 
                         // pulizia databare
                         mysqlQuery(
@@ -487,7 +520,7 @@
             } else {
 
                 // log
-                logger( 'impossibile associare il file: ' . $f, 'image' );
+                logger( 'impossibile associare il file: ' . $f, 'image', LOG_ERR );
 
                 // sposto il file fuori dalle scatole
                 moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );

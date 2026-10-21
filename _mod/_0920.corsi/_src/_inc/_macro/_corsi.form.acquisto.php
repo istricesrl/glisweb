@@ -38,14 +38,20 @@
             )
         );
 
+        // NOTA il prodotto prende come codice quello del corso ( progetti.codice, o l'id se il corso non ne ha uno ):
+        // l'id del prodotto e' numerico dal 02/03/2026 e lo da' l'AUTO_INCREMENT, o se il prodotto c'e' gia' lo si
+        // ritrova per codice
         $idProdotto = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
-                'id' => $idProgetto,
+                'codice' => ( ! empty( $progetto['codice'] ) ) ? $progetto['codice'] : $idProgetto,
                 'id_tipologia' => 1,
                 'nome' => $progetto['nome']
             ),
-            'prodotti'
+            'prodotti',
+            true,
+            false,
+            array( 'codice' )
         );
 
         // var_dump( $idProdotto );

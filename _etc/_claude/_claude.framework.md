@@ -92,6 +92,15 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 
 `_src/_config.php` rileva e carica i file custom automaticamente tramite `path2custom()` e `glob2custom()`.
 
+**⚠ Promuovere a monte codice che vive in un `.add.php` vuol dire anche toglierlo dal progetto, nello stesso
+gesto.** Il `.add.php` non sostituisce lo standard, si carica **in più**, sempre ( `_src/_config.php`, ciclo su
+`$cf['library']['files']` ): finché le funzioni restano anche nel progetto, il primo aggiornamento che porta lo
+standard nuovo manda il deploy in `Cannot redeclare` **su ogni pagina**, non su una sola. Mettere a monte e
+togliere dal progetto sono **una mossa sola**: prima si toglie dal progetto ( o lo si fa nella stessa finestra
+dell'aggiornamento ), poi si verifica con `_smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
+del sottoscorta promosse in `_0500.mastri` e rimaste in `src/lib/mysql.utils.add.php` hanno fermato il sito
+otto minuti e mezzo, col magazzino al lavoro.
+
 ---
 
 ## Il materiale di progetto sta in `var/`, mai dentro la document root
@@ -198,7 +207,7 @@ e va letto prima di scrivere in uno di questi file** se non lo si è già fatto 
 | file | risponde a | come si scrive |
 |---|---|---|
 | `CLAUDE.md` | **come ci si deve comportare qui**: regole e trappole | stabile, **snello** ( vedi sopra ) |
-| `READ.md` | **cosa serve sapere per metterci le mani**: sette voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure | il fatto e il rimando; la trattazione in `var/` |
+| `READ.md` | **cosa serve sapere per metterci le mani**: nove voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure, **documentazione** e **test automatici** ( i link a un clic ) | il fatto e il rimando; la trattazione in `var/` |
 | `TODO.md` | **cosa c'è da fare** | per **aree**, una riga per compito, tre flag; si pota |
 | `DONE.md` | **cosa è successo e perché** | un capitolo per giornata, in append; si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | una sezione per destinatario, `## lock` in fondo; si riscrive per sezione, mai intero |
@@ -218,7 +227,13 @@ Le regole che contano di più:
    flag urgente/rilevante/impattante, `(!-!)`;
 6. **chiudere una voce sono tre gesti**: marcatore, trasloco nel `DONE.md` col perché, e — se il cliente
    la vede o l'aspettava — la stessa riga nel `CHAT.md` in `### Da dirgli alla prossima occasione`, il
-   giorno stesso.
+   giorno stesso;
+7. **una domanda per il cliente si scrive quando nasce**: nello stesso turno, nel `CHAT.md` in
+   `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
+   dove muore col `/clear`.
+
+La **pulizia** di un `TODO.md` ( voci già chiuse, doppioni, domande da fare ) ha una procedura sua:
+`.claude/skills/glisweb/riferimenti/pulizia-todo.md`, coi verdetti applicati da `bin/applica-triage.py`.
 
 ## Documentazione: `READ.md`, `USER.md` e le quickstart
 
@@ -227,6 +242,14 @@ underscore.** Il dettaglio — composizione dei manuali, sezioni *template* e *m
 e PDF, marcatori `@pubblico`/`@linea`/`@shot`, vincoli della generazione — sta in
 `.claude/skills/glisweb/riferimenti/documentazione.md`: **leggerlo prima di toccare documentazione o
 generatore**.
+
+**⚠ TASSATIVO ( Fabio, 06/10/2026 ): applicazione e documentazione sempre allineati**, nello standard come
+nel custom. Ogni modifica aggiorna, nello stesso lavoro, tutto ciò che la descrive: commenti Doxygen,
+`READ.md`, `USER.md` se l'utente vede la differenza, quickstart. Prima si cerca con `grep` **ogni** punto che
+cita la cosa toccata; codice e documentazione vanno nello stesso commit. Il giro è **codice → test → report dei test →
+documentazione → file di progetto**: l'ultimo passo aggiorna la sezione **Documentazione** del `READ.md`. Documentazione che non si può
+scrivere subito si dichiara e finisce nel `TODO.md`, area `documentazione`. Dettaglio nella skill `glisweb`,
+sezione "TASSATIVO: applicazione e documentazione sempre allineati".
 
 | cosa si documenta | standard | custom |
 |---|---|---|
@@ -244,6 +267,15 @@ generatore**.
   non si pubblica, non si cita, non si versiona;
 - si genera con `_src/_sh/_docs.build.sh`, che **non fa il bootstrap del framework** e sui deploy cliente
   scrive solo dentro `usr/`, mai sotto `_*`.
+
+## Commenti al codice
+
+I commenti seguono il canone dei file già documentati: in italiano, testata `/** … */` con titolo in
+minuscolo e sezioni sottolineate, docblock di funzione con `@param`/`@return` allineati, etichette `//`
+canoniche nelle macro ( `// tabella gestita`, `// macro di default`… ). Il commento dice **perché**, e
+un commit di documentazione **non cambia il codice**. La guida completa, coi modelli per tipo di file:
+`.claude/skills/glisweb/riferimenti/commenti.md` — **leggerla prima di commentare o di sciogliere un
+`TODO documentare`**.
 
 ## Come trovare le credenziali del database (e degli altri servizi)
 
@@ -264,6 +296,10 @@ Prima i YAML, poi i JSON; all'interno di ciascun gruppo, prima `ext/` poi `src/`
 | 3 | `src/config/ext/shadow.json` | git-ignored |
 | 2 | `src/config.json` | |
 | 1 — massima | `src/shadow.json` | git-ignored |
+
+**Password, hash e segreti stanno solo in `shadow.*`, mai in `config.*`**: i `config.*` si versionano, e fino
+al 04/10/2026 i `.yaml` non erano nemmeno nel `FilesMatch` del `.htaccess`, quindi un `src/config.yaml` con le
+credenziali si scaricava via HTTP. Se ne trovi in un `config.*`, spostale nello shadow corrispondente.
 
 I file shadow non sono versionati: esistono solo in produzione/staging. Per trovare le credenziali di un progetto
 leggere nell'ordine di priorità decrescente: `src/shadow.json` → `src/config.json` → `src/shadow.yaml` →
@@ -454,6 +490,11 @@ I moduli vecchi hanno `_mod/<modulo>/_src/_templates/` ( `.html` ), i nuovi `_mo
 su ventuno ), e **latest non ha nessun modulo vecchio**: è la disponibilità dei moduli a decidere se un
 deploy può passarci. Dettagli: `.claude/skills/glisweb/riferimenti/migrazioni.md`.
 
+**Una pagina può essere dichiarata due volte, purché da due moduli di generazione diversa**, uno legacy e
+uno nuovo ( `anagrafica.form.audio` sta sia in `_0010.anagrafica` sia in `_AU000.audio`, e così video,
+immagini e file ): non è un doppione da togliere. È un doppione, invece, la stessa pagina dichiarata da due
+moduli della stessa generazione.
+
 ## Job in background: come si scrive uno che non si pianta
 
 Un **job** è un lavoro lungo spezzato in iterazioni, fatto avanzare dal browser ( `_src/_api/_job.php`,
@@ -473,6 +514,38 @@ prima di scrivere o correggere un job**. Il modello è `_src/_api/_job/_test.job
   file da gigabyte su diecimila giri;
 - dopo aver lanciato un job lungo **si guarda la prima passata** ( `workspace.status`, e
   `var/log/memcache.err` se usa un dataset ) prima di andarsene.
+
+## Test automatici: tre suite, e quelli custom stanno accanto agli standard
+
+**⚠ TASSATIVO ( Fabio, 06/10/2026 ): applicazione e test sempre allineati**, nello standard come nei
+progetti. Ogni funzionalità nuova nasce col suo test; ogni modifica aggiorna, nello stesso lavoro, i test che
+la toccano; ogni correzione porta il test che avrebbe preso il bug. Codice e test vanno nello stesso commit, e
+prima di chiudere si fanno girare. Un test che non si può scrivere si dichiara e finisce nel `TODO.md`, area
+`test automatici`. Dettaglio nella skill `glisweb`, sezione "TASSATIVO: applicazione e test sempre allineati".
+
+I test girano con Codeception in tre suite: **`unit`** ( le librerie, via gli esempi di `_usr/_examples/` ),
+**`backend`** e **`frontend`** ( funzionali, in Chromium headless: aprono le pagine, compilano i form e
+verificano il risultato nel database ). Si lanciano con `_src/_sh/_codeception.run.sh <suite|tutte>`, e un
+test solo col suo percorso di raccolta ( `backend AN000.anagrafica/anagraficaFormCest.php` ). Tutto il
+dettaglio sta nel capitolo `_usr/_docs/_read/180.test.md`: **leggerlo prima di scrivere un test**. Le regole:
+
+- **i test funzionali scrivono nel database del deploy**: il bootstrap rifiuta la produzione, gli account
+  sono `test-<gruppo>` creati e tolti dall'helper `\Helper\Glisweb`, i record si marcano `TEST-E2E-` e si
+  tolgono con `deleteTestRecords()` in `_before()` **e** `_after()`;
+- **vale la legge degli underscore**: i test del progetto in `usr/test/tests/<suite>/` ( stesso nome =
+  sostituisce lo standard, nome nuovo = si aggiunge ), quelli di un modulo in
+  `_mod/<modulo>/_usr/_test/_tests/<suite>/` e girano solo se il modulo è attivo;
+- **nel back-end le pagine si aprono per id** ( `$I->amOnPageId( 'anagrafica.form' )` ), non per URL, e il
+  login passa dal JWT: serve `auth.jwt.secret` nello shadow;
+- **il reCAPTCHA è spento per la durata della suite** ( file `var/test/recaptcha.off`, letto da
+  `_src/_config/_115.google.php`, solo fuori produzione e per un'ora al massimo ): non lo si aggira altrimenti.
+- **il framework si fa comodo da testare, non il test acrobatico**: i campi si cercano per `name` o `id`, e i
+  campi di servizio delle macro hanno un id derivato ( `<id>_checkbox`, `<id>_inputbox` ). Se un campo non si
+  raggiunge con un selettore stabile, si corregge la macro standard.
+
+I modelli da copiare: `_usr/_test/_tests/backend/loginCest.php`,
+`_mod/_AN000.anagrafica/_usr/_test/_tests/backend/anagraficaFormCest.php`,
+`_mod/_CT000.contatti/_usr/_test/_tests/frontend/contattiCest.php`.
 
 ## Log e debug
 

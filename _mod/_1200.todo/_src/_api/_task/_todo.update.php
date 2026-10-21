@@ -34,11 +34,11 @@
         
         if( ! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']=='0'  ){
 
-            $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
+            $result = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
-            logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
+            logWrite( implode(', ', $result), 'todo', LOG_INFO ); 
             
-            if( $restult ){
+            if( $result ){
 
                 $status['__status__'] = 'trovate todo da modificare';
 
@@ -68,7 +68,7 @@
                         else{ $where = '';}
 
                         // aggiornamento todo ed attivita
-                        foreach( $restult as $data ){
+                        foreach( $result as $data ){
 
                             $params[count($params)] =  array( 's' => $data );
 /*
@@ -80,9 +80,12 @@
                             );
 */
 
+                            // Fix 2026-10-09: qui c'era `BETWEEN ? AND ?` con un solo parametro di data, la query
+                            // falliva e il task rispondeva comunque OK; le date sono quelle della pianificazione,
+                            // quindi il confronto e' di uguaglianza come nella versione commentata sopra
                             $query = 'UPDATE todo SET todo.id_luogo = ?, 
                             todo.timestamp_aggiornamento = unix_timestamp() 
-                            WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+                            WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ';
 
                             $status['query'][] = $query;
 
@@ -93,7 +96,7 @@
 
                             $query = 'UPDATE attivita, todo SET attivita.id_luogo = ?, 
                             attivita.timestamp_aggiornamento = unix_timestamp()
-                            WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+                            WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ';
 
                             $status['query'][] = $query;
 
@@ -113,7 +116,7 @@
                     $status['action'][] = 'aggiunta istruttore';
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();
@@ -164,7 +167,7 @@
                 if( ! empty( $_REQUEST['__removei__'] ) ){
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();
@@ -208,10 +211,10 @@
                 if( ! empty( $_REQUEST['__deletei__'] ) && ! empty( $_REQUEST['__newi__'] ) ){
 
                     $status['action'][] = 'sostituzione istruttore';
-                    $status['date'] = $restult;
+                    $status['date'] = $result;
 
                     // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    foreach( $result as $data ){
 
                         $where = array();
                         $params = array();

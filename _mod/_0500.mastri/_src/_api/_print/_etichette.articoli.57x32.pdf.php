@@ -41,7 +41,7 @@
         // ...
         $etichette = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT immagini.path, ra.id_articolo, articoli.nome AS articolo
+            'SELECT immagini.path, ra.id_articolo, coalesce( articoli.codice, articoli.id ) AS codice_articolo, articoli.nome AS articolo
                 FROM __report_giacenza_magazzini__ AS ra 
                 INNER JOIN articoli ON articoli.id = ra.id_articolo 
                 INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
@@ -94,7 +94,7 @@
             $pdf->setTextColor( 0, 0, 0 );
             $pdf->SetFillColor(  255, 255, 255 );
             $pdf -> SetFont( 'helvetica', 'B', $fntSizeCodice );
-            $pdf-> Cell( 30, 10, strtoupper( $etichetta['id_articolo'] ), '','', 'R', 1 );
+            $pdf-> Cell( 30, 10, strtoupper( $etichetta['codice_articolo'] ), '','', 'R', 1 );
 
             // descrizione
             $pdf->setXY( 10, 10 );

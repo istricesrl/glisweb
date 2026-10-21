@@ -45,14 +45,22 @@
 		array( 'id' =>'S', '__label__'=> 'S - scissione dei pagamenti')
 	); 
 	
-    // tendina mittenti
-	// TODO le fatture di ciclo attivo devono poter essere emesse solo dalle aziende gestite
-	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static' 
-	);
+    // TODO le fatture di ciclo attivo devono poter essere emesse solo dalle aziende gestite
+    /**
+     * tendina id_emittenti — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+     *
+     * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE. Su un deploy con l'anagrafica
+     * grande ( Polmasi: oltre 55.000 righe ) supera il tetto di 1 MB di memcached, quindi la scrittura
+     * in cache fallisce con l'errore 37 e la query si rifa' a ogni apertura del form ( Polmasi, ottobre
+     * 2026: 239 scritture fallite, quasi tutte da questo form e dal suo gemello ).
+     *
+     * Non serviva. Il campo e' reso da `frm.selectBox()` con l'api `anagrafica`
+     * ( _src/_templates/_athena/ricevute.amministrazione.form.html ): quando la macro riceve un `api` NON stampa
+     * nemmeno le `<option>` — rende un hidden e lascia cercare via REST a
+     * `_src/_js/_lib/_selectbox.js` da tre caratteri in su, e l'etichetta del valore gia' scelto
+     * la prende da `/api/anagrafica/<id>`. La lista serviva al piu' a risolvere quell'etichetta.
+     */
+    $ct['etc']['select']['id_emittenti'] = array();
 
 	// tendina coupon
 	$ct['etc']['select']['coupon'] = mysqlCachedIndexedQuery(
@@ -62,13 +70,21 @@
 	    'SELECT id, __label__ FROM coupon_view'
 	);
 
-    // tendina destinatari
-	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
-	);
+    /**
+     * tendina id_destinatari — disattivata il 2026-10-12, il campo ha gia' la ricerca REST
+     *
+     * Era `SELECT id, __label__ FROM anagrafica_view_static` senza WHERE. Su un deploy con l'anagrafica
+     * grande ( Polmasi: oltre 55.000 righe ) supera il tetto di 1 MB di memcached, quindi la scrittura
+     * in cache fallisce con l'errore 37 e la query si rifa' a ogni apertura del form ( Polmasi, ottobre
+     * 2026: 239 scritture fallite, quasi tutte da questo form e dal suo gemello ).
+     *
+     * Non serviva. Il campo e' reso da `frm.selectBox()` con l'api `anagrafica`
+     * ( _src/_templates/_athena/ricevute.amministrazione.form.html ): quando la macro riceve un `api` NON stampa
+     * nemmeno le `<option>` — rende un hidden e lascia cercare via REST a
+     * `_src/_js/_lib/_selectbox.js` da tre caratteri in su, e l'etichetta del valore gia' scelto
+     * la prende da `/api/anagrafica/<id>`. La lista serviva al piu' a risolvere quell'etichetta.
+     */
+    $ct['etc']['select']['id_destinatari'] = array();
 
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){

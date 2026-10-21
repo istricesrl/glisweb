@@ -30,12 +30,12 @@
 
   Fra gli esempi del framework è presente una struttura elementare che riproduce questo schema, costituita dai file:
 
-  - _usr/_examples/_ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
-  - _usr/_examples/_ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
-  - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
-  - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
-  - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
-  - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
+  - _usr/_examples/_mod/_4170.ecommerce/_esito.php che simula la pagina di esito generico del pagamento
 
   Il processo standard si può quindi sintetizzare in uno schema:
 
@@ -55,6 +55,12 @@
   ---------------------
 
   [...] lo step 01 del processo di acquisto.
+
+  L'articolo si aggiunge con *__carrello__[__articolo__][id_articolo]*, che è l'id numerico dell'articolo. Un valore che
+  non è un numero si prende per il codice ( *articoli.codice* ) e si traduce nell'id, per i link e i moduli scritti
+  quando l'id dell'articolo era il codice ( prima del 02/03/2026 ); un codice che non esiste non aggiunge niente. Le
+  righe del carrello in sessione hanno anche *codice_articolo*, che il template del carrello mostra al posto dell'id e
+  che va ad Analytics come item_id.
 
   la pagina di inserimento dati del carrello
   ------------------------------------------
@@ -132,17 +138,78 @@ if( carrelloForm.checkValidity() ) {
   all'aliquota applicabile all'utente (ad es. utenti che beneficiano di esenzioni specifiche) oppure dal paese di spedizione degli articoli
   acquistati (ad es. spedizione all'estero).
 
-  [...] il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello, e può dipendere dall'utente collegato, dal paese di
-  destinazione degli articoli acquistati, e da altri fattori custom.
+  Il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello ( *carrelli.id_listino*, default 1, o quello della
+  riga ). Con `$cf['ecommerce']['listini']['automatico']` acceso ( spento di default ) la controller lo sceglie a ogni richiesta che
+  non ne porta uno scelto apposta, con trovaListinoCarrello(): il primo listino del cliente ( *listini_clienti*, per *ordine*,
+  dell'anagrafica intestataria o di quella dell'account collegato ), poi il primo della zona del carrello ( *listini_zone* ), poi il
+  default; i listini archiviati non si scelgono, e il cambio va nel log cart. Un listino scelto da un operatore nella scheda del
+  carrello resta, perché la scheda lo manda a ogni salvataggio. Prima di accenderla su un deploy si controlla quali clienti hanno un
+  listino assegnato. Fino al 2026-10-01 *listini_clienti* non si leggeva e il controllo per zona non scattava mai.
 
-  [...] eventuali variazioni di prezzo applicabili agli articoli acquistati sono considerate dalla funzione calcolaPrezzoNettoArticolo() e di
-  conseguenza anche dalla funzione calcolaPrezzoLordoArticolo() che utilizza a sua volta la calcolaPrezzoNettoArticolo().
+  Chi può cambiare listino, sconti e coupon di riga: filtraRichiestaCarrello() ( _src/_lib/_mysql.utils.add.php ), chiamata in testa
+  alla controller, toglie dalla richiesta il listino del carrello e delle righe, lo sconto ( *sconto_percentuale*, *sconto_valore* ) e i
+  coupon delle righe ( *id_coupon*, *coupon_percentuale*, *coupon_valore* ) quando chi la manda non ha il privilegio GESTIONE_ECOMMERCE,
+  e lo scrive nel log cart. I listini che il sito può scegliere apposta ( per esempio un selettore privati / aziende ) si elencano, per
+  codice o id, in `$cf['ecommerce']['listini']['dal_sito']`. Il codice coupon del carrello ( *codice_coupon* ) resta aperto a tutti:
+  lo verifica verificaValiditaCoupon(). Fino al 2026-10-01 questi campi si accettavano da chiunque.
+
+  Allo stesso modo si tolgono *id* e *session* del carrello, che decide la controller. *carrelli.session* è chiave unica e
+  mysqlInsertRow() fa INSERT ... ON DUPLICATE KEY UPDATE: un carrello nuovo che nascesse con la session o l'id di un altro
+  ne riscriverebbe la riga. Per questo il carrello nuovo nasce sempre senza id, e prima di scriverlo la controller toglie la
+  session della richiesta dai carrelli vecchi; un carrello vecchio ancora aperto con la stessa session si cancella, uno già
+  chiuso ( *timestamp_checkout* valorizzata ) si lascia com'è. Fino al 2026-10-12 un carrello nuovo poteva riscrivere o
+  cancellare un carrello già pagato dallo stesso browser.
+
+  Il prezzo di una riga lo calcola il motore di _mod/_4000.catalogo/_src/_lib/_mysql.tools.add.php. calcolaPrezzoArticolo() raccoglie i
+  candidati sul listino: il prezzo del prodotto dell'articolo ( per la quantità del prodotto nel carrello ), quello dell'articolo ( per
+  la sua quantità ) e, per ogni paniere di cui l'articolo fa parte ( *relazioni_articoli* con ruolo 6, quantità del paniere da
+  contaQuantitaArticoliCarrello() ), il prezzo del paniere, il suo *sconto_articoli* e, se il paniere ha il metadato *conf_rif_sconto*,
+  il prezzo dell'articolo sul listino di riferimento con quel codice; fra più panieri vale quello che dà il netto più basso. Vince il
+  candidato positivo più basso e lo sconto del paniere scelto si applica al prezzo vincente. Ogni riga di *prezzi* vale per la data
+  ( giorno di inizio e di fine compresi ) e per la quantità ( *qta_min* e *qta_max* compresi ), e una riga con il solo sconto non
+  nasconde il prezzo. calcolaPrezzoNettoArticolo() ne restituisce il netto, calcolaPrezzoLordoArticolo() lo stesso netto con l'aliquota
+  della riga vincente ( o dell'IVA della riga del carrello ), calcolaProvvigioneArticolo() la provvigione più bassa fra prodotto,
+  articolo e panieri; le versioni ...Carrello() di _mysql.utils.add.php le chiamano con le quantità del carrello. I risultati stanno in
+  memcache senza scadenza, con una chiave che porta la versione del motore: dopo una correzione dei prezzi va svuotata.
+
+  Fino al 2026-10-01 il giorno di fine di un prezzo era escluso nel netto e ignorato nel lordo, vinceva l'ultimo paniere del ciclo
+  invece del più conveniente, la query del listino di riferimento falliva sempre e il lordo aveva una copia sua del calcolo: netto e
+  lordo potevano non corrispondere. Le correzioni vengono dal progetto berni; *qta_max* prima non si leggeva, e da allora una quantità
+  oltre l'ultima fascia con *qta_max* torna al prezzo senza fascia.
 
   calcolo dei coupon
   ------------------
+  Il cliente digita il codice del coupon nel campo *codice_coupon* del carrello. Nello step 6 di _src/_config/_750.controller.php
+  il codice si cerca in *coupon.codice*, l'id trovato va in *carrelli.id_coupon* e il codice digitato resta in
+  *carrelli.codice_coupon*, che il template rimostra; un codice vuoto toglie il coupon. verificaValiditaCoupon()
+  ( _src/_lib/_mysql.utils.add.php ) controlla esistenza, date di validità, uso singolo per persona e articoli vincolati
+  confrontando *carrelli.id_coupon* e *coupon_articoli.id_coupon* con l'id del coupon; un coupon respinto si toglie dal
+  carrello e il motivo va in `$_SESSION['coupon']['errore']`. Fino al 2026-09-30 il codice digitato finiva direttamente in
+  *id_coupon*, che dal 02/03/2026 è numerico: nessun coupon veniva mai trovato. I coupon per riga ( *carrelli_articoli.id_coupon* )
+  e quelli dei pagamenti si scelgono da elenchi e usano già l'id.
 
   calcolo dei costi di spedizione
   -------------------------------
+  La politica la sceglie `$cf['ecommerce']['spedizione']` ( _src/_config/_030.common.php del modulo ), perché ogni
+  ecommerce fa pagare la spedizione a modo suo:
+
+  - `'articolo'` ( il default ): il costo si calcola riga per riga con calcolaCostoSpedizioneNettoArticolo() e
+    calcolaCostoSpedizioneLordoArticolo(), dalla riga di *modalita_spedizione* più specifica per la zona del carrello
+    ( articolo, prodotto, categoria del prodotto, o la riga generica della zona ), moltiplicata per i lotti di
+    *lotto_spedizione*; va in *carrelli_articoli.costo_spedizione_netto* e *costo_spedizione_lordo* e nel prezzo finale
+    della riga;
+  - `'ordine'`: le righe non hanno spedizione, e il costo si calcola una volta per carrello con
+    calcolaCostoSpedizioneOrdine(), dalla riga generica della zona ( senza articolo, prodotto né categoria, senza lotti );
+    va in *carrelli.costo_spedizione_netto* e *costo_spedizione_lordo* e si somma al prezzo finale del carrello dopo il
+    coupon, che non si applica alla spedizione.
+
+  Nei documenti che il checkout genera ( `_740.controller.php` e il checkout diretto di `_ecommerce.pagamento.php` ) le
+  righe degli articoli hanno il prezzo senza spedizione, e la spedizione va in una riga a parte "spese di spedizione"
+  ( aggiungiRigaSpedizioneDocumento(), col reparto dell'articolo per l'aliquota ): quella delle righe nel loro documento,
+  quella dell'ordine nel primo documento. Gli importi che manda la cassa non si toccano. Fino al 2026-10-01 la spedizione
+  stava dentro le righe degli articoli, e nel checkout diretto le righe nascevano a importo zero nella fatturazione
+  SINGOLA e si scartavano nella MULTIPLA, perché leggevano colonne *importo_** che *carrelli_articoli* non ha.
+
 
   il checkout
   ===========
@@ -335,6 +402,32 @@ if( carrelloForm.checkValidity() ) {
   [...] creare i listener necessari in _mod/_4170.ecommerce/_src/_api/
 
   [...] se necessario aggiungere un ramo in _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.esito.php
+
+  la gestione dei carrelli nel back end
+  =====================================
+
+  la vista dei carrelli
+  ---------------------
+  La vista ( pagina *carrelli.view*, macro _mod/_4170.ecommerce/_src/_inc/_macro/_carrelli.view.php ) mostra per ogni carrello il
+  cliente ( *cliente_nome*, *cliente_cognome*, *cliente_mail* di carrelli_view, cioè l'intestatario o, se manca, il destinatario ),
+  le date di inserimento, conferma, pagamento ed evasione, l'esito del pagamento ( *status_pagamento* ), il totale e il sito, ed è
+  ordinata dal carrello più recente. I filtri di default mostrano solo i carrelli confermati e non ancora evasi.
+
+  Un deploy che vuole altri filtri di default, o altre colonne, copia la macro in mod/4170.ecommerce/src/inc/macro/carrelli.view.alt.php
+  e la modifica: la versione .alt.php viene eseguita al posto dello standard, che quindi non gira due volte. Le linguette della vista
+  e della scheda si cambiano dal file delle pagine del deploy, reimpostando $p['carrelli.view']['etc']['tabs'] e
+  $p['carrelli.form']['etc']['tabs'].
+
+  la scheda del carrello
+  ----------------------
+  La scheda ( pagina *carrelli.form*, template _mod/_4170.ecommerce/_src/_templates/_athena/carrelli.form.html ) mostra, oltre ai
+  dati anagrafici e di contatto, quelli che il front end raccoglie: codice fiscale, partita IVA, PEC e codice SDI dell'intestatario,
+  codice fiscale, partita IVA, data e luogo di nascita del destinatario, comune e stato di entrambi, e il coupon applicato. I metadati
+  del carrello stanno nella sezione *dati aggiuntivi*.
+
+  Il template deve usare solo colonne della tabella carrelli: un campo che non c'è fa fallire con l'errore 1054 l'intero salvataggio,
+  in silenzio. Fino al 2026-10-19 la scheda mostrava *note_pagamento*, che è una colonna di pagamenti, e nessun salvataggio andava a buon
+  fine; le note di fatturazione, che il front end raccoglie, sono un metadato e non una colonna.
 
   correlazioni fra il modulo e-commerce e gli altri moduli
   ========================================================

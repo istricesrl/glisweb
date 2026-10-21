@@ -194,7 +194,7 @@ le trappole note. Il fatto che GlisWeb ripeta ovunque gli stessi schemi lo rende
 particolarmente favorevole: un assistente che ha capito un modulo sa scriverne un altro.
 
 **Integrare l'AI nelle applicazioni: solo le basi.** C'è la configurazione per ambiente delle
-credenziali OpenAI e un esempio di chiamata alle API in `_usr/_examples/_openai/`, ma nessuna funzione
+credenziali OpenAI e un esempio di chiamata alle API in `_usr/_examples/_lab/_openai.01.php`, ma nessuna funzione
 del CMS o dei moduli usa ancora un modello linguistico, e l'esempio usa un modello ormai dismesso da
 OpenAI. Chi vuole integrare l'AI in un progetto ha l'infrastruttura per le chiamate REST, non una
 funzione pronta.

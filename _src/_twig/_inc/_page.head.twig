@@ -21,7 +21,7 @@
     <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
     <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
     {% if page.robots %}<meta name="robots" content="{{ page.robots[ localization.language.ietf ] }}">
-    {% elseif site.status == 'DEV' or site.status == 'TEST' %}<meta name="robots" content="noindex, nofollow">{% endif %}
+    {% elseif site.status|slice( 0, 4 ) != 'PROD' %}<meta name="robots" content="noindex, nofollow">{% endif %}
 
     {# FAVICONS #}
     {% for icon in page.template.favicons %}<link

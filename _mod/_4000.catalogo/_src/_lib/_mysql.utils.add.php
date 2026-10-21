@@ -126,6 +126,13 @@
         // die( 'listino: ' . $carrello['id_listino'] );
         // die( 'IVA: ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'] );
 
+        // le righe del carrello, come in calcolaPrezzoNettoArticoloCarrello()
+        // NOTA fino al 2026-10-01 listino e IVA della riga si leggevano sempre da $_SESSION['carrello'], anche quando si
+        // calcolava un altro carrello ( le API dei prezzi ne costruiscono uno simulato )
+        if( empty( $carrello['articoli'] ) ) {
+            $carrello['articoli'] = $_SESSION['carrello']['articoli'] ?? array();
+        }
+
         // trovo la quantità dell'articolo
         $qs = contaQuantitaArticoliCarrello( $a, $carrello );
 
@@ -137,8 +144,8 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             $a,
-            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
-            $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
+            ( ( ! empty( $carrello['articoli'][ $rowKey ]['id_listino'] ) ) ? $carrello['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
+            $carrello['articoli'][ $rowKey ]['id_iva'] ?? NULL,
             $qs[0],
             $qs[1],
             $qs[2],
@@ -387,8 +394,10 @@
             }
             */
 
-            // ciclo sui bundle
-            foreach( $bs as $bd ) {
+            // ciclo sui bundle dell'articolo
+            // NOTA fino al 2026-10-01 il ciclo era su $bs, i bundle dell'ultimo articolo esaminato nel ciclo sopra
+            // ( e indefinito a carrello vuoto ), invece che su quelli dell'articolo di cui si contano le quantità
+            foreach( $bsa as $bd ) {
 
                 // ...
                 if( $ma['conf_bundle'] == 'SI' ) {
@@ -446,3 +455,85 @@
         return array( $qa, $qp, $qb );
 
     }
+
+    /**
+     * calcola la provvigione percentuale di un articolo in un carrello
+     *
+     * È il corrispondente di calcolaPrezzoNettoArticoloCarrello() per calcolaProvvigioneArticolo(): stesse quantità
+     * ( contaQuantitaArticoliCarrello() ), stesso listino e stessa data. Portata nello standard dal progetto berni il
+     * 2026-10-01.
+     *
+     * @param  mixed   $a        l'id dell'articolo
+     * @param  array   $carrello il carrello
+     * @param  string  $rowKey   la chiave della riga nel carrello
+     *
+     * @return float             la provvigione percentuale, 0 se non c'è
+     */
+    function calcolaProvvigioneArticoloCarrello( $a, $carrello, $rowKey ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // le righe del carrello
+        if( empty( $carrello['articoli'] ) ) {
+            $carrello['articoli'] = $_SESSION['carrello']['articoli'] ?? array();
+        }
+
+        // quantità
+        $qs = contaQuantitaArticoliCarrello( $a, $carrello );
+
+        // provvigione
+        return calcolaProvvigioneArticolo(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            $a,
+            ( ( ! empty( $carrello['articoli'][ $rowKey ]['id_listino'] ) ) ? $carrello['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
+            $qs[0],
+            $qs[1],
+            $qs[2],
+            ( ( empty( $carrello['timestamp_checkout'] ) ) ? date('Y-m-d') : $carrello['timestamp_checkout'] )
+        );
+
+    }
+
+    /**
+     * converte una quantità espressa in confezioni nella quantità in pezzi
+     *
+     * Gli articoli con il metadato conf_bundle = SI hanno prezzi e fasce di quantità espressi in confezioni ( conf_udm ),
+     * mentre il carrello ragiona in pezzi e riconverte dividendo per conf_qta ( contaQuantitaArticoliCarrello() ): chi
+     * riceve una quantità già in confezioni ( per esempio da un gestionale esterno ) la riporta in pezzi prima di
+     * popolare il carrello. Per gli altri articoli la quantità resta com'è. Portata nello standard dal progetto berni il
+     * 2026-10-01.
+     *
+     * @param  mixed   $a  l'id dell'articolo
+     * @param  float   $q  la quantità in confezioni
+     *
+     * @return float       la quantità in pezzi
+     */
+    function qtaConfezioniInPezzi( $a, $q ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // metadati dell'articolo
+        $mt = mysqlSelectCachedRow(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT m1.testo AS conf_qta, m2.testo AS conf_bundle FROM articoli AS a
+            LEFT JOIN metadati_articoli AS m1 ON m1.id_articolo = a.id AND m1.nome = "conf_qta"
+            LEFT JOIN metadati_articoli AS m2 ON m2.id_articolo = a.id AND m2.nome = "conf_bundle"
+            WHERE a.id = ?',
+            array(
+                array( 's' => $a )
+            )
+        );
+
+        // senza confezione la quantità resta com'è
+        if( empty( $mt['conf_qta'] ) || ( $mt['conf_bundle'] ?? NULL ) != 'SI' ) {
+            return $q;
+        }
+
+        return $q * $mt['conf_qta'];
+
+    }
+

@@ -1,9 +1,21 @@
 {# LIBRERIE #}
-{% import '_lib/_navigation.twig' as nav %}
 {% import '_lib/_default.twig' as cms %}
 
+{# GALLERIA DELLE IMMAGINI DELLA PAGINA
+    Le immagini col ruolo gallery diventano miniature in griglia ( due per riga su schermo stretto, quattro da md in
+    su ); il clic le apre ingrandite con Colorbox, che si aggancia in js/main.js. La libreria _default.twig non ha una
+    macro per la galleria, quindi il markup è qui ( lo stesso della vecchia gallery2colorbox() di
+    _src/_html/_bin/_default.html ) e le singole immagini le disegna cms.image(). #}
 <!-- file {{ _self }} -->
 {% if page.contents.images.gallery|length > 0 %}
-{{ cms.gallery2colorbox( page, localization.language.ietf, site, 'galleryId', ['gallery'] ) }}
+<div id="galleryId" class="row g2cb justify-content-center" style="display: none;">
+    {% for ordine, img in page.contents.images.gallery %}
+    <div class="col col-6 col-md-3 mb-4">
+        <a class="g2cb-gallery" href="{{ site.root }}{% if img.path is iterable %}{{ img.path[ localization.language.ietf ] }}{% else %}{{ img.path }}{% endif %}">
+            {{ cms.image( { 'source': { 'ruolo': 'gallery', 'ordine': ordine, 'ietf': localization.language.ietf }, 'site': site, 'page': page, 'image': image } ) }}
+        </a>
+    </div>
+    {% endfor %}
+</div>
 {% endif %}
 <!-- fine file {{ _self }} -->

@@ -50,7 +50,7 @@
     $p['colli.form'] = array(
         'sitemap'		=> false,
         'title'			=> array( $l		=> 'gestione' ),
-        'h1'			=> array( $l		=> 'gestione' ),
+        'h1'			=> array( $l		=> 'gestione collo' ),
         'parent'		=> array( 'id'		=> 'colli.view' ),
         'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.html' ),
         'macro'			=> array( $m.'_src/_inc/_macro/_colli.form.php' ),

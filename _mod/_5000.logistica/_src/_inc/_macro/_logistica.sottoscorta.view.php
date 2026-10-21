@@ -33,8 +33,7 @@
 
     // modalita' report: senza questa il controller cercherebbe una vista __report_sottoscorta___view
     // ( getStaticViewExtension() appende _view al nome della tabella ) e la pagina risponderebbe
-    // "nessun dato trovato" senza dire perche'. Le tabelle __report_*__ si leggono cosi', come fa
-    // gia' mod/4100.prodotti/src/inc/macro/articoli.form.giacenze.php sulle giacenze.
+    // "nessun dato trovato" senza dire perche'. Le tabelle __report_*__ si leggono cosi'.
     $ct['view']['data']['__report_mode__'] = 1;
 
     // tabella della vista

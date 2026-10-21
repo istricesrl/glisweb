@@ -2,12 +2,12 @@
 {# FILE PER LA GENERAZIONE DEL TAG <noscript> DI GOOGLE TAG MANAGER #}
 
 {% if google.profile.gtm.property %}
-{% if google.profile.gtm.anonymous or privacy.cookie.terzi.analitici.identificativi.GoogleTagManager.consenso == 'ok' %}
+{% if google.profile.gtm.anonymous or privacy.cookie.terzi.analitici.GoogleTagManager.consenso == 'ok' %}
 <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id={{ google.profile.gtm.property }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 {% else %}
-<!-- profilo GTM settato {{ google.profile.gtm.anonymous }}/{{ privacy.cookie.terzi.analitici.identificativi.Googlegtm.consenso }} -->
+<!-- profilo GTM settato {% if google.profile.gtm.anonymous %}anonimo{% else %}identificativo{% endif %}/{% if privacy.cookie.terzi.analitici.GoogleTagManager.consenso %}consenso negato{% else %}consenso non prestato{% endif %} -->
 {% endif %}
 {% else %}
 <!-- profilo GTM non settato -->

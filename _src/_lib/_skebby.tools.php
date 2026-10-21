@@ -71,19 +71,27 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 		// log
 		logWrite('autenticazione su Skebby effettuata con successo: ' . $auth, 'skebby');
 
-		// elimino da $to tutti i caratteri non numerici
-		foreach ($to as $key => $value) {
-			$to[$key] = preg_replace('/[^0-9]/', '', $value);
+		// NOTA un destinatario singolo passato come stringa diventa un array di un elemento: senza, il foreach qui sotto
+		// e array_values() fermavano il task di invio con la riga ancora marcata dal token
+		if (! is_array($to)) {
+			$to = array($to);
 		}
 
-		// aggiungo +39 all'inizio di ogni elemento in $to se manca
+		// porto i destinatari in formato internazionale
+		// NOTA fino al 2026-09-30 qui si toglieva il + e si rimetteva +39 davanti a tutto quello che non cominciava con +39,
+		// e +39 333 1234567 diventava +39393331234567; la regola ora sta in string2smsNumber() ( _src/_lib/_sms.tools.php )
 		foreach ($to as $key => $value) {
-			if (substr($value, 0, 4) == '0039') {
-				$to[$key] = '+' . substr($value, 2);
+			$to[$key] = string2smsNumber($value);
+			if ($to[$key] === false) {
+				logWrite('destinatario senza cifre scartato: ' . print_r($value, true), 'skebby', LOG_WARNING);
+				unset($to[$key]);
 			}
-			if (substr($value, 0, 3) != '+39') {
-				$to[$key] = '+39' . $value;
-			}
+		}
+
+		// NOTA senza destinatari validi non c'è niente da inviare, e l'invio è fallito
+		if (empty($to)) {
+			logWrite('invio senza destinatari validi', 'skebby', LOG_WARNING);
+			return false;
 		}
 
 		$recipient = array_values($to);
@@ -131,7 +139,7 @@ function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type
 		if (isset( $result['result']) && $result['result'] == 'OK') {
 			return true;
 		} else {
-			logWrite('fallito invio: ' . print_r($result, true), 'skebby', LOG_CRIT);
+			logWrite('fallito invio: ' . print_r($result, true), 'skebby', LOG_ERR);
 			return false;
 		}
 	} else {

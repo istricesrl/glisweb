@@ -81,7 +81,7 @@
 		$p['iscrizioni.form'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'gestione' ),
-			'h1'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione iscrizione' ),
 			'parent'			=> array( 'id'		=> 'iscrizioni.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'iscrizioni.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_iscrizioni.form.php' ),

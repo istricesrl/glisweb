@@ -23,7 +23,7 @@
 	$status = array();
 
     // verifiche formali
-    if( ! in_array( 'CANCELLAZIONE_RICORSIVA', $_SESSION['account']['privilegi'], true ) ) {
+    if( ! getPrivilege( 'CANCELLAZIONE_RICORSIVA' ) ) {
 
         // status
         $status['err'][] = 'privilegi insufficenti';

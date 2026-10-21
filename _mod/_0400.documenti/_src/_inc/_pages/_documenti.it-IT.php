@@ -37,7 +37,7 @@
 	$p['documenti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione documento' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
@@ -174,7 +174,7 @@
 	$p['documenti.articoli.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione riga' ),
 	    'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),

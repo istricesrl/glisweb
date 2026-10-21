@@ -37,7 +37,7 @@
 	$p['recensioni.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione recensione' ),
 	    'parent'		=> array( 'id'		=> 'recensioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'recensioni.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_recensioni.form.php' ),

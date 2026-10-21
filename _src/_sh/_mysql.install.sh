@@ -50,9 +50,9 @@ echo "installazione del database"
         PASSC="-p$SRVPASS"
     fi
 
-    mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE DATABASE IF NOT EXISTS \`$SRVDBNAME\` CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-    # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
-    # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
+    mysql $DEFAULT -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER $PASSC -e "CREATE DATABASE IF NOT EXISTS \`$SRVDBNAME\` CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    # mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
+    # mysql -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
 
     read -p "vuoi assegnare il database a un utente specifico (s/n)? " YN
 
@@ -72,10 +72,10 @@ echo "installazione del database"
             else
                 read -s -p "password utente DATABASE: " SRVDBPASS && echo
             fi
-            mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
+            mysql $DEFAULT -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
         fi
 
-        mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "GRANT ALL PRIVILEGES ON \`$SRVDBNAME\`.* TO \`$SRVDBUSER\`@\`%\`;"
+        mysql $DEFAULT -h $SRVADDR -P ${SRVPORT:-3306} -u $SRVUSER $PASSC -e "GRANT ALL PRIVILEGES ON \`$SRVDBNAME\`.* TO \`$SRVDBUSER\`@\`%\`;"
 
     fi
 

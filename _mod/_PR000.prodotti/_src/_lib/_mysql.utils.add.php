@@ -43,7 +43,17 @@
 
         } else {
 
-            logger( 'articolo id: ' . $id . ' non trovato', 'articoli' );
+            // l'articolo non c'e' piu' ( DELETE dal controller finally ): si toglie anche dalla statica, come fa
+            // updateAnagraficaViewStatic(), altrimenti resta nelle viste e nelle tendine
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM articoli_view_static WHERE id = ?',
+                array(
+                    array( 's' => $id )
+                )
+            );
+
+            logger( 'articolo id: ' . $id . ' non trovato, tolto dalla view statica', 'articoli' );
 
         }
 

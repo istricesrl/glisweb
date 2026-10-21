@@ -37,7 +37,7 @@
 	$p['matricole.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione matricola' ),
 	    'parent'		=> array( 'id'		=> 'matricole.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'matricole.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_matricole.form.php' ),

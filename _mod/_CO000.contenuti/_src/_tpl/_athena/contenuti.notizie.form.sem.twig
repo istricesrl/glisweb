@@ -120,7 +120,7 @@
                     </div>
                     <div class="col-12 col-md-4 form-col">
                         <span class="label-top">OG:video</span>
-                        {{ frm.input({ 'field': { 'name': 'og_title', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'og_video', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
                     </div>
                 </div>
 
@@ -139,9 +139,9 @@
             {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             {% endfor %}
 
-            <textarea name="robots" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][robots]">{{ request[ form.table ][ subtable ][ i ].robots }}</textarea>
-            <textarea name="description" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][description]">{{ request[ form.table ][ subtable ][ i ].description }}</textarea>
-            <textarea name="og_description" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][og_description]">{{ request[ form.table ][ subtable ][ i ].og_description }}</textarea>
+            <textarea class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][robots]">{{ request[ form.table ][ subtable ][ i ].robots }}</textarea>
+            <textarea class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][description]">{{ request[ form.table ][ subtable ][ i ].description }}</textarea>
+            <textarea class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][og_description]">{{ request[ form.table ][ subtable ][ i ].og_description }}</textarea>
 
             {% endif %}
 

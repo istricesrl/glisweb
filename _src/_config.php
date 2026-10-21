@@ -303,11 +303,12 @@
      * @param   string  $c          il nome del canale (lettere, cifre, punto, trattino e underscore)
      * @param   int     $n          il numero massimo di richieste accettate nella finestra
      * @param   int     $t          la durata della finestra in secondi
+     * @param   int     $p          quante richieste vale questa (default 1); il firewall lo usa per sommare i punti
      *
      * @return  bool                true se la richiesta rientra nel limite, false altrimenti
      *
      */
-    function rateLimitCheck( $c, $n, $t ) {
+    function rateLimitCheck( $c, $n, $t, $p = 1 ) {
 
         // sorgente della richiesta
         $ip = ( isset( $_SERVER['REMOTE_ADDR'] ) ) ? $_SERVER['REMOTE_ADDR'] : 'cli';
@@ -336,9 +337,9 @@
         }
 
         // verifica del limite
-        $ok = ( count( $richieste ) < $n );
+        $ok = ( count( $richieste ) + $p <= $n );
         if( $ok ) {
-            $richieste[] = $adesso;
+            $richieste = array_merge( $richieste, array_fill( 0, $p, $adesso ) );
         }
 
         // riscrittura del registro, senza le richieste uscite dalla finestra
@@ -360,6 +361,413 @@
         }
 
         return $ok;
+
+    }
+
+    /**
+     * questa funzione legge le regole del firewall applicativo
+     *
+     * Legge prima il vecchio elenco FILE_BANNED_WORDS, poi FILE_FIREWALL_RULES e FILE_FIREWALL_RULES_CUSTOM; una regola
+     * con la stessa zona, lo stesso tipo e lo stesso valore di una letta prima la sostituisce. Il formato delle regole
+     * è descritto in _src/_inc/_macro/_security.php.
+     *
+     * @return  array               le regole, ognuna con stato, zona, tipo, peso e valore
+     *
+     */
+    function securityRules() {
+
+        // regole lette
+        $r = array();
+
+        // righe dei tre file, saltando vuote e commenti
+        foreach( array( FILE_BANNED_WORDS, FILE_FIREWALL_RULES, FILE_FIREWALL_RULES_CUSTOM ) as $f ) {
+            foreach( ( file_exists( $f ) ) ? file( $f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) : array() as $row ) {
+                $row = trim( $row );
+                if( ! strlen( $row ) || substr( $row, 0, 1 ) == '#' ) {
+                    continue;
+                } elseif( $f != FILE_BANNED_WORDS ) {
+                    $rows = array( preg_split( '/\s+/', $row, 5 ) );
+                } elseif( preg_match( '/^[A-Za-z0-9_]+$/', $row ) ) {
+                    // una parola semplice pesa da sola nel percorso, poco come parola intera nella querystring
+                    $rows = array( array( 'on', 'path', 'str', 10, $row ), array( 'on', 'query', 'word', 2, $row ) );
+                } else {
+                    $rows = array( array( 'on', 'uri', 'str', 10, urldecode( $row ) ), array( 'on', 'valore', 'eq', 10, $row ) );
+                }
+                foreach( $rows as $x ) {
+                    if( count( $x ) == 5 && in_array( $x[0], array( 'on', 'obs', 'off' ) ) ) {
+                        $r[ $x[1] . ' ' . $x[2] . ' ' . strtolower( $x[4] ) ] = array( 'stato' => $x[0], 'zona' => $x[1], 'tipo' => $x[2], 'peso' => (int) $x[3], 'valore' => $x[4] );
+                    }
+                }
+            }
+        }
+
+        return $r;
+
+    }
+
+    /**
+     * questa funzione applica le regole del firewall applicativo a una richiesta
+     *
+     * La richiesta viene scomposta nelle zone su cui lavorano le regole; nella querystring le parole intere non si
+     * cercano dentro i token opachi ( gclid, fbclid, JWT: almeno 16 caratteri base64 con maiuscole, minuscole e cifre ),
+     * dove una parola corta prima o poi compare per caso.
+     *
+     * @param   array   $r          le regole lette da securityRules()
+     * @param   string  $u          l'URI richiesto, con la querystring
+     * @param   array   $p          la $_POST
+     * @param   string  $a          lo User-Agent
+     * @param   array   $q          la $_REQUEST
+     * @param   string  $b          il corpo della richiesta, se non è un form
+     *
+     * @return  array               le regole che corrispondono, spente escluse
+     *
+     */
+    function securityCheck( $r, $u, $p = array(), $a = '', $q = array(), $b = '' ) {
+
+        // percorso e querystring
+        $parts = explode( '?', $u, 2 );
+        $qs = ( isset( $parts[1] ) ) ? $parts[1] : '';
+
+        // querystring senza i token opachi
+        $qword = '';
+        foreach( explode( '&', $qs ) as $pair ) {
+            $pair = explode( '=', $pair, 2 );
+            $qword .= ' ' . urldecode( $pair[0] );
+            if( isset( $pair[1] ) ) {
+                $v = urldecode( $pair[1] );
+                if( ! ( strlen( $v ) >= 16 && preg_match( '/^[A-Za-z0-9+\/=_\-\*\.~ ]+$/', $v ) && preg_match( '/[A-Z]/', $v ) && preg_match( '/[a-z]/', $v ) && preg_match( '/[0-9]/', $v ) ) ) {
+                    $qword .= ' ' . $v;
+                }
+            }
+        }
+
+        // valori della POST a qualsiasi profondità e corpo grezzo, fino a 64 kB
+        $body = array();
+        array_walk_recursive( $p, function( $v ) use ( &$body ) { $body[] = (string) $v; } );
+
+        // zone
+        $z = array(
+            'path'      => urldecode( $parts[0] ),
+            'query'     => urldecode( $qs ),
+            'uri'       => urldecode( $u ),
+            'body'      => substr( implode( ' ', $body ) . ' ' . $b, 0, 65536 ),
+            'ua'        => $a,
+            'valore'    => array_values( array_filter( $q, 'is_scalar' ) )
+        );
+
+        // regole che corrispondono
+        $m = array();
+        foreach( $r as $x ) {
+            if( $x['stato'] == 'off' || ! isset( $z[ $x['zona'] ] ) ) {
+                continue;
+            }
+            $s = ( $x['tipo'] == 'word' && $x['zona'] == 'query' ) ? $qword : $z[ $x['zona'] ];
+            if( $x['tipo'] == 'eq' ) {
+                // il confronto è STRETTO: con quello largo '150.php' == 150 è vero
+                $hit = ( is_array( $s ) && in_array( $x['valore'], $s, true ) );
+            } elseif( ! is_string( $s ) ) {
+                $hit = false;
+            } elseif( $x['tipo'] == 'word' ) {
+                // una parola intera non ha un'altra lettera o cifra attaccata ai suoi bordi alfanumerici
+                $hit = preg_match( '/' . ( preg_match( '/^[A-Za-z0-9]/', $x['valore'] ) ? '(?<![A-Za-z0-9])' : '' ) . preg_quote( $x['valore'], '/' ) . ( preg_match( '/[A-Za-z0-9]$/', $x['valore'] ) ? '(?![A-Za-z0-9])' : '' ) . '/i', $s );
+            } elseif( $x['tipo'] == 're' ) {
+                $hit = @preg_match( $x['valore'], $s );
+            } else {
+                $hit = ( stripos( $s, $x['valore'] ) !== false );
+            }
+            if( $hit ) {
+                $m[] = $x;
+            }
+        }
+
+        return $m;
+
+    }
+
+    /**
+     * questa funzione scrive un evento del firewall nel registro degli attacchi dell'IP corrente
+     *
+     * È lo stesso registro in cui annota rateLimitCheck(); gli indizi dicono se la richiesta aveva l'aria di venire da
+     * un utente vero ( un cookie, un referer dello stesso sito ), e sono quello che il resoconto notturno guarda.
+     *
+     * @param   string  $m          il testo dell'evento
+     *
+     * @return  void
+     *
+     */
+    function securityLog( $m ) {
+
+        // indizi di un utente vero
+        $h = array();
+        if( ! empty( $_COOKIE ) ) {
+            $h[] = 'cookie';
+        }
+        if( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 ) {
+            $h[] = 'referer interno';
+        }
+
+        @file_put_contents(
+            DIR_VAR_SPOOL_SECURITY . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $_SERVER['REMOTE_ADDR'] ) . '.log',
+            date( 'Y-m-d H:i:s' ) . ' ' . $m . PHP_EOL .
+            'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+            'url: ' . ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ) . PHP_EOL .
+            'indizi: ' . implode( ',', $h ) . PHP_EOL . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
+
+    }
+
+    /**
+     * questa funzione dice perché l'IP corrente non va bandito
+     *
+     * Non si bandiscono la macchina stessa, gli indirizzi e le reti di FILE_ALLOWED_HOSTS ( v4 o v6, anche CIDR ) e i
+     * crawler dei motori di ricerca verificati col DNS inverso e poi diretto. googleusercontent.com NON va fra i
+     * crawler: è il DNS inverso di qualsiasi macchina su Google Cloud.
+     *
+     * @return  string              il motivo, vuota se l'IP va bandito
+     *
+     */
+    function securitySpared() {
+
+        // sorgente
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $a = @inet_pton( $ip );
+
+        // la macchina stessa e gli indirizzi ammessi dal deploy
+        $allowed = array( '127.0.0.1', '::1', ( ( isset( $_SERVER['SERVER_ADDR'] ) ) ? $_SERVER['SERVER_ADDR'] : '::1' ) );
+        if( file_exists( FILE_ALLOWED_HOSTS ) ) {
+            $allowed = array_merge( $allowed, file( FILE_ALLOWED_HOSTS, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) );
+        }
+        foreach( $allowed as $net ) {
+            $net = explode( '/', trim( $net ) );
+            $b = @inet_pton( $net[0] );
+            if( $a !== false && $b !== false && strlen( $a ) == strlen( $b ) ) {
+                $bits = ( isset( $net[1] ) ) ? (int) $net[1] : strlen( $a ) * 8;
+                $mask = str_pad( str_repeat( chr( 255 ), intdiv( $bits, 8 ) ) . ( ( $bits % 8 ) ? chr( 256 - ( 1 << ( 8 - $bits % 8 ) ) ) : '' ), strlen( $a ), chr( 0 ) );
+                if( ( $a & $mask ) === ( $b & $mask ) ) {
+                    return 'indirizzo ammesso ' . implode( '/', $net );
+                }
+            }
+        }
+
+        // crawler dei motori di ricerca
+        $host = @gethostbyaddr( $ip );
+        if( $host && $host != $ip && preg_match( '/\.(googlebot\.com|google\.com|search\.msn\.com|applebot\.apple\.com|yandex\.(ru|net|com))$/i', $host ) ) {
+            $resolved = @gethostbynamel( $host );
+            if( is_array( $resolved ) && in_array( $ip, $resolved ) ) {
+                return 'crawler ' . $host;
+            }
+        }
+
+        return '';
+
+    }
+
+    /**
+     * questa funzione dà punti all'IP corrente e lo bandisce quando arriva alla soglia
+     *
+     * I punti sono le richieste del canale firewall di rateLimitCheck(), pesate: l'IP viene bandito quando nella
+     * finestra di SECURITY_SCORE_WINDOW secondi arriva a SECURITY_SCORE_LIMIT punti. La durata del bando sale coi
+     * gradini di SECURITY_BAN_STEPS se l'IP è già stato bandito negli ultimi SECURITY_RECIDIVE_TTL secondi: ogni
+     * gradino è un canale di rateLimitCheck() che accetta un solo bando nella finestra.
+     *
+     * Il bando è il file DIR_VAR_SPOOL_SECURITY_BAN/\<ip\>, con la scadenza come data di ultima modifica, perché lo possa
+     * controllare anche Apache ( .htaccess ); Apache non guarda la data, quindi i bandi scaduti si tolgono qui a ogni
+     * nuovo bando, oltre che nel task notturno _src/_api/_task/_security.clean.php.
+     *
+     * @param   int     $p          i punti da dare
+     * @param   string  $m          il motivo, scritto nel file del bando
+     *
+     * @return  string              l'esito, vuota se l'IP è ancora sotto la soglia
+     *
+     */
+    function securityBan( $p, $m ) {
+
+        // sotto la soglia
+        if( rateLimitCheck( 'firewall', SECURITY_SCORE_LIMIT - 1, SECURITY_SCORE_WINDOW, $p ) ) {
+            return '';
+        }
+
+        // indirizzi da non bandire
+        $spared = securitySpared();
+        if( ! empty( $spared ) ) {
+            return 'non bandito: ' . $spared;
+        }
+
+        // gradino del bando
+        foreach( SECURITY_BAN_STEPS as $i => $d ) {
+            if( rateLimitCheck( 'firewall.bandi.' . $i, 1, SECURITY_RECIDIVE_TTL ) ) {
+                break;
+            }
+        }
+
+        // file del bando, e pulizia dei bandi scaduti
+        if( checkPath( DIR_VAR_SPOOL_SECURITY_BAN ) ) {
+            file_put_contents( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'], $m . PHP_EOL, LOCK_EX );
+            touch( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'], time() + $d );
+            foreach( scandir2array( DIR_VAR_SPOOL_SECURITY_BAN ) as $f ) {
+                if( @filemtime( DIR_VAR_SPOOL_SECURITY_BAN . $f ) < time() ) {
+                    @unlink( DIR_VAR_SPOOL_SECURITY_BAN . $f );
+                }
+            }
+        }
+
+        // segnalazione alla lista globale dei bandi, a risposta già scritta
+        register_shutdown_function( 'securityReport', $m, $d );
+
+        return 'bandito per ' . $d . ' secondi';
+
+    }
+
+    /**
+     * questa funzione segnala il bando dell'IP corrente alla lista globale dei bandi del dataserver
+     *
+     * Il dataserver ( SECURITY_DATASERVER ) raccoglie i bandi di tutti i deploy e ne fa la lista globale che legge
+     * securityGlobalBan(): così un IP bandito da un deploy non deve farsi bandire da capo in ognuno degli altri. Segnala
+     * solo il deploy che ha il token in FILE_SECURITY_DATASERVER_TOKEN; senza token, o senza cURL, non fa niente. La
+     * chiamata ha un timeout di SECURITY_DATASERVER_TIMEOUT secondi e il suo esito non cambia niente per la richiesta in
+     * corso: securityBan() la registra come funzione di shutdown, e un fallimento finisce solo nel registro dell'IP.
+     *
+     * @param   string  $m          il motivo del bando
+     * @param   int     $d          la durata del bando in secondi
+     *
+     * @return  void
+     *
+     */
+    function securityReport( $m, $d ) {
+
+        // token del deploy
+        $t = ( file_exists( FILE_SECURITY_DATASERVER_TOKEN ) ) ? trim( (string) @file_get_contents( FILE_SECURITY_DATASERVER_TOKEN ) ) : '';
+        if( empty( $t ) || ! function_exists( 'curl_init' ) ) {
+            return;
+        }
+
+        // segnalazione
+        $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
+        curl_setopt_array( $c, array(
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => json_encode( array(
+                'ip'        => $_SERVER['REMOTE_ADDR'],
+                'regola'    => $m,
+                'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
+                'durata'    => (int) $d
+            ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
+            CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+            CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+        ) );
+        $r = curl_exec( $c );
+        $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+        curl_close( $c );
+
+        // il fallimento si annota e basta
+        if( $s != 200 ) {
+            securityLog( 'segnalazione del bando al dataserver non riuscita, HTTP ' . $s . ' ' . substr( trim( (string) $r ), 0, 200 ) );
+        }
+
+    }
+
+    /**
+     * questa funzione dice se l'IP corrente è nella lista globale dei bandi, e per quanto
+     *
+     * La lista la decide il dataserver ( SECURITY_DATASERVER, bandi.php ): un IP per riga, "ip scadenza_epoch n_deploy
+     * regola", le righe che cominciano con # sono commenti. Non c'è un cron, perché sugli hosting condivisi spesso
+     * manca: la copia locale FILE_SECURITY_GLOBAL_BANS si riscarica quando l'ultimo tentativo è più vecchio di
+     * SECURITY_GLOBAL_REFRESH secondi, da una richiesta sola, quella che prende il lock FILE_SECURITY_GLOBAL_BANS_LOCK;
+     * le altre non aspettano e usano la copia che c'è. La data di ultima modifica della copia è quella che ha dato il
+     * dataserver, e va nell'If-Modified-Since; quella del lock è l'ultimo tentativo, che ci scrive dentro il suo esito.
+     *
+     * Se il download fallisce resta la copia vecchia, e le righe scadute non contano; senza cURL la lista non si legge.
+     * Un IP che si è sbloccato con la verifica umana ( _src/_inc/_macro/_security.sblocco.php ) ha un file in
+     * DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN fino alla scadenza del bando globale, e per questo deploy non è più bandito.
+     *
+     * @return  int                 i secondi che mancano alla fine del bando globale, 0 se l'IP non è bandito
+     *
+     */
+    function securityGlobalBan() {
+
+        // copia locale da rinnovare
+        $t = @filemtime( FILE_SECURITY_GLOBAL_BANS_LOCK );
+        if( ( $t === false || $t < time() - SECURITY_GLOBAL_REFRESH ) && function_exists( 'curl_init' ) && checkPath( DIR_VAR_SPOOL_SECURITY_GLOBAL ) ) {
+            $h = @fopen( FILE_SECURITY_GLOBAL_BANS_LOCK, 'c' );
+            if( $h !== false && flock( $h, LOCK_EX | LOCK_NB ) ) {
+                clearstatcache();
+                if( filesize( FILE_SECURITY_GLOBAL_BANS_LOCK ) == 0 || filemtime( FILE_SECURITY_GLOBAL_BANS_LOCK ) < time() - SECURITY_GLOBAL_REFRESH ) {
+                    $c = curl_init( SECURITY_DATASERVER . 'bandi.php' );
+                    curl_setopt_array( $c, array(
+                        CURLOPT_HTTPHEADER      => ( file_exists( FILE_SECURITY_GLOBAL_BANS ) ) ? array( 'If-Modified-Since: ' . gmdate( 'D, d M Y H:i:s', filemtime( FILE_SECURITY_GLOBAL_BANS ) ) . ' GMT' ) : array(),
+                        CURLOPT_FILETIME        => true,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+                        CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+                    ) );
+                    $r = curl_exec( $c );
+                    $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+                    $lm = curl_getinfo( $c, CURLINFO_FILETIME );
+                    curl_close( $c );
+                    // la copia nuova si scrive a parte e si rinomina, perché le altre richieste la leggono senza lock
+                    if( $s == 200 && is_string( $r ) && file_put_contents( DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.tmp', $r ) !== false && rename( DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.tmp', FILE_SECURITY_GLOBAL_BANS ) ) {
+                        touch( FILE_SECURITY_GLOBAL_BANS, ( $lm > 0 ) ? $lm : time() );
+                    }
+                    ftruncate( $h, 0 );
+                    fwrite( $h, date( 'Y-m-d H:i:s' ) . ' HTTP ' . $s . PHP_EOL );
+                }
+                flock( $h, LOCK_UN );
+            }
+            if( $h !== false ) {
+                fclose( $h );
+            }
+        }
+
+        // l'IP nella copia locale, con la sua scadenza
+        $ip = $_SERVER['REMOTE_ADDR'];
+        if( ! file_exists( FILE_SECURITY_GLOBAL_BANS ) || ! preg_match( '/^' . preg_quote( $ip, '/' ) . '\s+(\d+)/mi', (string) @file_get_contents( FILE_SECURITY_GLOBAL_BANS ), $m ) || $m[1] <= time() ) {
+            return 0;
+        }
+
+        // sbloccato con la verifica umana
+        $u = DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN . preg_replace( '/[^a-zA-Z0-9\.\-_]/', '_', $ip );
+        if( file_exists( $u ) && filemtime( $u ) > time() ) {
+            return 0;
+        }
+
+        return $m[1] - time();
+
+    }
+
+    /**
+     * questa funzione, registrata dal firewall applicativo come funzione di shutdown, dà punti all'IP per i 404
+     *
+     * Conta solo il 404 su un percorso che cerca uno scanner ( SECURITY_PROBE_PATHS ) e senza referer interno, che
+     * sarebbe un collegamento rotto del sito: un 404 qualsiasi no, perché favicon, immagini e librerie vecchie chieste
+     * senza referer bandivano migliaia di utenti veri ( simulazione sui log di PROD, 30/09/2026 ).
+     *
+     * Conta anche il 403 che Apache dà prima di PHP ( ModSecurity, i blocchi del .htaccess ), che arriva qui
+     * dall'ErrorDocument 403 con REDIRECT_STATUS: un punto, tre se il percorso è da scanner, niente col referer interno,
+     * perché ModSecurity ha falsi positivi noti sui salvataggi dei CMS e un redattore non deve finire bandito.
+     *
+     * @return  void
+     *
+     */
+    function securityOutcome() {
+
+        // un referer dello stesso sito è un collegamento rotto o un utente al lavoro, non uno scanner
+        $interno = ( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 );
+        $probe = ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( SECURITY_PROBE_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) );
+
+        if( http_response_code() == 404 && ! $interno && $probe ) {
+            $e = securityBan( 3, '404 su percorsi da scanner' );
+            if( ! empty( $e ) ) {
+                securityLog( '404 su percorsi da scanner, ' . $e );
+            }
+        } elseif( http_response_code() == 403 && isset( $_SERVER['REDIRECT_STATUS'] ) && $_SERVER['REDIRECT_STATUS'] == '403' && ! $interno ) {
+            $m = ( $probe ) ? '403 su percorsi da scanner' : '403 di Apache';
+            $e = securityBan( ( $probe ) ? 3 : 1, $m );
+            if( ! empty( $e ) ) {
+                securityLog( $m . ', ' . $e );
+            }
+        }
 
     }
 
@@ -575,10 +983,18 @@
     define( 'DIR_SRC_TWIG'                              , DIR_BASE . '_src/_twig/' );
     define( 'DIR_SRC_TWIG_BIN'                          , DIR_BASE . '_src/_twig/_bin/' );
     define( 'DIR_SRC_TWIG_INC'                          , DIR_BASE . '_src/_twig/_inc/' );
-    define( 'DIR_SRC_XSL'                               , DIR_BASE . '_src/_xsl/' );
+    define( 'DIR_SRC_XML'                               , DIR_BASE . '_src/_xml/' );
+    define( 'DIR_SRC_XML_XSD'                           , DIR_BASE . '_src/_xml/_xsd/' );
+    define( 'DIR_SRC_XML_XSL'                           , DIR_BASE . '_src/_xml/_xsl/' );
 
     // la directory _usr/ contiene codice aggiuntivo del framework che non fa parte dell'esecuzione principale
     define( 'DIR_USR'                                   , DIR_BASE . '_usr/' );
+    define( 'DIR_USR_CONFIG'                            , DIR_BASE . '_usr/_config/' );
+    define( 'DIR_USR_CONFIG_APACHE2'                    , DIR_BASE . '_usr/_config/_apache2/' );
+    define( 'DIR_USR_CONFIG_GIT'                        , DIR_BASE . '_usr/_config/_git/' );
+    define( 'DIR_USR_CONFIG_JSON'                       , DIR_BASE . '_usr/_config/_json/' );
+    define( 'DIR_USR_CONFIG_JSON_EXAMPLES'              , DIR_BASE . '_usr/_config/_json/_examples/' );
+    define( 'DIR_USR_CONFIG_JSON_TEMPLATES'             , DIR_BASE . '_usr/_config/_json/_templates/' );
     define( 'DIR_USR_DATABASE'                          , DIR_BASE . '_usr/_database/');
     define( 'DIR_USR_DATABASE_PATCH'                    , DIR_BASE . '_usr/_database/_patch/');
     define( 'DIR_USR_DEPLOY'                            , DIR_BASE . '_usr/_deploy/');
@@ -598,13 +1014,9 @@
     define( 'DIR_USR_DOCS_SHOT'                         , DIR_BASE . '_usr/_docs/_shot/' );
     define( 'DIR_USR_PAGES'                             , DIR_BASE . '_usr/_pages/' );
     define( 'DIR_USR_EXAMPLES'                          , DIR_BASE . '_usr/_examples/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG'                   , DIR_BASE . '_usr/_examples/_config/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_APACHE2'           , DIR_BASE . '_usr/_examples/_config/_apache2/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_GIT'               , DIR_BASE . '_usr/_examples/_config/_git/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON'              , DIR_BASE . '_usr/_examples/_config/_json/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON_EXAMPLES'     , DIR_BASE . '_usr/_examples/_config/_json/_examples/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_JSON_TEMPLATES'    , DIR_BASE . '_usr/_examples/_config/_json/_templates/' );
-    define( 'DIR_USR_EXAMPLES_CONFIG_PHING'             , DIR_BASE . '_usr/_examples/_config/_phing/' );
+    // le costanti DIR_USR_EXAMPLES_CONFIG* puntavano a _usr/_examples/_config/, che non e' mai
+    // esistita e che non usava nessuno: i modelli di configurazione stanno in _usr/_config/, e
+    // quelli di Phing in _usr/_deploy/_phing/ ( DIR_USR_DEPLOY_PHING )
 
     // la directory tmp/ contiene i file temporanei ed è solo custom
     define( 'DIR_TMP'                                   , DIR_BASE . 'tmp/' );
@@ -622,6 +1034,7 @@
     define( 'DIR_VAR_LOG_CSV'                           , DIR_BASE . 'var/log/csv/' );
     define( 'DIR_VAR_LOG_JOB'                           , DIR_BASE . 'var/log/job/' );
     define( 'DIR_VAR_LOG_MYSQL'                         , DIR_BASE . 'var/log/mysql/' );
+    define( 'DIR_VAR_LOG_PIANIFICAZIONI'                , DIR_BASE . 'var/log/pianificazioni/' );
     define( 'DIR_VAR_LOG_LATEST'                        , DIR_BASE . 'var/log/latest/' );
     define( 'DIR_VAR_LOG_SLOW'                          , DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_LOG_TASK'                          , DIR_BASE . 'var/log/task/' );
@@ -638,6 +1051,9 @@
     define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL'             , DIR_BASE . 'var/spool/security/globale/' );
+    define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL_UNBAN'       , DIR_BASE . 'var/spool/security/globale/sbloccati/' );
     define( 'DIR_VAR_SPOOL_SIGNUP'                      , DIR_BASE . 'var/spool/signup/' );
 
     // file autoload per caricare le librerie con composer
@@ -647,6 +1063,16 @@
     define( 'FILE_BANNED_WORDS'                         , DIR_ETC_SECURITY . '_banned.words.conf' );
     define( 'FILE_COMMON_PASSWORDS'                     , DIR_ETC_SECURITY . '_common.passwords.conf' );
     define( 'FILE_BANNED_HOSTS'                         , DIR_VAR_SPOOL_SECURITY . 'banned.hosts.conf' );
+
+    // file delle regole del firewall applicativo, standard e del deploy, e degli indirizzi mai banditi
+    define( 'FILE_FIREWALL_RULES'                       , DIR_ETC_SECURITY . '_firewall.rules.conf' );
+    define( 'FILE_FIREWALL_RULES_CUSTOM'                , DIR_BASE . 'etc/security/firewall.rules.conf' );
+    define( 'FILE_ALLOWED_HOSTS'                        , DIR_BASE . 'etc/security/allowed.hosts.conf' );
+
+    // file della lista globale dei bandi: il token per segnalare al dataserver, la copia locale e il suo lock
+    define( 'FILE_SECURITY_DATASERVER_TOKEN'            , DIR_BASE . 'etc/secret/dataserver.token' );
+    define( 'FILE_SECURITY_GLOBAL_BANS'                 , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.txt' );
+    define( 'FILE_SECURITY_GLOBAL_BANS_LOCK'            , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.lock' );
 
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
@@ -1386,6 +1812,11 @@
      * - file standard moduli
      * - file custom moduli
      * 
+     * Se accanto al file custom esiste la sua versione .alt.php (ad esempio src/config/750.controller.alt.php
+     * per il base, oppure mod/<modulo>/src/config/750.controller.alt.php per un modulo), questa viene inclusa
+     * IN SOSTITUZIONE DI file standard e file custom dello stesso livello, coerentemente con quanto descritto
+     * per la logica di customizzazione; la sostituzione vale separatamente per il base e per ogni modulo.
+     * 
      * Comprendere l'ordine in cui vengono inclusi i file è essenziale per poter customizzare il framework,
      * quindi si consiglia di prestare particolare attenzione a questa sezione e studiarne bene il contenuto.
      *
@@ -1415,6 +1846,9 @@
         // controparte locale
         $locale = path2custom( $runLvlFile );
 
+        // controparte alternativa
+        $alternativa = str_replace( '.php', '.alt.php', $locale );
+
         // calcolo runlevel
         $lvls = explode( '.', basename( $locale ) );
         $lvl = array_shift( $lvls );
@@ -1422,26 +1856,43 @@
         // salto i runlevel specificati
         if( ! in_array( $lvl, $cf['lvls']['skip'] ) ) {
 
-            // inclusione file standard
-            if( is_readable( $runLvlFile ) ) {                
-                loggerLatest( 'inizio: ' . $runLvlFile );
-                require $runLvlFile;
-                timerCheck( $cf['speed'], $runLvlFile );
-                loggerLatest( 'completato: ' . $runLvlFile );
-            } else {
-                loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
-            }
+            // se esiste il file alternativo, sostituisce standard e locale
+            if( file_exists( $alternativa ) ) {
 
-            // inclusione file locale
-            if( file_exists( $locale ) ) {
-                if( is_readable( $locale ) ) {
-                    loggerLatest( 'inizio: ' . $locale );
-                    require $locale;
-                    timerCheck( $cf['speed'], $locale );
-                    loggerLatest( 'completato: ' . $locale );
+                // inclusione file alternativo
+                if( is_readable( $alternativa ) ) {
+                    loggerLatest( 'inizio: ' . $alternativa );
+                    require $alternativa;
+                    timerCheck( $cf['speed'], $alternativa );
+                    loggerLatest( 'completato: ' . $alternativa );
                 } else {
-                    loggerLatest( 'impossibile leggere il file ' . $locale );
+                    loggerLatest( 'impossibile leggere il file ' . $alternativa );
                 }
+
+            } else {
+
+                // inclusione file standard
+                if( is_readable( $runLvlFile ) ) {
+                    loggerLatest( 'inizio: ' . $runLvlFile );
+                    require $runLvlFile;
+                    timerCheck( $cf['speed'], $runLvlFile );
+                    loggerLatest( 'completato: ' . $runLvlFile );
+                } else {
+                    loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
+                }
+
+                // inclusione file locale
+                if( file_exists( $locale ) ) {
+                    if( is_readable( $locale ) ) {
+                        loggerLatest( 'inizio: ' . $locale );
+                        require $locale;
+                        timerCheck( $cf['speed'], $locale );
+                        loggerLatest( 'completato: ' . $locale );
+                    } else {
+                        loggerLatest( 'impossibile leggere il file ' . $locale );
+                    }
+                }
+
             }
 
             // controparte moduli
@@ -1450,29 +1901,49 @@
             // inclusione controparte moduli
             foreach( $moduli as $modulo ) {
 
-                // inclusione file di modulo
-                if( is_readable( $modulo ) ) {
-                    loggerLatest( 'inizio: ' . $modulo );
-                    require $modulo;
-                    timerCheck( $cf['speed'], $modulo );
-                    loggerLatest( 'completato: ' . $modulo );
-                } else {
-                    loggerLatest( 'impossibile leggere il file ' . $modulo );
-                }
-
                 // controparte modulo locale
                 $locale = path2custom( $modulo );
 
-                // inclusione controparte modulo locale
-                if( file_exists( $locale ) ) {
-                    if( is_readable( $locale ) ) {                        
-                        loggerLatest( 'inizio: ' . $locale );
-                        require $locale;
-                        timerCheck( $cf['speed'], $locale );
-                        loggerLatest( 'completato: ' . $locale );
+                // controparte modulo alternativa
+                $alternativa = str_replace( '.php', '.alt.php', $locale );
+
+                // se esiste il file alternativo, sostituisce standard e locale del modulo
+                if( file_exists( $alternativa ) ) {
+
+                    // inclusione file alternativo di modulo
+                    if( is_readable( $alternativa ) ) {
+                        loggerLatest( 'inizio: ' . $alternativa );
+                        require $alternativa;
+                        timerCheck( $cf['speed'], $alternativa );
+                        loggerLatest( 'completato: ' . $alternativa );
                     } else {
-                        loggerLatest( 'impossibile leggere il file ' . $locale );
+                        loggerLatest( 'impossibile leggere il file ' . $alternativa );
                     }
+
+                } else {
+
+                    // inclusione file di modulo
+                    if( is_readable( $modulo ) ) {
+                        loggerLatest( 'inizio: ' . $modulo );
+                        require $modulo;
+                        timerCheck( $cf['speed'], $modulo );
+                        loggerLatest( 'completato: ' . $modulo );
+                    } else {
+                        loggerLatest( 'impossibile leggere il file ' . $modulo );
+                    }
+
+                    // inclusione controparte modulo locale
+                    if( file_exists( $locale ) ) {
+                        if( is_readable( $locale ) ) {
+                            loggerLatest( 'inizio: ' . $locale );
+                            require $locale;
+                            timerCheck( $cf['speed'], $locale );
+                            loggerLatest( 'completato: ' . $locale );
+                        } else {
+                            loggerLatest( 'impossibile leggere il file ' . $locale );
+                        }
+                    }
+
                 }
 
             }

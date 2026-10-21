@@ -35,7 +35,7 @@
      * Il numero e' un `MAX( numero ) + 1` e chi lo chiede lo usa **piu' tardi**, quando inserisce
      * il documento. Fra le due cose c'e' una finestra, e due richieste che ci entrano insieme
      * calcolano lo **stesso numero**. Non finisce con due ricevute pari numero: `documenti` ha
-     * `UNIQUE KEY unica ( id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
+     * `UNIQUE KEY unica ( id_emittente, id_tipologia, numero, sezionale )` e `mysqlInsertRow` fa
      * `INSERT ... ON DUPLICATE KEY UPDATE`, quindi il secondo INSERT **aggiorna la ricevuta del
      * primo** e ne restituisce l'id: righe e pagamenti del secondo finiscono nel documento del
      * primo, intestato a un'altra persona.
@@ -88,7 +88,7 @@
                 'attenzione: lock della numerazione documenti non acquisito entro 10 secondi, procedo comunque'
                 . ' ( sezionale ' . $sezionale . ', tipologia ' . $idTipologia . ' )',
                 'documenti',
-                LOG_ERR
+                LOG_WARNING
             );
         }
 
@@ -144,6 +144,59 @@
 
     }
 
+    /**
+     * restituisce il numero di un documento come va scritto nella fattura elettronica e nella sua copia PDF
+     *
+     * Il numero porta il sezionale, se c'e', come lo mostra l'interfaccia ( "12/E/2026" ): lo SDI non conosce i sezionali
+     * e scarta come duplicata una fattura con numero, data e cedente gia' visti, per cui lo stesso numero in due
+     * sezionali diversi passava solo col sezionale scritto nel numero. I documenti con data anteriore al 2026-10-01
+     * sono stati trasmessi col numero senza sezionale, e chi li cita ( la nota di credito con la fattura che rettifica,
+     * la ristampa ) deve citarli come lo SDI li ha ricevuti: per loro il sezionale non si aggiunge.
+     *
+     * @param  string $numero     il numero del documento
+     * @param  string $sezionale  il sezionale, anche vuoto
+     * @param  string $data       la data del documento ( Y-m-d )
+     *
+     * @return string             il numero, con /sezionale quando si aggiunge
+     */
+    function numeroDocumentoFattura( $numero, $sezionale, $data ) {
+
+        $numero = trim( (string) $numero );
+        $sezionale = trim( (string) $sezionale );
+
+        if( $sezionale === '' || ( ! empty( $data ) && $data < '2026-10-01' ) ) {
+            return $numero;
+        }
+
+        return $numero . '/' . $sezionale;
+
+    }
+
+    /**
+     * raccoglie i dati di un documento per le stampe
+     *
+     * Restituisce un array con il documento ( doc, con le righe, i totali per aliquota in iva, i pagamenti ), l'emittente
+     * ( src, la sua sede sri, il suo regime srr e il suo rappresentante fiscale srf ) e il destinatario ( dst e la sua sede dsi ), usato dalle stampe PDF e
+     * dalla fattura elettronica ( _src/_api/_print/_fattura.xml.php ). Dal 2026-09-30 doc ha anche i dati dei blocchi
+     * condizionati della fattura elettronica:
+     *
+     * chiave               | contenuto
+     * ---------------------|-----------------------------------------------------------------------------------------
+     * collegati            | i documenti collegati con un ruolo che ha se_xml, divisi in fatture e ddt, ciascuno con le
+     *                      | linee di questo documento a cui si riferisce ( vuoto se è tutto il documento )
+     * casse                | i contributi alle casse previdenziali, con imponibile, importo e IVA calcolati se vuoti
+     * ritenute             | le ritenute, con l'importo calcolato se vuoto; le righe soggette hanno se_ritenuta
+     * trasporto            | per la fattura accompagnatoria: vettore, causale, colli ( numero, peso, unità ), resa
+     * dichiarazione_intento| la dichiarazione d'intento del cliente valida alla data, se il documento ha righe N3.5
+     *
+     * Ogni riga ha importo_netto_totale già scontato: lo sconto di riga ( sconto_valore, netto sull'intera riga, o in
+     * mancanza sconto_percentuale ) è in sconto_netto, e il prezzo di prima in importo_netto_prima_sconto.
+     *
+     * @param       integer     $idDocumento    l'ID del documento
+     *
+     * @return      array                       i dati del documento
+     *
+     */
     function generaContenutiDocumento( $idDocumento ) {
 
         // ...
@@ -165,7 +218,11 @@
             'SELECT documenti.*, '.
             'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, tipologie_documenti.nome AS tipologia, '.
             'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
-            'tipologie_documenti.codice AS codice_tipologia, '.
+            'tipologie_documenti.codice AS codice_tipologia, tipologie_documenti.se_trasporto, '.
+            'tipologie_documenti.se_ricevuta, tipologie_documenti.se_pro_forma, tipologie_documenti.se_offerta, '.
+            'tipologie_documenti.se_ordine, tipologie_documenti.se_missione, '.
+            'tipologie_documenti.id_genitore AS id_genitore_tipologia, tipologie_documenti.stampa_pdf, '.
+            'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, coalesce( tipologie_documenti.se_ricevuta, 0 ) ) AS se_sedi_richieste, '.
             'condizioni_pagamento.codice AS codice_pagamento '.
             'FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
@@ -228,15 +285,25 @@
         $r['doc']['tot']['importo_iva_totale'] = 0;
         $r['doc']['tot']['importo_lordo_totale'] = 0;
 
-        // carico le righe del documento
+        // carico le righe del documento: per i documenti fiscali reparto, IVA e unita' di misura sono obbligatori e una
+        // riga che non li ha resta fuori, come e' sempre stato; per gli altri ( DDT, ordini, offerte, missioni... ) le
+        // righe arrivano spesso dagli import senza reparto, e vanno stampate lo stesso, con aliquota zero
+        $join = ( ( ! empty( $r['doc']['se_sedi_richieste'] ) ) ? 'INNER' : 'LEFT' );
         $r['doc']['righe'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT documenti_articoli.*,
-            iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
-            udm.sigla AS udm FROM documenti_articoli 
-            INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
-            INNER JOIN iva ON iva.id = reparti.id_iva 
-            INNER JOIN udm ON udm.id = documenti_articoli.id_udm 
+            coalesce( iva.aliquota, 0 ) AS aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
+            udm.sigla AS udm,
+            articoli.codice AS codice_articolo, coalesce( documenti_articoli.nome, articoli.nome ) AS articolo,
+            mp.nome AS mastro_provenienza, md.nome AS mastro_destinazione,
+            ( SELECT count(*) FROM documenti_articoli AS sottorighe WHERE sottorighe.id_genitore = documenti_articoli.id ) AS sottorighe
+            FROM documenti_articoli 
+            LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo 
+            LEFT JOIN mastri AS mp ON mp.id = documenti_articoli.id_mastro_provenienza 
+            LEFT JOIN mastri AS md ON md.id = documenti_articoli.id_mastro_destinazione 
+            ' . $join . ' JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
+            ' . $join . ' JOIN iva ON iva.id = reparti.id_iva 
+            ' . $join . ' JOIN udm ON udm.id = documenti_articoli.id_udm 
             WHERE documenti_articoli.id_documento = ? 
             AND documenti_articoli.id_genitore IS NULL ',
             array( array( 's' => $r['doc']['id'] ) )
@@ -257,7 +324,22 @@
             $riga['qtd'] = ( empty( $riga['quantita'] ) ) ? 1 : $riga['quantita'];
 
             $riga['importo_netto_unitario']         = str_replace( ',', '.', round( ( $riga['importo_netto_totale'] / $riga['qtd'] ), 2 ) );
-            $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_totale'] , 2 ) );
+
+            // sconto di riga: si applica all'imponibile, come vuole la fattura; sconto_valore e' lo sconto netto sull'intera
+            // riga, sconto_percentuale serve quando il valore manca; importo_netto_totale diventa l'imponibile scontato, e il
+            // prezzo di prima resta in importo_netto_prima_sconto per la fattura elettronica ( ScontoMaggiorazione )
+            // NOTA fino al 2026-09-30 lo sconto si calcolava sul lordo e toccava solo importo_lordo_finale: la fattura
+            // elettronica e il PDF riportavano la riga a prezzo pieno
+            $riga['importo_netto_prima_sconto']     = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['importo_netto_totale'], 2 ) ) );
+            if( is_numeric( $riga['sconto_valore'] ?? NULL ) && $riga['sconto_valore'] > 0 ) {
+                $riga['sconto_netto'] = round( $riga['sconto_valore'], 2 );
+            } elseif( is_numeric( $riga['sconto_percentuale'] ?? NULL ) && $riga['sconto_percentuale'] > 0 ) {
+                $riga['sconto_netto'] = round( $riga['importo_netto_prima_sconto'] * $riga['sconto_percentuale'] / 100, 2 );
+            } else {
+                $riga['sconto_netto'] = 0;
+            }
+            $riga['sconto_netto']                   = min( $riga['sconto_netto'], $riga['importo_netto_prima_sconto'] );
+            $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_prima_sconto'] - $riga['sconto_netto'], 2 ) );
             $riga['importo_iva_totale']             = str_replace( ',', '.', round( $riga['importo_netto_totale'] * ( $riga['aliquota'] / 100 ), 2 ) );
             $riga['importo_lordo_totale']           = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] + $riga['importo_iva_totale'] ) );
             $riga['aliquota']                       = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['aliquota'], 2 ) ) );
@@ -393,9 +475,9 @@
         // seleziono tutte le righe di missione
         $r['doc']['missione']['righe'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+            'SELECT documenti_articoli.id_articolo, articoli.codice AS codice_articolo, sum( quantita ) AS quantita,
                 concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
-                group_concat( concat_ws( " - ", 
+                group_concat( concat_ws( " - ",
                 concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
             FROM documenti_articoli 
             INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
@@ -411,7 +493,7 @@
         foreach( $r['doc']['missione']['righe'] as &$row ) {
 
             // niente filtro sulla tipologia: le righe di prelievo si riconoscono da id_genitore
-            // + id_missione. La nota distesa e' in src/inc/macro/missione.php.
+            // + id_missione: e' la convenzione con cui le scrive la maschera di prelievo.
             $row['qta_prelevata'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_articolo = ? GROUP BY id_genitore',
@@ -553,8 +635,18 @@
             array( array( 's' => $r['doc']['id_emittente'] ) )
         );
 
+        // rappresentante fiscale dell'emittente ( RappresentanteFiscale della fattura elettronica )
+        $r['srf'] = array();
+        if( ! empty( $r['src']['id_rappresentante_fiscale'] ) ) {
+            $r['srf'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, nome, cognome, denominazione, partita_iva, codice_fiscale FROM anagrafica WHERE id = ?',
+                array( array( 's' => $r['src']['id_rappresentante_fiscale'] ) )
+            );
+        }
+
         // verifico la presenza del progressivo di invio
-        if( empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
+        if( ! empty( $r['doc']['se_progressivo_invio_richiesto'] ) && empty( $r['src']['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
 
         // denominazione fiscale
         $r['src']['denominazione_fiscale'] = trim( $r['src']['nome'] . ' ' . $r['src']['cognome'] . ' ' . $r['src']['denominazione'] );
@@ -578,9 +670,11 @@
             )
         );
 
-        // controllo indirizzo
-        if( empty( $r['sri'] ) ) {
+        // controllo indirizzo: obbligatorio solo per i documenti fiscali, gli altri si stampano anche senza sede
+        if( empty( $r['sri'] ) && ! empty( $r['doc']['se_sedi_richieste'] ) ) {
             dieText('richiesto indirizzo sede emittente');
+        } elseif( empty( $r['sri'] ) ) {
+            $r['sri'] = array( 'tipologia' => NULL, 'indirizzo' => NULL, 'civico' => NULL, 'cap' => NULL, 'comune' => NULL, 'provincia' => NULL, 'sigla_stato' => NULL );
         }
 
         // recupero il logo dell'azienda emittente
@@ -686,9 +780,11 @@
             // debug
             // print_r( $r['dsi'] );
 
-            // controllo indirizzo
-            if( empty( $r['dsi'] ) ) {
+            // controllo indirizzo: obbligatorio solo per i documenti fiscali, gli altri si stampano anche senza sede
+            if( empty( $r['dsi'] ) && ! empty( $r['doc']['se_sedi_richieste'] ) ) {
                 dieText('richiesto indirizzo sede destinatario');
+            } elseif( empty( $r['dsi'] ) ) {
+                $r['dsi'] = array( 'tipologia' => NULL, 'indirizzo' => NULL, 'civico' => NULL, 'cap' => NULL, 'comune' => NULL, 'provincia' => NULL, 'sigla_stato' => NULL );
             }
 
             // indirizzo fiscale
@@ -697,22 +793,224 @@
 
         }
 
-        // documenti collegati
-        // TODO selezionare in base al ruolo
-        // TODO selezionare solo le fatture
-        // TODO fare la UNION in $dcl anche delle relazioni fra righe (una riga di nota di credito può far riferimento a una o più righe di fattura specifiche e non all'intera fattura)
-        $dcl = mysqlSelectRow(
+        // numero di linea di ogni riga, come lo scrive la fattura elettronica ( NumeroLinea, dalla posizione della riga )
+        $numeriLinea = array();
+        foreach( $r['doc']['righe'] as $n => $rigaLinea ) {
+            $numeriLinea[ $rigaLinea['id'] ] = $n + 1;
+        }
+
+        // documenti collegati, per DatiFattureCollegate e DatiDDT della fattura elettronica
+        // NOTA contano solo le relazioni con un ruolo che ha se_xml ( dal 2026-09-30 'fattura collegata' e 'DDT collegato' ):
+        // quelle con gli altri ruoli ( conferma, evasione, missione... ) o senza ruolo, come la fattura generata da una pro
+        // forma, non riguardano la fattura elettronica; il documento collegato va in DatiDDT se la sua tipologia è di
+        // trasporto, in DatiFattureCollegate negli altri casi
+        $r['doc']['collegati'] = array( 'fatture' => array(), 'ddt' => array() );
+        $collegati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_view.* '.
+            'SELECT documenti.id, documenti.numero, documenti.sezionale, documenti.data, documenti.cig, documenti.cup, '.
+            'tipologie_documenti.se_trasporto '.
             'FROM relazioni_documenti '.
-            'INNER JOIN documenti_view ON documenti_view.id = relazioni_documenti.id_documento_collegato '.
-            'WHERE relazioni_documenti.id_documento = ?',
+            'INNER JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo '.
+            'INNER JOIN documenti ON documenti.id = relazioni_documenti.id_documento_collegato '.
+            'LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+            'WHERE relazioni_documenti.id_documento = ? AND ruoli_documenti.se_xml = 1 '.
+            'ORDER BY documenti.data, documenti.id',
             array( array( 's' => $r['doc']['id'] ) )
         );
 
-        // TODO DDT collegati
-        // cercare i DDT
-        // compilare la sezione <DatiDDT>
+        // righe del documento legate alle righe del documento collegato ( RiferimentoNumeroLinea )
+        // NOTA se il collegamento riguarda tutte le righe, o nessuna in particolare, per le specifiche RiferimentoNumeroLinea
+        // non si scrive: il riferimento vale per l'intero documento
+        if( ! empty( $collegati ) ) {
+            foreach( $collegati as $collegato ) {
+                $collegato['linee'] = array();
+                $idRighe = mysqlSelectColumn(
+                    'id_documenti_articolo',
+                    $cf['mysql']['connection'],
+                    'SELECT DISTINCT relazioni_documenti_articoli.id_documenti_articolo '.
+                    'FROM relazioni_documenti_articoli '.
+                    'INNER JOIN documenti_articoli AS righe ON righe.id = relazioni_documenti_articoli.id_documenti_articolo '.
+                    'INNER JOIN documenti_articoli AS collegate ON collegate.id = relazioni_documenti_articoli.id_documenti_articolo_collegato '.
+                    'WHERE righe.id_documento = ? AND collegate.id_documento = ?',
+                    array( array( 's' => $r['doc']['id'] ), array( 's' => $collegato['id'] ) )
+                );
+                foreach( $idRighe as $idRiga ) {
+                    if( isset( $numeriLinea[ $idRiga ] ) ) {
+                        $collegato['linee'][] = $numeriLinea[ $idRiga ];
+                    }
+                }
+                sort( $collegato['linee'] );
+                if( count( $collegato['linee'] ) == count( $numeriLinea ) ) {
+                    $collegato['linee'] = array();
+                }
+                $r['doc']['collegati'][ ( ! empty( $collegato['se_trasporto'] ) ) ? 'ddt' : 'fatture' ][] = $collegato;
+            }
+        }
+
+        // contributi alle casse previdenziali ( DatiCassaPrevidenziale )
+        // NOTA l'imponibile, se non è indicato, è il totale netto delle righe tranne quelle escluse ex art. 15 ( natura N1,
+        // come le spese anticipate in nome e per conto del cliente, su cui il contributo non si calcola ), e l'importo, se non
+        // è indicato, è l'imponibile per l'aliquota della cassa; l'IVA del contributo è quella dell'aliquota scelta, e se
+        // l'aliquota è a zero la sua natura va nel blocco al posto dell'IVA
+        $r['doc']['casse'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_casse_previdenziali.*, casse_previdenziali.codice AS codice_cassa, casse_previdenziali.nome AS nome_cassa, '.
+            'iva.aliquota AS aliquota_iva, iva.codice AS codice_iva, iva.nome AS nome_iva, iva.descrizione AS descrizione_iva '.
+            'FROM documenti_casse_previdenziali '.
+            'INNER JOIN casse_previdenziali ON casse_previdenziali.id = documenti_casse_previdenziali.id_cassa_previdenziale '.
+            'LEFT JOIN iva ON iva.id = documenti_casse_previdenziali.id_iva '.
+            'WHERE documenti_casse_previdenziali.id_documento = ? '.
+            'ORDER BY documenti_casse_previdenziali.id',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // calcolo dei contributi
+        if( empty( $r['doc']['casse'] ) ) {
+            $r['doc']['casse'] = array();
+        }
+        $baseCassa = 0;
+        foreach( $r['doc']['righe'] as $rigaCassa ) {
+            if( $rigaCassa['codice_iva'] != 'N1' ) {
+                $baseCassa += $rigaCassa['importo_netto_totale'];
+            }
+        }
+        foreach( array_keys( $r['doc']['casse'] ) as $k ) {
+            $cassa = &$r['doc']['casse'][ $k ];
+            if( ! is_numeric( $cassa['imponibile'] ) ) {
+                $cassa['imponibile'] = $baseCassa;
+            }
+            if( ! is_numeric( $cassa['importo'] ) ) {
+                $cassa['importo'] = round( $cassa['imponibile'] * $cassa['aliquota'] / 100, 2 );
+            }
+            $cassa['importo_iva'] = round( $cassa['importo'] * $cassa['aliquota_iva'] / 100, 2 );
+            $cassa['aliquota']       = str_replace( ',', '.', sprintf( '%0.2f', $cassa['aliquota'] ) );
+            $cassa['imponibile']     = str_replace( ',', '.', sprintf( '%0.2f', $cassa['imponibile'] ) );
+            $cassa['importo']        = str_replace( ',', '.', sprintf( '%0.2f', $cassa['importo'] ) );
+            $cassa['importo_iva']    = str_replace( ',', '.', sprintf( '%0.2f', $cassa['importo_iva'] ) );
+            $cassa['aliquota_iva']   = str_replace( ',', '.', sprintf( '%0.2f', $cassa['aliquota_iva'] ) );
+            unset( $cassa );
+        }
+
+        // ritenute ( DatiRitenuta )
+        $r['doc']['ritenute'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_ritenute.*, ritenute.codice AS codice_ritenuta, ritenute.nome AS nome_ritenuta '.
+            'FROM documenti_ritenute '.
+            'INNER JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta '.
+            'WHERE documenti_ritenute.id_documento = ? '.
+            'ORDER BY documenti_ritenute.id',
+            array( array( 's' => $r['doc']['id'] ) )
+        );
+
+        // calcolo delle ritenute
+        // NOTA la base della ritenuta sono le righe soggette ( se_ritenuta ) e i contributi di cassa soggetti; se il documento
+        // ha una ritenuta ma nessuna riga è segnata, come succede per le parcelle fatte solo di compensi, sono soggette tutte
+        // le righe tranne quelle escluse ex art. 15 ( natura N1, le spese anticipate per conto del cliente ), e così le scrive
+        // la fattura elettronica; l'importo, se non è indicato, è la base per l'aliquota
+        if( empty( $r['doc']['ritenute'] ) ) {
+            $r['doc']['ritenute'] = array();
+        } else {
+            $righeSoggette = array_filter( array_column( $r['doc']['righe'], 'se_ritenuta' ) );
+            $baseRitenuta = 0;
+            foreach( array_keys( $r['doc']['righe'] ) as $k ) {
+                if( empty( $righeSoggette ) && $r['doc']['righe'][ $k ]['codice_iva'] != 'N1' ) {
+                    $r['doc']['righe'][ $k ]['se_ritenuta'] = 1;
+                }
+                if( ! empty( $r['doc']['righe'][ $k ]['se_ritenuta'] ) ) {
+                    $baseRitenuta += $r['doc']['righe'][ $k ]['importo_netto_totale'];
+                }
+            }
+            foreach( $r['doc']['casse'] as $cassa ) {
+                if( ! empty( $cassa['se_ritenuta'] ) ) {
+                    $baseRitenuta += $cassa['importo'];
+                }
+            }
+            foreach( array_keys( $r['doc']['ritenute'] ) as $k ) {
+                $ritenuta = &$r['doc']['ritenute'][ $k ];
+                if( ! is_numeric( $ritenuta['importo'] ) ) {
+                    $ritenuta['importo'] = round( $baseRitenuta * $ritenuta['aliquota'] / 100, 2 );
+                }
+                $ritenuta['aliquota']    = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['aliquota'] ) );
+                $ritenuta['importo']     = str_replace( ',', '.', sprintf( '%0.2f', $ritenuta['importo'] ) );
+                unset( $ritenuta );
+            }
+        }
+
+        // dichiarazione d'intento del cliente valida alla data del documento, per le righe con natura N3.5: la piu' recente
+        // fra quelle ricevute entro la data, dello stesso anno ( se lo indicano ) e col periodo che la comprende ( se ne
+        // indicano uno )
+        $r['doc']['dichiarazione_intento'] = array();
+        if( in_array( 'N3.5', array_column( $r['doc']['righe'], 'codice_iva' ) ) && ! empty( $r['doc']['id_destinatario'] ) ) {
+            $r['doc']['dichiarazione_intento'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM dichiarazioni_intento WHERE id_anagrafica = ? '.
+                'AND data_protocollo <= ? '.
+                'AND ( anno IS NULL OR anno = year( ? ) ) '.
+                'AND ( data_inizio IS NULL OR data_inizio <= ? ) '.
+                'AND ( data_fine IS NULL OR data_fine >= ? ) '.
+                'ORDER BY data_protocollo DESC, id DESC LIMIT 1',
+                array(
+                    array( 's' => $r['doc']['id_destinatario'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] ),
+                    array( 's' => $r['doc']['data'] )
+                )
+            );
+        }
+
+        // dati del trasporto ( DatiTrasporto ), per i documenti che accompagnano la merce ( tipologie con se_trasporto:
+        // il DDT e la fattura accompagnatoria ): il vettore, la causale, i colli con il loro peso, l'indirizzo e la data
+        // di consegna, quando il documento li ha
+        $r['doc']['trasporto'] = array();
+        if( ! empty( $r['doc']['se_trasporto'] ) ) {
+
+            if( ! empty( $r['doc']['id_trasportatore'] ) ) {
+                $r['doc']['trasporto']['vettore'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT id, nome, cognome, denominazione, partita_iva, codice_fiscale FROM anagrafica WHERE id = ?',
+                    array( array( 's' => $r['doc']['id_trasportatore'] ) )
+                );
+            }
+
+            if( ! empty( $r['doc']['id_causale'] ) ) {
+                $r['doc']['trasporto']['causale'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT nome FROM causali WHERE id = ?',
+                    array( array( 's' => $r['doc']['id_causale'] ) )
+                );
+            }
+
+            // i colli del documento: il numero, e il peso se hanno tutti la stessa unita' di misura
+            $colli = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT count(*) AS numero, sum( colli.peso ) AS peso, count( DISTINCT colli.id_udm_peso ) AS udm_diverse, '.
+                'max( udm.sigla ) AS udm_peso FROM colli LEFT JOIN udm ON udm.id = colli.id_udm_peso '.
+                'WHERE colli.id_documento = ? AND colli.id_genitore IS NULL',
+                array( array( 's' => $r['doc']['id'] ) )
+            );
+            if( ! empty( $colli['numero'] ) ) {
+                $r['doc']['trasporto']['colli'] = $colli;
+            }
+
+            // la sede di consegna, se il documento ne indica una
+            if( ! empty( $r['doc']['id_sede_destinatario_spedizione'] ) ) {
+                $r['doc']['trasporto']['resa'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
+                    'comuni.nome AS comune, provincie.sigla AS provincia, stati.iso31661alpha2 AS sigla_stato '.
+                    'FROM anagrafica_indirizzi '.
+                    'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
+                    'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                    'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                    'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                    'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+                    'WHERE anagrafica_indirizzi.id = ?',
+                    array( array( 's' => $r['doc']['id_sede_destinatario_spedizione'] ) )
+                );
+            }
+
+        }
 
         /**
          * Fattura elettronica a privato senza p iva: obbligo di legge
@@ -798,8 +1096,8 @@
      * NOTA sulla quantita': la riga del DDT riporta la quantita' ORDINATA della riga di lista, non
      * quella realmente prelevata (che sarebbe la somma delle righe figlie con id_genitore
      * valorizzato e id_tipologia 4). Su una missione chiusa e completa i due valori coincidono, ma
-     * src/inc/macro/chiusura.missione.php:65-67 si limita ad avvisare quando le quantita' non
-     * tornano e non impedisce la chiusura: su una missione chiusa parziale il DDT sovradichiara la
+     * la chiusura di una missione puo' limitarsi ad avvisare quando le quantita' non tornano,
+     * senza impedirla: su una missione chiusa parziale il DDT sovradichiara la
      * merce. Scelta deliberata di non cambiarlo qui.
      *
      * @param   integer $idMissione     documenti.id della missione (id_tipologia 34)
@@ -831,7 +1129,7 @@
         }
 
         // la missione deve essere chiusa: "missione completata" significa timestamp_chiusura
-        // valorizzato, che e' cio' che scrive src/inc/macro/missione.php alla chiusura del
+        // valorizzato, che e' cio' che scrive la maschera di prelievo alla chiusura del
         // prelievo. Senza questa guardia il cron genererebbe DDT per missioni ancora in corso.
         if( empty( $missione['timestamp_chiusura'] ) && $forza !== true ) {
             $status['err'][] = 'la missione ' . $missione['codice'] . ' non e\' chiusa: DDT non generato';
@@ -991,4 +1289,36 @@
 
         return $status;
 
+    }
+
+    /**
+     * restituisce l'id della tipologia di riga che ha il flag dato, oppure NULL
+     *
+     * I flag sono se_dettaglio, se_evasione, se_raggruppamento, se_somma, se_alternativa. Una riga
+     * figlia di un'altra ( documenti_articoli.id_genitore ) dice che cosa e' rispetto alla madre con
+     * la sua tipologia: la dettaglia, la evade o la raggruppa con altre. Il codice legge il flag e
+     * non l'id, come fa con i flag di tipologie_documenti, perche' gli id possono cambiare da deploy
+     * a deploy ( la patch standard del 13/10/2026 da' 5 e 6 al dettaglio e all'evasione solo se sono
+     * liberi ). Il nome del flag non arriva mai dalla richiesta, ma lo si controlla lo stesso perche'
+     * finisce dentro la query.
+     *
+     * @param $conn         connessione MySQL
+     * @param $flag         il nome del flag di tipologie_documenti_articoli
+     * @return              l'id della tipologia, oppure NULL
+     */
+    if( ! function_exists( 'idTipologiaRigaDaFlag' ) ) {
+        function idTipologiaRigaDaFlag( $conn, $flag ) {
+
+            if( ! in_array( $flag, array( 'se_dettaglio', 'se_evasione', 'se_raggruppamento', 'se_somma', 'se_alternativa' ) ) ) {
+                return NULL;
+            }
+
+            $id = mysqlSelectValue(
+                $conn,
+                'SELECT id FROM tipologie_documenti_articoli WHERE ' . $flag . ' = 1 ORDER BY id LIMIT 1'
+            );
+
+            return ( empty( $id ) ) ? NULL : $id;
+
+        }
     }

@@ -1,0 +1,26 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> DEL ONETAG DI CRITEO PRIMA DELLA CHIUSURA DEL TAG <body>
+    Il OneTag carica il loader di Criteo e registra l'evento generico viewPage; gli eventi di catalogo
+    e di conversione ( viewItem, viewBasket, trackTransaction ) sono dati della pagina e non si
+    emettono qui: chi ne ha bisogno li accoda a window.criteo_q nel blocco javascript della pagina.
+    L'account è quello del profilo corrente ( _src/_config/_650.criteo.php ) e lo script parte solo
+    col consenso al cookie Criteo, dichiarato in privacy.cookie.terzi.analitici come quello di Facebook #}
+
+{% if criteo.profile.account %}
+{% if privacy.cookie.terzi.analitici.Criteo.consenso == 'ok' %}
+<script async src="https://dynamic.criteo.com/js/ld/ld.js?a={{ criteo.profile.account }}"></script>
+<script>
+    window.criteo_q = window.criteo_q || [];
+    var deviceType = /iPad/.test( navigator.userAgent ) ? 't' : /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Silk/.test( navigator.userAgent ) ? 'm' : 'd';
+    window.criteo_q.push(
+        { event: 'setAccount', account: '{{ criteo.profile.account }}' },
+        { event: 'setSiteType', type: deviceType },
+        { event: 'viewPage' }
+    );
+</script>
+{% else %}
+<!-- profilo Criteo settato, consenso {% if privacy.cookie.terzi.analitici.Criteo.consenso %}negato{% else %}non prestato{% endif %} -->
+{% endif %}
+{% else %}
+<!-- account Criteo non settato -->
+{% endif %}

@@ -4,11 +4,11 @@
      * task richiamato per cambiare il codice di un articolo
      *
      * Riceve in ingresso:
-     * - id:  il codice attuale
+     * - id:  l'id della riga ( o il suo codice attuale )
      * - new: il codice nuovo
      *
-     * Il lavoro vero lo fa rinominaEntita() in _src/_lib/_page.utils.php, che ripunta tutte le
-     * righe figlie prima di cancellare quella vecchia. Qui c'e' solo il guscio, modellato su
+     * Il lavoro vero lo fa rinominaEntita() in _src/_lib/_page.utils.php, che scrive il codice
+     * nuovo nella colonna codice: l'id, e le righe che lo citano, non cambiano. Qui c'e' solo il guscio, modellato su
      * _articoli.duplicate.php.
      *
      * @todo usare le funzioni di ACL per verificare se l'azione è autorizzata
@@ -35,7 +35,7 @@
     } else {
 
         // status
-        $status['err'][] = 'servono il codice attuale ( id ) e quello nuovo ( new )';
+        $status['err'][] = 'servono la riga ( id ) e il codice nuovo ( new )';
 
     }
 

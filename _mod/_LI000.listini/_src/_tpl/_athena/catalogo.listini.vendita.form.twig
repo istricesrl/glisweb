@@ -46,7 +46,14 @@
                 </div>
 
                 {# SECONDA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">emittente</span>
+                        {{ frm.select({ 'field': { 'name': 'id_emittente' }, 'source': { 'values': etc.select.emittenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
 
+                {# TERZA RIGA DI CAMPI #}
                 <div class="form-group row">
                     <div class="col form-col">
                         <span class="label-top">note</span>

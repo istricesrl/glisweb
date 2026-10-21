@@ -21,23 +21,20 @@
 {# SCRIPT JAVASCRIPT ESTERNI #}
 {% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
-{# SCRIPT JAVASCRIPT INTERNI #}
-{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+{# SCRIPT JAVASCRIPT INTERNI — la versione in coda cambia l'URL a ogni rilascio: il .htaccess li tiene in cache un mese senza rivalidare #}
+{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
 {# SCRIPT JAVASCRIPT DEL TEMPLATE #}
-{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
-
-{# CODICE DI CHIUSURA PER FACEBOOK MESSENGER #}
-{% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.twig' %}{% endif %}
+{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}?v={{ common.version.current|trim }}"></script>{% endfor %}
 
 {# CODICE DI CHIUSURA PER CRITEO #}
-{% if criteo.account %}{% include '_inc/_criteo.twig' %}{% endif %}
+{% if criteo.profile.account %}{% include '_inc/_criteo.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER CHARTJS #}
 {% if page.contents.chartjs %}{% include '_inc/_chartjs.script.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER SMARTSUPP #}
-{% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
+{% if smartsupp.profile.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
 
 {# CODICE DI CHIUSURA PER EMAILABLE #}
 {% if emailable.profile.apikey or emailable.profile.apikey_server %}{% include '_inc/_emailable.close.twig' %}{% endif %}

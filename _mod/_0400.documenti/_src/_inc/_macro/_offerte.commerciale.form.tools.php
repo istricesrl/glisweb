@@ -27,18 +27,34 @@
      * RIPOPOLAMENTO DELLA VISTA STATICA DELLE OFFERTE
      *
      * Stessa forma dei tre pulsanti delle attivita' ( _mod/_0200.attivita/_src/_inc/_macro/_attivita.tools.php ):
-     * lws e non ws, perche' il task scrive UNA riga per volta e va richiamato in ciclo.
+     * lws e non ws per la popolazione, perche' il task scrive un lotto per volta e va richiamato in ciclo.
      *
      * Di norma non serve: la statica la tiene allineata il controller finally dei documenti. Serve
      * per la prima popolazione e per le righe entrate in archivio senza passare dal controller,
      * per esempio un'importazione.
      */
     $ct['page']['contents']['metro']['static'][] = array(
-        'lws' => '/task/0400.documenti/offerte.attive.view.static.popolazione',
+        'lws' => '/task/0400.documenti/offerte.view.static.popolazione',
         'icon' => NULL,
         'fa' => 'fa-refresh',
         'title' => 'ripopola la vista statica delle offerte',
         'text' => 'riscrive le righe dell\'elenco offerte rimaste indietro rispetto ai documenti'
+    );
+
+    $ct['page']['contents']['metro']['static'][] = array(
+        'ws' => '/task/0400.documenti/offerte.view.static.pulizia',
+        'icon' => NULL,
+        'fa' => 'fa-refresh',
+        'title' => 'pulizia della vista statica delle offerte',
+        'text' => 'toglie dall\'elenco offerte le righe dei documenti cancellati o che non sono piu\' offerte'
+    );
+
+    $ct['page']['contents']['metro']['static'][] = array(
+        'ws' => '/task/0400.documenti/offerte.view.static.svuotamento',
+        'icon' => NULL,
+        'fa' => 'fa-trash',
+        'title' => 'svuotamento della vista statica delle offerte',
+        'text' => 'svuota la vista statica delle offerte ( solo per le emergenze, poi va ripopolata )'
     );
 
     // macro di default

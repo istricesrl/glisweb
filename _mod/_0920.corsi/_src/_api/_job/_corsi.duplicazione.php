@@ -94,7 +94,11 @@
             );
 
             // modifico l'ID
-            $job['corso']['id'] = date( 'YmdHis' );
+            // NOTA fino al 02/03/2026 l'id di progetti, prodotti e articoli era il loro codice, e la copia prendeva come
+            // id un codice nuovo; adesso gli id sono numerici e li da' l'AUTO_INCREMENT alla scrittura, e il codice nuovo
+            // va in codice ( UNIQUE: la copia non puo' tenere quello dell'originale )
+            $job['corso']['id'] = NULL;
+            $job['corso']['codice'] = date( 'YmdHis' );
 
             // applico la regola sul riferimento
             if( ! empty( $job['workspace']['sostituzioni']['riferimento'] ) ) {
@@ -147,17 +151,21 @@
                 );
 
                 // trasformo l'ID
-                $prodotto['id'] = $job['corso']['id'];
+                $prodotto['id'] = NULL;
+                $prodotto['codice'] = $job['corso']['codice'];
 
                 // trasformo il nome
                 $prodotto['nome'] = $job['corso']['nome'];
 
                 // inserisco il prodotto
-                mysqlInsertRow(
+                $prodotto['id'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     $prodotto,
                     'prodotti'
                 );
+
+                // il contatore dei codici degli articoli copiati
+                $nArticolo = 0;
 
                 // elaboro gli articoli
                 foreach( $articoli as $articolo ) {
@@ -177,11 +185,12 @@
                     );
 
                     // trasformo l'ID
-                    $articolo['id'] = microtime( true );
+                    $articolo['id'] = NULL;
+                    $articolo['codice'] = $prodotto['codice'] . '.' . ( ++$nArticolo );
                     $articolo['id_prodotto'] = $prodotto['id'];
 
                     // inserisco l'articolo
-                    mysqlInsertRow(
+                    $articolo['id'] = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         $articolo,
                         'articoli'
@@ -232,7 +241,7 @@
             }
 
             // duplico il corso
-            mysqlInsertRow(
+            $job['corso']['id'] = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 $job['corso'],
                 'progetti'

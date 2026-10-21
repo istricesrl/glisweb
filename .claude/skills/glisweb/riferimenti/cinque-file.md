@@ -24,11 +24,13 @@ una riga comincia con "non fare mai" va nel CLAUDE; se comincia con "il database
 ⚠ **Nel `READ.md` di progetto non va la documentazione del framework.** Snippet e tecniche che
 valgono su qualunque deploy glisweb non sono informazioni di *questo* progetto: vanno nella
 documentazione del framework (questo file, `dev/READ.md`, o la skill). Il READ di progetto tiene
-sette cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
+nove cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
 credenziali utili, o il posto preciso dove trovarle; **3)** architettura e risorse — macchine,
 database, servizi esterni, domini; **4)** mappa delle personalizzazioni — cosa in questo deploy è
 diverso dallo standard, e perché; **5)** FAQ di progetto; **6)** soluzioni ai problemi frequenti —
-il sintomo, e cosa si fa; **7)** procedure proprie del progetto.
+il sintomo, e cosa si fa; **7)** procedure proprie del progetto; **8)** documentazione — i link ai manuali, standard e custom, e
+come si genera, si aggiorna e si verifica quella custom ( vedi sotto ); **9)** test automatici — i link
+all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ).
 
 Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
 trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
@@ -40,14 +42,78 @@ dentro o fuori l'aggiornamento notturno del framework. Un cliente può avere **d
 macchine diverse** — il sito su una, il gestionale legacy su un'altra: se il READ non lo dice,
 nessuno lo sa.
 
+### ⚠ La voce 8, documentazione: ogni manuale a un clic
+
+Regola di Fabio del **13/10/2026**. Lo sviluppatore che lavora sul progetto deve poter aprire la
+documentazione che gli serve **con un clic**, senza ricostruire URL, cercare quale host la pubblica o
+ricordarsi dove stanno le credenziali. Per questo il `READ.md` ha una sezione **Documentazione**,
+divisa in due sottosezioni:
+
+- **standard** — i link alla documentazione del framework, sul sito pubblico del **repository da cui il
+  deploy si aggiorna**, e non su uno a scelta: quello di `update.repository.conf` nella root del
+  deploy ( `glisweb` → `glisweb.istricesrl.it`, `glisdev` → `glisdev.istricesrl.com`; senza il file vale
+  `glisweb` ). Lo standard che il deploy fa girare è quello, e il manuale da aprire è il suo:
+  manuale sviluppatore e manuale utente, ciascuno come **indice HTML**, **pagina unica**
+  ( `tutto.html` ) e **PDF**, più l'indice delle quickstart. **Solo i link**: come si genera lo
+  standard è lavoro del framework, e qui non si scrive;
+- **custom** — gli stessi link per la documentazione di progetto ( `/manual/read/`, `/manual/user/`,
+  `/quickstart/` ), **per ogni ambiente** su cui è pubblicata, con le credenziali della Basic auth o il
+  rimando preciso alla voce 2 che le contiene. E poi, per esteso, **come si lavora sulla
+  documentazione di questo progetto**:
+  - **generazione** — quali sorgenti ci sono davvero ( `usr/docs/READ.md`, `USER.md`, `read/`,
+    `user/`, `quickstart/`, i `READ.md` sotto `mod/` e `src/tpl/` ), il comando con le opzioni che
+    servono qui ( `_src/_sh/_docs.build.sh --dev`, `--user`, `--quickstart` ), dove scrive
+    ( `usr/pages/` ), se gira anche dentro l'aggiornamento notturno, e se su questa macchina esce il
+    PDF ( serve chromium ) o solo la pagina unica;
+  - **aggiornamento** — chi la rigenera e quando, come arriva sugli altri ambienti ( il deploy, e il
+    `.htpasswd` che viaggia con lui ), gli screenshot se il progetto ne usa ( `_docs.shots.sh` );
+  - **verifica** — come si controlla che sia giusta e protetta: `401` senza credenziali e `200` con,
+    data di modifica delle pagine posteriore all'ultima modifica dei sorgenti, PDF presente o assenza
+    spiegata.
+
+Tre vincoli:
+
+- **un link si scrive solo dopo averlo aperto**: si controlla il codice di risposta, e si linka
+  sempre il file ( `index.html` ), mai la cartella, che dà 404;
+- **gli URL si scrivono interi**, `https://` compreso, così il visualizzatore li rende cliccabili;
+- ⚠ **la sezione si aggiorna ogni volta che si aggiorna la documentazione**, perché è l'ultimo anello
+  del giro di ogni modifica: **codice → test → report dei test → documentazione → file di progetto**, e fra questi il
+  `READ.md`. Un capitolo nuovo, un manuale che nasce o sparisce, un PDF che comincia a uscire, un
+  ambiente nuovo su cui si pubblica: se la sezione non lo dice, per chi viene dopo non c'è.
+
+Il verso è uno solo: **il `READ.md` linka la documentazione, la documentazione non cita il `READ.md`**,
+che resta fuori dalla generazione ( vedi `documentazione.md` ).
+
 ### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
+
+### ⚠ La voce 9, test automatici: l'esito a un clic, come la documentazione
+
+Regola di Fabio del **13/10/2026**, stessa logica della voce 8. Ogni esecuzione dei test
+( `_src/_sh/_codeception.run.sh` ) lascia un `esito.md` in `var/spool/test/<data e ora>/` e pubblica
+l'ultima a un indirizzo fisso; la sezione **Test automatici** del `READ.md` ne tiene i link, divisa
+nelle stesse due sottosezioni:
+
+- **standard** — l'esito dei test dello standard, sul sito pubblico del repository da cui il deploy si
+  aggiorna, con la stessa regola della voce 8 ( `https://glisweb.istricesrl.it/_test/index.html` o
+  `https://glisdev.istricesrl.com/_test/index.html` ), **solo se esiste**: si pubblica solo sui deploy
+  del framework, dopo che ci sono girati i test. Se non c'è si scrive che non c'è, non si mette il link;
+- **custom** — l'esito del progetto ( `/test/index.html` ) **per ogni ambiente dove i test girano**, con
+  la stessa Basic auth del manuale. Di norma è il solo DEV: l'esito non viaggia col deploy, e i test
+  funzionali scrivono nel database, quindi in produzione il bootstrap li rifiuta. E poi:
+  - **come si lanciano** qui ( le suite che il progetto ha davvero, il comando );
+  - **dove finiscono i risultati** ( `var/spool/test/`, 30 giorni ) e cosa si pubblica ( `esito.md` e i
+    report HTML, mai HTML e screenshot dei fallimenti );
+  - **lo stato noto** — i fallimenti che si conoscono e il perché, o il rimando alla voce del `TODO.md`.
+
+Anche qui un link si scrive solo dopo averlo aperto, e la sezione si aggiorna nel giro di ogni
+modifica: **codice → test → report dei test → documentazione → file di progetto**.
 
 Detto da Fabio il 23/09/2026: *"mi fanno domande riguardo a cose che dovrebbero essere descritte
 dal READ.md"*. Una domanda del tipo *"su che macchina sta questo?"*, *"dove sta il database?"*,
 *"qual è il deploy di produzione?"*, *"come si fa il rilascio qui?"* **è un buco nel READ**, non è
 una domanda. Prima di farla:
 
-1. **si cerca nel READ** — le sette voci, non solo quella che sembra;
+1. **si cerca nel READ** — le nove voci, non solo quella che sembra;
 2. se non c'è, **si guarda**: la macchina risponde. `ssh`, `src/config.json`, `/etc/cron.d`,
    `git remote -v`, `update.branch.conf`, il vhost;
 3. **si scrive nel READ**, nella voce che le compete, **nello stesso turno in cui si è scoperta** —
@@ -199,6 +265,49 @@ Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
 Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
 niente.
 
+#### L'urgenza scade: dopo 14 giorni fermi il `!` cade da solo
+
+Regola data da Fabio l'**08/10/2026**: *"una cosa urgente che è lì da due mesi era ovvio che non
+fosse urgente"*. Quel giorno le voci urgenti aperte erano 375 su 1364: il flag non aiutava più a
+scegliere da dove partire, e le urgenze vere si perdevano fra quelle scadute.
+
+- una voce `- [ ]` o `- [?]` col primo flag a `!` che **non si muove da più di 14 giorni** perde l'urgenza:
+  `(!!-)` diventa `(-!-)`, e in coda alla riga si aggiunge `( declassata GG/MM/AAAA: ferma da N gg )`.
+  Non si chiude e non si sposta: cambia solo il flag;
+- **il movimento è la data più recente citata nella voce o nelle sue note**, compreso il campo
+  `( aperta … )`. Una voce su cui si lavora si muove da sola, perché ogni nota porta la sua data;
+- **restano fuori** le voci `[=]`, che aspettano qualcun altro, quelle che citano una data
+  futura ( hanno una scadenza davanti ), e quelle senza nessuna data, perché non si sa da quando
+  sono ferme;
+- lo fa `/usr/local/bin/normalizza-urgenze.py`, ogni sera alle 21:30 su web02 e web03, su tutti i
+  `TODO.md` di `/var/www`; il resoconto è in `/var/log/normalizza-urgenze.log`. Senza `--applica` è
+  un'anteprima: `-v` elenca le voci, `-p <testo>` limita ai progetti. Il sorgente sta nel repository
+  avanzamenti-todo, che lo installa sulle macchine; la skill ne porta la stessa copia in
+  `bin/normalizza-urgenze.py`, per lanciarlo dal deploy. **Le due copie devono restare identiche**:
+  chi ne modifica una aggiorna l'altra e reinstalla su web02 e web03;
+- **chi la ritiene ancora urgente rimette il `!` e scrive perché**, in una nota datata: la data
+  nuova le dà altri 14 giorni. Rimettere il `!` senza scrivere niente vuol dire ritrovarselo
+  declassato fra due settimane, ed è giusto così.
+
+#### Due campi fissi in coda alla voce: quando è nata e chi avvisare
+
+Regola data da Fabio l'**08/10/2026**. In fondo alla riga, in quest'ordine:
+
+    - [ ] (!--) il registro presenze in PDF ( avvisare: Melania, Marco Mosti ) ( aperta 08/10/2026 )
+
+- **`( aperta GG/MM/AAAA )` — obbligatorio su ogni voce nuova**, con l'anno intero e la parola
+  `aperta`. È l'unica data che gli strumenti leggono come nascita della voce: le altre date citate
+  nel testo ( *"ferme fra 01/10 e 02/10"* ) parlano del contenuto, e un `( 07/10 )` senza anno né
+  parola chiave non si distingue da loro. Il cruscotto `~/.claude/bin/panoramica.py`, che dice quanto
+  si sta muovendo ogni progetto, conta su questo campo; una voce senza data risulta vecchia.
+- **`( avvisare: Nome, Nome )` — quando qualcuno va avvisato alla chiusura**: chi l'ha chiesta, chi
+  l'aspetta. Alla chiusura ogni nome diventa una riga nel `### Da dirgli alla prossima occasione` della
+  sua sezione del `CHAT.md` ( vedi *"Quando una voce chiude, il giro non finisce nel DONE.md"* ). Non
+  si scrive in prosa nelle note: lì non lo trova nessuno.
+- `~/.claude/bin/voce-progetto.py <dominio> todo-aggiungi "(!--) testo" -p "Nome, Nome"` scrive tutti e
+  due i campi da solo. Chi aggiunge la voce con Edit li scrive a mano.
+- le voci già esistenti non si ridatano a tappeto: una data inventata è peggio di nessuna data.
+
 #### Quanto dettaglio ci sta in una voce
 
 ⚠ **Nel TODO ci sta quello che serve per decidere e per cominciare. Niente di più.** Ogni compito
@@ -247,6 +356,28 @@ che stava aspettando, **la stessa riga va anche nel `CHAT.md`**, nella sezione
 finito e non comunicato, per il cliente, non è finito — e nessuno se ne accorge, perché da noi
 risulta fatto.
 
+⚠ **Quando nasce una domanda per il cliente, va scritta qui subito.** Regola data da Fabio il
+**28/09/2026**: nel momento in cui il lavoro fa sorgere una domanda che solo il cliente può
+sciogliere, la domanda va nel `CHAT.md`, nella sezione `### Da chiedergli alla prossima occasione`
+della persona giusta, **nello stesso turno**. Il dettaglio sta in *"Quando nasce una domanda per il
+cliente"*, più sotto.
+
+⚠ **"Aspettiamo noi" vuol dire che domani qualcuno deve scrivere o fare qualcosa per quella
+persona**, e nient'altro. Regola data dall'assistente generale il **20/10/2026**: le voci `- [ ]`
+di quella sezione le legge `chat-progetti.py --aperte` e diventano, davanti a Fabio, **comunicazioni
+da mandare**. Quel giorno la metà erano stantie — già evase, o ferme in attesa dell'altro e mai
+spostate — e Fabio se le è ritrovate come palla nostra. Quattro regole:
+
+1. **la voce si riscrive a ogni messaggio mandato o ricevuto**, non a fine lavoro: mandata la
+   risposta, la voce esce da `### Aspettiamo noi` — chiusa, o spostata in `### Aspetta lui` se
+   ora tocca a lui;
+2. **una voce che non è più "da fare per lui domani" non resta lì**, nemmeno "per memoria": la
+   memoria sta negli *Ultimi scambi* e nel `DONE.md`;
+3. **quando l'assistente generale o Fabio dicono che una cosa è fatta**, la voce si chiude nello
+   stesso turno;
+4. **a ogni apertura di sessione** si ripassano le voci di `### Aspettiamo noi` più vecchie di
+   **7 giorni**, e per ognuna si controlla nella posta o nel `DONE.md` se è ancora vera.
+
 #### Una sezione per conversazione e destinatario
 
 Non un blocco unico, e non più "un progetto, un interlocutore": **una sezione `##` per persona**.
@@ -265,6 +396,9 @@ Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
 
 ### Aspettiamo noi — cosa ha chiesto lui
   - [ ] <richiesta>, arrivata il <data>
+
+### Da chiedergli alla prossima occasione
+  - [ ] <domanda>, nata il <data> da <voce del TODO o lavoro che l'ha fatta sorgere>
 
 ### Da dirgli alla prossima occasione
   - [ ] <cosa fatta che lui non sa ancora>
@@ -314,6 +448,9 @@ la sua e riprova ); scrive **solo nella sezione di quella persona**; rimette `li
   voce o per iscritto, e con quali parole;
 - prima di scrivere "da chiedere a <cliente>" da qualunque parte, **si cerca qui e nel `DONE.md`**
   se la risposta esiste già;
+- ⚠ **una domanda per il cliente non resta in conversazione**: va in `### Da chiedergli alla
+  prossima occasione` nello stesso turno in cui nasce ( vedi *"Quando nasce una domanda per il
+  cliente"* );
 - il tono delle voci è quello che si userebbe col cliente: niente nomi di tabelle, niente dettagli
   interni. Quelli stanno nel `TODO.md`;
 - **il materiale lungo non ci va**: allegati, screenshot, trascrizioni dei vocali e diagnosi stanno
@@ -384,14 +521,24 @@ Due regole che valgono più di tutte le altre:
 Regola data da Fabio il **22/09/2026**, ribadita il **23/09/2026**: *"quando fanno le cose e chiudono i
 task devono sempre aggiornare di conseguenza il `CHAT.md`"*.
 
-Chiudere una voce sono **tre gesti nello stesso turno**, non uno:
+Chiudere una voce sono **tre gesti nello stesso turno** ( quattro se è nata da una issue GitHub ), non uno:
 
 1. il marcatore diventa `[v]` ( o `[x]` se si è deciso di non farla );
 2. la voce **trasloca** nel `DONE.md`, nel capitolo di oggi, con **com'è andata e perché si è deciso
    così** — è l'unica cosa che risponderà a *"perché l'avevamo fatto così?"* fra sei mesi;
 3. ⚠ se è una cosa che **il cliente vede o che stava aspettando**, la stessa riga va **anche nel
    `CHAT.md`**, nella sezione `### Da dirgli alla prossima occasione` della persona giusta, **il giorno
-   stesso**.
+   stesso**. Se la voce ha il campo `( avvisare: … )`, la persona giusta è ognuna di quelle.
+
+4. ⚠ se la voce porta il tag **`[gh#N]`** ( è nata da una issue GitHub ), **si chiude anche la issue**,
+   nello stesso turno: `~/.claude/bin/issue-todo.py -C <deploy> --chiudi`, **dopo** il trasloco nel
+   `DONE.md`, perché chiude su GitHub le issue la cui voce `[gh#N]` trova lì come `[v]` o `[x]`. Regola
+   di Fabio del **12/10/2026**: *"quando chiudi una todo collegata a una issue github […] chiudere anche
+   la issue"*. C'è il cron notturno `/etc/cron.daily/issue-github` che fa la stessa cosa, ma è una rete
+   di sicurezza, non il gesto: chi ha aperto la issue la vede chiusa quando il lavoro è fatto, non il
+   giorno dopo. Lo script commenta senza citare il testo della voce, perché il repo è pubblico: **non si
+   chiude a mano con `gh issue close` aggiungendo dettagli del TODO**. Una voce `[gh#N]` chiusa solo in
+   parte resta aperta, e la issue con lei.
 
 **Il test, in una riga**: *se ne accorgerebbe, o l'aveva chiesta lui?* Se sì, il terzo gesto non è
 facoltativo. **Uno sviluppo finito e non comunicato, per il cliente, non è finito** — e nessuno se ne
@@ -412,6 +559,35 @@ sezione di quella persona, si rimette `libero`. Un lock più vecchio di dieci mi
 e si annota che è stato forzato. Il protocollo per esteso sta nella sezione `CHAT.md`
 qui sopra.
 
+#### ⚠ Quando nasce una domanda per il cliente, va nel `CHAT.md` subito
+
+Regola data da Fabio il **28/09/2026**: *"è fondamentale che il dialogo con il cliente sia tenuto con
+la massima continuità possibile"*.
+
+È il verso opposto della regola sulla chiusura: lì si registra quello che **dobbiamo dirgli**, qui
+quello che **dobbiamo chiedergli**. Una domanda che vive solo in conversazione muore col `/clear` o
+con la fine della sessione, e il cliente o non se la sente mai fare, o se la sente fare due volte
+da due sessioni diverse. Tutt'e due rompono la continuità del dialogo.
+
+Quando il lavoro fa sorgere una domanda che **solo il cliente può sciogliere** ( un requisito
+ambiguo, un dato che non abbiamo, una scelta che spetta a lui ):
+
+1. prima si cerca nel `CHAT.md` e nel `DONE.md` se la risposta c'è già, e nel `READ.md` se è una
+   domanda di fatti nostri e non sua;
+2. se non c'è, la domanda va **nello stesso turno** nel `CHAT.md`, in `### Da chiedergli alla
+   prossima occasione` della persona giusta, col lock come ogni scrittura: **la data** e **da dove
+   è nata** ( la voce del `TODO.md` o il lavoro ), nel tono che si userebbe col cliente;
+3. quando la domanda viene fatta — da Fabio o dall'assistente generale — si sposta in `### Aspetta
+   lui — cosa gli abbiamo chiesto` con data e canale, e la voce del `TODO.md` che ne dipende diventa
+   `[=]` con nome e data;
+4. quando arriva la risposta esce dal `CHAT.md` e diventa lavoro nel `TODO.md` o decisione nel
+   `DONE.md`, come già detto sopra.
+
+**Il test, in una riga**: *se la sessione finisse adesso, la domanda sopravviverebbe?* Se sta solo
+in conversazione, no. Per questo **prima di proporre un `/clear` o di chiudere una sessione** si
+controlla che nessuna domanda per il cliente sia rimasta solo detta a Fabio in chat: dirgliela non
+basta, va scritta.
+
 ## Come si scrive il `TODO.md` ( deciso il 15/09/2026 )
 
 ⚠ **Per aree del progetto, non in ordine cronologico.** La data in cui una cosa è stata scritta è l'unico
@@ -429,6 +605,9 @@ impatto, `!` se sì e `-` se no:
 **urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
 l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
 tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
+
+⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `/usr/local/bin/normalizza-urgenze.py`, ogni sera
+( vedi *"L'urgenza scade"* sopra ).
 
 ⚠ **`[?]` non conta nel residuo**: è il posto dove mettere una cosa senza doverla né fare né buttare.
 
