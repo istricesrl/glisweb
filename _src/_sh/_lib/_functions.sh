@@ -612,3 +612,120 @@ function deploy-check() {
     esac
 
 }
+
+#
+# Porta al canone del framework appena installato un database rimasto alla linea di release precedente.
+#
+# A ogni release minore o maggiore le patch datate della linea vecchia vengono assorbite nei file base
+# e tolte ( capitolo 300 ): un database che non le aveva applicate tutte resta sotto il livello del
+# canone, e mysqlPatchCheck() rifiuta di aggiornarlo. Le patch che gli mancano esistono ancora, nella
+# release da cui la linea nuova e' partita: la seconda riga di _etc/_current.canon dice quale tag.
+#
+# Questa funzione legge il livello del database ( dalla prova a vuoto di _mysql.upgrade.sh ), e finche'
+# sta sotto il canone risale la catena: scarica lo zip del tag di passaggio, ne legge il canone, e se
+# serve passa al tag precedente ( al massimo cinque gradini ). Poi applica le patch partendo dal tag
+# piu' vecchio, ciascuno col proprio _mysql.upgrade.sh e con la configurazione del deploy copiata
+# accanto, e lascia al chiamante le patch della linea nuova. Le patch di progetto ( usr/database/patch/ )
+# non viaggiano coi tag e si applicano dopo, con quelle della linea nuova.
+#
+# Lavora in <progetto>/var/<data>-gradino/: i tag scaricati si tolgono alla fine, i dump che
+# _mysql.upgrade.sh fa prima di ogni gradino restano in <progetto>/var/<data>-gradino/backups/.
+#
+# Va lanciata dalla document root del deploy appena aggiornato.
+#
+# $1 profilo del database ( DEV, TEST, PROD )
+# $2 repository da cui scaricare i tag ( glisweb, glisdev )
+# $3 --prova per fermarsi alle prove a vuoto, senza applicare niente
+#
+# restituisce 0 se non serviva o se e' andato a buon fine, 1 se il gradino non si e' potuto fare
+#
+function gw-gradino() {
+
+    local STATO="$1"
+    local REPO="$2"
+    local PROVA="$3"
+    local LIVELLO CANONE TAG ZIP CARTELLA FILE
+    local LAVORO="$( dirname "$( pwd )" )/var/$( date '+%Y%m%d%H%M%S' )-gradino"
+    local CATENA=()
+    local CANONI="./_etc/_current.canon"
+
+    # livello del database, dalla prova a vuoto: senza livello leggibile ci pensa _mysql.upgrade.sh a dirlo
+    LIVELLO=$( ./_src/_sh/_mysql.upgrade.sh $STATO 2>/dev/null | sed -n 's/.*livello di patch attuale: \([0-9]\{12\}\).*/\1/p' | head -1 )
+    if [ -z "$LIVELLO" -o "$LIVELLO" = "000000000000" ]; then
+        return 0
+    fi
+
+    # risalgo la catena dei canoni finche' il database non ci sta sopra
+    while [ -f "$CANONI" ]; do
+
+        CANONE=$( sed -n 1p "$CANONI" | tr -d '[:space:]' )
+        if [ -z "$CANONE" ] || [[ ! "$LIVELLO" < "$CANONE" ]]; then
+            break
+        fi
+
+        TAG=$( sed -n 2p "$CANONI" | tr -d '[:space:]' )
+        if [ -z "$TAG" ]; then
+            echo "ERRORE: il database e' al livello $LIVELLO, sotto il canone $CANONE, e il canone non dice da che release passare: va ricostruito"
+            return 1
+        fi
+
+        if [ ${#CATENA[@]} -ge 5 ]; then
+            echo "ERRORE: piu' di cinque gradini per arrivare al canone, il database va ricostruito"
+            return 1
+        fi
+
+        echo "gradino: il database e' al livello $LIVELLO, sotto il canone $CANONE, passa prima dalla release $TAG"
+
+        # scarico e scompatto il tag, con gli stessi controlli dell'aggiornamento
+        mkdir -p "$LAVORO" || return 1
+        ZIP="$LAVORO/$TAG.zip"
+        if ! wget -q -O "$ZIP" "https://github.com/istricesrl/$REPO/archive/refs/tags/$TAG.zip" || [ ! -s "$ZIP" ]; then
+            echo "ERRORE: scaricamento della release $TAG fallito"
+            return 1
+        fi
+        if ! unzip -qq -o "$ZIP" -d "$LAVORO" || [ ! -f "$LAVORO/$REPO-$TAG/_src/_config.php" ]; then
+            echo "ERRORE: la release $TAG scaricata non sembra una distribuzione del framework"
+            return 1
+        fi
+        rm -f "$ZIP"
+
+        CARTELLA="$LAVORO/$REPO-$TAG"
+        CATENA=( "$CARTELLA" "${CATENA[@]}" )
+        CANONI="$CARTELLA/_etc/_current.canon"
+
+    done
+
+    # niente da fare
+    if [ ${#CATENA[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    # un gradino alla volta, dal piu' vecchio, con la configurazione del deploy
+    for CARTELLA in "${CATENA[@]}"; do
+
+        mkdir -p "$CARTELLA/src"
+        for FILE in config.json shadow.json config.yaml shadow.yaml; do
+            [ -f "./src/$FILE" ] && cp -a "./src/$FILE" "$CARTELLA/src/$FILE"
+        done
+        chmod +x "$CARTELLA"/_src/_sh/*.sh
+
+        echo "gradino: patch della release $( basename "$CARTELLA" )"
+        if [ "$PROVA" = "--prova" ]; then
+            "$CARTELLA/_src/_sh/_mysql.upgrade.sh" $STATO
+        elif ! "$CARTELLA/_src/_sh/_mysql.upgrade.sh" $STATO --si; then
+            echo "ERRORE: gradino $( basename "$CARTELLA" ) non riuscito, il dump e' in $LAVORO/backups/"
+            return 1
+        fi
+
+    done
+
+    # tolgo i tag scaricati, che contengono anche la configurazione copiata; i dump restano
+    for CARTELLA in "${CATENA[@]}"; do
+        rm -rf "$CARTELLA"
+    done
+    rmdir "$LAVORO" 2> /dev/null
+
+    echo "gradino completato, il database e' pronto per le patch della linea nuova"
+    return 0
+
+}

@@ -2401,7 +2401,9 @@
      * Questa funzione legge da _etc/_current.canon il livello del canone, cioè l'id dell'ultima patch assorbita nei file
      * base _0N0000999999.*.sql all'ultimo rilascio maggiore o minore, quando la coda delle patch datate è stata svuotata.
      * Un database con un livello più basso è anteriore al canone: le patch che lo ci avrebbero portato non ci sono più.
-     * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'.
+     * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'. Il livello sta
+     * nella prima riga; la seconda, se c'è, è il tag della release da cui un database più vecchio deve passare prima
+     * ( il gradino di _src/_sh/_gw.upgrade.sh ), e qui non si legge.
      *
      * @param       string      $b      la cartella base del deploy, con la barra finale
      *
@@ -2412,7 +2414,7 @@
     {
 
         // leggo il livello dal file
-        $k = (file_exists($b . '_etc/_current.canon')) ? trim(file_get_contents($b . '_etc/_current.canon')) : '';
+        $k = (file_exists($b . '_etc/_current.canon')) ? trim(strtok(file_get_contents($b . '_etc/_current.canon'), "\n")) : '';
 
         // un livello vale solo se è di dodici cifre
         return (preg_match('/^[0-9]{12}$/', $k)) ? $k : '000000000000';
