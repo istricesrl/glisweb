@@ -5174,19 +5174,28 @@ CREATE OR REPLACE VIEW pagine_view AS
 -- periodi_view
 -- tipologia: tabella di supporto
 -- verifica: 2022-05-24 12:57 Chiara GDL
+-- i periodi con la tipologia; l'etichetta dice nome e date, e se il nome manca usa la tipologia al suo posto
 CREATE OR REPLACE VIEW `periodi_view` AS
 	SELECT
 		periodi.id,
 		periodi.id_genitore,
 		periodi.id_tipologia,
-		periodi.id_contratto,
 		tipologie_periodi_path( periodi.id_tipologia ) AS tipologia,
+		periodi.nome,
+		periodi.id_contratto,
 		periodi.data_inizio,
 		periodi.data_fine,
+		periodi.note,
 		periodi.id_account_inserimento,
 		periodi.id_account_aggiornamento,
-		concat( periodi.nome, ' dal ',CONCAT_WS('-',periodi.data_inizio),' al ',CONCAT_WS('-',periodi.data_fine)) AS __label__
-	FROM periodi;
+		concat_ws(
+			' ',
+			coalesce( periodi.nome, tipologie_periodi_path( periodi.id_tipologia ) ),
+			concat( 'dal ', periodi.data_inizio ),
+			concat( 'al ', periodi.data_fine )
+		) AS __label__
+	FROM periodi
+;
 
 -- | 090000023701
 

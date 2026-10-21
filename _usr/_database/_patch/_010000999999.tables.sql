@@ -4785,22 +4785,33 @@ CREATE TABLE IF NOT EXISTS `pagine` (                             --
 -- tipologia: tabella di supporto
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i periodi
+-- funzione: contiene intervalli di date con un nome e una tipologia
 --
-CREATE TABLE IF NOT EXISTS `periodi` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `data_inizio` date DEFAULT NULL,
-  `data_fine` date DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene periodi di qualsiasi tipo, ognuno con una data di inizio, una data di fine e una tipologia
+-- ( dalla tabella tipologie_periodi ) che dice cos'è; oggi i periodi servono come anno di riferimento degli oggetti
+-- ( l'anno sportivo a cui appartengono i corsi, progetti.id_periodo ), come chiusure da saltare quando si generano
+-- date ( feste, ferie, sospensioni ) e come sospensioni di un contratto; i periodi si possono appendere a un periodo
+-- che li contiene ( p.es. le feste al loro anno sportivo ), e la tabella è ricorsiva per questo
+--
+-- NOTA la tabella è volutamente generica: un periodo è qualsiasi intervallo di date che abbia un significato per
+-- l'applicazione ( le repliche di uno spettacolo, la validità di un'offerta, una finestra di gioco ), e i nuovi usi
+-- si aggiungono con una tipologia e, se il periodo appartiene a un oggetto, con una colonna per quell'oggetto, come
+-- id_contratto per le sospensioni dei contratti
+--
+CREATE TABLE IF NOT EXISTS `periodi` (                         --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per il periodo che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia del periodo
+  `nome` char(255) DEFAULT NULL,                              -- nome del periodo
+  `id_contratto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il contratto a cui appartiene il periodo ( p.es. una sospensione )
+  `data_inizio` date DEFAULT NULL,                            -- data di inizio del periodo, compresa
+  `data_fine` date DEFAULT NULL,                              -- data di fine del periodo, compresa
+  `note` text DEFAULT NULL,                                   -- note sul periodo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il periodo
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il periodo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000023600
 

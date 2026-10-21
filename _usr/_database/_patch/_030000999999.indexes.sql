@@ -2896,13 +2896,14 @@ ALTER TABLE `pagine` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- periodi
 ALTER TABLE `periodi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `id_contratto`, `nome`, `id_genitore`),
-	ADD	KEY `id_genitore` (`id_genitore`),
-	ADD	KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `data_inizio` (`data_inizio`),
+	ADD KEY `data_fine` (`data_fine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` ( `id`, `id_genitore`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
-	ADD KEY `id_contratto` (`id_contratto`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`nome`,`id_contratto`,`data_inizio`,`data_fine`);
 
 -- | 030000023501
 
