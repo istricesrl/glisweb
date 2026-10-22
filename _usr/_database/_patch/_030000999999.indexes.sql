@@ -3046,15 +3046,20 @@ ALTER TABLE `popup_pagine` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000025000
 
 -- prezzi
+-- tipologia: tabella gestita
+-- verifica: 2026-10-22 punto 6, riga 130
 ALTER TABLE `prezzi`
- 	ADD PRIMARY KEY (`id`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_articolo` (`id_listino`,`id_articolo`,`qta_min`,`data_inizio`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_listino`,`id_prodotto`,`qta_min`,`data_inizio`),
+	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `id_reparto` (`id_reparto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_listino`,`id_prodotto`,`id_articolo`,`qta_min`,`qta_max`,`data_inizio`,`data_fine`,`prezzo`,`id_iva`);
 
 -- | 030000025001
 

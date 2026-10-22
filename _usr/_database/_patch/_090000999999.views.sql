@@ -5383,31 +5383,33 @@ CREATE OR REPLACE VIEW `popup_pagine_view` AS
 -- | 090000025000
 
 -- prezzi_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-22 punto 6, riga 130
 CREATE OR REPLACE VIEW `prezzi_view` AS
 	SELECT
 		prezzi.id,
+		prezzi.id_listino,
+		listini.nome AS listino,
+		valute.utf8 AS valuta,
 		prezzi.id_prodotto,
 		prodotti.nome AS prodotto,
 		prezzi.id_articolo,
 		articoli.nome AS articolo,
-		prezzi.fascia,
 		prezzi.qta_min,
 		prezzi.qta_max,
-		prezzi.sconto_articoli,
+		prezzi.data_inizio,
+		prezzi.data_fine,
+		prezzi.fascia,
 		prezzi.prefisso,
 		prezzi.prezzo,
 		prezzi.suffisso,
+		prezzi.id_iva,
+		iva.nome AS iva,
+		prezzi.sconto_articoli,
 		prezzi.provvigione_percentuale,
 		prezzi.provvigione_fissa,
 		prezzi.id_reparto,
 		reparti.nome AS reparto,
-		prezzi.id_listino,
-		listini.nome AS listino,
-		valute.utf8 AS valuta,
-		prezzi.id_iva,
-		iva.nome AS iva,
-        prezzi.data_inizio,
-        prezzi.data_fine,
 		prezzi.id_account_inserimento,
 		prezzi.id_account_aggiornamento,
 		concat_ws(
@@ -5421,13 +5423,12 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 			iva.nome
 		) AS __label__
 	FROM prezzi
-		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
-		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
-		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 		LEFT JOIN listini ON listini.id = prezzi.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
+		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
-	GROUP BY prezzi.id
+		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 ;															  --
 
 -- | 090000025501

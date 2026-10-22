@@ -5043,30 +5043,41 @@ CREATE TABLE IF NOT EXISTS `popup_pagine` (
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i prezzi di prodotti e articoli per fascia, listino, reparto e periodo
-CREATE TABLE IF NOT EXISTS `prezzi` (
-  `id` bigint(20) NOT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `fascia` char(32) DEFAULT NULL,
-  `qta_min` int(11) DEFAULT NULL,
-  `qta_max` int(11) DEFAULT NULL,
-  `sconto_articoli` decimal(16,5) DEFAULT NULL,
-  `prefisso` char(64) DEFAULT NULL,
-  `prezzo` decimal(16,5) DEFAULT NULL,
-  `suffisso` char(64) DEFAULT NULL,
-  `provvigione_percentuale` decimal(16,5) DEFAULT NULL,
-  `provvigione_fissa` decimal(16,5) DEFAULT NULL,
-  `id_reparto` bigint(20) DEFAULT NULL,
-  `id_listino` bigint(20) DEFAULT NULL,
-  `id_iva` bigint(20) DEFAULT NULL,
-  `data_inizio` date DEFAULT NULL,
-  `data_fine` date DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene i prezzi di prodotti e articoli, per listino, scaglione di quantità e periodo di validità
+--
+-- un prezzo non ha senso al di fuori di un listino: ogni riga appartiene a un listino ( listini ), che ne dà la
+-- valuta, e si riferisce a un articolo o a un prodotto ( in quel caso vale per tutti i suoi articoli ); il prezzo è
+-- netto e l'aliquota è in id_iva; per lo stesso listino e oggetto ci possono essere più righe, una per scaglione
+-- ( qta_min, qta_max ) e per periodo ( data_inizio, data_fine ): il prezzo che vale è quello della riga con l'inizio
+-- più recente e lo scaglione più alto fra quelle che comprendono data e quantità, e lo storico si tiene chiudendo le
+-- righe superate con data_fine; la chiave unica è listino, oggetto, qta_min, data_inizio; se un listino non ha il
+-- prezzo vale quello del listino genitore ( specificità lungo l'albero, vedi listini )
+--
+-- NOTA le provvigioni sono per riga di listino; provvigioni per cliente o per categoria non sono ancora previste
+--
+CREATE TABLE IF NOT EXISTS `prezzi` (                           --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_listino` bigint(20) DEFAULT NULL,                         -- chiave esterna per il listino a cui appartiene il prezzo, obbligatoria
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto, se il prezzo vale per tutti i suoi articoli
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui si riferisce il prezzo
+  `qta_min` int(11) DEFAULT NULL,                               -- quantità minima da cui vale il prezzo ( scaglione ), NULL = nessun minimo
+  `qta_max` int(11) DEFAULT NULL,                               -- quantità massima fino a cui vale il prezzo, NULL = nessun massimo
+  `data_inizio` date DEFAULT NULL,                              -- data da cui vale il prezzo, NULL = da sempre
+  `data_fine` date DEFAULT NULL,                                -- data fino a cui vale il prezzo, compresa, NULL = senza scadenza
+  `fascia` char(32) DEFAULT NULL,                               -- fascia di prezzo, etichetta libera per raggruppare i prezzi
+  `prefisso` char(64) DEFAULT NULL,                             -- testo mostrato prima del prezzo ( p.es. "da" )
+  `prezzo` decimal(16,5) DEFAULT NULL,                          -- prezzo netto, nella valuta del listino
+  `suffisso` char(64) DEFAULT NULL,                             -- testo mostrato dopo il prezzo ( p.es. "al mese" )
+  `id_iva` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'aliquota IVA del prezzo
+  `sconto_articoli` decimal(16,5) DEFAULT NULL,                 -- sconto percentuale sugli articoli di un prodotto composto ( paniere )
+  `provvigione_percentuale` decimal(16,5) DEFAULT NULL,         -- provvigione percentuale sul prezzo
+  `provvigione_fissa` decimal(16,5) DEFAULT NULL,               -- provvigione fissa, nella valuta del listino
+  `id_reparto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il reparto di cassa del prezzo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il prezzo
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il prezzo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000026000
 
