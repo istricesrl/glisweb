@@ -3070,15 +3070,16 @@ ALTER TABLE `prezzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- prodotti
 ALTER TABLE `prodotti`
- 	ADD PRIMARY KEY (`id`),
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_sito` (`id_sito`),
-	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_marchio`,`id_sito`,`id_pagina`);
 
 -- | 030000026001
 

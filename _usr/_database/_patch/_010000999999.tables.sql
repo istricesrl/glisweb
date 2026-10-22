@@ -5085,34 +5085,44 @@ CREATE TABLE IF NOT EXISTS `prezzi` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i prodotti del sito
+-- funzione: contiene i prodotti, cioè le schede commerciali che raggruppano gli articoli
 --
--- questa tabella contiene i prodotti del sito, con le informazioni principali
+-- un prodotto è l'oggetto teorico che raggruppa uno o più articoli con le stesse caratteristiche di base: il prodotto
+-- porta nome, marchio, produttore e tipologia, gli articoli ( articoli.id_prodotto ) sono le sue varianti concrete, con
+-- codice, misure e prezzo. Ogni prodotto genera una pagina del sito sotto ciascuna delle sue categorie
+-- ( prodotti_categorie ), la canonical sotto la prima; per questo porta il blocco web ( template, schema_html,
+-- tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) come le altre entità che generano pagine.
 --
-CREATE TABLE IF NOT EXISTS `prodotti` (	
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `codice` char(32) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `note_codifica` text DEFAULT NULL,
-  `id_marchio` bigint(20) DEFAULT NULL,
-  `id_produttore` bigint(20) DEFAULT NULL,
-  `codice_produttore` char(64) DEFAULT NULL,
-  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
-  `note_archiviazione` text NULL,                               -- note di archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA il blocco web è deprecato su questa tabella ( punto 6e, 22/10/2026 ): sta sulle pubblicazioni, una per sito, e
+-- qui resta per i moduli legacy di oldstable; il codice latest legge quello di pubblicazioni
+-- NOTA id_pagina è la pagina sotto cui si appende il prodotto senza categoria; id_sito non ha chiave esterna perché
+-- i siti sono definiti nella configurazione, non nel database
+-- NOTA il marchio non possiede il prodotto: cancellare un marchio lascia i suoi prodotti senza marchio
+--
+CREATE TABLE IF NOT EXISTS `prodotti` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del prodotto
+  `codice` char(32) DEFAULT NULL,                                 -- codice del prodotto
+  `nome` char(255) DEFAULT NULL,                                  -- nome del prodotto
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio del prodotto
+  `id_produttore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica del produttore
+  `codice_produttore` char(64) DEFAULT NULL,                      -- codice assegnato al prodotto dal produttore
+  `note` text DEFAULT NULL,                                       -- note sul prodotto
+  `note_codifica` text DEFAULT NULL,                              -- annotazioni su come è stato assegnato il codice
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina del prodotto ( deprecato )
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template ( deprecato )
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template ( deprecato )
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina del prodotto va nella sitemap ( deprecato )
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina del prodotto si può mettere in cache ( deprecato )
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina ( deprecato )
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000026400
 

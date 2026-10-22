@@ -5460,20 +5460,29 @@ CREATE OR REPLACE VIEW `istruzioni_view` AS
 -- prodotti_view
 CREATE OR REPLACE VIEW `prodotti_view` AS
 	SELECT
-		pubblicazioni.id_tipologia AS id_tipologia_pubblicazione,
-		tipologie_pubblicazioni.nome AS pubblicazione,
+		-- PUBBLICAZIONE: SOTTOQUERY, NON JOIN ( 22/10/2026 )
+		--
+		-- prima era una LEFT JOIN su pubblicazioni: un prodotto con piu' pubblicazioni usciva una volta per
+		-- pubblicazione ( su utensilerialughese cinque righe doppie ). Si prende la prima pubblicazione del
+		-- prodotto, come in articoli_view.
+		( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.id LIMIT 1 ) AS id_tipologia_pubblicazione,
+		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = (
+				SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.id LIMIT 1
+			) ) AS pubblicazione,
 		prodotti.id,
-		prodotti.codice,
 		prodotti.id_tipologia,
 		tipologie_prodotti.nome AS tipologia,
 		tipologie_prodotti.se_prodotto,
 		tipologie_prodotti.se_servizio,
+		prodotti.codice,
 		prodotti.nome,
 		prodotti.id_marchio,
 		marchi.nome AS marchio,
 		prodotti.id_produttore,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
+		prodotti.note,
+		prodotti.note_codifica,
 		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view. Misurato
 		-- l'08/09/2026: SELECT * ... WHERE id = ? da 0,81 secondi a 0,011, un elenco di venti
 		-- righe da 0,74 a 0,017.
@@ -5481,13 +5490,14 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 			FROM prodotti_categorie AS pc
 		   WHERE pc.id_prodotto = prodotti.id
 		), '' ) AS categorie,
-		prodotti.id_sito,
 		prodotti.template,
 		prodotti.schema_html,
 		prodotti.tema_css,
 		prodotti.se_sitemap,
 		prodotti.se_cacheable,
-        prodotti.data_archiviazione,
+		prodotti.id_sito,
+		prodotti.id_pagina,
+		prodotti.data_archiviazione,
 		prodotti.id_account_inserimento,
 		prodotti.id_account_aggiornamento,
 		concat_ws(
@@ -5499,9 +5509,6 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
 		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
 		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
-		LEFT JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id
-		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
-
 ;
 
 -- | 090000026201
