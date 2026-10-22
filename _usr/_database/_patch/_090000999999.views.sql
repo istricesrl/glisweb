@@ -5565,38 +5565,46 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 CREATE OR REPLACE VIEW `progetti_view` AS
 	SELECT
 		progetti.id,
-		progetti.codice,
 		progetti.id_tipologia,
 		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
-		progetti.id_pianificazione,
+		progetti.codice,
+		progetti.nome,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
+		progetti.id_prodotto,
+		progetti.id_articolo,
+		progetti.id_periodo,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
-		progetti.id_ranking,
-		ranking.nome AS ranking,
-		progetti.id_articolo,
-		progetti.id_prodotto,
-		progetti.id_periodo,
-		progetti.nome,
+		progetti.id_pianificazione,
+		progetti.note,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.uscite_previste,
+		progetti.id_periodicita_prevista,
+		progetti.data_accettazione,
+		progetti.entrate_accettazione,
+		progetti.id_periodicita_accettazione,
+		progetti.data_apertura,
 		progetti.data_consegna,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.ore_totali,
+		progetti.uscite_totali,
+		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view ( 22/10/2026, come prodotti_view )
+		coalesce( ( SELECT group_concat( DISTINCT categorie_progetti_path( pc.id_categoria ) SEPARATOR ' | ' )
+			FROM progetti_categorie AS pc
+		   WHERE pc.id_progetto = progetti.id
+		), '' ) AS categorie,
 		progetti.template,
 		progetti.schema_html,
 		progetti.tema_css,
 		progetti.se_sitemap,
 		progetti.se_cacheable,
-        progetti.id_sito,
-        progetti.id_pagina,
-		progetti.data_apertura,
-		progetti.entrate_previste,
-		progetti.ore_previste,
-		progetti.costi_previsti,
-		progetti.entrate_accettazione,
-		progetti.data_accettazione,
-		progetti.data_chiusura,
-		progetti.entrate_totali,
-		progetti.uscite_totali,
+		progetti.id_sito,
+		progetti.id_pagina,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -5606,11 +5614,9 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
 	FROM progetti
-		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
-	GROUP BY progetti.id
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 ;
 
 -- | 090000027201

@@ -5157,56 +5157,70 @@ CREATE TABLE IF NOT EXISTS `prodotti_categorie` (             --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i progetti
+-- funzione: contiene i progetti, cioè le commesse e le iniziative con un ciclo di vita
 --
--- questa tabella contiene i progetti, con le informazioni principali
+-- un progetto è un lavoro con un inizio e una fine che aggrega cose da fare ( todo ) e attività ( attivita.id_progetto ),
+-- e le persone che ci lavorano ( progetti_anagrafica, con ruolo ). Il suo ciclo di vita si legge dai blocchi di colonne,
+-- nell'ordine in cui si riempiono: previsioni ( entrate, ore e uscite stimate ), accettazione del cliente, apertura
+-- dei lavori, consegna, chiusura e consuntivo ( totali ); le viste virtuali progetti_commerciale, progetti_produzione e
+-- le loro sorelle selezionano i progetti in base a quali date sono valorizzate. Un progetto può essere l'istanza di un
+-- prodotto in un periodo, come l'edizione di un corso ( id_prodotto, id_periodo ). Come le altre entità che generano
+-- pagine porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina ) e si
+-- appende sotto le sue categorie ( progetti_categorie ).
 --
-CREATE TABLE IF NOT EXISTS `progetti` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+-- NOTA il blocco web è deprecato su questa tabella ( punto 6e, 22/10/2026 ): sta sulle pubblicazioni, una per sito, e
+-- qui resta per i moduli legacy di oldstable; il codice latest legge quello di pubblicazioni
+-- NOTA id_pagina è la pagina sotto cui si appende il progetto senza categoria; id_sito non ha chiave esterna perché
+-- i siti sono definiti nella configurazione, non nel database
+-- NOTA entrate, ore e uscite hanno lo stesso nome in previsione e a consuntivo ( entrate_previste / entrate_totali,
+-- uscite_previste / uscite_totali ); uscite_previste si chiamava costi_previsti fino al 22/10/2026
+--
+CREATE TABLE IF NOT EXISTS `progetti` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del progetto
   `codice` char(32) DEFAULT NULL,                                 -- codice del progetto
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia di progetto
-  `id_pianificazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la pianificazione del progetto
-  `id_cliente` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'anagrafica del cliente
-  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo del progetto
-  `id_ranking` bigint(20) DEFAULT NULL,                          -- chiave esterna per il ranking del progetto
-  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo collegato al progetto
-  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato al progetto
-  `id_periodo` bigint(20) DEFAULT NULL,                          -- chiave esterna per il periodo del progetto
-  `nome` char(255) DEFAULT NULL,                              -- nome del progetto
-  `data_consegna` date DEFAULT NULL,                          -- data di consegna prevista
-  `note_consegna` text DEFAULT NULL,                          -- note sulla consegna
-  `note` text DEFAULT NULL,                                   -- note sul progetto
-  `template` char(255) DEFAULT NULL,                          -- template associato al progetto
-  `schema_html` char(128) DEFAULT NULL,                       -- schema HTML associato al progetto
-  `tema_css` char(128) DEFAULT NULL,                          -- tema CSS associato al progetto
-  `se_sitemap` tinyint(1) DEFAULT NULL,                       -- se il progetto deve essere incluso nella sitemap
-  `se_cacheable` tinyint(1) DEFAULT NULL,                     -- se il progetto è cacheable
-  `id_sito` bigint(20) DEFAULT NULL,                             -- chiave esterna per il sito collegato al progetto
-  `id_pagina` bigint(20) DEFAULT NULL,                           -- chiave esterna per la pagina collegata al progetto
-  `entrate_previste` decimal(16,2) DEFAULT NULL,              -- entrate previste per il progetto
-  `ore_previste` decimal(16,2) DEFAULT NULL,                  -- ore previste per il progetto
-  `costi_previsti` decimal(16,2) DEFAULT NULL,                -- costi previsti per il progetto
-  `id_periodicita_prevista` bigint(20) DEFAULT NULL,             -- chiave esterna per la periodicità prevista del progetto
-  `note_previsioni` text DEFAULT NULL,                        -- note sulle previsioni
-  `entrate_accettazione` decimal(16,2) DEFAULT NULL,          -- entrate alla data di accettazione del progetto
-  `data_accettazione` date DEFAULT NULL,                      -- data di accettazione del progetto
-  `id_periodicita_accettazione` bigint(20) DEFAULT NULL,	      -- chiave esterna per la periodicità alla data di accettazione del progetto
-  `note_accettazione` text DEFAULT NULL,                      -- note sull'accettazione
-  `data_apertura` date DEFAULT NULL,                          -- data di apertura del progetto
-  `note_apertura` text DEFAULT NULL,                          -- note sull'apertura
-  `data_chiusura` date DEFAULT NULL,                          -- data di chiusura del progetto
-  `note_chiusura` text DEFAULT NULL,                          -- note sulla chiusura
-  `entrate_totali` decimal(16,2) DEFAULT NULL,                -- entrate totali del progetto
-  `ore_totali` decimal(16,2) DEFAULT NULL,                    -- ore totali del progetto
-  `uscite_totali` decimal(16,2) DEFAULT NULL,                 -- uscite totali del progetto
-  `note_totali` text DEFAULT NULL,                            -- note sui totali
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del progetto
-  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il progetto
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il progetto
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+  `nome` char(255) DEFAULT NULL,                                  -- nome del progetto
+  `id_ranking` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ranking ( importanza ) del progetto
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto di cui il progetto è un'istanza ( p.es. il corso )
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo con cui il progetto si vende
+  `id_periodo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il periodo in cui si svolge il progetto ( p.es. l'edizione )
+  `id_cliente` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'anagrafica del cliente
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo dove si svolge il progetto
+  `id_pianificazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per la pianificazione che ha generato il progetto
+  `note` text DEFAULT NULL,                                       -- note sul progetto
+  `entrate_previste` decimal(16,2) DEFAULT NULL,                  -- entrate previste
+  `ore_previste` decimal(16,2) DEFAULT NULL,                      -- ore di lavoro previste
+  `uscite_previste` decimal(16,2) DEFAULT NULL,                   -- uscite previste ( fino al 22/10/2026 costi_previsti )
+  `id_periodicita_prevista` bigint(20) DEFAULT NULL,              -- chiave esterna per la periodicità a cui si riferiscono le previsioni
+  `note_previsioni` text DEFAULT NULL,                            -- note sulle previsioni
+  `data_accettazione` date DEFAULT NULL,                          -- data in cui il cliente ha accettato il progetto
+  `entrate_accettazione` decimal(16,2) DEFAULT NULL,              -- entrate concordate all'accettazione
+  `id_periodicita_accettazione` bigint(20) DEFAULT NULL,          -- chiave esterna per la periodicità a cui si riferiscono le entrate concordate
+  `note_accettazione` text DEFAULT NULL,                          -- note sull'accettazione
+  `data_apertura` date DEFAULT NULL,                              -- data di apertura dei lavori
+  `note_apertura` text DEFAULT NULL,                              -- note sull'apertura
+  `data_consegna` date DEFAULT NULL,                              -- data di consegna prevista
+  `note_consegna` text DEFAULT NULL,                              -- note sulla consegna
+  `data_chiusura` date DEFAULT NULL,                              -- data di chiusura dei lavori
+  `note_chiusura` text DEFAULT NULL,                              -- note sulla chiusura
+  `entrate_totali` decimal(16,2) DEFAULT NULL,                    -- entrate a consuntivo
+  `ore_totali` decimal(16,2) DEFAULT NULL,                        -- ore di lavoro a consuntivo
+  `uscite_totali` decimal(16,2) DEFAULT NULL,                     -- uscite a consuntivo
+  `note_totali` text DEFAULT NULL,                                -- note sul consuntivo
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina del progetto ( deprecato )
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template ( deprecato )
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template ( deprecato )
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina del progetto va nella sitemap ( deprecato )
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina del progetto si può mettere in cache ( deprecato )
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina ( deprecato )
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000027200
 
