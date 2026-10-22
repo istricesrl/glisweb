@@ -5342,23 +5342,19 @@ CREATE OR REPLACE VIEW `popup_view` AS
 	SELECT
 		popup.id,
 		popup.id_tipologia,
-		tipologie_popup.nome AS tipologia,
-		popup.id_sito,
+		tipologie_popup_path( popup.id_tipologia ) AS tipologia,
 		popup.nome,
 		popup.html_id,
-		popup.html_class,
-		popup.html_class_attivazione,
-		popup.n_scroll,
 		popup.n_secondi,
+		popup.n_scroll,
+		popup.note,
 		popup.template,
 		popup.schema_html,
-		popup.se_ovunque,
 		popup.id_account_inserimento,
 		popup.id_account_aggiornamento,
 		popup.nome AS __label__
 	FROM popup
-		LEFT JOIN tipologie_popup ON tipologie_popup.id = popup.id_tipologia
-;
+	;
 
 -- | 090000024201
 

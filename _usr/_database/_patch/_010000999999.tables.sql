@@ -4984,26 +4984,38 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (                 --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i popup
+-- funzione: contiene i popup, finestre modali pubblicitarie o informative da mostrare sui siti e sulle app
 --
-CREATE TABLE IF NOT EXISTS `popup` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `html_id` char(128) DEFAULT NULL,
-  `html_class` char(128) DEFAULT NULL,
-  `html_class_attivazione` char(128) DEFAULT NULL,
-  `n_scroll` int(11) DEFAULT NULL,
-  `n_secondi` int(11) DEFAULT NULL,
-  `template` char(128) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `se_ovunque` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- un popup è un elemento pubblicitario o informativo che compare sopra la pagina, in una finestra modale; si gestisce
+-- col modulo dei popup ed è in tutto simmetrico ai banner: cambia solo il modo in cui si manifesta all'utente; il
+-- momento in cui compare è indicato dalla tipologia, da tipologie_popup ( all'apertura della pagina, alla chiusura,
+-- dopo n_secondi, dopo n_scroll per cento di scorrimento ); titoli e testo del popup stanno in contenuti, collegati
+-- con id_popup
+--
+-- quando l'utente chiude un popup la chiusura viene ricordata per html_id, che è anche l'id dell'elemento HTML,
+-- e il popup non gli viene più mostrato
+--
+-- NOTA dove e quando il popup appare non sta qui ma in pubblicazioni, collegata con id_popup: ogni pubblicazione
+-- è una collocazione, col sito o l'app, la pagina ( senza pagina, ovunque ), l'ordine e il periodo di validità
+--
+-- NOTA template e schema_html sono il template delle pagine su cui il popup compare e lo schema Twig della finestra;
+-- non sono il blocco web delle tabelle che generano pagine ( il popup non genera pagine ), e seguono la decisione
+-- sul blocco web nelle pubblicazioni ( schema canonico, punto 6e )
+--
+CREATE TABLE IF NOT EXISTS `popup` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del popup ( quando compare )
+  `nome` char(255) DEFAULT NULL,                                  -- nome del popup
+  `html_id` char(128) DEFAULT NULL,                               -- id dell'elemento HTML, chiave con cui si ricorda la chiusura
+  `n_secondi` int(11) DEFAULT NULL,                               -- secondi dopo i quali compare, per la tipologia dopo secondi
+  `n_scroll` int(11) DEFAULT NULL,                                -- percentuale di scorrimento a cui compare, per la tipologia dopo scroll
+  `note` text DEFAULT NULL,                                       -- note
+  `template` char(128) DEFAULT NULL,                              -- template delle pagine su cui il popup compare
+  `schema_html` char(128) DEFAULT NULL,                           -- schema Twig della finestra del popup
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000024200

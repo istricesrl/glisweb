@@ -3006,14 +3006,15 @@ ALTER TABLE `pianificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- popup
 -- tipologia: tabella gestita
--- verifica: 2021-10-04 16:14 Fabio Mosti
 ALTER TABLE `popup`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_sito` (`id_sito`),
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `html_id` (`html_id`),
+	ADD KEY `template` (`template`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_sito`,`nome`,`html_id`,`html_class`,`html_class_attivazione`,`n_scroll`,`n_secondi`,`template`,`schema_html`,`se_ovunque`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`html_id`,`n_secondi`,`n_scroll`,`template`,`schema_html`);
 
 -- | 030000024001
 
