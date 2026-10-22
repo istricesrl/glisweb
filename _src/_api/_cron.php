@@ -90,7 +90,7 @@
      * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
      * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
      * log dei task pianificati sono /var/log/task/TASKID.AAAAMM.log (che contiene informazioni generali sull'esecuzione del
-     * task) e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica
+     * task) e /var/log/task/TASKID/AAAAMMGG.log (che contiene, una dopo l'altra, informazioni più dettagliate relative a ogni specifica
      * esecuzione del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e
      * suddiviso in piccole parti ognuna relativa a una data esecuzione.
      *
@@ -377,7 +377,8 @@
                         logger( 'fine iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
                         // ...
-                        loggerLatest( print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
+                        // un file al giorno per task, in append: un file per iterazione faceva decine di migliaia di file al giorno
+                        loggerLatest( microtime( true ) . ' ' . print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . date( 'Ymd' ) . '.log' );
 
                     }
 
