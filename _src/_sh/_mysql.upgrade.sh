@@ -103,14 +103,19 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     // le regole delle patch: lettura, livello, esecuzione
     require_once $docroot . '/_src/_lib/_mysql.tools.php';
 
-    // lettura della configurazione, come in _backup.nightly.sh
-    function carica( $f ) {
-        $j = ( is_readable( $f ) ) ? json_decode( file_get_contents( $f ), true ) : NULL;
-        return ( is_array( $j ) ) ? $j : array();
+    // lettura della configurazione: come il framework, sia il .json sia il .yaml ( il secondo vince );
+    // un deploy configurato solo in YAML, come glistest, prima risultava senza server
+    function carica( $base ) {
+        $r = array();
+        $j = ( is_readable( $base . '.json' ) ) ? json_decode( file_get_contents( $base . '.json' ), true ) : NULL;
+        if( is_array( $j ) ) { $r = array_replace_recursive( $r, $j ); }
+        $y = ( is_readable( $base . '.yaml' ) && function_exists( 'yaml_parse_file' ) ) ? yaml_parse_file( $base . '.yaml' ) : NULL;
+        if( is_array( $y ) ) { $r = array_replace_recursive( $r, $y ); }
+        return $r;
     }
 
-    $cf = carica( $docroot . '/src/config.json' );
-    $sh = carica( $docroot . '/src/shadow.json' );
+    $cf = carica( $docroot . '/src/config' );
+    $sh = carica( $docroot . '/src/shadow' );
 
     // fusione minima, come fa il framework: shadow vince su config
     $servers = $cf['mysql']['servers'] ?? array();
