@@ -5543,23 +5543,19 @@ CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 	SELECT
 		prodotti_categorie.id,
+		prodotti_categorie.ordine,
 		prodotti_categorie.id_prodotto,
 		prodotti.nome AS prodotto,
 		prodotti_categorie.id_categoria,
 		categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria,
-		prodotti_categorie.id_ruolo,
-		ruoli_prodotti.nome AS ruolo,
-		prodotti_categorie.ordine,
 		prodotti_categorie.id_account_inserimento,
 		prodotti_categorie.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			prodotti_categorie.id_prodotto,
-			ruoli_prodotti.nome,
+		concat(
+			prodotti.nome,
+			' / ',
 			categorie_prodotti_path( prodotti_categorie.id_categoria )
 		) AS __label__
 	FROM prodotti_categorie
-		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
 		LEFT JOIN prodotti ON prodotti.id = prodotti_categorie.id_prodotto
 ;
 

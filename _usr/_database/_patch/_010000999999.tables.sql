@@ -5130,18 +5130,26 @@ CREATE TABLE IF NOT EXISTS `prodotti` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione i prodotti e le categorie, con il ruolo di ciascuna
-CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
-  `id` bigint(20) NOT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_categoria` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: associa molti a molti i prodotti alle categorie dei prodotti
+--
+-- questa tabella contiene le associazioni molti a molti tra i prodotti e le categorie_prodotti, cioe' l'albero di
+-- navigazione del catalogo: un prodotto genera una pagina sotto ogni categoria a cui appartiene; le categorie fanno
+-- parte della scheda del prodotto, quindi la chiave verso prodotti si segue
+--
+-- NOTA la categoria principale di un prodotto e' la prima nell'ordine ( ORDER BY ordine, id ), ed e' quella sotto
+-- cui sta la canonical della sua pagina; i prodotti "speciali" di una categoria ( p.es. in evidenza ) non si
+-- marcano qui ma con una pubblicazione ( pubblicazioni )
+--
+CREATE TABLE IF NOT EXISTS `prodotti_categorie` (             --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione, la prima e' la principale
+  `id_prodotto` bigint(20) DEFAULT NULL,                      -- chiave esterna per il prodotto
+  `id_categoria` bigint(20) DEFAULT NULL,                     -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000027000
 

@@ -3090,13 +3090,14 @@ ALTER TABLE `prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- prodotti_categorie
 ALTER TABLE `prodotti_categorie`
- 	ADD PRIMARY KEY (`id`),
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_categoria`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_categoria` (`id_categoria`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`ordine`);
 
 -- | 030000026401
 
