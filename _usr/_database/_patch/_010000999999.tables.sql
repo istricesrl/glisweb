@@ -5226,24 +5226,33 @@ CREATE TABLE IF NOT EXISTS `progetti` (                           --
 
 -- progetti_anagrafica
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene le progetti anagrafica
+-- funzione: collega un progetto alle anagrafiche che vi hanno un ruolo
 --
-CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `se_sostituto` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega un progetto alle anagrafiche che vi hanno un ruolo ( cliente, referente, coordinatore,
+-- docente, istruttore... ); i ruoli proponibili sono quelli con ruoli_anagrafica.se_progetti
+--
+-- NOTA la chiave unica e' ( id_progetto, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli;
+-- le note precisano il ruolo nel caso specifico; fra le righe con lo stesso ruolo quella di default e' la prima
+-- nell'ordine ( p.es. il cliente principale )
+--
+-- NOTA se_sostituto e' deprecata: la usano i moduli legacy 0900, 1000 e 1200 e resta finche' la usano; i moduli
+-- nuovi non la devono usare, il sostituto e' un ruolo ( ruoli_anagrafica.se_sostituto, decisione del 22/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (              --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `se_sostituto` tinyint(1) DEFAULT NULL,                       -- deprecata: flag di sostituto per i moduli legacy
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000027300
 
@@ -5890,6 +5899,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_contratti` tinyint(1) DEFAULT NULL,
   `se_proponente` tinyint(1) DEFAULT NULL,
   `se_contraente` tinyint(1) DEFAULT NULL,
+  `se_sostituto` tinyint(1) DEFAULT NULL,
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

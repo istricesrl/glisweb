@@ -5627,13 +5627,14 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 CREATE OR REPLACE VIEW progetti_anagrafica_view AS
 	SELECT
 		progetti_anagrafica.id,
+		progetti_anagrafica.ordine,
 		progetti_anagrafica.id_progetto,
 		progetti.nome AS progetto,
 		progetti_anagrafica.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		progetti_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome as ruolo,
-		progetti_anagrafica.ordine,
+		progetti_anagrafica.note,
 		progetti_anagrafica.se_sostituto,
 		progetti_anagrafica.id_account_inserimento,
 		progetti_anagrafica.id_account_aggiornamento,
@@ -6313,6 +6314,7 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_contratti,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		ruoli_anagrafica.se_sostituto,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;

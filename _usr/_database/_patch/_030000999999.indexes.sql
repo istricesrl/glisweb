@@ -3153,7 +3153,7 @@ ALTER TABLE `progetti_anagrafica`
 	ADD KEY `se_sostituto` (`se_sostituto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_anagrafica`,`id_ruolo`);
 
 -- | 030000027201
 
