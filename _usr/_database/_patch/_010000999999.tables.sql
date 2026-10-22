@@ -5280,20 +5280,25 @@ CREATE TABLE IF NOT EXISTS `progetti_articoli` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: tabella di relazione molti a molti tra progetti e categorie
+-- funzione: associa molti a molti i progetti alle categorie dei progetti
 --
--- questa tabella contiene la relazione molti a molti tra progetti e categorie, con le informazioni relative
--- all'ordine di visualizzazione e ai dati di inserimento e aggiornamento
+-- questa tabella contiene le associazioni molti a molti tra i progetti e le categorie_progetti, cioe' l'albero di
+-- navigazione dei progetti: un progetto genera una pagina sotto ogni categoria a cui appartiene; le categorie fanno
+-- parte della scheda del progetto, quindi la chiave verso progetti si segue
+--
+-- NOTA la categoria principale di un progetto e' la prima nell'ordine ( ORDER BY ordine, id ), ed e' quella sotto
+-- cui sta la canonical della sua pagina; le categorie di dimensioni diverse ( p.es. disciplina, classe e fascia di
+-- un corso ) non si distinguono qui ma coi flag di categorie_progetti ( se_disciplina, se_classe, se_fascia... )
 --
 CREATE TABLE IF NOT EXISTS `progetti_categorie` (             --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto
-  `id_categoria` bigint(20) DEFAULT NULL,                        -- chiave esterna per la categoria
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione, la prima e' la principale
+  `id_progetto` bigint(20) DEFAULT NULL,                      -- chiave esterna per il progetto
+  `id_categoria` bigint(20) DEFAULT NULL,                     -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000027600

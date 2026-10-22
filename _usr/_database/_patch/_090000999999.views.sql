@@ -5686,16 +5686,16 @@ CREATE OR REPLACE VIEW `progetti_articoli_view` AS
 CREATE OR REPLACE VIEW progetti_categorie_view AS
 	SELECT
 		progetti_categorie.id,
+		progetti_categorie.ordine,
 		progetti_categorie.id_progetto,
 		progetti.nome AS progetto,
 		progetti_categorie.id_categoria,
 		categorie_progetti_path( progetti_categorie.id_categoria ) AS categoria,
-		progetti_categorie.ordine,
 		progetti_categorie.id_account_inserimento,
 		progetti_categorie.id_account_aggiornamento,
- 		concat_ws(
-			' ',
+		concat(
 			progetti.nome,
+			' / ',
 			categorie_progetti_path( progetti_categorie.id_categoria )
 		) AS __label__
 	FROM progetti_categorie
