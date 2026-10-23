@@ -5342,19 +5342,27 @@ CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (          --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione progetti e matricole
+-- funzione: collega un progetto ai singoli pezzi con matricola che vi hanno un ruolo
 --
-CREATE TABLE IF NOT EXISTS `progetti_matricole` (
-  `id` bigint(20) NOT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_matricola` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega un progetto ai singoli pezzi con matricola che vi hanno un ruolo ( ruoli_matricole ):
+-- l'attrezzatura usata nel progetto, il prodotto realizzato o consegnato; il pezzo e' una riga di matricole, il lotto
+-- da cui viene sta in matricole.id_lotto
+--
+-- NOTA la chiave unica e' ( id_progetto, id_matricola, id_ruolo ): lo stesso pezzo puo' avere piu' ruoli; le note
+-- precisano il ruolo nel caso specifico
+--
+CREATE TABLE IF NOT EXISTS `progetti_matricole` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_matricola` bigint(20) DEFAULT NULL,                       -- chiave esterna per la matricola
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_matricole )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000028000
 

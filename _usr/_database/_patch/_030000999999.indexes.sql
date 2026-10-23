@@ -3239,7 +3239,7 @@ ALTER TABLE `progetti_matricole`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_matricola`,`ordine`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_matricola`,`id_ruolo`);
 
 -- | 030000027801
 

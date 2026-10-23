@@ -5743,19 +5743,21 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 CREATE OR REPLACE VIEW progetti_matricole_view AS
 	SELECT
 		progetti_matricole.id,
+		progetti_matricole.ordine,
 		progetti_matricole.id_progetto,
 		progetti.nome AS progetto,
 		progetti_matricole.id_matricola,
 		matricole.matricola AS matricola,
 		progetti_matricole.id_ruolo,
 		ruoli_matricole_path( progetti_matricole.id_ruolo ) AS ruolo,
-		progetti_matricole.ordine,
+		progetti_matricole.note,
 		progetti_matricole.id_account_inserimento,
 		progetti_matricole.id_account_aggiornamento,
  		concat_ws(
 			' ',
 			progetti.nome,
-			matricole.matricola
+			matricole.matricola,
+			ruoli_matricole_path( progetti_matricole.id_ruolo )
 		) AS __label__
 	FROM progetti_matricole
 		LEFT JOIN progetti ON progetti.id = progetti_matricole.id_progetto
