@@ -1438,7 +1438,7 @@
      */
 
     // inizializzazione motore numeri casuali
-    mt_srand( ( double ) microtime() * 1000000 );
+    mt_srand( (int) ( microtime( true ) * 1000000 ) );
 
     // timer
     timerCheck( $cf['speed'], 'fine inizializzazione motore numeri casuali' );
