@@ -4,23 +4,23 @@
     "config": {
         "vendor-dir": "_src/_lib/_ext",
         "platform": {
-            "php": "7.3.31"
+
         }
     },
     "require": {
         "php": ">=7.3",
         "phpoffice/phpword": "*",
-        "phpoffice/phpspreadsheet": "*",
-        "phpoffice/phppresentation": "*",
+        "phpoffice/phpspreadsheet": "^1.30",
+        "phpoffice/phppresentation": "^1.2",
         "html2text/html2text": "*",
         "phpmailer/phpmailer": "6.*",
-        "tecnickcom/tcpdf": "*",
-        "twig/twig": "2.*",
+        "tecnickcom/tcpdf": "^6.11",
+        "twig/twig": "^3.27",
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
-        "league/commonmark": "^1.6",
+        "league/commonmark": "^2.10",
         "codeception/module-webdriver": "*"
     },
     "suggest": {
