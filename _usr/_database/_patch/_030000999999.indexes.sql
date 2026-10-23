@@ -3259,10 +3259,7 @@ ALTER TABLE `provincie`
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `codice_istat` (`codice_istat`),
-	ADD KEY `indice` (`id`,`id_regione`,`nome`,`sigla`,`codice_istat`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `indice` (`id`,`nome`,`id_regione`,`sigla`,`codice_istat`);
 
 -- | 030000028001
 

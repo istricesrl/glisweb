@@ -5367,31 +5367,31 @@ CREATE TABLE IF NOT EXISTS `progetti_matricole` (               --
 -- | 010000028000
 
 -- provincie
--- tipologia: tabella di supporto
--- rango: tabella principale
+-- tipologia: tabella standard
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le provincie italiane
+-- funzione: contiene le provincie
 --
--- questa tabella contiene le provincie italiane, con le informazioni relative alla regione di appartenenza, al nome,
--- alla sigla, al codice ISTAT, all'URL di riferimento e alle note
---
--- La provincia soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
--- id_successore alla provincia che ne ha preso il posto; questi campi si valorizzano a mano
+-- le provincie, livello intermedio della geografia ( continenti, stati, regioni, provincie, comuni, indirizzi ) fra la
+-- regione che le contiene e i comuni che contengono, per qualsiasi stato. Ogni livello è secondario rispetto a quello
+-- che lo contiene: una provincia non ha senso senza la sua regione, quindi una regione che ha delle provincie non si
+-- può cancellare. I file di base non popolano la geografia, la carica un'importazione; dentro l'Italia la provincia si
+-- identifica con la sigla e col codice ISTAT.
+-- una provincia soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore alla provincia che ne ha preso il posto. I valori li scrive l'importazione della geografia; i
+-- riferimenti vivi si spostano sul successore, quelli di storia ( nascita, destinatari ) no.
+-- NOTA sigla e codice_istat sono codici esterni e mantengono il loro formato; le provincie estere di solito non li hanno
 CREATE TABLE IF NOT EXISTS `provincie` (                      --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_regione` bigint(20) DEFAULT NULL,                          -- chiave esterna per la regione di appartenenza
-  `id_successore` bigint(20) DEFAULT NULL,                       -- provincia che ha preso il posto di questa dopo l'archiviazione
-  `nome` varchar(254) DEFAULT NULL,                           -- nome della provincia
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della provincia
+  `id_regione` bigint(20) DEFAULT NULL,                       -- regione che contiene la provincia
+  `id_successore` bigint(20) DEFAULT NULL,                    -- provincia che ha preso il posto di questa dopo l'archiviazione
   `sigla` char(8) DEFAULT NULL,                               -- sigla della provincia
   `codice_istat` char(3) DEFAULT NULL,                        -- codice ISTAT della provincia
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della provincia
-  `note` text DEFAULT NULL,                                    -- note sulla provincia
-  `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione della provincia
-  `note_archiviazione` text DEFAULT NULL,                      -- note sull'archiviazione della provincia
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `note` text DEFAULT NULL,                                   -- note sulla provincia
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione della provincia
+  `note_archiviazione` text DEFAULT NULL                      -- note sull'archiviazione della provincia
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000028400

@@ -1726,9 +1726,8 @@ ALTER TABLE `progetti_matricole`
 
 -- provincie
 ALTER TABLE `provincie`
-    ADD CONSTRAINT `provincie_ibfk_02_nofollow`                             FOREIGN KEY (`id_successore`) REFERENCES `provincie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `provincie_ibfk_98_nofollow`                             FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `provincie_ibfk_99_nofollow`                             FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `provincie_ibfk_01_nofollow`                             FOREIGN KEY (`id_regione`) REFERENCES `regioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `provincie_ibfk_02_nofollow`                             FOREIGN KEY (`id_successore`) REFERENCES `provincie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000028400
 
