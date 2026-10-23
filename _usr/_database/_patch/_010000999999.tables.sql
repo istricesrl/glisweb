@@ -5305,23 +5305,36 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (             --
 
 -- progetti_certificazioni
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene i progetti certificazioni
+-- funzione: collega un progetto ai documenti e attestati che richiede o che rilascia
 --
-CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_certificazione` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(1) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `se_richiesta` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega un progetto alle certificazioni in due sensi, distinti dal ruolo ( ruoli_certificazioni ):
+-- quelle richieste per partecipare ( il certificato medico sportivo per un corso di nuoto, l'abilitazione a un
+-- macchinario per un lavoro che lo usa ) e quelle che il progetto rilascia ( l'attestato di frequenza di un corso,
+-- l'abilitazione a un macchinario ); il possesso di un'anagrafica sta in anagrafica_certificazioni
+--
+-- NOTA la chiave unica e' ( id_progetto, id_certificazione, id_ruolo ): un corso di aggiornamento che richiede
+-- un'abilitazione e la rinnova ha due righe, una per ruolo; le note precisano il requisito ( p.es. in corso di
+-- validita' all'iscrizione )
+--
+-- NOTA nome e se_richiesta sono deprecate: le scrivono i moduli legacy 0920 e 6700 e l'import di polmasi, e restano
+-- finche' li usano; i moduli nuovi non le devono usare, l'obbligatorieta' e' un ruolo ( decisione del 23/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (          --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto
+  `id_certificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per la certificazione
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_certificazioni )
+  `note` text DEFAULT NULL,                                     -- note che precisano il requisito o il rilascio
+  `nome` char(1) DEFAULT NULL,                                  -- deprecata: dettagli del form dei moduli legacy
+  `se_richiesta` tinyint(1) DEFAULT NULL,                       -- deprecata: flag di obbligatorieta' per i moduli legacy
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000027800
 
@@ -5979,6 +5992,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_recuperi` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034272
+
+-- ruoli_certificazioni
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli delle certificazioni nei progetti
+--
+-- questa tabella contiene i ruoli con cui una certificazione e' collegata a un progetto ( requisito obbligatorio,
+-- requisito facoltativo, rilasciata ); la legge progetti_certificazioni.id_ruolo
+--
+CREATE TABLE IF NOT EXISTS `ruoli_certificazioni` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL                          -- classe Font Awesome dell'icona del ruolo
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034280

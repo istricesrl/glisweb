@@ -1706,6 +1706,7 @@ ALTER TABLE `progetti_categorie`
 ALTER TABLE `progetti_certificazioni`
     ADD CONSTRAINT `progetti_certificazioni_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_02_nofollow`    FOREIGN KEY (`id_certificazione`) REFERENCES `certificazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_certificazioni_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -2006,6 +2007,13 @@ ALTER TABLE `ruoli_audio`
 -- verifica: 2021-10-09 18:36 Fabio Mosti
 ALTER TABLE `ruoli_categorie_progetti`
     ADD CONSTRAINT `ruoli_categorie_progetti_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_categorie_progetti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- | 060000034272
+
+-- ruoli_certificazioni
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_certificazioni`
+    ADD CONSTRAINT `ruoli_certificazioni_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000034280
 

@@ -3208,15 +3208,16 @@ ALTER TABLE `progetti_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-03 11:12 Chiara GDL
 ALTER TABLE `progetti_certificazioni`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`,`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `se_richiesta` (`se_richiesta`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `se_richiesta` (`se_richiesta`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`,`nome`);
+	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_certificazione`,`id_ruolo`);
 
 -- | 030000027601
 
@@ -3765,6 +3766,22 @@ ALTER TABLE `ruoli_categorie_progetti`
 -- ruoli_categorie_progetti
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034272
+
+-- ruoli_certificazioni
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000034273
+
+-- ruoli_certificazioni
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_certificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034280
 

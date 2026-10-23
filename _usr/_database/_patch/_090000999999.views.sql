@@ -5710,11 +5710,14 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 	SELECT
 		progetti_certificazioni.id,
+		progetti_certificazioni.ordine,
 		progetti_certificazioni.id_progetto,
 		progetti.nome AS progetto,
 		progetti_certificazioni.id_certificazione,
 		certificazioni.nome AS certificazione,
-		progetti_certificazioni.ordine,
+		progetti_certificazioni.id_ruolo,
+		ruoli_certificazioni.nome AS ruolo,
+		progetti_certificazioni.note,
 		progetti_certificazioni.nome,
 		progetti_certificazioni.se_richiesta,
 		progetti_certificazioni.id_account_inserimento,
@@ -5723,11 +5726,13 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 			' ',
 			progetti.nome,
 			'/',
-			certificazioni.nome 
+			certificazioni.nome,
+			ruoli_certificazioni.nome
 		) AS __label__
 	FROM progetti_certificazioni
 		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
 		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
+		LEFT JOIN ruoli_certificazioni ON ruoli_certificazioni.id = progetti_certificazioni.id_ruolo
 ;
 
 -- | 090000027801
@@ -6385,6 +6390,21 @@ CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 		ruoli_categorie_progetti.se_recuperi,
 	 	ruoli_categorie_progetti_path( ruoli_categorie_progetti.id ) AS __label__
 	FROM ruoli_categorie_progetti
+;
+
+-- | 090000034273
+
+-- ruoli_certificazioni_view
+-- tipologia: tabella di supporto
+CREATE OR REPLACE VIEW ruoli_certificazioni_view AS
+	SELECT
+		ruoli_certificazioni.id,
+		ruoli_certificazioni.id_genitore,
+		ruoli_certificazioni.nome,
+		ruoli_certificazioni.html_entity,
+		ruoli_certificazioni.font_awesome,
+	 	ruoli_certificazioni_path( ruoli_certificazioni.id ) AS __label__
+	FROM ruoli_certificazioni
 ;
 
 -- | 090000034281
