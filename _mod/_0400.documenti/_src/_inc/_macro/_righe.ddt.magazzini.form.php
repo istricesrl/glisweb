@@ -159,12 +159,15 @@
 	 */
 	$ct['etc']['select']['id_destinatari'] = array();
 
-	$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM documenti_view '
-    );
+	/**
+	 * tendina id_documenti — disattivata il 2026-10-26, il campo ha gia' la ricerca REST
+	 *
+	 * Era `SELECT id, __label__ FROM documenti_view` senza WHERE: su crm.eurosnodi.it 54.000 righe ( 2,9 MB ),
+	 * oltre il tetto di 1 MB di memcached ( errore 37 ), stesso caso di id_destinatari qui sopra.
+	 *
+	 * Non serviva: il template di questa pagina rende id_documento con `frm.selectBox()` e l'api `documenti`.
+	 */
+	$ct['etc']['select']['id_documenti'] = array();
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_documento'] )  && !empty( $_REQUEST[ $ct['form']['table'] ]['id_documento'] ) ){
 		$documento = $_REQUEST[ $ct['form']['table'] ]['id_documento'];
@@ -180,6 +183,14 @@
 		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] = $riga['id_documento'];
 		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $riga['id_emittente'];
 		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_destinatario'] = $riga['id_destinatario'];
+	} elseif( ! empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ( $rigaDocumento = mysqlSelectValue(
+		$cf['mysql']['connection'],
+		'SELECT coalesce( id_documento, id_packing_list ) FROM documenti_articoli WHERE id = ?',
+		array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+	) ) ) {
+		// NOTA riga esistente ( fix 2026-10-26 ): il documento si prende dalla riga, prima di __latest__ che puo' essere
+		// un documento qualunque aperto prima; le righe di packing list hanno id_documento NULL e il DDT in id_packing_list
+		$documento = $rigaDocumento;
 	} elseif( isset( $_SESSION['__latest__'][ $ct['form']['table'] ]['id_documento'] ) ) {
 		$documento = $_SESSION['__latest__'][ $ct['form']['table'] ]['id_documento'];
 	} else {
@@ -188,14 +199,16 @@
 
 
 	if( $documento == 'ALL' && isset(  $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
-			$cf['memcache']['index'],
-			$cf['memcache']['connection'],
-			$cf['mysql']['connection'],
-			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL AND id <> ?',
-			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
-		);
-		
+
+		/**
+		 * tendina id_righe_genitori senza documento — svuotata il 2026-10-26
+		 *
+		 * Caricava tutte le righe di tutti i documenti ( su crm.eurosnodi.it 180.000 ): memcached rifiuta la
+		 * scrittura con l'errore 37 e la pagina muore senza risposta ( ERR_EMPTY_RESPONSE ). Una riga senza
+		 * documento non ha righe genitori sensate fra cui scegliere.
+		 */
+		$ct['etc']['select']['id_righe_genitori'] = array();
+
 	} elseif( isset(  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
 
 	$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
