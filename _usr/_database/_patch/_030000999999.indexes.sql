@@ -3423,13 +3423,15 @@ ALTER TABLE `regioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- relazioni_anagrafica
 ALTER TABLE `relazioni_anagrafica`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_anagrafica_collegata`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_anagrafica_collegata` (`id_anagrafica_collegata`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`id_anagrafica_collegata`,`id_ruolo`);
 
 -- | 030000030301
 
@@ -3472,8 +3474,7 @@ ALTER TABLE `relazioni_categorie_progetti`
 
 -- | 030000030351
 
--- relazioni_anagrafica
--- tipologia: tabella gestita
+-- relazioni_categorie_progetti
 ALTER TABLE `relazioni_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030400

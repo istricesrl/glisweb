@@ -5982,18 +5982,29 @@ CREATE OR REPLACE VIEW regioni_view AS
 -- | 090000030300
 
 -- relazioni_anagrafica_view
-CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
+CREATE OR REPLACE VIEW `relazioni_anagrafica_view` AS
 	SELECT
-	relazioni_anagrafica.id,
-	relazioni_anagrafica.id_ruolo,
-	relazioni_anagrafica.id_anagrafica,
-	relazioni_anagrafica.id_anagrafica_collegata,
-	concat( 
-        relazioni_anagrafica.id_anagrafica,
-        ' - ',
-        relazioni_anagrafica.id_anagrafica_collegata
-    ) AS __label__
+		relazioni_anagrafica.id,
+		relazioni_anagrafica.ordine,
+		relazioni_anagrafica.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		relazioni_anagrafica.id_anagrafica_collegata,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS anagrafica_collegata,
+		relazioni_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		relazioni_anagrafica.note,
+		relazioni_anagrafica.id_account_inserimento,
+		relazioni_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_anagrafica.nome,
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS __label__
 	FROM relazioni_anagrafica
+		LEFT JOIN anagrafica AS a1 ON a1.id = relazioni_anagrafica.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = relazioni_anagrafica.id_anagrafica_collegata
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = relazioni_anagrafica.id_ruolo
 ;
 
 -- | 090000030321

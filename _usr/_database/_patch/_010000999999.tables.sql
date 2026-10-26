@@ -5655,16 +5655,27 @@ CREATE TABLE IF NOT EXISTS `regioni` (                        --
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: mette in relazione due anagrafiche, con il ruolo che le lega
-CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_anagrafica_collegata` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- questa tabella collega due anagrafiche col ruolo che le lega ( genitore, fratello, tutore, coniuge, collega,
+-- titolare, socio, dipendente... ); i ruoli proponibili sono quelli con ruoli_anagrafica.se_relazioni
+--
+-- NOTA la relazione ha un verso: id_anagrafica e' il <ruolo> di id_anagrafica_collegata ( il genitore a sinistra,
+-- il figlio a destra ); si registra una volta sola e si legge nei due versi ( _210.auth.php ), quindi i ruoli
+-- simmetrici ( fratello, coniuge, collega ) non si duplicano a versi invertiti; le note precisano il ruolo nel
+-- caso specifico ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (            --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica che ha il ruolo
+  `id_anagrafica_collegata` bigint(20) DEFAULT NULL,            -- chiave esterna per l'anagrafica rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030320
 
