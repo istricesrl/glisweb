@@ -5549,20 +5549,28 @@ CREATE TABLE IF NOT EXISTS `recensioni` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i redirect del sistema
+-- funzione: contiene i redirect HTTP dei siti del deploy
 -- entità: questa tabella corrisponde all'entità redirect
 --
--- questa tabella contiene i redirect del sistema, con le informazioni relative al codice di stato HTTP, alla
--- sorgente e alla destinazione; per ulteriori informazioni sul funzionamento dei redirect nel framework si vedano
--- il codice e i commenti dei file _src/_config/_130.redirect.php e _src/_config/_135.redirect.php
+-- questa tabella contiene i redirect HTTP: quando la richiesta arriva a un percorso che corrisponde alla sorgente di
+-- un redirect del sito corrente, il framework risponde col codice di stato HTTP indicato e manda alla destinazione,
+-- prima di caricare qualsiasi pagina ( runlevel 130 e 135 ). Ai redirect della tabella si sommano quelli del file
+-- etc/redirect.csv, che ha le stesse colonne; per il funzionamento si vedano il codice e i commenti dei file
+-- _src/_config/_130.redirect.php e _src/_config/_135.redirect.php
 --
+-- NOTA la sorgente e' il percorso della richiesta al netto della query string, relativo e con la barra iniziale
+-- ( /vecchia/pagina.html ), e il confronto e' esatto: una sorgente con il dominio o con la query string non scatta
+-- mai; la destinazione puo' essere relativa o assoluta. Con se_query_string la query string della richiesta viene
+-- riportata sulla destinazione. id_sito e' l'ID di un sito della configurazione ( $cf['sites'] ), non di una tabella,
+-- quindi non ha chiave esterna; NULL vuol dire tutti i siti, come per le pubblicazioni, e a parita' di sorgente il
+-- redirect del sito corrente vince su quello senza sito.
 CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_sito` bigint(20) DEFAULT NULL,                             -- ID del sito al quale appartiene il redirect
-  `codice_stato_http` int(11) DEFAULT NULL,                   -- codice di stato HTTP del redirect
-  `sorgente` char(255) DEFAULT NULL,                          -- sorgente del redirect
-  `destinazione` char(255) DEFAULT NULL,                      -- destinazione del redirect
-  `se_query_string` tinyint(1) DEFAULT NULL,                  -- se tenere la query string nel redirect
+  `id_sito` bigint(20) DEFAULT NULL,                             -- ID del sito del redirect ( NULL per tutti i siti )
+  `codice_stato_http` int(11) DEFAULT NULL,                   -- codice di stato HTTP della risposta ( 301, 302… )
+  `sorgente` char(255) DEFAULT NULL,                          -- percorso che fa scattare il redirect, senza query string
+  `destinazione` char(255) DEFAULT NULL,                      -- URL verso cui si manda la richiesta, relativo o assoluto
+  `se_query_string` tinyint(1) DEFAULT NULL,                  -- riporta la query string della richiesta sulla destinazione
   `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il redirect
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect

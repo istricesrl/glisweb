@@ -3362,7 +3362,6 @@ ALTER TABLE `recensioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `redirect`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_sito`,`sorgente`),
-	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`codice_stato_http`,`sorgente`,`destinazione`);

@@ -109,7 +109,7 @@
                 else
                     $row['id_sito'] = 'sito non definito';
             } else {
-                $row['id_sito'] = 'nessun sito';
+                $row['id_sito'] = 'tutti i siti';
             }
 
             $buttons = [];

@@ -98,11 +98,11 @@ scheda di un redirect ha:
 
 | campo | contenuto |
 |---|---|
-| sito | il sito su cui il redirect vale |
+| sito | il sito su cui il redirect vale; lasciato vuoto, il redirect vale per tutti i siti |
 | codice http | il tipo di reindirizzamento: di norma **301** se lo spostamento è definitivo, **302** se è temporaneo |
-| sorgente | il vecchio indirizzo |
+| sorgente | il vecchio indirizzo, scritto come percorso che comincia con la barra ( `/vecchia/pagina.html` ), senza il dominio e senza la parte dopo il punto interrogativo |
 | destinazione | l'indirizzo verso cui mandare il visitatore |
-| query string | se il redirect deve tenere conto anche della parte dell'indirizzo dopo il punto interrogativo |
+| query string | se la parte dell'indirizzo dopo il punto interrogativo va riportata sulla destinazione |
 
 > **attenzione** — un redirect sbagliato può rendere irraggiungibile una pagina buona, o mandare i
 > visitatori in un giro senza fine fra due indirizzi che si rimandano a vicenda. Dopo averne
