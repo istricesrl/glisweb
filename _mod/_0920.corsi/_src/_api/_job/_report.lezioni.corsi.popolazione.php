@@ -52,6 +52,10 @@
             // report: query interrotta dopo 140 s senza completare, contro 0,5 s con il cast, a
             // parità di risultato.
             // NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`.
+            // Fix 2026-10-26 ( polmasi ): il cast deve dire anche il charset, `character set utf8`. Il framework
+            // si connette in utf8mb4, e un cast nudo produce una stringa utf8mb4 che non si confronta con la PK
+            // utf8 del report senza convertirla: di nuovo niente PRIMARY, e al primo giro di cron la SELECT e'
+            // rimasta appesa 3-4 minuti in prod; da CLI, in utf8, non si vedeva. Con il charset: eq_ref, 0,05 s.
 
             // il ricalcolo notturno ( lanciato dal cron, vedi report.lezioni.corsi.popolazione.start ) rifa' anche le
             // lezioni non cambiate da una settimana fa in avanti, perche' posti e scadenze cambiano con la data; le
@@ -64,7 +68,7 @@
                 'id',
                 $cf['mysql']['connection'],
                 'SELECT c.id FROM todo AS c INNER JOIN progetti ON progetti.id = c.id_progetto
-                LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = cast( c.id as char )
+                LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = cast( c.id as char character set utf8 )
                 WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.timestamp_aggiornamento IS NULL OR r.id IS NULL' . $ntt . ' )
                 AND c.id_tipologia IN (14, 15, 18) ' . $whr,
                 $cnd

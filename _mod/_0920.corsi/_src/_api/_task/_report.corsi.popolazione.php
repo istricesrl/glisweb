@@ -41,7 +41,7 @@
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
 			'SELECT progetti.id FROM progetti
-			LEFT JOIN __report_corsi__ ON __report_corsi__.id = cast( progetti.id as char )
+			LEFT JOIN __report_corsi__ ON __report_corsi__.id = cast( progetti.id as char character set utf8 )
 			WHERE (
 				coalesce( progetti.timestamp_aggiornamento, progetti.timestamp_inserimento ) > __report_corsi__.timestamp_aggiornamento
 				OR __report_corsi__.timestamp_aggiornamento IS NULL
