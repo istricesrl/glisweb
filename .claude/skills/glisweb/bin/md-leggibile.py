@@ -9,7 +9,8 @@ di progetto"; qui si misurano.
 
 Cosa guarda:
   - righe oltre LARGHEZZA caratteri, fuori dai blocchi di codice ( ``` e righe rientrate di
-    4 spazi, dove un URL o un comando lungo puo' stare );
+    4 spazi, dove un URL o un comando lungo puo' stare ) e fuori dalle voci del TODO, che
+    restano su una riga perche' todo.py e gli altri leggono solo quella;
   - tabelle con piu' di COLONNE colonne;
   - tabelle con le colonne non allineate ( --allinea le sistema da solo );
   - tabelle che anche allineate superano LARGHEZZA: vanno riscritte a mano, come elenco.
@@ -114,6 +115,9 @@ def esamina(percorso, sistema):
             i = j
             continue
         codice = fence or (r.startswith('    ') and not re.match(r'^\s*([-*+]|\d+\.)\s', r))
+        # NOTA le voci del TODO restano su una riga: gli strumenti leggono solo la riga "- ["
+        if re.match(r'^- \[[ =?vx]\]', r):
+            codice = True
         if not codice and larghezza(r) > LARGHEZZA:
             lunghe.append('%d ( %d )' % (i + 1, larghezza(r)))
         nuove.append(r)

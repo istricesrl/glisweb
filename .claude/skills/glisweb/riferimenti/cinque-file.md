@@ -178,9 +178,13 @@ di chiusura del capitano. Un progetto che ha davvero bisogno di un file in più 
 Fabio i file di progetto li apre **come testo**, non in un'anteprima markdown. Quello che conta è
 come appaiono in un terminale:
 
-1. **righe di 100 caratteri al massimo**. Si va a capo a mano; una voce del `TODO.md` che non ci
-   sta continua sulla riga sotto, rientrata di due spazi. Fanno eccezione solo i blocchi di
-   codice ( ``` o rientro di quattro spazi ), dove un URL o un comando lungo può stare intero;
+1. **righe di 100 caratteri al massimo**. Si va a capo a mano. Fanno eccezione i blocchi di
+   codice ( ``` o rientro di quattro spazi ), dove un URL o un comando lungo può stare intero, e
+   ⚠ **le voci del `TODO.md`, che restano su una riga sola**: `todo.py`, `giornata.py`, il
+   burndown e `issue-todo.py` leggono la voce solo sulla riga `- [`, e testo e
+   `( aperta GG/MM/AAAA )` mandati a capo sparirebbero da ricerche e conteggi ( obiezione di
+   glisweb, 26/10/2026 ). La voce si tiene corta; il dettaglio va nelle note `--` sotto, o in un
+   file in `var/`;
 2. **tabelle di 5 colonne al massimo, con le colonne allineate** nel testo, così si leggono senza
    anteprima. `bin/md-leggibile.py --allinea` le allinea da solo. Una tabella che anche allineata
    supera i 100 caratteri **diventa un elenco**: un blocco per voce, coi campi su righe proprie;

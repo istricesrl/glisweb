@@ -127,7 +127,8 @@ L'elenco esatto lo tiene **`bin/cartella-progetto.py`**, e l'hook del server blo
 fuori elenco. Un progetto che ha bisogno di altro lo scrive in `.claude/cartella-progetto.consentiti`.
 
 ⚠ **I `.md` di progetto si leggono con `mcedit` e `less`, non in anteprima** ( Fabio, 26/10/2026 ):
-righe di **100 caratteri al massimo**, tabelle di **5 colonne al massimo** e **allineate nel testo**,
+righe di **100 caratteri al massimo** ( tranne le voci del `TODO.md`, una riga per voce, perché
+gli strumenti leggono solo quella ), tabelle di **5 colonne al massimo** e **allineate nel testo**,
 e il `READ.md` dice **com'è adesso**, la storia sta nel `DONE.md`. Prima di chiudere si passa
 **`bin/md-leggibile.py`** ( `--allinea` sistema le tabelle da solo ). Regole complete in
 `riferimenti/cinque-file.md`, *"Come si scrive un .md di progetto"*.
