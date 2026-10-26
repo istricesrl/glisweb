@@ -600,6 +600,18 @@ Claude**, e non chiude con "aprila tu dal browser".
   **scrive subito nel `READ.md`**, con l'ambiente in cui vale. Solo dopo si chiude, e si chiude
   **dopo aver provato**: una verifica rinviata a Fabio "perché mancava l'account" è un lavoro lasciato a metà.
 
+### ⚠ TASSATIVO: comandi da lanciare con `!`
+
+Vale per ogni livello ( generale, capitani, soldati ) — detto da Fabio il 26/10/2026: un comando da far lanciare a
+Fabio con `!` sta **su una riga sola**. Il copia-incolla di più righe gli fa fare i salti mortali con gli a capo, e un
+comando spezzato fallisce.
+
+- prima si verifica che non lo si possa lanciare da soli: se si può, si lancia;
+- **un comando lungo, o più di un comando, si raccoglie in uno script** ( in `.claude/bin/` se serve ancora, nella
+  scratchpad se è usa e getta ) e a Fabio si dà **una riga sola**, corta ( sotto i ~100 caratteri, che non vada a capo
+  nel terminale ): `! bash /percorso/script.sh`;
+- mai heredoc, `python3 -c` lunghi, `&&` a catena che vanno a capo, né due blocchi da incollare uno dopo l'altro.
+
 ### ⚠ TASSATIVO: applicazione e test sempre allineati
 
 Regola di Fabio del **06/10/2026**, e non ammette eccezioni: **il codice e i suoi test si muovono insieme**,

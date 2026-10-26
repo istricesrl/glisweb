@@ -196,6 +196,18 @@ regole per esteso, con le misure che le motivano, stanno nella skill `glisweb`
 
 Niente di tutto questo giustifica lavorare peggio: **lo stesso lavoro, impacchettato meglio**.
 
+## Comandi da lanciare con `!`
+
+⚠ **TASSATIVO, vale per ogni livello ( generale, capitani, soldati )** — detto da Fabio il 26/10/2026: un comando da
+far lanciare a Fabio con `!` sta **su una riga sola**. Il copia-incolla di più righe gli fa fare i salti mortali con gli
+a capo, e un comando spezzato fallisce.
+
+- prima si verifica che non lo si possa lanciare da soli: se si può, si lancia;
+- **un comando lungo, o più di un comando, si raccoglie in uno script** ( in `.claude/bin/` se serve ancora, nella
+  scratchpad se è usa e getta ) e a Fabio si dà **una riga sola**, corta ( sotto i ~100 caratteri, che non vada a capo
+  nel terminale ): `! bash /percorso/script.sh`;
+- mai heredoc, `python3 -c` lunghi, `&&` a catena che vanno a capo, né due blocchi da incollare uno dopo l'altro.
+
 ## I cinque file di un progetto: `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`
 
 Vivono nella **root del deploy** ( il livello che contiene `dev/` ), più il `burndown.md` che è generato.
