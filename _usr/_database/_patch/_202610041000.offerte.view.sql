@@ -171,6 +171,9 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
 
 -- | 202610041011
 
+-- NOTA il 14/10/2026 ( 96621b841 ) id_immobile è uscito da documenti per andare sulle righe, e la vista del base ha
+-- smesso di leggerlo; qui è rimasto fino al 26/10/2026 e fermava ogni costruzione da zero con 1054 Unknown column
+
 -- documenti_view, copiata dal base
 CREATE OR REPLACE VIEW `documenti_view` AS
     SELECT
@@ -238,7 +241,6 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.porto,
 		documenti.id_causale,
 		documenti.id_trasportatore,
-		documenti.id_immobile,
 		documenti.id_pianificazione,
 		documenti.data_consegna,
 		documenti.timestamp_chiusura,

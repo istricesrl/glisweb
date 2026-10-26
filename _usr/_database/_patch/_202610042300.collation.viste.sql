@@ -26,6 +26,9 @@ ALTER TABLE `__patch__` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- | 202610042302
 
+-- NOTA codice_affiliazione è uscito da contratti ( 693ae4be4 ) e la vista del base legge contratti.codice; la copia qui
+-- è rimasta indietro fino al 26/10/2026 e fermava ogni costruzione da zero con 1054 Unknown column
+
 -- account_view
 CREATE OR REPLACE VIEW account_view AS                        --
 	SELECT                                                    --
@@ -40,7 +43,7 @@ CREATE OR REPLACE VIEW account_view AS                        --
 		account.id_mail,                                      --
 		mail.indirizzo AS mail,                               -- indirizzo email
 		account.id_affiliazione,                              --
-		contratti.codice_affiliazione,                        -- codice affiliazione
+		contratti.codice AS codice_affiliazione,              -- codice del contratto di affiliazione
 		account.username,                                     --
 		account.password,                                     --
 		account.se_attivo,                                    --
@@ -200,6 +203,9 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 
 -- | 202610042307
 
+-- NOTA timestamp_lettura è uscito da messaggi per andare in messaggi_account ( 46abf3822 ); la copia qui è rimasta
+-- indietro fino al 26/10/2026 e fermava ogni costruzione da zero con 1054 Unknown column
+
 -- messaggi_view
 -- tipologia: tabella gestita
 -- verifica: 2022-04-26 17:32 Chiara GDL
@@ -209,7 +215,6 @@ CREATE OR REPLACE VIEW `messaggi_view` AS
 		messaggi.id_conversazione,
 		messaggi.testo,
 		messaggi.timestamp_invio,
-		messaggi.timestamp_lettura,
 		messaggi.id_account_inserimento,
 		messaggi.timestamp_inserimento,
 		messaggi.id_account_aggiornamento,
