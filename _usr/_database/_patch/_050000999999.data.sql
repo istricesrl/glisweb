@@ -676,7 +676,7 @@ INSERT IGNORE INTO `ruoli_conversazioni` (`id`, `id_genitore`, `nome`, `html_ent
 INSERT INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_relazioni`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
 (1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL,	NULL),
 (2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1,	NULL),
-(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	1),
+(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1),
 (4,	NULL,	'missione',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	1),
 (5,	NULL,	'fattura collegata',	NULL,	NULL,	1,	1,	1,	1,	NULL,	NULL,	NULL),
 (6,	NULL,	'DDT collegato',	NULL,	NULL,	1,	1,	1,	1,	NULL,	NULL,	NULL);
@@ -757,23 +757,23 @@ INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome
 -- | 050000035000
 
 -- ruoli_prodotti
-INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
-(1,	NULL,	'prodotto',	NULL,	NULL),
-(2,	NULL,	'principale',	NULL,	NULL),
-(3,	NULL,	'suggerito',	NULL,	NULL),
-(4,	NULL,	'accessorio',	NULL,	NULL),
-(5,	NULL,	'consumabile',	NULL,	NULL),
-(6,	NULL,	'bundle',	NULL,	NULL);
+INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`) VALUES
+(1,	NULL,	'prodotto',	NULL,	NULL,	1),
+(2,	NULL,	'principale',	NULL,	NULL,	1),
+(3,	NULL,	'suggerito',	NULL,	NULL,	1),
+(4,	NULL,	'accessorio',	NULL,	NULL,	1),
+(5,	NULL,	'consumabile',	NULL,	NULL,	1),
+(6,	NULL,	'bundle',	NULL,	NULL,	1);
 
 -- | 050000035100
 
 -- ruoli_progetti
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-20 10:45 chiara GDL
-INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`) VALUES
-(1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`, `se_relazioni`) VALUES
+(1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1),
+(2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1),
+(3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1);
 
 -- | 050000035200
 

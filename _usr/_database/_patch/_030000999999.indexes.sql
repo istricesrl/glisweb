@@ -3483,13 +3483,15 @@ ALTER TABLE `relazioni_categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_
 
 -- relazioni_documenti
 ALTER TABLE `relazioni_documenti`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_documento`,`id_documento_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_documento`,`id_documento_collegato`,`id_ruolo`);
 
 -- | 030000030401
 
@@ -3499,16 +3501,16 @@ ALTER TABLE `relazioni_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- | 030000030410
 
 -- relazioni_documenti_articoli
--- tipologia: tabella gestita
--- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_documenti_articoli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
-	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
 
 -- | 030000030411
 
@@ -3539,14 +3541,17 @@ ALTER TABLE `relazioni_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 
 -- relazioni_prodotti
 ALTER TABLE `relazioni_prodotti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_prodotto`,`id_prodotto_collegato`,`id_ruolo`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_prodotto_collegato`,`id_ruolo`),
+	ADD UNIQUE KEY `unica_articolo` (`id_prodotto`,`id_articolo_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),
 	ADD KEY `id_articolo_collegato` (`id_articolo_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_prodotto`,`id_prodotto_collegato`,`id_articolo_collegato`,`id_ruolo`);
 
 -- | 030000030471
 
@@ -3556,16 +3561,16 @@ ALTER TABLE `relazioni_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000030490
 
 -- relazioni_progetti
--- tipologia: tabella gestita
--- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_progetti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_progetto_collegato` (`id_progetto_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_progetto_collegato`,`id_ruolo`);
 
 -- | 030000030491
 

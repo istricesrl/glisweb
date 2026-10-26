@@ -6067,15 +6067,28 @@ CREATE OR REPLACE VIEW `relazioni_categorie_progetti_view` AS
 -- | 090000030400
 
 -- relazioni_documenti_view
-CREATE OR REPLACE VIEW relazioni_documenti_view AS
+CREATE OR REPLACE VIEW `relazioni_documenti_view` AS
 	SELECT
 		relazioni_documenti.id,
+		relazioni_documenti.ordine,
 		relazioni_documenti.id_documento,
+		coalesce( d1.codice, d1.id ) AS documento,
 		relazioni_documenti.id_documento_collegato,
+		coalesce( d2.codice, d2.id ) AS documento_collegato,
 		relazioni_documenti.id_ruolo,
 		ruoli_documenti.nome AS ruolo,
-		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+		relazioni_documenti.note,
+		relazioni_documenti.id_account_inserimento,
+		relazioni_documenti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( d1.codice, d1.id ),
+			ruoli_documenti.nome,
+			coalesce( d2.codice, d2.id )
+		) AS __label__
 	FROM relazioni_documenti
+		LEFT JOIN documenti AS d1 ON d1.id = relazioni_documenti.id_documento
+		LEFT JOIN documenti AS d2 ON d2.id = relazioni_documenti.id_documento_collegato
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
@@ -6084,15 +6097,28 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 -- relazioni_documenti_articoli_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
+CREATE OR REPLACE VIEW `relazioni_documenti_articoli_view` AS
 	SELECT
 		relazioni_documenti_articoli.id,
+		relazioni_documenti_articoli.ordine,
 		relazioni_documenti_articoli.id_documenti_articolo,
+		coalesce( r1.nome, r1.codice, r1.id ) AS documenti_articolo,
 		relazioni_documenti_articoli.id_documenti_articolo_collegato,
+		coalesce( r2.nome, r2.codice, r2.id ) AS documenti_articolo_collegato,
 		relazioni_documenti_articoli.id_ruolo,
 		ruoli_documenti.nome AS ruolo,
-		concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+		relazioni_documenti_articoli.note,
+		relazioni_documenti_articoli.id_account_inserimento,
+		relazioni_documenti_articoli.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( r1.nome, r1.codice, r1.id ),
+			ruoli_documenti.nome,
+			coalesce( r2.nome, r2.codice, r2.id )
+		) AS __label__
 	FROM relazioni_documenti_articoli
+		LEFT JOIN documenti_articoli AS r1 ON r1.id = relazioni_documenti_articoli.id_documenti_articolo
+		LEFT JOIN documenti_articoli AS r2 ON r2.id = relazioni_documenti_articoli.id_documenti_articolo_collegato
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti_articoli.id_ruolo
 ;
 
@@ -6114,17 +6140,31 @@ CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 
 -- relazioni_prodotti_view
 CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
-	SELECT 
+	SELECT
 		relazioni_prodotti.id,
+		relazioni_prodotti.ordine,
 		relazioni_prodotti.id_prodotto,
-		relazioni_prodotti.id_ruolo,
+		coalesce( p1.nome, p1.codice, p1.id ) AS prodotto,
 		relazioni_prodotti.id_prodotto_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS prodotto_collegato,
 		relazioni_prodotti.id_articolo_collegato,
-		concat_ws( ' - ', coalesce( p1.codice, p1.id ), coalesce( p2.codice, a2.codice, p2.id, a2.id ) ) AS __label__
+		coalesce( a2.nome, a2.codice, a2.id ) AS articolo_collegato,
+		relazioni_prodotti.id_ruolo,
+		ruoli_prodotti.nome AS ruolo,
+		relazioni_prodotti.note,
+		relazioni_prodotti.id_account_inserimento,
+		relazioni_prodotti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.codice, p1.id ),
+			ruoli_prodotti.nome,
+			coalesce( p2.nome, p2.codice, p2.id, a2.nome, a2.codice, a2.id )
+		) AS __label__
 	FROM relazioni_prodotti
 		LEFT JOIN prodotti AS p1 ON p1.id = relazioni_prodotti.id_prodotto
 		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_prodotti.id_prodotto_collegato
 		LEFT JOIN articoli AS a2 ON a2.id = relazioni_prodotti.id_articolo_collegato
+		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = relazioni_prodotti.id_ruolo
 ;
 
 -- | 090000030491
@@ -6132,16 +6172,29 @@ CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
 -- relazioni_progetti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_progetti_view AS
+CREATE OR REPLACE VIEW `relazioni_progetti_view` AS
 	SELECT
-	relazioni_progetti.id,
-	relazioni_progetti.id_progetto,
-	relazioni_progetti.id_progetto_collegato,
-	relazioni_progetti.id_ruolo,
-	ruoli_progetti.nome AS ruolo,
-	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
+		relazioni_progetti.id,
+		relazioni_progetti.ordine,
+		relazioni_progetti.id_progetto,
+		coalesce( p1.nome, p1.id ) AS progetto,
+		relazioni_progetti.id_progetto_collegato,
+		coalesce( p2.nome, p2.id ) AS progetto_collegato,
+		relazioni_progetti.id_ruolo,
+		ruoli_progetti.nome AS ruolo,
+		relazioni_progetti.note,
+		relazioni_progetti.id_account_inserimento,
+		relazioni_progetti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.id ),
+			ruoli_progetti.nome,
+			coalesce( p2.nome, p2.id )
+		) AS __label__
 	FROM relazioni_progetti
-	LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
+		LEFT JOIN progetti AS p1 ON p1.id = relazioni_progetti.id_progetto
+		LEFT JOIN progetti AS p2 ON p2.id = relazioni_progetti.id_progetto_collegato
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 ;
 
 -- | 090000030501
@@ -6650,6 +6703,7 @@ CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 		ruoli_prodotti.id,
 		ruoli_prodotti.id_genitore,
 		ruoli_prodotti.nome,
+		ruoli_prodotti.se_relazioni,
 	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
 	FROM ruoli_prodotti
 ;
@@ -6669,6 +6723,7 @@ CREATE OR REPLACE VIEW ruoli_progetti_view AS
 		ruoli_progetti.se_proseguimento,
 		ruoli_progetti.se_sostituto,
 		ruoli_progetti.se_attesa,
+		ruoli_progetti.se_relazioni,
 	 	ruoli_progetti.nome AS __label__
 	FROM ruoli_progetti
 ;

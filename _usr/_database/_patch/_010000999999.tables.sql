@@ -5744,21 +5744,29 @@ CREATE TABLE IF NOT EXISTS `relazioni_categorie_progetti` (    --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: tabella di relazione molti a molti tra documenti
+-- funzione: mette in relazione due documenti, con il ruolo che li lega
 --
--- questa tabella contiene la relazione molti a molti tra documenti, con le informazioni relative al ruolo
--- della relazione e ai dati di inserimento e aggiornamento
+-- questa tabella collega due documenti col ruolo che li lega ( il DDT che evade un ordine, la missione di un
+-- ordine, la fattura collegata... ); i ruoli proponibili sono quelli con ruoli_documenti.se_relazioni;
+-- documenti_view ne ricava i documenti antecedenti e successivi
 --
-CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
-  `id` bigint(20) NOT NULL,
-  `id_documento` bigint(20) DEFAULT NULL,
-  `id_documento_collegato` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA la relazione ha un verso: id_documento e' il <ruolo> di id_documento_collegato ( il DDT a sinistra e'
+-- l'evasione dell'ordine a destra ), quindi il documento derivato sta a sinistra e quello da cui deriva a destra;
+-- si registra una volta sola e si legge nei due versi; le note precisano il ruolo nel caso specifico ( decisione
+-- del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_documenti` (              --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_documento` bigint(20) DEFAULT NULL,                       -- chiave esterna per il documento che ha il ruolo
+  `id_documento_collegato` bigint(20) DEFAULT NULL,             -- chiave esterna per il documento rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_documenti )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030410
 
@@ -5766,18 +5774,28 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione relazioni e documenti articoli
+-- funzione: mette in relazione due righe di documento, con il ruolo che le lega
 --
-CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
-  `id` bigint(20) NOT NULL,
-  `id_documenti_articolo` bigint(20) DEFAULT NULL,
-  `id_documenti_articolo_collegato` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega due righe di documento col ruolo che le lega ( la riga del DDT che evade la riga
+-- dell'ordine, la riga della fattura collegata... ), con i ruoli di ruoli_documenti; la fattura elettronica la
+-- legge per riferire le righe ai documenti collegati
+--
+-- NOTA la relazione ha il verso di relazioni_documenti: id_documenti_articolo e' il <ruolo> di
+-- id_documenti_articolo_collegato, la riga derivata a sinistra e quella da cui deriva a destra; si registra una
+-- volta sola e si legge nei due versi; le note precisano il ruolo nel caso specifico ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (     --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_documenti_articolo` bigint(20) DEFAULT NULL,              -- chiave esterna per la riga che ha il ruolo
+  `id_documenti_articolo_collegato` bigint(20) DEFAULT NULL,    -- chiave esterna per la riga rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_documenti )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030440
 
@@ -5803,22 +5821,31 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: collega i prodotti fra loro secondo un ruolo
+-- funzione: collega un prodotto a un altro prodotto o a un articolo, con il ruolo che li lega
 --
--- questa tabella contiene le relazioni fra un prodotto e un altro prodotto o articolo collegato ( accessori,
--- ricambi, alternative ), qualificate dal ruolo
+-- questa tabella collega un prodotto a un prodotto o a un articolo col ruolo che li lega ( l'accessorio, il
+-- suggerito, il consumabile... ); le pagine prodotto ne elencano accessori e suggeriti; i ruoli proponibili sono
+-- quelli con ruoli_prodotti.se_relazioni
 --
-CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
-  `id` bigint(20) NOT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_prodotto_collegato` bigint(20) DEFAULT NULL,
-  `id_articolo_collegato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA la relazione ha il verso di relazioni_articoli, il contrario delle altre relazioni_*: il collegato e' il
+-- <ruolo> del prodotto ( il prodotto collegato e' l'accessorio, o il suggerito, di id_prodotto ), perche' quando
+-- il collegato e' un articolo a sinistra sta per forza il prodotto; ogni riga ha un solo estremo collegato, il
+-- prodotto oppure l'articolo, e ciascuno ha la sua chiave unica; le note precisano il ruolo nel caso specifico
+-- ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
+  `id_prodotto_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per il prodotto collegato, se il collegato e' un prodotto
+  `id_articolo_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per l'articolo collegato, se il collegato e' un articolo
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo del collegato ( ruoli_prodotti )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030490
 
@@ -5826,18 +5853,28 @@ CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione relazioni e progetti
+-- funzione: mette in relazione due progetti, con il ruolo che li lega
 --
-CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
-  `id` bigint(20) NOT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_progetto_collegato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega due progetti col ruolo che li lega ( il corso che prosegue un altro, il bundle dei
+-- corsi che lo compongono, l'attesa... ); i ruoli proponibili sono quelli con ruoli_progetti.se_relazioni
+--
+-- NOTA la relazione ha un verso: id_progetto e' il <ruolo> di id_progetto_collegato ( il corso nuovo a sinistra e'
+-- il proseguimento del corso vecchio a destra, il bundle a sinistra e' il bundle del corso a destra ); si registra
+-- una volta sola e si legge nei due versi; senza ruolo la chiave unica non protegge ( due NULL non sono uguali ),
+-- quindi il ruolo va sempre scritto; le note precisano il ruolo nel caso specifico ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_progetti` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto che ha il ruolo
+  `id_progetto_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per il progetto rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_progetti )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030500
 
@@ -6351,7 +6388,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `id_genitore` bigint(20) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035100
@@ -6371,7 +6409,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `se_sottoprogetto` tinyint(1) DEFAULT NULL,
   `se_proseguimento` tinyint(1) DEFAULT NULL,
   `se_sostituto` tinyint(1) DEFAULT NULL,
-  `se_attesa` tinyint(1) DEFAULT NULL
+  `se_attesa` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035200
