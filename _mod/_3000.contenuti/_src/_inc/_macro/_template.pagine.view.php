@@ -54,6 +54,19 @@
         }
     }
 
+    // elenco template del progetto ( src/templates/ ), che altrimenti nel CMS non compaiono
+    $templates = getFilteredDirList( 'src/templates/' );
+
+    // dati della vista, salvo i template che personalizzano uno standard e sono già in elenco
+    foreach( $templates as $template ) {
+        if( ! in_array( trim( basename( $template ), '_' ), array( 'athena' ) ) && ! is_dir( DIR_BASE . '_src/_templates/_' . basename( $template ) ) ) {
+            $ct['view']['data'][] = array(
+                'id' => trim( basename( $template ), '_' ),
+                'template' => trim( basename( $template ), '_' )
+            );
+        }
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
