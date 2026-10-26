@@ -34,11 +34,21 @@
 			LIMIT 1'
 		);
 */
+		// trovo un corso cambiato dopo la sua riga di report, o che la riga non ce l'ha; fino al 2026-10-26 il task
+		// girava a rotazione su tutti i progetti con la colonna progetti.timestamp_aggiornamento_report_corsi, uscita
+		// perche' fuori canone: i valori che cambiano con la data li rifa' ogni notte il job, lanciato dal cron con
+		// report.corsi.popolazione.start
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
-			'SELECT progetti.id FROM progetti ORDER BY progetti.timestamp_aggiornamento_report_corsi ASC, progetti.id DESC LIMIT 1'
+			'SELECT progetti.id FROM progetti
+			LEFT JOIN __report_corsi__ ON __report_corsi__.id = cast( progetti.id as char )
+			WHERE (
+				coalesce( progetti.timestamp_aggiornamento, progetti.timestamp_inserimento ) > __report_corsi__.timestamp_aggiornamento
+				OR __report_corsi__.timestamp_aggiornamento IS NULL
+			)
+			ORDER BY progetti.id DESC
+			LIMIT 1'
 		);
-
 
 	}
 
@@ -46,10 +56,6 @@
 	if( ! empty( $status['aggiornare']['id'] ) ) {
 		updateReportCorsi(
 			$status['aggiornare']['id']
-		);
-		mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE progetti SET timestamp_aggiornamento_report_corsi = unix_timestamp(now()) WHERE id = ' . intval( $status['aggiornare']['id'] )
 		);
 	}
 

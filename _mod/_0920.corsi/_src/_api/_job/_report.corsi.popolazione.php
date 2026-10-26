@@ -29,13 +29,17 @@
             // pulizia ragionata report
             cleanReportCorsi();
 
+            // il ricalcolo notturno ( lanciato dal cron, vedi report.corsi.popolazione.start ) rifa' tutti i corsi, perche'
+            // stato e posti cambiano anche con la data; sono pochi ( 1.717 su polmasi, 24 ms l'uno, 26/10/2026 )
+            $ntt = ( ! empty( $job['workspace']['notturno'] ) ) ? ' OR 1 = 1' : '';
+
             // inizializzo l'array
             $arr = mysqlSelectColumn(
                 'id',
                 $cf['mysql']['connection'],
                 'SELECT c.id FROM progetti AS c LEFT JOIN __report_corsi__ AS r ON r.id = c.id
                 LEFT JOIN tipologie_progetti AS t ON t.id = c.id_tipologia
-                WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.id IS NULL )
+                WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.id IS NULL' . $ntt . ' )
                 AND t.se_didattica = 1'
             );
 

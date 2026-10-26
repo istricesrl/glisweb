@@ -120,10 +120,6 @@
 		updateReportLezioniCorsi(
 			$status['aggiornare']['id']
 		);
-		mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE todo SET timestamp_aggiornamento_report_corsi = unix_timestamp(now()) WHERE id = ' . intval( $status['aggiornare']['id'] )
-		);
 	}
 
 	// output
