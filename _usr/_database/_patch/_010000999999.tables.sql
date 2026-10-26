@@ -5623,20 +5623,24 @@ CREATE TABLE IF NOT EXISTS `regimi` (                           --
 
 -- regioni
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le regioni italiane
+-- funzione: contiene le regioni
 --
--- questa tabella contiene le regioni italiane, con le informazioni relative allo stato di appartenenza, al nome,
--- al codice ISTAT, all'URL di riferimento e alle note
---
--- La regione soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
--- id_successore alla regione che ne ha preso il posto; questi campi si valorizzano a mano
+-- le regioni, livello della geografia ( continenti, stati, regioni, provincie, comuni, indirizzi ) fra lo stato che
+-- le contiene e le provincie che contengono, per qualsiasi stato. Ogni livello è secondario rispetto a quello che lo
+-- contiene: una regione non ha senso senza il suo stato, quindi uno stato che ha delle regioni non si può cancellare.
+-- I file di base non popolano la geografia, la carica un'importazione; dentro l'Italia la regione si identifica col
+-- codice ISTAT.
+-- una regione soppressa o fusa non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore alla regione che ne ha preso il posto. I valori li scrive l'importazione della geografia; i
+-- riferimenti vivi si spostano sul successore, quelli di storia no.
+-- NOTA codice_istat è un codice esterno e mantiene il suo formato; le regioni estere di solito non lo hanno
 CREATE TABLE IF NOT EXISTS `regioni` (                        --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_stato` bigint(20) DEFAULT NULL,                            -- chiave esterna per lo stato di appartenenza
-  `id_successore` bigint(20) DEFAULT NULL,                       -- regione che ha preso il posto di questa dopo l'archiviazione
-  `nome` char(64) DEFAULT NULL,                               -- nome della regione
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della regione
+  `id_stato` bigint(20) DEFAULT NULL,                         -- stato che contiene la regione
+  `id_successore` bigint(20) DEFAULT NULL,                    -- regione che ha preso il posto di questa dopo l'archiviazione
   `codice_istat` char(2) DEFAULT NULL,                        -- codice ISTAT della regione
   `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento della regione
   `note` text DEFAULT NULL,                                    -- note sulla regione

@@ -3412,7 +3412,7 @@ ALTER TABLE `regioni`
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
-	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
+	ADD KEY `indice` (`id`,`nome`,`id_stato`,`codice_istat`);
 
 -- | 030000030201
 

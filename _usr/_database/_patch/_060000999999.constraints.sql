@@ -1802,7 +1802,8 @@ ALTER TABLE `redirect_azioni`
 
 -- regioni
 ALTER TABLE `regioni`
-    ADD CONSTRAINT `regioni_ibfk_02_nofollow`                               FOREIGN KEY (`id_successore`) REFERENCES `regioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `regioni_ibfk_01_nofollow`                               FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `regioni_ibfk_02_nofollow`                              FOREIGN KEY (`id_successore`) REFERENCES `regioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000030300
 

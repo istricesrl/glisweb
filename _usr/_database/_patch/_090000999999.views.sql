@@ -5959,7 +5959,7 @@ CREATE OR REPLACE VIEW `regimi_view` AS
 -- | 090000030201
 
 -- regioni_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 15:40 Fabio Mosti
 CREATE OR REPLACE VIEW regioni_view AS
 	SELECT
@@ -5976,7 +5976,7 @@ CREATE OR REPLACE VIEW regioni_view AS
 			stati.nome
 		) AS __label__
 	FROM regioni
-		LEFT JOIN stati ON stati.id = regioni.id_stato
+		INNER JOIN stati ON stati.id = regioni.id_stato
 ;
 
 -- | 090000030300
