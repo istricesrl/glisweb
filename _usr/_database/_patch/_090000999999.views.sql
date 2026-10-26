@@ -5351,6 +5351,8 @@ CREATE OR REPLACE VIEW `popup_view` AS
 		popup.note,
 		popup.template,
 		popup.schema_html,
+		popup.id_sito,
+		popup.se_ovunque,
 		popup.id_account_inserimento,
 		popup.id_account_aggiornamento,
 		popup.nome AS __label__

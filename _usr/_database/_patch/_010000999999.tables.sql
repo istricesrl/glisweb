@@ -5002,6 +5002,9 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (                 --
 -- non sono il blocco web delle tabelle che generano pagine ( il popup non genera pagine ), e seguono la decisione
 -- sul blocco web nelle pubblicazioni ( schema canonico, punto 6e )
 --
+-- NOTA id_sito e se_ovunque sono deprecate ( 26/10/2026 ): la collocazione sta in pubblicazioni, e restano solo
+-- perche' il modulo legacy dei popup le legge ancora; si tolgono quando tutti i legacy che le usano sono dismessi
+--
 CREATE TABLE IF NOT EXISTS `popup` (                            --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del popup ( quando compare )
@@ -5012,6 +5015,8 @@ CREATE TABLE IF NOT EXISTS `popup` (                            --
   `note` text DEFAULT NULL,                                       -- note
   `template` char(128) DEFAULT NULL,                              -- template delle pagine su cui il popup compare
   `schema_html` char(128) DEFAULT NULL,                           -- schema Twig della finestra del popup
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito su cui compare il popup ( deprecato )
+  `se_ovunque` tinyint(1) DEFAULT NULL,                           -- il popup compare su tutte le pagine ( deprecato )
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
