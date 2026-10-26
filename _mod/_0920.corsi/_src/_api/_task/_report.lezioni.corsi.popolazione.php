@@ -60,6 +60,9 @@
 		// si connette in utf8mb4, e un cast nudo produce una stringa utf8mb4 che non si confronta con la PK
 		// utf8 del report senza convertirla: di nuovo niente PRIMARY, e al primo giro di cron la SELECT e'
 		// rimasta appesa 3-4 minuti in prod; da CLI, in utf8, non si vedeva. Con il charset: eq_ref, 0,05 s.
+		// Fix 2026-10-26 ( Fabio, come polmasi nel suo custom ): solo le lezioni da oggi in avanti. Il task gira ogni
+		// minuto e, quando non c'e' niente da rifare, scorreva tutte le lezioni ( 5 s su 124.722 a polmasi ); le passate
+		// le rifanno i controller quando cambiano ( _todo.finally, _attivita.finally ).
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
 			'SELECT todo.id FROM todo
@@ -69,6 +72,7 @@
 				coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento
 				OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
 			) AND todo.id_progetto IS NOT NULL
+			AND todo.data_programmazione >= curdate()
 			ORDER BY todo.id DESC
 			LIMIT 1'
 		);
