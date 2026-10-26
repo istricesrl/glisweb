@@ -41,24 +41,7 @@ INSERT IGNORE INTO `tipologie_documenti_articoli` ( `id`, `ordine`, `nome`, `sig
 
 -- | 202610131804
 
-CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
-	SELECT
-		tipologie_documenti_articoli.id,
-		tipologie_documenti_articoli.id_genitore,
-		tipologie_documenti_articoli.ordine,
-		tipologie_documenti_articoli.nome,
-		tipologie_documenti_articoli.sigla,
-		tipologie_documenti_articoli.html_entity,
-		tipologie_documenti_articoli.font_awesome,
-		tipologie_documenti_articoli.se_raggruppamento,
-		tipologie_documenti_articoli.se_somma,
-		tipologie_documenti_articoli.se_alternativa,
-		tipologie_documenti_articoli.se_dettaglio,
-		tipologie_documenti_articoli.se_evasione,
-		tipologie_documenti_articoli.id_account_inserimento,
-		tipologie_documenti_articoli.id_account_aggiornamento,
-		tipologie_documenti_articoli_path( tipologie_documenti_articoli.id ) AS __label__
-	FROM tipologie_documenti_articoli
-;
+-- vuota dal 26/10/2026: ricreava una vista copiandola dal base, e la copia restava indietro quando il canone andava
+-- avanti; le viste vivono solo nei file base e ai deploy arrivano con le migrazioni del canone ( 300.database.md )
 
 -- | FINE

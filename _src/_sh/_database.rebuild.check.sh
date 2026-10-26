@@ -21,7 +21,11 @@
 #      - colonne diverse     ( stesso oggetto, forma diversa )
 #   3. le statiche <t>_view_static dei patch che non hanno le colonne della loro <t>_view, nello
 #      stesso ordine ( si riempiono con REPLACE ... SELECT *, quindi conta la posizione ); con
-#      --inventario anche le colonne dello stesso nome e tipo diverso, che non fanno fallire.
+#      --inventario anche le colonne dello stesso nome e tipo diverso, che non fanno fallire;
+#   4. le patch datate dopo 202610261200 che creano una vista: dal 26/10/2026 le viste vivono solo
+#      nei file base e ai deploy arrivano con le migrazioni del canone, perche' la copia di una vista
+#      in una patch resta indietro quando il canone va avanti ( fino a quel giorno fermava ogni
+#      costruzione da zero ). Fa fallire lo script come le divergenze.
 #
 # La seconda parte e' anche l'inventario di quanto i patch coprano davvero lo schema.
 #
@@ -196,8 +200,23 @@ if rc != 0:
 # DELIMITER: proseguiva dopo gli errori, e non vedeva i blocchi che il task saltava o registrava
 # senza eseguirli. Ora un errore ferma l'applicazione, e il confronto che segue e' su uno schema
 # parziale: va letto sapendolo.
+# patch datate che creano una vista: dopo 202610261200 non ce ne devono essere ( vedi sopra, punto 4 )
+copie = []
+for cartella in ( '_usr/_database/_patch', 'usr/database/patch' ):
+    base = os.path.join( docroot, cartella )
+    if not os.path.isdir( base ): continue
+    for nome in sorted( os.listdir( base ) ):
+        if not re.match( r'_?[0-9]{12}\..*\.sql$', nome ): continue
+        blocchi = re.split( r'(?m)^-- \| (\S+)[^\n]*\n', open( os.path.join( base, nome ) ).read() )
+        for i in range( 1, len( blocchi ) - 1, 2 ):
+            if re.match( r'[0-9]{12}$', blocchi[ i ] ) and blocchi[ i ] > '202610261200' and re.search( r'(?im)^\s*CREATE\s+(OR\s+REPLACE\s+)?(ALGORITHM\S*\s+)?VIEW', blocchi[ i + 1 ] ):
+                copie.append( '%s/%s %s' % ( cartella, nome, blocchi[ i ] ) )
+print( '\nviste nelle patch datate dopo 202610261200: %d' % len( copie ) )
+for c in copie:
+    print( '  ERRORE: %s crea una vista; le viste stanno solo nei file base' % c )
+
 print( '\napplicazione dei patch' )
-env = dict( os.environ, MYSQL_PWD = BANCO.get( 'password' ) or '' )
+env =dict( os.environ, MYSQL_PWD = BANCO.get( 'password' ) or '' )
 r = subprocess.run( [ 'php', os.path.join( docroot, '_src/_cli/_mysql.patch.php' ),
                       BANCO.get( 'address' ) or '127.0.0.1', str( BANCO.get( 'port' ) or 3306 ),
                       BANCO.get( 'username' ) or 'root', banco_db ],
@@ -287,7 +306,7 @@ if TIENI:
 else:
     butta( banco_db )
 
-print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti, %d statiche disallineate'
-       % ( errori, len( solo_db ), len( diverse ), len( statiche ) ) )
-sys.exit( 1 if ( errori or diverse or statiche ) else 0 )
+print( '\nesito: %d errori nei patch, %d oggetti non dichiarati, %d divergenti, %d statiche disallineate, %d viste nelle patch datate'
+       % ( errori, len( solo_db ), len( diverse ), len( statiche ), len( copie ) ) )
+sys.exit( 1 if ( errori or diverse or statiche or copie ) else 0 )
 PYTHON

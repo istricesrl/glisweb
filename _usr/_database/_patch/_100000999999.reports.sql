@@ -3,6 +3,39 @@
 -- questo file contiene le query per la creazione dei report
 --
 
+-- | 100000007801
+
+-- __report_corsi__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P81 ): tabella, non vista,
+-- un corso per riga come lo mostrano il catalogo e l'archivio del modulo 0920.corsi; la popolano il task e il job
+-- report.corsi.popolazione del modulo con updateReportCorsi() ( _mod/_0920.corsi/_src/_lib/_mysql.utils.add.php ), e
+-- la legge anche il modulo 0400.documenti; dopo una costruzione da zero resta vuota finché non ci sono corsi
+CREATE TABLE IF NOT EXISTS `__report_corsi__` (
+  `id` char(255) NOT NULL,
+  `id_periodo` int(11) DEFAULT NULL,
+  `periodo` char(255) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `fasce` char(255) DEFAULT NULL,
+  `discipline` char(255) DEFAULT NULL,
+  `livelli` char(255) DEFAULT NULL,
+  `giorni_orari_luoghi` text DEFAULT NULL,
+  `dettagli` text DEFAULT NULL,
+  `posti_disponibili` char(255) DEFAULT NULL,
+  `lista_attesa` char(255) DEFAULT NULL,
+  `stato` char(255) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
+  `prezzi` char(255) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_inserimento` (`timestamp_inserimento`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 100000008005
 
 -- __report_utilizzi_coupon__
@@ -180,6 +213,88 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   KEY `id_articolo` (`id_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000060300
+
+-- __report_lezioni_corsi__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P83 ): tabella, non vista,
+-- una lezione per riga; la popolano il task e il job report.lezioni.corsi.popolazione del modulo 0920.corsi, la
+-- leggono le lezioni di 0630.iscrizioni e 0640.abbonamenti
+CREATE TABLE IF NOT EXISTS `__report_lezioni_corsi__` (
+  `id` char(255) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `codice` char(255) DEFAULT NULL,
+  `se_agenda` int(1) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `anagrafica` char(255) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `cliente` char(255) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `indirizzo` char(255) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `luogo` char(255) DEFAULT NULL,
+  `docenti` char(255) DEFAULT NULL,
+  `numero_alunni` int(11) DEFAULT NULL,
+  `numero_posti` int(11) DEFAULT NULL,
+  `numero_alunni_in_attesa` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `data_scadenza` char(255) DEFAULT NULL,
+  `ora_scadenza` char(255) DEFAULT NULL,
+  `data_programmazione` char(255) DEFAULT NULL,
+  `id_giorno_programmazione` int(11) DEFAULT NULL,
+  `ora_inizio_programmazione` char(255) DEFAULT NULL,
+  `ora_fine_programmazione` char(255) DEFAULT NULL,
+  `anno_programmazione` char(255) DEFAULT NULL,
+  `settimana_programmazione` char(255) DEFAULT NULL,
+  `ore_programmazione` char(255) DEFAULT NULL,
+  `note_programmazione` text DEFAULT NULL,
+  `data_chiusura` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `posti_disponibili` char(32) DEFAULT NULL,
+  `se_prova` int(1) DEFAULT NULL,
+  `se_prenotabile_online` int(1) DEFAULT NULL,
+  `posti_prova` int(11) DEFAULT NULL,
+  `id_contatto` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `corso` char(255) DEFAULT NULL,
+  `discipline` char(255) DEFAULT NULL,
+  `id_disciplina` int(11) DEFAULT NULL,
+  `tipologie_abbonamenti` char(255) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `data_archiviazione` char(255) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000060320
+
+-- __report_lezioni_tipologie_abbonamenti__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P84 ): per ogni lezione
+-- ( id_todo ) le tipologie di abbonamento compatibili; la popola il task report.lezioni.tipologie.abbonamenti.popolazione
+-- del modulo 0920.corsi, la legge la scheda presenze della lezione
+CREATE TABLE IF NOT EXISTS `__report_lezioni_tipologie_abbonamenti__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_tipologia_contratti` int(11) DEFAULT NULL,
+  `se_compatibile` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unica` (`id_todo`,`id_tipologia_contratti`),
+  KEY `indice` (`id`,`id_todo`,`id_tipologia_contratti`,`se_compatibile`,`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE
