@@ -5400,39 +5400,64 @@ CREATE TABLE IF NOT EXISTS `provincie` (                      --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le pubblicazioni delle entità del sistema
+-- funzione: dice dove, quando, in che stato e come sono pubblicati gli oggetti dei siti
 --
--- questa tabella contiene le pubblicazioni delle entità del sistema, con le informazioni relative alla tipologia,
--- all'ordine di visualizzazione, all'entità pubblicata, alle note e ai timestamp di inizio e fine pubblicazione
+-- ogni riga è la pubblicazione di un oggetto, e di uno solo: una colonna id_* valorizzata dice di quale oggetto si
+-- tratta ( una pagina, una delle entità che generano pagine e le loro categorie, un articolo, un banner o un popup );
+-- la riga dice su quale sito vale ( id_sito, NULL = tutti ), in che periodo ( timestamp_inizio e timestamp_fine, NULL
+-- = senza limite ), in che stato ( la tipologia, da tipologie_pubblicazioni: bozza, pubblicato, in evidenza,
+-- anteprima ) e, per gli oggetti che generano pagine, come si mostrano su quel sito ( il blocco web: template,
+-- schema_html, tema_css, se_sitemap, se_cacheable ); un oggetto può avere più pubblicazioni, per siti o periodi diversi
 --
-CREATE TABLE IF NOT EXISTS `pubblicazioni` (                    --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di pubblicazione
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `id_pagina` bigint(20) DEFAULT NULL,                             -- ID della pagina
-  `id_popup` bigint(20) DEFAULT NULL,                              -- ID del popup
-  `id_prodotto` bigint(20) DEFAULT NULL,                          -- ID del prodotto
-  `id_articolo` bigint(20) DEFAULT NULL,                          -- ID dell'articolo
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                 -- ID della categoria prodotti
-  `id_notizia` bigint(20) DEFAULT NULL,                            -- ID della notizia
-  `id_annuncio` bigint(20) DEFAULT NULL,                           -- ID dell'annuncio
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,                  -- ID della categoria notizie
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,                  -- ID della categoria annunci
-  `id_risorsa` bigint(20) DEFAULT NULL,                            -- ID della risorsa
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,                  -- ID della categoria risorse
-  `id_progetto` bigint(20) DEFAULT NULL,                          -- ID del progetto
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- ID della categoria progetti
-  `id_banner` bigint(20) DEFAULT NULL,                           -- ID del banner
-  `id_marchio` bigint(20) DEFAULT NULL,                          -- ID del marchio
-  `id_categoria_marchi` bigint(20) DEFAULT NULL,                 -- ID della categoria di marchi
-  `note` char(254) DEFAULT NULL,                                -- note sulla pubblicazione
-  `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio pubblicazione
-  `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine pubblicazione
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+-- id_pagina ha due sensi: da sola è la pubblicazione della pagina; accanto a id_banner o id_popup è la pagina dove il
+-- banner o il popup appare ( senza pagina, ovunque ); per i banner spazio è l'id HTML dello spazio della pagina
+-- in cui il banner compare
+--
+-- NOTA il blocco web si legge a catena: la pubblicazione, poi la configurazione del modulo ( $cf[<modulo>]['pages'] );
+-- fra più pubblicazioni attive dello stesso oggetto sullo stesso sito vince la prima nell'ordine ( ORDER BY ordine IS
+-- NULL, ordine, id ); sulle tabelle che generano pagine le stesse colonne sono deprecate e restano per i moduli legacy
+-- di oldstable ( schema canonico, punto 6e, 22/10/2026 )
+--
+-- NOTA l'albero delle pagine ( id_genitore sull'entità ) è lo stesso su tutti i siti, per scelta: un nodo compare su un
+-- sito se è pubblicato lì, e se il suo genitore non lo è si aggancia alla id_pagina dell'entità, altrimenti non compare
+--
+-- NOTA spazio entra per il modulo dei banner nuovo, che ne fisserà i dettagli ( schema canonico, riga 140, 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `pubblicazioni` (                     --
+  `id` bigint(20) NOT NULL,                                      -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                        -- stato della pubblicazione ( bozza, pubblicato, in evidenza, anteprima )
+  `ordine` int(11) DEFAULT NULL,                                 -- ordine fra le pubblicazioni dello stesso oggetto: vince la prima
+  `id_pagina` bigint(20) DEFAULT NULL,                           -- pagina pubblicata, o pagina dove appare il banner o il popup
+  `id_popup` bigint(20) DEFAULT NULL,                            -- pubblicazione del popup
+  `id_banner` bigint(20) DEFAULT NULL,                           -- pubblicazione del banner
+  `spazio` char(128) DEFAULT NULL,                               -- id HTML dello spazio in cui appare il banner, NULL = qualunque
+  `id_prodotto` bigint(20) DEFAULT NULL,                         -- pubblicazione del prodotto
+  `id_articolo` bigint(20) DEFAULT NULL,                         -- pubblicazione dell'articolo
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,               -- pubblicazione della categoria di prodotti
+  `id_marchio` bigint(20) DEFAULT NULL,                          -- pubblicazione del marchio
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                 -- pubblicazione della categoria di marchi
+  `id_notizia` bigint(20) DEFAULT NULL,                          -- pubblicazione della notizia
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                -- pubblicazione della categoria di notizie
+  `id_annuncio` bigint(20) DEFAULT NULL,                         -- pubblicazione dell'annuncio
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                -- pubblicazione della categoria di annunci
+  `id_risorsa` bigint(20) DEFAULT NULL,                          -- pubblicazione della risorsa
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                -- pubblicazione della categoria di risorse
+  `id_progetto` bigint(20) DEFAULT NULL,                         -- pubblicazione del progetto
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- pubblicazione della categoria di progetti
+  `note` text DEFAULT NULL,                                      -- note sulla pubblicazione
+  `id_sito` bigint(20) DEFAULT NULL,                             -- sito della configurazione su cui vale la pubblicazione, NULL = tutti
+  `template` char(255) DEFAULT NULL,                             -- template con cui si mostra l'oggetto su questo sito
+  `schema_html` char(128) DEFAULT NULL,                          -- schema HTML del template
+  `tema_css` char(128) DEFAULT NULL,                             -- tema CSS del template
+  `se_sitemap` tinyint(1) DEFAULT NULL,                          -- l'oggetto va nella sitemap del sito
+  `se_cacheable` tinyint(1) DEFAULT NULL,                        -- la pagina dell'oggetto si puo' mettere in cache
+  `timestamp_inizio` int(11) DEFAULT NULL,                       -- inizio della finestra di pubblicazione, NULL = da sempre
+  `timestamp_fine` int(11) DEFAULT NULL,                         -- fine della finestra di pubblicazione, NULL = per sempre
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                  -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                 -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
 
 -- | 010000028600
 

@@ -596,14 +596,15 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		-- prima erano due LEFT JOIN su pubblicazioni ( dell'articolo e del prodotto ): un articolo con
 		-- piu' pubblicazioni usciva una volta per pubblicazione, e su glisweb la vista dava 7.920 righe
 		-- per 132 articoli. La statica, che ha id come chiave primaria, non si riusciva piu' a
-		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto.
+		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto; la prima e' quella
+		-- che viene prima nell'ordine ( punto 6e ), su qualunque sito.
 		coalesce(
-			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
-			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
+			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
 		) AS id_tipologia_pubblicazione,
 		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = coalesce(
-				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
-				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
+				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
 			) ) AS pubblicazione,
 		-- TIPOLOGIA DI VOCE A LISTINO: SOTTOQUERY, NON JOIN
 		--
@@ -5464,10 +5465,10 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		--
 		-- prima era una LEFT JOIN su pubblicazioni: un prodotto con piu' pubblicazioni usciva una volta per
 		-- pubblicazione ( su utensilerialughese cinque righe doppie ). Si prende la prima pubblicazione del
-		-- prodotto, come in articoli_view.
-		( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.id LIMIT 1 ) AS id_tipologia_pubblicazione,
+		-- prodotto, come in articoli_view, la prima nell'ordine.
+		( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 ) AS id_tipologia_pubblicazione,
 		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = (
-				SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.id LIMIT 1
+				SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1
 			) ) AS pubblicazione,
 		prodotti.id,
 		prodotti.id_tipologia,
@@ -5795,39 +5796,50 @@ CREATE OR REPLACE VIEW provincie_view AS                      --
 -- | 090000028400
 
 -- pubblicazioni_view
-CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
-    SELECT                                                      --
-		pubblicazioni.id,                                       --
-		pubblicazioni.id_tipologia,                             --
-		tp.nome AS tipologia,                                   --
-		pubblicazioni.ordine,                                   --
-		pubblicazioni.id_prodotto,                              --
-		pubblicazioni.id_articolo,                              --
-		pubblicazioni.id_categoria_prodotti,                    --
-		pubblicazioni.id_notizia,                               --
-		pubblicazioni.id_categoria_notizie,                     --
-		pubblicazioni.id_categoria_annunci,                     --
-		pubblicazioni.id_pagina,                                --
-		pubblicazioni.id_popup,                                 --
-		pubblicazioni.id_risorsa,                               --
-		pubblicazioni.id_categoria_risorse,                     --
-		pubblicazioni.id_progetto,                              --
-		pubblicazioni.id_categoria_progetti,                    --
-		pubblicazioni.id_banner,                                --
-		pubblicazioni.id_marchio,                               --
-		pubblicazioni.id_categoria_marchi,                      --
-		pubblicazioni.timestamp_inizio,                         --
-		pubblicazioni.timestamp_fine,                           --
-		concat_ws(                                              --
-			' ',                                                --
-			tp.nome,                                            --
-			pubblicazioni.timestamp_inizio,                     --
-			pubblicazioni.timestamp_fine                        --
-		) AS __label__                                          -- etichetta per le tendine e le liste
-    FROM pubblicazioni                                          --
-		LEFT JOIN tipologie_pubblicazioni AS tp                 --
-            ON tp.id = pubblicazioni.id_tipologia               --
-;                                                               --
+CREATE OR REPLACE VIEW `pubblicazioni_view` AS
+	SELECT
+		pubblicazioni.id,
+		pubblicazioni.id_tipologia,
+		tipologie_pubblicazioni_path( pubblicazioni.id_tipologia ) AS tipologia,
+		pubblicazioni.ordine,
+		pubblicazioni.id_pagina,
+		pubblicazioni.id_popup,
+		pubblicazioni.id_banner,
+		pubblicazioni.spazio,
+		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
+		pubblicazioni.id_categoria_prodotti,
+		pubblicazioni.id_marchio,
+		pubblicazioni.id_categoria_marchi,
+		pubblicazioni.id_notizia,
+		pubblicazioni.id_categoria_notizie,
+		pubblicazioni.id_annuncio,
+		pubblicazioni.id_categoria_annunci,
+		pubblicazioni.id_risorsa,
+		pubblicazioni.id_categoria_risorse,
+		pubblicazioni.id_progetto,
+		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.note,
+		pubblicazioni.id_sito,
+		pubblicazioni.template,
+		pubblicazioni.schema_html,
+		pubblicazioni.tema_css,
+		pubblicazioni.se_sitemap,
+		pubblicazioni.se_cacheable,
+		pubblicazioni.timestamp_inizio,
+		from_unixtime( pubblicazioni.timestamp_inizio, '%Y-%m-%d %H:%i' ) AS data_ora_inizio,
+		pubblicazioni.timestamp_fine,
+		from_unixtime( pubblicazioni.timestamp_fine, '%Y-%m-%d %H:%i' ) AS data_ora_fine,
+		pubblicazioni.id_account_inserimento,
+		pubblicazioni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_pubblicazioni_path( pubblicazioni.id_tipologia ),
+			from_unixtime( pubblicazioni.timestamp_inizio, '%Y-%m-%d %H:%i' ),
+			from_unixtime( pubblicazioni.timestamp_fine, '%Y-%m-%d %H:%i' )
+		) AS __label__
+	FROM pubblicazioni
+;
 
 -- | 090000028600
 
