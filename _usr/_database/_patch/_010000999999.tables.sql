@@ -735,6 +735,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                         --
   `id_mailing` bigint(20) DEFAULT NULL,                           -- chiave esterna per il mailing collegato all'attività
   `id_banner` bigint(20) DEFAULT NULL,                            -- chiave esterna per il banner visualizzato o cliccato
   `id_pubblicazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la collocazione che ha servito il banner
+  `id_redirect` bigint(20) DEFAULT NULL,                          -- chiave esterna per il redirect eseguito
   `id_documento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il documento collegato all'attività
   `id_corrispondenza` bigint(20) DEFAULT NULL,                    -- chiave esterna per la corrispondenza collegata all'attività
   `id_pagamento` bigint(20) DEFAULT NULL,                         -- chiave esterna per il pagamento collegato all'attività

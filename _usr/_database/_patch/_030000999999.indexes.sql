@@ -397,6 +397,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_banner` (`id_banner`),
 	ADD KEY `id_pubblicazione` (`id_pubblicazione`),
+	ADD KEY `id_redirect` (`id_redirect`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_corrispondenza` (`id_corrispondenza`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
