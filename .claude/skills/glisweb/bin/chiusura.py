@@ -215,6 +215,28 @@ def controlla_igiene(root):
         dì('✓', 'igiene', 'niente root:root recente, niente copie di appoggio nella document root')
 
 
+# ---------------------------------------------------------------- cartella del progetto e .md
+BIN = os.path.dirname(os.path.abspath(__file__))
+
+
+def controlla_cartella(root):
+    _, out, _ = sh([sys.executable, os.path.join(BIN, 'cartella-progetto.py'), root])
+    voci = [l.strip() for l in out.splitlines()[1:] if l.strip()]
+    if voci:
+        dì('⚠', 'cartella', '%d voci fuori posto nella cartella del progetto ( vanno in var/AAAAMMGG-scopo/ )' % len(voci), voci)
+    else:
+        dì('✓', 'cartella', 'nella cartella del progetto solo i file canonici')
+
+
+def controlla_md(root):
+    rc, out, _ = sh([sys.executable, os.path.join(BIN, 'md-leggibile.py'), root])
+    if rc:
+        dì('⚠', 'leggibilità', 'i .md di progetto non si leggono bene con less ( md-leggibile.py, --allinea per le tabelle )',
+           [l.replace(root + '/', '') for l in out.splitlines()])
+    else:
+        dì('✓', 'leggibilità', out.strip())
+
+
 # ---------------------------------------------------------------- processi e scratchpad
 def controlla_processi(root):
     nome = os.path.basename(root)
@@ -323,6 +345,8 @@ def main():
         controlla_standard(root)
     controlla_file_progetto(root, commit_oggi or carichi)
     controlla_igiene(root)
+    controlla_cartella(root)
+    controlla_md(root)
     controlla_processi(root)
     controlla_scratchpad(root)
     controlla_cron(root)

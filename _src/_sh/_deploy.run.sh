@@ -96,6 +96,12 @@ else
 
     fi
 
+    ## l'elenco dei file trasferiti va in var/deploy/, nel DEPLOY.md solo il riassunto
+    # NOTA fino al 26/10/2026 l'output di rsync -av finiva nel DEPLOY.md, file per file, e quello
+    # di bernispa era arrivato a 4 MB: il DEPLOY.md e' il diario dei deploy, si legge con less
+    mkdir -p ../var/deploy
+    RSYNC_LOG="../var/deploy/$( date "+%Y%m%d-%H%M" )-$1.log"
+
     ## registro il deploy
     if [ -z "$PARGNOLOG" ]; then
 
@@ -103,7 +109,7 @@ else
         sed -i -e '$a\' ../DEPLOY.md
 
         ## registro dei deploy
-        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT" >> ../DEPLOY.md
+        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT ( $1 )" >> ../DEPLOY.md
         echo "======================================" >> ../DEPLOY.md
         echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../DEPLOY.md
         echo >> ../DEPLOY.md
@@ -355,7 +361,7 @@ else
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -368,7 +374,7 @@ else
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.open.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -395,24 +401,27 @@ else
                 CMD="rsync $EXCLUDE -avz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> "$RSYNC_LOG"
 
                 # esito del deploy
                 RSYNC_STATUS=$?
+
+                # riassunto nel diario
+                echo "file trasferiti: $( grep -cvE '^(sending |sent |total size |building |created directory |deleting |\./$|$)' "$RSYNC_LOG" ), esito rsync $RSYNC_STATUS — elenco completo in ${RSYNC_LOG#../}" >> ../DEPLOY.md
 
                 # comando per composer update
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
 
                 # registro dei deploy
                 echo >> ../DEPLOY.md
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -425,7 +434,7 @@ else
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -484,7 +493,7 @@ else
                 CMD="$DST_PATH/_src/_sh/_backup.run.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -501,7 +510,7 @@ else
                 CMD="$DST_PATH/_src/_sh/_lamp.permissions.open.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
@@ -528,23 +537,26 @@ else
                 CMD="rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # deploy
-                rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
+                rsync $EXCLUDE -avz --checksum --delete $SRC_PATH/ $DST_PATH >> "$RSYNC_LOG"
 
                 # esito del deploy
                 RSYNC_STATUS=$?
+
+                # riassunto nel diario
+                echo "file trasferiti: $( grep -cvE '^(sending |sent |total size |building |created directory |deleting |\./$|$)' "$RSYNC_LOG" ), esito rsync $RSYNC_STATUS — elenco completo in ${RSYNC_LOG#../}" >> ../DEPLOY.md
 
                 # comando
                 CMD="$DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
 
                 # registro dei deploy
-                echo "$CMD" >> ../DEPLOY.md
+                printf '```\n%s\n```\n' "$CMD" >> ../DEPLOY.md
                 echo >> ../DEPLOY.md
 
                 # informazioni

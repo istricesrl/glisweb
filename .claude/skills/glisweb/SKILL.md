@@ -114,6 +114,24 @@ destinatario del `CHAT.md`, concorrenza fra sessioni, chiusura di una voce in tr
 **`riferimenti/cinque-file.md`** accanto a questo file: **leggilo prima di scrivere in uno dei cinque**,
 se non l'hai già fatto nella sessione.
 
+Accanto ai cinque c'è il **`DEPLOY.md`**, il **diario dei deploy** `dev -> test` e `dev -> prod`: lo
+scrive `_deploy.run.sh` a ogni deploy ( quando, quale canale, quanti file, dov'è il log completo ),
+e a mano ci si aggiunge una riga sola quando un deploy fa qualcosa che lo script non vede ( un
+passo a mano, un ritorno indietro ). Non è un log: l'elenco dei file trasferiti sta in
+`var/deploy/`, e il diario resta leggibile con `less`. Dettaglio in `riferimenti/cinque-file.md`.
+
+⚠ **La cartella del progetto contiene solo i file canonici** ( dal 26/10/2026 ): i sei qui sopra,
+quelli generati e le cartelle `dev/ stable/ test/ var/ backups/ disallineamenti/ .claude/`. Tutto
+il resto — dump, copie, analisi, allegati, script di una volta — va in **`var/AAAAMMGG-scopo/`**.
+L'elenco esatto lo tiene **`bin/cartella-progetto.py`**, e l'hook del server blocca i file nuovi
+fuori elenco. Un progetto che ha bisogno di altro lo scrive in `.claude/cartella-progetto.consentiti`.
+
+⚠ **I `.md` di progetto si leggono con `mcedit` e `less`, non in anteprima** ( Fabio, 26/10/2026 ):
+righe di **100 caratteri al massimo**, tabelle di **5 colonne al massimo** e **allineate nel testo**,
+e il `READ.md` dice **com'è adesso**, la storia sta nel `DONE.md`. Prima di chiudere si passa
+**`bin/md-leggibile.py`** ( `--allinea` sistema le tabelle da solo ). Regole complete in
+`riferimenti/cinque-file.md`, *"Come si scrive un .md di progetto"*.
+
 **Il `READ.md` del progetto porta gli accessi**, sezione *Accessi e credenziali*: almeno le **credenziali
 di root dell'applicazione**, che servono a provare ogni parte del gestionale ( login, schede, form,
 stampe ) senza chiedere a nessuno; poi DB, Adminer, SSH e servizi esterni. È il primo posto dove
@@ -400,6 +418,11 @@ nient'altro**. Non ci va nessun materiale di progetto:
 
 **Nemmeno dentro `dev/var/`**, che è comunque sotto la document root.
 
+**E nemmeno sciolto nella cartella del progetto**, accanto ai file canonici: un
+`backup.db.<…>.sql.gz` o un `colli.dev.prima.sql` lasciati in `/var/www/<progetto>/` sono rusco
+quanto dentro `dev/` ( il 26/10/2026 ce n'erano 59 su 11 progetti ). Il dump "prima di toccare il
+database" si scrive **direttamente** in `var/AAAAMMGG-scopo/`, non dove si trova la shell.
+
 Tutto questo vive in **`<progetto>/var/<sottocartella parlante>/`**, un livello **sopra** la document root,
 coi file che tengono il **nome originale** (e, se serve a distinguerli, il loro percorso relativo):
 
@@ -419,6 +442,10 @@ coi file che tengono il **nome originale** (e, se serve a distinguerli, il loro 
 `var/file/` sono rusco quanto un file lasciato nella document root: la cartella deve dire a chi legge fra sei
 mesi cosa c'è dentro senza doverla aprire. Data (`20260827-<motivo>`), argomento, o tutt'e due — e una
 sottocartella per cosa, non un raccoglitore unico in cui si sedimenta di tutto.
+
+⚠ **La data ha un formato solo, `AAAAMMGG-scopo`** ( dal 26/10/2026 ): niente `2026-09-01-x`, niente
+ora attaccata ( `202609281012-x` ), scopo minuscolo coi trattini. I nomi tematici senza data restano
+buoni ( `procedure/`, `deploy/` ). Le cartelle già nate non si rinominano: TODO e DONE ci rimandano.
 
 E vale sempre la regola del nome: **l'identificativo va nel nome della cartella, non appiccicato dopo
 l'estensione vera**. Non `config.json.bak.20260910`, ma `20260910-<motivo>/config.json`.
@@ -887,6 +914,12 @@ progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.frame
 - Questa skill è distribuita **dentro al repository del framework** (cartella `.claude/skills/glisweb/`). È
   l'unica cartella senza prefisso underscore che è versionata di proposito — deroga consapevole alla regola
   "no underscore = custom = gitignored".
+- **Copie fuori dal framework non se ne fanno.** Un progetto senza codice su questa macchina ( il
+  deploy gira altrove, come crm.2si.it ) la skill la prende con un **link simbolico**
+  `.claude/skills/glisweb -> /var/www/glisweb.istricesrl.it/dev/.claude/skills/glisweb`, non con una
+  copia: il 26/10/2026 la copia fatta a mano il 23/09 in crm.2si.it era indietro di un mese, con la
+  regola sui disallineamenti rovesciata dal 12/10. Le copie in `stable/` restano indietro finché
+  stable non si aggiorna a mano, ed è voluto: seguono il framework che hanno accanto.
 - La skill si può migliorare anche da un deploy cliente: `_gw.upgrade.sh` raccoglie `./.claude` fra i
   disallineamenti, e la modifica risale allo standard col giro di riallineamento. Prima e dopo l'Edit si
   controlla `stat` ( inode e `Links:` ), come per ogni file standard: in alcuni deploy il framework è

@@ -16,6 +16,7 @@ non è ordine estetico, è la condizione perché restino leggibili.
 | `TODO.md` | **cosa c'è da fare**: solo `[ ]` e `[?]` | si **pota** quando una voce chiude |
 | `DONE.md` | **cosa è successo, e perché si è deciso così**: `[v]`, `[x]` e le cronache | append, non si rilegge: si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | si **riscrive**: non è un diario, è una fotografia di adesso |
+| `DEPLOY.md` | **cosa è andato su test e su prod, e quando** | lo appende `_deploy.run.sh`; a mano una riga sola |
 
 Il confine fra i primi due: il `CLAUDE.md` dice **come comportarsi** (le regole, cosa non fare, le
 convenzioni), il `READ.md` dice **i fatti** (dove sta la roba, come ci si entra, quali comandi). Se
@@ -132,6 +133,67 @@ La regola che tiene insieme i tre file di stato: **una cosa sta in un file solo.
 dal `TODO.md` e entra nel `DONE.md`; quando una domanda al cliente ha risposta esce dal `CHAT.md` e
 la decisione entra nel `DONE.md`. Se la stessa riga sta in due file, il prossimo che legge non sa
 quale delle due è vera.
+
+### `DEPLOY.md`: il diario dei deploy ( dal 26/10/2026 )
+
+È il sesto file canonico: risponde a **"cosa è andato su test e su prod, e quando"**. Lo scrive
+`_deploy.run.sh` a ogni deploy `dev -> test` o `dev -> prod`, con un blocco per deploy:
+
+```
+2026-10-26 10:40 DEPLOY TRAMITE SCRIPT ( stable )
+==================================================
+...il comando, in un blocco di codice...
+file trasferiti: 12 — elenco completo in var/deploy/20261026-1040-stable.log
+```
+
+- **non è un log**: fino al 26/10/2026 lo script ci scriveva l'output di `rsync -av`, file per file,
+  e il `DEPLOY.md` di bernispa era arrivato a 4 MB e 105.000 righe. L'elenco dei file ora sta in
+  `var/deploy/AAAAMMGG-HHMM-<canale>.log`;
+- **a mano si aggiunge una riga sola**, sotto il blocco dello script, quando il deploy ha fatto
+  qualcosa che lo script non vede: un passo a mano sul target, una patch del database applicata,
+  un ritorno indietro. Il perché va nel `DONE.md`, qui solo il fatto;
+- un `DEPLOY.md` vecchio troppo grosso per `less` si sposta in `var/AAAAMMGG-deploy-storico/` e si
+  riparte da un file nuovo, con una riga che ci rimanda;
+- `chiusura.py` legge da qui gli `--exclude` dell'ultimo `rsync`: il comando resta scritto per intero.
+
+### La cartella del progetto: i file canonici, e niente altro ( dal 26/10/2026 )
+
+Nella cartella del progetto ( `/var/www/<progetto>/`, quella che contiene `dev/` ) stanno solo:
+
+| cosa                     | quali                                                              |
+|--------------------------|--------------------------------------------------------------------|
+| i file di progetto       | `CLAUDE.md` `READ.md` `TODO.md` `DONE.md` `CHAT.md` `DEPLOY.md`    |
+| generati                 | `burndown.md` `CHAT.md.flock` `phpmalwarefinder.log`               |
+| aggiornamento e gabbie   | `update.*.conf` `devuser.conf` `ftpuser.conf`                      |
+| cartelle                 | `dev/ stable/ test/ var/ backups/ disallineamenti/ .claude/`       |
+
+Tutto il resto va in `var/AAAAMMGG-scopo/`. L'elenco vero è in `bin/cartella-progetto.py`, che lo
+controlla ( senza argomenti guarda tutti i progetti di `/var/www` ); lo usano `chiusura.py`, l'hook
+`niente-rusco` del server, che blocca la creazione di un file nuovo fuori elenco, e il controllo
+di chiusura del capitano. Un progetto che ha davvero bisogno di un file in più lo elenca in
+`.claude/cartella-progetto.consentiti`, un nome per riga, e scrive il perché nel `CLAUDE.md`.
+
+### Come si scrive un .md di progetto: si legge con `mcedit` e `less` ( dal 26/10/2026 )
+
+Fabio i file di progetto li apre **come testo**, non in un'anteprima markdown. Quello che conta è
+come appaiono in un terminale:
+
+1. **righe di 100 caratteri al massimo**. Si va a capo a mano; una voce del `TODO.md` che non ci
+   sta continua sulla riga sotto, rientrata di due spazi. Fanno eccezione solo i blocchi di
+   codice ( ``` o rientro di quattro spazi ), dove un URL o un comando lungo può stare intero;
+2. **tabelle di 5 colonne al massimo, con le colonne allineate** nel testo, così si leggono senza
+   anteprima. `bin/md-leggibile.py --allinea` le allinea da solo. Una tabella che anche allineata
+   supera i 100 caratteri **diventa un elenco**: un blocco per voce, coi campi su righe proprie;
+3. **percorsi e URL lunghi fuori dalle celle**: nella tabella il nome breve, sotto la tabella un
+   blocco di codice coi percorsi interi;
+4. **il `READ.md` dice com'è adesso**. "Il 04/10 è successo che…" è cronaca e va nel `DONE.md`; nel
+   READ al massimo una riga che ci rimanda. Ogni sezione comincia dal fatto, non dalla storia;
+5. **`⚠` e grassetto con parsimonia**: se metà del file è in grassetto, niente lo è. Il `⚠` va sulle
+   trappole vere, quelle che hanno già fatto danno;
+6. il `DONE.md` è un archivio: le regole valgono per i capitoli nuovi, quelli vecchi non si toccano.
+
+Prima di chiudere una sessione che ha scritto nei file di progetto si passa
+`bin/md-leggibile.py` dalla cartella del progetto; `chiusura.py` lo fa da solo e lo segnala come ⚠.
 
 ### Perché i tre file esistono
 
