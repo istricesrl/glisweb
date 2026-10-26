@@ -118,6 +118,39 @@
             // ENTER non ha mandato il form: nessun telefono collegato
             $I->dontSeeInDatabase( 'telefoni', array( 'id_anagrafica' => $idAnagrafica ) );
 
+            // il form resta modificato e non salvato: senza questo l'avviso di uscita dalla pagina blocca il test dopo
+            $I->executeJS( 'formChanged = false;' );
+
+        }
+
+        // il sottomodulo delle relazioni dice il verso ( "<anagrafica> e' il/la <ruolo> di <anagrafica collegata>" ) e
+        // vuole ruolo e anagrafica collegata; e anche saltando il controllo del browser, una riga aggiunta col "+" e
+        // salvata vuota non diventa una relazione ( guardia di controller(), canone riga 147: in produzione su polmasi
+        // c'erano quattro righe con tutti e due gli id NULL )
+        public function relazioni( BackendTester $I ) {
+
+            $denominazione = $I->grabTestName( 'relazioni' );
+
+            $I->amLoggedInAs( 'roots' );
+
+            // anagrafica di partenza
+            $I->amOnPageId( 'anagrafica.form' );
+            $I->fillField( 'anagrafica[denominazione]', $denominazione );
+            $I->click( '#form-anagrafica button .fa-floppy-disk' );
+            $idAnagrafica = $I->grabFromDatabase( 'SELECT id FROM anagrafica WHERE denominazione = ?', array( $denominazione ) );
+
+            // etichette col verso e campi obbligatori
+            $I->amOnPageId( 'anagrafica.form.relazioni', array( 'anagrafica' => array( 'id' => $idAnagrafica ) ) );
+            $I->seeInSource( '<span class="label-top">è il/la</span>' );
+            $I->seeElementInDOM( 'select[name="anagrafica[relazioni_anagrafica][-1][id_ruolo]"][required]' );
+            $I->seeElementInDOM( 'input[name="anagrafica[relazioni_anagrafica][-1][id_anagrafica_collegata]"][data-required="true"]' );
+
+            // riga aggiunta e salvata vuota, togliendo i required come farebbe una POST costruita a mano
+            $I->click( '#relazioni_anagraficarelazioni legend button' );
+            $I->executeJS( '$( "#form-anagrafica [required]" ).prop( "required", false ).each( function() { this.setCustomValidity( "" ); } );' );
+            $I->click( '#form-anagrafica button .fa-floppy-disk' );
+            $I->dontSeeInDatabase( 'relazioni_anagrafica', array( 'id_anagrafica' => $idAnagrafica ) );
+
         }
 
     }

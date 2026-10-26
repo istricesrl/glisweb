@@ -79,7 +79,7 @@ quel ruolo e non per gli altri, ed è il motivo per cui la scheda generale resta
 | fornitore | ranking, condizioni di fornitura, codice fiscale e partita IVA, IBAN |
 | produttore | ranking, condizioni di fornitura, codice fiscale e partita IVA, IBAN |
 | collaboratore | note di collaborazione, codice fiscale e partita IVA, IBAN |
-| relazioni | i legami con altri contatti: anagrafica principale, tipo di relazione, anagrafica collegata |
+| relazioni | i legami con altri contatti, letti da sinistra a destra: *Rossi Mario* è il/la *genitore* di *Rossi Anna*; ruolo e anagrafica collegata sono obbligatori |
 | privacy | l'elenco dei **consensi** raccolti: quale consenso, da che modulo è arrivato, che valore ha e quando |
 | archiviazione | la data di archiviazione e le note che la spiegano |
 | stampe | i documenti che si possono stampare per questo contatto |

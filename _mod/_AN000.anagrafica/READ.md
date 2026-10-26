@@ -99,7 +99,9 @@ Questa è la macro della scheda privacy del modulo di gestione anagrafica.
 Questa è la macro della scheda produttore della pagina di gestione anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.relazioni.php
-Questa è la macro della scheda relazioni della pagina di gestione anagrafica.
+Questa è la macro della scheda relazioni della pagina di gestione anagrafica. La tendina dei ruoli propone solo quelli con
+`ruoli_anagrafica.se_relazioni`; il sottomodulo dice il verso della relazione ( *anagrafica* è il/la *ruolo* di *anagrafica
+collegata* ) e chiede ruolo e anagrafica collegata.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.stampe.php
 Questa è la macro della scheda stampe della pagina di gestione anagrafica.

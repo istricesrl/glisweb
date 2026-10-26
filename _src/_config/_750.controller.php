@@ -257,6 +257,21 @@
     // error_reporting( E_ALL );
 
     /**
+     * righe vuote dei sottomoduli standard
+     * ====================================
+     * La guardia anti-riga-vuota di controller() salta l'INSERT di una riga nuova quando tutti i suoi campi
+     * contenuto sono vuoti ( $cf['controller']['campi_contenuto'] ); qui si dichiarano quelli delle tabelle
+     * standard, senza sovrascrivere quelli che un progetto ha gia' dichiarato. Una relazione fra anagrafiche
+     * senza l'anagrafica collegata non e' una relazione: e' il "+" del sottomodulo salvato a vuoto.
+     *
+     */
+
+    // relazioni fra anagrafiche
+    if( ! isset( $cf['controller']['campi_contenuto']['relazioni_anagrafica'] ) ) {
+        $cf['controller']['campi_contenuto']['relazioni_anagrafica'] = array( 'id_anagrafica_collegata' );
+    }
+
+    /**
      * controller dati
      * ===============
      * 
