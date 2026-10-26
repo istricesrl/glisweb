@@ -183,7 +183,12 @@
             $cnfSpec = 'nessun file di configurazione trovato';
         }
 
-        die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare la configurazione (' . $cnfSpec . ')' );
+        // i dettagli vanno solo nel log: host, percorsi e file di configurazione non si mostrano a chi chiama
+        logger( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare la configurazione (' . $cnfSpec . ')', 'site', LOG_ERR );
+
+        // risposta generica
+        http_response_code( 404 );
+        die( 'sito non trovato' );
 
     }
 
