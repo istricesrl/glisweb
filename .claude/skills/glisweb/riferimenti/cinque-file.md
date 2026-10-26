@@ -241,6 +241,27 @@ E una regola di buon senso che le risparmia quasi tutte: **se si sa che c'è un'
 sullo stesso progetto, i file di stato li scrive una sola**, e l'altra lo dice invece di farlo. Alla
 fine di un giro, dire quali dei tre si sono toccati costa una riga e fa risparmiare la ricostruzione.
 
+#### Appendere non vuol dire riscrivere ( dal 26/10/2026 )
+
+Il 26/10/2026 una sessione ha appeso al `DONE.md` di gimbe con
+`open( 'DONE.md', 'w' ).write( open( 'DONE.md' ).read() + x )`: Python apre in `'w'`, quindi **tronca
+prima di leggere**, e il `DONE.md` ( ~490 KB ) è rimasto col solo ultimo blocco. Fuori da git non c'era
+niente da cui ripescarlo. Da qui:
+
+- **per appendere si usa `open( f, 'a' )` o `>>`**, mai una lettura e una scrittura dello stesso file
+  nella stessa istruzione: vale anche per `cat F … > F` e `sed … F > F`, che troncano allo stesso modo;
+- **prima di riscrivere un file di stato** ( `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`,
+  `var/chat/registro.jsonl` ) lo si legge tutto in una variabile, si costruisce il testo nuovo e si
+  controlla che **non sia più corto** del vecchio, a meno che accorciarlo sia proprio lo scopo ( una
+  pulizia del `TODO.md`, un trasloco nel `DONE.md` ).
+
+La rete sotto, che non sostituisce le due regole: `~/.claude/bin/storico-file-progetto.py`, da cron
+orario, copia ogni versione di questi file in `<progetto>/var/storico-file-progetto/AAAAMMGG-HH/`, e
+l'hook `storico-file-progetto.dopo.py` ( PostToolUse ) avvisa se uno è sceso di oltre il 20%. Se lo
+dice, **si ripristina da lì prima di qualsiasi altra cosa**, oppure si dice perché l'accorciamento era
+voluto. `var/storico-file-progetto/` è una cartella canonica del progetto: `bin/cartella-progetto.py` la
+riconosce come tema senza data.
+
 ### I cinque marcatori
 
 | marcatore | significato | stato | dove vive |

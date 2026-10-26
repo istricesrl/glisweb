@@ -242,7 +242,16 @@ Le regole che contano di più:
    giorno stesso;
 7. **una domanda per il cliente si scrive quando nasce**: nello stesso turno, nel `CHAT.md` in
    `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
-   dove muore col `/clear`.
+   dove muore col `/clear`;
+8. **appendere non vuol dire riscrivere**: per aggiungere in fondo si usa `open( f, 'a' )` o `>>`, **mai**
+   una lettura e una scrittura dello stesso file nella stessa istruzione — `open( f, 'w' ).write( open( f
+   ).read() + x )` tronca **prima** di leggere, e così vale per `cat F … > F` e `sed … F > F`. Prima di
+   **riscrivere** un file di stato ( i cinque, `var/chat/registro.jsonl` ) lo si legge tutto in una
+   variabile, si costruisce il testo nuovo e si controlla che non sia più corto del vecchio, a meno che
+   accorciarlo sia proprio lo scopo. Il 26/10/2026 il `DONE.md` di gimbe ( ~490 KB ) è rimasto col solo
+   ultimo blocco così. La rete è `~/.claude/bin/storico-file-progetto.py`: un cron orario copia ogni
+   versione in `<progetto>/var/storico-file-progetto/AAAAMMGG-HH/`, e l'hook `storico-file-progetto.dopo.py`
+   avvisa se un file è sceso di oltre il 20% — se lo dice, **si ripristina da lì prima di ogni altra cosa**.
 
 La **pulizia** di un `TODO.md` ( voci già chiuse, doppioni, domande da fare ) ha una procedura sua:
 `.claude/skills/glisweb/riferimenti/pulizia-todo.md`, coi verdetti applicati da `bin/applica-triage.py`.
