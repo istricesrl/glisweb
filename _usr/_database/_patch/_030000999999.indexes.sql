@@ -3328,16 +3328,25 @@ ALTER TABLE `ranking` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- recensioni
 ALTER TABLE `recensioni`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_lingua` (`id_lingua`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_risorsa` (`id_risorsa`),
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
-	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_pagina` (`id_pagina`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_categoria_marchi` (`id_categoria_marchi`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categoria_annunci` (`id_categoria_annunci`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `se_approvata` (`se_approvata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000028901

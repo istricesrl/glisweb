@@ -5495,33 +5495,48 @@ CREATE TABLE IF NOT EXISTS `ranking` (                            --
 
 -- recensioni
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene le recensioni per prodotti, articoli, notizie e pagine
+-- funzione: contiene le recensioni degli oggetti che generano pagine
 --
--- questa tabella contiene le recensioni per prodotti, articoli, notizie e pagine
+-- questa tabella contiene le recensioni lasciate sugli oggetti che generano una pagina: le pagine, le entita' pubblicabili
+-- ( prodotti, articoli, marchi, risorse, notizie, annunci, progetti ) e le loro categorie; ha una colonna per ognuno di
+-- questi oggetti e ogni riga ne valorizza una sola. La recensione appartiene al suo oggetto e muore con lui. Il framework
+-- aggiunge alla pagina di un oggetto le sue recensioni approvate nella lingua corrente ( aggiungiRecensioni(), chiamata
+-- dal runlevel 420 del modulo pagine ).
 --
-CREATE TABLE IF NOT EXISTS `recensioni` (
-  `id` bigint(20) NOT NULL,
-  `id_lingua` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `data` date DEFAULT NULL,
-  `autore` char(128) DEFAULT NULL,
-  `valutazione` int(11) DEFAULT NULL,
-  `titolo` char(255) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
-  `se_approvata` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA l'autore si salva sempre: quando la recensione la scrive un utente riconosciuto, id_account va valorizzato con il
+-- suo account ( autore resta il nome con cui la recensione viene pubblicata ); le recensioni importate o inserite a mano
+-- per conto di altri hanno solo autore. La scala di valutazione non e' fissata dal framework.
+CREATE TABLE IF NOT EXISTS `recensioni` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_account` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'account dell'autore
+  `id_annuncio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'annuncio recensito
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto recensito
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo recensito
+  `id_lingua` bigint(20) DEFAULT NULL,                            -- chiave esterna per la lingua della recensione
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto recensito
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina recensita
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti recensita
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio recensito
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di marchi recensita
+  `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa recensita
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse recensita
+  `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia recensita
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria notizie recensita
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria annunci recensita
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti recensita
+  `autore` char(128) DEFAULT NULL,                                -- nome dell'autore, come viene pubblicato
+  `valutazione` int(11) DEFAULT NULL,                             -- voto dato dall'autore
+  `titolo` char(255) DEFAULT NULL,                                -- titolo della recensione
+  `testo` text DEFAULT NULL,                                      -- testo della recensione
+  `se_approvata` tinyint(1) DEFAULT NULL,                         -- recensione approvata, e quindi pubblicata
+  `data` date DEFAULT NULL,                                       -- data della recensione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000029000
 
