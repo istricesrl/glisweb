@@ -108,7 +108,8 @@
 
 		{% if  request.__preset__[ table ].id_documento %}
 			{% set default_documento = request.__preset__[ table ].id_documento %}
-		{% elseif  session.__latest__[ table ].id_documento %}
+		{# l'ultimo documento aperto si propone solo sulle righe nuove: una riga di packing list ha id_documento vuoto, e salvandola la si agganciava a quello ( fix 2026-10-26 ) #}
+		{% elseif  session.__latest__[ table ].id_documento and not request[ table ].id %}
 			{% set default_documento = session.__latest__[ table ].id_documento %}
 		{% endif %}
 		{% if  request.__preset__[ table ].id_emittente %}
