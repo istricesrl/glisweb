@@ -1902,6 +1902,7 @@ ALTER TABLE `relazioni_progetti`
 ALTER TABLE `relazioni_software`
     ADD CONSTRAINT `relazioni_software_ibfk_01` FOREIGN KEY (`id_software`) REFERENCES `software` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_software_ibfk_02` FOREIGN KEY (`id_software_collegato`) REFERENCES `software` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_software_ibfk_03_nofollow`      FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_software` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -2085,6 +2086,13 @@ ALTER TABLE `ruoli_prodotti`
 -- ruoli_progetti
 ALTER TABLE `ruoli_progetti`
     ADD CONSTRAINT `ruoli_progetti_ibfk_01_nofollow`                        FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_progetti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- | 060000035150
+
+-- ruoli_software
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_software`
+    ADD CONSTRAINT `ruoli_software_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_software` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000035200
 

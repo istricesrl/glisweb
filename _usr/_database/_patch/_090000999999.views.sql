@@ -6202,13 +6202,29 @@ CREATE OR REPLACE VIEW `relazioni_progetti_view` AS
 -- relazioni_software_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_software_view AS
+CREATE OR REPLACE VIEW `relazioni_software_view` AS
 	SELECT
-	relazioni_software.id,
-	relazioni_software.id_software,
-	relazioni_software.id_software_collegato,
-	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
+		relazioni_software.id,
+		relazioni_software.ordine,
+		relazioni_software.id_software,
+		coalesce( s1.nome, s1.codice, s1.id ) AS software,
+		relazioni_software.id_software_collegato,
+		coalesce( s2.nome, s2.codice, s2.id ) AS software_collegato,
+		relazioni_software.id_ruolo,
+		ruoli_software.nome AS ruolo,
+		relazioni_software.note,
+		relazioni_software.id_account_inserimento,
+		relazioni_software.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( s1.nome, s1.codice, s1.id ),
+			ruoli_software.nome,
+			coalesce( s2.nome, s2.codice, s2.id )
+		) AS __label__
 	FROM relazioni_software
+		LEFT JOIN software AS s1 ON s1.id = relazioni_software.id_software
+		LEFT JOIN software AS s2 ON s2.id = relazioni_software.id_software_collegato
+		LEFT JOIN ruoli_software ON ruoli_software.id = relazioni_software.id_ruolo
 ;
 
 -- | 090000030800
@@ -6726,6 +6742,22 @@ CREATE OR REPLACE VIEW ruoli_progetti_view AS
 		ruoli_progetti.se_relazioni,
 	 	ruoli_progetti.nome AS __label__
 	FROM ruoli_progetti
+;
+
+-- | 090000035150
+
+-- ruoli_software_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_software_view AS
+	SELECT
+		ruoli_software.id,
+		ruoli_software.id_genitore,
+		ruoli_software.nome,
+		ruoli_software.html_entity,
+		ruoli_software.font_awesome,
+		ruoli_software.se_relazioni,
+	 	ruoli_software_path( ruoli_software.id ) AS __label__
+	FROM ruoli_software
 ;
 
 -- | 090000035200

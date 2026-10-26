@@ -3581,15 +3581,16 @@ ALTER TABLE `relazioni_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000030500
 
 -- relazioni_software
--- tipologia: tabella gestita
--- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_software`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_software`,`id_software_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_software` (`id_software`),
 	ADD KEY `id_software_collegato` (`id_software_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_software`,`id_software_collegato`,`id_ruolo`);
 	
 
 -- | 030000030501
@@ -3960,6 +3961,22 @@ ALTER TABLE `ruoli_progetti`
 -- ruoli_progetti
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000035150
+
+-- ruoli_software
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_software`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000035151
+
+-- ruoli_software
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035200
 

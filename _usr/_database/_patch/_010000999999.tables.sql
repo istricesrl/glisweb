@@ -5882,17 +5882,27 @@ CREATE TABLE IF NOT EXISTS `relazioni_progetti` (               --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione relazioni e software
+-- funzione: mette in relazione due software, con il ruolo che li lega
 --
-CREATE TABLE IF NOT EXISTS `relazioni_software` (
-  `id` bigint(20) NOT NULL,
-  `id_software` bigint(20) DEFAULT NULL,
-  `id_software_collegato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega due software col ruolo che li lega ( l'aggiornamento di un altro software, il plugin di
+-- un altro software... ); i ruoli proponibili sono quelli con ruoli_software.se_relazioni
+--
+-- NOTA la relazione ha un verso: id_software e' il <ruolo> di id_software_collegato ( il plugin a sinistra e' il
+-- plugin del software a destra ); si registra una volta sola e si legge nei due versi; le note precisano il ruolo
+-- nel caso specifico ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_software` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_software` bigint(20) DEFAULT NULL,                        -- chiave esterna per il software che ha il ruolo
+  `id_software_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per il software rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_software )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030800
 
@@ -6411,6 +6421,26 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `se_sostituto` tinyint(1) DEFAULT NULL,
   `se_attesa` tinyint(1) DEFAULT NULL,
   `se_relazioni` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000035150
+
+-- ruoli_software
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli che legano due software
+--
+-- questa tabella contiene i ruoli con cui un software e' collegato a un altro ( aggiornamento, plugin... ); la
+-- legge relazioni_software.id_ruolo, e i ruoli proponibili sono quelli con se_relazioni ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_software` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_software
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035200

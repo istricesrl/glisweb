@@ -775,6 +775,13 @@ INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`
 (2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1),
 (3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1);
 
+-- | 050000035150
+
+-- ruoli_software
+INSERT IGNORE INTO `ruoli_software` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`) VALUES
+(1,	NULL,	'aggiornamento',	NULL,	NULL,	1),
+(2,	NULL,	'plugin',	NULL,	NULL,	1);
+
 -- | 050000035200
 
 -- ruoli_video
