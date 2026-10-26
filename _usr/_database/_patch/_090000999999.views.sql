@@ -6041,17 +6041,27 @@ CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
 -- | 090000030351
 
 -- relazioni_categorie_progetti_view
--- tipologia: tabella gestita
--- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS
+CREATE OR REPLACE VIEW `relazioni_categorie_progetti_view` AS
 	SELECT
-	relazioni_categorie_progetti.id,
-	relazioni_categorie_progetti.ordine,
-	relazioni_categorie_progetti.id_ruolo,
-	relazioni_categorie_progetti.id_categoria,
-	relazioni_categorie_progetti.id_categoria_collegata,
-	concat( relazioni_categorie_progetti.id_categoria,' - ', relazioni_categorie_progetti.id_categoria_collegata ) AS __label__
+		relazioni_categorie_progetti.id,
+		relazioni_categorie_progetti.ordine,
+		relazioni_categorie_progetti.id_categoria,
+		coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria ), '' ) AS categoria,
+		relazioni_categorie_progetti.id_categoria_collegata,
+		coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria_collegata ), '' ) AS categoria_collegata,
+		relazioni_categorie_progetti.id_ruolo,
+		ruoli_categorie_progetti.nome AS ruolo,
+		relazioni_categorie_progetti.note,
+		relazioni_categorie_progetti.id_account_inserimento,
+		relazioni_categorie_progetti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria ), '' ),
+			ruoli_categorie_progetti.nome,
+			coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria_collegata ), '' )
+		) AS __label__
 	FROM relazioni_categorie_progetti
+		LEFT JOIN ruoli_categorie_progetti ON ruoli_categorie_progetti.id = relazioni_categorie_progetti.id_ruolo
 ;
 
 -- | 090000030400

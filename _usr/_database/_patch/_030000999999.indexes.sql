@@ -3462,18 +3462,17 @@ ALTER TABLE `relazioni_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000030350
 
 -- relazioni_categorie_progetti
--- tipologia: tabella gestita
--- verifica: 2022-02-03 11:12 Chiara GDL
 ALTER TABLE `relazioni_categorie_progetti`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_categoria`,`id_categoria_collegata`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
-	ADD UNIQUE KEY `unico` (`id_categoria`,`id_ruolo`, `id_categoria_collegata`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_categoria` (`id_categoria`),
 	ADD KEY `id_categoria_collegata` (`id_categoria_collegata`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_categoria`,`id_categoria_collegata`,`id_ruolo`);
+
 
 -- | 030000030351
 

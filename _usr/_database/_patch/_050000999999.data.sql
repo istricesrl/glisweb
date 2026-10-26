@@ -646,6 +646,12 @@ INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `f
 (1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	1),
 (2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
+-- | 050000034250
+
+-- ruoli_categorie_progetti
+INSERT IGNORE INTO `ruoli_categorie_progetti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_recuperi`) VALUES
+(1,	NULL,	'accetta recuperi da',	NULL,	NULL,	1);
+
 -- | 050000034272
 
 -- ruoli_certificazioni
