@@ -171,6 +171,16 @@
     $cf['cron']['token'] = getToken( __FILE__ );
 
     /**
+     * Fix 2026-10-26: il dettaglio del run solo a chi ha GESTIONE_SISTEMA.
+     *
+     * L'API non chiede login, perche' la chiama il cron di sistema con un curl anonimo, e non ne ha
+     * bisogno: il lock e la pianificazione per minuto la rendono idempotente. Ma la risposta era
+     * l'intero $cf['cron'], cioe' percorsi dei task, esiti, errori e stato dei job, e la riceveva
+     * chiunque: adesso chi non ha il privilegio riceve solo l'esito e gli orari del run.
+     */
+    $dettaglio = getPrivilege( 'GESTIONE_SISTEMA' );
+
+    /**
      * Fix 2026-07-24: durata massima di un run, in secondi.
      *
      * Il cron di sistema chiama questa API ogni minuto: il tetto sta sotto al minuto così ogni run
@@ -232,9 +242,9 @@
         $cf['cron']['status']['saltato'] = date( 'Y-m-d H:i:s' );
         $cf['cron']['info'][] = 'run precedente ancora in esecuzione, esecuzione saltata';
 
-        // output
+        // output, completo solo per chi ha il privilegio
         buildJson(
-            $cf['cron'],
+            ( $dettaglio ) ? $cf['cron'] : array( 'esito' => 'saltato', 'status' => $cf['cron']['status'] ),
             ENCODING_UTF8,
             array(
                 'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
@@ -818,9 +828,9 @@
     // log
     loggerLatest( print_r( $cf['cron'], true ), FILE_LATEST_CRON );
 
-    // output
+    // output, completo solo per chi ha il privilegio
     buildJson(
-        $cf['cron'], 
+        ( $dettaglio ) ? $cf['cron'] : array( 'esito' => 'eseguito', 'status' => $cf['cron']['status'] ),
         ENCODING_UTF8,
         array(
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
