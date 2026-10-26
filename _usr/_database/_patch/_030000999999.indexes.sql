@@ -3111,7 +3111,6 @@ ALTER TABLE `progetti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_ranking` (`id_ranking`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_periodo` (`id_periodo`),
@@ -3309,14 +3308,16 @@ ALTER TABLE `pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ranking`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `se_fornitore` (`se_fornitore`),
 	ADD KEY `se_cliente` (`se_cliente`),
-	ADD KEY `se_progetti` (`se_progetti`),
+	ADD KEY `se_fornitore` (`se_fornitore`),
+	ADD KEY `se_produttore` (`se_produttore`),
+	ADD KEY `se_corriere` (`se_corriere`),
+	ADD KEY `se_collaboratore` (`se_collaboratore`),
+	ADD KEY `se_partner` (`se_partner`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`ordine`,  `se_cliente`, `se_fornitore`,`se_progetti`);
+	ADD KEY `indice` (`id`,`ordine`,`nome`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_corriere`,`se_collaboratore`,`se_partner`);
 
 -- | 030000028601
 

@@ -5570,7 +5570,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.codice,
 		progetti.nome,
-		progetti.id_ranking,
+		a1.id_ranking,
 		ranking.nome AS ranking,
 		progetti.id_prodotto,
 		progetti.id_articolo,
@@ -5616,8 +5616,8 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		) AS __label__
 	FROM progetti
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
-		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN ranking ON ranking.id = a1.id_ranking
 ;
 
 -- | 090000027201
@@ -5847,11 +5847,14 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 CREATE OR REPLACE VIEW `ranking_view` AS
     SELECT
 		ranking.id,
-		ranking.nome,
 		ranking.ordine,
-		ranking.se_fornitore,
+		ranking.nome,
 		ranking.se_cliente,
-		ranking.se_progetti,
+		ranking.se_fornitore,
+		ranking.se_produttore,
+		ranking.se_corriere,
+		ranking.se_collaboratore,
+		ranking.se_partner,
 		ranking.id_account_inserimento,
 		ranking.id_account_aggiornamento,
 		ranking.nome AS __label__

@@ -5180,7 +5180,6 @@ CREATE TABLE IF NOT EXISTS `progetti` (                           --
   `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del progetto
   `codice` char(32) DEFAULT NULL,                                 -- codice del progetto
   `nome` char(255) DEFAULT NULL,                                  -- nome del progetto
-  `id_ranking` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ranking ( importanza ) del progetto
   `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto di cui il progetto è un'istanza ( p.es. il corso )
   `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo con cui il progetto si vende
   `id_periodo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il periodo in cui si svolge il progetto ( p.es. l'edizione )
@@ -5465,25 +5464,32 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                     --
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i ranking per anagrafiche e progetti
+-- funzione: contiene le fasce in cui si dividono le anagrafiche per tipo di rapporto
 --
--- questa tabella contiene i ranking per anagrafiche e progetti, con le informazioni relative al nome, alle note,
--- all'ordine di visualizzazione e alle entità a cui si applica (clienti
--- e fornitori, progetti)
+-- le fasce ( p.es. PLATINUM, GOLD, SILVER, BRONZE ) in cui si dividono le anagrafiche di un certo tipo di rapporto:
+-- clienti, fornitori, produttori, corrieri, collaboratori, partner; l'anagrafica ha la sua fascia in anagrafica.id_ranking.
+-- A ogni fascia si legano determinate caratteristiche ( p.es. lo SLA per i clienti, i benefit per i collaboratori ).
 --
-CREATE TABLE IF NOT EXISTS `ranking` (                        --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `nome` varchar(254) DEFAULT NULL,                           -- nome del ranking
-  `note` text DEFAULT NULL,                                   -- note sul ranking
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `se_cliente` tinyint(1) DEFAULT NULL,                       -- se anagrafica cliente
-  `se_fornitore` tinyint(1) DEFAULT NULL,                     -- se anagrafica fornitore
-  `se_progetti` tinyint(1) DEFAULT NULL,                      -- se progetti
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il ranking
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il ranking
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA: i flag se_* dicono a quali tipi di rapporto si applica la fascia, con gli stessi nomi dei flag di
+-- categorie_anagrafica, e servono a far comparire nella tendina di ogni scheda solo le fasce di quel rapporto; una fascia
+-- puo' averne piu' d'uno. Lead e prospect usano le fasce dei clienti ( se_cliente ), cosi' quando diventano clienti si
+-- portano dietro la loro fascia. Il ranking di un progetto e' quello del suo cliente ( progetti_view ).
+CREATE TABLE IF NOT EXISTS `ranking` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine delle fasce, dalla piu' alta
+  `nome` char(255) DEFAULT NULL,                                  -- nome della fascia
+  `note` text DEFAULT NULL,                                       -- note sulla fascia ( p.es. le caratteristiche che porta )
+  `se_cliente` tinyint(1) DEFAULT NULL,                           -- fascia per i clienti, e per lead e prospect
+  `se_fornitore` tinyint(1) DEFAULT NULL,                         -- fascia per i fornitori
+  `se_produttore` tinyint(1) DEFAULT NULL,                        -- fascia per i produttori
+  `se_corriere` tinyint(1) DEFAULT NULL,                          -- fascia per i corrieri
+  `se_collaboratore` tinyint(1) DEFAULT NULL,                     -- fascia per i collaboratori
+  `se_partner` tinyint(1) DEFAULT NULL,                           -- fascia per i partner
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000028900
 

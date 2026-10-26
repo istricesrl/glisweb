@@ -509,11 +509,11 @@ INSERT IGNORE INTO `pesi_tipologie_corrispondenza` (`id`, `id_tipologia`, `nome`
 -- | 050000028600
 
 -- ranking
-INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'PLATINUM',	NULL,	100,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	'GOLD',	NULL,	200,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT IGNORE INTO `ranking` (`id`, `ordine`, `nome`, `note`, `se_cliente`, `se_fornitore`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	100,	'PLATINUM',	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	200,	'GOLD',	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	300,	'SILVER',	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	400,	'BRONZE',	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000029800
 
