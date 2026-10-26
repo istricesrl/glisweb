@@ -3442,14 +3442,17 @@ ALTER TABLE `relazioni_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMEN
 
 -- relazioni_articoli
 ALTER TABLE `relazioni_articoli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_articolo`,`id_ruolo`, `id_prodotto_collegato`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_articolo_collegato`,`id_ruolo`),
+	ADD UNIQUE KEY `unica_prodotto` (`id_articolo`,`id_prodotto_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
-	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),
 	ADD KEY `id_articolo_collegato` (`id_articolo_collegato`),
+	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_articolo`,`id_articolo_collegato`,`id_prodotto_collegato`,`id_ruolo`);
 
 -- | 030000030321
 

@@ -631,13 +631,13 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 -- | 050000034100
 
 -- ruoli_articoli
-INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_risorse`, `se_acquisto`, `se_rinnovo`) VALUES
-(1,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	'principale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	'suggerito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	'accessorio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	'consumabile',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	'bundle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_risorse`, `se_acquisto`, `se_rinnovo`, `se_relazioni`) VALUES
+(1,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(2,	NULL,	'principale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(3,	NULL,	'suggerito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(4,	NULL,	'accessorio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(5,	NULL,	'consumabile',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(6,	NULL,	'bundle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 -- | 050000034200
 

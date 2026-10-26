@@ -48,10 +48,10 @@ Questa è la macro del modulo di gestione degli articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
 Questa è la macro della scheda relazioni del modulo di gestione articoli: prepara la tendina dei ruoli ( ruoli_articoli_view )
-per il sotto-elenco delle righe di relazioni_articoli ( macro relazioni di lib/catalogo.articoli.form.sub.twig, sul
-modello di /_mod/_AN000.anagrafica/_src/_tpl/_athena/lib/anagrafica.form.relazioni.sub.twig ). Siccome controller()
-segue sia relazioni_articoli_ibfk_01 sia _ibfk_02, nel sotto-elenco compaiono anche le relazioni in cui l'articolo è
-quello collegato: per questo la riga mostra anche l'articolo principale.
+per il sotto-elenco delle righe di relazioni_articoli ( macro relazioni di lib/catalogo.articoli.form.sub.twig,
+sul modello di /_mod/_AN000.anagrafica/_src/_tpl/_athena/lib/anagrafica.form.relazioni.sub.twig ). Il collegato, un articolo
+oppure un prodotto, è il <ruolo> dell'articolo ( il bundle, il modello, l'accessorio ); controller() segue solo
+relazioni_articoli_ibfk_01, quindi il sotto-elenco mostra le relazioni in cui l'articolo è quello principale.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione articoli.

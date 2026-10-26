@@ -5683,19 +5683,31 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (            --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione relazioni e articoli
+-- funzione: collega un articolo a un altro articolo o a un prodotto, con il ruolo che li lega
 --
-CREATE TABLE IF NOT EXISTS `relazioni_articoli` (
-  `id` bigint(20) NOT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_prodotto_collegato` bigint(20) DEFAULT NULL,
-  `id_articolo_collegato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega un articolo a un articolo o a un prodotto col ruolo che li lega ( il prodotto di bundle
+-- di cui l'articolo fa parte, il modello dell'articolo, l'accessorio, il consumabile, il suggerito... ); i ruoli
+-- proponibili sono quelli con ruoli_articoli.se_relazioni
+--
+-- NOTA la relazione ha un verso, ed e' il contrario di quello delle altre relazioni_*: il collegato e' il <ruolo>
+-- dell'articolo ( il prodotto collegato e' il bundle, o il modello, di id_articolo ), perche' quando il collegato
+-- e' un prodotto a sinistra sta per forza l'articolo; ogni riga ha un solo estremo collegato, l'articolo oppure il
+-- prodotto, e ciascuno ha la sua chiave unica; le note precisano il ruolo nel caso specifico ( decisione del
+-- 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_articoli` (              --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
+  `id_articolo_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per l'articolo collegato, se il collegato e' un articolo
+  `id_prodotto_collegato` bigint(20) DEFAULT NULL,              -- chiave esterna per il prodotto collegato, se il collegato e' un prodotto
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo del collegato ( ruoli_articoli )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030350
 
@@ -6026,7 +6038,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
   `se_progetti` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
   `se_acquisto` tinyint(1) DEFAULT NULL,
-  `se_rinnovo` tinyint(1) DEFAULT NULL
+  `se_rinnovo` tinyint(1) DEFAULT NULL,
+  `se_relazioni` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034200

@@ -6011,17 +6011,31 @@ CREATE OR REPLACE VIEW `relazioni_anagrafica_view` AS
 
 -- relazioni_articoli_view
 CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
-	SELECT 
+	SELECT
 		relazioni_articoli.id,
+		relazioni_articoli.ordine,
 		relazioni_articoli.id_articolo,
-		relazioni_articoli.id_ruolo,
-		relazioni_articoli.id_prodotto_collegato,
+		coalesce( a1.nome, a1.codice, a1.id ) AS articolo,
 		relazioni_articoli.id_articolo_collegato,
-		concat_ws( ' - ', coalesce( a1.codice, a1.id ), coalesce( a2.codice, p2.codice, a2.id, p2.id ) ) AS __label__
+		coalesce( a2.nome, a2.codice, a2.id ) AS articolo_collegato,
+		relazioni_articoli.id_prodotto_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS prodotto_collegato,
+		relazioni_articoli.id_ruolo,
+		ruoli_articoli.nome AS ruolo,
+		relazioni_articoli.note,
+		relazioni_articoli.id_account_inserimento,
+		relazioni_articoli.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( a1.nome, a1.codice, a1.id ),
+			ruoli_articoli.nome,
+			coalesce( a2.nome, a2.codice, a2.id, p2.nome, p2.codice, p2.id )
+		) AS __label__
 	FROM relazioni_articoli
 		LEFT JOIN articoli AS a1 ON a1.id = relazioni_articoli.id_articolo
 		LEFT JOIN articoli AS a2 ON a2.id = relazioni_articoli.id_articolo_collegato
 		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_articoli.id_prodotto_collegato
+		LEFT JOIN ruoli_articoli ON ruoli_articoli.id = relazioni_articoli.id_ruolo
 ;
 
 -- | 090000030351
@@ -6378,7 +6392,8 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 		ruoli_articoli.se_progetti,
 		ruoli_articoli.se_risorse,
 		ruoli_articoli.se_acquisto,
-        ruoli_articoli.se_rinnovo,
+		ruoli_articoli.se_rinnovo,
+		ruoli_articoli.se_relazioni,
 	 	ruoli_articoli_path( ruoli_articoli.id ) AS __label__
 	FROM ruoli_articoli
 ;
