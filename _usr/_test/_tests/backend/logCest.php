@@ -5,7 +5,8 @@
      *
      * verifica che /api/log ( _src/_api/_log.php ) scriva le righe di una sorgente dichiarata in
      * var/log/remoti/<host>/, una per file di livello, e che rifiuti un segreto sbagliato, un host che prova a
-     * uscire dalla cartella e un invio con troppe righe
+     * uscire dalla cartella e un invio con troppe righe; i messaggi su piu' righe o che somigliano a un attacco viaggiano
+     * in base64, come li manda il software, perche' ModSecurity li fermerebbe prima dell'endpoint
      *
      * la sorgente e' la prima di debug.log.remoti.sorgenti del deploy; l'host e' TEST-E2E-log, e la sua cartella
      * resta in var/log/remoti/ solo per la durata del test
@@ -32,7 +33,7 @@
             list( $sorgente, $segreto ) = $this->sorgente( $I );
 
             $r = $this->invia( $sorgente, $segreto, self::HOST, array(
-                array( 'livello' => 'info', 'data' => '2026-10-26 18:00:00', 'messaggio' => "TEST-E2E prova\nsu due righe" ),
+                array( 'livello' => 'info', 'data' => '2026-10-26 18:00:00', 'codifica' => 'base64', 'messaggio' => base64_encode( "TEST-E2E prova\nsu due righe" ) ),
                 array( 'livello' => 3, 'canale' => 'socket', 'messaggio' => 'TEST-E2E errore' ),
                 array( 'livello' => 'inesistente', 'messaggio' => 'TEST-E2E scartata' )
             ), $status );
@@ -47,6 +48,27 @@
             $I->assertFileExists( $info );
             $I->assertStringContainsString( '[2026-10-26 18:00:00] TEST-E2E prova su due righe', file_get_contents( $info ) );
             $I->assertFileExists( DIR_VAR_LOG . 'remoti/' . self::HOST . '/' . $sorgente . '.socket.err.' . date( 'Ym' ) . '.log' );
+
+        }
+
+        // in base64 passa anche quello che ModSecurity prenderebbe per un attacco, e si scrive in chiaro; una base64 non valida o una codifica sconosciuta scartano la riga
+        public function messaggiCodificati( BackendTester $I ) {
+
+            list( $sorgente, $segreto ) = $this->sorgente( $I );
+
+            $r = $this->invia( $sorgente, $segreto, self::HOST, array(
+                array( 'livello' => 'warning', 'codifica' => 'base64', 'messaggio' => base64_encode( "TEST-E2E ../../etc/passwd; rm -rf /tmp/x\nriga due" ) ),
+                array( 'livello' => 'warning', 'codifica' => 'base64', 'messaggio' => 'TEST-E2E non e\' base64!' ),
+                array( 'livello' => 'warning', 'codifica' => 'rot13', 'messaggio' => 'GRFG-R2R' )
+            ), $status );
+
+            $I->assertEquals( 200, $status );
+            $I->assertEquals( 1, $r['scritte'] );
+            $I->assertEquals( 2, $r['scartate'] );
+
+            $warning = DIR_VAR_LOG . 'remoti/' . self::HOST . '/' . $sorgente . '.warning.' . date( 'Ym' ) . '.log';
+            $I->assertFileExists( $warning );
+            $I->assertStringContainsString( 'TEST-E2E ../../etc/passwd; rm -rf /tmp/x riga due', file_get_contents( $warning ) );
 
         }
 

@@ -11,7 +11,7 @@
      *         "sorgente": "<nome della sorgente>",
      *         "host": "<nome della macchina che scrive>",
      *         "righe": [
-     *             { "livello": "info", "data": "2026-10-26 18:00:00", "canale": "<facoltativo>", "messaggio": "..." },
+     *             { "livello": "info", "data": "2026-10-26 18:00:00", "canale": "<facoltativo>", "codifica": "base64", "messaggio": "..." },
      *             ...
      *         ]
      *     }
@@ -20,6 +20,12 @@
      * _src/_config/_210.auth.php lo intercetta come token JWT di login. Risponde:
      *
      *     { "status": "OK", "scritte": <n>, "scartate": <n> }
+     *
+     * Chi manda testo libero lo codifica: con "codifica": "base64" il messaggio e' la base64 del testo UTF-8 e
+     * l'endpoint lo decodifica prima di scriverlo. Dove c'e' ModSecurity col Core Rule Set, un ritorno a capo seguito
+     * da una parola, un '../' o un frammento di shell o di SQL nel corpo vengono letti come un attacco: la richiesta
+     * prende 403 prima di arrivare qui, e ogni 403 da' punti all'IP del mittente nel firewall applicativo. Senza
+     * "codifica" il messaggio si scrive com'e'; una codifica sconosciuta o una base64 non valida scartano la riga.
      *
      * Le sorgenti si dichiarano in debug.log.remoti.sorgenti.<nome>.segreto, nello shadow: ogni software ha il suo segreto,
      * revocabile da solo, e scrive solo nei suoi file. Le righe finiscono in
@@ -123,7 +129,13 @@
             // canale facoltativo, sempre dentro i file della sorgente
             $canale = ( isset( $riga['canale'] ) && is_string( $riga['canale'] ) && preg_match( '/^[a-zA-Z0-9\-_]{1,32}$/', $riga['canale'] ) ) ? $sorgente . '.' . $riga['canale'] : $sorgente;
 
-            if( $l === NULL || ! isset( $riga['messaggio'] ) || ! is_scalar( $riga['messaggio'] ) ) {
+            // messaggio, in chiaro o codificato; false se la codifica non si conosce o non si decodifica
+            $m = ( isset( $riga['messaggio'] ) && is_scalar( $riga['messaggio'] ) ) ? (string) $riga['messaggio'] : NULL;
+            if( $m !== NULL && isset( $riga['codifica'] ) ) {
+                $m = ( $riga['codifica'] === 'base64' ) ? base64_decode( $m, true ) : false;
+            }
+
+            if( $l === NULL || ! is_string( $m ) ) {
 
                 // riga malformata
                 $result['scartate']++;
@@ -148,7 +160,7 @@
                     $quando = ( isset( $riga['data'] ) && is_string( $riga['data'] ) && strtotime( $riga['data'] ) !== false ) ? ' [' . date( 'Y-m-d H:i:s', strtotime( $riga['data'] ) ) . ']' : '';
 
                     // messaggio su una riga sola, troncato
-                    $m = substr( str_replace( array( "\r", "\n" ), ' ', (string) $riga['messaggio'] ), 0, 4096 );
+                    $m = substr( str_replace( array( "\r", "\n" ), ' ', $m ), 0, 4096 );
 
                     // NOTA non si usa logger() perche' filtra con LOG_CURRENT_LEVEL, la verbosita' del deploy; il formato e' il suo
                     file_put_contents( $file, date( 'Y-m-d H:i:s' ) . ' (' . $l . ')' . $quando . ' ' . $m . PHP_EOL, FILE_APPEND | LOCK_EX );
