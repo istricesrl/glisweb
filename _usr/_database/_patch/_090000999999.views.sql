@@ -5945,16 +5945,14 @@ CREATE OR REPLACE VIEW `redirect_azioni_view` AS
 -- | 090000029800
 
 -- regimi_view
-CREATE OR REPLACE VIEW regimi_view AS
+-- tipologia: tabella standard
+-- funzione: espone i regimi fiscali con l'etichetta codice SdI - nome per le tendine
+CREATE OR REPLACE VIEW `regimi_view` AS
 	SELECT
 		regimi.id,
 		regimi.nome,
-		regimi.codice,
-		concat_ws(
-			' ',
-			regimi.nome,
-			regimi.codice
-		) AS __label__
+		regimi.codice_sdi,
+		concat_ws( ' - ', regimi.codice_sdi, regimi.nome ) AS __label__
 	FROM regimi
 ;
 

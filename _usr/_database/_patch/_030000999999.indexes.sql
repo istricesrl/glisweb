@@ -3393,8 +3393,9 @@ ALTER TABLE `redirect_azioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- regimi
 ALTER TABLE `regimi`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
-	ADD UNIQUE KEY `unica` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `codice_sdi` (`codice_sdi`),
+	ADD KEY `indice` (`id`,`nome`,`codice_sdi`);
 
 -- | 030000029801
 

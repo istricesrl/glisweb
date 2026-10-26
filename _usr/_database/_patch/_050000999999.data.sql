@@ -518,7 +518,9 @@ INSERT IGNORE INTO `ranking` (`id`, `ordine`, `nome`, `note`, `se_cliente`, `se_
 -- | 050000029800
 
 -- regimi
-INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
+-- i codici RegimeFiscale delle specifiche tecniche della fattura elettronica ( RF03 e' abrogato ), piu' la riga 1
+-- privato senza codice per le anagrafiche senza partita IVA; gli id non si cambiano
+INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice_sdi`) VALUES
 (1,     'privato',                      NULL),
 (2,     'ordinario',                    'RF01'),
 (3,     'minimi',                       'RF02'),
@@ -541,7 +543,7 @@ INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
 (20,    'franchigia transfrontaliera',  'RF20');
 
 -- NOTE
--- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
+-- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF02
 -- Agricoltura e attività connesse e pesca (articoli 34 e 34-bis, D.P.R. n. 633/1972);	RF04
 -- Vendita sali e tabacchi (art. 74, comma 1, D.P.R. n. 633/1972)	RF05
 -- Commercio dei fiammiferi (art. 74, comma 1, D.P.R. n. 633/1972)	RF06

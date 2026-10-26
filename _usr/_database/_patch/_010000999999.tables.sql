@@ -5604,15 +5604,20 @@ CREATE TABLE IF NOT EXISTS `redirect_azioni` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i regimi fiscali
+-- funzione: contiene i regimi fiscali della fattura elettronica
 --
--- questa tabella contiene i regimi fiscali, con le informazioni relative al nome e al codice
+-- i regimi fiscali, ognuno col codice RegimeFiscale ( RF01 - RF20 ) che la fattura elettronica scrive nei dati del
+-- cedente; li cita un'anagrafica in anagrafica.id_regime, e ne fanno la tendina i form dell'anagrafica.
 --
-CREATE TABLE IF NOT EXISTS `regimi` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: la riga 1 privato non e' un regime fiscale e non ha codice_sdi: e' il valore che i form legacy, dove la tendina
+-- e' obbligatoria, fanno scegliere per un'anagrafica senza partita IVA; come cedente in fattura vale quanto un regime
+-- vuoto. Per questo codice_sdi ammette NULL, ma e' unico. L'elenco lo carica il 050 con id fissi, e gli id non si
+-- cambiano. Quando escono nuove specifiche della fattura elettronica l'elenco va ricontrollato e aggiornato con una patch.
+CREATE TABLE IF NOT EXISTS `regimi` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) NOT NULL,                                      -- nome del regime fiscale
+  `codice_sdi` char(32) DEFAULT NULL                              -- codice RegimeFiscale della fattura elettronica
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000030200
 
