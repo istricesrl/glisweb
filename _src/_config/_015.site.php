@@ -153,8 +153,8 @@
                 // regola di match per gli host
                 $hrule = implode( '|', $hosts );
 
-                // composizione dell'espressione regolare
-                $regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/';
+                // composizione dell'espressione regolare, senza distinzione di maiuscole come fa Apache sull'Host
+                $regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/i';
 
                 // debug
                 // echo $regex .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
