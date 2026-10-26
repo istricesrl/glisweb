@@ -578,12 +578,25 @@
      * vera ( 'X' == 0 ), quindi lascia passare chiunque, e su PHP 8 e' sempre falsa, quindi blocca
      * chiunque. Non va reintrodotta.
      *
+     * I privilegi del gruppo guests ( $cf['auth']['groups']['guests']['privilegi'], vuoto nello
+     * standard ) li ha chiunque, anche senza login: e' il modo canonico di aprire un task agli
+     * anonimi, assegnando il suo privilegio a guests nella configurazione del progetto invece di
+     * togliere checkTaskPrivilege() dal file. Valgono anche per gli utenti collegati, altrimenti un
+     * task aperto agli anonimi risponderebbe 403 proprio a chi ha fatto il login.
+     *
      * @param       string      $p      codice del privilegio
      *
      * @return      boolean             true se l'utente ha il privilegio, false altrimenti
      *
      */
     function getPrivilege( $p ) {
+
+        global $cf;
+
+        // i privilegi dei guests valgono per chiunque; senza privilegio richiesto non bastano
+        if( ! empty( $p ) && in_array( $p, (array)( $cf['auth']['groups']['guests']['privilegi'] ?? array() ), true ) ) {
+            return true;
+        }
 
         // senza gruppi non c'e' un utente autenticato: stessa semantica di getPagePermission()
         if( empty( $_SESSION['account']['gruppi'] ) ) {
