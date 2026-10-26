@@ -18,6 +18,10 @@ class twigToolsCest
         $I->see('string(15) "{ {{ dt.nome }}"');
         $I->see('string(41) "{ % set x = 1 %}{ # nota #}{ { dt.nome }}"');
         $I->see('string(26) "Pinco {{ 7*7 }} { { 7*7 }}"');
+        $I->see('string(36) "{{ dt.nome|raw }} {{dt.email | raw}}"');
+        $I->see('string(32) "{ { dt.nome|raw|map(\'system\') }}"');
+        $I->see('string(19) "{ { dt.nome|rawx }}"');
+        $I->see('string(24) "D\'Amico o\'brien@gimbe.it"');
     }
 
 }

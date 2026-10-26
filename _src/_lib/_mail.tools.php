@@ -372,7 +372,7 @@
      * array( '{{ dt.nome }} {{ dt.cognome }}' => '{{ dt.email }}' ): un nome scritto in un form con della sintassi Twig
      * verrebbe altrimenti eseguito ( fino al 14/10/2026 la registrazione faceva così ). Per difesa, prima della compilazione
      * nomi e indirizzi dei destinatari passano da twigPulisci(), che lascia intatti solo i segnaposto puri ( un percorso di
-     * variabile, senza filtri, chiamate né indici ) e rende testo tutto il resto della sintassi Twig; il mittente, che
+     * variabile senza chiamate né indici, al più con |raw ) e rende testo tutto il resto della sintassi Twig; il mittente, che
      * viene dal template, non viene pulito.
      *
      * Se il template non ha il mittente per la lingua richiesta ( anche perché la lingua manca del tutto ), oppure se Twig

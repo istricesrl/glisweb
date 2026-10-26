@@ -48,6 +48,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-10-14       | Fabio Mosti          | aggiunta twigPulisci() contro l'esecuzione di codice via Twig
+     * 2026-10-26       | Fabio Mosti          | twigPulisci() lascia intatto anche il segnaposto puro con |raw
      *
      * licenza
      * =======
@@ -97,9 +98,10 @@
      *
      * Questa funzione spezza ogni delimitatore Twig ( {{, {% e {# ) inserendo uno spazio dopo la graffa, così Twig lo
      * tratta come testo e lo restituisce com'è; anche {{{ diventa innocuo. Con $segnaposto vero lascia intatti i
-     * segnaposto puri, cioè un percorso di variabile senza filtri, chiamate né indici ( {{ dt.email }} ), e neutralizza
-     * tutto il resto: è la forma da usare sui testi che devono poter richiamare il contesto, come i destinatari di
-     * queueMailFromTemplate(). Un valore che non è una stringa viene convertito; una stringa vuota resta vuota.
+     * segnaposto puri, cioè un percorso di variabile senza chiamate né indici, al più col solo filtro raw ( {{ dt.email }},
+     * {{ dt.email|raw }} ), e neutralizza tutto il resto: è la forma da usare sui testi che devono poter richiamare il
+     * contesto, come i destinatari di queueMailFromTemplate(). Un valore che non è una stringa viene convertito; una
+     * stringa vuota resta vuota.
      *
      * Un segnaposto puro scritto da un utente viene comunque risolto, ma legge solo il contesto passato a Twig e non
      * può eseguire codice: nel contesto non va messo niente che non debba finire nel testo prodotto.
@@ -115,7 +117,10 @@
 
         // NB una graffa in fondo a un pezzo si spezza anche lei, perché subito dopo può venire un segnaposto
         // lasciato intatto, e insieme formerebbero un delimitatore ( {{{ dt.email }} )
-        $parti = ( $segnaposto ) ? preg_split( '/(\{\{\s*[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)*\s*\}\})/', (string) $s, -1, PREG_SPLIT_DELIM_CAPTURE ) : array( (string) $s );
+        $parti = ( $segnaposto ) ? preg_split( '/(\{\{\s*[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)*(?:\s*\|\s*raw)?\s*\}\})/', (string) $s, -1, PREG_SPLIT_DELIM_CAPTURE ) : array( (string) $s );
+
+        // NB |raw si lascia perché stampa un valore del contesto senza compilarlo: lo usano i progetti per non far
+        // diventare &#039; l'apostrofo di un nome o di un indirizzo, e senza di lui il destinatario diventava testo
 
         // i pezzi pari sono testo, i dispari segnaposto puri
         foreach( $parti as $i => $parte ) {
