@@ -287,7 +287,9 @@
 
             $riga['numero_posti'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( max( m.testo ), "∞" )
+                // numero_posti e' int: senza limite si scrive NULL, il simbolo di infinito sta solo
+                // nell'etichetta posti_disponibili
+                'SELECT max( m.testo )
                 FROM metadati AS m
                 WHERE m.id_progetto = ?
                 AND m.nome = "iscritti_max"
@@ -304,7 +306,7 @@
                 array( array( 's' => $riga['id'] ) )
             );
 
-            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $riga['numero_posti'];
+            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . ( ( empty( $riga['numero_posti'] ) && ! is_numeric( $riga['numero_posti'] ) ) ? '∞' : $riga['numero_posti'] );
 
             $riga['numero_alunni_in_attesa'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
