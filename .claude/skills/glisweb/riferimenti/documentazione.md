@@ -15,7 +15,7 @@ Vale su **due livelli**, e sono due perché documentano due cose diverse:
 | il **deploy** (framework o progetto) | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |
 | un **componente** (modulo, template) | `_mod/_4000.catalogo/READ.md` e `USER.md` | `mod/4000.catalogo/READ.md` e `USER.md` |
 | le **quickstart** | `_usr/_docs/_quickstart/*.md` | `usr/docs/quickstart/*.md` |
-| le **vulnerabilità** | `_usr/_docs/_cve/CVE-AAAA-NNNNN.md` | `usr/docs/cve/CVE-AAAA-NNNNN.md` |
+| le **vulnerabilità** | `_usr/_docs/_cve/CVE-AAAA-NNNNN.md` ( o `GHSA-…` ) | `usr/docs/cve/CVE-AAAA-NNNNN.md` |
 
 `READ.md` è il manuale **sviluppatore**, `USER.md` quello **utente**. I moduli non hanno un
 `_usr/_docs/` proprio: replicano solo `_src/`, e la coppia nella radice del componente è già la
