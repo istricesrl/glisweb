@@ -5969,31 +5969,52 @@ CREATE TABLE IF NOT EXISTS `rinnovi_documenti_articoli` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i risorse
+-- funzione: contiene le risorse documentali, cioè i documenti d'archivio catalogati e consultabili dal sito
 --
-CREATE TABLE IF NOT EXISTS `risorse` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `template` char(255) DEFAULT NULL,
-  `schema_html` char(128) DEFAULT NULL,
-  `tema_css` char(128) DEFAULT NULL,
-  `se_sitemap` tinyint(1) DEFAULT NULL,
-  `se_cacheable` tinyint(1) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL,
-  `id_testata` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `giorno_pubblicazione` int(2) DEFAULT NULL,
-  `mese_pubblicazione` int(2) DEFAULT NULL,
-  `anno_pubblicazione` int(4) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- una risorsa è un documento, o una parte di documento, di qualsiasi natura ( testo, audio, multimedia ), catalogato
+-- con un suo codice e identificabile singolarmente: un articolo di giornale, un saggio, una registrazione. Porta la
+-- testata su cui è uscito ( id_testata ) e la data di pubblicazione originale in tre colonne, perché di un documento
+-- storico spesso si conoscono solo l'anno o il mese; non va confusa con la finestra di uscita sul sito, che sta in
+-- pubblicazioni ( pubblicazioni.id_risorsa ). Il testo e gli altri contenuti stanno in contenuti e nei media, le
+-- categorie in risorse_categorie. L'accesso a una risorsa si può vendere: id_prodotto e id_articolo dicono con cosa
+-- si compra, come per progetti e tipologie_contratti, e chi l'ha comprata sta in risorse_account. Come le altre
+-- entità che generano pagine porta il blocco web ( template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito,
+-- id_pagina ) e si appende sotto ciascuna delle sue categorie.
+--
+-- NOTA il blocco web è deprecato su questa tabella ( punto 6e, 22/10/2026 ): sta sulle pubblicazioni, una per sito, e
+-- qui resta per i moduli legacy di oldstable; il codice latest legge quello di pubblicazioni
+-- NOTA id_pagina è la pagina sotto cui si appende la risorsa senza categoria; id_sito non ha chiave esterna perché
+-- i siti sono definiti nella configurazione, non nel database
+-- NOTA id_prodotto vuol dire che l'accesso lo dà qualunque articolo del prodotto ( p.es. le varianti di durata ),
+-- id_articolo che lo dà solo quell'articolo; il modulo legacy 3500.risorse lo legge ancora dal metadato
+-- risorse|acquisto dell'articolo, e il modulo risorse latest leggerà queste colonne
+--
+CREATE TABLE IF NOT EXISTS `risorse` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della risorsa
+  `codice` char(32) DEFAULT NULL,                                 -- codice di catalogo della risorsa
+  `nome` char(255) DEFAULT NULL,                                  -- titolo della risorsa
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto i cui articoli danno accesso alla risorsa
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo con cui si compra l'accesso alla risorsa
+  `id_testata` bigint(20) DEFAULT NULL,                           -- chiave esterna per la testata su cui è uscita la risorsa
+  `note` text DEFAULT NULL,                                       -- note sulla risorsa
+  `giorno_pubblicazione` int(2) DEFAULT NULL,                     -- giorno della pubblicazione originale, se noto
+  `mese_pubblicazione` int(2) DEFAULT NULL,                       -- mese della pubblicazione originale, se noto
+  `anno_pubblicazione` int(4) DEFAULT NULL,                       -- anno della pubblicazione originale
+  `template` char(255) DEFAULT NULL,                              -- template con cui si mostra la pagina della risorsa ( deprecato )
+  `schema_html` char(128) DEFAULT NULL,                           -- schema HTML del template ( deprecato )
+  `tema_css` char(128) DEFAULT NULL,                              -- tema CSS del template ( deprecato )
+  `se_sitemap` tinyint(1) DEFAULT NULL,                           -- la pagina della risorsa va nella sitemap ( deprecato )
+  `se_cacheable` tinyint(1) DEFAULT NULL,                         -- la pagina della risorsa si può mettere in cache ( deprecato )
+  `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina ( deprecato )
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
+  `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000032100
 

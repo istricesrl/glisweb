@@ -6327,29 +6327,30 @@ CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
 -- | 090000032001
 
 -- risorse_view
--- tipologia: tabella gestita
--- verifica: 2021-10-09 16:02 Fabio Mosti
 CREATE OR REPLACE VIEW `risorse_view` AS
 	SELECT
-		risorse.id, 
+		risorse.id,
 		risorse.id_tipologia,
 		tipologie_risorse.nome AS tipologia,
-		risorse.codice, 
+		risorse.codice,
 		risorse.nome,
+		risorse.id_prodotto,
+		risorse.id_articolo,
+		risorse.id_testata,
+		testate.nome AS testata,
+		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
+		risorse.note,
+		risorse.giorno_pubblicazione,
+		risorse.mese_pubblicazione,
+		risorse.anno_pubblicazione,
 		risorse.template,
 		risorse.schema_html,
 		risorse.tema_css,
 		risorse.se_sitemap,
 		risorse.se_cacheable,
 		risorse.id_sito,
-		risorse.id_testata, 
-		testate.nome AS testata,
-		risorse.id_articolo,
-		risorse.id_prodotto,
-		risorse.giorno_pubblicazione,
-		risorse.mese_pubblicazione,
-		risorse.anno_pubblicazione,
-		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
+		risorse.id_pagina,
+		risorse.data_archiviazione,
 		risorse.id_account_inserimento,
 		risorse.id_account_aggiornamento,
 		concat_ws(

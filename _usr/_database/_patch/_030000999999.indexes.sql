@@ -3642,30 +3642,30 @@ ALTER TABLE `rinnovi_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_IN
 -- | 030000032000
 
 -- risorse
--- tipologia: tabella gestita
--- verifica: 2021-10-09 16:08 Fabio Mosti
 ALTER TABLE `risorse`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_testata` (`id_testata`),
-	ADD KEY `id_articolo` (`id_articolo`), 
-	ADD KEY `id_prodotto` (`id_prodotto`), 
-	ADD KEY `id_sito` (`id_sito`),
-	ADD KEY `se_sitemap` (`se_sitemap`),
-	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `giorno_pubblicazione` (`giorno_pubblicazione`),
 	ADD KEY `mese_pubblicazione` (`mese_pubblicazione`),
 	ADD KEY `anno_pubblicazione` (`anno_pubblicazione`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`giorno_pubblicazione`,`mese_pubblicazione`,`anno_pubblicazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`anno_pubblicazione`,`id_sito`,`id_pagina`,`data_archiviazione`);
 
 -- | 030000032001
 
 -- risorse
--- tipologia: tabella gestita
-ALTER TABLE `risorse` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;	
+ALTER TABLE `risorse` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000032100
 
