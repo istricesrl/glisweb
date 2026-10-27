@@ -31,13 +31,13 @@
     /**
      * le famiglie di componenti che nel manuale stanno in un sottomenu
      *
-     * Sono i due insiemi di cui il manuale raccoglie la documentazione un pezzo per volta: i
-     * template e i moduli. Il nome vale tre volte — e' la chiave del gruppo, il nome del capitolo
-     * che ne fa da testata e la voce del menu — e per questo e' un vocabolario chiuso: chiamare la
-     * testata in un altro modo la lascia in fila con gli altri capitoli, senza errori e senza
-     * segnali.
+     * Sono gli insiemi di cui il manuale raccoglie la documentazione un pezzo per volta: i
+     * template, i moduli e le schede delle vulnerabilita' ( CVE ) che riguardano il framework. Il
+     * nome vale tre volte — e' la chiave del gruppo, il nome del capitolo che ne fa da testata e la
+     * voce del menu — e per questo e' un vocabolario chiuso: chiamare la testata in un altro modo la
+     * lascia in fila con gli altri capitoli, senza errori e senza segnali.
      */
-    define( 'DOCS_FAMIGLIE', array( 'template', 'moduli' ) );
+    define( 'DOCS_FAMIGLIE', array( 'template', 'moduli', 'sicurezza' ) );
 
     /**
      * verifica che un percorso resti dentro la document root
@@ -282,6 +282,34 @@
                 'file'   => array( $f ),
                 'gruppo' => $gruppo
             );
+
+        }
+
+        // le schede delle vulnerabilita': una per CVE, col nome ufficiale come nome del file, in
+        // _usr/_docs/_cve/ per lo standard e in usr/docs/cve/ per il progetto. Sono materia da
+        // sviluppatore e stanno solo nel manuale READ, sotto la testata della sicurezza
+        $gruppo = false;
+
+        if( isset( $testate['sicurezza'] ) ) {
+            $capitoli[] = $testate['sicurezza'];
+            $gruppo     = 'sicurezza';
+        }
+
+        if( $tipo === 'READ' && $dir = docsBuildPath( ( $standard ) ? '_usr/_docs/_cve' : 'usr/docs/cve' ) ) {
+
+            foreach( glob( $dir . '/CVE-*.md' ) as $f ) {
+
+                $nome = basename( $f, '.md' );
+
+                $capitoli[] = array(
+                    'chiave' => strtolower( $nome ),
+                    'titolo' => $nome,
+                    'breve'  => $nome,
+                    'file'   => array( $f ),
+                    'gruppo' => $gruppo
+                );
+
+            }
 
         }
 

@@ -17,7 +17,7 @@ auth, con l'utente `docs`.
 
 | documento | sorgente | si legge in | accesso |
 |---|---|---|---|
-| manuale sviluppatore dello standard | `_usr/_docs/READ.md` e `_usr/_docs/_read/*.md` | `/_manual/read/index.html` | pubblico |
+| manuale sviluppatore dello standard | `_usr/_docs/READ.md`, `_usr/_docs/_read/*.md` e le schede CVE di `_usr/_docs/_cve/*.md` | `/_manual/read/index.html` | pubblico |
 | manuale utente dello standard | `_usr/_docs/USER.md` e `_usr/_docs/_user/*.md` | `/_manual/user/index.html` | pubblico |
 | quickstart sviluppatore | `_usr/_docs/_quickstart/*.md` | `/_quickstart/index.html` | pubblico |
 | manuale sviluppatore del progetto | i sorgenti dello standard **più** `usr/docs/READ.md` e `usr/docs/read/*.md` | `/manual/read/index.html` | Basic auth |

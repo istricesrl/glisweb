@@ -101,6 +101,7 @@ sorgenti_doc() {
     ls -1 ./_usr/_docs/READ.md ./_usr/_docs/USER.md ./usr/docs/READ.md ./usr/docs/USER.md \
           ./_usr/_docs/_read/*.md ./_usr/_docs/_user/*.md ./_usr/_docs/_quickstart/*.md \
           ./usr/docs/read/*.md    ./usr/docs/user/*.md    ./usr/docs/quickstart/*.md \
+          ./_usr/_docs/_cve/*.md  ./usr/docs/cve/*.md \
           ./_src/_tpl/*/READ.md   ./_src/_tpl/*/USER.md \
           ./src/tpl/*/READ.md     ./src/tpl/*/USER.md \
           2> /dev/null

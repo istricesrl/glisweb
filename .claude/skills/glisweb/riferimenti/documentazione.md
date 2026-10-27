@@ -15,6 +15,7 @@ Vale su **due livelli**, e sono due perché documentano due cose diverse:
 | il **deploy** (framework o progetto) | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |
 | un **componente** (modulo, template) | `_mod/_4000.catalogo/READ.md` e `USER.md` | `mod/4000.catalogo/READ.md` e `USER.md` |
 | le **quickstart** | `_usr/_docs/_quickstart/*.md` | `usr/docs/quickstart/*.md` |
+| le **vulnerabilità** | `_usr/_docs/_cve/CVE-AAAA-NNNNN.md` | `usr/docs/cve/CVE-AAAA-NNNNN.md` |
 
 `READ.md` è il manuale **sviluppatore**, `USER.md` quello **utente**. I moduli non hanno un
 `_usr/_docs/` proprio: replicano solo `_src/`, e la coppia nella radice del componente è già la
@@ -34,7 +35,30 @@ altri: diventano la voce da cui il sottomenu si apre, cioè la documentazione **
 famiglia, e la loro pagina elenca in fondo i capitoli che raccoglie. Il vocabolario è chiuso —
 `template` e `moduli`, `DOCS_FAMIGLIE` in `_src/_cli/_docs.build.php` — e chiamare la testata in un
 altro modo la lascia in fila con gli altri capitoli, **senza errori e senza segnali**. La coppia
-standard/custom qui si somma, come nell'introduzione.
+standard/custom qui si somma, come nell'introduzione. Dal 27/10/2026 c'è una terza famiglia,
+`sicurezza`, solo nel manuale sviluppatore: la testata è `_usr/_docs/_read/165.sicurezza.md`, i
+capitoli sono le schede CVE ( sotto ).
+
+### Le schede delle vulnerabilità ( CVE )
+
+Regola di Fabio del **27/10/2026**, nata da PHP2Shell: **ogni CVE che si valuta per il framework o
+per il suo stack ( PHP, Apache, MySQL, le librerie di Composer ) ha una scheda**, un file per CVE
+col nome ufficiale — `_usr/_docs/_cve/CVE-2026-109618.md` — aperta il giorno stesso della
+valutazione, anche se l'esito è "non ci riguarda". Il custom `usr/docs/cve/` serve solo quando un
+deploy ha un'esposizione o una protezione sua.
+
+- le sezioni sono fisse e in quest'ordine: **riferimenti ufficiali** ( NVD, advisory del
+  produttore, changelog della versione corretta ), **effetti**, **come si sfrutta**, **esposizione
+  del framework**, **come ci siamo protetti**, **storia**. Il modello è nel capitolo
+  `165.sicurezza.md`, e la prima scheda da copiare è `CVE-2026-109618.md`;
+- ⚠ **la scheda è pubblica** ( `/_manual/read/` ): "come si sfrutta" descrive il **meccanismo** come
+  lo descrivono gli advisory, mai un exploit o i passi per riprodurlo; e i dettagli
+  dell'infrastruttura di un cliente o dei server ( quale macchina ha quale versione, cosa è ancora
+  scoperto ) non ci vanno: stanno nel `DONE.md` e nel `TODO.md`;
+- "come ci siamo protetti" dice **cosa è cambiato nel framework, con l'hash del commit**, oppure
+  perché non serviva cambiare niente e da quale versione dello stack dipende la protezione;
+- la scheda si aggiorna quando cambia lo stato ( patch rilasciata, mitigazione tolta, migrazione
+  fatta ), con una riga datata nella storia.
 
 ⚠ **L'attivazione di un modulo non si documenta.** I manuali raccolgono i `READ.md` e gli
 `USER.md` di **tutti** i moduli e di **tutti** i template dell'albero, accesi o spenti: qui si

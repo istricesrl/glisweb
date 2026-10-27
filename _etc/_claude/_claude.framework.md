@@ -277,8 +277,12 @@ sezione "TASSATIVO: applicazione e documentazione sempre allineati".
 | il **deploy** | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |
 | un **componente** | `_mod/_4000.catalogo/READ.md` e `USER.md` | `mod/4000.catalogo/READ.md` e `USER.md` |
 | le **quickstart** | `_usr/_docs/_quickstart/*.md` | `usr/docs/quickstart/*.md` |
+| le **vulnerabilità** | `_usr/_docs/_cve/CVE-AAAA-NNNNN.md` | `usr/docs/cve/CVE-AAAA-NNNNN.md` |
 
 - `READ.md` è il manuale **sviluppatore**, `USER.md` quello **utente**;
+- **ogni CVE che tocca il framework o il suo stack ha la sua scheda**, aperta il giorno in cui la si
+  valuta: riferimenti ufficiali, effetti, come si sfrutta, esposizione del framework, come ci si è
+  protetti. Struttura e regole nel capitolo `_usr/_docs/_read/165.sicurezza.md`;
 - la documentazione di progetto è **solo correttiva, sostitutiva o additiva**: un capitolo entra nel
   manuale di progetto solo se esiste il suo sorgente custom, e un deploy senza personalizzazioni
   documentate non ha manuale di progetto. Quella dello standard è pubblica ( `/_manual/` ), quella di

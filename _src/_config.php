@@ -1006,6 +1006,7 @@
     define( 'DIR_USR_DOCS_BUILD'                        , DIR_BASE . '_usr/_docs/' );
     define( 'DIR_USR_DOCS_BUILD_HTML'                   , DIR_BASE . '_usr/_docs/_html/' );
     define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/_pdf/' );
+    define( 'DIR_USR_DOCS_CVE'                          , DIR_BASE . '_usr/_docs/_cve/' );
     define( 'DIR_USR_DOCS_ETC'                          , DIR_BASE . '_usr/_docs/_etc/' );
     define( 'DIR_USR_DOCS_IMG'                          , DIR_BASE . '_usr/_docs/_img/' );
     // DIR_USR_DOCS_MD puntava a _usr/_docs/_md/, che non e' mai esistita e che non usava
