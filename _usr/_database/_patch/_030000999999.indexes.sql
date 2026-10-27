@@ -3524,12 +3524,15 @@ ALTER TABLE `relazioni_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_pagamenti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_pagamento`,`id_pagamento_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_pagamento_collegato` (`id_pagamento_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_pagamento`,`id_pagamento_collegato`,`id_ruolo`);
 
 -- | 030000030441
 
@@ -3926,6 +3929,22 @@ ALTER TABLE `ruoli_matricole`
 -- ruoli_matricole
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034950
+
+-- ruoli_pagamenti
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_pagamenti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000034951
+
+-- ruoli_pagamenti
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035000
 

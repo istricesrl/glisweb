@@ -6127,13 +6127,29 @@ CREATE OR REPLACE VIEW `relazioni_documenti_articoli_view` AS
 -- relazioni_pagamenti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
+CREATE OR REPLACE VIEW `relazioni_pagamenti_view` AS
 	SELECT
-	relazioni_pagamenti.id,
-	relazioni_pagamenti.id_pagamento,
-	relazioni_pagamenti.id_pagamento_collegato,
-	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
+		relazioni_pagamenti.id,
+		relazioni_pagamenti.ordine,
+		relazioni_pagamenti.id_pagamento,
+		coalesce( p1.nome, p1.codice, p1.id ) AS pagamento,
+		relazioni_pagamenti.id_pagamento_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS pagamento_collegato,
+		relazioni_pagamenti.id_ruolo,
+		ruoli_pagamenti.nome AS ruolo,
+		relazioni_pagamenti.note,
+		relazioni_pagamenti.id_account_inserimento,
+		relazioni_pagamenti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.codice, p1.id ),
+			ruoli_pagamenti.nome,
+			coalesce( p2.nome, p2.codice, p2.id )
+		) AS __label__
 	FROM relazioni_pagamenti
+		LEFT JOIN pagamenti AS p1 ON p1.id = relazioni_pagamenti.id_pagamento
+		LEFT JOIN pagamenti AS p2 ON p2.id = relazioni_pagamenti.id_pagamento_collegato
+		LEFT JOIN ruoli_pagamenti ON ruoli_pagamenti.id = relazioni_pagamenti.id_ruolo
 ;
 
 -- | 090000030470
@@ -6709,6 +6725,22 @@ CREATE OR REPLACE VIEW ruoli_matricole_view AS
     	ruoli_matricole.font_awesome,
 	 	ruoli_matricole_path( ruoli_matricole.id ) AS __label__
 	FROM ruoli_matricole
+;
+
+-- | 090000034950
+
+-- ruoli_pagamenti_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_pagamenti_view AS
+	SELECT
+		ruoli_pagamenti.id,
+		ruoli_pagamenti.id_genitore,
+		ruoli_pagamenti.nome,
+		ruoli_pagamenti.html_entity,
+		ruoli_pagamenti.font_awesome,
+		ruoli_pagamenti.se_relazioni,
+	 	ruoli_pagamenti_path( ruoli_pagamenti.id ) AS __label__
+	FROM ruoli_pagamenti
 ;
 
 -- | 090000035000

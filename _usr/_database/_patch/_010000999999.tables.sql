@@ -5803,17 +5803,29 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (     --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione relazioni e pagamenti
+-- funzione: mette in relazione due pagamenti, con il ruolo che li lega
 --
-CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
-  `id` bigint(20) NOT NULL,
-  `id_pagamento` bigint(20) DEFAULT NULL,
-  `id_pagamento_collegato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega due movimenti autonomi, ognuno valido da solo, col ruolo che li lega ( lo storno di un
+-- incasso, la contropartita intercompany, la compensazione, la ripresentazione di un insoluto... ); i ruoli
+-- proponibili sono quelli con ruoli_pagamenti.se_relazioni
+--
+-- NOTA la relazione ha un verso: id_pagamento e' il <ruolo> di id_pagamento_collegato ( il rimborso a sinistra e'
+-- lo storno dell'incasso a destra ); si registra una volta sola e si legge nei due versi; le note precisano il ruolo
+-- nel caso specifico; le righe che nascono da un'altra e muoiono con lei ( rate, catture, differenze cambio ) non
+-- stanno qui ma in pagamenti.id_genitore ( decisioni del 21/10 e del 27/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_pagamento` bigint(20) DEFAULT NULL,                       -- chiave esterna per il pagamento che ha il ruolo
+  `id_pagamento_collegato` bigint(20) DEFAULT NULL,             -- chiave esterna per il pagamento rispetto a cui lo ha
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_pagamenti )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000030470
 
@@ -6380,6 +6392,27 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
   `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034950
+
+-- ruoli_pagamenti
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli che legano due pagamenti
+--
+-- questa tabella contiene i ruoli con cui un pagamento e' collegato a un altro ( storno, contropartita,
+-- compensazione, ripresentazione... ); la legge relazioni_pagamenti.id_ruolo, e i ruoli proponibili sono quelli
+-- con se_relazioni ( decisione del 27/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_pagamenti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_pagamenti
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035000

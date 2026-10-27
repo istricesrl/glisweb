@@ -754,6 +754,15 @@ INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome
 (1,	'attrezzatura',	    '',	    ''),
 (2,	'prodotto',	    '',	    '');
 
+-- | 050000034950
+
+-- ruoli_pagamenti
+INSERT IGNORE INTO `ruoli_pagamenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`) VALUES
+(1,	NULL,	'storno',	NULL,	NULL,	1),
+(2,	NULL,	'contropartita',	NULL,	NULL,	1),
+(3,	NULL,	'compensazione',	NULL,	NULL,	1),
+(4,	NULL,	'ripresentazione',	NULL,	NULL,	1);
+
 -- | 050000035000
 
 -- ruoli_prodotti

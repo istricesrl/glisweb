@@ -1868,6 +1868,7 @@ ALTER TABLE `relazioni_documenti_articoli`
 ALTER TABLE `relazioni_pagamenti`
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_01` FOREIGN KEY (`id_pagamento`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_02` FOREIGN KEY (`id_pagamento_collegato`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_pagamenti_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_pagamenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -2074,6 +2075,13 @@ ALTER TABLE `ruoli_mastri`
 -- verifica: 2021-10-12 10:57 Fabio Mosti
 ALTER TABLE `ruoli_matricole`
     ADD CONSTRAINT `ruoli_matricole_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_matricole` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- | 060000034950
+
+-- ruoli_pagamenti
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_pagamenti`
+    ADD CONSTRAINT `ruoli_pagamenti_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_pagamenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000035000
 
