@@ -1911,7 +1911,7 @@ ALTER TABLE `relazioni_software`
 
 -- reparti
 ALTER TABLE `reparti`
-    ADD CONSTRAINT `reparti_ibfk_01_nofollow`                 FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `reparti_ibfk_01_nofollow`                 FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `reparti_ibfk_02_nofollow`                 FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `reparti_ibfk_98_nofollow`                 FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `reparti_ibfk_99_nofollow`                 FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

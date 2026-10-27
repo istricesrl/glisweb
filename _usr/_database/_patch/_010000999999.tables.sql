@@ -5922,18 +5922,28 @@ CREATE TABLE IF NOT EXISTS `relazioni_software` (               --
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i reparti, con l aliquota IVA e il settore di appartenenza
-CREATE TABLE IF NOT EXISTS `reparti` (
-  `id` bigint(20) NOT NULL,
-  `id_iva` bigint(20) DEFAULT NULL,
-  `id_settore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene i reparti di cassa, ognuno con la sua aliquota IVA
+--
+-- i reparti sono i reparti di cassa, cioè i tasti del registratore telematico, e insieme le divisioni contabili
+-- delle vendite: l'aliquota IVA del reparto decide l'IVA delle righe ( articoli, righe dei documenti, prezzi ) che
+-- lo usano, quindi un reparto senza aliquota non ha senso e un'aliquota usata da un reparto non si cancella ( si
+-- archivia ). L'id del reparto è il numero del reparto sul registratore, per questo i file di base lo popolano a id
+-- fissi; i reparti con un'aliquota archiviata non vengono proposti nelle tendine.
+-- NOTA id_iva è obbligatoria per l'applicazione ma DEFAULT NULL come ogni id_*; la chiave esterna NO ACTION impedisce
+-- di cancellare un'aliquota usata da un reparto
+-- NOTA id_settore è il settore ATECO dell'attività a cui il reparto si riferisce, per chi ne esercita più di una;
+-- oggi non è valorizzato su nessun deploy
+CREATE TABLE IF NOT EXISTS `reparti` (                        --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome del reparto
+  `id_iva` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'aliquota IVA del reparto ( obbligatoria )
+  `id_settore` bigint(20) DEFAULT NULL,                       -- chiave esterna per il settore ATECO del reparto
+  `note` text DEFAULT NULL,                                   -- note sul reparto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000031550
 

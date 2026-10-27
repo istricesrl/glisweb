@@ -3607,12 +3607,12 @@ ALTER TABLE `relazioni_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- reparti
 ALTER TABLE `reparti` 
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_iva` (`id_iva`), 
 	ADD KEY `id_settore` (`id_settore`), 
-	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_iva`,`id_settore`,`nome`);
+	ADD KEY `indice` (`id`,`nome`,`id_iva`,`id_settore`);
 
 -- | 030000030801
 

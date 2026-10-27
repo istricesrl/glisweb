@@ -6246,14 +6246,15 @@ CREATE OR REPLACE VIEW `relazioni_software_view` AS
 -- | 090000030800
 
 -- reparti_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW reparti_view AS
 	SELECT
 		reparti.id,
+		reparti.nome,
 		reparti.id_iva,
 		iva.aliquota AS iva,
 		reparti.id_settore,
 		settori_path( reparti.id_settore ) AS settore,
-		reparti.nome,
 		reparti.id_account_inserimento,
 		reparti.id_account_aggiornamento,
 		reparti.nome AS __label__
