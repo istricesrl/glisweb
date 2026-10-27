@@ -3670,22 +3670,20 @@ ALTER TABLE `risorse` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000032100
 
 -- risorse_account
--- tipologia: tabella di supporto
--- verifica: 2022-08-02 12:07 Chiara GDL
 ALTER TABLE `risorse_account`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_account`),
-	ADD KEY `id_account` (`id_account`),
-	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_carrelli_articoli` (`id_carrelli_articoli`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_risorsa`,`id_account`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_account`,`id_carrelli_articoli`);
 
 -- | 030000032101
 
 -- risorse_account
--- tipologia: tabella di supporto
 ALTER TABLE `risorse_account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000032200

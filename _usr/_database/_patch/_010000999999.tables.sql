@@ -6020,21 +6020,31 @@ CREATE TABLE IF NOT EXISTS `risorse` (                            --
 
 -- risorse_account
 -- tipologia: tabella di supporto
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene i risorse account
+-- funzione: dice quali account hanno accesso a quali risorse
 --
-CREATE TABLE IF NOT EXISTS `risorse_account` (
-  `id` bigint(20) NOT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_account` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella mette in relazione risorse e account: ogni riga e' un account che ha accesso a una risorsa. La scrive
+-- il checkout quando si compra un articolo che da' accesso alla risorsa ( risorse.id_prodotto / risorse.id_articolo ),
+-- e in quel caso id_carrelli_articoli dice da quale riga di carrello viene l'accesso, come per documenti_articoli;
+-- un accesso dato a mano da un operatore la lascia vuota.
+--
+-- NOTA note e' deprecata ( punto 6, riga 159, 27/10/2026 ): la relazione non ha ruolo, e la nota la scrive solo il
+-- checkout del modulo legacy 3500.risorse per annotare la provenienza; il modulo risorse latest scrive
+-- id_carrelli_articoli e non la usa
+--
+CREATE TABLE IF NOT EXISTS `risorse_account` (                  --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_risorsa` bigint(20) DEFAULT NULL,                         -- chiave esterna per la risorsa
+  `id_account` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'account che ha accesso alla risorsa
+  `id_carrelli_articoli` bigint(20) DEFAULT NULL,               -- chiave esterna per la riga di carrello da cui viene l'accesso
+  `note` text DEFAULT NULL,                                     -- note sul collegamento ( deprecato )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento della riga
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000032200
 

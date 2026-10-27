@@ -6368,21 +6368,26 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 
 -- | 090000032101
 
--- risorse_account
--- tipologia: tabella di supporto
--- verifica: 2022-08-02 12:07 Chiara GDL
+-- risorse_account_view
 CREATE OR REPLACE VIEW `risorse_account_view` AS
 	SELECT
 		risorse_account.id,
+		risorse_account.ordine,
 		risorse_account.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_account.id_account,
-		risorse_account.ordine,
+		account.username AS account,
+		risorse_account.id_carrelli_articoli,
 		risorse_account.id_account_inserimento,
 		risorse_account.id_account_aggiornamento,
-		risorse.nome AS __label__
+		concat_ws(
+			' ',
+			risorse.nome,
+			account.username
+		) AS __label__
 	FROM risorse_account
 		LEFT JOIN risorse ON risorse.id = risorse_account.id_risorsa
+		LEFT JOIN account ON account.id = risorse_account.id_account
 ;
 
 -- | 090000032201
