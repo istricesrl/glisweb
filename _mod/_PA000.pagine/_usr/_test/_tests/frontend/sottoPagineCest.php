@@ -45,13 +45,14 @@
                 $scenario->skip( 'il livello di log non arriva a LOG_DEBUG, il salto delle sotto pagine non viene registrato' );
             }
 
-            // template e schema presi da una pagina esistente del sito, se li ha; il 420 lavora prima del rendering
-            $idModello = $I->grabFromDatabase( 'SELECT id FROM pagine WHERE id_sito = ? ORDER BY id LIMIT 1', array( SITE_CURRENT ) );
-            $base = array_filter( array(
+            // template e schema presi da una pagina esistente del sito che li ha, altrimenti quelli standard di aurora: una
+            // pagina senza template fa scrivere a _pages.php un crit su dev/etc/template.conf a ogni giro
+            $idModello = $I->grabFromDatabase( 'SELECT id FROM pagine WHERE id_sito = ? AND template IS NOT NULL AND schema_html IS NOT NULL ORDER BY id LIMIT 1', array( SITE_CURRENT ) );
+            $base = array(
                 'id_sito' => SITE_CURRENT,
-                'template' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT template FROM pagine WHERE id = ?', array( $idModello ) ) : NULL,
-                'schema_html' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT schema_html FROM pagine WHERE id = ?', array( $idModello ) ) : NULL
-            ) );
+                'template' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT template FROM pagine WHERE id = ?', array( $idModello ) ) : '_src/_tpl/_aurora/',
+                'schema_html' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT schema_html FROM pagine WHERE id = ?', array( $idModello ) ) : 'default.twig'
+            );
 
             // la madre e due figlie
             $idMadre = $I->haveInDatabase( 'pagine', array_merge( $base, array( 'nome' => $I->grabTestName( 'madre' ) ) ) );
