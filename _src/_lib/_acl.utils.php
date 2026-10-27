@@ -475,19 +475,25 @@
         // NOTA _attivi e _archiviati sono suffissi obsoleti
         // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
+        // account corrente: la funzione puo' essere chiamata senza un account in sessione, e su
+        // PHP 8 in_array() e implode() su un null sono un TypeError, non piu' un warning
+        $username = ( isset( $_SESSION['account']['username'] ) ) ? $_SESSION['account']['username'] : NULL;
+        $gruppi   = ( isset( $_SESSION['account']['gruppi'] ) ) ? (array) $_SESSION['account']['gruppi'] : array();
+        $permessi = ( isset( $_SESSION['account']['permissions'][ $t ] ) ) ? (array) $_SESSION['account']['permissions'][ $t ] : array();
+
         // verifico se l'utente non è root
-        if ($_SESSION['account']['username'] == 'root' || in_array('roots', $_SESSION['account']['gruppi'])) {
+        if ($username == 'root' || in_array('roots', $gruppi)) {
 
             // log
-            logger('accesso root concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+            logger('accesso root concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
             // default
             return NULL;
 
-        } elseif (in_array(CONTROL_FULL, $_SESSION['account']['permissions'][$t])) {
+        } elseif (in_array(CONTROL_FULL, $permessi)) {
 
             // log
-            logger('accesso FULL concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+            logger('accesso FULL concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
             // default
             return NULL;
@@ -502,14 +508,14 @@
             );
 
             // log
-            logger($_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth');
+            logger($username . ' (' . implode(',', $gruppi) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth');
 
             // risultato
             return $r;
         }
 
         // log
-        logger('accesso non filtrato concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+        logger('accesso non filtrato concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
         // default
         return NULL;

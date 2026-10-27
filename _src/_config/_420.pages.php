@@ -52,7 +52,8 @@
     $ct['page'] = &$cf['contents']['page'];
 
     // versione canonica della pagina
-    if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['page']['path'] ) ) {
+    // una pagina senza path non ha l'array, e su PHP 8 in_array() su un null e' un TypeError
+    if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), ( isset( $cf['contents']['page']['path'] ) ) ? (array) $cf['contents']['page']['path'] : array() ) ) {
         $cf['contents']['page']['canonical'] = $cf['contents']['page']['id'];
     }
 
@@ -166,7 +167,7 @@
     // di non farlo con metadati.noSiteNameInTitle: la chiave esisteva già nei config di
     // alcuni siti ma nessuno la leggeva, e il titolo usciva col marchio due volte quando
     // anche il titolo a database se lo portava dietro
-    if( ! empty( TITLE_SEPARATOR ) && empty( $cf['site']['metadati']['noSiteNameInTitle'] ) ) {
+    if( ! empty( TITLE_SEPARATOR ) && empty( $cf['site']['metadati']['noSiteNameInTitle'] ) && isset( $ct['page']['title'][ LINGUA_CORRENTE ] ) ) {
         $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
     }
 
