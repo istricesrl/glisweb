@@ -167,7 +167,9 @@
                     $cn = new Predis\Client([
                         'scheme' => 'tcp',
                         'host'   => $cf['redis']['servers'][ $server ]['address'],
-                        'port'   => $cf['redis']['servers'][ $server ]['port']
+                        'port'   => $cf['redis']['servers'][ $server ]['port'],
+                        // database opzionale, come mysql.servers.<n>.db: senza, si resta sul db0
+                        'database' => ( ( isset( $cf['redis']['servers'][ $server ]['db'] ) ) ? (int) $cf['redis']['servers'][ $server ]['db'] : 0 )
                     ]);
 
                     $cn->connect();

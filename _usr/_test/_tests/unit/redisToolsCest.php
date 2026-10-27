@@ -22,6 +22,13 @@ class redisToolsCest
         $I->see('TEST_AGE');
     }
 
+    // redis.servers.<n>.db -> la connessione deve lavorare sul database configurato ( db0 se manca )
+    public function redisDatabase(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_config/_framework/_redis.database.01.php');
+        $I->see('database OK');
+    }
+
     // redisWrite() -> deve restituire OK
     public function redisWrite(UnitTester $I)
     {
