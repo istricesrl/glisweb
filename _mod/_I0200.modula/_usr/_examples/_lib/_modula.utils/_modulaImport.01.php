@@ -4,7 +4,9 @@
      * esempio di modulaImport()
      *
      * L'output e' controllato da _mod/_I0200.modula/_usr/_test/_tests/unit/modulaUtilsCest.php: un import valido
-     * passa, uno con la quantita' numerica torna la descrizione del WMS, un WMS non disponibile torna 503.
+     * passa, uno con la quantita' numerica torna la descrizione del WMS, un WMS non disponibile torna lo
+     * status 0 con l'errore di curl. Il WMS non disponibile si simula puntando il profilo su una porta chiusa, non
+     * col server finto: un 5xx vero finirebbe nell'access.log del deploy.
      *
      */
 
@@ -32,5 +34,8 @@
     ) );
     var_dump( $errore );
 
-    var_dump( modulaImport( array(), array(), 'ERR-503', $errore ) );
+    // WMS non disponibile: nessuno ascolta sulla porta 1
+    $cf['modula']['profile']['url'] = 'http://127.0.0.1:1/';
+    $cf['modula']['profile']['auth'] = 'basic';
+    var_dump( modulaImport( array(), array(), NULL, $errore ) );
     var_dump( $errore );

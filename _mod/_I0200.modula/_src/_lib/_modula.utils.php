@@ -121,10 +121,11 @@
      * @param    array     dati        il corpo, mandato come JSON
      * @param    int       status      il codice HTTP della risposta
      * @param    string    raw         la risposta grezza, che negli errori e' la descrizione del WMS
+     * @param    string    errore      l'errore di curl, quando il WMS non si raggiunge ( status 0 )
      *
      * @return   array                 la risposta decodificata, NULL se vuota o se il modulo non e' configurato
      */
-    function modulaChiamata( $percorso, $metodo = METHOD_GET, $dati = NULL, &$status = NULL, &$raw = NULL ) {
+    function modulaChiamata( $percorso, $metodo = METHOD_GET, $dati = NULL, &$status = NULL, &$raw = NULL, &$errore = NULL ) {
 
         // globalizzazione
         global $cf;
@@ -187,7 +188,7 @@
      * @param    array     ordini     le righe di IMP_ORDINI
      * @param    array     righe      le righe di IMP_ORDINI_RIGHE
      * @param    string    job        il job, di default quello di import del profilo
-     * @param    string    errore     la descrizione dell'errore restituita dal WMS
+     * @param    string    errore     la descrizione dell'errore restituita dal WMS, o quella di curl se non si raggiunge
      *
      * @return   boolean              true solo se il WMS ha risposto 200
      */
@@ -205,11 +206,12 @@
             '/api/jobs/' . rawurlencode( $job ),
             METHOD_POST,
             array( 'IMP_ORDINI' => array_values( $ordini ), 'IMP_ORDINI_RIGHE' => array_values( $righe ) ),
-            $status, $raw
+            $status, $raw, $erroreCurl
         );
 
+        // se il WMS non si raggiunge non c'e' risposta, e la descrizione e' quella di curl
         if( $status != 200 ) {
-            $errore = $status . ' ' . $raw;
+            $errore = $status . ' ' . ( ( empty( $raw ) ) ? $erroreCurl : $raw );
             return false;
         }
 

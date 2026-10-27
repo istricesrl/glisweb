@@ -10,7 +10,7 @@
      * -------------------------|---------------------------------------------------------------------------------
      * POST /token              | con utente modula e password fake da' il token, altrimenti 400 invalid_grant
      * POST /api/jobs/{job}     | import: valida IMP_ORDINI e IMP_ORDINI_RIGHE, li tiene e risponde 200, o 400
-     *                          | con la descrizione dell'errore; il job ERR-503 risponde sempre 503
+     *                          | con la descrizione dell'errore
      * GET  /api/jobs/{job}     | export: un pacchetto di al massimo due ordini, evasi per intero tranne le righe
      *                          | dell'articolo MANCA, che tornano a "0,000"; finche' non arriva l'ack ripete lo
      *                          | stesso; senza ordini risponde 204
@@ -22,6 +22,10 @@
      * Il file NON fa il bootstrap del framework, di proposito: le credenziali finte in Basic e in Bearer
      * verrebbero prese per un login ( _src/_config/_210.auth.php ) e finirebbero nel log come accessi falliti.
      * Per lo stesso motivo non sa niente dei profili: lo stato sta in var/spool/modula/fake/.
+     *
+     * Il WMS non disponibile NON si simula qui: un 5xx vero finirebbe nell'access.log del deploy, e i controlli
+     * dei log ( log-deploy.py ) lo prenderebbero per un guasto a ogni giro di test. Gli esempi lo simulano dal
+     * client, puntando il profilo su una porta chiusa.
      *
      * Risponde solo se esiste il file var/test/modula.fake.on con meno di dieci minuti, che gli esempi di
      * _usr/_examples/_lib/_modula.utils/ creano prima di chiamarlo; altrimenti 404. Per usarlo a mano:
@@ -142,11 +146,6 @@
     // job
     if( ! preg_match( '#^/api/jobs/([^/]+)(/ack)?$#', $percorso, $job ) ) {
         rispondi( 404, 'Not Found' );
-    }
-
-    // job che simula il WMS non disponibile
-    if( $job[1] == 'ERR-503' ) {
-        rispondi( 503, 'Service Unavailable' );
     }
 
     // ack

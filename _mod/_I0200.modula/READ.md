@@ -58,8 +58,8 @@ Stanno in `_src/_lib/_modula.utils.php`.
 | `modulaQta2Testo( $q )` | numero → testo per il WMS, con la virgola e tre decimali ( `12.5` → `"12,500"` ) |
 | `modulaTesto2Qta( $t )` | testo del WMS → numero |
 | `modulaToken( $rinnova )` | token Bearer, tenuto in memcache sotto `MODULA_TOKEN`; con `$rinnova` ne chiede uno nuovo |
-| `modulaChiamata( $percorso, $metodo, $dati, &$status, &$raw )` | chiamata generica; il percorso comincia con `/`; in Bearer, su un `401` rinnova il token e riprova una volta |
-| `modulaImport( $ordini, $righe, $job, &$errore )` | manda `IMP_ORDINI` e `IMP_ORDINI_RIGHE`; `true` se il WMS risponde `200`, altrimenti `false` con `"<status> <risposta>"` in `$errore` |
+| `modulaChiamata( $percorso, $metodo, $dati, &$status, &$raw, &$errore )` | chiamata generica; il percorso comincia con `/`; in Bearer, su un `401` rinnova il token e riprova una volta; `$errore` è l'errore di curl se il WMS non si raggiunge |
+| `modulaImport( $ordini, $righe, $job, &$errore )` | manda `IMP_ORDINI` e `IMP_ORDINI_RIGHE`; `true` se il WMS risponde `200`, altrimenti `false` con `"<status> <risposta>"` in `$errore` ( `"0 <errore di curl>"` se non si raggiunge ) |
 | `modulaExport( $job, &$status )` | il prossimo pacchetto di esiti, con `GUID`, `TransactionStatus` ( `CHUNK` o `END` ) e `DATA`; `NULL` quando non c'è niente ( `204` ) o in caso di errore |
 | `modulaAck( $guid, $job )` | conferma il pacchetto; finché non lo si conferma, l'export restituisce sempre lo stesso |
 
@@ -69,10 +69,11 @@ Per questo passano sempre da `modulaQta2Testo()` e `modulaTesto2Qta()`.
 ## il server finto
 
 `_usr/_test/_fake/_wms.php` risponde come il WMS: token, import, export a pacchetti con l'ack,
-`401` senza credenziali. Ha due comportamenti per i test:
+`401` senza credenziali. Per i test le righe dell'articolo `MANCA` tornano evase a `"0,000"`.
 
-- le righe dell'articolo `MANCA` tornano evase a `"0,000"`;
-- il job `ERR-503` risponde sempre `503`.
+Il WMS non disponibile **non** si simula col server finto: un `5xx` vero finirebbe nell'access.log del
+deploy, e `log-deploy.py` lo segnalerebbe come guasto a ogni giro di test. L'esempio di `modulaImport()`
+punta il profilo su una porta chiusa e verifica lo status `0` con l'errore di curl.
 
 Le credenziali sono `modula` / `fake`, e `POST /reset` svuota lo stato.
 

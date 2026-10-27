@@ -40,7 +40,7 @@ class modulaUtilsCest
     {
         $I->amOnPage('/_mod/_I0200.modula/_usr/_examples/_lib/_modula.utils/_modulaImport.01.php');
         $I->see('400 IMP_ORDINI_RIGHE[0]: RIG_QTAR non valida');
-        $I->see('503 Service Unavailable');
+        $I->see('0 Failed to connect');
     }
 
     // modulaExport() -> deve restituire i pacchetti in ordine, ripeterli fino all'ack e finire con 204
