@@ -193,7 +193,8 @@
      * css.external             | un array contenente i percorsi dei file CSS esterni (ossia quelli che vengono caricati da un URL esterno)
      * css.internal             | un array contenente i percorsi dei file CSS interni (ossia quelli che vengono prelevati dal framework)
      * css.template             | un array contenente i percorsi dei file CSS interni (ossia quelli che vengono prelevati dalla cartella del template)
-     * css.cached               | un array contenente i percorsi dei file CSS esterni in cache locale (popolato automaticamente dal framework)
+     * css.preload              | un array contenente i percorsi dei file CSS esterni da caricare in modo asincrono (rel="preload")
+     * css.cached               | un array contenente i percorsi dei file CSS esterni e in preload in cache locale (popolato automaticamente dal framework)
      * js.external              | un array contenente i percorsi dei file Js esterni (ossia quelli che vengono caricati da un URL esterno)
      * js.internal              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dal framework)
      * js.template              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dalla cartella del template)
@@ -879,9 +880,9 @@
      * caching locale delle risorse esterne
      * ====================================
      *
-     * Per ogni risorsa CSS/JS dichiarata in page.css.external / page.js.external il framework scarica il
-     * contenuto in DIR_VAR_CACHE/\<tipo\>/\<host\>/\<path\>, lo serve dal filesystem locale e sposta l'URL
-     * dall'array external all'array cached. I CSS estraggono anche le risorse riferite via url(); i JS
+     * Per ogni risorsa CSS/JS dichiarata in page.css.external, page.css.preload o page.js.external il framework
+     * scarica il contenuto in DIR_VAR_CACHE/\<tipo\>/\<host\>/\<path\>, lo serve dal filesystem locale e sposta
+     * l'URL nell'array cached ( un CSS in preload diventa quindi un foglio normale, non piu' asincrono ). I CSS estraggono anche le risorse riferite via url(); i JS
      * cachano solo il file principale. Le URL contenenti marker Twig ({{, {%, {#) non vengono cachate.
      *
      * Dalla copia locale si toglie il commento sourceMappingURL: la source map non viene cachata, e un browser con gli
@@ -893,16 +894,20 @@
     // il commento che punta alla source map: //# nei JS, /*# */ nei CSS, e la vecchia forma con @
     $sourceMapUrl = '~^[ \t]*(//[#@][ \t]*sourceMappingURL=[^\r\n]*|/\*[#@][ \t]*sourceMappingURL=.*?\*/)[ \t]*$~m';
 
-    // caching locale dei CSS esterni
-    // I CSS in $ct['page']['css'][$tier] possono avere DUE strutture:
+    // caching locale dei CSS esterni e di quelli in preload
+    // I CSS di un tier possono avere DUE strutture:
     //  - nested  [media => [url, ...]]   tipica dei template.yaml (es. _src/_tpl/_athena)
-    //  - piatta  [idx => url]            tipica dei template.conf INI (es. _src/_templates/_athena)
-    // Il template .twig e l'HTML legacy iterano la struttura nested; per i template INI piatti
-    // il caching CSS resta inattivo (gli URL restano in external e vengono serviti dai CDN).
-    if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
-        foreach( $ct['page']['css']['external'] as $media => $sheets ) {
-            if( ! is_array( $sheets ) ) { continue; }
-            foreach( $sheets as $sheet => $css ) {
+    //  - piatta  [idx => url]            tipica dei template.conf INI (es. _src/_templates/_arianna)
+    // La piatta vale come media screen, che e' quello con cui l'HTML legacy la stampa. Anche il preload si
+    // copia in locale: in cache il foglio passa in cached e diventa un <link rel="stylesheet"> servito da noi.
+    // Fino al 27/10/2026 la piatta e il preload restavano sulla CDN, e quando stackpath.bootstrapcdn.com non
+    // rispondeva i siti coi template legacy perdevano Bootstrap e Font Awesome, cioe' tutta la grafica.
+    foreach( array( 'external', 'preload' ) as $tier ) {
+        if( ! isset( $ct['page']['css'][ $tier ] ) || ! is_array( $ct['page']['css'][ $tier ] ) ) { continue; }
+        foreach( $ct['page']['css'][ $tier ] as $media => $sheets ) {
+            $piatta = ! is_array( $sheets );
+            foreach( ( $piatta ? array( $media => $sheets ) : $sheets ) as $sheet => $css ) {
+                if( ! is_string( $css ) || strpos( $css, '//' ) === false ) { continue; }
                 // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.head.twig: non cachabili
                 if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
                     continue;
@@ -911,14 +916,25 @@
                 if( ! file_exists( $cachefile ) ) {
                     $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
                     $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
-                    $content = file_get_contents( $css );
-                    writeToFile( preg_replace( $sourceMapUrl, '', $content ), $cachefile );
-                    preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
-                    foreach( $matches[1] as $match ) {
-                        $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
-                        $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
-                        if( ! file_exists( $resCache ) ) {
-                            writeToFile( file_get_contents( $res ), $resCache );
+                    $content = @file_get_contents( $css );
+                    // come per i JS ( fix del 2026-05-18 ) si scrive solo un fetch con contenuto reale: un file vuoto
+                    // non verrebbe mai servito e nemmeno riscaricato, e la risorsa resterebbe sulla CDN per sempre
+                    if( $content !== false && strlen( trim( $content ) ) > 0 ) {
+                        writeToFile( preg_replace( $sourceMapUrl, '', $content ), $cachefile );
+                        // la query e il frammento ( font-awesome.css: fontawesome-webfont.eot?v=4.7.0, ?#iefix ) non
+                        // fanno parte del percorso: senza toglierli i font non venivano copiati e le icone sparivano
+                        preg_match_all( '/url\(\s*[\"\']{0,1}([a-zA-Z0-9_\.\-\/]+)(?:[?#][^\"\'\)]*){0,1}[\"\']{0,1}\s*\)/', $content, $matches );
+                        foreach( array_unique( $matches[1] ) as $match ) {
+                            $res = $baseUrl . ( substr( $match, 0, 1 ) == '/' ? $match : simplifyPath( $basePath . '/' . $match ) );
+                            $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
+                            if( ! file_exists( $resCache ) ) {
+                                $resContent = @file_get_contents( $res );
+                                // terminatore vuoto: il default di writeToFile() aggiunge un a capo, che in coda a un
+                                // font WOFF lo rende piu' lungo di quanto dice la sua intestazione, e il browser lo scarta
+                                if( $resContent !== false && strlen( $resContent ) > 0 ) {
+                                    writeToFile( $resContent, $resCache, FILE_WRITE_OVERWRITE, '' );
+                                }
+                            }
                         }
                     }
                 } else {
@@ -927,9 +943,13 @@
                     if( strpos( $content, 'sourceMappingURL' ) !== false ) {
                         writeToFile( $content = preg_replace( $sourceMapUrl, '', $content ), $cachefile );
                     }
-                    if( ! empty( $content ) ) {
-                        $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
-                        unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
+                    if( ! empty( trim( $content ) ) ) {
+                        $ct['page']['css']['cached'][ ( $piatta ? 'screen' : $media ) ][] = shortPath( $cachefile );
+                        if( $piatta ) {
+                            unset( $ct['page']['css'][ $tier ][ $media ] );
+                        } else {
+                            unset( $ct['page']['css'][ $tier ][ $media ][ $sheet ] );
+                        }
                     }
                 }
             }

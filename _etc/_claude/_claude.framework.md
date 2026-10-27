@@ -477,15 +477,19 @@ non fanno un reload forzato.
 
 ### Caching locale di CSS e JS esterni
 
-Le risorse remote dichiarate in `page.css.external` e `page.js.external` (file `etc/template.yaml` o
-`etc/template.conf` del template) vengono cachate automaticamente su filesystem dal framework durante il
-rendering della pagina (`_src/_api/_pages.php`):
+Le risorse remote dichiarate in `page.css.external`, `page.css.preload` e `page.js.external` (file
+`etc/template.yaml` o `etc/template.conf` del template, annidate per media o piatte) vengono cachate
+automaticamente su filesystem dal framework durante il rendering della pagina (`_src/_api/_pages.php`).
+Dal 27/10/2026 anche il preload e gli elenchi piatti dei template legacy: prima restavano sulla CDN, e
+quando `stackpath.bootstrapcdn.com` non rispondeva i siti su `_arianna` perdevano tutta la grafica:
 
 - Path locale: `var/cache/css/<host>/<path>` e `var/cache/js/<host>/<path>` (creati on-demand alla prima
   richiesta della pagina, con permessi `www-data:www-data` se la dir esiste già; per i CSS vengono cachate
   anche le risorse riferite via `url(...)` — font, immagini).
-- Lo URL cachato viene spostato in `page.css.cached` (multilivello per media) o `page.js.cached` (flat) e
-  rimosso da `external`. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
+- Lo URL cachato viene spostato in `page.css.cached` (multilivello per media; gli elenchi piatti vanno sotto
+  `screen`) o `page.js.cached` (flat) e rimosso da `external`/`preload`: un CSS in preload diventa un foglio
+  normale, non più asincrono. Un download fallito non scrive niente e si riprova alla richiesta dopo; i
+  `url(...)` con query o frammento (`font.woff2?v=4.7.0`) si copiano senza, byte per byte. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
   `<link>` / `<script defer>` puntando alla copia locale (`{{ site.root }}{{ ... }}`).
 - Le URL contenenti marker Twig (`{{`, `{%`, `{#`) non vengono cachate (per i JS sono pre-renderizzate
   runtime via `include(template_from_string(...))`, p.es. recaptcha con site key dinamica) e restano in
