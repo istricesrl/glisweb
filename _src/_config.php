@@ -612,8 +612,9 @@
             }
         }
 
-        // segnalazione alla lista globale dei bandi, a risposta già scritta
-        register_shutdown_function( 'securityReport', $m, $d );
+        // segnalazione alla lista globale dei bandi, a risposta già scritta; l'IP si prende adesso, perché alla
+        // chiusura REMOTE_ADDR può non essere più quello del bando ( i test lo cambiano a ogni caso )
+        register_shutdown_function( 'securityReport', $m, $d, $_SERVER['REMOTE_ADDR'] );
 
         return 'bandito per ' . $d . ' secondi';
 
@@ -628,13 +629,25 @@
      * chiamata ha un timeout di SECURITY_DATASERVER_TIMEOUT secondi e il suo esito non cambia niente per la richiesta in
      * corso: securityBan() la registra come funzione di shutdown, e un fallimento finisce solo nel registro dell'IP.
      *
+     * Non segnala gli IP che non sono pubblici ( securityPublicIp() ): il dataserver li rifiuta con 400, e vengono
+     * dai test o da un client dietro un proxy, non da un attacco da condividere. Su un 5xx, o senza risposta, ritenta
+     * una volta dopo mezzo secondo: il 27/10/2026 il dataserver ha risposto 500 a un gruppo di segnalazioni
+     * contemporanee ( SQLite bloccato ), e senza un secondo tentativo quelle segnalazioni erano perse.
+     *
      * @param   string  $m          il motivo del bando
      * @param   int     $d          la durata del bando in secondi
+     * @param   string  $ip         l'IP bandito
      *
      * @return  void
      *
      */
-    function securityReport( $m, $d ) {
+    function securityReport( $m, $d, $ip = NULL ) {
+
+        // IP bandito
+        $ip = ( $ip === NULL ) ? $_SERVER['REMOTE_ADDR'] : $ip;
+        if( ! securityPublicIp( $ip ) ) {
+            return;
+        }
 
         // token del deploy
         $t = ( file_exists( FILE_SECURITY_DATASERVER_TOKEN ) ) ? trim( (string) @file_get_contents( FILE_SECURITY_DATASERVER_TOKEN ) ) : '';
@@ -642,29 +655,63 @@
             return;
         }
 
-        // segnalazione
-        $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
-        curl_setopt_array( $c, array(
-            CURLOPT_POST            => true,
-            CURLOPT_POSTFIELDS      => json_encode( array(
-                'ip'        => $_SERVER['REMOTE_ADDR'],
-                'regola'    => $m,
-                'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
-                'durata'    => (int) $d
-            ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
-            CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
-            CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
-        ) );
-        $r = curl_exec( $c );
-        $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
-        curl_close( $c );
+        // segnalazione, con un secondo tentativo sugli errori del dataserver
+        for( $tentativo = 1; $tentativo <= 2; $tentativo++ ) {
+
+            if( $tentativo > 1 ) {
+                usleep( 500000 );
+            }
+
+            $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
+            curl_setopt_array( $c, array(
+                CURLOPT_POST            => true,
+                CURLOPT_POSTFIELDS      => json_encode( array(
+                    'ip'        => $ip,
+                    'regola'    => $m,
+                    'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
+                    'durata'    => (int) $d
+                ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
+                CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
+                CURLOPT_RETURNTRANSFER  => true,
+                CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+                CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+            ) );
+            $r = curl_exec( $c );
+            $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+            curl_close( $c );
+
+            // un 4xx non cambia ritentando
+            if( $s == 200 || ( $s >= 400 && $s < 500 ) ) {
+                break;
+            }
+
+        }
 
         // il fallimento si annota e basta
         if( $s != 200 ) {
             securityLog( 'segnalazione del bando al dataserver non riuscita, HTTP ' . $s . ' ' . substr( trim( (string) $r ), 0, 200 ) );
         }
+
+    }
+
+    /**
+     * questa funzione dice se un IP è pubblico, cioè se ha senso segnalarlo alla lista globale dei bandi
+     *
+     * Esclude le reti private e riservate, che filter_var() conosce, e le tre reti di documentazione ( RFC 5737 ) che
+     * PHP 7.3 non esclude: sono quelle che usano i test del firewall.
+     *
+     * @param   string  $ip         l'IP da verificare
+     *
+     * @return  bool                true se l'IP è pubblico
+     *
+     */
+    function securityPublicIp( $ip ) {
+
+        if( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
+            return false;
+        }
+
+        return ! preg_match( '/^(192\.0\.2|198\.51\.100|203\.0\.113)\./', $ip );
 
     }
 

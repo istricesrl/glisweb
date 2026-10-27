@@ -155,6 +155,21 @@
 
         }
 
+        // alla lista globale si segnalano solo gli IP pubblici: i privati, i riservati e le reti di documentazione dei
+        // test il dataserver li rifiuta con 400 ( 27/10/2026, quattro segnalazioni da una suite su glisdev )
+        public function segnalazioneSoloIpPubblici( FrontendTester $I ) {
+
+            $I->assertTrue( securityPublicIp( '8.8.8.8' ) );
+            $I->assertTrue( securityPublicIp( '2001:4860:4860::8888' ) );
+            $I->assertFalse( securityPublicIp( '127.0.0.1' ) );
+            $I->assertFalse( securityPublicIp( '10.132.0.7' ) );
+            $I->assertFalse( securityPublicIp( '192.168.1.1' ) );
+            $I->assertFalse( securityPublicIp( self::RETE . '9' ) );
+            $I->assertFalse( securityPublicIp( '198.51.100.1' ) );
+            $I->assertFalse( securityPublicIp( 'non un ip' ) );
+
+        }
+
         // l'IP della lista globale e' bandito finche' la riga non scade, o finche' non si sblocca
         public function listaGlobale( FrontendTester $I ) {
 
