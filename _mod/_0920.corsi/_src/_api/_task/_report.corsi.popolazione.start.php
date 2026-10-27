@@ -24,7 +24,7 @@
         array(
             array( 's' => 'popolazione report corsi' ),
             array( 's' => '_mod/_0920.corsi/_src/_api/_job/_report.corsi.popolazione.php' ),
-            array( 's' => 15 ),
+            array( 's' => 2000 ),
             array( 's' => ( defined( 'CRON_RUNNING' ) ) ? NULL : 1 ),
             array( 's' => json_encode( $workspace ) )
         )
