@@ -2,25 +2,22 @@
     "name": "istricesrl/glisweb",
     "description": "GlisWeb framework for web developement",
     "config": {
-        "vendor-dir": "_src/_lib/_ext",
-        "platform": {
-            "php": "7.3.31"
-        }
+        "vendor-dir": "_src/_lib/_ext"
     },
     "require": {
         "php": ">=7.3",
         "phpoffice/phpword": "*",
-        "phpoffice/phpspreadsheet": "*",
-        "phpoffice/phppresentation": "*",
+        "phpoffice/phpspreadsheet": "^1.25",
+        "phpoffice/phppresentation": "^1.2",
         "html2text/html2text": "*",
         "phpmailer/phpmailer": "6.*",
-        "tecnickcom/tcpdf": "*",
-        "twig/twig": "2.*",
+        "tecnickcom/tcpdf": "^6.11",
+        "twig/twig": "^2.16 || ^3.27",
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "*",
         "codeception/module-asserts": "*",
-        "league/commonmark": "^1.6",
+        "league/commonmark": "^1.6 || ^2.10",
         "codeception/module-webdriver": "*"
     },
     "suggest": {
