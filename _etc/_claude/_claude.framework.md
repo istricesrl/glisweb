@@ -491,6 +491,9 @@ rendering della pagina (`_src/_api/_pages.php`):
   `external`.
 - **Nessun TTL o refresh automatico**: per aggiornare/invalidare una risorsa si cancella manualmente il
   file in `var/cache/css/` o `var/cache/js/`, oppure si usa una URL versionata (`bootstrap@5.3.2/...`).
+- **La copia locale perde il commento `sourceMappingURL`**: la source map non si copia, e il browser che la
+  chiedesse in `var/cache/` prenderebbe un 403 dal `FilesMatch`. Quei 403 sui `.map` non danno punti al
+  firewall ( `SECURITY_SOURCEMAP_PATHS` ).
 
 ### Moduli (`_mod/` e `mod/`)
 

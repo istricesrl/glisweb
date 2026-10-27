@@ -883,7 +883,15 @@
      * contenuto in DIR_VAR_CACHE/\<tipo\>/\<host\>/\<path\>, lo serve dal filesystem locale e sposta l'URL
      * dall'array external all'array cached. I CSS estraggono anche le risorse riferite via url(); i JS
      * cachano solo il file principale. Le URL contenenti marker Twig ({{, {%, {#) non vengono cachate.
+     *
+     * Dalla copia locale si toglie il commento sourceMappingURL: la source map non viene cachata, e un browser con gli
+     * strumenti per sviluppatori aperti la chiederebbe accanto al file, in var/cache/, dove il FilesMatch del .htaccess
+     * nega i .map con un 403 che dà punti al firewall applicativo. Il 27/10/2026 una decina di richieste così, in un
+     * minuto, hanno bandito la segreteria di polmasi.
      */
+
+    // il commento che punta alla source map: //# nei JS, /*# */ nei CSS, e la vecchia forma con @
+    $sourceMapUrl = '~^[ \t]*(//[#@][ \t]*sourceMappingURL=[^\r\n]*|/\*[#@][ \t]*sourceMappingURL=.*?\*/)[ \t]*$~m';
 
     // caching locale dei CSS esterni
     // I CSS in $ct['page']['css'][$tier] possono avere DUE strutture:
@@ -904,7 +912,7 @@
                     $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
                     $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
                     $content = file_get_contents( $css );
-                    writeToFile( $content, $cachefile );
+                    writeToFile( preg_replace( $sourceMapUrl, '', $content ), $cachefile );
                     preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
                     foreach( $matches[1] as $match ) {
                         $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
@@ -915,6 +923,10 @@
                     }
                 } else {
                     $content = readStringFromFile( $cachefile );
+                    // le copie scaricate prima del 27/10/2026 hanno ancora il riferimento alla source map
+                    if( strpos( $content, 'sourceMappingURL' ) !== false ) {
+                        writeToFile( $content = preg_replace( $sourceMapUrl, '', $content ), $cachefile );
+                    }
                     if( ! empty( $content ) ) {
                         $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
                         unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
@@ -968,10 +980,14 @@
                 // passavano il check `! empty($content)` (es. "\n") e venivano serviti come
                 // <script> vuoti, mascherando rotture in pagina.
                 if( $content !== false && strlen( trim( $content ) ) > 0 ) {
-                    writeToFile( $content, $cachefile );
+                    writeToFile( preg_replace( $sourceMapUrl, '', $content ), $cachefile );
                 }
             } else {
                 $content = readStringFromFile( $cachefile );
+                // le copie scaricate prima del 27/10/2026 hanno ancora il riferimento alla source map
+                if( strpos( $content, 'sourceMappingURL' ) !== false ) {
+                    writeToFile( $content = preg_replace( $sourceMapUrl, '', $content ), $cachefile );
+                }
                 if( ! empty( trim( $content ) ) ) {
                     $ct['page']['js']['cached'][] = shortPath( $cachefile );
                     unset( $ct['page']['js']['external'][ $idx ] );
