@@ -89,6 +89,26 @@ I test girano solo col modulo attivo:
 
     sudo _src/_sh/_codeception.run.sh unit I0200.modula/modulaUtilsCest.php
 
+## il collaudo col WMS vero
+
+`_usr/_test/_modula.curl.sh` chiama il WMS a mano, una funzione alla volta, **senza il bootstrap**
+del framework: serve in sede col tecnico, quando URL e credenziali arrivano sul momento e non stanno
+ancora nel `config.json`. Li legge dalle variabili d'ambiente:
+
+    export MODULA_URL=http://<indirizzo>:<porta> MODULA_USER=<utente> MODULA_PASS=<password>
+    _mod/_I0200.modula/_usr/_test/_modula.curl.sh giro <codice articolo>
+
+Il `giro` chiede il token, manda un articolo ( `CFG-IMP-ARTICOLI` ), un ordine di prelievo e uno di
+versamento ( `CFG-IMP-ORDINI` ), e legge esiti ( `CFG-EXP-ORDINI` ) e giacenze
+( `CFG-EXP-GIACENZE` ). I pacchetti letti si confermano a parte con `ack <GUID> [job]`, perché un ack
+toglie il pacchetto dalla coda del WMS. Gli altri comandi ( `token`, `articolo`, `ordine`, `annulla`,
+`esiti`, `giacenze`, `post <job> <file.json>` per un tracciato diverso ) e le variabili per i nomi dei
+job sono nella testata dello script. Il token sta in `var/tmp/modula-token.txt`, leggibile solo da chi
+lo ha chiesto.
+
+Sul server finto passano token, ordini, esiti e ack; l'articolo risponde `400`, perché il finto
+conosce solo il job degli ordini.
+
 ## i file del modulo
 
 ### /_mod/_I0200.modula/_src/_config/_030.common.php
@@ -102,6 +122,9 @@ Questa è la libreria del client REST verso il WMS Modula.
 
 ### /_mod/_I0200.modula/_usr/_examples/_lib/_modula.utils/
 Gli esempi delle funzioni della libreria, usati dai test unitari.
+
+### /_mod/_I0200.modula/_usr/_test/_modula.curl.sh
+Questo è lo script di collaudo del WMS vero via curl, senza bootstrap.
 
 ### /_mod/_I0200.modula/_usr/_test/_fake/_wms.php
 Questo è il server finto del WMS Modula, per i test.
