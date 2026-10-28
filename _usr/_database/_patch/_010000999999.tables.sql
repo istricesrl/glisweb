@@ -1302,7 +1302,7 @@ CREATE TABLE IF NOT EXISTS `casse_previdenziali` (              --
 -- le anagrafiche si associano alle categorie tramite anagrafica_categorie, anche a piu' d'una; i flag di un'anagrafica
 -- sono il massimo dei flag delle sue categorie, propagato in anagrafica_view_static. I flag se_* sono di due famiglie:
 -- i flag di ruolo dicono cosa e' l'anagrafica per l'azienda ( lead, prospect, cliente, fornitore, partner... ) e in
--- quale segmento dell'organigramma sta ( amministrazione, produzione, commerciale, logistica, simmetrici a ruoli_mastri );
+-- quale segmento dell'organigramma sta ( amministrazione, produzione, commerciale, logistica );
 -- i flag di associabilita' ( da se_annunci a se_risorse ) dicono a quali oggetti l'anagrafica puo' essere associata,
 -- cioe' in quali tendine compare: p.es. gli autori delle notizie o delle risorse, gli inquilini degli immobili. Sono lo
 -- specchio dei flag di ruoli_anagrafica: il ruolo dice a che titolo un'anagrafica e' associata, la categoria chi puo'
@@ -4118,7 +4118,8 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
 -- inventariale dell'articolo; una coppia mastro / articolo compare una volta sola
 --
 -- NOTA il ruolo si cerca per nome e non per id ( trovaUbicazioneBulk() del modulo 0500.mastri cerca
--- 'stoccaggio' ), perche' i file di base non caricano righe in ruoli_mastri e gli id cambiano fra deploy;
+-- 'stoccaggio' ), perche' i ruoli li caricano i file di base solo dal 28/10/2026 e sui deploy nati prima gli id
+-- possono essere altri;
 -- le soglie le legge il task _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php
 --
 CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
@@ -6520,26 +6521,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli dei mastri
+-- funzione: contiene i ruoli che un mastro di magazzino svolge per un articolo che vi e' collocato
 --
--- questa tabella contiene i ruoli dei mastri, con le icone e i flag che dicono in quali ambiti il ruolo
--- si usa
+-- questa tabella contiene i ruoli di una collocazione ( collocazione preferenziale, stoccaggio, prelievo ); la legge
+-- mastri_articoli.id_ruolo, l'unica chiave che la usa, quindi non ha flag ( decisione del 28/10/2026 )
 --
-CREATE TABLE IF NOT EXISTS `ruoli_mastri` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_xml` tinyint(1) DEFAULT NULL,
-  `se_commerciale` tinyint(1) DEFAULT NULL,
-  `se_produzione` tinyint(1) DEFAULT NULL,
-  `se_amministrazione` tinyint(1) DEFAULT NULL,
-  `se_acquisti` tinyint(1) DEFAULT NULL,
-  `se_ordini` tinyint(1) DEFAULT NULL,
-  `se_logistica` tinyint(1) DEFAULT NULL,
-  `se_helpdesk` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA il codice cerca il ruolo per nome ( trovaUbicazioneBulk() del modulo 0500.mastri cerca 'stoccaggio' ), quindi
+-- i nomi caricati dai file di base non vanno cambiati
+--
+CREATE TABLE IF NOT EXISTS `ruoli_mastri` (                   --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL                          -- classe Font Awesome dell'icona del ruolo
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034900
 

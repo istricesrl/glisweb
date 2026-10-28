@@ -746,6 +746,15 @@ INSERT IGNORE INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `fo
 (6,	NULL,	'ordini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (7,	NULL,	'helpdesk',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
+-- | 050000034870
+
+-- ruoli_mastri
+-- caricati dal 28/10/2026: gli id 1 e 2 sono quelli di bernispa, l'unico deploy che li usava
+INSERT IGNORE INTO `ruoli_mastri` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	NULL,	'collocazione',	NULL,	NULL),
+(2,	NULL,	'stoccaggio',	NULL,	NULL),
+(3,	NULL,	'prelievo',	NULL,	NULL);
+
 -- | 050000034900
 
 -- ruoli_matricole

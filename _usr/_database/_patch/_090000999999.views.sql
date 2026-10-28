@@ -6763,15 +6763,14 @@ CREATE OR REPLACE VIEW ruoli_mail_view AS
 -- | 090000034871
 
 -- ruoli_mastri_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-12 11:23 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_mastri_view AS
 	SELECT
 		ruoli_mastri.id,
 		ruoli_mastri.id_genitore,
 		ruoli_mastri.nome,
-    	ruoli_mastri.html_entity,
-    	ruoli_mastri.font_awesome,
+		ruoli_mastri.html_entity,
+		ruoli_mastri.font_awesome,
 	 	ruoli_mastri_path( ruoli_mastri.id ) AS __label__
 	FROM ruoli_mastri
 ;
