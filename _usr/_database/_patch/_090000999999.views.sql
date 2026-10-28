@@ -6681,33 +6681,43 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 -- | 090000034600
 
 -- ruoli_immagini_view
--- tipologia: tabella di supporto
-CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
-	SELECT                                                      --
-		ruoli_immagini.id,                                      --
-		ruoli_immagini.id_genitore,                             --
-		ruoli_immagini.ordine_scalamento,                       --
-		ruoli_immagini.nome,                                    --
-		ruoli_immagini.html_entity,                             --
-		ruoli_immagini.font_awesome,                            --
-		ruoli_immagini.se_anagrafica,                           --
-		ruoli_immagini.se_pagine,                               --
-		ruoli_immagini.se_prodotti,                             --
-		ruoli_immagini.se_articoli,                             --
-		ruoli_immagini.se_categorie_prodotti,                   --
-		ruoli_immagini.se_marchi,                   --
-		ruoli_immagini.se_categorie_marchi,                   --
-		ruoli_immagini.se_notizie,                              --
-		ruoli_immagini.se_categorie_notizie,                    --
-		ruoli_immagini.se_risorse,                              --
-		ruoli_immagini.se_categorie_risorse,                    --
-		ruoli_immagini.se_immobili,                             --
-		ruoli_immagini.se_audio,                                --
-		ruoli_immagini.se_file,                                 --
-		ruoli_immagini.se_video,                             --
-	 	ruoli_immagini_path(                                    --
-            ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
-	FROM ruoli_immagini                                         --
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_immagini_view AS
+	SELECT
+		ruoli_immagini.id,
+		ruoli_immagini.id_genitore,
+		ruoli_immagini.nome,
+		ruoli_immagini.html_entity,
+		ruoli_immagini.font_awesome,
+		ruoli_immagini.se_anagrafica,
+		ruoli_immagini.se_annunci,
+		ruoli_immagini.se_prodotti,
+		ruoli_immagini.se_articoli,
+		ruoli_immagini.se_contatti,
+		ruoli_immagini.se_indirizzi,
+		ruoli_immagini.se_progetti,
+		ruoli_immagini.se_contratti,
+		ruoli_immagini.se_immobili,
+		ruoli_immagini.se_pagine,
+		ruoli_immagini.se_file,
+		ruoli_immagini.se_categorie_prodotti,
+		ruoli_immagini.se_marchi,
+		ruoli_immagini.se_categorie_marchi,
+		ruoli_immagini.se_risorse,
+		ruoli_immagini.se_categorie_risorse,
+		ruoli_immagini.se_notizie,
+		ruoli_immagini.se_categorie_notizie,
+		ruoli_immagini.se_categorie_annunci,
+		ruoli_immagini.se_categorie_progetti,
+		ruoli_immagini.se_edifici,
+		ruoli_immagini.se_valutazioni,
+		ruoli_immagini.se_rinnovi,
+		ruoli_immagini.se_banner,
+		ruoli_immagini.se_audio,
+		ruoli_immagini.se_video,
+		ruoli_immagini.se_vani,
+	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
+	FROM ruoli_immagini
 ;
 
 -- | 090000034800

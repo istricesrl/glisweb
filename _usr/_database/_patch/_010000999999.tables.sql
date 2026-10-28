@@ -6409,36 +6409,52 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
 
 -- ruoli_immagini
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli delle immagini
+-- funzione: contiene i ruoli che un'immagine svolge rispetto all'oggetto a cui appartiene
 --
--- questa tabella contiene i ruoli delle immagini, con le informazioni relative al nome, alle
--- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere associate le immagini
+-- questa tabella contiene i ruoli di un'immagine ( immagine, gallery, card, copertina, logo... ); la legge immagini.id_ruolo,
+-- e la tendina del form immagini di un oggetto propone i ruoli col flag se_<oggetto> di quell'oggetto: c'e' un flag per ogni
+-- chiave oggetto di immagini, nello stesso ordine ( decisione del 28/10/2026 ), compresi se_audio, se_file e se_video
+-- della matrice dei media ( decisione del 16/10/2026 )
 --
-CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna ricorsiva per il ruolo genitore
-  `ordine_scalamento` int(11) DEFAULT NULL,                     -- ordine di scalamento delle immagini con questo ruolo
-  `nome` char(64) DEFAULT NULL,                                 -- nome del ruolo
-  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML associata al ruolo
-  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome associata al ruolo
-  `se_anagrafica` tinyint(1) DEFAULT NULL,                      -- se anagrafica
-  `se_pagine` tinyint(1) DEFAULT NULL,                          -- se pagine
-  `se_prodotti` tinyint(1) DEFAULT NULL,                        -- se prodotti
-  `se_articoli` tinyint(1) DEFAULT NULL,                        -- se articoli
-  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- se categorie prodotti
-  `se_marchi` tinyint(1) DEFAULT NULL,                          -- se marchi
-  `se_categorie_marchi` tinyint(1) DEFAULT NULL,                -- se categorie marchi
-  `se_notizie` tinyint(1) DEFAULT NULL,                         -- se notizie
-  `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
-  `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
-  `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
-  `se_immobili` tinyint(1) DEFAULT NULL,                         -- se immobili
-  `se_audio` tinyint(1) DEFAULT NULL,                            -- se audio
-  `se_file` tinyint(1) DEFAULT NULL,                             -- se file
-  `se_video` tinyint(1) DEFAULT NULL                             -- se video
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+-- NOTA la priorita' dello scalamento automatico per ruolo non sta qui ( la colonna ordine_scalamento e' uscita dal canone
+-- il 28/10/2026 ): se serve, la si definisce nella configurazione delle immagini ( $cf['image'] ), per nome del ruolo
+--
+CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                      -- flag per i ruoli proponibili nelle immagini dell'anagrafica
+  `se_annunci` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nelle immagini degli annunci
+  `se_prodotti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle immagini dei prodotti
+  `se_articoli` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle immagini degli articoli
+  `se_contatti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle immagini dei contatti
+  `se_indirizzi` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili nelle immagini degli indirizzi
+  `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle immagini dei progetti
+  `se_contratti` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili nelle immagini dei contratti
+  `se_immobili` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle immagini degli immobili
+  `se_pagine` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili nelle immagini delle pagine
+  `se_file` tinyint(1) DEFAULT NULL,                            -- flag per i ruoli proponibili nelle immagini dei file
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili nelle immagini delle categorie di prodotti
+  `se_marchi` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili nelle immagini dei marchi
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,                -- flag per i ruoli proponibili nelle immagini delle categorie di marchi
+  `se_risorse` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nelle immagini delle risorse
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nelle immagini delle categorie di risorse
+  `se_notizie` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nelle immagini delle notizie
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nelle immagini delle categorie di notizie
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nelle immagini delle categorie di annunci
+  `se_categorie_progetti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili nelle immagini delle categorie di progetti
+  `se_edifici` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nelle immagini degli edifici
+  `se_valutazioni` tinyint(1) DEFAULT NULL,                     -- flag per i ruoli proponibili nelle immagini delle valutazioni
+  `se_rinnovi` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nelle immagini dei rinnovi
+  `se_banner` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili nelle immagini dei banner
+  `se_audio` tinyint(1) DEFAULT NULL,                           -- flag per i ruoli proponibili nelle immagini degli audio
+  `se_video` tinyint(1) DEFAULT NULL,                           -- flag per i ruoli proponibili nelle immagini dei video
+  `se_vani` tinyint(1) DEFAULT NULL                             -- flag per i ruoli proponibili nelle immagini dei vani
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034800
 
