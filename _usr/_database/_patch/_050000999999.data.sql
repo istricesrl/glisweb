@@ -758,11 +758,9 @@ INSERT IGNORE INTO `ruoli_mastri` (`id`, `id_genitore`, `nome`, `html_entity`, `
 -- | 050000034900
 
 -- ruoli_matricole
--- tipologia: tabella standard
--- verifica: 2021-10-12 10:45 Fabio Mosti
-INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
-(1,	'attrezzatura',	    '',	    ''),
-(2,	'prodotto',	    '',	    '');
+INSERT IGNORE INTO `ruoli_matricole` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_todo`) VALUES
+(1,	NULL,	'attrezzatura',	NULL,	NULL,	1,	1),
+(2,	NULL,	'prodotto',	NULL,	NULL,	1,	1);
 
 -- | 050000034950
 

@@ -6543,15 +6543,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_mastri` (                   --
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli matricole
+-- funzione: contiene i ruoli che un pezzo con matricola svolge in un progetto o in un'attivita'
 --
-CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene i ruoli di un pezzo con matricola ( l'attrezzatura usata, il prodotto realizzato o
+-- consegnato ); la leggono progetti_matricole.id_ruolo e todo_matricole.id_ruolo, e i ruoli proponibili sono quelli
+-- con se_progetti e con se_todo rispettivamente ( decisione del 28/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_matricole` (                --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili in progetti_matricole
+  `se_todo` tinyint(1) DEFAULT NULL                             -- flag per i ruoli proponibili in todo_matricole
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034950
 

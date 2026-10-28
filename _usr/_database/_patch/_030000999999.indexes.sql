@@ -3940,12 +3940,11 @@ ALTER TABLE `ruoli_mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- ruoli_matricole
 -- tipologia: tabella standard
--- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_matricole`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034901
 

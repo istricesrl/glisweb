@@ -6778,15 +6778,16 @@ CREATE OR REPLACE VIEW ruoli_mastri_view AS
 -- | 090000034901
 
 -- ruoli_matricole_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-12 11:23 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_matricole_view AS
 	SELECT
 		ruoli_matricole.id,
 		ruoli_matricole.id_genitore,
 		ruoli_matricole.nome,
-    	ruoli_matricole.html_entity,
-    	ruoli_matricole.font_awesome,
+		ruoli_matricole.html_entity,
+		ruoli_matricole.font_awesome,
+		ruoli_matricole.se_progetti,
+		ruoli_matricole.se_todo,
 	 	ruoli_matricole_path( ruoli_matricole.id ) AS __label__
 	FROM ruoli_matricole
 ;
