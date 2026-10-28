@@ -49,7 +49,15 @@ AddType image/webp .webp
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
 # ( yaml e yml dal 04/10/2026: src/config.yaml e src/config/ext/config.yaml, con le credenziali dentro,
 # si scaricavano in chiaro; le credenziali vanno in shadow.*, ma il blocco non deve contarci )
-<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swn|swo|swp|templ|trace|twig|xsd|yaml|yml)$">
+<FilesMatch "(?i)\.(bak|bk|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|old|orig|pem|properties|save|sql|sqlite|swn|swo|swp|templ|tpl|trace|twig|xsd|yaml|yml)$">
+    Deny from all
+</FilesMatch>
+
+# impedisco l'accesso alle copie di backup dei sorgenti e delle configurazioni con un suffisso o una data in
+# fondo ( pagina.php.bak.20260827, config.yaml.old ): il FilesMatch qui sopra e' ancorato alla fine del nome e
+# non le vede ( dal 28/10/2026, S-007 del censimento dei test ). Non si bloccano csv, xlsx, zip e simili: i siti
+# li scaricano davvero, e chi puo' scaricare un file riservato lo decide l'API di download
+<FilesMatch "(?i)\.(php|sql|ya?ml|json|conf|ini|env|htaccess|htpasswd|twig)\.(bak|bk|old|orig|save|swp|tmp|copy|copia|[0-9]{6,14})">
     Deny from all
 </FilesMatch>
 
