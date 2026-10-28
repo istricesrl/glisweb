@@ -15,6 +15,10 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
+    // verifica dei privilegi: l'albero di $cf rivela percorsi, servizi e configurazione del deploy,
+    // e array2censored() copre solo le chiavi che conosce ( S-008 e S-009 del censimento, 28/10/2026 )
+    checkTaskPrivilege( 'GESTIONE_SISTEMA' );
+
     // debug
     // ini_set( 'display_errors', 1 );
     // ini_set( 'display_startup_errors', 1 );

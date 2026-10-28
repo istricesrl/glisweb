@@ -1461,7 +1461,8 @@
         } else {
             echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
         }
-        echo PHP_EOL . '<!-- sessione: ' . session_id() . ' -->' . PHP_EOL;
+        // NOTA l'id di sessione non si stampa: nell'HTML lo legge chiunque veda la pagina, e una cache
+        // condivisa lo consegnerebbe ad altri ( S-019 del censimento dei test, 28/10/2026 )
 
         // timer
         timerCheck( $cf['speed'], 'fine gestione cache statica delle pagine' );
@@ -1496,9 +1497,11 @@
 
     }
 
-    // debug
+    // debug ( senza i Set-Cookie, che portano l'id di sessione: S-019 del censimento dei test )
     foreach( headers_list() as $header ) {
-        echo '<!-- header: ' . $header . ' -->' . PHP_EOL;
+        if( stripos( $header, 'Set-Cookie' ) !== 0 ) {
+            echo '<!-- header: ' . $header . ' -->' . PHP_EOL;
+        }
     }
 
     // debug

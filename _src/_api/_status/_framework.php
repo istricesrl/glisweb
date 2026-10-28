@@ -16,6 +16,10 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
+    // verifica dei privilegi: il rapporto rivela versioni, percorsi assoluti e file segreti del
+    // deploy ( S-008 del censimento dei test, 28/10/2026 )
+    checkTaskPrivilege( 'GESTIONE_SISTEMA' );
+
     // header
     header( 'Content-type: text/plain' );
     header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0' );

@@ -18,6 +18,10 @@
         require INCLUDE_SUBDIR . '_config.php';
     }
 
+    // verifica dei privilegi: caricare file vuole una sessione autenticata; fino al 28/10/2026 un
+    // anonimo poteva scrivere in tmp/ e var/contenuti/ ( S-003 del censimento dei test )
+    checkTaskPrivilege();
+
     // risposta
     $reply = array();
 
@@ -30,11 +34,11 @@
     // verifico che il path sia consentito
     if( str_starts_with_array( $_SERVER['HTTP_X_TARGET_FOLDER'], array( 'tmp/', 'var/contenuti/' ) ) ) {
 
-    // TODO verifico che l'utente possa caricare il file
+    // TODO verifico che l'utente possa caricare il file in quella cartella
     if( true ) {
 
-        // dati ricevuti dagli header della richiesta ajax
-        $fileName    = $_SERVER['HTTP_X_FILE_NAME'];
+        // dati ricevuti dagli header della richiesta ajax ( il nome senza percorso: S-001 del censimento )
+        $fileName    = basename( $_SERVER['HTTP_X_FILE_NAME'] );
         $fileSize    = $_SERVER['HTTP_X_FILE_SIZE'];
         $chunkNumber    = $_SERVER['HTTP_X_CHUNK_NUMBER'];
         $totalChunks    = $_SERVER['HTTP_X_CHUNK_TOTAL'];
