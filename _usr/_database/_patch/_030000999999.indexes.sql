@@ -3689,23 +3689,20 @@ ALTER TABLE `risorse_account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000032200
 
 -- risorse_anagrafica
--- tipologia: tabella di supporto
--- verifica: 2021-10-09 16:08 Fabio Mosti
 ALTER TABLE `risorse_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_anagrafica`,`id_ruolo`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_risorsa` (`id_risorsa`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_risorsa`,`id_anagrafica`,`id_ruolo`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_anagrafica`,`id_ruolo`);
 
 -- | 030000032201
 
 -- risorse_anagrafica
--- tipologia: tabella di supporto
 ALTER TABLE `risorse_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000032400
@@ -3727,6 +3724,25 @@ ALTER TABLE `risorse_categorie`
 -- risorse_categorie
 -- tipologia: tabella di supporto
 ALTER TABLE `risorse_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000032500
+
+-- risorse_organizzazioni
+ALTER TABLE `risorse_organizzazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_organizzazione`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_organizzazione`,`id_ruolo`);
+
+-- | 030000032501
+
+-- risorse_organizzazioni
+ALTER TABLE `risorse_organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000033000
 
@@ -3978,6 +3994,22 @@ ALTER TABLE `ruoli_progetti`
 -- ruoli_progetti
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000035120
+
+-- ruoli_risorse
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_risorse`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000035121
+
+-- ruoli_risorse
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_risorse` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035150
 

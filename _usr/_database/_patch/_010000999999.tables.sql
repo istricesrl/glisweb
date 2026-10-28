@@ -6049,22 +6049,29 @@ CREATE TABLE IF NOT EXISTS `risorse_account` (                  --
 -- | 010000032200
 
 -- risorse_anagrafica
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione risorse e anagrafica
+-- funzione: collega una risorsa alle anagrafiche che vi hanno un ruolo
 --
-CREATE TABLE IF NOT EXISTS `risorse_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega una risorsa alle anagrafiche che vi hanno avuto un ruolo ( autore, curatore, traduttore,
+-- intervistato... ); i ruoli proponibili sono quelli con ruoli_anagrafica.se_risorse
+--
+-- NOTA la chiave unica e' ( id_risorsa, id_anagrafica, id_ruolo ): la stessa anagrafica puo' avere piu' ruoli;
+-- le note precisano il ruolo nel caso specifico ( decisione del 20/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `risorse_anagrafica` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_risorsa` bigint(20) DEFAULT NULL,                         -- chiave esterna per la risorsa
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000032400
 
@@ -6084,6 +6091,34 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000032500
+
+-- risorse_organizzazioni
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega una risorsa ai nodi delle organizzazioni, con un ruolo
+--
+-- questa tabella collega una risorsa ai nodi di una struttura organizzata ( organizzazioni ) e dice cosa la risorsa
+-- e' per il nodo ( prodotta, custodita, destinata... ) con un ruolo preso da ruoli_risorse; i ruoli proponibili sono
+-- quelli con ruoli_risorse.se_organizzazioni ( punto 6d, 21/10/2026, e riga 160, 28/10/2026 )
+--
+-- NOTA la chiave unica e' ( id_risorsa, id_organizzazione, id_ruolo ): la stessa risorsa puo' stare nello stesso
+-- nodo con piu' ruoli; le note precisano il ruolo nel caso specifico
+--
+CREATE TABLE IF NOT EXISTS `risorse_organizzazioni` (           --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_risorsa` bigint(20) DEFAULT NULL,                         -- chiave esterna per la risorsa
+  `id_organizzazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per il nodo dell'organizzazione
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_risorse )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000033000
 
@@ -6495,6 +6530,27 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `se_sostituto` tinyint(1) DEFAULT NULL,
   `se_attesa` tinyint(1) DEFAULT NULL,
   `se_relazioni` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000035120
+
+-- ruoli_risorse
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli che legano una risorsa a un nodo organizzativo
+--
+-- questa tabella contiene i ruoli con cui una risorsa e' collegata a un nodo di un'organizzazione ( prodotta,
+-- custodita, destinata... ); la legge risorse_organizzazioni.id_ruolo, e i ruoli proponibili sono quelli con
+-- se_organizzazioni ( decisione del 28/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_risorse` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_organizzazioni` tinyint(1) DEFAULT NULL                   -- flag per i ruoli proponibili in risorse_organizzazioni
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000035150

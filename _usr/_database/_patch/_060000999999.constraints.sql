@@ -1989,6 +1989,16 @@ ALTER TABLE `risorse_categorie`
     ADD CONSTRAINT `risorse_categorie_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `risorse_categorie_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+-- | 060000032500
+
+-- risorse_organizzazioni
+ALTER TABLE `risorse_organizzazioni`
+    ADD CONSTRAINT `risorse_organizzazioni_ibfk_01`         FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `risorse_organizzazioni_ibfk_02_nofollow` FOREIGN KEY (`id_organizzazione`) REFERENCES `organizzazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `risorse_organizzazioni_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_risorse` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `risorse_organizzazioni_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `risorse_organizzazioni_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 -- | 060000034000
 
 -- ruoli_anagrafica
@@ -2094,6 +2104,13 @@ ALTER TABLE `ruoli_prodotti`
 -- ruoli_progetti
 ALTER TABLE `ruoli_progetti`
     ADD CONSTRAINT `ruoli_progetti_ibfk_01_nofollow`                        FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_progetti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- | 060000035120
+
+-- ruoli_risorse
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_risorse`
+    ADD CONSTRAINT `ruoli_risorse_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_risorse` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000035150
 

@@ -6398,13 +6398,14 @@ CREATE OR REPLACE VIEW `risorse_account_view` AS
 CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 	SELECT
 		risorse_anagrafica.id,
+		risorse_anagrafica.ordine,
 		risorse_anagrafica.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_anagrafica.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		risorse_anagrafica.id_ruolo,
 		ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ) AS ruolo,
-		risorse_anagrafica.ordine,
+		risorse_anagrafica.note,
 		risorse_anagrafica.id_account_inserimento,
 		risorse_anagrafica.id_account_aggiornamento,
 		concat_ws(
@@ -6440,6 +6441,32 @@ CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 		) AS __label__
 	FROM risorse_categorie
 		LEFT JOIN risorse ON risorse.id = risorse_categorie.id_risorsa
+;
+
+-- | 090000032501
+
+-- risorse_organizzazioni_view
+CREATE OR REPLACE VIEW `risorse_organizzazioni_view` AS
+	SELECT
+		risorse_organizzazioni.id,
+		risorse_organizzazioni.ordine,
+		risorse_organizzazioni.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_organizzazioni.id_organizzazione,
+		organizzazioni_path( risorse_organizzazioni.id_organizzazione ) AS organizzazione,
+		risorse_organizzazioni.id_ruolo,
+		ruoli_risorse_path( risorse_organizzazioni.id_ruolo ) AS ruolo,
+		risorse_organizzazioni.note,
+		risorse_organizzazioni.id_account_inserimento,
+		risorse_organizzazioni.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			organizzazioni_path( risorse_organizzazioni.id_organizzazione ),
+			risorse.nome,
+			ruoli_risorse_path( risorse_organizzazioni.id_ruolo )
+		) AS __label__
+	FROM risorse_organizzazioni
+		LEFT JOIN risorse ON risorse.id = risorse_organizzazioni.id_risorsa
 ;
 
 -- | 090000033001
@@ -6781,6 +6808,22 @@ CREATE OR REPLACE VIEW ruoli_progetti_view AS
 		ruoli_progetti.se_relazioni,
 	 	ruoli_progetti.nome AS __label__
 	FROM ruoli_progetti
+;
+
+-- | 090000035120
+
+-- ruoli_risorse_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_risorse_view AS
+	SELECT
+		ruoli_risorse.id,
+		ruoli_risorse.id_genitore,
+		ruoli_risorse.nome,
+		ruoli_risorse.html_entity,
+		ruoli_risorse.font_awesome,
+		ruoli_risorse.se_organizzazioni,
+	 	ruoli_risorse_path( ruoli_risorse.id ) AS __label__
+	FROM ruoli_risorse
 ;
 
 -- | 090000035150
