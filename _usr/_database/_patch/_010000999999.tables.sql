@@ -6136,14 +6136,18 @@ CREATE TABLE IF NOT EXISTS `risorse_organizzazioni` (           --
 -- struttura: tabella base
 -- funzione: contiene i tipi di ritenuta della fattura elettronica
 --
--- questa tabella contiene i tipi di ritenuta e di contributo previdenziale trattenuto, con il codice TipoRitenuta
--- ( RT01 - RT06 ) delle specifiche tecniche della fattura elettronica
+-- i tipi di ritenuta e di contributo previdenziale trattenuto, ognuno col codice TipoRitenuta ( RT01 - RT06 ) che la
+-- fattura elettronica scrive nel blocco DatiRitenuta; li cita una ritenuta di un documento in documenti_ritenute, e ne
+-- fanno la tendina i form dei dati fiscali dei documenti.
 --
-CREATE TABLE IF NOT EXISTS `ritenute` (
-  `id` bigint(20) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: l'elenco e' quello chiuso delle specifiche tecniche, e lo carica il 050 con id fissi e le descrizioni della
+-- rappresentazione tabellare; gli id non si cambiano. Quando le specifiche cambiano si aggiorna con una patch, non a
+-- mano. Le righe usate da un documento non si cancellano ( documenti_ritenute punta qui con NO ACTION ).
+CREATE TABLE IF NOT EXISTS `ritenute` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) NOT NULL,                                      -- nome del tipo di ritenuta
+  `codice_sdi` char(32) NOT NULL                                  -- codice TipoRitenuta della fattura elettronica
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000034000
 

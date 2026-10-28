@@ -573,13 +573,13 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 
 -- ritenute
 -- i codici TipoRitenuta delle specifiche tecniche 1.9 della fattura elettronica, con le descrizioni della rappresentazione tabellare
-INSERT IGNORE INTO `ritenute` (`id`, `codice`, `nome`) VALUES
-(1,		'RT01',		'ritenuta persone fisiche'),
-(2,		'RT02',		'ritenuta persone giuridiche'),
-(3,		'RT03',		'contributo INPS'),
-(4,		'RT04',		'contributo ENASARCO'),
-(5,		'RT05',		'contributo ENPAM'),
-(6,		'RT06',		'altro contributo previdenziale');
+INSERT IGNORE INTO `ritenute` (`id`, `nome`, `codice_sdi`) VALUES
+(1,		'ritenuta persone fisiche',			'RT01'),
+(2,		'ritenuta persone giuridiche',		'RT02'),
+(3,		'contributo INPS',					'RT03'),
+(4,		'contributo ENASARCO',				'RT04'),
+(5,		'contributo ENPAM',					'RT05'),
+(6,		'altro contributo previdenziale',	'RT06');
 
 -- | 050000034000
 

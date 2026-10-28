@@ -3751,7 +3751,9 @@ ALTER TABLE `risorse_organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREM
 -- tipologia: tabella standard
 ALTER TABLE `ritenute`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `codice` (`codice`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `codice_sdi` (`codice_sdi`),
+	ADD KEY `indice` (`id`,`nome`,`codice_sdi`);
 
 -- | 030000033001
 

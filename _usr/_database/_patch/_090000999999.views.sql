@@ -3140,13 +3140,13 @@ CREATE OR REPLACE VIEW documenti_ritenute_view AS
 		documenti_ritenute.ordine,
 		documenti_ritenute.id_documento,
 		documenti_ritenute.id_ritenuta,
-		ritenute.codice AS ritenuta,
+		ritenute.codice_sdi AS ritenuta,
 		documenti_ritenute.aliquota,
 		documenti_ritenute.causale_pagamento,
 		documenti_ritenute.importo,
 		documenti_ritenute.id_account_inserimento,
 		documenti_ritenute.id_account_aggiornamento,
-		concat_ws( ' ', ritenute.codice, concat( documenti_ritenute.aliquota, '%' ), documenti_ritenute.causale_pagamento ) AS __label__
+		concat_ws( ' ', ritenute.codice_sdi, concat( documenti_ritenute.aliquota, '%' ), documenti_ritenute.causale_pagamento ) AS __label__
 	FROM documenti_ritenute
 		LEFT JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta
 ;
@@ -6473,12 +6473,13 @@ CREATE OR REPLACE VIEW `risorse_organizzazioni_view` AS
 
 -- ritenute_view
 -- tipologia: tabella standard
-CREATE OR REPLACE VIEW ritenute_view AS
+-- funzione: espone i tipi di ritenuta con l'etichetta codice SdI - nome per le tendine dei dati fiscali
+CREATE OR REPLACE VIEW `ritenute_view` AS
 	SELECT
 		ritenute.id,
-		ritenute.codice,
 		ritenute.nome,
-		concat( ritenute.codice, ' - ', ritenute.nome ) AS __label__
+		ritenute.codice_sdi,
+		concat( ritenute.codice_sdi, ' - ', ritenute.nome ) AS __label__
 	FROM ritenute
 ;
 
