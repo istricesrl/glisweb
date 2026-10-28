@@ -6488,27 +6488,30 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
 
 -- ruoli_mail
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli delle mail
+-- funzione: contiene i ruoli che un indirizzo mail svolge per il suo proprietario
 --
--- questa tabella contiene i ruoli delle mail, con le informazioni relative al nome, alle entità HTML e Font Awesome associate
--- e ai vari tipi di mail (XML, commerciale, produzione, amministrazione, acquisti, ordini, helpdesk); i ruoli delle mail qualificano
--- il ruolo di un indirizzo mail rispetto a una data anagrafica
+-- questa tabella contiene i ruoli di un indirizzo mail ( generica, commerciale, produzione, amministrazione, acquisti,
+-- ordini, helpdesk ); la legge mail.id_ruolo, l'unica chiave che la usa, quindi i flag non dicono dove il ruolo e'
+-- proponibile ma a quale funzione aziendale l'indirizzo serve; generica le serve tutte ( decisione del 28/10/2026 )
+--
+-- NOTA i flag servono a chi deve scegliere a quale indirizzo scrivere per una funzione ( un ordine, un ticket, una
+-- comunicazione amministrativa ): si cerca la mail col flag e fra quelle si prende la prima nell'ordine; il destinatario
+-- delle fatture elettroniche non e' un ruolo, lo dicono mail.se_pec e anagrafica.id_pec_sdi
 --
 CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna ricorsiva per il ruolo genitore
-  `nome` char(128) DEFAULT NULL,                              -- nome del ruolo
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML associata al ruolo
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome associata al ruolo
-  `se_xml` tinyint(1) DEFAULT NULL,                           -- se l'indirizzo mail è di tipo XML
-  `se_commerciale` tinyint(1) DEFAULT NULL,                   -- se l'indirizzo mail è di tipo commerciale
-  `se_produzione` tinyint(1) DEFAULT NULL,                    -- se l'indirizzo mail è di tipo produzione
-  `se_amministrazione` tinyint(1) DEFAULT NULL,               -- se l'indirizzo mail è di tipo amministrazione
-  `se_acquisti` tinyint(1) DEFAULT NULL,                      -- se l'indirizzo mail è di tipo acquisti
-  `se_ordini` tinyint(1) DEFAULT NULL,                        -- se l'indirizzo mail è di tipo ordini
-  `se_helpdesk` tinyint(1) DEFAULT NULL                        -- se l'indirizzo mail è di tipo helpdesk
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_commerciale` tinyint(1) DEFAULT NULL,                     -- flag per i ruoli che servono alla funzione commerciale
+  `se_produzione` tinyint(1) DEFAULT NULL,                      -- flag per i ruoli che servono alla produzione
+  `se_amministrazione` tinyint(1) DEFAULT NULL,                 -- flag per i ruoli che servono all'amministrazione
+  `se_acquisti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli che servono agli acquisti
+  `se_ordini` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli che servono agli ordini
+  `se_helpdesk` tinyint(1) DEFAULT NULL                         -- flag per i ruoli che servono all'helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034870

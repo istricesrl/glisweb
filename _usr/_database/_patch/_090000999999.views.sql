@@ -6742,21 +6742,21 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
 -- | 090000034801
 
 -- ruoli_mail_view
-CREATE OR REPLACE VIEW `ruoli_mail_view` AS
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_mail_view AS
 	SELECT
 		ruoli_mail.id,
 		ruoli_mail.id_genitore,
 		ruoli_mail.nome,
 		ruoli_mail.html_entity,
 		ruoli_mail.font_awesome,
-		ruoli_mail.se_xml,
 		ruoli_mail.se_commerciale,
 		ruoli_mail.se_produzione,
 		ruoli_mail.se_amministrazione,
 		ruoli_mail.se_acquisti,
 		ruoli_mail.se_ordini,
 		ruoli_mail.se_helpdesk,
-		ruoli_mail_path( ruoli_mail.id ) AS __label__
+	 	ruoli_mail_path( ruoli_mail.id ) AS __label__
 	FROM ruoli_mail
 ;
 

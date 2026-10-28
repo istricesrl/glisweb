@@ -736,15 +736,15 @@ INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `id_genitore`, `nome`, `html_entity`
 -- | 050000034850
 
 -- ruoli_mail
--- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026
-INSERT IGNORE INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `se_acquisti`, `se_ordini`, `se_helpdesk`) VALUES
-(1,	NULL,	'generica',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1),
-(2,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(5,	NULL,	'acquisti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(6,	NULL,	'ordini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
-(7,	NULL,	'helpdesk',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+-- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026; se_xml tolto il 28/10/2026
+INSERT IGNORE INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `se_acquisti`, `se_ordini`, `se_helpdesk`) VALUES
+(1,	NULL,	'generica',	NULL,	NULL,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'produzione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(5,	NULL,	'acquisti',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(6,	NULL,	'ordini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(7,	NULL,	'helpdesk',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 -- | 050000034900
 
