@@ -6422,7 +6422,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 -- | 090000032401
 
 -- risorse_categorie_view
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- verifica: 2021-10-09 18:03 Fabio Mosti
 CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 	SELECT
@@ -6431,12 +6431,12 @@ CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 		risorse_categorie.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_categorie.id_categoria,
-		categorie_risorse_path( risorse_categorie.id_categoria ),
+		categorie_risorse_path( risorse_categorie.id_categoria ) AS categoria,
 		risorse_categorie.id_account_inserimento,
 		risorse_categorie.id_account_aggiornamento,
-		concat_ws(
-			' ',
+		concat(
 			risorse.nome,
+			' / ',
 			categorie_risorse_path( risorse_categorie.id_categoria )
 		) AS __label__
 	FROM risorse_categorie

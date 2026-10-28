@@ -3708,12 +3708,13 @@ ALTER TABLE `risorse_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000032400
 
 -- risorse_categorie
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- verifica: 2021-10-09 17:48 Fabio Mosti
 ALTER TABLE `risorse_categorie`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_categoria`),
 	ADD KEY `id_risorsa` (`id_risorsa`),
-	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `id_categoria` (`id_categoria`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -3722,7 +3723,7 @@ ALTER TABLE `risorse_categorie`
 -- | 030000032401
 
 -- risorse_categorie
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 ALTER TABLE `risorse_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000032500

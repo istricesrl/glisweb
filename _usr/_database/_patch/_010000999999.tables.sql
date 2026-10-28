@@ -6076,21 +6076,29 @@ CREATE TABLE IF NOT EXISTS `risorse_anagrafica` (               --
 -- | 010000032400
 
 -- risorse_categorie
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione risorse e categorie
+-- funzione: associa molti a molti le risorse alle categorie delle risorse
 --
-CREATE TABLE IF NOT EXISTS `risorse_categorie` (
-  `id` bigint(20) NOT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene le associazioni molti a molti tra le risorse e le categorie_risorse, cioe' l'albero di
+-- navigazione sotto cui si appendono le pagine delle risorse: una risorsa genera una pagina sotto ogni categoria a cui
+-- appartiene; le categorie fanno parte della scheda della risorsa, quindi la chiave verso risorse si segue, mentre
+-- quella verso categorie_risorse no; e' ricalcata su prodotti_categorie
+--
+-- NOTA la categoria principale di una risorsa e' la prima nell'ordine ( ORDER BY ordine, id ), ed e' quella sotto
+-- cui sta la canonical della sua pagina
+--
+CREATE TABLE IF NOT EXISTS `risorse_categorie` (              --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione, la prima e' la principale
+  `id_risorsa` bigint(20) DEFAULT NULL,                       -- chiave esterna per la risorsa
+  `id_categoria` bigint(20) DEFAULT NULL,                     -- chiave esterna per la categoria
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000032500
 

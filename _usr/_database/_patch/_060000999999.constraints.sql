@@ -1981,7 +1981,7 @@ ALTER TABLE `risorse_anagrafica`
 -- | 060000032400
 
 -- risorse_categorie
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- verifica: 2021-10-09 17:59 Fabio Mosti
 ALTER TABLE `risorse_categorie`
     ADD CONSTRAINT `risorse_categorie_ibfk_01`              FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
