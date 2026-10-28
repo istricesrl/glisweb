@@ -556,6 +556,12 @@ la toccano; ogni correzione porta il test che avrebbe preso il bug. Codice e tes
 prima di chiudere si fanno girare. Un test che non si può scrivere si dichiara e finisce nel `TODO.md`, area
 `test automatici`. Dettaglio nella skill `glisweb`, sezione "TASSATIVO: applicazione e test sempre allineati".
 
+**⚠⚠ Dal 28/10/2026 la lista dei test da scrivere si deve ACCORCIARE, mai allungare** ( Fabio ): nessuno
+sviluppo aggiunge debito, "lo scrivo dopo" non esiste. Lo fanno rispettare `_src/_sh/_test.guardia.sh`,
+l'hook `.githooks/commit-msg` che **rifiuta** il commit con codice e senza test, e `bin/chiusura.py` che
+segnala come bloccanti i commit del giorno fuori regola. L'unica deroga è la riga `Senza-test: <motivo>`
+nel messaggio, più la voce nel `TODO.md`; `--no-verify` e i test finti non si usano.
+
 I test girano con Codeception in tre suite: **`unit`** ( le librerie, via gli esempi di `_usr/_examples/` ),
 **`backend`** e **`frontend`** ( funzionali, in Chromium headless: aprono le pagine, compilano i form e
 verificano il risultato nel database ). Si lanciano con `_src/_sh/_codeception.run.sh <suite|tutte>`, e un

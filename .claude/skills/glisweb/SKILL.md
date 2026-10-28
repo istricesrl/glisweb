@@ -630,6 +630,37 @@ di dire qualcosa.
 - se un test proprio non si può scrivere ( servizio esterno, hardware, produzione ), **lo si dice** e la voce
   va nel `TODO.md` del progetto, area `test automatici`: non si tace.
 
+⚠⚠ **Dal 28/10/2026 la lista dei test da scrivere si deve ACCORCIARE, mai allungare.** Detto da Fabio quel
+giorno, dopo il censimento su gimbe: **979 test mancanti nello standard**, e sugli ultimi 200 commit di
+`develop` **50 toccavano il codice senza toccare un test**. Il debito non è nato in un giorno: è nato un
+commit alla volta, ognuno con la sua buona ragione. Da qui in avanti:
+
+- **nessuno sviluppo aggiunge debito**: il commit che porta codice nuovo o cambiato porta il suo test, e il
+  lavoro si fa in quest'ordine — test, lo si vede rosso, codice, lo si vede verde, commit insieme;
+- **"lo scrivo dopo" non esiste**: è esattamente il gesto che ha prodotto i 979. Un test rimandato è una voce
+  in più nella lista, cioè la cosa che Fabio ha vietato;
+- **la deroga è un'eccezione dichiarata, non una scorciatoia**: si scrive nel messaggio di commit una riga
+  `Senza-test: <motivo>` **e** nello stesso turno si apre la voce nel `TODO.md`, area `test automatici`,
+  col hash del commit. Motivi validi: servizio esterno senza sandbox né stub costruibile, hardware,
+  solo commenti o formattazione. **Non** sono motivi: la fretta, "è una riga", "è ovvio", "il test è difficile"
+  ( se è difficile si corregge il framework per renderlo testabile, vedi `180.test.md` );
+- **ogni sessione che lavora sullo standard smaltisce anche il debito vecchio**: la lista sta in
+  `/var/www/gimbe.istricesrl.it/var/20261028-censimento-test/ELENCO-STANDARD.md`, le voci nel `TODO.md` di
+  glisweb, area `test automatici`, ordine P0 → P3.
+
+**La regola non è affidata alla memoria, la applicano due controlli** ( `_src/_sh/_test.guardia.sh` ):
+
+1. **l'hook `.githooks/commit-msg`** ( glisweb e glisdev, su ogni branch ) **rifiuta il commit** che tocca il
+   codice — `.php .twig .html .js .sh .sql` sotto `_src/`, `src/`, `_mod/<m>/_src/`, `mod/<m>/src/` — senza
+   toccare un file sotto `_usr/_test/`, `usr/test/`, `_usr/_examples/`, `usr/examples/` ( anche dentro i
+   moduli ), e senza la riga `Senza-test:`;
+2. **`bin/chiusura.py`** controlla i commit del giorno di **ogni** deploy, anche dove l'hook non c'è, e quelli
+   fuori regola sono **bloccanti**: non si risponde "puoi chiudere" finché non hanno il test o la voce.
+
+⚠ **Non si aggira**: niente `--no-verify`, niente `core.hooksPath` tolto, niente test vuoto o finto messo lì
+per far passare la guardia ( un Cest senza asserzioni vere è peggio di nessun test, perché dice verde ). Chi
+lo facesse sta cancellando di nascosto una regola di Fabio.
+
 ### ⚠ TASSATIVO: applicazione e documentazione sempre allineati
 
 Regola di Fabio del **06/10/2026**, gemella di quella dei test e come quella senza eccezioni: **il codice e la

@@ -6,6 +6,21 @@ MSG_FILE="$1"
 GIT_DIR="$(git rev-parse --git-dir)"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
+## guardia dei test, su ogni branch
+#
+# un commit che tocca il codice porta i suoi test, o dichiara perche' non li porta con una riga
+# "Senza-test: <motivo>" ( regola di Fabio del 28/10/2026, vedi _src/_sh/_test.guardia.sh ); i
+# merge si saltano, i loro commit sono gia' passati di qui
+if [ ! -f "$GIT_DIR/MERGE_HEAD" ]; then
+    if ! SENZA="$( bash _src/_sh/_test.guardia.sh --staged "$MSG_FILE" )"; then
+        echo "commit rifiutato: tocca il codice senza toccare nessun test" >&2
+        echo "$SENZA" | sed 's/^/    /' >&2
+        echo "aggiungi il test ( _usr/_test/, _mod/<modulo>/_usr/_test/, _usr/_examples/ ) oppure" >&2
+        echo "dichiara nel messaggio 'Senza-test: <motivo>' e apri la voce nel TODO.md, area test automatici" >&2
+        exit 1
+    fi
+fi
+
 if [ "$BRANCH" != "master" ]; then
     exit 0
 fi
