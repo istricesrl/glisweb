@@ -655,7 +655,10 @@ commit alla volta, ognuno con la sua buona ragione. Da qui in avanti:
    toccare un file sotto `_usr/_test/`, `usr/test/`, `_usr/_examples/`, `usr/examples/` ( anche dentro i
    moduli ), e senza la riga `Senza-test:`;
 2. **`bin/chiusura.py`** controlla i commit del giorno di **ogni** deploy, anche dove l'hook non c'è, e quelli
-   fuori regola sono **bloccanti**: non si risponde "puoi chiudere" finché non hanno il test o la voce.
+   fuori regola sono **bloccanti**: non si risponde "puoi chiudere" finché non hanno il test o la voce;
+3. **il workflow GitHub `.github/workflows/guardia-test.yml`** ripassa ogni push e pull request di
+   `istricesrl/glisweb` e fallisce nominando i commit fuori regola: è il controllo che `--no-verify` non
+   scavalca. Un run rosso della *guardia dei test* si sistema subito, col test o con la voce.
 
 ⚠ **Non si aggira**: niente `--no-verify`, niente `core.hooksPath` tolto, niente test vuoto o finto messo lì
 per far passare la guardia ( un Cest senza asserzioni vere è peggio di nessun test, perché dice verde ). Chi
