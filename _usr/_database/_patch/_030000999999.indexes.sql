@@ -3768,13 +3768,9 @@ ALTER TABLE `ritenute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `se_progetti` (`se_progetti`),
-	ADD KEY `se_risorse` (`se_risorse`),
-	ADD KEY `se_acquisto` (`se_acquisto`),
-	ADD KEY `se_rinnovo` (`se_rinnovo`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`);
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034101
 
@@ -5529,8 +5525,9 @@ ALTER TABLE `contratti_anagrafica`
 -- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000999011
 

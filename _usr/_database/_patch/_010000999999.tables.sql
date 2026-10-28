@@ -6153,28 +6153,38 @@ CREATE TABLE IF NOT EXISTS `ritenute` (                         --
 
 -- ruoli_anagrafica
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero dei ruoli che le anagrafiche possono svolgere
+-- funzione: contiene i ruoli che le anagrafiche possono svolgere
+--
+-- questa tabella contiene i ruoli che un'anagrafica svolge rispetto a un altro oggetto ( titolare, dipendente, autore,
+-- docente, proprietario, contraente... ); la leggono gli id_ruolo delle relazioni con l'anagrafica ( anagrafica_organizzazioni,
+-- relazioni_anagrafica, notizie_anagrafica, risorse_anagrafica, progetti_anagrafica, contratti_anagrafica e le relazioni
+-- degli immobili ); i flag dicono in quale relazione il ruolo e' proponibile, in quale tipologia di progetto, o una
+-- qualita' del ruolo
+--
+-- NOTA: se_produzione e se_didattica sono sottoinsiemi di se_progetti per tipologia di progetto, gemelli dei flag di
+-- tipologie_progetti: la tendina dei ruoli di un progetto filtra sul flag della sua tipologia ( decisione del 28/10/2026 );
+-- se_proponente, se_contraente e se_sostituto sono qualita' del ruolo, non della relazione ( decisione del 22/10/2026 )
+--
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_produzione` tinyint(1) DEFAULT NULL,
-  `se_didattica` tinyint(1) DEFAULT NULL,
-  `se_organizzazioni` tinyint(1) DEFAULT NULL,
-  `se_relazioni` tinyint(1) DEFAULT NULL,
-  `se_risorse` tinyint(1) DEFAULT NULL,
-  `se_notizie` tinyint(1) DEFAULT NULL,
-  `se_progetti` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_contratti` tinyint(1) DEFAULT NULL,
-  `se_proponente` tinyint(1) DEFAULT NULL,
-  `se_contraente` tinyint(1) DEFAULT NULL,
-  `se_sostituto` tinyint(1) DEFAULT NULL,
-  `note` text DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_organizzazioni` tinyint(1) DEFAULT NULL,                  -- flag per i ruoli proponibili in anagrafica_organizzazioni
+  `se_relazioni` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili in relazioni_anagrafica
+  `se_notizie` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili in notizie_anagrafica
+  `se_risorse` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili in risorse_anagrafica
+  `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili in progetti_anagrafica
+  `se_immobili` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nelle relazioni degli immobili
+  `se_contratti` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili in contratti_anagrafica
+  `se_produzione` tinyint(1) DEFAULT NULL,                      -- flag per i ruoli dei progetti con tipologia se_produzione
+  `se_didattica` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli dei progetti con tipologia se_didattica
+  `se_proponente` tinyint(1) DEFAULT NULL,                      -- flag per il ruolo di chi propone un contratto
+  `se_contraente` tinyint(1) DEFAULT NULL,                      -- flag per il ruolo di chi sottoscrive un contratto
+  `se_sostituto` tinyint(1) DEFAULT NULL                        -- flag per il ruolo di un sostituto ( p.es. docente sostituto )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034100
@@ -6183,19 +6193,23 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli articoli
+-- funzione: contiene i ruoli con cui un articolo o un prodotto e' collegato a un articolo
+--
+-- questa tabella contiene i ruoli che il collegato svolge rispetto all'articolo ( prodotto, principale, suggerito,
+-- accessorio, consumabile, bundle ); la legge relazioni_articoli.id_ruolo, e i ruoli proponibili sono quelli con
+-- se_relazioni ( decisione del 26/10/2026 )
+--
+-- NOTA: i flag se_progetti, se_risorse, se_acquisto e se_rinnovo sono usciti dal canone il 28/10/2026: le loro
+-- relazioni non ci sono piu' ( progetti_articoli, rinnovi_documenti_articoli ) o non sono mai esistite, e l'acquisto
+-- passa da id_prodotto / id_articolo dell'oggetto venduto ( decisione del 27/10/2026 )
 --
 CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_progetti` tinyint(1) DEFAULT NULL,
-  `se_risorse` tinyint(1) DEFAULT NULL,
-  `se_acquisto` tinyint(1) DEFAULT NULL,
-  `se_rinnovo` tinyint(1) DEFAULT NULL,
-  `se_relazioni` tinyint(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_articoli
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034200

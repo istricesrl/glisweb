@@ -6486,13 +6486,14 @@ CREATE OR REPLACE VIEW `ritenute_view` AS
 -- | 090000034001
 
 -- ruoli_anagrafica_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 	SELECT
 		ruoli_anagrafica.id,
 		ruoli_anagrafica.id_genitore,
 		ruoli_anagrafica.nome,
-		ruoli_anagrafica.se_produzione,
-		ruoli_anagrafica.se_didattica,
+		ruoli_anagrafica.html_entity,
+		ruoli_anagrafica.font_awesome,
 		ruoli_anagrafica.se_organizzazioni,
 		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_notizie,
@@ -6500,6 +6501,8 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_progetti,
 		ruoli_anagrafica.se_immobili,
 		ruoli_anagrafica.se_contratti,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
 		ruoli_anagrafica.se_sostituto,
@@ -6510,8 +6513,7 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 -- | 090000034101
 
 -- ruoli_articoli_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-09 18:17 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_articoli_view AS
 	SELECT
 		ruoli_articoli.id,
@@ -6519,10 +6521,6 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 		ruoli_articoli.nome,
 		ruoli_articoli.html_entity,
 		ruoli_articoli.font_awesome,
-		ruoli_articoli.se_progetti,
-		ruoli_articoli.se_risorse,
-		ruoli_articoli.se_acquisto,
-		ruoli_articoli.se_rinnovo,
 		ruoli_articoli.se_relazioni,
 	 	ruoli_articoli_path( ruoli_articoli.id ) AS __label__
 	FROM ruoli_articoli
