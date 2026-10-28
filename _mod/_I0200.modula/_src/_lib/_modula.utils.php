@@ -14,6 +14,9 @@
      *   confermato non si puo' piu' richiedere. Quindi l'ack si manda DOPO aver scritto gli esiti, mai prima:
      *   se la scrittura fallisce, alla chiamata dopo il WMS ripete lo stesso pacchetto.
      *
+     * Accanto agli ordini, modulaArticoli() manda l'anagrafica degli articoli e modulaGiacenze() legge le giacenze del
+     * WMS, confermando ogni pacchetto letto.
+     *
      * Le quantita' viaggiano come testo con la virgola e tre decimali ( "1,000" ): la conversione si fa con
      * modulaQta2Testo() e modulaTesto2Qta(), non a mano.
      *
@@ -217,6 +220,118 @@
 
         $errore = NULL;
         return true;
+
+    }
+
+    /**
+     * funzione che manda degli articoli al job di import dell'anagrafica del WMS
+     *
+     * Gli articoli vanno nel formato della tabella host IMP_ARTICOLI, p.es.
+     *
+     *     modulaArticoli( array(
+     *         array( 'ART_OPERAZIONE' => 'I', 'ART_ARTICOLO' => 'A1', 'ART_DES' => 'articolo uno', 'ART_UMI' => 'FF' )
+     *     ) );
+     *
+     * Con ART_OPERAZIONE I un articolo che il WMS ha gia' viene aggiornato. L'anagrafica va mandata prima degli
+     * ordini: una riga d'ordine su un articolo che il WMS non conosce fa rifiutare l'intero pacchetto.
+     *
+     * @param    array     articoli   le righe di IMP_ARTICOLI
+     * @param    string    job        il job, di default quello dell'anagrafica del profilo
+     * @param    string    errore     la descrizione dell'errore restituita dal WMS, o quella di curl se non si raggiunge
+     *
+     * @return   boolean              true solo se il WMS ha risposto 200
+     */
+    function modulaArticoli( $articoli, $job = NULL, &$errore = NULL ) {
+
+        // globalizzazione
+        global $cf;
+
+        // job di default
+        if( empty( $job ) ) {
+            $job = $cf['modula']['profile']['jobs']['articoli'];
+        }
+
+        modulaChiamata(
+            '/api/jobs/' . rawurlencode( $job ),
+            METHOD_POST,
+            array( 'IMP_ARTICOLI' => array_values( $articoli ) ),
+            $status, $raw, $erroreCurl
+        );
+
+        // se il WMS non si raggiunge non c'e' risposta, e la descrizione e' quella di curl
+        if( $status != 200 ) {
+            $errore = $status . ' ' . ( ( empty( $raw ) ) ? $erroreCurl : $raw );
+            return false;
+        }
+
+        $errore = NULL;
+        return true;
+
+    }
+
+    /**
+     * funzione che legge le giacenze del WMS
+     *
+     * Scarica dal job delle giacenze tutti i pacchetti fino all'ultimo, confermando ciascuno con l'ack appena letto:
+     * le giacenze non si elaborano, si leggono, e un pacchetto lasciato aperto blocca i successivi. Il WMS elenca
+     * solo gli articoli con giacenza o con movimenti in corso.
+     *
+     * ⚠ Un job delle giacenze puo' essere configurato sul WMS per mandare, dopo l'ack, solo gli articoli che si sono
+     * mossi: allora quello che torna e' una variazione, non la fotografia intera, e un articolo assente non vuol dire
+     * giacenza zero. In quel caso chi deve conoscere le giacenze le tiene in una fotografia sua, ci fonde sopra i
+     * pacchetti, ed e' l'unico lettore del job.
+     *
+     * @param    string    job        il job, di default quello delle giacenze del profilo
+     * @param    int       status     il codice HTTP dell'ultima risposta
+     *
+     * @return   array                codice articolo => array( giacenza, versamento, prelievo ), NULL se il WMS non
+     *                                ha risposto o se un ack e' fallito
+     */
+    function modulaGiacenze( $job = NULL, &$status = NULL ) {
+
+        // globalizzazione
+        global $cf;
+
+        // job di default
+        if( empty( $job ) ) {
+            $job = $cf['modula']['profile']['jobs']['giacenze'];
+        }
+
+        // al massimo cento pacchetti, perche' un WMS che rispondesse sempre CHUNK non fermi il task
+        $giacenze = array();
+        for( $i = 0; $i < 100; $i++ ) {
+
+            $pacchetto = modulaExport( $job, $status );
+
+            // 204 vuol dire nessun articolo in giacenza
+            if( $status == 204 ) {
+                return $giacenze;
+            } elseif( empty( $pacchetto ) ) {
+                return NULL;
+            }
+
+            if( ! modulaAck( $pacchetto['GUID'], $job ) ) {
+                return NULL;
+            }
+
+            if( isset( $pacchetto['DATA']['EXP_GIACENZE'] ) ) {
+                foreach( $pacchetto['DATA']['EXP_GIACENZE'] as $riga ) {
+                    $giacenze[ $riga['GIA_ARTICOLO'] ] = array(
+                        'giacenza'      => (float) $riga['GIA_GIAC'],
+                        'versamento'    => ( isset( $riga['GIA_VER'] ) ) ? (float) $riga['GIA_VER'] : 0,
+                        'prelievo'      => ( isset( $riga['GIA_PRE'] ) ) ? (float) $riga['GIA_PRE'] : 0
+                    );
+                }
+            }
+
+            if( $pacchetto['TransactionStatus'] != 'CHUNK' ) {
+                return $giacenze;
+            }
+
+        }
+
+        logger( 'giacenze: piu\' di cento pacchetti, lettura interrotta', 'modula', LOG_ERR );
+        return NULL;
 
     }
 

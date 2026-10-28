@@ -9,13 +9,23 @@
      * percorso                 | cosa fa
      * -------------------------|---------------------------------------------------------------------------------
      * POST /token              | con utente modula e password fake da' il token, altrimenti 400 invalid_grant
-     * POST /api/jobs/{job}     | import: valida IMP_ORDINI e IMP_ORDINI_RIGHE, li tiene e risponde 200, o 400
-     *                          | con la descrizione dell'errore
-     * GET  /api/jobs/{job}     | export: un pacchetto di al massimo due ordini, evasi per intero tranne le righe
-     *                          | dell'articolo MANCA, che tornano a "0,000"; finche' non arriva l'ack ripete lo
-     *                          | stesso; senza ordini risponde 204
-     * POST /api/jobs/{job}/ack | conferma il pacchetto col suo GUID e ne cancella gli ordini; GUID sbagliato 400
-     * POST /reset              | solo del finto: cancella ordini e pacchetto
+     * POST /api/jobs/{job}     | import: IMP_ARTICOLI aggiorna l'anagrafica; IMP_ORDINI e IMP_ORDINI_RIGHE
+     *                          | inseriscono ( I: testata aggiornata, righe aggiunte per RIG_HOSTINF ) o
+     *                          | cancellano ( D, con ORD_DEL_SINGOLE_RIGHE le sole righe ) gli ordini; un ordine
+     *                          | non in attesa non si cancella, e una riga su un articolo fuori anagrafica ( o
+     *                          | ASSENTE ) fa rifiutare il pacchetto intero, col 400 in JSON del WMS; un corpo
+     *                          | non riconosciuto prende 200, come sul WMS
+     * GET  /api/jobs/{job}     | export: col job delle giacenze le quantita' impostate con /giacenze, con
+     *                          | gli altri lo stato di al massimo due ordini, come CFG-EXP-ORDRIG-STATO; alla
+     *                          | lettura gli ordini si eseguono: righe C per intero, tranne gli articoli MANCA
+     *                          | ( I a zero ), PARZIALE ( I a meta' ), ATTESA ( W ) e LANCIATO ( E ); finche'
+     *                          | non arriva l'ack ripete lo stesso pacchetto; senza dati risponde 204
+     * POST /api/jobs/{job}/ack | conferma il pacchetto del job col suo GUID, e gli ordini COMPL spariscono;
+     *                          | GUID sbagliato 400
+     * POST /giacenze           | solo del finto: imposta le giacenze, { "codice": quantita', … }
+     * POST /evasioni           | solo del finto: fissa l'evaso per RIG_HOSTINF, { "hostinf": quantita', … }, e la
+     *                          | riga torna I se l'evaso e' minore del richiesto
+     * POST /reset              | solo del finto: cancella ordini, anagrafica, giacenze, evasioni e pacchetti
      *
      * Tutto tranne /token vuole Basic ( modula / fake ) oppure il Bearer emesso, altrimenti 401 come il WMS.
      *
@@ -59,7 +69,7 @@
     flock( $lock, LOCK_EX );
     $stato = ( file_exists( $cartella . 'stato.json' ) ) ? json_decode( file_get_contents( $cartella . 'stato.json' ), true ) : NULL;
     if( ! is_array( $stato ) ) {
-        $stato = array( 'ordini' => array(), 'pacchetto' => NULL, 'token' => array() );
+        $stato = array( 'ordini' => array(), 'articoli' => array(), 'giacenze' => array(), 'pacchetti' => array(), 'token' => array() );
     }
 
     /**
@@ -139,7 +149,21 @@
 
     // reset
     if( $metodo == 'POST' && $percorso == '/reset' ) {
-        $stato = array( 'ordini' => array(), 'pacchetto' => NULL, 'token' => $stato['token'] );
+        $stato = array( 'ordini' => array(), 'articoli' => array(), 'giacenze' => array(), 'evasioni' => array(), 'pacchetti' => array(), 'token' => $stato['token'] );
+        rispondi( 200 );
+    }
+
+    // evasioni forzate del finto, impostate dal test: RIG_HOSTINF => quantita' evasa
+    if( $metodo == 'POST' && $percorso == '/evasioni' ) {
+        $dati = json_decode( $corpo, true );
+        $stato['evasioni'] = ( is_array( $dati ) ) ? $dati : array();
+        rispondi( 200 );
+    }
+
+    // giacenze del finto, impostate dal test: codice => quantita'
+    if( $metodo == 'POST' && $percorso == '/giacenze' ) {
+        $dati = json_decode( $corpo, true );
+        $stato['giacenze'] = ( is_array( $dati ) ) ? $dati : array();
         rispondi( 200 );
     }
 
@@ -148,41 +172,81 @@
         rispondi( 404, 'Not Found' );
     }
 
+    /**
+     * errore sui dati, nel formato del WMS
+     *
+     * @param    string    primario    la descrizione dell'errore
+     * @param    array     testata     la testata dell'ordine
+     * @param    array     riga        la riga in errore
+     *
+     */
+    function rifiuta( $primario, $testata = array(), $riga = array() ) {
+        rispondi( 400, array( array(
+            'PrimaryError' => $primario,
+            'SecondaryError' => '',
+            'MasterRow' => array_values( $testata ),
+            'SlaveRow' => array_values( $riga )
+        ) ) );
+    }
+
     // ack
     if( $metodo == 'POST' && ! empty( $job[2] ) ) {
         $dati = json_decode( $corpo, true );
-        if( empty( $stato['pacchetto'] ) || ! isset( $dati['GUID'] ) || $dati['GUID'] !== $stato['pacchetto']['GUID'] ) {
+        if( empty( $stato['pacchetti'][ $job[1] ] ) || ! isset( $dati['GUID'] ) || $dati['GUID'] !== $stato['pacchetti'][ $job[1] ]['GUID'] ) {
             rispondi( 400, 'GUID non valido o pacchetto gia\' confermato' );
         }
-        foreach( $stato['pacchetto']['DATA']['EXP_ORDINI'] as $ordine ) {
-            unset( $stato['ordini'][ $ordine['ORD_ORDINE'] ] );
+        if( isset( $stato['pacchetti'][ $job[1] ]['DATA']['EXP_ORDINI'] ) ) {
+            foreach( $stato['pacchetti'][ $job[1] ]['DATA']['EXP_ORDINI'] as $ordine ) {
+                if( $ordine['ORD_STATO'] == 'COMPL' ) {
+                    unset( $stato['ordini'][ $ordine['ORD_ORDINE'] ] );
+                }
+            }
         }
-        $stato['pacchetto'] = NULL;
-        rispondi( 200 );
+        $stato['pacchetti'][ $job[1] ] = NULL;
+        rispondi( 200, 'Operazione completata con successo' );
     }
 
     // import
     if( $metodo == 'POST' ) {
 
         $dati = json_decode( $corpo, true );
-        if( ! is_array( $dati ) || ! isset( $dati['IMP_ORDINI'], $dati['IMP_ORDINI_RIGHE'] ) || ! is_array( $dati['IMP_ORDINI'] ) || ! is_array( $dati['IMP_ORDINI_RIGHE'] ) ) {
-            rispondi( 400, 'formato non valido: servono IMP_ORDINI e IMP_ORDINI_RIGHE' );
+        if( ! is_array( $dati ) ) {
+            rispondi( 400, 'formato non valido' );
         }
 
-        $ordini = array();
-        foreach( $dati['IMP_ORDINI'] as $i => $ordine ) {
-            if( empty( $ordine['ORD_ORDINE'] ) ) {
-                rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_ORDINE mancante' );
+        // anagrafica: ART_OPERAZIONE I inserisce o aggiorna, D cancella
+        if( isset( $dati['IMP_ARTICOLI'] ) ) {
+            $articoli = $stato['articoli'];
+            foreach( $dati['IMP_ARTICOLI'] as $i => $articolo ) {
+                if( empty( $articolo['ART_ARTICOLO'] ) || empty( $articolo['ART_UMI'] ) ) {
+                    rifiuta( 'Articolo - campi obbligatori mancanti !', array(), $articolo );
+                }
+                if( isset( $articolo['ART_OPERAZIONE'] ) && $articolo['ART_OPERAZIONE'] == 'D' ) {
+                    unset( $articoli[ $articolo['ART_ARTICOLO'] ] );
+                } else {
+                    $articoli[ $articolo['ART_ARTICOLO'] ] = $articolo;
+                }
             }
-            if( ! isset( $ordine['ORD_TIPOOP'] ) || ! in_array( $ordine['ORD_TIPOOP'], array( 'P', 'V' ), true ) ) {
-                rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_TIPOOP non valido' );
-            }
-            $ordini[ $ordine['ORD_ORDINE'] ] = array( 'ordine' => $ordine, 'righe' => array() );
+            $stato['articoli'] = $articoli;
+            rispondi( 200, 'Operazione completata con successo' );
         }
 
+        // un corpo che il job non riconosce prende 200, come sul WMS
+        if( ! isset( $dati['IMP_ORDINI'] ) || ! is_array( $dati['IMP_ORDINI'] ) ) {
+            rispondi( 200, 'Operazione completata con successo' );
+        }
+        if( ! isset( $dati['IMP_ORDINI_RIGHE'] ) || ! is_array( $dati['IMP_ORDINI_RIGHE'] ) ) {
+            $dati['IMP_ORDINI_RIGHE'] = array();
+        }
+
+        // il pacchetto e' transazionale: si lavora su una copia e la si tiene solo se va tutto bene
+        $ordini = $stato['ordini'];
+
+        // righe per ordine
+        $righe = array();
         foreach( $dati['IMP_ORDINI_RIGHE'] as $i => $riga ) {
-            if( empty( $riga['RIG_ORDINE'] ) || ! isset( $ordini[ $riga['RIG_ORDINE'] ] ) ) {
-                rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_ORDINE assente fra gli ordini del pacchetto' );
+            if( empty( $riga['RIG_ORDINE'] ) ) {
+                rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_ORDINE mancante' );
             }
             if( empty( $riga['RIG_ARTICOLO'] ) ) {
                 rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_ARTICOLO mancante' );
@@ -190,41 +254,136 @@
             if( ! isset( $riga['RIG_QTAR'] ) || ! is_string( $riga['RIG_QTAR'] ) || ! preg_match( '/^\d+,\d{3}$/', $riga['RIG_QTAR'] ) ) {
                 rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_QTAR non valida, atteso testo come "1,000"' );
             }
-            $ordini[ $riga['RIG_ORDINE'] ]['righe'][] = $riga;
+            $righe[ $riga['RIG_ORDINE'] ][] = $riga;
         }
 
-        $stato['ordini'] = array_merge( $stato['ordini'], $ordini );
-        rispondi( 200 );
+        foreach( $dati['IMP_ORDINI'] as $i => $ordine ) {
+
+            if( empty( $ordine['ORD_ORDINE'] ) ) {
+                rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_ORDINE mancante' );
+            }
+            if( ! isset( $ordine['ORD_TIPOOP'] ) || ! in_array( $ordine['ORD_TIPOOP'], array( 'P', 'V' ), true ) ) {
+                rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_TIPOOP non valido' );
+            }
+
+            $codice = $ordine['ORD_ORDINE'];
+            $operazione = ( isset( $ordine['ORD_OPERAZIONE'] ) ) ? $ordine['ORD_OPERAZIONE'] : 'I';
+            $sue = ( isset( $righe[ $codice ] ) ) ? $righe[ $codice ] : array();
+
+            // cancellazione: dell'ordine intero, o delle sole righe elencate con ORD_DEL_SINGOLE_RIGHE
+            if( $operazione == 'D' ) {
+                if( ! isset( $ordini[ $codice ] ) ) {
+                    continue;
+                }
+                if( $ordini[ $codice ]['ordine']['ORD_STATO'] != 'WAIT' ) {
+                    rifiuta( 'Ordine non cancellabile !', $ordine );
+                }
+                if( ! empty( $ordine['ORD_DEL_SINGOLE_RIGHE'] ) ) {
+                    foreach( $sue as $riga ) {
+                        unset( $ordini[ $codice ]['righe'][ $riga['RIG_HOSTINF'] ] );
+                    }
+                } else {
+                    unset( $ordini[ $codice ] );
+                }
+                continue;
+            }
+
+            // inserimento o aggiornamento: la testata si aggiorna, le righe si aggiungono per RIG_HOSTINF
+            if( ! isset( $ordini[ $codice ] ) ) {
+                $ordini[ $codice ] = array( 'ordine' => array(), 'righe' => array() );
+            }
+            $ordine['ORD_STATO'] = 'WAIT';
+            $ordini[ $codice ]['ordine'] = array_replace( $ordini[ $codice ]['ordine'], $ordine );
+            foreach( $sue as $n => $riga ) {
+                if( $riga['RIG_ARTICOLO'] == 'ASSENTE' || ( ! empty( $stato['articoli'] ) && ! isset( $stato['articoli'][ $riga['RIG_ARTICOLO'] ] ) ) ) {
+                    rifiuta( 'Riga Ordine - Violata integrita\' articolo !', $ordine, $riga );
+                }
+                $chiave = ( ! empty( $riga['RIG_HOSTINF'] ) ) ? $riga['RIG_HOSTINF'] : count( $ordini[ $codice ]['righe'] ) . '-' . $n;
+                $ordini[ $codice ]['righe'][ $chiave ] = $riga;
+            }
+
+        }
+
+        $stato['ordini'] = $ordini;
+        rispondi( 200, 'Operazione completata con successo' );
 
     }
 
     // export
     if( $metodo == 'GET' ) {
 
-        if( empty( $stato['pacchetto'] ) ) {
+        // un pacchetto non confermato si ripete
+        if( empty( $stato['pacchetti'][ $job[1] ] ) ) {
 
-            if( empty( $stato['ordini'] ) ) {
-                rispondi( 204 );
-            }
+            // giacenze
+            if( strpos( $job[1], 'GIACENZE' ) !== false ) {
 
-            $evasi = array( 'EXP_ORDINI' => array(), 'EXP_ORDINI_RIGHE' => array() );
-            foreach( array_slice( $stato['ordini'], 0, $pacchettoMax, true ) as $ordine ) {
-                $evasi['EXP_ORDINI'][] = $ordine['ordine'];
-                foreach( $ordine['righe'] as $riga ) {
-                    $riga['RIG_QTAE'] = ( $riga['RIG_ARTICOLO'] == 'MANCA' ) ? '0,000' : $riga['RIG_QTAR'];
-                    $evasi['EXP_ORDINI_RIGHE'][] = $riga;
+                if( empty( $stato['giacenze'] ) ) {
+                    rispondi( 204 );
                 }
+
+                $dati = array( 'EXP_GIACENZE' => array() );
+                foreach( $stato['giacenze'] as $codice => $quantita ) {
+                    $dati['EXP_GIACENZE'][] = array(
+                        'GIA_DATAORAS1' => date( 'Y-m-d H:i:s' ), 'GIA_ARTICOLO' => (string) $codice,
+                        'GIA_GIAC' => $quantita, 'GIA_VER' => 0, 'GIA_PRE' => 0
+                    );
+                }
+                $resto = 0;
+
+            // stato di ordini e righe
+            } else {
+
+                if( empty( $stato['ordini'] ) ) {
+                    rispondi( 204 );
+                }
+
+                // alla lettura il finto esegue gli ordini in attesa: ogni riga completata, tranne quelle
+                // dell'articolo MANCA ( incompleta a zero ), PARZIALE ( incompleta a meta' ), ATTESA ( resta
+                // in attesa, con l'ordine ) e LANCIATO ( in esecuzione, con l'ordine )
+                $dati = array( 'EXP_ORDINI' => array(), 'EXP_ORDINI_RIGHE' => array() );
+                foreach( array_slice( array_keys( $stato['ordini'] ), 0, $pacchettoMax ) as $codice ) {
+                    $ordine = &$stato['ordini'][ $codice ];
+                    $testata = 'COMPL';
+                    foreach( $ordine['righe'] as &$riga ) {
+                        $richiesta = (float) str_replace( ',', '.', $riga['RIG_QTAR'] );
+                        if( $riga['RIG_ARTICOLO'] == 'ATTESA' ) {
+                            $testata = 'WAIT'; $riga['RIG_STARIORD'] = 'W'; $evasa = 0;
+                        } elseif( $riga['RIG_ARTICOLO'] == 'LANCIATO' ) {
+                            $testata = 'EXE'; $riga['RIG_STARIORD'] = 'E'; $evasa = 0;
+                        } elseif( $riga['RIG_ARTICOLO'] == 'MANCA' ) {
+                            $riga['RIG_STARIORD'] = 'I'; $evasa = 0;
+                        } elseif( $riga['RIG_ARTICOLO'] == 'PARZIALE' ) {
+                            $riga['RIG_STARIORD'] = 'I'; $evasa = floor( $richiesta / 2 );
+                        } elseif( isset( $riga['RIG_HOSTINF'], $stato['evasioni'][ $riga['RIG_HOSTINF'] ] ) ) {
+                            $evasa = min( $richiesta, (float) $stato['evasioni'][ $riga['RIG_HOSTINF'] ] );
+                            $riga['RIG_STARIORD'] = ( $evasa < $richiesta ) ? 'I' : 'C';
+                        } else {
+                            $riga['RIG_STARIORD'] = 'C'; $evasa = $richiesta;
+                        }
+                        $riga['RIG_QTAE'] = number_format( $evasa, 3, ',', '' );
+                        $riga['RIG_EXE_OPERATORE'] = ( $evasa > 0 ) ? 'FINTO' : '';
+                        $riga['RIG_DMOV1'] = date( 'Y-m-d H:i:s' );
+                        $dati['EXP_ORDINI_RIGHE'][] = $riga;
+                    }
+                    unset( $riga );
+                    $ordine['ordine']['ORD_STATO'] = $testata;
+                    $dati['EXP_ORDINI'][] = $ordine['ordine'];
+                    unset( $ordine );
+                }
+                $resto = count( $stato['ordini'] ) - $pacchettoMax;
+
             }
 
-            $stato['pacchetto'] = array(
+            $stato['pacchetti'][ $job[1] ] = array(
                 'GUID' => vsprintf( '%s%s-%s-%s-%s-%s%s%s', str_split( bin2hex( random_bytes( 16 ) ), 4 ) ),
-                'TransactionStatus' => ( count( $stato['ordini'] ) > $pacchettoMax ) ? 'CHUNK' : 'END',
-                'DATA' => $evasi
+                'DATA' => $dati,
+                'TransactionStatus' => ( $resto > 0 ) ? 'CHUNK' : 'END'
             );
 
         }
 
-        rispondi( 200, $stato['pacchetto'] );
+        rispondi( 200, $stato['pacchetti'][ $job[1] ] );
 
     }
 

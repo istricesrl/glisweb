@@ -26,7 +26,7 @@ Nel `config.json` del progetto vanno l'indirizzo e i job:
         "PROD": {
             "url": "http://<indirizzo del WMS>:<porta>",
             "auth": "bearer",
-            "jobs": { "import": "CFG-IMP-ORDINI", "export": "CFG-EXP-ORDINI" }
+            "jobs": { "import": "CFG-IMP-ORDINI", "export": "CFG-EXP-ORDINI", "articoli": "CFG-IMP-ARTICOLI", "giacenze": "CFG-EXP-GIACENZE" }
         }
     }
 }
@@ -43,7 +43,8 @@ Utente e password vanno nello `shadow.json`, mai nel `config.json`:
 | `url` | indirizzo di base del WMS, senza la barra finale; vuoto = modulo spento | `NULL` |
 | `auth` | `bearer`, con token da `/token`, oppure `basic` | `bearer` |
 | `username`, `password` | credenziali del WMS, nello shadow | `NULL` |
-| `jobs.import`, `jobs.export` | nomi dei job configurati sul WMS | `CFG-IMP-ORDINI`, `CFG-EXP-ORDINI` |
+| `jobs.import`, `jobs.export` | nomi dei job degli ordini configurati sul WMS | `CFG-IMP-ORDINI`, `CFG-EXP-ORDINI` |
+| `jobs.articoli`, `jobs.giacenze` | nomi dei job dell'anagrafica articoli e delle giacenze | `CFG-IMP-ARTICOLI`, `CFG-EXP-GIACENZE` |
 | `timeout` | secondi di attesa di ogni chiamata | `30` |
 
 Con `url` vuoto ogni chiamata scrive un `WARNING` nel log e restituisce `NULL`, quindi gli ambienti
@@ -60,6 +61,8 @@ Stanno in `_src/_lib/_modula.utils.php`.
 | `modulaToken( $rinnova )` | token Bearer, tenuto in memcache sotto `MODULA_TOKEN`; con `$rinnova` ne chiede uno nuovo |
 | `modulaChiamata( $percorso, $metodo, $dati, &$status, &$raw, &$errore )` | chiamata generica; il percorso comincia con `/`; in Bearer, su un `401` rinnova il token e riprova una volta; `$errore` è l'errore di curl se il WMS non si raggiunge |
 | `modulaImport( $ordini, $righe, $job, &$errore )` | manda `IMP_ORDINI` e `IMP_ORDINI_RIGHE`; `true` se il WMS risponde `200`, altrimenti `false` con `"<status> <risposta>"` in `$errore` ( `"0 <errore di curl>"` se non si raggiunge ) |
+| `modulaArticoli( $articoli, $job, &$errore )` | manda l'anagrafica in `IMP_ARTICOLI`, da fare prima degli ordini: una riga d'ordine su un articolo che il WMS non conosce fa rifiutare l'intero pacchetto; ritorno ed errore come `modulaImport()` |
+| `modulaGiacenze( $job, &$status )` | legge tutti i pacchetti del job delle giacenze confermandoli; codice articolo → `giacenza`, `versamento`, `prelievo`; `array()` col `204`, `NULL` in caso di errore. ⚠ Se il job è configurato per mandare solo gli articoli mossi, il risultato è una variazione e non la fotografia intera |
 | `modulaExport( $job, &$status )` | il prossimo pacchetto di esiti, con `GUID`, `TransactionStatus` ( `CHUNK` o `END` ) e `DATA`; `NULL` quando non c'è niente ( `204` ) o in caso di errore |
 | `modulaAck( $guid, $job )` | conferma il pacchetto; finché non lo si conferma, l'export restituisce sempre lo stesso |
 
@@ -69,7 +72,15 @@ Per questo passano sempre da `modulaQta2Testo()` e `modulaTesto2Qta()`.
 ## il server finto
 
 `_usr/_test/_fake/_wms.php` risponde come il WMS: token, import, export a pacchetti con l'ack,
-`401` senza credenziali. Per i test le righe dell'articolo `MANCA` tornano evase a `"0,000"`.
+`401` senza credenziali, anagrafica articoli e giacenze. Alla lettura dell'export esegue gli ordini, e alcuni
+codici articolo hanno un comportamento fisso per i test:
+
+- `MANCA` torna incompleta a `"0,000"`, `PARZIALE` incompleta a metà;
+- `ATTESA` resta in attesa ( `W` ) e `LANCIATO` in esecuzione ( `E` ), con l'ordine;
+- `ASSENTE`, o un articolo fuori dall'anagrafica mandata con `IMP_ARTICOLI`, fa rifiutare il pacchetto intero col `400` del WMS.
+
+Solo del finto: `POST /giacenze` imposta le giacenze ( `{ "codice": quantità }` ), `POST /evasioni` fissa l'evaso
+per `RIG_HOSTINF` ( `{ "hostinf": quantità }` ).
 
 Il WMS non disponibile **non** si simula col server finto: un `5xx` vero finirebbe nell'access.log del
 deploy, e `log-deploy.py` lo segnalerebbe come guasto a ogni giro di test. L'esempio di `modulaImport()`
@@ -107,8 +118,7 @@ toglie il pacchetto dalla coda del WMS. Gli altri comandi ( `token`, `articolo`,
 job sono nella testata dello script. Il token sta in `var/tmp/modula-token.txt`, leggibile solo da chi
 lo ha chiesto.
 
-Sul server finto passano token, ordini, esiti e ack; l'articolo risponde `400`, perché il finto
-conosce solo il job degli ordini.
+Sul server finto passano token, articoli, ordini, esiti, giacenze e ack.
 
 ## i file del modulo
 

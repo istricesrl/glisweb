@@ -55,6 +55,27 @@ class modulaUtilsCest
         $I->see('status 204');
     }
 
+    // modulaArticoli() -> l'anagrafica passa, un ordine su un articolo ignoto fa rifiutare l'intero pacchetto
+    public function modulaArticoli(UnitTester $I)
+    {
+        $I->amOnPage('/_mod/_I0200.modula/_usr/_examples/_lib/_modula.utils/_modulaArticoli.01.php');
+        $I->see('anagrafica accettata');
+        $I->see('ordine noto accettato');
+        $I->see('ordine ignoto rifiutato');
+        $I->see('Violata integrita');
+        $I->see('ordini nel WMS 1');
+    }
+
+    // modulaGiacenze() -> deve restituire le giacenze per codice, confermare il pacchetto e reggere il 204
+    public function modulaGiacenze(UnitTester $I)
+    {
+        $I->amOnPage('/_mod/_I0200.modula/_usr/_examples/_lib/_modula.utils/_modulaGiacenze.01.php');
+        $I->see('A1 giacenza 60');
+        $I->see('articoli 2');
+        $I->see('nuovo pacchetto si');
+        $I->see('vuote []');
+    }
+
     // modulaAck() -> deve rifiutare un GUID che il WMS non ha emesso
     public function modulaAck(UnitTester $I)
     {
