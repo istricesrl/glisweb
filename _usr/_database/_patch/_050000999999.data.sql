@@ -725,12 +725,13 @@ INSERT IGNORE INTO `ruoli_immagini` (`id`, `id_genitore`, `nome`, `html_entity`,
 -- | 050000034800
 
 -- ruoli_indirizzi
-INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`) VALUES
-(1,	'sede legale',	    '&#xf1ad;',	    '',     1,	    NULL,	NULL,	NULL),
-(2,	'sede operativa',	'&#xf275;',     '',     NULL,	1,	    NULL,	NULL),
-(3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
-(4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
-(5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
+-- casa non ha flag ( indirizzo senza qualita' giuridica ), domicilio non e' residenza ( decisione del 28/10/2026 )
+INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`) VALUES
+(1,	NULL,	'sede legale',	    '&#xf1ad;',	    '',     1,	    NULL,	NULL,	NULL),
+(2,	NULL,	'sede operativa',	'&#xf275;',     '',     NULL,	1,	    NULL,	NULL),
+(3,	NULL,	'casa',             '&#xf015;',     '',     NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
+(5,	NULL,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	NULL,	1);
 
 -- | 050000034850
 

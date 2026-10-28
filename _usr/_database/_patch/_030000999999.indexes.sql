@@ -3892,19 +3892,17 @@ ALTER TABLE `ruoli_immagini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000034800
 
 -- ruoli_indirizzi
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_indirizzi`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `se_sede_legale` (`se_sede_legale`), 
-	ADD KEY `se_sede_operativa` (`se_sede_operativa`), 
-	ADD KEY `se_residenza` (`se_residenza`), 
-	ADD KEY `se_domicilio` (`se_domicilio`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034801
 
 -- ruoli_indirizzi
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034850

@@ -6460,24 +6460,28 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli degli indirizzi
+-- funzione: contiene i ruoli che un indirizzo svolge per l'anagrafica a cui appartiene
 --
--- questa tabella contiene i ruoli degli indirizzi, con le informazioni relative al nome, alle entità HTML e Font Awesome associate
--- e ai vari tipi di indirizzo (sede legale, sede operativa, residenza, domicilio); i ruoli degli indirizzi qualificano il ruolo
--- di un indirizzo rispetto a una data anagrafica
+-- questa tabella contiene i ruoli di un indirizzo ( sede legale, sede operativa, casa, residenza, domicilio ); la legge
+-- anagrafica_indirizzi.id_ruolo, l'unica relazione che la usa, quindi i flag non dicono dove il ruolo e' proponibile ma
+-- la qualita' giuridica dell'indirizzo: sede legale e sede operativa per le aziende, residenza e domicilio per le persone
+-- ( decisione del 28/10/2026 ); un ruolo senza flag, come casa, e' un indirizzo senza qualita' giuridica
 --
-CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (                --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna ricorsiva per il ruolo genitore
-  `nome` char(32) DEFAULT NULL,                               -- nome del ruolo
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML associata al ruolo
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome associata al ruolo
-  `se_sede_legale` tinyint(1) DEFAULT NULL,                   -- se l'indirizzo è una sede legale
-  `se_sede_operativa` tinyint(1) DEFAULT NULL,                -- se l'indirizzo è una sede operativa
-  `se_residenza` tinyint(1) DEFAULT NULL,                     -- se l'indirizzo è una residenza
-  `se_domicilio` tinyint(1) DEFAULT NULL                       -- se l'indirizzo è un domicilio
+-- NOTA se_sede_legale e' letto dal core ( la sede legale dell'anagrafica in mysql.utils.php ) e dai moduli anagrafica e
+-- documenti, che mettono per primo l'indirizzo di sede legale
+--
+CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_sede_legale` tinyint(1) DEFAULT NULL,                     -- flag per i ruoli che sono una sede legale
+  `se_sede_operativa` tinyint(1) DEFAULT NULL,                  -- flag per i ruoli che sono una sede operativa
+  `se_residenza` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli che sono una residenza
+  `se_domicilio` tinyint(1) DEFAULT NULL                        -- flag per i ruoli che sono un domicilio
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000034850

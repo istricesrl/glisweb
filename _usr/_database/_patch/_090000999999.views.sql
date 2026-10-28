@@ -6723,21 +6723,21 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS
 -- | 090000034800
 
 -- ruoli_indirizzi_view
-CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
-	SELECT													  --
-		ruoli_indirizzi.id,					  				  --
-		ruoli_indirizzi.id_genitore,			  			  --
-		ruoli_indirizzi.nome,							  	  --
-    	ruoli_indirizzi.html_entity,				  		  --
-    	ruoli_indirizzi.font_awesome,		  		  		  --
-    	ruoli_indirizzi.se_sede_legale,	  		  			  --
-    	ruoli_indirizzi.se_sede_operativa,	  		  		  --
-    	ruoli_indirizzi.se_residenza,	  		  			  --
-    	ruoli_indirizzi.se_domicilio,			  		  	  --
-	 	ruoli_indirizzi_path(								  --
-			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
-	FROM ruoli_indirizzi									  --
-;                                                             --
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
+	SELECT
+		ruoli_indirizzi.id,
+		ruoli_indirizzi.id_genitore,
+		ruoli_indirizzi.nome,
+		ruoli_indirizzi.html_entity,
+		ruoli_indirizzi.font_awesome,
+		ruoli_indirizzi.se_sede_legale,
+		ruoli_indirizzi.se_sede_operativa,
+		ruoli_indirizzi.se_residenza,
+		ruoli_indirizzi.se_domicilio,
+	 	ruoli_indirizzi_path( ruoli_indirizzi.id ) AS __label__
+	FROM ruoli_indirizzi
+;
 
 -- | 090000034801
 
