@@ -425,6 +425,20 @@
 
             }
 
+            // un task che non e' girato ( file mancante, iterazioni nulle ) rilascia comunque il lock: se
+            // non era mai girato timestamp_esecuzione e' NULL, il recupero dei task fermi ( "< ?" ) non lo
+            // vede, e il task resterebbe bloccato per sempre anche dopo che il file e' arrivato
+            if( ! file_exists( DIR_BASE . $task['task'] ) || empty( $task['iterazioni'] ) ) {
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+                    array(
+                        array( 's' => $cf['cron']['time'] ),
+                        array( 's' => $task['id'] )
+                    )
+                );
+            }
+
             // log
             loggerLatest( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.' . date( 'Ym' ) . '.log' );
 
