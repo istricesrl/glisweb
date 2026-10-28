@@ -42,6 +42,89 @@
 
     }
 
+    // STEP 0.1 - se il carrello della sessione non esiste più nel database, lo stacco dalla sessione
+    // NOTA un carrello cancellato dall'elenco o dalla pulizia dei carrelli abbandonati mentre è ancora in una
+    // sessione faceva fallire sulla FK id_carrello ogni riga riscritta allo STEP 5 ( 1452 ), senza che nessuno lo vedesse
+    if( ! empty( $_SESSION['carrello']['id'] ) ) {
+        $carrelloEsiste = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM carrelli WHERE id = ?',
+            array( array( 's' => $_SESSION['carrello']['id'] ) )
+        );
+        if( empty( $carrelloEsiste ) ) {
+            logWrite( 'il carrello #' . $_SESSION['carrello']['id'] . ' della sessione non esiste più, staccato dalla sessione', 'cart', LOG_WARNING );
+            $_SESSION['carrello'] = array();
+        }
+    }
+
+    // STEP 0.2 - tolgo le righe di sessione il cui rinnovo non esiste più
+    // NOTA lo STEP 5 riscrive ogni riga con l'id_rinnovo che ha in sessione: se il rinnovo è stato cancellato nel
+    // frattempo ( un altro operatore, un'altra scheda ) la FK ha già messo a NULL id_rinnovo nel database ma la
+    // sessione no, la riscrittura fallisce con un 1452 e la riga resta nel carrello a far pagare una quota che non
+    // esiste più; la salvaguardia è quella della cancellazione dello STEP 5: con denaro incassato o documento
+    // emesso la riga resta, e le si toglie solo l'id_rinnovo ( polmasi, 27/10/2026 )
+    if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
+        foreach( $_SESSION['carrello']['articoli'] as $rowKey => $riga ) {
+
+            // solo le righe legate a un rinnovo che non esiste più
+            if( ! is_array( $riga ) || empty( $riga['id_rinnovo'] ) ) {
+                continue;
+            }
+            if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM rinnovi WHERE id = ?', array( array( 's' => $riga['id_rinnovo'] ) ) ) ) {
+                continue;
+            }
+
+            // riga nel database con denaro incassato o documento emesso
+            $protetta = ( empty( $riga['id'] ) ) ? NULL : mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT carrelli_articoli.id
+                   FROM carrelli_articoli
+                  WHERE carrelli_articoli.id = ?
+                    AND ( EXISTS (
+                              SELECT 1 FROM pagamenti
+                               WHERE pagamenti.id_carrelli_articoli = carrelli_articoli.id
+                                 AND ( pagamenti.timestamp_pagamento IS NOT NULL
+                                       OR pagamenti.id_documento IS NOT NULL )
+                          )
+                          OR EXISTS (
+                              SELECT 1 FROM documenti_articoli
+                               WHERE documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
+                                 AND documenti_articoli.id_documento IS NOT NULL
+                          )
+                        )',
+                array( array( 's' => $riga['id'] ) )
+            );
+
+            if( ! empty( $protetta ) ) {
+
+                // la riga resta, senza il rinnovo
+                $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'] = NULL;
+                logWrite( 'rinnovo ' . $riga['id_rinnovo'] . ' cancellato, la riga #' . $riga['id'] . ' resta perché ha pagamenti incassati o documenti emessi', 'cart', LOG_WARNING );
+
+            } else {
+
+                // tolgo la riga dal database e dalla sessione
+                if( ! empty( $riga['id'] ) && ! empty( $_SESSION['carrello']['id'] ) ) {
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE FROM carrelli_articoli WHERE id = ? AND id_carrello = ?',
+                        array( array( 's' => $riga['id'] ), array( 's' => $_SESSION['carrello']['id'] ) )
+                    );
+                }
+                unset( $_SESSION['carrello']['articoli'][ $rowKey ] );
+
+                // avviso per il template
+                $ct['etc']['rinnovi_cancellati'][] = array(
+                    'id_rinnovo' => $riga['id_rinnovo'],
+                    'descrizione' => ( isset( $riga['descrizione'] ) ) ? $riga['descrizione'] : $rowKey
+                );
+                logWrite( 'rinnovo ' . $riga['id_rinnovo'] . ' cancellato, tolta la riga #' . ( empty( $riga['id'] ) ? '?' : $riga['id'] ) . ' dal carrello #' . ( isset( $_SESSION['carrello']['id'] ) ? $_SESSION['carrello']['id'] : 'nuovo' ), 'cart', LOG_WARNING );
+
+            }
+
+        }
+    }
+
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
     // verifico se è presente una richiesta per il modulo ecommerce

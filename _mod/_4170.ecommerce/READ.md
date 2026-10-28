@@ -20,6 +20,14 @@
   specializzata. Questa controller, implementata nel file _mod/_4170.ecommerce/_src/_config/_750.controller.php, viene attivata dalla chiave
   __carrello__ e si occupa di gestire sia la testata che le righe del carrello.
 
+  Prima di leggere __carrello__ la controller ripulisce la sessione da ciò che nel database non c'è più ( step 0, 0.1 e 0.2 ):
+  il carrello già chiuso o cancellato ( dall'elenco dei carrelli o dalla pulizia di quelli abbandonati ) viene staccato
+  dalla sessione, e le righe il cui rinnovo è stato cancellato vengono tolte dalla sessione e dal database, perché lo step 5
+  le riscrive a ogni richiesta e fallirebbe sulle foreign key. Le righe con un pagamento incassato o documentato, o con un
+  documento emesso, restano e perdono solo l'id_rinnovo. Le righe tolte sono elencate in $ct['etc']['rinnovi_cancellati']
+  ( id_rinnovo e descrizione ), che il template può usare per avvisare l'operatore; ogni intervento finisce nel log cart
+  a LOG_WARNING.
+
   il flusso di acquisto
   =====================
   Il caso più comune di flusso di acquisto è quello che prevede l'aggiunta di prodotti al carrello, la conferma dei dati, la chiusura del carrello;
