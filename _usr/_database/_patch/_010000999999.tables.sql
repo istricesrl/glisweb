@@ -5718,8 +5718,8 @@ CREATE TABLE IF NOT EXISTS `relazioni_articoli` (              --
 -- funzione: mette in relazione due categorie progetti, con il ruolo che le lega
 --
 -- questa tabella collega due categorie progetti col ruolo che le lega; l'uso tipico e' fra discipline, per dire
--- in quali altre discipline si puo' recuperare una lezione persa ( ruolo accetta recuperi da ); i ruoli sono quelli
--- di ruoli_categorie_progetti, che esiste solo per questa relazione, e le loro qualita' sono i flag ( se_recuperi )
+-- in quali altre discipline si puo' recuperare una lezione persa ( ruolo accetta recuperi da ); i ruoli proponibili
+-- sono quelli con ruoli_categorie_progetti.se_relazioni, e le loro qualita' sono gli altri flag ( se_recuperi )
 --
 -- NOTA la relazione ha un verso: id_categoria e' il <ruolo> di id_categoria_collegata ( la disciplina che accetta
 -- i recuperi a sinistra, quella da cui vengono a destra ); si registra una volta sola, e chi la legge decide se
@@ -6262,15 +6262,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli categorie progetti
+-- funzione: contiene i ruoli che legano due categorie progetti
+--
+-- questa tabella contiene i ruoli con cui una categoria progetti e' collegata a un'altra ( accetta recuperi da... );
+-- la legge relazioni_categorie_progetti.id_ruolo, e i ruoli proponibili sono quelli con se_relazioni; gli altri flag
+-- sono qualita' del ruolo: se_recuperi dice che le lezioni perse in una disciplina si recuperano nell'altra
+-- ( decisione del 28/10/2026 )
 --
 CREATE TABLE IF NOT EXISTS `ruoli_categorie_progetti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_recuperi` tinyint(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili in relazioni_categorie_progetti
+  `se_recuperi` tinyint(1) DEFAULT NULL                         -- flag per i ruoli che indicano dove si recuperano le lezioni
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034272

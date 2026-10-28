@@ -3800,11 +3800,10 @@ ALTER TABLE `ruoli_audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:28 Fabio Mosti
 ALTER TABLE `ruoli_categorie_progetti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `se_recuperi` (`se_recuperi`), 
-	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034251
 

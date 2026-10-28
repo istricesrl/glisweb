@@ -6567,8 +6567,7 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 -- | 090000034251
 
 -- ruoli_categorie_progetti_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-09 18:41 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 	SELECT
 		ruoli_categorie_progetti.id,
@@ -6576,6 +6575,7 @@ CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 		ruoli_categorie_progetti.nome,
 		ruoli_categorie_progetti.html_entity,
 		ruoli_categorie_progetti.font_awesome,
+		ruoli_categorie_progetti.se_relazioni,
 		ruoli_categorie_progetti.se_recuperi,
 	 	ruoli_categorie_progetti_path( ruoli_categorie_progetti.id ) AS __label__
 	FROM ruoli_categorie_progetti

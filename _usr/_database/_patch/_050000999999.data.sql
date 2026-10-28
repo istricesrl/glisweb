@@ -649,8 +649,8 @@ INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `f
 -- | 050000034250
 
 -- ruoli_categorie_progetti
-INSERT IGNORE INTO `ruoli_categorie_progetti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_recuperi`) VALUES
-(1,	NULL,	'accetta recuperi da',	NULL,	NULL,	1);
+INSERT IGNORE INTO `ruoli_categorie_progetti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`, `se_recuperi`) VALUES
+(1,	NULL,	'accetta recuperi da',	NULL,	NULL,	1,	1);
 
 -- | 050000034272
 
