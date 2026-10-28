@@ -3781,14 +3781,17 @@ ALTER TABLE `ruoli_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000034200
 
 -- ruoli_audio
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034201
 
 -- ruoli_audio
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_audio` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034250

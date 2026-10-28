@@ -6529,6 +6529,7 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 -- | 090000034200
 
 -- ruoli_audio_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_audio_view AS
 	SELECT
 		ruoli_audio.id,
@@ -6537,22 +6538,28 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.html_entity,
 		ruoli_audio.font_awesome,
 		ruoli_audio.se_anagrafica,
-		ruoli_audio.se_pagine,
+		ruoli_audio.se_annunci,
 		ruoli_audio.se_prodotti,
 		ruoli_audio.se_articoli,
+		ruoli_audio.se_indirizzi,
+		ruoli_audio.se_progetti,
+		ruoli_audio.se_immobili,
+		ruoli_audio.se_pagine,
+		ruoli_audio.se_file,
 		ruoli_audio.se_categorie_prodotti,
 		ruoli_audio.se_marchi,
 		ruoli_audio.se_categorie_marchi,
-		ruoli_audio.se_notizie,
-		ruoli_audio.se_categorie_notizie,
-		ruoli_audio.se_annunci,
-		ruoli_audio.se_categorie_annunci,
 		ruoli_audio.se_risorse,
 		ruoli_audio.se_categorie_risorse,
-		ruoli_audio.se_immobili,
-		ruoli_audio.se_file,
-		ruoli_audio.se_immagini,
+		ruoli_audio.se_notizie,
+		ruoli_audio.se_categorie_notizie,
+		ruoli_audio.se_categorie_annunci,
+		ruoli_audio.se_categorie_progetti,
+		ruoli_audio.se_edifici,
+		ruoli_audio.se_valutazioni,
 		ruoli_audio.se_video,
+		ruoli_audio.se_immagini,
+		ruoli_audio.se_vani,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;

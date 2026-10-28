@@ -6218,34 +6218,42 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli degli audio
+-- funzione: contiene i ruoli che un audio svolge rispetto all'oggetto a cui appartiene
 --
--- questa tabella contiene i ruoli degli audio, con le stesse colonne di ruoli_video; i flag se_*
--- dicono a quali entità un ruolo è pertinente, e li leggono le tendine dei form audio dei moduli
+-- questa tabella contiene i ruoli di un audio ( audio, commento... ); la legge audio.id_ruolo, e la tendina del
+-- form audio di un oggetto propone i ruoli col flag se_<oggetto> di quell'oggetto: c'e' un flag per ogni chiave
+-- oggetto di audio, nello stesso ordine ( decisione del 28/10/2026 ), compresi se_file, se_immagini e se_video
+-- della matrice dei media ( decisione del 16/10/2026 )
 --
 CREATE TABLE IF NOT EXISTS `ruoli_audio` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_anagrafica` tinyint(1) DEFAULT NULL,
-  `se_pagine` tinyint(1) DEFAULT NULL,
-  `se_prodotti` tinyint(1) DEFAULT NULL,
-  `se_articoli` tinyint(1) DEFAULT NULL,
-  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `se_marchi` tinyint(1) DEFAULT NULL,
-  `se_categorie_marchi` tinyint(1) DEFAULT NULL,
-  `se_notizie` tinyint(1) DEFAULT NULL,
-  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
-  `se_annunci` tinyint(1) DEFAULT NULL,
-  `se_categorie_annunci` tinyint(1) DEFAULT NULL,
-  `se_risorse` tinyint(1) DEFAULT NULL,
-  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_file` tinyint(1) DEFAULT NULL,
-  `se_immagini` tinyint(1) DEFAULT NULL,
-  `se_video` tinyint(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                      -- flag per i ruoli proponibili negli audio dell'anagrafica
+  `se_annunci` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili negli audio degli annunci
+  `se_prodotti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili negli audio dei prodotti
+  `se_articoli` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili negli audio degli articoli
+  `se_indirizzi` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili negli audio degli indirizzi
+  `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili negli audio dei progetti
+  `se_immobili` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili negli audio degli immobili
+  `se_pagine` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili negli audio delle pagine
+  `se_file` tinyint(1) DEFAULT NULL,                            -- flag per i ruoli proponibili negli audio dei file
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili negli audio delle categorie di prodotti
+  `se_marchi` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili negli audio dei marchi
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,                -- flag per i ruoli proponibili negli audio delle categorie di marchi
+  `se_risorse` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili negli audio delle risorse
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili negli audio delle categorie di risorse
+  `se_notizie` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili negli audio delle notizie
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili negli audio delle categorie di notizie
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili negli audio delle categorie di annunci
+  `se_categorie_progetti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili negli audio delle categorie di progetti
+  `se_edifici` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili negli audio degli edifici
+  `se_valutazioni` tinyint(1) DEFAULT NULL,                     -- flag per i ruoli proponibili negli audio delle valutazioni
+  `se_video` tinyint(1) DEFAULT NULL,                           -- flag per i ruoli proponibili negli audio dei video
+  `se_immagini` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili negli audio delle immagini
+  `se_vani` tinyint(1) DEFAULT NULL                             -- flag per i ruoli proponibili negli audio dei vani
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034250

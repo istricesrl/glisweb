@@ -642,9 +642,9 @@ INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_
 -- | 050000034200
 
 -- ruoli_audio
-INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_annunci`, `se_categorie_annunci`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
-(1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	1),
-(2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_annunci`, `se_prodotti`, `se_articoli`, `se_indirizzi`, `se_progetti`, `se_immobili`, `se_pagine`, `se_file`, `se_categorie_prodotti`, `se_marchi`, `se_categorie_marchi`, `se_risorse`, `se_categorie_risorse`, `se_notizie`, `se_categorie_notizie`, `se_categorie_annunci`, `se_categorie_progetti`, `se_edifici`, `se_valutazioni`, `se_video`, `se_immagini`, `se_vani`) VALUES
+(1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'commento',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000034250
 
