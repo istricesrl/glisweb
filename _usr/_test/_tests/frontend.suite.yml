@@ -11,7 +11,7 @@ modules:
         - WebDriver:
             url: '%GLISWEB_TEST_URL%'
             browser: chrome
-            port: 9515
+            port: '%GLISWEB_CHROMEDRIVER_PORT%'
             path: ''
             window_size: 1366x900
             capabilities:

@@ -96,3 +96,9 @@
     // URL del sito per i file .suite.yml
     $_SERVER['GLISWEB_TEST_URL'] = $_ENV['GLISWEB_TEST_URL'] = $cf['site']['url'];
     putenv( 'GLISWEB_TEST_URL=' . $cf['site']['url'] );
+
+    // porta di chromedriver per i file .suite.yml: la sceglie _codeception.run.sh fra quelle libere, cosi' due deploy
+    // della stessa macchina possono far girare i test insieme; senza lo script vale la 9515 di sempre
+    $porta = getenv( 'GLISWEB_CHROMEDRIVER_PORT' ) ?: '9515';
+    $_SERVER['GLISWEB_CHROMEDRIVER_PORT'] = $_ENV['GLISWEB_CHROMEDRIVER_PORT'] = $porta;
+    putenv( 'GLISWEB_CHROMEDRIVER_PORT=' . $porta );

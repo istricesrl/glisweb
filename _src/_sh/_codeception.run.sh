@@ -60,11 +60,20 @@ if [ "$SUITE" = "tutte" ]; then
     SUITE="unit backend frontend"
 fi
 
+## porta di chromedriver
+# la prima libera da 9515 in su: con una porta fissa due deploy che fanno girare i test insieme si pestano i
+# piedi, perche' il secondo chromedriver non parte e il primo, a fine giro, spegne quello che usano tutti e due;
+# i .suite.yml la leggono come %GLISWEB_CHROMEDRIVER_PORT%
+PORTA=9515
+while (echo > /dev/tcp/127.0.0.1/$PORTA) 2>/dev/null; do
+    PORTA=$(( PORTA + 1 ))
+done
+
 ## esecuzione come www-data se lanciato da root
 if [ "$(id -u)" = "0" ]; then
-    ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test"
+    ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
 else
-    ESEGUI="env HOME=$(pwd)/var/test"
+    ESEGUI="env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
 fi
 
 ## PHP col bootstrap del framework
@@ -140,7 +149,7 @@ fi
 
 ## browser per le suite che ne hanno bisogno
 if [[ " $SUITE " =~ " backend " || " $SUITE " =~ " frontend " ]]; then
-    $ESEGUI chromedriver --port=9515 > var/test/output/chromedriver.log 2>&1 &
+    $ESEGUI chromedriver --port=$PORTA > var/test/output/chromedriver.log 2>&1 &
     CHROMEDRIVER_PID=$!
     sleep 1
 fi
