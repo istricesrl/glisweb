@@ -6614,6 +6614,7 @@ CREATE OR REPLACE VIEW ruoli_conversazioni_view AS
 -- | 090000034300
 
 -- ruoli_documenti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_documenti_view AS
 	SELECT
 		ruoli_documenti.id,
@@ -6622,12 +6623,8 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 		ruoli_documenti.html_entity,
 		ruoli_documenti.font_awesome,
 		ruoli_documenti.se_xml,
-		ruoli_documenti.se_documenti,
 		ruoli_documenti.se_documenti_articoli,
 		ruoli_documenti.se_relazioni,
-		ruoli_documenti.se_conferma,
-		ruoli_documenti.se_consuntivo,
-		ruoli_documenti.se_evasione,
 	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
 	FROM ruoli_documenti
 ;
@@ -6635,6 +6632,7 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 -- | 090000034401
 
 -- ruoli_file_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_file_view AS
 	SELECT
 		ruoli_file.id,
@@ -6643,22 +6641,39 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.html_entity,
 		ruoli_file.font_awesome,
 		ruoli_file.se_anagrafica,
-		ruoli_file.se_pagine,
+		ruoli_file.se_annunci,
 		ruoli_file.se_prodotti,
 		ruoli_file.se_articoli,
+		ruoli_file.se_indirizzi,
+		ruoli_file.se_progetti,
+		ruoli_file.se_contratti,
+		ruoli_file.se_todo,
+		ruoli_file.se_immobili,
+		ruoli_file.se_mailing,
+		ruoli_file.se_documenti,
+		ruoli_file.se_pagine,
 		ruoli_file.se_categorie_prodotti,
 		ruoli_file.se_marchi,
 		ruoli_file.se_categorie_marchi,
-		ruoli_file.se_notizie,
-		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_notizie,
+		ruoli_file.se_categorie_notizie,
+		ruoli_file.se_categorie_annunci,
+		ruoli_file.se_categorie_progetti,
+		ruoli_file.se_edifici,
+		ruoli_file.se_valutazioni,
+		ruoli_file.se_licenze,
+		ruoli_file.se_anagrafica_certificazioni,
+		ruoli_file.se_template,
+		ruoli_file.se_rinnovi,
+		ruoli_file.se_valutazioni_certificazioni,
 		ruoli_file.se_mail,
-		ruoli_file.se_immobili,
-		ruoli_file.se_documenti,
+		ruoli_file.se_attivita,
 		ruoli_file.se_audio,
-		ruoli_file.se_immagini,
 		ruoli_file.se_video,
+		ruoli_file.se_immagini,
+		ruoli_file.se_vani,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;

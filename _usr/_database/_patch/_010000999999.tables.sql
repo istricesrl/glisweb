@@ -6321,27 +6321,29 @@ CREATE TABLE IF NOT EXISTS `ruoli_conversazioni` (
 
 -- ruoli_documenti
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli dei documenti
+-- funzione: contiene i ruoli che legano due documenti, o due righe di documento
 --
--- questa tabella contiene i ruoli dei documenti, con le informazioni relative al nome, alle
--- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere
--- associati i documenti
+-- questa tabella contiene i ruoli che il documento derivato svolge rispetto a quello da cui deriva ( conferma,
+-- consuntivo, evasione, missione, fattura collegata, DDT collegato ); la leggono relazioni_documenti.id_ruolo e
+-- relazioni_documenti_articoli.id_ruolo, e i ruoli proponibili sono quelli con se_relazioni e con
+-- se_documenti_articoli rispettivamente; se_xml dice che il documento collegato va riportato nella fattura
+-- elettronica ( DatiFattureCollegate, DatiDDT )
+--
+-- NOTA: gli id dei ruoli sono canonici e il codice li usa scritti a mano ( 3 evasione, 4 missione ); i flag
+-- se_documenti, se_conferma, se_consuntivo e se_evasione sono usciti dal canone il 28/10/2026: il primo doppiava
+-- se_relazioni, gli altri valevano solo per la riga omonima e nessuno li leggeva
 --
 CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_xml` tinyint(1) DEFAULT NULL,
-  `se_documenti` tinyint(1) DEFAULT NULL,
-  `se_documenti_articoli` tinyint(1) DEFAULT NULL,
-  `se_relazioni` tinyint(1) DEFAULT NULL,
-  `se_conferma` tinyint(1) DEFAULT NULL,
-  `se_consuntivo` tinyint(1) DEFAULT NULL,
-  `se_evasione` tinyint(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_xml` tinyint(1) DEFAULT NULL,                             -- flag per i ruoli il cui collegato va nella fattura elettronica
+  `se_documenti_articoli` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili in relazioni_documenti_articoli
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_documenti
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034400
@@ -6350,35 +6352,57 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli dei file
+-- funzione: contiene i ruoli che un file svolge rispetto all'oggetto a cui appartiene
 --
--- questa tabella contiene i ruoli dei file, con le informazioni relative al nome, alle
--- entità HTML e Font Awesome associate e ai vari tipi di entità a cui possono essere associati i file
+-- questa tabella contiene i ruoli di un file ( allegato, brochure, scansione... ); la legge file.id_ruolo, e la tendina
+-- del form file di un oggetto propone i ruoli col flag se_<oggetto> di quell'oggetto: c'e' un flag per ogni chiave
+-- oggetto di file, nello stesso ordine ( decisione del 28/10/2026 ), compresi se_audio, se_immagini e se_video
+-- della matrice dei media ( decisione del 16/10/2026 )
+--
+-- NOTA se_mail vale per le due colonne della coda di invio, file.id_mail_out e file.id_mail_sent: le due tabelle di
+-- una coda sono lo stesso oggetto che si sposta, e il ruolo di un allegato non cambia quando la mail parte
+-- ( decisione del 28/10/2026 )
 --
 CREATE TABLE IF NOT EXISTS `ruoli_file` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_anagrafica` tinyint(1) DEFAULT NULL,
-  `se_pagine` tinyint(1) DEFAULT NULL,
-  `se_template` tinyint(1) DEFAULT NULL,
-  `se_prodotti` tinyint(1) DEFAULT NULL,
-  `se_articoli` tinyint(1) DEFAULT NULL,
-  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `se_marchi` tinyint(1) DEFAULT NULL,
-  `se_categorie_marchi` tinyint(1) DEFAULT NULL,
-  `se_notizie` tinyint(1) DEFAULT NULL,
-  `se_categorie_notizie` tinyint(1) DEFAULT NULL,
-  `se_risorse` tinyint(1) DEFAULT NULL,
-  `se_categorie_risorse` tinyint(1) DEFAULT NULL,
-  `se_mail` tinyint(1) DEFAULT NULL,
-  `se_immobili` tinyint(1) DEFAULT NULL,
-  `se_documenti` tinyint(1) DEFAULT NULL,
-  `se_audio` tinyint(1) DEFAULT NULL,
-  `se_immagini` tinyint(1) DEFAULT NULL,
-  `se_video` tinyint(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                      -- flag per i ruoli proponibili nei file dell'anagrafica
+  `se_annunci` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file degli annunci
+  `se_prodotti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file dei prodotti
+  `se_articoli` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file degli articoli
+  `se_indirizzi` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili nei file degli indirizzi
+  `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file dei progetti
+  `se_contratti` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili nei file dei contratti
+  `se_todo` tinyint(1) DEFAULT NULL,                            -- flag per i ruoli proponibili nei file delle cose da fare
+  `se_immobili` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file degli immobili
+  `se_mailing` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file dei mailing
+  `se_documenti` tinyint(1) DEFAULT NULL,                       -- flag per i ruoli proponibili nei file dei documenti
+  `se_pagine` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili nei file delle pagine
+  `se_categorie_prodotti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili nei file delle categorie di prodotti
+  `se_marchi` tinyint(1) DEFAULT NULL,                          -- flag per i ruoli proponibili nei file dei marchi
+  `se_categorie_marchi` tinyint(1) DEFAULT NULL,                -- flag per i ruoli proponibili nei file delle categorie di marchi
+  `se_risorse` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file delle risorse
+  `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nei file delle categorie di risorse
+  `se_notizie` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file delle notizie
+  `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nei file delle categorie di notizie
+  `se_categorie_annunci` tinyint(1) DEFAULT NULL,               -- flag per i ruoli proponibili nei file delle categorie di annunci
+  `se_categorie_progetti` tinyint(1) DEFAULT NULL,              -- flag per i ruoli proponibili nei file delle categorie di progetti
+  `se_edifici` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file degli edifici
+  `se_valutazioni` tinyint(1) DEFAULT NULL,                     -- flag per i ruoli proponibili nei file delle valutazioni
+  `se_licenze` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file delle licenze
+  `se_anagrafica_certificazioni` tinyint(1) DEFAULT NULL,       -- flag per i ruoli proponibili nei file delle certificazioni dell'anagrafica
+  `se_template` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file dei template
+  `se_rinnovi` tinyint(1) DEFAULT NULL,                         -- flag per i ruoli proponibili nei file dei rinnovi
+  `se_valutazioni_certificazioni` tinyint(1) DEFAULT NULL,      -- flag per i ruoli proponibili nei file delle certificazioni delle valutazioni
+  `se_mail` tinyint(1) DEFAULT NULL,                            -- flag per i ruoli proponibili nei file delle mail della coda di invio
+  `se_attivita` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file delle attivita'
+  `se_audio` tinyint(1) DEFAULT NULL,                           -- flag per i ruoli proponibili nei file degli audio
+  `se_video` tinyint(1) DEFAULT NULL,                           -- flag per i ruoli proponibili nei file dei video
+  `se_immagini` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili nei file delle immagini
+  `se_vani` tinyint(1) DEFAULT NULL                             -- flag per i ruoli proponibili nei file dei vani
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034600

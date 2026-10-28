@@ -3847,9 +3847,10 @@ ALTER TABLE `ruoli_conversazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 
 -- ruoli_documenti
 ALTER TABLE `ruoli_documenti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034301
 
@@ -3859,14 +3860,17 @@ ALTER TABLE `ruoli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000034400
 
 -- ruoli_file
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_file`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000034401
 
 -- ruoli_file
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034600
