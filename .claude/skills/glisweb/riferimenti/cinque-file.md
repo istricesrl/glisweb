@@ -25,13 +25,14 @@ una riga comincia con "non fare mai" va nel CLAUDE; se comincia con "il database
 ⚠ **Nel `READ.md` di progetto non va la documentazione del framework.** Snippet e tecniche che
 valgono su qualunque deploy glisweb non sono informazioni di *questo* progetto: vanno nella
 documentazione del framework (questo file, `dev/READ.md`, o la skill). Il READ di progetto tiene
-nove cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
+dieci cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
 credenziali utili, o il posto preciso dove trovarle; **3)** architettura e risorse — macchine,
 database, servizi esterni, domini; **4)** mappa delle personalizzazioni — cosa in questo deploy è
 diverso dallo standard, e perché; **5)** FAQ di progetto; **6)** soluzioni ai problemi frequenti —
 il sintomo, e cosa si fa; **7)** procedure proprie del progetto; **8)** documentazione — i link ai manuali, standard e custom, e
 come si genera, si aggiorna e si verifica quella custom ( vedi sotto ); **9)** test automatici — i link
-all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ).
+all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ); **10)** persone —
+una scheda per ogni persona coinvolta nel progetto, chi è e come la si raggiunge ( vedi sotto ).
 
 Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
 trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
@@ -85,8 +86,6 @@ Tre vincoli:
 Il verso è uno solo: **il `READ.md` linka la documentazione, la documentazione non cita il `READ.md`**,
 che resta fuori dalla generazione ( vedi `documentazione.md` ).
 
-### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
-
 ### ⚠ La voce 9, test automatici: l'esito a un clic, come la documentazione
 
 Regola di Fabio del **13/10/2026**, stessa logica della voce 8. Ogni esecuzione dei test
@@ -109,12 +108,54 @@ nelle stesse due sottosezioni:
 Anche qui un link si scrive solo dopo averlo aperto, e la sezione si aggiorna nel giro di ogni
 modifica: **codice → test → report dei test → documentazione → file di progetto**.
 
+### ⚠ La voce 10, persone: chi è, e come la si raggiunge
+
+Regola di Fabio del **28/10/2026**. La sezione **Persone** del `READ.md` tiene **una scheda per ogni
+persona coinvolta nel progetto**: lato cliente, nostra o di terzi ( fornitori, consulenti, l'agenzia
+che fa il sito accanto ). Il formato è fisso e uguale per tutti, così si legge e si cerca con `grep`:
+
+```markdown
+### <Nome Cognome>
+
+- **azienda**: <ragione sociale, o "Istrice">
+- **ruolo**: <decide | referente tecnico | referente business | utente | fornitore | consulente>
+  — <una riga su cosa fa nel progetto>
+- **contatti**: mail <indirizzo>; telefono <numero>; WhatsApp <numero, o "stesso">
+- **canale preferito**: <mail | WhatsApp | telefono>, <quando: orari, giorni>
+- **note**: <come va trattata, cosa sa e cosa no, chi sostituisce o da chi è sostituita>
+```
+
+Un campo che non si conosce si scrive `?`, non si toglie: il buco si vede e qualcuno lo riempie.
+Il ruolo dice **cosa può fare quella persona nel progetto**, non il suo titolo in azienda: chi
+decide, chi si sente per le cose tecniche, chi per quelle di business, chi usa e basta.
+
+Il confine con gli altri file:
+
+- **il `READ.md` dice chi è la persona e come la si raggiunge**, e niente dello stato della
+  conversazione;
+- **il `CHAT.md` resta lo stato della conversazione**: le sue sezioni `## <Nome Cognome> — <ruolo>`
+  rimandano alla scheda del READ e **non ne ripetono** mail, telefoni e note;
+- **il `CLAUDE.md`** di progetto tiene solo l'indicazione di comportamento verso il referente
+  ( *"non è una persona tecnica: domande secche"* ) e rimanda alla voce 10.
+
+⚠ **Mail e telefoni stanno nel `READ.md` perché il `READ.md` non esce dalla macchina.** Il `READ.md`
+di progetto vive nella **root del deploy**, che non è versionata di proposito ( verificato il
+28/10/2026: nessuno dei `READ.md` nelle root di `/var/www` è sotto git; i soli `dev/READ.md`
+versionati sono la documentazione del framework, e il repository `istricesrl/glisweb` è **pubblico** ).
+Ne discende la regola: **i contatti delle persone stanno solo nel `READ.md` della root del deploy**, e
+non si copiano in niente che sia versionato o che esca dalla macchina — non sotto `dev/` ( né nei
+`READ.md`/`USER.md` della documentazione, né nei commenti o nei test ), non nei commit, non nel
+`CHAT.md` e nel suo registro, non nei messaggi fra i claude né su Discord. Lì la persona si nomina e
+basta; chi ha bisogno del numero lo legge nel READ.
+
+### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
+
 Detto da Fabio il 23/09/2026: *"mi fanno domande riguardo a cose che dovrebbero essere descritte
 dal READ.md"*. Una domanda del tipo *"su che macchina sta questo?"*, *"dove sta il database?"*,
 *"qual è il deploy di produzione?"*, *"come si fa il rilascio qui?"* **è un buco nel READ**, non è
 una domanda. Prima di farla:
 
-1. **si cerca nel READ** — le nove voci, non solo quella che sembra;
+1. **si cerca nel READ** — le dieci voci, non solo quella che sembra;
 2. se non c'è, **si guarda**: la macchina risponde. `ssh`, `src/config.json`, `/etc/cron.d`,
    `git remote -v`, `update.branch.conf`, il vhost;
 3. **si scrive nel READ**, nella voce che le compete, **nello stesso turno in cui si è scoperta** —
@@ -476,6 +517,7 @@ senza scorrere tutto il file.
 
 ## <Nome Cognome> — <ruolo>
 
+Scheda: `READ.md`, voce 10 *Persone*.
 Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
 
 ### Aspetta lui — cosa gli abbiamo chiesto

@@ -219,7 +219,7 @@ e va letto prima di scrivere in uno di questi file** se non lo si è già fatto 
 | file | risponde a | come si scrive |
 |---|---|---|
 | `CLAUDE.md` | **come ci si deve comportare qui**: regole e trappole | stabile, **snello** ( vedi sopra ) |
-| `READ.md` | **cosa serve sapere per metterci le mani**: nove voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure, **documentazione** e **test automatici** ( i link a un clic ) | il fatto e il rimando; la trattazione in `var/` |
+| `READ.md` | **cosa serve sapere per metterci le mani**: dieci voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure, **documentazione** e **test automatici** ( i link a un clic ), **persone** ( chi è, come la si raggiunge ) | il fatto e il rimando; la trattazione in `var/` |
 | `TODO.md` | **cosa c'è da fare** | per **aree**, una riga per compito, tre flag; si pota |
 | `DONE.md` | **cosa è successo e perché** | un capitolo per giornata, in append; si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | una sezione per destinatario, `## lock` in fondo; si riscrive per sezione, mai intero |
