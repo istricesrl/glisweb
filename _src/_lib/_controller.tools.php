@@ -1184,7 +1184,8 @@
                  *
                  * - in scrittura (POST, PUT, REPLACE, UPDATE) ogni riga di ogni sottomodulo presente nel blocco dati
                  *   viene passata alla controller() con lo stesso metodo, con l'entità pari al nome del sottomodulo e
-                 *   con l'id della riga corrente come id padre, da usare con il valore speciale __parent_id__;
+                 *   con l'id della riga corrente come id padre, da usare con il valore speciale __parent_id__; se l'id
+                 *   manca, perché la scrittura del padre è fallita, le sottoform non vengono elaborate;
                  * - in lettura (GET con id nei campi) la controller() cerca in information_schema le tabelle che hanno
                  *   una chiave esterna verso l'entità corrente, escluse quelle il cui vincolo termina in _nofollow,
                  *   legge gli id delle righe collegate (ordinate secondo l'eventuale indice SORTING) e chiama sé stessa
@@ -1212,6 +1213,12 @@
                         case METHOD_PUT:
                         case METHOD_REPLACE:
                         case METHOD_UPDATE:
+                            // se la scrittura del padre e' fallita ( 1062 o 1054 su un POST ) l'id manca, e le sottoform
+                            // resterebbero con id_<padre> NULL: 30 righe di account_gruppi orfane su polmasi fino al 29/10/2026
+                            if (empty($d['id'])) {
+                                logWrite("sottomoduli di $t non elaborati: manca l'id del padre, stato " . ($i['__status__'] ?? ''), 'controller', LOG_WARNING);
+                                break;
+                            }
                             foreach ($d as $k => $v) {
                                 if (is_array($v)) {
                                     foreach ($v as $x => $y) {
