@@ -11,9 +11,11 @@
      *
      * account di test
      * ---------------
-     * All'inizio di ogni suite l'helper crea un account per ognuno dei gruppi elencati nella configurazione
-     * gruppi ( di default roots ), chiamato test-<gruppo> e con una password casuale diversa a ogni giro, e alla
-     * fine della suite li cancella. Gli account test-* rimasti da un giro interrotto vengono tolti anche
+     * All'inizio di ogni suite l'helper crea un account per ognuno dei gruppi d'ufficio ( roots e users, che
+     * servono ai test dello standard ) e di quelli elencati nella configurazione gruppi, chiamato test-<gruppo> e
+     * con una password casuale diversa a ogni giro, e alla fine della suite li cancella. I gruppi d'ufficio non
+     * stanno nella configurazione perche' un .suite.yml di progetto sostituisce per intero quello standard, e
+     * altrimenti i test dello standard resterebbero senza i loro account. Gli account test-* rimasti da un giro interrotto vengono tolti anche
      * all'inizio, prima di crearne di nuovi. Nei test ci si entra con $I->amLoggedInAs( '<gruppo>' ).
      *
      * Il login non passa dal form, perche' il reCAPTCHA v3 da' punteggio zero al browser headless: si usa il
@@ -56,7 +58,8 @@
      *
      * configurazione
      * --------------
-     * - gruppi: i gruppi per cui creare un account di test, p.es. [ roots, staff ]; [] per non crearne
+     * - gruppi: i gruppi per cui creare un account di test oltre a quelli d'ufficio, p.es. [ staff ]; [] per non
+     *   crearne altri
      * - recaptcha: true per lasciare attivo il reCAPTCHA durante la suite, di default false
      * - anagrafica: true per collegare a ogni account di test un'anagrafica dell'operatore, di default false
      * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form;
@@ -80,10 +83,15 @@
         const RECORD_PREFIX = 'TEST-E2E-';
 
         /**
+         * gruppi per cui l'account di test si crea sempre, perche' servono ai test dello standard
+         */
+        const GRUPPI_UFFICIO = array( 'roots', 'users' );
+
+        /**
          * configurazione di default
          */
         protected $config = array(
-            'gruppi'    => array( 'roots' ),
+            'gruppi'    => array(),
             'recaptcha' => false,
             'anagrafica'    => false,
             'login'     => '/admin.it-IT.html'
@@ -106,7 +114,7 @@
 
             $this->rimuoviAccountTest();
 
-            foreach( $this->config['gruppi'] as $gruppo ) {
+            foreach( array_unique( array_merge( self::GRUPPI_UFFICIO, $this->config['gruppi'] ) ) as $gruppo ) {
                 $this->creaAccountTest( $gruppo );
             }
 
@@ -143,6 +151,10 @@
 
             if( ! isset( $this->accounts[ $gruppo ] ) ) {
                 $this->fail( 'nessun account di test per il gruppo ' . $gruppo . ', va aggiunto alla configurazione gruppi della suite' );
+            }
+
+            if( empty( $this->accounts[ $gruppo ]['jwt'] ) ) {
+                $this->fail( 'per il login dei test serve auth.jwt.secret nello shadow del deploy ( src/shadow.json o src/shadow.yaml )' );
             }
 
             $browser = $this->getModule( 'WebDriver' );
@@ -476,10 +488,6 @@
 
             global $cf;
 
-            if( empty( $cf['auth']['jwt']['secret'] ) ) {
-                $this->fail( 'per il login dei test serve auth.jwt.secret nello shadow del deploy ( src/shadow.json o src/shadow.yaml )' );
-            }
-
             $idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
 
             if( empty( $idGruppo ) ) {
@@ -531,8 +539,9 @@
                 'account_gruppi'
             );
 
-            // token JWT per il login
-            $account['jwt'] = getJwt(
+            // token JWT per il login; senza il segreto l'account si crea lo stesso, perche' i gruppi d'ufficio ci
+            // sono anche nelle suite che non fanno login, e il controllo si sposta su amLoggedInAs()
+            $account['jwt'] = ( empty( $cf['auth']['jwt']['secret'] ) ) ? NULL : getJwt(
                 array(
                     'id' => $idAccount,
                     'user' => $account['username']

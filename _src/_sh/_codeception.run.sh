@@ -240,6 +240,10 @@ if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
 else
     ESITO="falliti ( codice $CODECEPTION_EXIT_CODE )"
 fi
+SALTATI=$(awk '
+    /^Signature: / { firma = $2 }
+    /I mark test (skipped|incomplete) / { m = $0; sub( /^.*I mark test (skipped|incomplete) "?/, "", m ); sub( /"$/, "", m ); printf( "- `%s`: %s\n", firma, m ) }
+' "$ESECUZIONE/test.log" 2>/dev/null)
 {
     echo "# esecuzione del $DATA"
     echo
@@ -287,6 +291,18 @@ fi
         done
         grep -q "^esecuzione fallita prima dei test" "$ESECUZIONE/errori.log" && echo "- $(cat "$ESECUZIONE/errori.log")"
     fi
+    # i test saltati non fanno fallire l'esecuzione, ma sono test che non hanno girato: quasi sempre al deploy
+    # manca una risorsa ( una configurazione, un segreto, un servizio ), e la cosa giusta e' dargliela; il
+    # motivo non sta nel report JUnit, che ha solo <skipped/>, quindi si prende dal log, dove con --steps
+    # Codeception scrive la firma del test e poi la riga "I mark test skipped" col messaggio
+    if [ -n "$SALTATI" ]; then
+        echo
+        echo "## saltati"
+        echo
+        echo "Non hanno girato: vanno fatti girare dando al deploy le risorse che chiedono."
+        echo
+        echo "$SALTATI"
+    fi
 } > "$ESECUZIONE/esito.md"
 [ "$(id -u)" = "0" ] && chown -R www-data:www-data "$ESECUZIONE"
 
@@ -297,6 +313,14 @@ fi
 
 echo
 echo "risultati in $ESECUZIONE/"
+
+## avviso dei test saltati
+# non cambia il codice di uscita, perche' un test saltato non e' un test fallito, ma non deve passare inosservato
+if [ -n "$SALTATI" ]; then
+    echo >&2
+    echo "ATTENZIONE: $(echo "$SALTATI" | wc -l) test saltati, che vanno fatti girare dando al deploy le risorse che chiedono:" >&2
+    echo "$SALTATI" | sed 's/`//g' >&2
+fi
 
 ## codice di uscita
 exit $CODECEPTION_EXIT_CODE
