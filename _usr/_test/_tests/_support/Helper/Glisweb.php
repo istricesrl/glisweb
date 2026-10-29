@@ -307,7 +307,7 @@
             $id = mysqlInsertRow( $cf['mysql']['connection'], $riga, $tabella, false );
 
             if( empty( $id ) ) {
-                $this->fail( 'riga non scritta in ' . $tabella . ' per ' . json_encode( $riga ) . ', vedi var/log/mysql.err' );
+                $this->fail( 'riga non scritta in ' . $tabella . ' per ' . json_encode( $riga ) . ', vedi var/log/test/mysql.err' );
             }
 
             return $id;
@@ -361,7 +361,7 @@
             global $cf;
 
             if( ! refreshStaticView( $cf['mysql']['connection'], $tabella, $id ) ) {
-                $this->fail( 'statica di ' . $tabella . ' non riallineata per l\'id ' . $id . ', vedi var/log/mysql.err' );
+                $this->fail( 'statica di ' . $tabella . ' non riallineata per l\'id ' . $id . ', vedi var/log/test/mysql.err' );
             }
 
         }

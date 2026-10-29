@@ -87,6 +87,29 @@
     }
 
     /**
+     * log dei test in una cartella a parte
+     * ====================================
+     * Gli errori che i test provocano apposta ( login sbagliati, query su tabelle di prova, SMS senza server ) non devono
+     * finire nei log del deploy, dove i controlli quotidiani li scambiano per guasti veri. Le richieste dei test portano
+     * nello User-Agent il marcatore LOG_TEST_USER_AGENT, derivato dal segreto del giro in var/test/log.remoti ( un hash,
+     * non il segreto, che vale anche per /api/log ): Chromium dall'argomento --user-agent dei .suite.yml, PhpBrowser
+     * dall'intestazione della suite unit, restCall() dal processo dei test. Per quelle richieste, e per il processo di
+     * Codeception stesso ( GLISWEB_TEST, _usr/_test/_bootstrap.php ), LOG_TEST vale true e logger() scrive in
+     * var/log/test/. Si separa per richiesta e non per finestra di tempo, perché il traffico vero che arriva durante un
+     * giro deve restare nei log del deploy. Come la sorgente di prova non vale in produzione e scade dopo un'ora; i log
+     * scritti prima di questo runlevel restano nei file soliti.
+     *
+     */
+
+    // marcatore delle richieste dei test
+    if( isset( $cf['debug']['log']['remoti']['sorgenti']['test-e2e']['segreto'] ) ) {
+        define( 'LOG_TEST_USER_AGENT', 'glisweb-test/' . substr( hash( 'sha256', 'user-agent' . $cf['debug']['log']['remoti']['sorgenti']['test-e2e']['segreto'] ), 0, 16 ) );
+    }
+
+    // log dei test a parte
+    define( 'LOG_TEST', defined( 'LOG_TEST_USER_AGENT' ) && ( defined( 'GLISWEB_TEST' ) || strpos( $_SERVER['HTTP_USER_AGENT'] ?? '', LOG_TEST_USER_AGENT ) !== false ) );
+
+    /**
      * debug del runlevel
      * ==================
      * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.

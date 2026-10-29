@@ -26,6 +26,8 @@
      * -------------------
      * La variabile d'ambiente GLISWEB_TEST_URL, con l'URL del sito, che i file .suite.yml usano come
      * '%GLISWEB_TEST_URL%' per configurare PhpBrowser e WebDriver; tutto il resto lo prende l'Helper da $cf.
+     * La variabile GLISWEB_TEST_USER_AGENT, lo User-Agent col marcatore che fa scrivere al sito i log dei test in
+     * var/log/test/ ( vedi _src/_config/_020.debug.php ), che i .suite.yml usano come '%GLISWEB_TEST_USER_AGENT%'.
      *
      * sicurezza
      * ---------
@@ -96,6 +98,12 @@
     // URL del sito per i file .suite.yml
     $_SERVER['GLISWEB_TEST_URL'] = $_ENV['GLISWEB_TEST_URL'] = $cf['site']['url'];
     putenv( 'GLISWEB_TEST_URL=' . $cf['site']['url'] );
+
+    // User-Agent col marcatore dei test per i file .suite.yml e per restCall(): senza _codeception.run.sh non c'e' il
+    // segreto del giro, e lo User-Agent resta senza marcatore
+    $ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome' . ( defined( 'LOG_TEST_USER_AGENT' ) ? ' ' . LOG_TEST_USER_AGENT : '' );
+    $_SERVER['GLISWEB_TEST_USER_AGENT'] = $_ENV['GLISWEB_TEST_USER_AGENT'] = $ua;
+    putenv( 'GLISWEB_TEST_USER_AGENT=' . $ua );
 
     // porta di chromedriver per i file .suite.yml: la sceglie _codeception.run.sh fra quelle libere, cosi' due deploy
     // della stessa macchina possono far girare i test insieme; senza lo script vale la 9515 di sempre

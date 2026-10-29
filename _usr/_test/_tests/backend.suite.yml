@@ -17,6 +17,6 @@ modules:
             window_size: 1366x900
             capabilities:
                 goog:chromeOptions:
-                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage' ]
+                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--user-agent=%GLISWEB_TEST_USER_AGENT%' ]
         - Asserts
     step_decorators: ~

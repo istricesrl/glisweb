@@ -590,7 +590,8 @@ I modelli da copiare: `_usr/_test/_tests/backend/loginCest.php`,
 
 ## Log e debug
 
-I file di log si trovano in `var/log/`. Per il debug rapido i più utili sono i "latest":
+I file di log si trovano in `var/log/`; quelli delle richieste dei test automatici in `var/log/test/` ( marcatore
+nello User-Agent, vedi `_usr/_docs/_read/180.test.md` ). Per il debug rapido i più utili sono i "latest":
 
 | File | Contenuto |
 |---|---|

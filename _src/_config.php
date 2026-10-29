@@ -847,6 +847,9 @@
      * 
      * @param       string      $m      il messaggio da scrivere
      * @param       string      $f      il percorso e il nome (senza estensione) del file di log da scrivere rispetto alla cartella dei log
+     * Le richieste dei test automatici ( LOG_TEST, vedi _src/_config/_020.debug.php ) scrivono in DIR_VAR_LOG . 'test/'
+     * invece che in DIR_VAR_LOG, così gli errori voluti dai test non finiscono nei controlli dei log del deploy.
+     * 
      * @param       int         $l      il livello di gravità del messaggio
      * 
      * @return      void
@@ -854,9 +857,10 @@
      */
     function logger( $m, $f = 'core', $l = LOG_DEBUG ) {
         if( ! defined( 'LOG_CURRENT_LEVEL' ) || $l <= LOG_CURRENT_LEVEL ) {
-            checkPath( dirname( DIR_VAR_LOG . $f ) );
+            $d = ( defined( 'LOG_TEST' ) && LOG_TEST ) ? DIR_VAR_LOG . 'test/' : DIR_VAR_LOG;
+            checkPath( dirname( $d . $f ) );
             $lvl = array( 0 => 'emerg', 1 => 'alert', 2 => 'crit', 3 => 'err', 4 => 'warning', 5 => 'notice', 6 => 'info', 7 => 'debug' );
-            $h = fopen( DIR_VAR_LOG . $f . '.' . $lvl[ $l ] . '.' . date( 'Ym' ) . '.log', 'a+' );
+            $h = fopen( $d . $f . '.' . $lvl[ $l ] . '.' . date( 'Ym' ) . '.log', 'a+' );
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' (' . $l . ') ' . str_replace( '§', PHP_EOL . "\t\t\t\t\t--> ", $m ) . PHP_EOL );
             fclose( $h );
         }

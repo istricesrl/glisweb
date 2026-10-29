@@ -40,7 +40,7 @@
 
             $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             if( empty( $id ) ) {
-                $I->fail( 'carrello ' . $nome . ' non creato, vedi var/log/cart' );
+                $I->fail( 'carrello ' . $nome . ' non creato, vedi var/log/test/cart' );
             }
 
             $I->dontSeeInDatabase( 'metadati', array( 'id_carrello' => $id, 'nome' => $metadato ) );

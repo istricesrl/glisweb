@@ -75,7 +75,7 @@
             $I->amOnPage( '/?p=' . $idMadre );
 
             // il 420 salta la figlia non pubblicata e lo scrive nel log
-            $log = DIR_VAR_LOG . 'pagine.debug.' . date( 'Ym' ) . '.log';
+            $log = DIR_VAR_LOG . 'test/pagine.debug.' . date( 'Ym' ) . '.log';
             $saltata = false;
             for( $i = 0; $i < 10 && $saltata === false; $i++ ) {
                 if( file_exists( $log ) && strpos( file_get_contents( $log ), 'sotto pagina ' . $idBozza . ' della pagina ' . $idMadre . ' ' ) !== false ) {

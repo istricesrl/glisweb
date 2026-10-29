@@ -233,6 +233,11 @@
         curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $connectTimeout );
         curl_setopt( $curl, CURLOPT_TIMEOUT, $responseTimeout );
 
+        // dal processo dei test le richieste portano il marcatore, e il sito ne scrive i log a parte ( _020.debug.php )
+        if( defined( 'GLISWEB_TEST' ) && getenv( 'GLISWEB_TEST_USER_AGENT' ) ) {
+            curl_setopt( $curl, CURLOPT_USERAGENT, getenv( 'GLISWEB_TEST_USER_AGENT' ) );
+        }
+
         // autenticazione
         if( $user !== NULL && $pasw !== NULL ) {
 
