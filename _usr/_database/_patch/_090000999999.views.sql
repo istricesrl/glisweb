@@ -505,14 +505,14 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			concat_ws( ' ', settori.ateco, settori.nome )
+			concat_ws( ' ', settori.ateco, coalesce( settori.soprannome, settori.nome ) )
 		) AS __label__
 	FROM anagrafica_settori
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_settori.id_anagrafica
 		LEFT JOIN settori ON settori.id = anagrafica_settori.id_settore
 ;
 
--- il settore si etichetta con codice ATECO e nome, come in settori_view; il percorso completo ( settori_path ) è
+-- il settore si etichetta con codice ATECO e soprannome ( o nome ), come in settori_view; il percorso completo ( settori_path ) è
 -- troppo lungo per un'etichetta
 
 -- | 090000001251
@@ -7054,6 +7054,8 @@ CREATE OR REPLACE VIEW `sconti_prodotti_view` AS
 -- | 090000037000
 
 -- settori_view
+-- tipologia: tabella standard
+-- funzione: espone i settori ATECO con l'etichetta codice e soprannome, o nome se il soprannome manca
 CREATE OR REPLACE VIEW settori_view AS
 	SELECT
 		settori.id,
@@ -7061,7 +7063,7 @@ CREATE OR REPLACE VIEW settori_view AS
 		settori.nome,
 		settori.soprannome,
 		settori.ateco,
-	 	concat( settori.ateco, ' ', settori.nome ) AS __label__
+		concat( settori.ateco, ' ', coalesce( settori.soprannome, settori.nome ) ) AS __label__
 	FROM settori
 ;
 

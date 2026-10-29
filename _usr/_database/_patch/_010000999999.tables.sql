@@ -6872,18 +6872,28 @@ CREATE TABLE IF NOT EXISTS `sconti_prodotti` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i settori aziendali
+-- funzione: contiene i settori di attività della classificazione ATECO
 --
--- questa tabella contiene i settori di attività ATECO, con le informazioni relative al nome, al soprannome
--- e al codice ATECO
+-- i settori di attività economica della classificazione ATECO dell'ISTAT, intera e nella sua gerarchia ( sezione,
+-- divisione, gruppo, classe, categoria, sottocategoria ); li citano anagrafica_settori, per i settori di un'anagrafica,
+-- e reparti.id_settore, e ne fanno la tendina i form dell'anagrafica e dei reparti
 --
-CREATE TABLE IF NOT EXISTS `settori` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `soprannome` char(64) DEFAULT NULL,
-  `ateco` char(32) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA: i dati sono ATECO 2025 e li carica il 050; l'id e' l'ordine ISTAT del codice ( ORDINE_CODICE_ATECO_2025 ) e
+-- id_genitore quello del codice padre, quindi gli id sono gli stessi su tutti i deploy. E' una tabella standard con fonte
+-- esterna ( famiglia ateco dei dati standard, decisione del 16/10/2026 ): si aggiorna sul database canonico e si
+-- distribuisce dal data server, i deploy non la modificano.
+--
+-- NOTA: molti nomi ufficiali sono lunghissimi e ripetono quello del genitore, e un'etichetta fatta col nome sarebbe
+-- ingestibile; per questo c'e' soprannome, il nome breve che la vista e il path usano al posto del nome quando c'e'. Va
+-- compilato con criterio, perche' l'etichetta risulti parlante ma corta e senza ridondanze, a ogni importazione di una
+-- versione aggiornata della classificazione, prima della distribuzione ( decisione del 29/10/2026 )
+CREATE TABLE IF NOT EXISTS `settori` (                          --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria, ordine ISTAT del codice
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- settore genitore ( codice ATECO padre )
+  `nome` char(255) DEFAULT NULL,                                  -- nome ufficiale ISTAT del settore
+  `soprannome` char(64) DEFAULT NULL,                             -- nome breve per l'etichetta, compilato all'importazione
+  `ateco` char(32) DEFAULT NULL                                   -- codice ATECO del settore
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000041000
 

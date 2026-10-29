@@ -4841,7 +4841,7 @@ CREATE
 
 			SELECT
 				settori.id_genitore,
-				concat( settori.ateco, ' ', settori.nome )
+				concat( settori.ateco, ' ', coalesce( settori.soprannome, settori.nome ) )
 			FROM settori
 			WHERE settori.id = p1
 			INTO p1, step;

@@ -4180,7 +4180,8 @@ ALTER TABLE `sconti_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `settori`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`ateco`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ateco`,`soprannome`);
 
 -- | 030000037001
 
