@@ -122,7 +122,13 @@
                 $I->markTestSkipped( 'il deploy non ha sorgenti in debug.log.remoti.sorgenti' );
             }
 
-            foreach( $cf['debug']['log']['remoti']['sorgenti'] as $nome => $sorgente ) {
+            // la sorgente di prova accesa da _codeception.run.sh ( vedi _src/_config/_020.debug.php ) viene prima di quelle del deploy
+            $sorgenti = $cf['debug']['log']['remoti']['sorgenti'];
+            if( isset( $sorgenti['test-e2e'] ) ) {
+                $sorgenti = array( 'test-e2e' => $sorgenti['test-e2e'] ) + $sorgenti;
+            }
+
+            foreach( $sorgenti as $nome => $sorgente ) {
                 if( ! empty( $sorgente['segreto'] ) ) {
                     return array( $nome, $sorgente['segreto'] );
                 }

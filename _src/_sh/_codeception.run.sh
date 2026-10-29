@@ -76,6 +76,13 @@ while (echo > /dev/tcp/127.0.0.1/$PORTA_REST) 2>/dev/null; do
     PORTA_REST=$(( PORTA_REST + 1 ))
 done
 
+## porta del server FTP di prova
+# il server FTP dei test gira su 127.0.0.1, alla prima porta libera da 2121 in su, se c'e' python3-pyftpdlib
+PORTA_FTP=2121
+while (echo > /dev/tcp/127.0.0.1/$PORTA_FTP) 2>/dev/null; do
+    PORTA_FTP=$(( PORTA_FTP + 1 ))
+done
+
 ## esecuzione come www-data se lanciato da root
 if [ "$(id -u)" = "0" ]; then
     ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
@@ -156,6 +163,20 @@ rm -rf var/test/rest.mock.d
 mkdir -p var/test/rest.mock.d/risposte
 echo $PORTA_REST > var/test/rest.mock
 
+## server FTP e sorgente dei log remoti di prova
+# credenziali casuali a ogni giro, negli interruttori che _src/_config/_585.ftp.php e _src/_config/_020.debug.php
+# leggono per far usare ai test il server FTP di prova e una sorgente di log remoti; senza python3-pyftpdlib il
+# server FTP non c'e' e i test FTP si saltano col loro motivo
+rm -rf var/test/ftp.mock.d
+mkdir -p var/test/ftp.mock.d
+if python3 -c "import pyftpdlib" 2>/dev/null; then
+    FTP_PASSWORD=$(head -c 32 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 24)
+    printf '%s\n%s\n' $PORTA_FTP $FTP_PASSWORD > var/test/ftp.mock
+fi
+head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 32 > var/test/log.remoti
+chmod 640 var/test/rest.mock var/test/log.remoti
+[ -f var/test/ftp.mock ] && chmod 640 var/test/ftp.mock
+
 ## permessi
 if [ "$(id -u)" = "0" ]; then
     chown -R www-data:www-data var/test var/spool/test
@@ -178,6 +199,16 @@ for i in $(seq 30); do
     sleep 0.1
 done
 
+## avvio del server FTP di prova
+if [ -f var/test/ftp.mock ]; then
+    $ESEGUI python3 -m pyftpdlib -i 127.0.0.1 -p $PORTA_FTP -w -d var/test/ftp.mock.d -u test -P $FTP_PASSWORD > /dev/null 2>&1 &
+    FTP_PID=$!
+    for i in $(seq 30); do
+        (echo > /dev/tcp/127.0.0.1/$PORTA_FTP) 2>/dev/null && break
+        sleep 0.1
+    done
+fi
+
 ## generazione degli actor
 $ESEGUI $CODECEPT build -c _usr/_test/codeception.yml --no-ansi > /dev/null
 CODECEPTION_EXIT_CODE=$?
@@ -185,7 +216,8 @@ CODECEPTION_EXIT_CODE=$?
 ## esecuzione delle suite
 if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
     for s in $SUITE; do
-        touch var/test/rest.mock
+        touch var/test/rest.mock var/test/log.remoti
+        [ -f var/test/ftp.mock ] && touch var/test/ftp.mock
         $ESEGUI $CODECEPT run $s -c _usr/_test/codeception.yml --no-colors --steps --html $s.report.html --xml $s.report.xml "$@" 2>&1 | tee var/test/output/$s.log
         ESITO=${PIPESTATUS[0]}
         [ "$ESITO" = "0" ] || CODECEPTION_EXIT_CODE=$ESITO
@@ -202,6 +234,13 @@ fi
 pkill -P $REST_MOCK_PID 2>/dev/null
 kill $REST_MOCK_PID 2>/dev/null
 rm -f var/test/rest.mock
+
+## arresto del server FTP di prova e della sorgente dei log remoti
+if [ -n "$FTP_PID" ]; then
+    pkill -P $FTP_PID 2>/dev/null
+    kill $FTP_PID 2>/dev/null
+fi
+rm -f var/test/ftp.mock var/test/log.remoti
 
 ## reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
 rm -f var/test/recaptcha.off

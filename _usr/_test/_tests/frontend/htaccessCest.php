@@ -91,6 +91,7 @@
                 '/var/session/x',
                 '/var/spool/security/ban/x',
                 '/var/work/x',
+                '/var/test/x',
                 '/var/contenuti/upload/x',
                 '/mod/x/src/inc/x.php',
                 '/_src/_inc/x.php',

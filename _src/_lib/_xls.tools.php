@@ -32,6 +32,10 @@
      * Le difese valgono anche con la 1.30.7, e non tolgono niente a quello che il framework legge: i dati, gli
      * stili e i formati delle celle. Le impostazioni globali toccate si rimettono com'erano alla fine.
      *
+     * Un file che non si puo' leggere ( formato non ammesso, file rovinato, difese che scattano ) non solleva
+     * eccezioni: la funzione scrive il motivo nel log xls e restituisce false, che il chiamante deve controllare prima
+     * di usare il risultato.
+     *
      * @param       string      $file           il file da aprire
      *
      * @return      mixed                       lo Spreadsheet, oppure false se il file non si puo' leggere

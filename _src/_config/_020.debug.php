@@ -72,6 +72,21 @@
     define( 'LOG_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['log']['lvl'] );
 
     /**
+     * sorgente dei log remoti per i test
+     * ==================================
+     * Per la durata dei test _src/_sh/_codeception.run.sh scrive in var/test/log.remoti un segreto casuale, e qui
+     * si aggiunge a debug.log.remoti.sorgenti la sorgente test-e2e con quel segreto, cosi' i test di /api/log e di
+     * /api/aggiornamenti girano anche sui deploy che non hanno sorgenti. Come per var/test/recaptcha.off
+     * ( _115.google.php ) non vale in produzione e scade dopo un'ora.
+     *
+     */
+
+    // sorgente di prova durante i test
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION && file_exists( DIR_VAR . 'test/log.remoti' ) && filemtime( DIR_VAR . 'test/log.remoti' ) > time() - 3600 ) {
+        $cf['debug']['log']['remoti']['sorgenti']['test-e2e'] = array( 'segreto' => trim( file_get_contents( DIR_VAR . 'test/log.remoti' ) ) );
+    }
+
+    /**
      * debug del runlevel
      * ==================
      * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.
