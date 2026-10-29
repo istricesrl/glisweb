@@ -6901,34 +6901,39 @@ CREATE TABLE IF NOT EXISTS `settori` (                          --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene gli SMS in uscita
+-- funzione: contiene la coda degli SMS da inviare
 --
--- questa tabella contiene gli SMS in uscita, con le informazioni relative al mittente, ai destinatari,
--- al corpo, al server di invio e allo stato di invio; ha le stesse colonne, nello stesso ordine, di
--- sms_sent, perche' il task di invio sposta le righe con REPLACE INTO sms_sent SELECT * FROM sms_out
+-- questa tabella è la coda degli SMS in uscita: ci scrive queueSms() ( _src/_lib/_sms.tools.php ), e il form di
+-- back-end del modulo SM000.sms; il task sms.queue.send prende una riga alla volta marcandola col token, la invia col
+-- provider scelto dal server e la sposta in sms_sent; se l'invio fallisce conta il tentativo e la riprogramma più avanti
 --
-CREATE TABLE IF NOT EXISTS `sms_out` (
-  `id` bigint(20) NOT NULL,
-  `id_telefono` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) DEFAULT NULL,
-  `destinatari` text DEFAULT NULL,
-  `corpo` text DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
-  `host` char(254) DEFAULT NULL,
-  `port` char(6) DEFAULT NULL,
-  `user` char(254) DEFAULT NULL,
-  `password` char(254) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT 0,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA sms_out e sms_sent devono avere le stesse colonne nello stesso ordine: lo spostamento è un
+-- REPLACE INTO sms_sent SELECT * FROM sms_out ( e il resend un INSERT INTO sms_out SELECT * FROM sms_sent ), quindi
+-- ogni modifica di schema si fa identica e insieme sulle due tabelle
+--
+-- NOTA il token, oltre al lock del task, porta due stati: COPIA_FALLITA ( l'SMS è partito ma la copia in sms_sent
+-- non è riuscita, va sistemato a mano ) e TROPPI_TENTATIVI ( raggiunto $cf['sms']['tentativi_massimi'] )
+--
+-- NOTA le credenziali del provider non stanno qui: server è la chiave della configurazione; le colonne host, port,
+-- user, password e id_telefono sono uscite dal canone il 2026-10-29 ( mai scritte né lette ), come per la posta
+--
+CREATE TABLE IF NOT EXISTS `sms_out` (                          --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- priorità di invio: NULL prima, poi in ordine crescente
+  `mittente` char(254) DEFAULT NULL,                              -- mittente, serializzato ( array nome => numero )
+  `destinatari` text DEFAULT NULL,                                -- destinatari, serializzati ( array di numeri )
+  `corpo` text DEFAULT NULL,                                      -- corpo dell'SMS
+  `server` char(128) DEFAULT NULL,                                -- chiave del server SMS in $cf['sms']['servers'], NULL per il server del profilo
+  `tentativi` int(11) DEFAULT 0,                                  -- tentativi di invio falliti
+  `token` char(128) DEFAULT NULL,                                 -- token di lock del task di invio, o stato COPIA_FALLITA / TROPPI_TENTATIVI
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                  -- timestamp della marcatura con il token
+  `timestamp_composizione` int(11) DEFAULT NULL,                  -- timestamp di composizione dell'SMS
+  `timestamp_invio` int(11) DEFAULT NULL,                         -- timestamp di invio: invio previsto; NULL vuol dire appena possibile
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000041200
 
@@ -6938,32 +6943,36 @@ CREATE TABLE IF NOT EXISTS `sms_out` (
 -- struttura: tabella base
 -- funzione: contiene gli SMS inviati
 --
--- questa tabella contiene gli SMS inviati, con le informazioni relative al mittente, ai destinatari,
--- al corpo, al server di invio e alla data di invio; ha le stesse colonne, nello stesso ordine, di
--- sms_out
+-- questa tabella è l'archivio degli SMS inviati: ci arrivano dal task sms.queue.send, che li sposta da sms_out
+-- dopo l'invio; sms.queue.resend fa il percorso inverso per rispedirli
 --
-CREATE TABLE IF NOT EXISTS `sms_sent` (
-  `id` bigint(20) NOT NULL,
-  `id_telefono` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) DEFAULT NULL,
-  `destinatari` text DEFAULT NULL,
-  `corpo` text DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
-  `host` char(254) DEFAULT NULL,
-  `port` char(6) DEFAULT NULL,
-  `user` char(254) DEFAULT NULL,
-  `password` char(254) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT 0,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA sms_sent e sms_out devono avere le stesse colonne nello stesso ordine: lo spostamento è un
+-- REPLACE INTO sms_sent SELECT * FROM sms_out ( e il resend un INSERT INTO sms_out SELECT * FROM sms_sent ), quindi
+-- ogni modifica di schema si fa identica e insieme sulle due tabelle
+--
+-- NOTA il token, oltre al lock del task, porta due stati: COPIA_FALLITA ( l'SMS è partito ma la copia in sms_sent
+-- non è riuscita, va sistemato a mano ) e TROPPI_TENTATIVI ( raggiunto $cf['sms']['tentativi_massimi'] )
+--
+-- NOTA le credenziali del provider non stanno qui: server è la chiave della configurazione; le colonne host, port,
+-- user, password e id_telefono sono uscite dal canone il 2026-10-29 ( mai scritte né lette ), come per la posta
+--
+CREATE TABLE IF NOT EXISTS `sms_sent` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- priorità di invio: NULL prima, poi in ordine crescente
+  `mittente` char(254) DEFAULT NULL,                              -- mittente, serializzato ( array nome => numero )
+  `destinatari` text DEFAULT NULL,                                -- destinatari, serializzati ( array di numeri )
+  `corpo` text DEFAULT NULL,                                      -- corpo dell'SMS
+  `server` char(128) DEFAULT NULL,                                -- chiave del server SMS in $cf['sms']['servers'], NULL per il server del profilo
+  `tentativi` int(11) DEFAULT 0,                                  -- tentativi di invio falliti
+  `token` char(128) DEFAULT NULL,                                 -- token di lock del task di invio, o stato COPIA_FALLITA / TROPPI_TENTATIVI
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                  -- timestamp della marcatura con il token
+  `timestamp_composizione` int(11) DEFAULT NULL,                  -- timestamp di composizione dell'SMS
+  `timestamp_invio` int(11) DEFAULT NULL,                         -- timestamp di invio: invio effettivo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000041400
 

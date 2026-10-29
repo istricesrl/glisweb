@@ -4193,9 +4193,12 @@ ALTER TABLE `settori` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- sms_out
 ALTER TABLE `sms_out`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_telefono` (`id_telefono`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`tentativi`,`token`,`timestamp_invio`);
 
 -- | 030000041001
 
@@ -4207,9 +4210,12 @@ ALTER TABLE `sms_out` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- sms_sent
 ALTER TABLE `sms_sent`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_telefono` (`id_telefono`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`tentativi`,`token`,`timestamp_invio`);
 
 -- | 030000041201
 
