@@ -214,6 +214,18 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'funnel' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'step' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'relazioni_step' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'pagine' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -855,6 +867,10 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'ruoli_software' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'ruoli_step' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),

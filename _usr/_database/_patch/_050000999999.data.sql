@@ -230,6 +230,12 @@ INSERT IGNORE INTO `formati_tipologie_corrispondenza` (`id`, `id_tipologia`, `no
 (52,	15,	'standard',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3),
 (53,	15,	'contrassegno',	0.00,	0.00,	0.00,	0.00,	0.00,	0.00,	3);
 
+-- | 050000015120
+
+-- funnel
+INSERT IGNORE INTO `funnel` (`id`, `nome`, `id_campagna`, `note`) VALUES
+(1,	'generico',	NULL,	'funnel di base: apertura, lavorazione ed esito di una pratica');
+
 -- | 050000015150
 
 -- giorni
@@ -561,6 +567,14 @@ INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice_sdi`) VALUES
 -- Altro	RF18
 -- Forfettario (art.1, commi 54-89, legge n. 190/2014)	RF19
 
+-- | 050000030600
+
+-- relazioni_step
+INSERT IGNORE INTO `relazioni_step` (`id`, `ordine`, `id_step`, `id_step_collegato`, `id_ruolo`, `note`) VALUES
+(1,	1,	1,	2,	1,	NULL),
+(2,	1,	2,	3,	2,	NULL),
+(3,	2,	2,	4,	2,	NULL);
+
 -- | 050000030800
 
 -- reparti
@@ -805,6 +819,15 @@ INSERT IGNORE INTO `ruoli_risorse` (`id`, `id_genitore`, `nome`, `html_entity`, 
 INSERT IGNORE INTO `ruoli_software` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`) VALUES
 (1,	NULL,	'aggiornamento',	NULL,	NULL,	1),
 (2,	NULL,	'plugin',	NULL,	NULL,	1);
+
+-- | 050000035170
+
+-- ruoli_step
+-- tipologia: tabella standard
+INSERT IGNORE INTO `ruoli_step` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_relazioni`) VALUES
+(1,	NULL,	'prosegue',	NULL,	NULL,	1),
+(2,	NULL,	'alternativa',	NULL,	NULL,	1),
+(3,	NULL,	'ripete',	NULL,	NULL,	1);
 
 -- | 050000035200
 
@@ -4090,12 +4113,12 @@ INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`
 -- | 050000042500
 
 -- step
--- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026
+-- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026; dal 29/10/2026 sono gli step del funnel generico
 INSERT IGNORE INTO `step` (`id`, `id_funnel`, `ordine`, `nome`, `note`) VALUES
-(1,	NULL,	NULL,	'apertura',	NULL),
-(2,	NULL,	NULL,	'in corso',	NULL),
-(3,	NULL,	NULL,	'esito positivo',	NULL),
-(4,	NULL,	NULL,	'esito negativo',	NULL);
+(1,	1,	1,	'apertura',	NULL),
+(2,	1,	2,	'in corso',	NULL),
+(3,	1,	3,	'esito positivo',	NULL),
+(4,	1,	4,	'esito negativo',	NULL);
 
 -- | 050000042700
 

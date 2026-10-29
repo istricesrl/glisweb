@@ -3057,6 +3057,36 @@ CREATE TABLE IF NOT EXISTS `formati_tipologie_corrispondenza` (--
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000015120
+
+-- funnel
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i funnel, cioe' i percorsi fatti di step
+--
+-- un funnel e' un percorso fatto di step ( step.id_funnel ): una sequenza di vendita, l'iscrizione a una newsletter,
+-- una procedura da far eseguire, un gioco a livelli; i passaggi fra gli step stanno in relazioni_step e possono
+-- portare anche negli step di un altro funnel ( la landing con "prenota ora" e "iscriviti alla newsletter" porta
+-- nei funnel prenotazioni e newsletter ); il punto d'ingresso del funnel e' il suo primo step nell'ordine
+--
+-- un funnel puo' appartenere a una campagna ( id_campagna ), ma non e' obbligatorio: lo stesso funnel puo' essere
+-- raggiunto dagli step di piu' campagne
+--
+-- NOTA il funnel non e' ricorsivo: la struttura del percorso la danno gli step e i loro passaggi ( decisione del
+-- 29/10/2026, riga 186 )
+--
+CREATE TABLE IF NOT EXISTS `funnel` (                           --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                                -- nome del funnel
+  `id_campagna` bigint(20) DEFAULT NULL,                        -- chiave esterna per la campagna a cui appartiene il funnel
+  `note` text DEFAULT NULL,                                     -- note sul funnel
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000015150
 
 -- giorni
@@ -5916,6 +5946,38 @@ CREATE TABLE IF NOT EXISTS `relazioni_software` (               --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000030600
+
+-- relazioni_step
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: contiene i passaggi fra gli step, cioe' da quale step si puo' passare a quale
+--
+-- questa tabella descrive come si percorrono i funnel: ogni riga e' un passaggio possibile da uno step a un altro,
+-- col ruolo che dice che passaggio e' ( prosegue, alternativa, ripete ); i ruoli proponibili sono quelli con
+-- ruoli_step.se_relazioni; uno step con piu' passaggi e' un bivio, e i passaggi possono portare negli step di un
+-- altro funnel; le attivita' registrano gli step raggiunti ( attivita.id_step )
+--
+-- NOTA la relazione ha un verso: id_step_collegato e' il <ruolo> di id_step ( la prosecuzione, l'alternativa ), cioe'
+-- lo step a cui si passa da id_step; si registra una volta sola ( decisione del 26/10/2026, riga 147 )
+--
+-- NOTA a differenza delle altre relazioni_* qui i cicli sono ammessi, anche quello di uno step su se' stesso ( si
+-- ripete lo step ): chi percorre il funnel deve fermarsi sugli step gia' visti ( decisione del 29/10/2026, riga 186 )
+--
+CREATE TABLE IF NOT EXISTS `relazioni_step` (                   --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione dei passaggi dello step
+  `id_step` bigint(20) DEFAULT NULL,                            -- chiave esterna per lo step da cui si passa
+  `id_step_collegato` bigint(20) DEFAULT NULL,                  -- chiave esterna per lo step a cui si passa
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_step )
+  `note` text DEFAULT NULL,                                     -- note che precisano il passaggio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000030800
 
 -- reparti
@@ -6666,6 +6728,26 @@ CREATE TABLE IF NOT EXISTS `ruoli_software` (
   `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_software
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000035170
+
+-- ruoli_step
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei passaggi fra gli step
+--
+-- questa tabella contiene i ruoli con cui uno step e' collegato a un altro ( prosegue, alternativa, ripete ); la legge
+-- relazioni_step.id_ruolo, e i ruoli proponibili sono quelli con se_relazioni ( decisione del 29/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_step` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_step
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000035200
 
 -- ruoli_video
@@ -7077,20 +7159,26 @@ CREATE TABLE IF NOT EXISTS `stati_lingue` (                   --
 -- struttura: tabella base
 -- funzione: contiene gli step dei funnel
 --
--- questa tabella contiene gli step dei funnel, con le informazioni relative al funnel di appartenenza, all'ordine,
--- al nome e alle note
+-- uno step e' una fase di un funnel ( la landing, il primo contatto, la trattativa, l'esito; un passo di una
+-- procedura; un livello di un gioco ) e appartiene al funnel che lo contiene; il primo step nell'ordine e' il punto
+-- d'ingresso del funnel ( decisione del 19/10/2026: il primo nell'ordine e' il default ); da quale step si passa a
+-- quale lo dice relazioni_step, e le attivita' registrano lo step a cui portano il contatto ( attivita.id_step ),
+-- quindi lo storico dei passaggi e' nelle attivita'
 --
-CREATE TABLE IF NOT EXISTS `step` (                                         --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_funnel` bigint(20) DEFAULT NULL,                           -- chiave esterna per il funnel di appartenenza
-  `ordine` char(32) DEFAULT NULL,                             -- ordine dello step nel funnel
-  `nome` char(128) DEFAULT NULL,                              -- nome dello step
-  `note` text DEFAULT NULL,                                    -- note sullo step
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA gli step non sono ricorsivi: un albero non regge i passaggi verso un altro funnel, le confluenze e i cicli,
+-- che stanno in relazioni_step ( decisione del 29/10/2026, riga 186 )
+--
+CREATE TABLE IF NOT EXISTS `step` (                             --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_funnel` bigint(20) DEFAULT NULL,                          -- chiave esterna per il funnel di appartenenza
+  `ordine` int(11) DEFAULT NULL,                                -- ordine dello step nel funnel, il primo e' l'ingresso
+  `nome` char(255) DEFAULT NULL,                                -- nome dello step
+  `note` text DEFAULT NULL,                                     -- note sullo step
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000043000
 

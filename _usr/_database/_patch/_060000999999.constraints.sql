@@ -970,6 +970,15 @@ ALTER TABLE `formati_tipologie_corrispondenza`
     ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+-- | 060000015120
+
+-- funnel
+-- tipologia: tabella gestita
+ALTER TABLE `funnel`
+    ADD CONSTRAINT `funnel_ibfk_01_nofollow` FOREIGN KEY (`id_campagna`) REFERENCES `campagne` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `funnel_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `funnel_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 -- | 060000015200
 
 -- gruppi
@@ -1907,6 +1916,17 @@ ALTER TABLE `relazioni_software`
     ADD CONSTRAINT `relazioni_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+-- | 060000030600
+
+-- relazioni_step
+-- tipologia: tabella gestita
+ALTER TABLE `relazioni_step`
+    ADD CONSTRAINT `relazioni_step_ibfk_01` FOREIGN KEY (`id_step`) REFERENCES `step` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_step_ibfk_02` FOREIGN KEY (`id_step_collegato`) REFERENCES `step` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_step_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_step` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `relazioni_step_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `relazioni_step_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 -- | 060000030800
 
 -- reparti
@@ -2119,6 +2139,13 @@ ALTER TABLE `ruoli_risorse`
 ALTER TABLE `ruoli_software`
     ADD CONSTRAINT `ruoli_software_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_software` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
+-- | 060000035170
+
+-- ruoli_step
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_step`
+    ADD CONSTRAINT `ruoli_step_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_step` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
 -- | 060000035200
 
 -- ruoli_video
@@ -2242,9 +2269,11 @@ ALTER TABLE `stati_lingue`
 -- | 060000042500
 
 -- step
+-- tipologia: tabella gestita
 ALTER TABLE `step`
-    ADD CONSTRAINT `step_ibfk_98_nofollow`                                  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `step_ibfk_99_nofollow`                                  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `step_ibfk_01` FOREIGN KEY (`id_funnel`) REFERENCES `funnel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `step_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `step_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000043000
 

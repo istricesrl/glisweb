@@ -3346,6 +3346,24 @@ CREATE OR REPLACE VIEW `formati_tipologie_corrispondenza_view` AS
 	FROM formati_tipologie_corrispondenza
 ;
 
+-- | 090000015121
+
+-- funnel_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW funnel_view AS
+	SELECT
+		funnel.id,
+		funnel.nome,
+		funnel.id_campagna,
+		campagne.nome AS campagna,
+		funnel.note,
+		funnel.id_account_inserimento,
+		funnel.id_account_aggiornamento,
+		funnel.nome AS __label__
+	FROM funnel
+		LEFT JOIN campagne ON campagne.id = funnel.id_campagna
+;
+
 -- | 090000015150
 
 -- giorni_view
@@ -6243,6 +6261,37 @@ CREATE OR REPLACE VIEW `relazioni_software_view` AS
 		LEFT JOIN ruoli_software ON ruoli_software.id = relazioni_software.id_ruolo
 ;
 
+-- | 090000030601
+
+-- relazioni_step_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `relazioni_step_view` AS
+	SELECT
+		relazioni_step.id,
+		relazioni_step.ordine,
+		relazioni_step.id_step,
+		s1.nome AS step,
+		relazioni_step.id_step_collegato,
+		s2.nome AS step_collegato,
+		relazioni_step.id_ruolo,
+		ruoli_step.nome AS ruolo,
+		relazioni_step.note,
+		relazioni_step.id_account_inserimento,
+		relazioni_step.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			concat_ws( ' > ', f1.nome, s1.nome ),
+			ruoli_step.nome,
+			concat_ws( ' > ', f2.nome, s2.nome )
+		) AS __label__
+	FROM relazioni_step
+		LEFT JOIN step AS s1 ON s1.id = relazioni_step.id_step
+		LEFT JOIN funnel AS f1 ON f1.id = s1.id_funnel
+		LEFT JOIN step AS s2 ON s2.id = relazioni_step.id_step_collegato
+		LEFT JOIN funnel AS f2 ON f2.id = s2.id_funnel
+		LEFT JOIN ruoli_step ON ruoli_step.id = relazioni_step.id_ruolo
+;
+
 -- | 090000030800
 
 -- reparti_view
@@ -6875,6 +6924,22 @@ CREATE OR REPLACE VIEW ruoli_software_view AS
 	FROM ruoli_software
 ;
 
+-- | 090000035170
+
+-- ruoli_step_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_step_view AS
+	SELECT
+		ruoli_step.id,
+		ruoli_step.id_genitore,
+		ruoli_step.nome,
+		ruoli_step.html_entity,
+		ruoli_step.font_awesome,
+		ruoli_step.se_relazioni,
+	 	ruoli_step_path( ruoli_step.id ) AS __label__
+	FROM ruoli_step
+;
+
 -- | 090000035200
 
 -- ruoli_video_view
@@ -7201,20 +7266,25 @@ CREATE OR REPLACE VIEW stati_lingue_view AS
 -- | 090000042501
 
 -- step_view
+-- tipologia: tabella gestita
 CREATE OR REPLACE VIEW step_view AS
 	SELECT
 		step.id,
 		step.id_funnel,
+		funnel.nome AS funnel,
 		step.ordine,
 		step.nome,
+		step.note,
 		step.id_account_inserimento,
 		step.id_account_aggiornamento,
 		concat_ws(
-			' / ',
+			' > ',
+			funnel.nome,
 			step.nome
 		) AS __label__
 	FROM step
-	ORDER BY step.id_funnel, step.ordine
+		INNER JOIN funnel ON funnel.id = step.id_funnel
+	ORDER BY step.id_funnel, step.ordine IS NULL, step.ordine, step.id
 ;
 
 -- | 090000043001

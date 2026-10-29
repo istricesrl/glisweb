@@ -1861,6 +1861,23 @@ ALTER TABLE `formati_tipologie_corrispondenza`
 -- formati_tipologie_corrispondenza
 ALTER TABLE `formati_tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000015120
+
+-- funnel
+ALTER TABLE `funnel`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_campagna` (`id_campagna`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_campagna`);
+
+-- | 030000015121
+
+-- funnel
+-- tipologia: tabella gestita
+ALTER TABLE `funnel` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000015150
 
 -- giorni
@@ -3602,6 +3619,26 @@ ALTER TABLE `relazioni_software`
 -- tipologia: tabella gestita
 ALTER TABLE `relazioni_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030600
+
+-- relazioni_step
+ALTER TABLE `relazioni_step`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_step`,`id_step_collegato`,`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_step` (`id_step`),
+	ADD KEY `id_step_collegato` (`id_step_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_step`,`id_step_collegato`,`id_ruolo`);
+
+-- | 030000030601
+
+-- relazioni_step
+-- tipologia: tabella gestita
+ALTER TABLE `relazioni_step` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030800
 
 -- reparti
@@ -4032,6 +4069,22 @@ ALTER TABLE `ruoli_software`
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000035170
+
+-- ruoli_step
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_step`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000035171
+
+-- ruoli_step
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_step` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000035200
 
 -- ruoli_video
@@ -4285,6 +4338,7 @@ ALTER TABLE `step`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_funnel`,`nome`),
 	ADD KEY `id_funnel` (`id_funnel`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
