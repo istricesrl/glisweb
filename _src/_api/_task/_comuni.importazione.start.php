@@ -70,11 +70,11 @@
                 'codice_catasto_comune'     => NULL     // T    utilizzato
             );
 
-            // apro il documento per leggere il numero di righe
-            $xls = \PhpOffice\PhpSpreadsheet\IOFactory::load( DIR_BASE . $status['file'] );
+            // apro il documento per leggere il numero di righe ( vedi xlsLoad() )
+            $xls = xlsLoad( DIR_BASE . $status['file'] );
 
-            // converto il foglio attivo in un array
-            $arr = $xls->getActiveSheet()->toArray();
+            // converto il foglio attivo in un array; un file che non si legge non porta righe
+            $arr = ( $xls === false ) ? array() : $xls->getActiveSheet()->toArray();
 
             // scarto l'intestazione
             array_shift( $arr );
