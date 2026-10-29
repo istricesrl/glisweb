@@ -330,7 +330,9 @@
         logger('richiesta di diritti per ' . $t . '/' . $id . '/' . $a, 'auth');
 
         // passaggio ricorsivo dei permessi
-        $i['__auth__'] = $_SESSION['account']['permissions'][$t];
+        // NOTA senza sessione ( un import con firma ) i permessi non ci sono: prima del 2026-10-30 qui partivano un notice
+        // e un warning di in_array(), che dove display_errors è acceso finivano nella risposta
+        $i['__auth__'] = $_SESSION['account']['permissions'][$t] ?? array();
 
         // verifico se l'utente ha il pieno controllo sulla tabella
         if (in_array(CONTROL_FULL, $i['__auth__'])) {

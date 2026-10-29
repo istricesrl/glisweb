@@ -105,9 +105,12 @@
 
             $I->seeInDatabase( 'immagini', array( 'id' => $id, 'token' => 'TROPPI_TENTATIVI', 'tentativi' => $cf['image']['tentativi_massimi'] ) );
 
-            $I->amOnPage( '/status/images.resize.status' );
-            $I->see( 'immagini ferme per troppi tentativi (' );
-            $I->see( 'TEST-E2E-inesistente.jpg' );
+            // il report c'è solo sulla linea distribuita ( glisweb ), non su latest
+            if( file_exists( DIR_BASE . '_src/_api/_status/_images.resize.status.php' ) ) {
+                $I->amOnPage( '/status/images.resize.status' );
+                $I->see( 'immagini ferme per troppi tentativi (' );
+                $I->see( 'TEST-E2E-inesistente.jpg' );
+            }
 
             $I->amOnPage( '/task/IM000.immagini/images.resize?id=' . $id );
 
