@@ -6878,6 +6878,7 @@ CREATE OR REPLACE VIEW ruoli_software_view AS
 -- | 090000035200
 
 -- ruoli_video_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_video_view AS
 	SELECT
 		ruoli_video.id,
@@ -6887,22 +6888,28 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.font_awesome,
 		ruoli_video.se_anagrafica,
 		ruoli_video.se_pagine,
+		ruoli_video.se_file,
 		ruoli_video.se_prodotti,
 		ruoli_video.se_articoli,
 		ruoli_video.se_categorie_prodotti,
 		ruoli_video.se_marchi,
 		ruoli_video.se_categorie_marchi,
-		ruoli_video.se_notizie,
-		ruoli_video.se_categorie_notizie,
-		ruoli_video.se_annunci,
-		ruoli_video.se_categorie_annunci,
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
+		ruoli_video.se_notizie,
+		ruoli_video.se_annunci,
+		ruoli_video.se_categorie_notizie,
+		ruoli_video.se_categorie_annunci,
+		ruoli_video.se_progetti,
+		ruoli_video.se_categorie_progetti,
+		ruoli_video.se_indirizzi,
+		ruoli_video.se_edifici,
 		ruoli_video.se_immobili,
+		ruoli_video.se_valutazioni,
 		ruoli_video.se_audio,
-		ruoli_video.se_file,
 		ruoli_video.se_immagini,
-	 	ruoli_video_path( ruoli_video.id ) AS __label__
+		ruoli_video.se_vani,
+		ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
 

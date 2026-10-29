@@ -4035,14 +4035,17 @@ ALTER TABLE `ruoli_software` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000035200
 
 -- ruoli_video
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_video`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`,`id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000035201
 
 -- ruoli_video
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_video` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000036000
