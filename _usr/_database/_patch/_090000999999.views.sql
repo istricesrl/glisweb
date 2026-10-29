@@ -6826,21 +6826,20 @@ CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 
 -- | 090000035101
 
--- ruoli_progetti
--- tipologia: tabella di supporto
--- verifica: 2022-04-20 10:45 chiara GDL
+-- ruoli_progetti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_progetti_view AS
 	SELECT
 		ruoli_progetti.id,
+		ruoli_progetti.id_genitore,
 		ruoli_progetti.nome,
 		ruoli_progetti.html_entity,
 		ruoli_progetti.font_awesome,
 		ruoli_progetti.se_sottoprogetto,
 		ruoli_progetti.se_proseguimento,
-		ruoli_progetti.se_sostituto,
 		ruoli_progetti.se_attesa,
 		ruoli_progetti.se_relazioni,
-	 	ruoli_progetti.nome AS __label__
+		ruoli_progetti_path( ruoli_progetti.id ) AS __label__
 	FROM ruoli_progetti
 ;
 

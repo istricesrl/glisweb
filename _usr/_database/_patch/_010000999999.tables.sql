@@ -6607,20 +6607,24 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (                 --
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli progetti
+-- funzione: contiene i ruoli con cui un progetto o un'anagrafica e' collegato a un progetto
 --
-CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_sottoprogetto` tinyint(1) DEFAULT NULL,
-  `se_proseguimento` tinyint(1) DEFAULT NULL,
-  `se_sostituto` tinyint(1) DEFAULT NULL,
-  `se_attesa` tinyint(1) DEFAULT NULL,
-  `se_relazioni` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene i ruoli che il collegato svolge rispetto al progetto ( proseguimento, bundle, attesa ); la
+-- leggono relazioni_progetti.id_ruolo, dove i ruoli proponibili sono quelli con se_relazioni ( decisione del 26/10/2026 ),
+-- e anagrafica_progetti.id_ruolo, per la lista d'attesa; se_sottoprogetto, se_proseguimento e se_attesa sono qualita'
+-- del ruolo, e il codice trova il ruolo col suo flag invece che con l'id
+--
+CREATE TABLE IF NOT EXISTS `ruoli_progetti` (                 --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_sottoprogetto` tinyint(1) DEFAULT NULL,                   -- flag per il ruolo che lega un sottoprogetto ( bundle )
+  `se_proseguimento` tinyint(1) DEFAULT NULL,                   -- flag per il ruolo del progetto che ne prosegue un altro
+  `se_attesa` tinyint(1) DEFAULT NULL,                          -- flag per il ruolo della lista d'attesa in anagrafica_progetti
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_progetti
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000035120
 

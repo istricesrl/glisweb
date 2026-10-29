@@ -3988,16 +3988,11 @@ ALTER TABLE `ruoli_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- ruoli_progetti
 -- tipologia: tabella standard
--- verifica: 2022-04-20 10:45 chiara GDL
 ALTER TABLE `ruoli_progetti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
-	ADD KEY `se_proseguimento` (`se_proseguimento`),
-	ADD KEY `se_sostituto` (`se_sostituto`), 
-	ADD KEY `se_attesa` (`se_attesa`), 
-	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`,`se_attesa`),
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000035101
 

@@ -785,12 +785,11 @@ INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_
 -- | 050000035100
 
 -- ruoli_progetti
--- tipologia: tabella di supporto
--- verifica: 2022-04-20 10:45 chiara GDL
-INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`, `se_relazioni`) VALUES
-(1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1),
-(2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1),
-(3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1);
+-- tipologia: tabella standard
+INSERT IGNORE INTO `ruoli_progetti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_attesa`, `se_relazioni`) VALUES
+(1,	NULL,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	1),
+(2,	NULL,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	1),
+(3,	NULL,	'attesa',	NULL,	NULL,	NULL,	NULL,	1,	NULL);
 
 -- | 050000035120
 
