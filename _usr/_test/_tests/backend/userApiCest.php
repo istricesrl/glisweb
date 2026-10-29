@@ -16,6 +16,8 @@
     class userApiCest {
 
         // chiama api/login con un array ( inviato come JSON ) o con una stringa ( inviata cosi' com'e' ); restituisce lo status HTTP e la risposta decodificata
+        // la stringa va come text/plain: dichiarata JSON o XML la analizza ModSecurity, che su un corpo malformato si ferma con
+        // un 500 prima di PHP, e il test proverebbe ModSecurity invece dell'API ( 500 falsi nei controlli di WEB03, 29/10/2026 )
         private function login( $corpo, &$risposta, &$raw ) {
 
             global $cf;
@@ -28,7 +30,7 @@
                 rtrim( $cf['site']['url'], '/' ) . '/api/login',
                 METHOD_POST,
                 $corpo,
-                is_string( $corpo ) ? MIME_APPLICATION_XML : MIME_APPLICATION_JSON,
+                is_string( $corpo ) ? MIME_TEXT_PLAIN : MIME_APPLICATION_JSON,
                 MIME_TEXT_PLAIN,
                 $status,
                 array(),
