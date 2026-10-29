@@ -2227,7 +2227,7 @@ ALTER TABLE `software`
 
 -- stati
 ALTER TABLE `stati`
-    ADD CONSTRAINT `stati_ibfk_01_nofollow`                   FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `stati_ibfk_01_nofollow`                   FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `stati_ibfk_02_nofollow`                                 FOREIGN KEY (`id_successore`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000042200

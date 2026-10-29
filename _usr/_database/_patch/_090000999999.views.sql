@@ -7153,6 +7153,7 @@ CREATE OR REPLACE VIEW software_view AS                                         
 -- | 090000042000
 
 -- stati_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW stati_view AS                          --
     SELECT                                                    --
 		stati.id,                                             --
@@ -7170,7 +7171,7 @@ CREATE OR REPLACE VIEW stati_view AS                          --
 			stati.nome                                        --
 		) AS __label__                                        -- etichetta per le tendine e le liste
     FROM stati                                                --
-    	LEFT JOIN continenti                                  --
+    	INNER JOIN continenti                                 --
             ON continenti.id = stati.id_continente            --
 ;                                                             --
 

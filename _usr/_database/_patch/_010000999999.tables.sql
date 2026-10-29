@@ -7016,26 +7016,31 @@ CREATE TABLE IF NOT EXISTS `software` (                           --
 
 -- stati
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
 -- funzione: contiene gli stati del mondo
--- 
--- questa tabella contiene gli stati del mondo, con le informazioni relative al continente di appartenenza, al nome,
--- ai codici ISO e ISTAT, all'URL di riferimento e alle note
 --
--- uno stato che cessa di esistere non si cancella: si archivia con data_archiviazione e note_archiviazione e punta
--- col id_successore allo stato che ne ha preso il posto; questi campi si valorizzano a mano
+-- gli stati, livello della geografia ( continenti, stati, regioni, provincie, comuni, indirizzi ) fra il continente
+-- che li contiene e le regioni che contengono. Ogni livello è secondario rispetto a quello che lo contiene: uno stato
+-- non ha senso senza il suo continente, quindi un continente che ha degli stati non si può cancellare, e uno stato
+-- che ha delle regioni nemmeno. I file di base non popolano la geografia, la carica un'importazione.
+-- uno stato che cessa di esistere non si cancella: si archivia con data_archiviazione e note_archiviazione e punta col
+-- id_successore allo stato che ne ha preso il posto. I valori li scrive l'importazione della geografia; i riferimenti
+-- vivi si spostano sul successore, quelli di storia no.
+-- NOTA iso31661alpha2, iso31661alpha3 e codice_istat sono codici esterni e mantengono il loro formato; gli stati vivi
+-- hanno i codici ISO, quelli cessati di solito solo il codice ISTAT, che a sua volta manca su molti stati vivi: per
+-- questo nessuno dei tre fa da chiave, e lo stesso nome può ripetersi fra uno stato vivo e uno cessato
 CREATE TABLE IF NOT EXISTS `stati` (                          --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_continente` bigint(20) DEFAULT NULL,                       -- chiave esterna per il continente di appartenenza
-  `id_successore` bigint(20) DEFAULT NULL,                       -- stato che ha preso il posto di questo dopo l'archiviazione
-  `nome` char(128) DEFAULT NULL,                              -- nome dello stato
-  `nome_esteso` char(128) DEFAULT NULL,                       -- nome esteso dello stato
-  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento dello stato
-  `note` text DEFAULT NULL,                                   -- note sullo stato
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome convenzionale dello stato
+  `nome_esteso` char(128) DEFAULT NULL,                       -- nome ufficiale dello stato
+  `id_continente` bigint(20) DEFAULT NULL,                    -- continente che contiene lo stato
+  `id_successore` bigint(20) DEFAULT NULL,                    -- stato che ha preso il posto di questo dopo l'archiviazione
   `iso31661alpha2` char(2) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-2 dello stato
   `iso31661alpha3` char(3) DEFAULT NULL,                      -- codice ISO 3166-1 alpha-3 dello stato
   `codice_istat` char(4) DEFAULT NULL,                        -- codice ISTAT dello stato
+  `url_riferimento` char(255) DEFAULT NULL,                   -- URL di riferimento dello stato
+  `note` text DEFAULT NULL,                                    -- note sullo stato
   `data_archiviazione` date DEFAULT NULL,                      -- data di archiviazione dello stato
   `note_archiviazione` text DEFAULT NULL                       -- note sull'archiviazione dello stato
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --

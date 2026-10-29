@@ -4252,7 +4252,7 @@ ALTER TABLE `stati`
 	ADD KEY `id_continente` (`id_continente`),
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
-	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
+	ADD KEY `indice` (`id`,`nome`,`id_continente`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
 
 -- | 030000042001
 
