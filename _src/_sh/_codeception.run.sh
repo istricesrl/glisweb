@@ -182,6 +182,50 @@ if [ "$(id -u)" = "0" ]; then
     chown -R www-data:www-data var/test var/spool/test
 fi
 
+## arresto del browser, dei server di prova e degli interruttori
+# gira alla fine del giro e, con il trap, anche quando il giro fallisce o viene interrotto ( Ctrl-C, timeout, kill ):
+# prima del 29/10/2026 un giro interrotto lasciava acceso tutto, e su web03 c'erano 12 Chromium headless orfani fino
+# a 30 giorni, 1,7 GB di RAM. Chromium e' figlio di chromedriver, che da root e' figlio di sudo: pkill -P sul PID
+# del job non arrivava a lui. Per questo si raccolgono tutti i discendenti del job PRIMA di spegnerli: spento il
+# padre, i figli passano a init e non si ritrovano piu'
+discendenti() {
+    local p
+    for p in $(pgrep -P $1); do
+        echo $p
+        discendenti $p
+    done
+}
+arresto() {
+
+    # browser
+    if [ -n "$CHROMEDRIVER_PID" ]; then
+        kill $(discendenti $CHROMEDRIVER_PID) $CHROMEDRIVER_PID 2>/dev/null
+    fi
+
+    # finto REST
+    if [ -n "$REST_MOCK_PID" ]; then
+        pkill -P $REST_MOCK_PID 2>/dev/null
+        kill $REST_MOCK_PID 2>/dev/null
+    fi
+    rm -f var/test/rest.mock
+
+    # server FTP di prova e sorgente dei log remoti
+    if [ -n "$FTP_PID" ]; then
+        pkill -P $FTP_PID 2>/dev/null
+        kill $FTP_PID 2>/dev/null
+    fi
+    rm -f var/test/ftp.mock var/test/log.remoti
+
+    # reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
+    rm -f var/test/recaptcha.off
+
+    # una volta sola: alla fine del giro e poi di nuovo dal trap non deve fare niente
+    CHROMEDRIVER_PID= REST_MOCK_PID= FTP_PID=
+
+}
+trap arresto EXIT
+trap 'exit 130' INT TERM HUP
+
 ## browser per le suite che ne hanno bisogno
 if [[ " $SUITE " =~ " backend " || " $SUITE " =~ " frontend " ]]; then
     $ESEGUI chromedriver --port=$PORTA > var/test/output/chromedriver.log 2>&1 &
@@ -224,26 +268,8 @@ if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
     done
 fi
 
-## arresto del browser
-if [ -n "$CHROMEDRIVER_PID" ]; then
-    pkill -P $CHROMEDRIVER_PID 2>/dev/null
-    kill $CHROMEDRIVER_PID 2>/dev/null
-fi
-
-## arresto del finto REST
-pkill -P $REST_MOCK_PID 2>/dev/null
-kill $REST_MOCK_PID 2>/dev/null
-rm -f var/test/rest.mock
-
-## arresto del server FTP di prova e della sorgente dei log remoti
-if [ -n "$FTP_PID" ]; then
-    pkill -P $FTP_PID 2>/dev/null
-    kill $FTP_PID 2>/dev/null
-fi
-rm -f var/test/ftp.mock var/test/log.remoti
-
-## reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
-rm -f var/test/recaptcha.off
+## arresto del browser, dei server di prova e degli interruttori
+arresto
 
 ## raccolta dei risultati
 # il log completo e' l'output delle suite una dopo l'altra; il report degli errori ne prende, per ogni suite, la
