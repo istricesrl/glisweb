@@ -912,7 +912,13 @@
                 if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
                     continue;
                 }
-                $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
+                // la query non puo' restare nel nome del file: il link emesso la porterebbe con se', e il browser
+                // chiederebbe il percorso senza query, che non esiste ( fonts.googleapis.com/css2?family=..., 404 su
+                // tutti i siti arianna di gimbe fino al 29/10/2026 ); al suo posto va un hash, e il file prende .css
+                $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', preg_replace( '/[?#].*$/', '', $css ) );
+                if( ! empty( $query = parse_url( $css, PHP_URL_QUERY ) ) ) {
+                    $cachefile = preg_replace( '/(\.css)?$/', '.' . md5( $query ) . '.css', $cachefile, 1 );
+                }
                 if( ! file_exists( $cachefile ) ) {
                     $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
                     $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
@@ -992,7 +998,11 @@
                     continue 2;
                 }
             }
-            $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', $js );
+            // come per i CSS, la query diventa un hash nel nome del file
+            $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', preg_replace( '/[?#].*$/', '', $js ) );
+            if( ! empty( $query = parse_url( $js, PHP_URL_QUERY ) ) ) {
+                $cachefile = preg_replace( '/(\.js)?$/', '.' . md5( $query ) . '.js', $cachefile, 1 );
+            }
             if( ! file_exists( $cachefile ) ) {
                 $content = @file_get_contents( $js );
                 // Fix 2026-05-18: scrivi in cache solo se il fetch ha portato contenuto reale.

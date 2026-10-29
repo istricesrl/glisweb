@@ -41,6 +41,22 @@
 
         }
 
+        // nessuna copia porta la query nel nome, ne' nel link emesso: il browser chiederebbe il percorso senza query
+        // e prenderebbe un 404 ( fonts.googleapis.com/css2?family=..., gimbe, 29/10/2026 )
+        public function nessunaCopiaConLaQuery( FrontendTester $I ) {
+
+            $this->scarica( '/', $raw );
+            $this->scarica( '/', $raw );
+
+            preg_match_all( '/(?:href|src)="(\/var\/cache\/(?:css|js)\/[^"]+)"/', $raw, $copie );
+
+            foreach( $copie[1] as $copia ) {
+                $I->assertStringNotContainsString( '?', $copia, 'il link ' . $copia . ' porta la query' );
+                $I->assertEquals( 200, $this->scarica( $copia, $contenuto ), 'la copia ' . $copia . ' non risponde' );
+            }
+
+        }
+
         // i font WOFF e WOFF2 copiati sono lunghi quanto dice la loro intestazione
         public function fontIntegri( FrontendTester $I ) {
 

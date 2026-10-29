@@ -489,7 +489,9 @@ quando `stackpath.bootstrapcdn.com` non rispondeva i siti su `_arianna` perdevan
 - Lo URL cachato viene spostato in `page.css.cached` (multilivello per media; gli elenchi piatti vanno sotto
   `screen`) o `page.js.cached` (flat) e rimosso da `external`/`preload`: un CSS in preload diventa un foglio
   normale, non più asincrono. Un download fallito non scrive niente e si riprova alla richiesta dopo; i
-  `url(...)` con query o frammento (`font.woff2?v=4.7.0`) si copiano senza, byte per byte. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
+  `url(...)` con query o frammento (`font.woff2?v=4.7.0`) si copiano senza, byte per byte. La risorsa
+  principale con query ( `fonts.googleapis.com/css2?family=…` ) si salva come `css2.<md5 della query>.css`:
+  fino al 29/10/2026 il `?` restava nel nome e nel link, e il browser prendeva un 404. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
   `<link>` / `<script defer>` puntando alla copia locale (`{{ site.root }}{{ ... }}`).
 - Le URL contenenti marker Twig (`{{`, `{%`, `{#`) non vengono cachate (per i JS sono pre-renderizzate
   runtime via `include(template_from_string(...))`, p.es. recaptcha con site key dinamica) e restano in
