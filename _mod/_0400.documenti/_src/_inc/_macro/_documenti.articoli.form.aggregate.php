@@ -57,10 +57,13 @@
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
  /*   if( !empty( $ct['view']['data'] ) ){
+		// le date AAAA-MM-GG le ha gia' convertite in GG/MM/AAAA _default.view.php ( dal 2026-09-22 ), e
+		// ripassarle da strtotime() leggeva GG/MM come MM/GG ( 01/01/1970 o giorno e mese scambiati ): si
+		// riconverte solo quello che e' ancora AAAA-MM-GG, come un datetime che il default lascia com'e'
 		foreach ( $ct['view']['data'] as &$row ){
-            if(!empty($row['data_programmazione'])){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
+            if(!empty($row['data_programmazione'])){$row['data_programmazione'] = ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $row['data_programmazione'] ) ? date('d/m/Y', strtotime($row['data_programmazione'])) : $row['data_programmazione'] );}
 
-            if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
+            if(!empty($row['data_attivita'])){$row['data_attivita'] = ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $row['data_attivita'] ) ? date('d/m/Y', strtotime($row['data_attivita'])) : $row['data_attivita'] );}
             $row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);
             $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
 		}
