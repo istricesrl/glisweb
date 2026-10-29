@@ -20,7 +20,7 @@
 	);
 
     $ct['page']['contents']['metro']['azioni'][] = array(
-		'ws' => '/task/images.resize?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+		'ws' => '/task/IM000.immagini/images.resize?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
 		'icon' => NULL,
 		'fa' => 'fa-image',
 		'title' => 'scalatura immagine',

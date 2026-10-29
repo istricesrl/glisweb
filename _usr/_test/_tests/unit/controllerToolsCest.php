@@ -26,4 +26,15 @@ class controllerToolsCest
         $I->see('sottoform orfane: 0');
     }
 
+    // controller() -> il controller di immagini mette NON_SCALABILE a un SVG e lo toglie quando il percorso diventa un JPEG
+    public function immagineNonScalabile(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_controller.tools/_controller.02.php');
+        $I->dontSee('segreto di importazione assente');
+        $I->see('inserimento: 200');
+        $I->see("token col percorso SVG: 'NON_SCALABILE'");
+        $I->see('aggiornamento: 200');
+        $I->see('token col percorso JPEG: NULL');
+    }
+
 }

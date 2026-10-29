@@ -450,12 +450,15 @@
         /**
          * conta le righe di una tabella che soddisfano la condizione
          *
+         * Il confronto è null-safe ( `<=>` ): un valore NULL nelle condizioni cerca le righe col campo NULL, che con `=`
+         * non si trovavano mai ( 2026-10-30 ).
+         *
          */
         protected function contaRighe( $tabella, $condizioni ) {
 
             $where = array();
             foreach( array_keys( $condizioni ) as $campo ) {
-                $where[] = $campo . ' = ?';
+                $where[] = $campo . ' <=> ?';
             }
 
             return (int) $this->grabFromDatabase(

@@ -8,8 +8,8 @@
      *
      * introduzione
      * ============
-     * Il framework usa questa libreria soprattutto nel task _src/_api/_task/_images.resize.php ( e nel suo gemello del modulo
-     * immagini ), che per ogni immagine caricata genera le versioni scalate e tagliate nei formati dichiarati in
+     * Il framework usa questa libreria soprattutto nel task di scalamento del modulo immagini
+     * ( _mod/_IM000.immagini/_src/_api/_task/_images.resize.php ), che per ogni immagine caricata genera le versioni scalate e tagliate nei formati dichiarati in
      * $cf['image']['formats'], più la versione WebP di ciascuna; la usa inoltre la macro _immagini.form.php del modulo archivio
      * per mostrare le dimensioni dell'immagine.
      *
@@ -32,6 +32,8 @@
      * ---------------------------------|---------------------------------------------------------------
      * imageSize()                      | legge le dimensioni e l'orientamento di un'immagine
      * imageOpen()                      | apre un'immagine in memoria
+     * imageScalabile()                 | dice se il task di scalamento sa lavorare un file
+     * imageCondizioneCoda()            | la condizione SQL delle righe di `immagini` da scalare
      *
      * funzioni di elaborazione
      * ------------------------
@@ -73,6 +75,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-10-30       | Fabio Mosti          | imageScalabile() e imageCondizioneCoda() per il task di scalamento e il suo report
      *
      * licenza
      * =======
@@ -197,6 +200,49 @@
     }
 
     /**
+     * dice se il task di scalamento sa lavorare un file
+     *
+     * Il task di scalamento ( _mod/_IM000.immagini/_src/_api/_task/_images.resize.php ) produce i formati con
+     * imageResize() e le versioni WebP con imageConvert(), che aprono solo JPEG, PNG e WebP: un SVG, un PDF o qualsiasi
+     * altro file collegato alla tabella `immagini` non si scala, e prima del 2026-10-30 il task ci girava sopra a vuoto a
+     * ogni giro. La funzione guarda l'estensione del percorso, perché la usa anche il controller di `immagini` quando il
+     * file può non essere ancora sul disco; il task controlla poi il contenuto con imageSize().
+     *
+     * @param       string      $f      il percorso del file
+     *
+     * @return      bool                true se il file è un JPEG, un PNG o un WebP
+     *
+     */
+    function imageScalabile( $f ) {
+
+        return in_array( strtolower( getFileExtension( $f ) ), array( 'jpg', 'jpeg', 'png', 'webp' ) );
+
+    }
+
+    /**
+     * la condizione SQL delle righe di `immagini` da scalare
+     *
+     * Una riga è in coda se non è mai stata scalata o se è stata aggiornata dopo l'ultimo scalamento, e se nessuno la
+     * tiene marcata: né un giro del task in corso ( il suo token ), né i token di stato `NON_SCALABILE` e
+     * `TROPPI_TENTATIVI`. La usano il task di scalamento, per scegliere la riga, e il report
+     * _src/_api/_status/_images.resize.status.php, che così mostra esattamente la coda del task; prima del 2026-10-30 il
+     * report leggeva una vista, `__report_immagini_da_scalare__`, che non esiste più.
+     *
+     * @param       string      $alias      il nome o l'alias della tabella `immagini` nella query
+     *
+     * @return      string                  la condizione SQL, senza parametri posizionali
+     *
+     */
+    function imageCondizioneCoda( $alias = 'immagini' ) {
+
+        return '( ' . $alias . '.timestamp_scalamento IS NULL '.
+            'OR ' . $alias . '.timestamp_scalamento < ' . $alias . '.timestamp_aggiornamento '.
+            'OR ' . $alias . '.timestamp_aggiornamento IS NULL ) '.
+            'AND ' . $alias . '.token IS NULL';
+
+    }
+
+    /**
      * FUNZIONI DI ELABORAZIONE
      */
 
@@ -207,7 +253,7 @@
      * lato minore: un'immagine orizzontale ( o quadrata ) viene tagliata in larghezza, una verticale in altezza. Il parametro $b
      * dice quale parte tenere: START tiene l'inizio ( sinistra o alto ), MIDDLE il centro, qualsiasi altro valore la fine. Il
      * risultato viene scritto in $fd con imageWrite(), nel formato indicato dall'estensione di $fd; per i PNG viene conservata
-     * la trasparenza. Il task _src/_api/_task/_images.resize.php la usa dopo imageResize() per ottenere i formati tagliati.
+     * la trasparenza. Il task di scalamento del modulo immagini la usa dopo imageResize() per ottenere i formati tagliati.
      *
      * Il caso in cui $d è maggiore del lato da tagliare non è gestito: l'origine del taglio diventa negativa e il risultato
      * dipende da imagecrop().

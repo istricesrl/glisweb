@@ -3219,7 +3219,9 @@ CREATE TABLE IF NOT EXISTS `immagini` (                         --
   `id_video` bigint(20) DEFAULT NULL,                             -- chiave esterna per il video descritto
   `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano descritto
   `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo dell'immagine
-  `token` char(128) DEFAULT NULL,                                 -- token per il lock dell'immagine durante lo scalamento
+  `token` char(128) DEFAULT NULL,                                 -- token di lock del task di scalamento, o stato NON_SCALABILE / TROPPI_TENTATIVI
+  `tentativi` int(11) DEFAULT 0,                                  -- giri di scalamento abbandonati a metà
+  `timestamp_elaborazione` int(11) DEFAULT NULL,                  -- timestamp della marcatura con il token
   `path` char(255) DEFAULT NULL,                                  -- percorso dell'immagine
   `path_alternativo` char(255) DEFAULT NULL,                      -- percorso alternativo dell'immagine
   `orientamento` enum('L','P','S') DEFAULT NULL,                  -- orientamento: L=landscape, P=portrait, S=square

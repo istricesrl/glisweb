@@ -4157,7 +4157,7 @@ INSERT IGNORE INTO `taglie` (`id`, `id_tipologia_prodotti`, `nome`, `sesso`, `ta
 -- task
 -- ripristinati il 2026-09-30 dai file di base di prima del 02/03/2026
 INSERT IGNORE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_IM000.immagini/_src/_api/_task/_images.resize.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 

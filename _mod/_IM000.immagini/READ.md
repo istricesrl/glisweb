@@ -9,7 +9,13 @@
 ## i file del modulo
 
 ### /_mod/_IM000.immagini/_src/_api/_task/_images.resize.php
-Questo task seleziona un'immagine e la ridimensiona. Il framework supporta un meccanismo di scalatura automatica delle immagini
+Questo task seleziona un'immagine e la ridimensiona. Dal 30/10/2026 è l'unica copia del task, e la riga 1 della tabella
+`task` punta qui ( `_202610301000.immagini.scalamento.sql` ): la copia del core, `_src/_api/_task/_images.resize.php`,
+calcolava l'orientamento opposto uguale a quello dell'immagine e non produceva i tagli. All'inizio di ogni giro sblocca le
+righe marcate da più di `$cf['image']['minuti_sblocco']` minuti contando il tentativo, ferma col token `TROPPI_TENTATIVI`
+quelle arrivate a `$cf['image']['tentativi_massimi']`, e marca `NON_SCALABILE` i file che non sono JPEG, PNG o WebP; il
+dettaglio è nel docblock del file, la coda si guarda con `/status/images.resize.status`, il test è
+`_usr/_test/_tests/backend/imagesResizeCest.php` del modulo. Il framework supporta un meccanismo di scalatura automatica delle immagini
 piuttosto sofisticato, oltre a un sistema per la conversione delle immagini in formato webp. Per maggiori dettagli sulla gestione
 delle immagini da parte del framework si veda, oltre alla documentazione di questo file, anche quella dei file
 /_src/_config/_360.image.php e /_src/_config/_365.image.php.
