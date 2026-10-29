@@ -6980,21 +6980,37 @@ CREATE TABLE IF NOT EXISTS `sms_sent` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i software
+-- funzione: contiene i software, con la loro struttura di moduli
 --
-CREATE TABLE IF NOT EXISTS `software` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `json` text DEFAULT NULL, 
-  `nome` char(128) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- un software è un prodotto che si distribuisce e si licenzia, ed è la testa della catena software -> licenze_software
+-- -> licenze -> chiavi: la licenza dice a quali software si applica, le chiavi ne validano l'uso. È un oggetto, non un
+-- classificatore: lo identifica il codice, unico, con cui lo riconoscono i sistemi esterni, e il nome è libero.
+-- L'albero è la struttura del software: sotto il software base stanno i suoi moduli come figli ( e sotto un modulo, se
+-- serve, le sue parti ), così una licenza può coprire il software intero o solo alcuni moduli. I legami fra software
+-- distinti ( il plugin di un altro software, l'aggiornamento che ne sostituisce un altro ) non stanno nell'albero ma in
+-- relazioni_software. Un software si può vendere: id_prodotto e id_articolo dicono con cosa si compra, come per
+-- progetti, tipologie_contratti e risorse. Nel framework latest nessuna parte la legge; in oldstable la usa il modulo
+-- V900.software.
+--
+-- NOTA json descrive le regole di attivazione del software, cioè cosa il software sa attivare e che una licenza può
+-- concedere; è un dato del software, non della licenza, e lo leggerà il modulo software di latest
+-- NOTA id_prodotto vuol dire che il software lo dà qualunque articolo del prodotto, id_articolo che lo dà solo
+-- quell'articolo
+--
+CREATE TABLE IF NOT EXISTS `software` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per il software di cui questo è un modulo
+  `codice` char(32) DEFAULT NULL,                                 -- codice del software, unico
+  `nome` char(255) DEFAULT NULL,                                  -- nome del software
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto i cui articoli danno il software
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo con cui si compra il software
+  `json` text DEFAULT NULL,                                       -- regole di attivazione del software, in JSON
+  `note` text DEFAULT NULL,                                       -- note sul software
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000042000
 

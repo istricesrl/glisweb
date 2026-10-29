@@ -4952,7 +4952,6 @@ DROP FUNCTION IF EXISTS `software_path`;
 -- | 070000041401
 
 -- software_path
--- verifica: 2021-11-16 10:39 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
 	FUNCTION `software_path`( `p1` BIGINT( 20 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
@@ -5003,7 +5002,6 @@ DROP FUNCTION IF EXISTS `software_path_check`;
 -- | 070000041411
 
 -- software_path_check
--- verifica: 2021-11-16 10:39 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
 	FUNCTION `software_path_check`( `p1` BIGINT( 20 ), `p2` BIGINT( 20 ) ) RETURNS TINYINT( 1 )
@@ -5048,7 +5046,6 @@ DROP FUNCTION IF EXISTS `software_path_find_ancestor`;
 -- | 070000041421
 
 -- software_path_find_ancestor
--- verifica: 2021-11-16 10:39 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
 	FUNCTION `software_path_find_ancestor`( `p1` BIGINT( 20 ) ) RETURNS BIGINT( 20 )

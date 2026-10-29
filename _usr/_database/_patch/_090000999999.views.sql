@@ -7125,25 +7125,30 @@ CREATE OR REPLACE VIEW `sms_sent_view` AS
 -- | 090000041401
 
 -- software_view
--- tipologia: tabella gestita
--- verifica: 2021-11-16 10:39 Chiara GDL 
-CREATE OR REPLACE VIEW software_view AS
-    SELECT
-		software.id,
-		software.id_genitore,
-		software.id_articolo,
-		software.codice,
-		concat(prodotti.nome, ' - ',articoli.nome) AS articolo,
-		software.json,
-		software.nome,
-		software.note,
-		software.id_account_inserimento,
-		software.id_account_aggiornamento,
-	 	software_path( software.id ) AS __label__
-	FROM software
-		LEFT JOIN articoli ON software.id_articolo = articoli.id
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-;
+CREATE OR REPLACE VIEW software_view AS                                                  --
+  SELECT                                                                                 --
+    software.id,                                                                         --
+    software.id_genitore,                                                                --
+    software.codice,                                                                     --
+    software.nome,                                                                       --
+    software.id_prodotto,                                                                --
+    prodotti.nome AS prodotto,                                                           -- nome del prodotto
+    software.id_articolo,                                                                --
+    concat_ws( ' - ', p2.nome, articoli.nome ) AS articolo,                              -- prodotto e articolo
+    software.json,                                                                       --
+    software.note,                                                                       --
+    software.id_account_inserimento,                                                     --
+    software.id_account_aggiornamento,                                                   --
+    concat_ws(                                                                           --
+      ' ',                                                                               --
+      software.codice,                                                                   --
+      software_path( software.id )                                                       --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM software                                                                          --
+    LEFT JOIN prodotti ON prodotti.id = software.id_prodotto                             --
+    LEFT JOIN articoli ON articoli.id = software.id_articolo                             --
+    LEFT JOIN prodotti AS p2 ON p2.id = articoli.id_prodotto                             --
+;                                                                                        --
 
 -- | 090000042000
 

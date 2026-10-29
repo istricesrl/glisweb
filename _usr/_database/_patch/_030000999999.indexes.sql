@@ -4225,18 +4225,15 @@ ALTER TABLE `sms_sent` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000041400
 
 -- software
--- tipologia: tabella gestita
--- verifica: 2021-11-16 10:39 Chiara GDL
 ALTER TABLE `software`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `json` (`json` (255)), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json` (255));
+	ADD KEY `indice` (`id`,`id_genitore`,`codice`,`nome`,`id_prodotto`,`id_articolo`);
 
 -- | 030000041401
 
