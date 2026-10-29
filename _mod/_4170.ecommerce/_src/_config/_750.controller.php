@@ -136,6 +136,53 @@
         // listino, sconti e coupon di riga solo dagli operatori ( vedi filtraRichiestaCarrello() )
         filtraRichiestaCarrello( $_REQUEST['__carrello__'] );
 
+        // STEP 1.0 - scarto gli articoli della richiesta il cui rinnovo non esiste più
+        // NOTA lo STEP 0.2 toglie dalla sessione le righe del rinnovo cancellato, ma gira prima di questo: un link di
+        // cassa vecchio ( dalla cronologia, da una scheda rimasta aperta ) che ripresenta quell'id_rinnovo lo
+        // rimetterebbe in sessione, e lo STEP 5 fallirebbe con un 1452 lasciando a carrello una quota che non esiste
+        // più; l'articolo si toglie dalla richiesta e il template lo dice con lo stesso avviso dello STEP 0.2 ( polmasi,
+        // 28/10/2026 )
+        $rinnoviRichiesti = array();
+        if( isset( $_REQUEST['__carrello__']['__articolo__'] ) && is_array( $_REQUEST['__carrello__']['__articolo__'] ) && ! empty( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) {
+            $rinnoviRichiesti[] = array( 'chiave' => NULL, 'articolo' => $_REQUEST['__carrello__']['__articolo__'] );
+        }
+        if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+            foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => $item ) {
+                if( is_array( $item ) && ! empty( $item['id_rinnovo'] ) ) {
+                    $rinnoviRichiesti[] = array( 'chiave' => $key, 'articolo' => $item );
+                }
+            }
+        }
+        foreach( $rinnoviRichiesti as $richiesto ) {
+
+            // solo i rinnovi che non esistono più
+            if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM rinnovi WHERE id = ?', array( array( 's' => $richiesto['articolo']['id_rinnovo'] ) ) ) ) {
+                continue;
+            }
+
+            // tolgo l'articolo dalla richiesta
+            if( $richiesto['chiave'] === NULL ) {
+                unset( $_REQUEST['__carrello__']['__articolo__'] );
+            } else {
+                unset( $_REQUEST['__carrello__']['__articoli__'][ $richiesto['chiave'] ] );
+            }
+
+            // destinatario della quota, per l'avviso
+            $destinatario = ( empty( $richiesto['articolo']['destinatario_id_anagrafica'] ) ) ? NULL : mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT concat_ws( " ", nome, cognome, denominazione ) FROM anagrafica WHERE id = ?',
+                array( array( 's' => $richiesto['articolo']['destinatario_id_anagrafica'] ) )
+            );
+
+            // avviso per il template
+            $ct['etc']['rinnovi_cancellati'][] = array(
+                'id_rinnovo' => $richiesto['articolo']['id_rinnovo'],
+                'descrizione' => ( empty( $destinatario ) ) ? 'quota' : $destinatario
+            );
+            logWrite( 'rinnovo ' . $richiesto['articolo']['id_rinnovo'] . ' inesistente, scartato dalla richiesta per il carrello #' . ( isset( $_SESSION['carrello']['id'] ) ? $_SESSION['carrello']['id'] : 'nuovo' ), 'cart', LOG_WARNING );
+
+        }
+
         // debug
         // die( print_r( $_REQUEST['__carrello__'], true ) );
 

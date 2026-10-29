@@ -7,7 +7,8 @@
      * se nel frattempo è stato cancellato il rinnovo di una riga ( la FK mette a NULL id_rinnovo nel database, la
      * sessione no ) o il carrello stesso, la riscrittura falliva con un 1452 e la riga restava a carrello a far pagare
      * una quota che non esisteva più ( polmasi, 27/10/2026 ); gli STEP 0.1 e 0.2 tolgono di mezzo il carrello e le
-     * righe orfane, salvo le righe con denaro incassato o documento emesso, che restano senza il rinnovo
+     * righe orfane, salvo le righe con denaro incassato o documento emesso, che restano senza il rinnovo; lo STEP 1.0
+     * scarta dalla richiesta l'articolo di un rinnovo cancellato, che un link di cassa vecchio ripresenterebbe
      *
      * le pagine si aprono da roots; contratti e anagrafiche si riconoscono dal prefisso TEST-E2E- nel nome
      *
@@ -89,6 +90,34 @@
 
         }
 
+        // dimensione dei log degli errori MySQL, per leggere dopo solo quello che è stato aggiunto
+        protected function logErrori() {
+
+            $dimensioni = array();
+            foreach( glob( DIR_VAR . 'log/mysql.err.*.log' ) as $f ) {
+                clearstatcache( true, $f );
+                $dimensioni[ $f ] = filesize( $f );
+            }
+
+            return $dimensioni;
+
+        }
+
+        // errori MySQL scritti dopo la lettura di logErrori()
+        protected function erroriDopo( $prima ) {
+
+            $errori = '';
+            foreach( $this->logErrori() as $f => $dimensione ) {
+                $da = ( isset( $prima[ $f ] ) ) ? $prima[ $f ] : 0;
+                if( $dimensione > $da ) {
+                    $errori .= file_get_contents( $f, false, NULL, $da );
+                }
+            }
+
+            return $errori;
+
+        }
+
         // righe di carrello del rinnovo
         protected function righe( BackendTester $I, $rinnovo ) {
 
@@ -117,6 +146,35 @@
 
             $I->assertEquals( 0, (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id = ?', array( $riga ) ), 'riga del rinnovo cancellato' );
             $I->assertEquals( 1, $this->righe( $I, $rinnovo2 ), 'righe di carrello dell\'altra quota' );
+
+        }
+
+        // un link di cassa vecchio che ripresenta un rinnovo cancellato non rimette la quota a carrello ( STEP 1.0 )
+        public function rinnovoCancellatoRipresentatoScartato( BackendTester $I ) {
+
+            global $cf;
+
+            list( $anagrafica, $rinnovo, $articolo ) = $this->rinnovo( $I );
+            list( $anagrafica2, $rinnovo2, $articolo2 ) = $this->rinnovo( $I );
+
+            $I->amLoggedInAs( 'roots' );
+            $this->carrello( $I, $anagrafica2, $rinnovo2, $articolo2 );
+
+            // il rinnovo viene cancellato prima che la sua quota arrivi a carrello
+            mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM rinnovi WHERE id = ?', array( array( 's' => $rinnovo ) ) );
+
+            // il link vecchio lo ripresenta: senza lo STEP 1.0 l'articolo tornava in sessione e lo STEP 5 falliva con un 1452
+            $prima = $this->logErrori();
+            $this->carrello( $I, $anagrafica, $rinnovo, $articolo );
+            $I->assertStringNotContainsString( '(1452)', $this->erroriDopo( $prima ), 'riscrittura delle righe di carrello' );
+
+            $I->assertEquals( 0, (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE destinatario_id_anagrafica = ?', array( $anagrafica ) ), 'righe di carrello della quota cancellata' );
+            $I->assertEquals( 1, $this->righe( $I, $rinnovo2 ), 'righe di carrello dell\'altra quota' );
+
+            // e la richiesta dopo non la riporta
+            $this->carrello( $I, $anagrafica2, $rinnovo2, $articolo2 );
+            $I->assertEquals( 0, (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE destinatario_id_anagrafica = ?', array( $anagrafica ) ), 'righe della quota cancellata alla richiesta dopo' );
+            $I->assertEquals( 1, $this->righe( $I, $rinnovo2 ), 'righe dell\'altra quota alla richiesta dopo' );
 
         }
 
