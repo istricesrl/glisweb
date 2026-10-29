@@ -7051,14 +7051,23 @@ CREATE TABLE IF NOT EXISTS `stati` (                          --
 -- tipologia: tabella standard
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione stati e lingue
+-- funzione: associa a ogni stato le lingue in cui ci si rivolge a chi ci sta
 --
-CREATE TABLE IF NOT EXISTS `stati_lingue` (
-  `id` bigint(20) NOT NULL,
-  `id_stato` bigint(20) DEFAULT NULL,
-  `id_lingua` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella associa molti a molti gli stati alle lingue: dice in quale lingua si scrive a chi sta in uno stato
+-- ( p.es. la lingua delle comunicazioni a un cliente estero, ricavata dallo stato del suo indirizzo ); uno stato puo'
+-- avere piu' lingue, e una lingua puo' servire piu' stati
+--
+-- e' una tabella standard ad aggiornamento centralizzato: i file di base non la popolano, perche' gli id degli stati
+-- sono del dataserver; le righe le carica l'importazione della geografia dopo gli stati, e i deploy non le modificano
+--
+-- NOTA la lingua predefinita di uno stato e' la prima nell'ordine ( ORDER BY ordine IS NULL, ordine, id )
+--
+CREATE TABLE IF NOT EXISTS `stati_lingue` (                   --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine delle lingue dello stato, la prima e' la predefinita
+  `id_stato` bigint(20) DEFAULT NULL,                         -- chiave esterna per lo stato
+  `id_lingua` bigint(20) DEFAULT NULL                         -- chiave esterna per la lingua
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000042500
 

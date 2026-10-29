@@ -7178,24 +7178,24 @@ CREATE OR REPLACE VIEW stati_view AS                          --
 -- | 090000042201
 
 -- stati_lingue_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:33 Fabio Mosti
 CREATE OR REPLACE VIEW stati_lingue_view AS
     SELECT
 		stati_lingue.id,
+		stati_lingue.ordine,
 		stati_lingue.id_stato,
 		stati.nome AS stato,
 		stati_lingue.id_lingua,
 		lingue.nome AS lingua,
-		stati_lingue.ordine,
 		concat_ws(
 			' ',
 			stati.nome,
 			lingue.nome
 		) AS __label__
     FROM stati_lingue
-    	LEFT JOIN stati ON stati.id = stati_lingue.id_stato
-    	LEFT JOIN lingue ON lingue.id = stati_lingue.id_lingua
+    	INNER JOIN stati ON stati.id = stati_lingue.id_stato
+    	INNER JOIN lingue ON lingue.id = stati_lingue.id_lingua
 ;
 
 -- | 090000042501

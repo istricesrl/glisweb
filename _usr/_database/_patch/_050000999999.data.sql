@@ -4087,15 +4087,6 @@ INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`
 (3256, 3255, '99.00.0', 'Attività di organizzazioni e organismi extraterritoriali', NULL),
 (3257, 3256, '99.00.00', 'Attività di organizzazioni e organismi extraterritoriali', NULL);
 
--- | 050000042200
-
--- stati_lingue
--- tipologia: tabella standard
--- verifica: 2021-10-12 15:42 Fabio Mosti
-INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`, `ordine`) VALUES
-(1,	1,	1,	1),
-(2,	12,	4,	1);
-
 -- | 050000042500
 
 -- step

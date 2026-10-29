@@ -2233,9 +2233,10 @@ ALTER TABLE `stati`
 -- | 060000042200
 
 -- stati_lingue
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:30 Fabio Mosti
 ALTER TABLE `stati_lingue`
+    ADD CONSTRAINT `stati_lingue_ibfk_01_nofollow`  FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `stati_lingue_ibfk_02_nofollow`  FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- | 060000042500
