@@ -22,6 +22,51 @@ class restToolsCest
         $I->seeInSource('<login><user>mario</user><Password type="x">***</Password></login>');
     }
 
+    // restMockUrl() -> devia solo gli host elencati, con percorso e query, e lascia stare il resto
+    public function restMockUrl(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_rest.tools/_restMockUrl.01.php');
+        $I->see('http://127.0.0.1:8790/api.esempio.test/v1/ordini?id=7');
+        $I->see('http://127.0.0.1:8790/api.esempio.test/');
+        $I->see('https://altro.esempio.test/v1/ordini');
+        $I->see('non e un url');
+    }
+
+    // restCall() durante i test -> la chiamata a esempio.test arriva al finto REST, che risponde come gli si e' detto
+    // e registra la richiesta con le credenziali mascherate
+    public function restCallFintoRest(UnitTester $I)
+    {
+        $I->assertTrue( \Helper\RestMock::attivo(), 'il finto REST lo avvia _src/_sh/_codeception.run.sh' );
+        \Helper\RestMock::pulisci();
+        \Helper\RestMock::risposta( 'POST', '#^/v1/ordini$#', array( 'id' => 42 ), 201, 'esempio.test' );
+        $I->amOnPage('/_usr/_examples/_lib/_rest.tools/_restCall.mock.01.php');
+        $I->see('status: 201');
+        $I->see('risposta: {"id":42}');
+        $richieste = \Helper\RestMock::richieste( 'POST', '#^/v1/ordini$#', 'esempio.test' );
+        $I->assertCount( 1, $richieste );
+        $I->assertEquals( 7, $richieste[0]['corpo']['numero'] );
+        $I->assertEquals( '***', $richieste[0]['corpo']['password'] );
+        $I->assertEquals( 'apikey=***', $richieste[0]['query'] );
+    }
+
+    // restCall() senza una risposta preparata -> 404, cosi' un test che se l'e' dimenticata non passa per caso
+    public function restCallFintoRestSenzaRisposta(UnitTester $I)
+    {
+        \Helper\RestMock::pulisci();
+        $I->amOnPage('/_usr/_examples/_lib/_rest.tools/_restCall.mock.01.php');
+        $I->see('status: 404');
+        $I->see('nessuna risposta preparata per POST esempio.test/v1/ordini');
+        \Helper\RestMock::pulisci();
+    }
+
+    // il finto REST aperto da Apache non fa niente
+    public function fintoRestNonRispondeDaApache(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_test/_rest.mock.php');
+        $I->see('questo file lo avvia _src/_sh/_codeception.run.sh');
+        $I->dontSee('nessuna risposta preparata');
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {
