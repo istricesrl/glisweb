@@ -3971,15 +3971,17 @@ ALTER TABLE `ruoli_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000035000
 
 -- ruoli_prodotti
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_prodotti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000035001
 
 -- ruoli_prodotti
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035100

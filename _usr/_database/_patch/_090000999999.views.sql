@@ -6811,13 +6811,16 @@ CREATE OR REPLACE VIEW ruoli_pagamenti_view AS
 -- | 090000035000
 
 -- ruoli_prodotti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 	SELECT
 		ruoli_prodotti.id,
 		ruoli_prodotti.id_genitore,
 		ruoli_prodotti.nome,
+		ruoli_prodotti.html_entity,
+		ruoli_prodotti.font_awesome,
 		ruoli_prodotti.se_relazioni,
-	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
+		ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
 	FROM ruoli_prodotti
 ;
 

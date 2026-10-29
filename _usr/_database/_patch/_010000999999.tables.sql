@@ -6586,19 +6586,20 @@ CREATE TABLE IF NOT EXISTS `ruoli_pagamenti` (
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli dei prodotti
+-- funzione: contiene i ruoli con cui un prodotto o un articolo e' collegato a un prodotto
 --
--- questa tabella contiene i ruoli dei prodotti, con le informazioni relative al nome, alle entità HTML
--- e Font Awesome associate e ai vari tipi di prodotto
--- 
-CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_relazioni` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene i ruoli che il collegato svolge rispetto al prodotto ( prodotto, principale, suggerito,
+-- accessorio, consumabile, bundle, gli stessi di ruoli_articoli ); la legge relazioni_prodotti.id_ruolo, e i ruoli
+-- proponibili sono quelli con se_relazioni ( decisione del 26/10/2026 )
+--
+CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (                 --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per il ruolo genitore
+  `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
+  `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
+  `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_relazioni` tinyint(1) DEFAULT NULL                        -- flag per i ruoli proponibili in relazioni_prodotti
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000035100
 
