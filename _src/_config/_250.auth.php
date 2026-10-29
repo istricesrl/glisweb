@@ -417,6 +417,18 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'sconti_categorie_prodotti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_marchi' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_prodotti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
         'tipologie_sconti' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')

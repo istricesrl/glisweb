@@ -62,7 +62,9 @@ GESTITE = frozenset( (
     'pubblicazioni', 'redirect', 'relazioni_anagrafica', 'relazioni_documenti',
     'relazioni_documenti_articoli', 'relazioni_pagamenti', 'relazioni_progetti',
     'relazioni_software', 'rinnovi', 'rinnovi_documenti_articoli', 'risorse',
-    'risorse_account', 'risorse_anagrafica', 'risorse_categorie', 'sms_out', 'sms_sent',
+    'risorse_account', 'risorse_anagrafica', 'risorse_categorie', 'sconti',
+    'sconti_articoli', 'sconti_categorie_prodotti', 'sconti_listini', 'sconti_marchi',
+    'sconti_prodotti', 'sms_out', 'sms_sent',
     'software', 'telefoni', 'template', 'testate', 'todo', 'todo_matricole', 'url',
     'video',
 ) )

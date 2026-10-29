@@ -6916,50 +6916,139 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 -- | 090000036001
 
 -- sconti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_view` AS
 	SELECT
-	sconti.id,
-	sconti.nome,
-	sconti.timestamp_inizio,
-	from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
-	sconti.timestamp_fine,
-	from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
-	concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
+		sconti.id,
+		sconti.id_tipologia,
+		tipologie_sconti.nome AS tipologia,
+		sconti.nome,
+		sconti.id_valuta,
+		valute.iso4217 AS valuta,
+		sconti.sconto_percentuale,
+		sconti.sconto_fisso,
+		sconti.qta_min,
+		sconti.note,
+		sconti.timestamp_inizio,
+		from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+		sconti.timestamp_fine,
+		from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+		sconti.id_account_inserimento,
+		sconti.timestamp_inserimento,
+		sconti.id_account_aggiornamento,
+		sconti.timestamp_aggiornamento,
+		concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
 	FROM sconti
+		LEFT JOIN tipologie_sconti ON tipologie_sconti.id = sconti.id_tipologia
+		LEFT JOIN valute ON valute.id = sconti.id_valuta
 ;
 
 -- | 090000036201
 
 -- sconti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_articoli_view` AS
 	SELECT
 		sconti_articoli.id,
+		sconti_articoli.ordine,
 		sconti_articoli.id_sconto,
 		sconti.nome AS sconto,
 		sconti_articoli.id_articolo,
 		articoli.id_prodotto,
 		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
-		concat_ws( ' ', sconti.nome, coalesce( articoli.codice, articoli.id ) ) AS __label__
+		sconti_articoli.id_account_inserimento,
+		sconti_articoli.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, coalesce( articoli.codice, articoli.id ) ) AS __label__
 	FROM sconti_articoli
 		LEFT JOIN sconti ON sconti.id = sconti_articoli.id_sconto
 		LEFT JOIN articoli ON articoli.id = sconti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
+-- | 090000036301
+
+-- sconti_categorie_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_categorie_prodotti_view` AS
+	SELECT
+		sconti_categorie_prodotti.id,
+		sconti_categorie_prodotti.ordine,
+		sconti_categorie_prodotti.id_sconto,
+		sconti.nome AS sconto,
+		sconti_categorie_prodotti.id_categoria,
+		categorie_prodotti.nome AS categoria,
+		sconti_categorie_prodotti.id_account_inserimento,
+		sconti_categorie_prodotti.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, categorie_prodotti.nome ) AS __label__
+	FROM sconti_categorie_prodotti
+		LEFT JOIN sconti ON sconti.id = sconti_categorie_prodotti.id_sconto
+		LEFT JOIN categorie_prodotti ON categorie_prodotti.id = sconti_categorie_prodotti.id_categoria
+;
+
 -- | 090000036401
 
 -- sconti_listini_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_listini_view` AS
 	SELECT
 		sconti_listini.id,
+		sconti_listini.ordine,
 		sconti_listini.id_sconto,
 		sconti.nome AS sconto,
 		sconti_listini.id_listino,
-		listini.nome AS listino,	
-		concat_ws( ' ', sconti.nome, listini.nome ) AS __label__
+		listini.nome AS listino,
+		sconti_listini.id_account_inserimento,
+		sconti_listini.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, listini.nome ) AS __label__
 	FROM sconti_listini
 		LEFT JOIN sconti ON sconti.id = sconti_listini.id_sconto
 		LEFT JOIN listini ON listini.id = sconti_listini.id_listino
+;
+
+-- | 090000036501
+
+-- sconti_marchi_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_marchi_view` AS
+	SELECT
+		sconti_marchi.id,
+		sconti_marchi.ordine,
+		sconti_marchi.id_sconto,
+		sconti.nome AS sconto,
+		sconti_marchi.id_marchio,
+		marchi.nome AS marchio,
+		sconti_marchi.id_account_inserimento,
+		sconti_marchi.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, marchi.nome ) AS __label__
+	FROM sconti_marchi
+		LEFT JOIN sconti ON sconti.id = sconti_marchi.id_sconto
+		LEFT JOIN marchi ON marchi.id = sconti_marchi.id_marchio
+;
+
+-- | 090000036601
+
+-- sconti_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_prodotti_view` AS
+	SELECT
+		sconti_prodotti.id,
+		sconti_prodotti.ordine,
+		sconti_prodotti.id_sconto,
+		sconti.nome AS sconto,
+		sconti_prodotti.id_prodotto,
+		prodotti.nome AS prodotto,
+		sconti_prodotti.id_account_inserimento,
+		sconti_prodotti.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, prodotti.nome ) AS __label__
+	FROM sconti_prodotti
+		LEFT JOIN sconti ON sconti.id = sconti_prodotti.id_sconto
+		LEFT JOIN prodotti ON prodotti.id = sconti_prodotti.id_prodotto
 ;
 
 -- | 090000037000

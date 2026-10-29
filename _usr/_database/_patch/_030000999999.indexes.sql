@@ -4051,54 +4051,128 @@ ALTER TABLE `ruoli_video` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000036000
 
 -- sconti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 ALTER TABLE `sconti`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_valuta` (`id_valuta`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`sconto_percentuale`,`sconto_fisso`,`qta_min`,`id_valuta`,`timestamp_inizio`,`timestamp_fine`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`id_valuta`,`sconto_percentuale`,`sconto_fisso`,`qta_min`,`timestamp_inizio`,`timestamp_fine`);
 
 -- | 030000036001
 
 -- sconti
+-- tipologia: tabella gestita
 ALTER TABLE `sconti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000036200
 
 -- sconti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 ALTER TABLE `sconti_articoli`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_sconto`,`id_articolo`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_sconto` (`id_sconto`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_sconto`,`id_articolo`);
+	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_articolo`);
 
 -- | 030000036201
 
 -- sconti_articoli
+-- tipologia: tabella gestita
 ALTER TABLE `sconti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000036300
+
+-- sconti_categorie_prodotti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+ALTER TABLE `sconti_categorie_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_sconto`,`id_categoria`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_sconto` (`id_sconto`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_categoria`);
+
+-- | 030000036301
+
+-- sconti_categorie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `sconti_categorie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000036400
 
 -- sconti_listini
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 ALTER TABLE `sconti_listini`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_sconto`,`id_listino`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_sconto` (`id_sconto`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_sconto`,`id_listino`);
+	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_listino`);
 
 -- | 030000036401
 
 -- sconti_listini
+-- tipologia: tabella gestita
 ALTER TABLE `sconti_listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000036500
+
+-- sconti_marchi
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+ALTER TABLE `sconti_marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_sconto`,`id_marchio`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_sconto` (`id_sconto`),
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_marchio`);
+
+-- | 030000036501
+
+-- sconti_marchi
+-- tipologia: tabella gestita
+ALTER TABLE `sconti_marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000036600
+
+-- sconti_prodotti
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+ALTER TABLE `sconti_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_sconto`,`id_prodotto`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_sconto` (`id_sconto`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_prodotto`);
+
+-- | 030000036601
+
+-- sconti_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `sconti_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000037000
 

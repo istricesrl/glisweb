@@ -2486,8 +2486,7 @@ CREATE TABLE IF NOT EXISTS `coupon_listini` (
 --
 -- questa tabella elenca i marchi per i quali e' valido un coupon, cioe' limita il coupon ai prodotti di quei marchi;
 -- e' una delle tabelle di applicazione del coupon ( con coupon_articoli, coupon_prodotti e coupon_categorie_prodotti )
--- e, come tutte le tabelle coupon_*, va affiancata dalla sua gemella negli sconti ( sconti_marchi, che il canone non
--- ha ancora ). Nel framework latest nessuna parte la legge; in oldstable la legge calcolaCoupon() del modulo prodotti,
+-- e, come tutte le tabelle coupon_*, ha la sua gemella negli sconti ( sconti_marchi, dal 29/10/2026 ). Nel framework latest nessuna parte la legge; in oldstable la legge calcolaCoupon() del modulo prodotti,
 -- come ultimo controllo dopo articolo, prodotto e categoria.
 --
 CREATE TABLE IF NOT EXISTS `coupon_marchi` (
@@ -2511,8 +2510,8 @@ CREATE TABLE IF NOT EXISTS `coupon_marchi` (
 --
 -- questa tabella elenca i prodotti per i quali e' valido un coupon, cioe' limita il coupon agli articoli di quei
 -- prodotti; e' una delle tabelle di applicazione del coupon ( con coupon_articoli, coupon_categorie_prodotti e
--- coupon_marchi ) e, come tutte le tabelle coupon_*, va affiancata dalla sua gemella negli sconti ( sconti_prodotti,
--- che il canone non ha ancora ). Nel framework latest nessuna parte la legge; in oldstable la legge calcolaCoupon()
+-- coupon_marchi ) e, come tutte le tabelle coupon_*, ha la sua gemella negli sconti ( sconti_prodotti, dal
+-- 29/10/2026 ). Nel framework latest nessuna parte la legge; in oldstable la legge calcolaCoupon()
 -- del modulo prodotti, come secondo controllo dopo l'articolo.
 --
 CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
@@ -6717,25 +6716,32 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene gli sconti
+-- funzione: contiene gli sconti, cioe' le riduzioni di prezzo che si applicano da sole
 --
--- questa tabella contiene gli sconti, percentuali o fissi, con la quantita' minima e il periodo di validita'
+-- questa tabella contiene uno sconto per riga: uno sconto percentuale o fisso ( nella valuta indicata ), la quantita'
+-- minima da cui vale ( lo sconto quantita' ) e il periodo di validita'. A differenza del coupon, che il cliente usa
+-- attivamente digitandone il codice, lo sconto e' passivo: si applica da solo quando le condizioni sono soddisfatte.
+-- A quali articoli, categorie di prodotti, listini, marchi e prodotti si applica lo dicono le tabelle di relazione
+-- sconti_*, gemelle delle coupon_*. E' gestita dal modulo listini.
+--
+-- NOTA: nel framework latest nessuna parte la legge; in oldstable il modulo listini la compila, mentre la query dello
+-- sconto quantita' del modulo catalogo che la leggerebbe e' ancora commentata ( TODO implementare in futuro ).
 --
 CREATE TABLE IF NOT EXISTS `sconti` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `nome` varchar(255) DEFAULT NULL,
-  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
-  `sconto_fisso` decimal(5,2) DEFAULT NULL,
-  `qta_min` int(11) DEFAULT NULL,
-  `id_valuta` bigint(20) DEFAULT NULL,
-  `timestamp_inizio` int(11) DEFAULT NULL,
-  `timestamp_fine` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di sconto
+  `nome` char(255) DEFAULT NULL,                                -- nome dello sconto
+  `id_valuta` bigint(20) DEFAULT NULL,                          -- chiave esterna per la valuta dello sconto fisso
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,               -- sconto in percentuale
+  `sconto_fisso` decimal(15,2) DEFAULT NULL,                    -- sconto a importo fisso
+  `qta_min` int(11) DEFAULT NULL,                               -- quantita' minima da cui si applica lo sconto
+  `note` text DEFAULT NULL,                                     -- note sullo sconto
+  `timestamp_inizio` int(11) DEFAULT NULL,                      -- timestamp di inizio validita'
+  `timestamp_fine` int(11) DEFAULT NULL,                        -- timestamp di fine validita'
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000036200
@@ -6744,18 +6750,48 @@ CREATE TABLE IF NOT EXISTS `sconti` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: collega gli sconti agli articoli a cui si applicano
+-- funzione: dice a quali articoli si applica uno sconto
 --
--- questa tabella contiene l'associazione molti a molti fra sconti e articoli
+-- questa tabella elenca gli articoli a cui si applica uno sconto; e' una delle tabelle di applicazione dello sconto
+-- ( con sconti_categorie_prodotti, sconti_listini, sconti_marchi e sconti_prodotti ), gemella di coupon_articoli.
+-- Nel framework latest nessuna parte la legge; in oldstable la compila il modulo listini, e la query dello sconto
+-- quantita' del modulo catalogo che la leggerebbe e' ancora commentata.
 --
 CREATE TABLE IF NOT EXISTS `sconti_articoli` (
-  `id` bigint(20) NOT NULL,
-  `id_sconto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_sconto` bigint(20) DEFAULT NULL,                          -- chiave esterna per lo sconto
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036300
+
+-- sconti_categorie_prodotti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: dice a quali categorie di prodotti si applica uno sconto
+--
+-- questa tabella elenca le categorie di prodotti a cui si applica uno sconto; e' una delle tabelle di applicazione
+-- dello sconto ( con sconti_articoli, sconti_listini, sconti_marchi e sconti_prodotti ), gemella di
+-- coupon_categorie_prodotti. Nasce il 29/10/2026 con la revisione del canone e nessuna parte del framework la legge.
+--
+-- NOTA: la colonna si chiama id_categoria e non id_categoria_prodotti perche' il tipo di categoria e' gia' nel nome
+-- della tabella, come in coupon_categorie_prodotti.
+--
+CREATE TABLE IF NOT EXISTS `sconti_categorie_prodotti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_sconto` bigint(20) DEFAULT NULL,                          -- chiave esterna per lo sconto
+  `id_categoria` bigint(20) DEFAULT NULL,                       -- chiave esterna per la categoria di prodotti
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000036400
@@ -6764,18 +6800,70 @@ CREATE TABLE IF NOT EXISTS `sconti_articoli` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: collega gli sconti ai listini a cui si applicano
+-- funzione: dice per quali listini e' valido uno sconto
 --
--- questa tabella contiene l'associazione molti a molti fra sconti e listini
+-- questa tabella elenca i listini per i quali e' valido uno sconto; uno sconto senza righe qui vale per tutti i
+-- listini. E' una delle tabelle di applicazione dello sconto ( con sconti_articoli, sconti_categorie_prodotti,
+-- sconti_marchi e sconti_prodotti ), gemella di coupon_listini. Nel framework latest nessuna parte la legge; in
+-- oldstable la compila il modulo listini.
 --
 CREATE TABLE IF NOT EXISTS `sconti_listini` (
-  `id` bigint(20) NOT NULL,
-  `id_sconto` bigint(20) DEFAULT NULL,
-  `id_listino` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_sconto` bigint(20) DEFAULT NULL,                          -- chiave esterna per lo sconto
+  `id_listino` bigint(20) DEFAULT NULL,                         -- chiave esterna per il listino
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036500
+
+-- sconti_marchi
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: dice per quali marchi e' valido uno sconto
+--
+-- questa tabella elenca i marchi per i quali e' valido uno sconto, cioe' limita lo sconto ai prodotti di quei marchi;
+-- e' una delle tabelle di applicazione dello sconto ( con sconti_articoli, sconti_categorie_prodotti, sconti_listini
+-- e sconti_prodotti ), gemella di coupon_marchi. Nasce il 29/10/2026 con la revisione del canone e nessuna parte del
+-- framework la legge.
+--
+CREATE TABLE IF NOT EXISTS `sconti_marchi` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_sconto` bigint(20) DEFAULT NULL,                          -- chiave esterna per lo sconto
+  `id_marchio` bigint(20) DEFAULT NULL,                         -- chiave esterna per il marchio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036600
+
+-- sconti_prodotti
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: dice per quali prodotti e' valido uno sconto
+--
+-- questa tabella elenca i prodotti per i quali e' valido uno sconto, cioe' limita lo sconto agli articoli di quei
+-- prodotti; e' una delle tabelle di applicazione dello sconto ( con sconti_articoli, sconti_categorie_prodotti,
+-- sconti_listini e sconti_marchi ), gemella di coupon_prodotti. Nasce il 29/10/2026 con la revisione del canone e
+-- nessuna parte del framework la legge.
+--
+CREATE TABLE IF NOT EXISTS `sconti_prodotti` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_sconto` bigint(20) DEFAULT NULL,                          -- chiave esterna per lo sconto
+  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000037000
