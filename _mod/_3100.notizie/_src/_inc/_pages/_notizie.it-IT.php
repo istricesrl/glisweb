@@ -82,18 +82,6 @@
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
-	$p['notizie.form.contenuti'] = array(
-	    'sitemap'		=> false,
-		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'notizie.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
-	);
-
 	$p['notizie.form.immagini'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
