@@ -96,7 +96,8 @@
      * se $user non è vuoto. I destinatari CC e BCC con indirizzo vuoto vengono saltati, gli allegati che non esistono o non si
      * possono leggere vengono saltati e loggati a LOG_ERR, e i parametri che non sono array ( la coda contiene davvero valori
      * NULL serializzati ) vengono ignorati. Il mittente è invece obbligatorio: se il suo indirizzo non è valido la mail non
-     * viene inviata e la funzione restituisce false.
+     * viene inviata e la funzione restituisce false. Lo stesso vale per i destinatari in A: se nessuno ha un indirizzo valido
+     * la mail non parte, nemmeno verso i CC e i BCC, e l'errore va nel canale mail a LOG_CRIT.
      *
      * La firma DKIM viene applicata se esiste il file etc/secret/\<dominio\>/dkim.private.pem, con il selettore fisso glisweb;
      * il dominio è $dkim_domain se non è vuoto, altrimenti quello del mittente, e con lo stesso dominio si firma ( DKIM_domain ).
@@ -125,7 +126,7 @@
      * @param       string      $dkim_domain    il dominio per la firma DKIM ( default NULL, il dominio del mittente )
      * @param       string      $dkim_pasw      la passphrase della chiave DKIM, se non c'è il file dkim.password.key ( default NULL )
      *
-     * @return      bool                        true se la mail è stata inviata, false se il mittente non è valido o l'invio fallisce
+     * @return      bool                        true se la mail è stata inviata, false se il mittente o tutti i destinatari in A non sono validi o l'invio fallisce
      *
      */
     function sendMail($host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL)
@@ -239,9 +240,14 @@
             // array il foreach solleva "Invalid argument supplied for foreach()". In coda si
             // trovano davvero valori 'N;' (NULL serializzato) su destinatari_bcc. Gli allegati e
             // gli header erano gia' protetti da is_array(): qui si allinea il resto.
+            // NOTA AddAddress() scarta in silenzio gli indirizzi non validi: si contano quelli accettati, perché senza
+            // nemmeno un destinatario in A la mail partiva verso i soli CC e BCC e finiva fra le inviate ( 2026-10-28 )
+            $destinatari = 0;
             if (is_array($to)) {
                 foreach ($to as $destName => $destAddress) {
-                    $mail->AddAddress(trim($destAddress), trim($destName));
+                    if ($mail->AddAddress(trim($destAddress), trim($destName))) {
+                        $destinatari++;
+                    }
                 }
             }
 
@@ -308,7 +314,14 @@
             }
 
             // invio
-            $status = $mail->Send();
+            // NOTA senza un destinatario valido la mail non parte: resta in coda e si vede fra le mail in uscita, e l'errore va
+            // nel log a LOG_CRIT perché nessun tentativo la sistemerà da solo, va corretto l'indirizzo
+            if ($destinatari == 0) {
+                logWrite('nessun destinatario valido in A, mail non inviata: ' . $oggetto . ' to: ' . serialize($to), 'mail', LOG_CRIT);
+                $status = false;
+            } else {
+                $status = $mail->Send();
+            }
 
             // log
             if ($status == false) {
