@@ -28,6 +28,11 @@
   ( id_rinnovo e descrizione ), che il template può usare per avvisare l'operatore; ogni intervento finisce nel log cart
   a LOG_WARNING.
 
+  Dallo step 2 allo step 9 la controller tiene un lock MySQL per sessione ( GET_LOCK, rilasciato dopo la copia di
+  sicurezza dello step 9 ): con le sessioni su Redis PHP non serializza le richieste della stessa sessione, e due
+  richieste identiche nello stesso secondo creavano o cancellavano il carrello a vicenda ( 1452 su carrelli_articoli ).
+  Se il lock non arriva entro dieci secondi la richiesta prosegue lo stesso, con un LOG_WARNING nel log cart.
+
   il flusso di acquisto
   =====================
   Il caso più comune di flusso di acquisto è quello che prevede l'aggiunta di prodotti al carrello, la conferma dei dati, la chiusura del carrello;

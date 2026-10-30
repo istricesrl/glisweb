@@ -267,6 +267,24 @@
             // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
             // die();
 
+            // lock del carrello della sessione
+            // NOTA con le sessioni su Redis PHP non serializza le richieste della stessa sessione: due richieste identiche
+            // alla cassa nello stesso secondo entravano insieme qui sotto, e la seconda cancellava il carrello appena
+            // creato dalla prima, che falliva scrivendone le righe ( 1452 carrelli_articoli_ibfk_01, polmasi 2026-10-30,
+            // 5 doppie su 2118 a ottobre ); il lock copre dallo STEP 2 allo STEP 9, così la seconda richiesta parte dal
+            // carrello già scritto dalla prima; il nome passa da md5() perché GET_LOCK non accetta più di 64 caratteri,
+            // e porta dentro database() perché i lock sono visibili a tutta l'istanza ( vedi _src/_api/_cron.php ); se
+            // non si prende entro dieci secondi si prosegue lo stesso, come la cassa ( vedi _0400.documenti )
+            $lockCarrello = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT GET_LOCK( concat( "carrello.", md5( concat( database(), ".carrello.", ? ) ) ), 10 )',
+                array( array( 's' => $_SESSION['id'] ) )
+            );
+
+            if( empty( $lockCarrello ) ) {
+                logWrite( 'lock del carrello della sessione ' . $_SESSION['id'] . ' non acquisito entro 10 secondi, procedo comunque', 'cart', LOG_WARNING );
+            }
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 
@@ -1414,6 +1432,13 @@
             // STEP 9 - salvataggio copia di sicurezza del carrello
             $f = DIR_VAR_SPOOL_CART . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
             writeToFile( print_r( $_SESSION['carrello'], true ), $f );
+
+            // rilascio del lock del carrello della sessione
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT RELEASE_LOCK( concat( "carrello.", md5( concat( database(), ".carrello.", ? ) ) ) )',
+                array( array( 's' => $_SESSION['id'] ) )
+            );
 
             // debug
             // echo $f;
