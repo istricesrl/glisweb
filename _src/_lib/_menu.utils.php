@@ -44,6 +44,14 @@
      * buildFlags()                     | costruisce le voci del selettore della lingua di una pagina
      * backurlRegistra()                | registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
      * 
+     * funzioni di controllo
+     * ---------------------
+     * Le funzioni in questo gruppo servono per trovare gli errori nella struttura delle pagine.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pagesCheck()                     | controlla la struttura delle pagine e restituisce i problemi trovati
+     * 
      * dipendenze
      * ==========
      * Questa libreria ha alcune dipendenze che devono essere soddisfatte per funzionare correttamente. In particolare
@@ -52,6 +60,7 @@
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * logWrite()                       | _src/_lib/_log.utils.php
+     * string2rewrite()                 | _src/_lib/_rewrite.tools.php
      * 
      * changelog
      * =========
@@ -60,6 +69,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-10-30       | Fabio Mosti          | pagesCheck()
      * 
      * licenza
      * =======
@@ -476,5 +486,90 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     // restituisco il risultato
         return $token;
+
+    }
+
+    /**
+     * FUNZIONI DI CONTROLLO
+     */
+
+    /**
+     * controlla la struttura delle pagine e restituisce i problemi trovati
+     *
+     * La costruzione dell'albero in _src/_config/_320.pages.php non si ferma davanti a una struttura rotta, la
+     * aggiusta in silenzio: una pagina figlia di una pagina che non esiste diventa una radice, e di due pagine con lo
+     * stesso percorso se ne raggiunge una sola. Succede soprattutto quando un modulo dichiara pagine che dipendono da
+     * un altro modulo non attivo, e il risultato si vede solo come una linguetta che dà "Unable to find template" o
+     * una pagina che non si apre. Questa funzione dice dove la struttura è rotta, così il runlevel lo può scrivere
+     * nel log; non corregge niente.
+     *
+     * Si controlla che:
+     *
+     *  - il genitore dichiarato in parent.id esista;
+     *  - le pagine elencate in etc.tabs esistano;
+     *  - due pagine con lo stesso genitore non abbiano, nella stessa lingua, lo stesso rewrited, cioè lo stesso
+     *    percorso; le pagine con forced o senza title in una lingua lì un percorso non ce l'hanno e non contano.
+     *
+     * Il rewrited si calcola come in _320.pages.php, perché la funzione lavora sulle pagine come sono dichiarate,
+     * prima che il runlevel azzeri i genitori che non esistono.
+     *
+     * @param   array       $pages      le pagine, come in $cf['contents']['pages'] prima della costruzione dell'albero
+     * @param   array       $languages  le lingue attive, p.es. array( 'it-IT', 'en-GB' )
+     *
+     * @return  array                   i problemi trovati, un messaggio per ciascuno; vuoto se la struttura è sana
+     *
+     */
+    function pagesCheck( $pages, $languages ) {
+
+    // problemi trovati
+        $problemi = array();
+
+    // percorsi già visti, per genitore e lingua
+        $percorsi = array();
+
+    // per ogni pagina
+        foreach( $pages as $k => $v ) {
+
+        // genitore inesistente
+            if( isset( $v['parent']['id'] ) && ! isset( $pages[ $v['parent']['id'] ] ) ) {
+                $problemi[] = 'la pagina ' . $k . ' è figlia di ' . $v['parent']['id'] . ', che non esiste';
+            }
+
+        // linguette inesistenti
+            if( isset( $v['etc']['tabs'] ) && is_array( $v['etc']['tabs'] ) ) {
+                foreach( $v['etc']['tabs'] as $tab ) {
+                    if( ! isset( $pages[ $tab ] ) ) {
+                        $problemi[] = 'la pagina ' . $k . ' ha la linguetta ' . $tab . ', che non esiste';
+                    }
+                }
+            }
+
+        // percorsi duplicati
+            $genitore = ( isset( $v['parent']['id'] ) ) ? $v['parent']['id'] : '';
+            foreach( $languages as $lk ) {
+
+            // le pagine senza percorso in questa lingua non contano
+                if( isset( $v['forced'][ $lk ] ) || empty( $v['title'][ $lk ] ) ) {
+                    continue;
+                }
+
+            // rewrited della pagina, come in _320.pages.php
+                $rewrited = ( isset( $v['rewrited'] ) && is_array( $v['rewrited'] ) && array_key_exists( $lk, $v['rewrited'] ) )
+                    ? $v['rewrited'][ $lk ]
+                    : string2rewrite( ( ! empty( $v['custom'][ $lk ] ) ) ? $v['custom'][ $lk ] : $v['title'][ $lk ] );
+
+            // confronto con le pagine già viste
+                if( isset( $percorsi[ $genitore ][ $lk ][ $rewrited ] ) ) {
+                    $problemi[] = 'la pagina ' . $k . ' ha lo stesso percorso di ' . $percorsi[ $genitore ][ $lk ][ $rewrited ] . ' in ' . $lk . ' ( ' . $rewrited . ' )';
+                } else {
+                    $percorsi[ $genitore ][ $lk ][ $rewrited ] = $k;
+                }
+
+            }
+
+        }
+
+    // restituisco il risultato
+        return $problemi;
 
     }

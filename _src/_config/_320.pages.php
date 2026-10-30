@@ -80,6 +80,16 @@
         // inizializzo l'array di risoluzione inversa
         // $cf['contents']['reverse']          = array();
 
+        // controllo della struttura: genitori e linguette che non esistono, percorsi duplicati
+        // NOTA si fa qui, prima che il ciclo qui sotto trasformi in radici le pagine col genitore che non esiste, e
+        // solo quando la struttura si ricostruisce e finisce in cache, così il log non si ripete a ogni richiesta;
+        // senza memcache la struttura si ricostruisce sempre, e il controllo non si fa
+        if( ! empty( $cf['memcache']['connection'] ) ) {
+            foreach( pagesCheck( $cf['contents']['pages'], array_keys( $cf['localization']['languages'] ) ) as $problema ) {
+                logger( $problema, 'pages', LOG_WARNING );
+            }
+        }
+
         // preparo le pagine
         foreach( $cf['contents']['pages'] as $k => &$v ) {
 
