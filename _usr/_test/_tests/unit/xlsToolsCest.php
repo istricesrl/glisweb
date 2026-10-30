@@ -29,6 +29,8 @@ class xlsToolsCest
         $I->dontSee('ODS letto');
         $I->see('immagine: [["nome","codice"],["Mario","001"],["Anna","002"]]');
         $I->see('dtd: ');
+        $I->dontSee('Unable to find the wrapper');
+        $I->dontSee('Warning');
         $I->assertCount( 0, \Helper\RestMock::richieste(), 'richieste partite verso indirizzi esterni' );
     }
 

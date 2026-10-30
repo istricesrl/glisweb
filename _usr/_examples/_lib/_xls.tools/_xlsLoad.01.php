@@ -17,6 +17,11 @@
 
     require '../../../../_src/_config.php';
 
+    // errori a video e tutti riportati, come su un deploy di sviluppo: un warning lasciato uscire da xlsLoad() finisce
+    // nell'output
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+
     // indirizzo che non deve essere chiamato
     $esterno = ( ( defined( 'REST_MOCK_URL' ) ) ? REST_MOCK_URL . '/esempio.test' : 'http://esempio.test' );
 

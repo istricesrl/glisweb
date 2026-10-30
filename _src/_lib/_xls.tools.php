@@ -146,6 +146,10 @@
      * Le difese valgono anche con la 1.30.7, e non tolgono niente a quello che il framework legge: i dati, gli
      * stili e i formati delle celle. Le impostazioni globali toccate si rimettono com'erano alla fine.
      *
+     * Durante la lettura i warning e i notice di PHP non vanno a video ma nel log xls, a LOG_WARNING: un'immagine
+     * collegata, coi wrapper di rete spenti, fa sollevare a PhpSpreadsheet un warning di file_get_contents() che con
+     * display_errors acceso finirebbe nella risposta.
+     *
      * Un file che non si può leggere ( formato non ammesso, file rovinato, difese che scattano ) non solleva
      * eccezioni: la funzione scrive il motivo nel log xls e restituisce false, che il chiamante deve controllare prima
      * di usare il risultato. Le schede delle tre vulnerabilità sono in `_usr/_docs/_cve/`.
@@ -168,6 +172,14 @@
             stream_wrapper_unregister( $w );
         }
 
+        // NOTA con i wrapper di rete spenti PhpSpreadsheet, davanti a un'immagine collegata, solleva il warning di
+        // file_get_contents() "Unable to find the wrapper": la difesa regge, ma con display_errors acceso il warning finisce
+        // nella risposta e ModSecurity la blocca, quindi durante la lettura warning e notice vanno nel log xls
+        set_error_handler( function( $livello, $messaggio, $origine, $riga ) {
+            logger( 'avviso durante la lettura: ' . $messaggio . ' in ' . $origine . ':' . $riga, 'xls', LOG_WARNING );
+            return true;
+        }, E_WARNING | E_NOTICE );
+
         try {
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile( $file, array( 'Xlsx', 'Xls', 'Csv' ) );
             $xls = $reader->load( $file );
@@ -177,6 +189,7 @@
         }
 
         // impostazioni com'erano
+        restore_error_handler();
         foreach( $spenti as $w ) {
             stream_wrapper_restore( $w );
         }
