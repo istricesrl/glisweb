@@ -8,9 +8,10 @@ Una persona **non si registra due volte** perché cambia il rapporto che ha con 
 anagrafica può essere insieme cliente, fornitore e collaboratore, e ognuno di quei ruoli è una
 scheda in più sullo stesso contatto.
 
-Nel menu la voce è **anagrafica**; il modulo aggiunge anche le voci **account**, **gruppi**,
-**categorie**, **ranking** e **indirizzi**, descritte in fondo. L'area è riservata al personale
-interno; account, gruppi, categorie, ranking e indirizzi sono riservati agli amministratori.
+Nel menu la voce è **anagrafica**; sotto, il modulo aggiunge le voci **account** ( con la sotto-voce
+**gruppi** ), **categorie** e **ranking**, descritte in fondo. L'area è riservata al personale interno;
+account, gruppi, categorie e ranking sono riservati agli amministratori. L'archivio degli **indirizzi**
+non ha una voce di menu propria.
 
 Per come funzionano gli elenchi e le schede in generale ( ricerca, ordinamento, salvataggio,
 sotto-elenchi ) vedi i capitoli sugli **elenchi** e sulle **schede**: qui si dice solo quello che

@@ -23,6 +23,8 @@ Mostra i contatti non archiviati, i più recenti in cima:
 | data | quando è arrivato |
 | sito | il sito da cui è arrivato; *nessun sito* se l'informazione manca |
 | modulo | il modulo del sito che il visitatore ha compilato |
+| contatto | il nome del contatto, preceduto dalla sua tipologia |
+| azioni | le icone delle azioni rapide |
 
 Le linguette dell'area sono **contatti**, **archiviati** ( lo stesso elenco per i contatti già
 archiviati ) e **azioni**, che per ora **non contiene riquadri**.

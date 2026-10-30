@@ -68,6 +68,7 @@ Le linguette della scheda, nell'ordine:
 | SEM/SMM | indirizzo e dati per i motori di ricerca e i social | amministratori |
 | testo | i testi della pagina, lingua per lingua | staff, amministratori |
 | menu | la pagina nei menu del sito | staff, amministratori |
+| progetti ( icona della valigetta ) | i progetti collegati alla pagina, e il pulsante per collegarne uno; c'è solo se è attivo il modulo dei progetti | staff, amministratori |
 | immagini, video, audio, file | i media della pagina | amministratori |
 | macro | i programmi che completano la pagina | amministratori |
 | metadati | coppie nome–valore aggiuntive | amministratori |

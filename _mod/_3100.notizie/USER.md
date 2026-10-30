@@ -25,21 +25,24 @@ La linguetta *gestione* ha il riquadro **dati generali**:
 |---|---|
 | tipologia | il tipo di notizia |
 | nome | il nome nel gestionale |
-| se sitemap | spuntato, la notizia compare nella mappa del sito per i motori di ricerca |
-| se cacheable | spuntato, il sito può tenerne in memoria il risultato |
 | note | annotazioni interne |
 
-Il riquadro **aspetto** ha **template**, **schema** e **tema**, che si scelgono come per le pagine: prima il
-template, poi si salva, poi schema e tema. In fondo c'è l'elenco delle **pubblicazioni**, una riga per
-periodo, con ordine, tipologia, inizio, fine e note.
+Sotto ci sono i riquadri **categorie**, le categorie in cui la notizia compare, e **persone**, le
+anagrafiche collegate alla notizia, ciascuna col suo ruolo.
+
+L'aspetto e le pubblicazioni stanno nella linguetta **web**, nel riquadro **contenuti e aspetto**: il
+**sito**, **template**, **schema** e **tema**, che si scelgono come per le pagine ( prima il template, poi
+si salva, poi schema e tema ), e le spunte *se sitemap* ( la notizia compare nella mappa del sito per i
+motori di ricerca ) e *se cacheable* ( il sito può tenerne in memoria il risultato ). In fondo c'è
+l'elenco delle **pubblicazioni**, una riga per periodo, con ordine, tipologia, inizio, fine e note.
 
 > **attenzione** — una notizia esce sul sito solo mentre ha una pubblicazione in corso. Senza
 > pubblicazione la notizia esiste nel gestionale ma il visitatore non la vede.
 
 | linguetta | cosa ci sta | chi la vede |
 |---|---|---|
-| gestione | dati generali, aspetto, pubblicazioni | staff, amministratori |
-| web | **sito**, template, schema, tema, mappa del sito, cache e pubblicazioni | staff, amministratori |
+| gestione | dati generali, categorie, persone | staff, amministratori |
+| web | contenuti e aspetto: **sito**, template, schema, tema, mappa del sito, cache, e le pubblicazioni | staff, amministratori |
 | SEM/SMM | dati per motori di ricerca e social | staff, amministratori |
 | testo | titoli e testi, lingua per lingua | staff, amministratori |
 | immagini, video, audio, file, metadati | media, allegati e coppie nome–valore | amministratori |
@@ -48,6 +51,9 @@ periodo, con ordine, tipologia, inizio, fine e note.
 La linguetta **testo** ha in alto la scelta della **lingua**, poi i campi *valore del tag h1*, *h2*, *h3*
 e *cappello*, e sotto gli editor di testo. La linguetta **SEM/SMM** ha gli stessi campi delle pagine ( path
 e URL custom, tag title, keywords, description, robots, OpenGraph ): vedi il capitolo *contenuti*.
+
+Nella linguetta **immagini** ogni immagine ha un **ruolo**, che dice al sito dove usarla; fra i ruoli c'è
+anche **copertina**.
 
 ## le categorie
 <!-- @pubblico: operatore, amministratore -->
