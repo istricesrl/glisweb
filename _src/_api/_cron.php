@@ -66,6 +66,10 @@
      * senza intervalli, liste né passi, e giorno_della_settimana va da 1 ( lunedì ) a 7 ( domenica ) perché si
      * confronta con date( 'N' ). La domenica è 7 e non 0 come in crontab: un task con 0 non parte mai. È lo stesso
      * range della tendina del form dei task ( _mod/_0030.strumenti/_src/_inc/_macro/_task.form.php ).
+     *
+     * Un task che sta in un modulo ( `_mod/_<modulo>/` o `mod/<modulo>/` ) gira solo se il modulo è fra quelli attivi
+     * ( $cf['mods']['active']['array'] ): altrimenti il run lo salta, scrive l'errore nel suo esito e una riga
+     * LOG_WARNING nel log `cron`, e ne rilascia il lock. Dal 2026-10-30; prima girava anche a modulo spento.
      * 
      * test dei task
      * -------------
@@ -331,8 +335,23 @@
         // ciclo sui task
         foreach( $cf['cron']['task'] as $task ) {
 
+            // modulo del task, se il task sta in un modulo ( _mod/_<modulo>/ o mod/<modulo>/ )
+            // NOTA un task di un modulo spento non gira: fino al 2026-10-30 il cron lo eseguiva lo stesso, e la riga 1
+            // di task, spostata sul task di scalamento del modulo IM000, avrebbe girato anche dove il modulo non c'è
+            $task['modulo'] = ( preg_match( '#^_?mod/_?([^/]+)/#', $task['task'], $cronModulo ) ) ? $cronModulo[1] : NULL;
+            $task['spento'] = ( ! empty( $task['modulo'] ) && ! in_array( $task['modulo'], $cf['mods']['active']['array'] ) );
+
+            // controllo che il modulo del task sia attivo
+            if( $task['spento'] ) {
+
+                // status
+                $cf['cron']['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo';
+
+                // log
+                logger( 'il task ' . $task['id'] . ' -> ' . $task['task'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo: non lo eseguo', 'cron', LOG_WARNING );
+
             // controllo che il file del task esista
-            if( file_exists( DIR_BASE . $task['task'] ) ) {
+            } elseif( file_exists( DIR_BASE . $task['task'] ) ) {
 
                 // log
                 logger( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
@@ -425,10 +444,10 @@
 
             }
 
-            // un task che non e' girato ( file mancante, iterazioni nulle ) rilascia comunque il lock: se
+            // un task che non e' girato ( modulo spento, file mancante, iterazioni nulle ) rilascia comunque il lock: se
             // non era mai girato timestamp_esecuzione e' NULL, il recupero dei task fermi ( "< ?" ) non lo
             // vede, e il task resterebbe bloccato per sempre anche dopo che il file e' arrivato
-            if( ! file_exists( DIR_BASE . $task['task'] ) || empty( $task['iterazioni'] ) ) {
+            if( $task['spento'] || ! file_exists( DIR_BASE . $task['task'] ) || empty( $task['iterazioni'] ) ) {
                 mysqlQuery(
                     $cf['mysql']['connection'],
                     'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',

@@ -33,4 +33,24 @@
 
         }
 
+        // un task di un modulo spento non gira, e rilascia il lock
+        // NOTA il modulo e il file non esistono: se il controllo del modulo mancasse, l'errore sarebbe quello del file
+        public function taskDiModuloSpento( BackendTester $I ) {
+
+            $I->deleteTestRecords( 'task', 'task', true );
+
+            $id = $I->haveInDatabase( 'task', array(
+                'task' => '_mod/_ZZ000.spento/_src/_api/_task/_' . $I->grabTestName( 'cron' ) . '.php',
+                'iterazioni' => 1
+            ) );
+
+            $I->amLoggedInAs( 'roots' );
+            $I->amOnPage( '/api/cron' );
+            $I->see( 'del modulo ZZ000.spento, che non' );
+            $I->seeInDatabase( 'task', array( 'id' => $id, 'token' => NULL ) );
+
+            $I->deleteTestRecords( 'task', 'task', true );
+
+        }
+
     }
