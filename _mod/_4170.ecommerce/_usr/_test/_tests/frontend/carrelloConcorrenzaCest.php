@@ -12,6 +12,9 @@
      * sparano con curl_multi da sessioni nuove, e i carrelli si riconoscono dal nome dell'intestatario che porta il
      * prefisso TEST-E2E-
      *
+     * le righe si contano solo per gli articoli richiesti dal test: un progetto può aggiungere righe sue al carrello
+     * ( polmasi aggiunge il tesseramento a chi compra un corso ), e quelle non dicono niente sulla concorrenza
+     *
      */
 
     class carrelloConcorrenzaCest {
@@ -110,7 +113,7 @@
 
                 // il carrello rimasto ha la sua riga
                 $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
-                $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ?', array( $id ) );
+                $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ? AND id_articolo = ?', array( $id, $articolo ) );
                 $I->assertEquals( 1, $righe, 'righe del carrello della coppia ' . $i );
 
             }
@@ -190,7 +193,7 @@
             $I->dontSeeInDatabase( 'carrelli', array( 'id' => $vecchio ) );
             $id = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             $I->assertNotEmpty( $id, 'carrello nuovo dopo il lock' );
-            $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ?', array( $id ) );
+            $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ? AND id_articolo = ?', array( $id, $articolo ) );
             $I->assertEquals( 1, $righe, 'righe del carrello nuovo' );
 
         }
@@ -240,7 +243,7 @@
             $I->seeInDatabase( 'carrelli', array( 'id' => $sorella, 'session' => $sessione ) );
             $carrelli = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
             $I->assertEquals( 1, $carrelli, 'carrelli della sessione' );
-            $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ?', array( $sorella ) );
+            $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ? AND id_articolo IN ( ?, ? )', array( $sorella, $articoli[0], $articoli[1] ) );
             $I->assertEquals( 2, $righe, 'righe del carrello adottato' );
 
         }
