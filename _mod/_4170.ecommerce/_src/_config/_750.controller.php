@@ -285,6 +285,27 @@
                 logWrite( 'lock del carrello della sessione ' . $_SESSION['id'] . ' non acquisito entro 10 secondi, procedo comunque', 'cart', LOG_WARNING );
             }
 
+            // STEP 1.2 - il carrello della sessione può essere sparito mentre si aspettava il lock
+            // NOTA lo STEP 0.1 guarda il carrello prima del lock, e $_SESSION è quella letta all'inizio della richiesta:
+            // con quattro richieste dall'app in due secondi una richiesta passava lo STEP 0.1 col carrello di una sorella,
+            // un'altra sorella partita senza carrello in sessione lo cancellava allo STEP 2 come carrello vecchio, e la
+            // prima, preso il lock, ci scriveva le righe ( 1452 carrelli_articoli_ibfk_01, polmasi 2026-11-02 09:42:35,
+            // carrello 11036 ); si stacca come allo STEP 0.1, tenendo le impostazioni dello STEP 1.1 di questa richiesta
+            if( ! empty( $_SESSION['carrello']['id'] ) ) {
+                $carrelloEsiste = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM carrelli WHERE id = ?',
+                    array( array( 's' => $_SESSION['carrello']['id'] ) )
+                );
+                if( empty( $carrelloEsiste ) ) {
+                    logWrite( 'il carrello #' . $_SESSION['carrello']['id'] . ' della sessione è stato cancellato mentre si aspettava il lock, staccato dalla sessione', 'cart', LOG_WARNING );
+                    $_SESSION['carrello'] = array_intersect_key(
+                        $_SESSION['carrello'],
+                        array_flip( array( 'intestazione_id_anagrafica', 'id_zona', 'id_listino', 'id_sito' ) )
+                    );
+                }
+            }
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 

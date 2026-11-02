@@ -31,7 +31,10 @@
   Dallo step 2 allo step 9 la controller tiene un lock MySQL per sessione ( GET_LOCK, rilasciato dopo la copia di
   sicurezza dello step 9 ): con le sessioni su Redis PHP non serializza le richieste della stessa sessione, e due
   richieste identiche nello stesso secondo creavano o cancellavano il carrello a vicenda ( 1452 su carrelli_articoli ).
-  Se il lock non arriva entro dieci secondi la richiesta prosegue lo stesso, con un LOG_WARNING nel log cart.
+  Se il lock non arriva entro dieci secondi la richiesta prosegue lo stesso, con un LOG_WARNING nel log cart. Preso il
+  lock, la controller riguarda se il carrello della sessione esiste ancora ( step 1.2 ): la sessione è quella letta
+  all'inizio della richiesta, e nell'attesa una richiesta sorella può averlo cancellato; in quel caso lo stacca come lo
+  step 0.1, tenendo intestazione, zona, listino e sito della richiesta.
 
   il flusso di acquisto
   =====================
