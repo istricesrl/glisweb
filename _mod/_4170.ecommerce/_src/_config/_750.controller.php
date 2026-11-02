@@ -306,6 +306,62 @@
                 }
             }
 
+            // STEP 1.3 - se la sessione non ha un carrello ma ce n'è uno aperto della stessa sessione, lo adotto
+            // NOTA il carrello aperto con la session di questa richiesta l'ha creato una richiesta sorella partita con la
+            // stessa sessione e arrivata prima al lock, la cui $_SESSION non è quella letta da questa; lo STEP 2 lo
+            // cancellava come carrello vecchio e ne creava uno nuovo, e con i tocchi ripetuti dall'app i carrelli si
+            // rincorrevano ( polmasi 2026-11-02, 11035 -> 11036 -> 11037 -> 11038 ); lo si carica come fa il recupero dei
+            // carrelli abbandonati in _710.session.php, tenendo le impostazioni dello STEP 1.1 di questa richiesta, e si
+            // prosegue allo STEP 3 come se la sessione l'avesse già avuto
+            if( empty( $_SESSION['carrello']['id'] ) ) {
+
+                $carrelloSorella = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM carrelli WHERE session = ? AND timestamp_checkout IS NULL',
+                    array( array( 's' => $_SESSION['id'] ) )
+                );
+
+                if( ! empty( $carrelloSorella ) ) {
+
+                    $_SESSION['carrello'] = array_replace(
+                        $carrelloSorella,
+                        array_intersect_key(
+                            (array) $_SESSION['carrello'],
+                            array_flip( array( 'intestazione_id_anagrafica', 'id_zona', 'id_listino', 'id_sito' ) )
+                        )
+                    );
+
+                    $_SESSION['carrello']['metadati'] = array();
+                    foreach( (array) mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM metadati WHERE id_carrello = ?',
+                        array( array( 's' => $_SESSION['carrello']['id'] ) )
+                    ) as $meta ) {
+                        $_SESSION['carrello']['metadati'][ $meta['nome'] ] = $meta['testo'];
+                    }
+
+                    $_SESSION['carrello']['articoli'] = array();
+                    foreach( (array) mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
+                        array( array( 's' => $_SESSION['carrello']['id'] ) )
+                    ) as $articolo ) {
+                        $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] . $articolo['destinatario_id_anagrafica'] ] = $articolo;
+                    }
+
+                    $_SESSION['carrello']['valuta_utf8'] = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT utf8 FROM valute INNER JOIN listini ON valute.id = listini.id_valuta WHERE listini.id = ?',
+                        array( array( 's' => $_SESSION['carrello']['id_listino'] ) )
+                    );
+
+                    logWrite( 'adottato il carrello ' . $_SESSION['carrello']['id'] . ' della sessione ' . $_SESSION['id'] . ', creato da una richiesta parallela', 'cart', LOG_WARNING );
+
+                }
+
+            }
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 
@@ -327,6 +383,8 @@
 
                 }
                 // se lo trovo aperto, lo resetto
+                // NOTA un carrello aperto della sessione lo adotta lo STEP 1.3: qui si arriva solo se è comparso dopo,
+                // cioè quando il lock non si è preso entro dieci secondi
                 elseif( !empty( $carrelloEsistente ) ){
 
                     logWrite( 'presente a database il carrello ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', procedo con il reset' , 'cart' );

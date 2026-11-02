@@ -34,7 +34,10 @@
   Se il lock non arriva entro dieci secondi la richiesta prosegue lo stesso, con un LOG_WARNING nel log cart. Preso il
   lock, la controller riguarda se il carrello della sessione esiste ancora ( step 1.2 ): la sessione è quella letta
   all'inizio della richiesta, e nell'attesa una richiesta sorella può averlo cancellato; in quel caso lo stacca come lo
-  step 0.1, tenendo intestazione, zona, listino e sito della richiesta.
+  step 0.1, tenendo intestazione, zona, listino e sito della richiesta. Se invece la sessione non ha un carrello ma a
+  database ce n'è uno aperto con la sua session, l'ha creato una richiesta sorella arrivata prima al lock: la controller
+  lo adotta ( step 1.3, caricato come il recupero dei carrelli abbandonati in _710.session.php ) e prosegue allo step 3,
+  invece di cancellarlo e crearne uno nuovo; coi tocchi ripetuti dall'app i carrelli non si rincorrono più.
 
   il flusso di acquisto
   =====================

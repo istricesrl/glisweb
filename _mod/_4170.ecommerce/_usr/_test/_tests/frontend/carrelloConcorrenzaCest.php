@@ -195,4 +195,54 @@
 
         }
 
+        // la richiesta partita senza carrello in sessione adotta quello aperto della stessa sessione, non lo cancella
+        // NOTA è la sorella che arriva al lock dopo quella che ha creato il carrello: la sua $_SESSION non lo conosce, ma
+        // a database il carrello ha la sua session; lo si riproduce con una sessione nuova, senza carrello, a cui si
+        // intesta il carrello creato da un'altra; senza lo STEP 1.3 lo STEP 2 lo cancellava e ne creava uno nuovo con la
+        // sola riga della richiesta ( polmasi 2026-11-02, carrelli 11035 -> 11038 coi tocchi ripetuti dall'app )
+        public function carrelloDellaSorellaAdottato( FrontendTester $I ) {
+
+            $articoli = array(
+                $I->grabFromDatabase( 'SELECT id FROM articoli ORDER BY id DESC LIMIT 1' ),
+                $I->grabFromDatabase( 'SELECT id FROM articoli ORDER BY id DESC LIMIT 1, 1' )
+            );
+            if( empty( $articoli[0] ) || empty( $articoli[1] ) ) {
+                $I->fail( 'servono due articoli a catalogo per il test' );
+            }
+
+            $nome = $I->grabTestName( 'sorella' );
+
+            // la sorella crea il carrello con il primo articolo
+            $ch = $this->richiesta( $this->apriSessione( $I ), array( '__carrello__' => array(
+                'intestazione_nome' => $nome,
+                '__articolo__' => array( 'id_articolo' => $articoli[0], 'quantita' => 1 )
+            ) ) );
+            curl_exec( $ch );
+            curl_close( $ch );
+            $sorella = $I->grabFromDatabase( 'SELECT id FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
+            if( empty( $sorella ) ) {
+                $I->fail( 'la richiesta sorella non ha creato il carrello' );
+            }
+
+            // il carrello passa a una sessione che non lo ha in $_SESSION
+            $sessione = $this->apriSessione( $I );
+            $I->updateInDatabase( 'carrelli', array( 'id' => $sorella, 'session' => $sessione ) );
+
+            // la richiesta di quella sessione aggiunge il secondo articolo
+            $ch = $this->richiesta( $sessione, array( '__carrello__' => array(
+                'intestazione_nome' => $nome,
+                '__articolo__' => array( 'id_articolo' => $articoli[1], 'quantita' => 1 )
+            ) ) );
+            curl_exec( $ch );
+            curl_close( $ch );
+
+            // il carrello è sempre quello della sorella, ed è l'unico, con le righe di tutt'e due le richieste
+            $I->seeInDatabase( 'carrelli', array( 'id' => $sorella, 'session' => $sessione ) );
+            $carrelli = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli WHERE intestazione_nome = ?', array( $nome ) );
+            $I->assertEquals( 1, $carrelli, 'carrelli della sessione' );
+            $righe = (int) $I->grabFromDatabase( 'SELECT count(*) FROM carrelli_articoli WHERE id_carrello = ?', array( $sorella ) );
+            $I->assertEquals( 2, $righe, 'righe del carrello adottato' );
+
+        }
+
     }
