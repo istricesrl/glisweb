@@ -44,6 +44,14 @@
      * buildFlags()                     | costruisce le voci del selettore della lingua di una pagina
      * backurlRegistra()                | registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
      * 
+     * funzioni per l'indice delle pagine
+     * ----------------------------------
+     * Le funzioni in questo gruppo servono per costruire l'indice dei percorsi usato dal rewrite.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pagesIndexAdd()                  | aggiunge una pagina fra le candidate di un percorso dell'indice
+     *
      * funzioni di controllo
      * ---------------------
      * Le funzioni in questo gruppo servono per trovare gli errori nella struttura delle pagine.
@@ -70,6 +78,7 @@
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
      * 2026-10-30       | Fabio Mosti          | pagesCheck()
+     * 2026-11-02       | Fabio Mosti          | pagesIndexAdd()
      * 
      * licenza
      * =======
@@ -486,6 +495,44 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     // restituisco il risultato
         return $token;
+
+    }
+
+    /**
+     * FUNZIONI PER L'INDICE DELLE PAGINE
+     */
+
+    /**
+     * aggiunge una pagina fra le candidate di un percorso dell'indice
+     *
+     * L'indice $cf['contents']['index'] associa a ogni percorso, per lingua, le pagine che ci corrispondono, e
+     * _src/_config/_400.rewrite.php fra quelle col genitore giusto tiene l'ultima. Una pagina il cui genitore non
+     * esiste viene resa radice da _src/_config/_320.pages.php, e così entra in concorrenza con le radici vere: se
+     * finisse in coda vincerebbe lei, e p.es. la scheda di un modulo coi genitori spenti prenderebbe il posto della
+     * dashboard che ha lo stesso nome. Per questo l'orfana va in testa: a parità di percorso vince sempre la pagina
+     * che sta al suo posto, e l'orfana resta raggiungibile solo se è l'unica con quel nome.
+     *
+     * @param   array       $index      l'indice di una lingua, p.es. $cf['contents']['index']['it-IT']
+     * @param   string      $rewrited   il percorso della pagina
+     * @param   string      $page       l'id della pagina
+     * @param   boolean     $orphan     true se la pagina ha un genitore dichiarato che non esiste
+     *
+     * @return  void
+     *
+     */
+    function pagesIndexAdd( &$index, $rewrited, $page, $orphan = false ) {
+
+    // candidate del percorso
+        if( ! isset( $index[ $rewrited ] ) ) {
+            $index[ $rewrited ] = array();
+        }
+
+    // l'orfana in testa, le altre in coda
+        if( $orphan ) {
+            array_unshift( $index[ $rewrited ], $page );
+        } else {
+            $index[ $rewrited ][] = $page;
+        }
 
     }
 

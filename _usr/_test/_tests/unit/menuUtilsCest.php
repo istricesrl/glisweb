@@ -24,4 +24,15 @@ class menuUtilsCest
         $I->see('sana: 0');
     }
 
+    // pagesIndexAdd() -> a parità di percorso l'ultima candidata è la pagina al suo posto, l'orfana sola resta
+    public function pagesIndexAdd(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_menu.utils/_pagesIndexAdd.01.php');
+        $I->see('prima la dashboard: contenuti');
+        $I->dontSee('prima la dashboard: contenuti.form');
+        $I->see('prima l\'orfana: contenuti');
+        $I->dontSee('prima l\'orfana: contenuti.form');
+        $I->see('orfana sola: catalogo.marchi.form');
+    }
+
 }

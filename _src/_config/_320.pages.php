@@ -107,7 +107,10 @@
                 // echo $v['id'].PHP_EOL;
 
                 // controllo parent
-                if( ! isset( $cf['contents']['pages'][ $v['parent']['id'] ] ) ) { $v['parent']['id'] = NULL; }
+                // NOTA la pagina che ha un genitore dichiarato ma inesistente diventa radice, e se ne tiene traccia
+                // perché nell'indice non deve scavalcare le radici vere che hanno il suo stesso nome
+                $orfana = false;
+                if( ! isset( $cf['contents']['pages'][ $v['parent']['id'] ] ) ) { $orfana = isset( $v['parent']['id'] ); $v['parent']['id'] = NULL; }
 
                 // imposto l'array dell'albero locale
                 $v['tree'] = array( $k => array() );
@@ -156,7 +159,8 @@
                     }
 
                     // inserisco la pagina corrente nell'indice
-                    $cf['contents']['index'][ $lk ][ $v['rewrited'][ $lk ] ][] = $k;
+                    // NOTA l'orfana va in testa alle candidate, vedi pagesIndexAdd()
+                    pagesIndexAdd( $cf['contents']['index'][ $lk ], $v['rewrited'][ $lk ], $k, $orfana );
 
                     // debug
                     // echo $v['rewrited'][ $lk ] . PHP_EOL;
