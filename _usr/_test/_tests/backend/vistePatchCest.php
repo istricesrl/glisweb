@@ -31,7 +31,6 @@
         public function visteAnagrafica( BackendTester $I ) {
 
             $this->vedoColonne( $I, array(
-                'anagrafica_view' => 'id, id_tipologia, tipologia, codice, riferimento, nome, cognome, denominazione, soprannome, sesso, codice_fiscale, partita_iva, id_ranking, ranking, recapiti, id_stato, id_provincia, se_prospect, se_lead, se_cliente, se_fornitore, se_produttore, se_collaboratore, se_interno, se_esterno, se_commerciale, se_concorrente, se_gestita, se_amministrazione, se_notizie, categorie, telefoni, mail, anno_nascita, mese_nascita, giorno_nascita, data_nascita, id_comune_nascita, data_archiviazione, id_account_inserimento, timestamp_inserimento, id_account_aggiornamento, timestamp_aggiornamento, __label__',
                 'anagrafica_categorie_view' => 'id, ordine, id_anagrafica, anagrafica, id_categoria, categoria, id_account_inserimento, id_account_aggiornamento, __label__',
                 'anagrafica_certificazioni_view' => 'id, id_anagrafica, anagrafica, id_certificazione, certificazione, id_emittente, emittente, nome, codice, data_emissione, data_scadenza, data_ora_inserimento, __label__',
                 'anagrafica_consensi_view' => 'id, id_account, id_anagrafica, anagrafica, id_mail, mail, id_consenso, se_prestato, timestamp_consenso, id_account_inserimento, id_account_aggiornamento, __label__',
@@ -48,10 +47,7 @@
         public function visteCatalogo( BackendTester $I ) {
 
             $this->vedoColonne( $I, array(
-                'articoli_view' => 'id_tipologia_pubblicazione, pubblicazione, tipologia_listino, id, codice, id_prodotto, prodotto, ordine, ean, isbn, codice_produttore, id_reparto, id_taglia, id_colore, id_periodicita, periodicita, id_tipologia_rinnovo, tipologia_rinnovo, larghezza, lunghezza, altezza, id_udm_dimensioni, udm_dimensioni, peso, id_udm_peso, udm_peso, volume, id_udm_volume, udm_volume, capacita, id_udm_capacita, udm_capacita, durata, id_udm_durata, udm_durata, nome, note, note_codifica, id_categorie, categorie, prezzi, data_archiviazione, note_archiviazione, id_account_inserimento, timestamp_inserimento, id_account_aggiornamento, timestamp_aggiornamento, __label__',
-                'prodotti_view' => 'id_tipologia_pubblicazione, pubblicazione, id, id_tipologia, tipologia, se_prodotto, se_servizio, codice, nome, id_marchio, marchio, id_produttore, produttore, codice_produttore, note, note_codifica, categorie, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, id_account_inserimento, id_account_aggiornamento, __label__',
                 'prodotti_caratteristiche_view' => 'id, ordine, id_prodotto, id_caratteristica, id_lingua, caratteristica, valore, note, id_account_inserimento, id_account_aggiornamento, __label__',
-                'caratteristiche_prodotti_view' => 'id, id_genitore, nome, html_entity, font_awesome, se_categoria, se_prodotto, se_articolo, id_account_inserimento, id_account_aggiornamento, __label__',
                 'categorie_prodotti_view' => 'id, id_genitore, ordine, codice, nome, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, figli, membri, id_account_inserimento, id_account_aggiornamento, __label__',
                 'categorie_notizie_view' => 'id, id_genitore, ordine, codice, nome, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, figli, membri, id_account_inserimento, id_account_aggiornamento, __label__',
                 'colori_view' => 'id, id_genitore, nome, hex, r, g, b, ral, pantone, c, m, y, k, css, __label__',

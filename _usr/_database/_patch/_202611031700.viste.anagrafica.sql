@@ -1,79 +1,22 @@
--- 2026-11-03 — viste dell'anagrafica al canone: anagrafica, le sue relazioni, consensi dei moduli, url
+-- 2026-11-03 — viste dell'anagrafica al canone: le relazioni dell'anagrafica, consensi dei moduli, url
 --
 -- Ordine di WEB03 del 03/11/2026, via Fabio; secondo gruppo dopo _202611031600.viste.geografia.sql, stesso criterio.
 -- Le viste vive sono rimaste indietro rispetto al file base _090000999999.views.sql perche' i loro blocchi stanno sotto
--- il livello di patch dei database esistenti: mancano p.es. id_tipologia e id_ranking di anagrafica_view ( crmeurosnodi ),
--- ordine e i nomi di anagrafica_categorie_view, ateco di anagrafica_settori_view, i dati del consenso di
+-- il livello di patch dei database esistenti: mancano p.es. ordine e i nomi di anagrafica_categorie_view, ateco di anagrafica_settori_view, i dati del consenso di
 -- consensi_moduli_view, username e password di url_view, note di immobili_anagrafica_view e progetti_anagrafica_view.
 -- Su ognuno dei dieci database dei deploy letti da web03 la vista viva ha solo colonne del canone e il SELECT del canone
 -- gira con LIMIT 0 ( viste-esatte.py, var/20261103-viste-ritardo/ di glisweb ): la patch aggiunge colonne e non ne toglie.
 -- Nessuna query, standard o dei progetti, mette queste viste in JOIN con le colonne nuove non qualificate ( join.py ).
--- anagrafica_view ha la statica anagrafica_view_static: refreshStaticView() copia solo le colonne comuni, quindi le
--- colonne nuove nella vista non la rompono.
+--
+-- Fuori da questo gruppo, anche se in ritardo su crmeurosnodi: anagrafica_view. bernispa e utensilerialughese la
+-- ridefiniscono di proposito con patch loro ( __label__, colonne delle statiche ), con le stesse colonne del canone:
+-- rifarla dal file base con un id piu' alto gli toglierebbe la personalizzazione. Va portata al canone deploy per
+-- deploy, o promuovendo prima a monte quello che i progetti hanno fatto meglio. Il suo blocco, 202611031700, e' stato
+-- tolto il 03/11 prima che la patch fosse applicata fuori da glisweb.
 --
 -- Un blocco per vista, con la definizione del file base copiata com'e'.
 --
 -- IDEMPOTENTE: CREATE OR REPLACE VIEW.
-
--- | 202611031700
-
--- anagrafica_view
-CREATE OR REPLACE VIEW `anagrafica_view` AS
-	SELECT
-		`anagrafica`.`id` AS `id`,
-		`anagrafica`.`id_tipologia` AS `id_tipologia`,
-		`tipologie_anagrafica`.`nome` AS `tipologia`,
-		`anagrafica`.`codice` AS `codice`,
-		`anagrafica`.`riferimento` AS `riferimento`,
-		`anagrafica`.`nome` AS `nome`,
-		`anagrafica`.`cognome` AS `cognome`,
-		`anagrafica`.`denominazione` AS `denominazione`,
-		`anagrafica`.`soprannome` AS `soprannome`,
-		`anagrafica`.`sesso` AS `sesso`,
-		`anagrafica`.`codice_fiscale` AS `codice_fiscale`,
-		`anagrafica`.`partita_iva` AS `partita_iva`,
-		`anagrafica`.`id_ranking` AS `id_ranking`,
-		`ranking`.`nome` AS `ranking`,
-		`anagrafica`.`recapiti` AS `recapiti`,
-		NULL AS `id_stato`,
-		NULL AS `id_provincia`,
-		max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,
-		max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,
-		max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,
-		max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,
-		max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,
-		max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,
-		max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,
-		max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,
-		max(`categorie_anagrafica`.`se_commerciale`) AS `se_commerciale`,
-		max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,
-		max(`categorie_anagrafica`.`se_gestita`) AS `se_gestita`,
-		max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,
-		max(`categorie_anagrafica`.`se_notizie`) AS `se_notizie`,
-		group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,
-		group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,
-		group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,
-		`anagrafica`.`anno_nascita` AS `anno_nascita`,
-		`anagrafica`.`mese_nascita` AS `mese_nascita`,
-		`anagrafica`.`giorno_nascita` AS `giorno_nascita`,
-		concat_ws('-',`anagrafica`.`anno_nascita`,lpad(`anagrafica`.`mese_nascita`,2,'0'),lpad(`anagrafica`.`giorno_nascita`,2,'0')) AS `data_nascita`,
-		`anagrafica`.`id_comune_nascita` AS `id_comune_nascita`,
-		`anagrafica`.`data_archiviazione` AS `data_archiviazione`,
-		`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,
-		`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,
-		`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,
-		`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,
-		concat_ws(' ',`anagrafica`.`codice`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__`
-	FROM
-		((((((`anagrafica`
-		left join `tipologie_anagrafica` on(`tipologie_anagrafica`.`id` = `anagrafica`.`id_tipologia`))
-		left join `ranking` on(`ranking`.`id` = `anagrafica`.`id_ranking`))
-		left join `anagrafica_categorie` on(`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))
-		left join `categorie_anagrafica` on(`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))
-		left join `telefoni` on(`telefoni`.`id_anagrafica` = `anagrafica`.`id`))
-		left join `mail` on(`mail`.`id_anagrafica` = `anagrafica`.`id`))
-		group by `anagrafica`.`id`
-;
 
 -- | 202611031701
 
