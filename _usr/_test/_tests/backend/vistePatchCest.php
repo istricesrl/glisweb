@@ -44,6 +44,28 @@
 
         }
 
+        // patch 202611031800: viste del catalogo
+        public function visteCatalogo( BackendTester $I ) {
+
+            $this->vedoColonne( $I, array(
+                'articoli_view' => 'id_tipologia_pubblicazione, pubblicazione, tipologia_listino, id, codice, id_prodotto, prodotto, ordine, ean, isbn, codice_produttore, id_reparto, id_taglia, id_colore, id_periodicita, periodicita, id_tipologia_rinnovo, tipologia_rinnovo, larghezza, lunghezza, altezza, id_udm_dimensioni, udm_dimensioni, peso, id_udm_peso, udm_peso, volume, id_udm_volume, udm_volume, capacita, id_udm_capacita, udm_capacita, durata, id_udm_durata, udm_durata, nome, note, note_codifica, id_categorie, categorie, prezzi, data_archiviazione, note_archiviazione, id_account_inserimento, timestamp_inserimento, id_account_aggiornamento, timestamp_aggiornamento, __label__',
+                'prodotti_view' => 'id_tipologia_pubblicazione, pubblicazione, id, id_tipologia, tipologia, se_prodotto, se_servizio, codice, nome, id_marchio, marchio, id_produttore, produttore, codice_produttore, note, note_codifica, categorie, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, id_account_inserimento, id_account_aggiornamento, __label__',
+                'prodotti_caratteristiche_view' => 'id, ordine, id_prodotto, id_caratteristica, id_lingua, caratteristica, valore, note, id_account_inserimento, id_account_aggiornamento, __label__',
+                'caratteristiche_prodotti_view' => 'id, id_genitore, nome, html_entity, font_awesome, se_categoria, se_prodotto, se_articolo, id_account_inserimento, id_account_aggiornamento, __label__',
+                'categorie_prodotti_view' => 'id, id_genitore, ordine, codice, nome, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, figli, membri, id_account_inserimento, id_account_aggiornamento, __label__',
+                'categorie_notizie_view' => 'id, id_genitore, ordine, codice, nome, template, schema_html, tema_css, se_sitemap, se_cacheable, id_sito, id_pagina, data_archiviazione, figli, membri, id_account_inserimento, id_account_aggiornamento, __label__',
+                'colori_view' => 'id, id_genitore, nome, hex, r, g, b, ral, pantone, c, m, y, k, css, __label__',
+                'coupon_articoli_view' => 'id, ordine, id_coupon, id_articolo, articolo, gruppo_alternative, id_account_inserimento, id_account_aggiornamento, __label__',
+                'sconti_view' => 'id, id_tipologia, tipologia, nome, id_valuta, valuta, sconto_percentuale, sconto_fisso, qta_min, note, timestamp_inizio, data_ora_inizio, timestamp_fine, data_ora_fine, id_account_inserimento, timestamp_inserimento, id_account_aggiornamento, timestamp_aggiornamento, __label__',
+                'listini_view' => 'id, id_genitore, id_tipologia, tipologia, codice, nome, id_emittente, emittente, id_valuta, valuta, sconto_su_genitore, note, se_default_su_genitore, data_archiviazione, id_account_inserimento, id_account_aggiornamento, __label__',
+                'listini_clienti_view' => 'id, ordine, id_listino, listino_codice, listino, id_cliente, cliente, cliente_nome, cliente_cognome, cliente_denominazione, cliente_codice_fiscale, cliente_codice, id_account_inserimento, id_account_aggiornamento, __label__',
+                'listini_zone_view' => 'id, ordine, id_listino, listino_codice, listino, id_zona, zona, id_account_inserimento, id_account_aggiornamento, __label__',
+                'mastri_articoli_view' => 'id, ordine, codice, id_mastro, mastro, id_articolo, articolo, id_ruolo, ruolo, scorta_minima, scorta_massima, id_udm, udm, note, id_account_inserimento, id_account_aggiornamento, __label__',
+                'colli_view' => 'id, id_genitore, id_tipologia, tipologia, ordine, codice, nome, id_anagrafica, anagrafica, id_documento, id_mittente, mittente, id_destinatario, destinatario, id_mastro, mastro, raggruppamento, larghezza, lunghezza, altezza, id_udm_dimensioni, peso, id_udm_peso, volume, id_udm_volume, pezzi, note, destinatari, timestamp_chiusura, note_chiusura, chiuso, timestamp_spedizione, note_spedizione, id_account_inserimento, id_account_aggiornamento, __label__'
+            ) );
+
+        }
+
         /**
          * verifica che ogni vista abbia tutte le colonne attese
          *
