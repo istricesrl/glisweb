@@ -14,6 +14,11 @@ class controllerToolsCest
     // settaggi pre test
     public function _before(UnitTester $I)
     {
+        global $cf;
+        // senza la chiave gli esempi non possono firmare le righe, e si fermano prima di scrivere
+        if( empty( $cf['auth']['import']['secret'] ) ) {
+            $I->markTestSkipped( 'il deploy non ha auth.import.secret' );
+        }
     }
 
     // controller() -> un account con username già usato dà 409 e la sua sottoform account_gruppi non viene scritta
