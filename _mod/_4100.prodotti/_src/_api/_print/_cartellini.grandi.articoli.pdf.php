@@ -48,7 +48,7 @@
     if( count( $articoli ) > 0 ){
 
         foreach(  $articoli as &$a ){
-            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT caratteristica, testo FROM articoli_caratteristiche_view  WHERE  id_articolo = ? UNION SELECT caratteristica, testo FROM prodotti_caratteristiche_view WHERE id_prodotto = ?', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
+            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT caratteristica, valore AS testo FROM articoli_caratteristiche_view  WHERE  id_articolo = ? UNION SELECT caratteristica, valore AS testo FROM prodotti_caratteristiche_view WHERE id_prodotto = ?', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
  
             $a['ric'] = mysqlSelectValue($cf['mysql']['connection'], 'SELECT metadati.testo FROM metadati WHERE id_articolo = ? AND nome = "ricondizionato"', array( array( 's' => $a['id'] ) ));
 
