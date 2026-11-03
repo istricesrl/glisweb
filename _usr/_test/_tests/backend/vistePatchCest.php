@@ -27,6 +27,23 @@
 
         }
 
+        // patch 202611031700: viste dell'anagrafica
+        public function visteAnagrafica( BackendTester $I ) {
+
+            $this->vedoColonne( $I, array(
+                'anagrafica_view' => 'id, id_tipologia, tipologia, codice, riferimento, nome, cognome, denominazione, soprannome, sesso, codice_fiscale, partita_iva, id_ranking, ranking, recapiti, id_stato, id_provincia, se_prospect, se_lead, se_cliente, se_fornitore, se_produttore, se_collaboratore, se_interno, se_esterno, se_commerciale, se_concorrente, se_gestita, se_amministrazione, se_notizie, categorie, telefoni, mail, anno_nascita, mese_nascita, giorno_nascita, data_nascita, id_comune_nascita, data_archiviazione, id_account_inserimento, timestamp_inserimento, id_account_aggiornamento, timestamp_aggiornamento, __label__',
+                'anagrafica_categorie_view' => 'id, ordine, id_anagrafica, anagrafica, id_categoria, categoria, id_account_inserimento, id_account_aggiornamento, __label__',
+                'anagrafica_certificazioni_view' => 'id, id_anagrafica, anagrafica, id_certificazione, certificazione, id_emittente, emittente, nome, codice, data_emissione, data_scadenza, data_ora_inserimento, __label__',
+                'anagrafica_consensi_view' => 'id, id_account, id_anagrafica, anagrafica, id_mail, mail, id_consenso, se_prestato, timestamp_consenso, id_account_inserimento, id_account_aggiornamento, __label__',
+                'anagrafica_settori_view' => 'id, id_anagrafica, id_settore, ateco, settore, ordine, id_account_inserimento, id_account_aggiornamento, __label__',
+                'consensi_moduli_view' => 'id, ordine, nome, id_lingua, lingua, id_consenso, codice_consenso, consenso, modulo, azione, informativa, pagina, note, se_richiesto, id_account_inserimento, id_account_aggiornamento, __label__',
+                'url_view' => 'id, id_tipologia, tipologia, id_anagrafica, anagrafica, url, nome, username, password, id_account_inserimento, id_account_aggiornamento, __label__',
+                'immobili_anagrafica_view' => 'id, ordine, id_immobile, id_anagrafica, anagrafica, id_ruolo, ruolo, note, id_account_inserimento, id_account_aggiornamento, __label__',
+                'progetti_anagrafica_view' => 'id, ordine, id_progetto, progetto, id_anagrafica, anagrafica, id_ruolo, ruolo, note, se_sostituto, id_account_inserimento, id_account_aggiornamento, __label__'
+            ) );
+
+        }
+
         /**
          * verifica che ogni vista abbia tutte le colonne attese
          *
