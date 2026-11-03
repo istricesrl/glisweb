@@ -32,6 +32,9 @@ dei dati fiscali. Quando sotto si parla di una linguetta si intende quella dei d
 
 La prima linguetta, *gestione*, ha nel riquadro **dati generali** la **data**, il **sezionale** e il **numero** ( che
 insieme identificano il documento ), un **nome** e le **note**; nei tipi che lo prevedono anche il **codice**.
+Il numero si chiede col pulsante **OTTIENI NUMERO**, che propone il primo libero del sezionale e **salva subito il
+documento**: così nessun altro può prendere lo stesso numero nel frattempo. Se manca un campo obbligatorio il
+salvataggio non parte, il campo viene evidenziato e il numero resta scritto: si completa e si salva a mano.
 Seguono i riquadri **dati emittente** e **dati destinatario**, ciascuno con l'anagrafica e la **sede** da usare sul
 documento: la sede si sceglie fra quelle dell'anagrafica scelta, quindi prima si compila l'anagrafica.
 
