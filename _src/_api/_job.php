@@ -114,8 +114,26 @@
      * 
      */
 
+    /**
+     * Fix 2026-11-03: l'API job solo a chi ha fatto il login.
+     *
+     * Il .htaccess la espone su /job/<id> e fino a oggi non chiedeva niente: chiunque conoscesse
+     * o indovinasse l'id ( e' un intero progressivo ) poteva far avanzare un job altrui, e nella
+     * vista di sola lettura leggerne lo stato e il result, cioe' il link al file prodotto. L'unico
+     * chiamante e' il driver dei job in foreground del back-end ( main.js dei template _athena ),
+     * che gira con l'utente loggato; il cron i job li esegue da se', senza passare di qui.
+     */
+    if( empty( $_SESSION['account']['id'] ) ) {
+
+        // status
+        http_response_code( 401 );
+        $job['err'][] = 'accesso negato';
+
+        // log
+        logger( 'richiesta anonima del job #' . ( isset( $_REQUEST['__id__'] ) ? (int) $_REQUEST['__id__'] : 0 ) . ' rifiutata', 'job', LOG_WARNING );
+
     // verifico la presenza di un ID
-    if( isset( $_REQUEST['__id__'] ) ) {
+    } elseif( isset( $_REQUEST['__id__'] ) ) {
 
         // debug
         // echo "id del job " . $_REQUEST['__id__'];

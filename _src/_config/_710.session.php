@@ -96,6 +96,28 @@
     }
 
     /**
+     * pulizia dei flag dei moduli di account
+     * ======================================
+     *
+     * Fix 2026-11-03: i flag __tk_ok__, __tk_sent__, __ts_check__ e __err__ dei blocchi __signup__,
+     * __profile__ e __pwreset__ li scrivono le macro di registrazione, profilo e reimpostazione della
+     * password, e i template li stampano con |raw perche' i testi contengono HTML. Se arrivano gia'
+     * dalla richiesta ( ?__signup__[__tk_sent__][testo][it-IT]=<script>... ) sono HTML iniettato nella
+     * pagina, anche dove la macro non gira ( il blocco di registrazione incluso nella pagina di login ):
+     * quindi si tolgono qui, prima di qualunque macro, e restano solo quelli scritti dal server.
+     *
+     */
+
+    // tolgo i flag arrivati dal client
+    foreach( array( '__signup__', '__profile__', '__pwreset__' ) as $blocco ) {
+        if( isset( $_REQUEST[ $blocco ] ) && is_array( $_REQUEST[ $blocco ] ) ) {
+            foreach( array( '__tk_ok__', '__tk_sent__', '__ts_check__', '__err__' ) as $flag ) {
+                unset( $_REQUEST[ $blocco ][ $flag ] );
+            }
+        }
+    }
+
+    /**
      * debug del runlevel
      * ==================
      * 

@@ -6,7 +6,8 @@
      * verifica che gli endpoint di servizio del nucleo ( /status, /cf, /report/memcache, /print/*, /api/security.403 )
      * non diano a chi non ha fatto il login ne' informazioni sull'installazione ( versioni, percorsi assoluti, albero
      * della configurazione ) ne' dati: devono rispondere 401, 403 o 404, oppure 200 con un corpo che non rivela
-     * niente di tutto questo ( S-008 )
+     * niente di tutto questo ( S-008 ); verifica anche che l'API job neghi a un anonimo l'avanzamento e lo stato dei job
+     * ( C-295 ) e che i flag della reimpostazione password scritti nella richiesta non finiscano nella pagina ( C-098 )
      *
      * le richieste partono da restCall() senza login; un test rosso qui vuol dire che l'endpoint e' aperto
      * e non ha nessuna chiamata di privilegio: non va coperto, va protetto
@@ -91,6 +92,28 @@
             }
 
             $I->assertEmpty( $aperti, 'endpoint interni aperti a un anonimo: ' . implode( '; ', $aperti ) );
+
+        }
+
+        // C-295 l'API job a un anonimo risponde 401, senza far avanzare il job ne' mostrarne lo stato
+        public function jobDaAnonimo( FrontendTester $I ) {
+
+            $status = $this->scarica( '/job/1', $raw );
+
+            $I->assertEquals( 401, $status, 'l\'API job risponde ' . $status . ' a un anonimo' );
+            $I->assertStringNotContainsString( '"corrente"', (string) $raw );
+
+        }
+
+        // C-098 i flag della reimpostazione password arrivati dalla richiesta non finiscono nella pagina
+        public function flagPasswordResetDaRichiesta( FrontendTester $I ) {
+
+            $I->amOnPageId( 'password.reset', array( '__pwreset__' => array(
+                '__tk_sent__'   => array( 'testo' => array( 'it-IT' => '<i>TEST-E2E-flag</i>' ) ),
+                '__err__'       => array( 'testo' => array( 'it-IT' => '<i>TEST-E2E-flag</i>' ) )
+            ) ) );
+
+            $I->dontSeeInSource( '<i>TEST-E2E-flag</i>' );
 
         }
 
