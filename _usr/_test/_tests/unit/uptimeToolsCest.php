@@ -45,6 +45,16 @@ class uptimeToolsCest
         $I->see('dopo un controllo riuscito: su, fallimenti 0');
     }
 
+    // uptimeAggiorna() -> lento solo dopo tre giri di fila oltre la soglia, che si sceglie per sito
+    public function lento(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_uptime.tools/_uptime.01.php');
+        $I->see('lento a freddo e poi veloce: false');
+        $I->see('giro lento 2: false');
+        $I->see('giro lento 3: true');
+        $I->see('soglia del sito a 10 secondi: false');
+    }
+
     // uptimeConsenso() -> giù solo se lo vede giù anche un altro server, e avvisa il primo in ordine alfabetico
     public function consenso(UnitTester $I)
     {

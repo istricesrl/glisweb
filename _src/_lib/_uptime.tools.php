@@ -63,7 +63,8 @@
      * testo        il testo che la risposta deve contenere ( NULL: nessuno )
      * codice       il codice HTTP atteso ( NULL: qualunque risposta sotto il 500 )
      * timeout      secondi oltre i quali il controllo fallisce
-     * lento        secondi oltre i quali la risposta è lenta: avviso a noi, non un fallimento
+     * lento        secondi oltre i quali la risposta è lenta per soglia giri di fila: va nel registro, non è un
+     *              fallimento e non manda mail
      * certificato  giorni di validità residua sotto i quali si avvisa noi
      * soglia       fallimenti consecutivi dopo i quali il sito è giù
      * ritardo      minuti di down confermato dopo i quali si avvisa il referente, se abilitato
@@ -356,27 +357,34 @@
     /**
      * applica l'isteresi agli esiti di un giro
      *
-     * Il sito passa giù in locale al fallimento numero $soglia, e torna su al primo controllo riuscito. I siti che
-     * non sono fra gli esiti escono dallo stato.
+     * Il sito passa giù in locale al fallimento numero $soglia, e torna su al primo controllo riuscito. Allo stesso
+     * modo è lento quando risponde oltre $lento secondi per $soglia giri di fila, e smette al primo giro sotto: una
+     * prova sola non basta, perché un deploy DEV senza memcache risponde in 6-7 secondi alla prima richiesta a
+     * freddo e in due alle successive ( gimbe, 04/11/2026 ). I siti che non sono fra gli esiti escono dallo stato.
      *
      * @param   array       $stato          lo stato del giro prima, per host
      * @param   array       $esiti          gli esiti di uptimeControlla()
-     * @param   int|array   $soglia         i fallimenti consecutivi per dire giù, uno solo o per host
+     * @param   int|array   $soglia         i giri consecutivi per dire giù o lento, uno solo o per host
+     * @param   int|array   $lento          i secondi oltre i quali la risposta è lenta, uno solo o per host
      *
-     * @return  array                       lo stato nuovo, per host: fallimenti, locale ( su|giu ) più l'esito
+     * @return  array                       lo stato nuovo, per host: fallimenti, locale ( su|giu ), lenti, lento più l'esito
      *
      */
-    function uptimeAggiorna( $stato, $esiti, $soglia = UPTIME_DEFAULT['soglia'] ) {
+    function uptimeAggiorna( $stato, $esiti, $soglia = UPTIME_DEFAULT['soglia'], $lento = UPTIME_DEFAULT['lento'] ) {
 
         $nuovo = array();
 
         foreach( $esiti as $h => $esito ) {
-            $prima = isset( $stato[ $h ] ) ? $stato[ $h ] : array( 'fallimenti' => 0, 'locale' => 'su' );
-            $fallimenti = ( $esito['ok'] ) ? 0 : $prima['fallimenti'] + 1;
+            $prima = array_replace( array( 'fallimenti' => 0, 'locale' => 'su', 'lenti' => 0 ), isset( $stato[ $h ] ) ? $stato[ $h ] : array() );
             $s = ( is_array( $soglia ) ) ? $soglia[ $h ] : $soglia;
+            $l = ( is_array( $lento ) ) ? $lento[ $h ] : $lento;
+            $fallimenti = ( $esito['ok'] ) ? 0 : $prima['fallimenti'] + 1;
+            $lenti = ( $esito['ok'] && $esito['tempo'] > $l ) ? $prima['lenti'] + 1 : 0;
             $nuovo[ $h ] = array_replace( $prima, $esito, array(
                 'fallimenti'    => $fallimenti,
-                'locale'        => ( $fallimenti >= $s ) ? 'giu' : 'su'
+                'locale'        => ( $fallimenti >= $s ) ? 'giu' : 'su',
+                'lenti'         => $lenti,
+                'lento'         => ( $lenti >= $s )
             ) );
         }
 

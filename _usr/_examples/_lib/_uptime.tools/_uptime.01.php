@@ -9,6 +9,7 @@
      * - uptimeVhost() sui due file di _vhost/: un Apache con un vhost sulla 80 e uno sulla 443, un nginx con un
      *   server sulla 443 e uno sulla 80; contano solo quelli sulla 443, col primo nome;
      * - uptimeAggiorna() su tre fallimenti e un controllo riuscito: il sito passa giù al terzo e torna su al primo ok;
+     *   e su risposte lente: una prova lenta a freddo non conta, tre di fila sì, e la soglia vale per sito;
      * - uptimeConsenso() nei quattro casi: confermato, smentito, nessun altro server, mittente;
      * - uptimeTransizione() e uptimeDowntime() su un periodo di down di dieci minuti.
      *
@@ -44,6 +45,17 @@
     }
     $stato = uptimeAggiorna( $stato, $ok, 3 );
     echo 'dopo un controllo riuscito: ' . $stato['sito.it']['locale'] . ', fallimenti ' . $stato['sito.it']['fallimenti'] . PHP_EOL;
+
+    // lentezza: conta solo dopo tre giri di fila oltre la soglia del sito
+    $adagio = array( 'sito.it' => array( 'ok' => true, 'codice' => 200, 'tempo' => 6.5, 'certificato' => 60, 'errore' => '' ) );
+    $stato = uptimeAggiorna( array(), $adagio, 3, array( 'sito.it' => 3 ) );
+    $stato = uptimeAggiorna( $stato, $ok, 3, array( 'sito.it' => 3 ) );
+    echo 'lento a freddo e poi veloce: ' . var_export( $stato['sito.it']['lento'], true ) . PHP_EOL;
+    for( $i = 1; $i <= 3; $i++ ) {
+        $stato = uptimeAggiorna( $stato, $adagio, 3, array( 'sito.it' => 3 ) );
+        echo 'giro lento ' . $i . ': ' . var_export( $stato['sito.it']['lento'], true ) . PHP_EOL;
+    }
+    echo 'soglia del sito a 10 secondi: ' . var_export( uptimeAggiorna( $stato, $adagio, 3, array( 'sito.it' => 10 ) )['sito.it']['lento'], true ) . PHP_EOL;
 
     // consenso
     $c = uptimeConsenso( 'web03', 'giu', array( 'web04' => 'giu' ) );

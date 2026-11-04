@@ -116,9 +116,10 @@
 
     // controlli e isteresi
     $esiti = uptimeControlla( $siti, isset( $conf['paralleli'] ) ? $conf['paralleli'] : 4 );
-    $vista = uptimeAggiorna( $vista, $esiti, array_combine( array_keys( $siti ), array_column( $siti, 'soglia' ) ) );
+    $prima_vista = $vista;
+    $vista = uptimeAggiorna( $vista, $esiti, array_combine( array_keys( $siti ), array_column( $siti, 'soglia' ) ), array_combine( array_keys( $siti ), array_column( $siti, 'lento' ) ) );
 
-    // gli avvisi di servizio ( lento, certificato ) li manda il primo dei server che rispondono
+    // gli avvisi di servizio ( certificato, DNS ) li manda il primo dei server che rispondono
     $presenti = array( $io );
     foreach( $altri as $nome => $a ) {
         if( $a !== NULL ) {
@@ -176,16 +177,15 @@
             }
         }
 
-        // lento o certificato in scadenza: una volta al giorno, solo a noi
-        $problemi = array();
-        if( $s['ok'] && $s['tempo'] > $siti[ $h ]['lento'] ) {
-            $problemi[] = 'risponde in ' . $s['tempo'] . ' secondi';
+        // lento: inizio e fine vanno solo nel registro, senza mail
+        $era = ! empty( $prima_vista[ $h ]['lento'] );
+        if( $s['lento'] !== $era ) {
+            $eventi[] = array( 'evento' => ( $s['lento'] ) ? 'lento' : 'normale', 'sito' => $h, 'ora' => date( 'c', $ora ), 'tempo' => $s['tempo'] );
         }
-        if( $s['certificato'] !== NULL && $s['certificato'] < $siti[ $h ]['certificato'] ) {
-            $problemi[] = 'il certificato scade fra ' . $s['certificato'] . ' giorni';
-        }
-        if( $primo && ! empty( $problemi ) && ( ! isset( $s['avvertito'] ) || $s['avvertito'] !== date( 'Y-m-d', $ora ) ) ) {
-            $posta[] = array( $noi, '[uptime] ' . $h . ': ' . $problemi[0], implode( PHP_EOL, $problemi ) . PHP_EOL );
+
+        // certificato in scadenza: una volta al giorno, solo a noi
+        if( $primo && $s['certificato'] !== NULL && $s['certificato'] < $siti[ $h ]['certificato'] && ( ! isset( $s['avvertito'] ) || $s['avvertito'] !== date( 'Y-m-d', $ora ) ) ) {
+            $posta[] = array( $noi, '[uptime] ' . $h . ': il certificato scade fra ' . $s['certificato'] . ' giorni', 'Il certificato di ' . $h . ' scade fra ' . $s['certificato'] . ' giorni.' . PHP_EOL );
             $vista[ $h ]['avvertito'] = date( 'Y-m-d', $ora );
         }
 
