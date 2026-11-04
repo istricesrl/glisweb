@@ -3,7 +3,8 @@
     /**
      * controller before per la tabella anagrafica_certificazioni
      *
-     * Su DELETE cancella i file allegati alla certificazione, la riga di file e il file su disco. Senza questo controller
+     * Su DELETE cancella i file allegati alla certificazione: la riga di file, e il file su disco lo sposta nel cestino con
+     * trashFile(), da dove emptyTrash() lo toglie dopo i giorni di common.garbage.giorni. Senza questo controller
      * il file resta sul disco anche dove la FK file.id_anagrafica_certificazioni è ON DELETE CASCADE ( lo standard ), e
      * dove è SET NULL restano anche le righe, senza padrone: su un certificato medico sono dati sanitari orfani. Lo fa
      * qui e non in un finally perché dopo la cancellazione le righe di file non dicono più a quale certificazione
@@ -31,8 +32,8 @@
                     mysqlQuery( $c, 'DELETE FROM file WHERE id = ?', array( array( 's' => $allegato['id'] ) ) );
 
                     if( ! empty( $allegato['path'] ) && ! mysqlSelectValue( $c, 'SELECT count(*) FROM file WHERE path = ?', array( array( 's' => $allegato['path'] ) ) ) ) {
-                        if( ! deleteFile( $allegato['path'] ) ) {
-                            logWrite( 'impossibile cancellare ' . $allegato['path'] . ' della certificazione #' . $d['id'], 'certificazioni', LOG_ERR );
+                        if( ! trashFile( $allegato['path'] ) ) {
+                            logWrite( 'impossibile spostare nel cestino ' . $allegato['path'] . ' della certificazione #' . $d['id'], 'certificazioni', LOG_ERR );
                         }
                     }
 

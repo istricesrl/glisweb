@@ -1075,6 +1075,9 @@
     // la directory tmp/ contiene i file temporanei ed è solo custom
     define( 'DIR_TMP'                                   , DIR_BASE . 'tmp/' );
 
+    // il cestino dei file: ci li sposta trashFile(), li toglie emptyTrash()
+    define( 'DIR_TMP_GARBAGE'                           , DIR_BASE . 'tmp/.garbage/' );
+
     // la directory var/ e le sue sottocartelle contengono tutti i dati che cambiano nel tempo (log, upload utente, ecc.); è solo custom
     define( 'DIR_VAR'                                   , DIR_BASE . 'var/' );
     define( 'DIR_VAR_CACHE'                             , DIR_BASE . 'var/cache/' );

@@ -5,7 +5,8 @@
      *
      * scritto il 04/11/2026: cancellando una certificazione i suoi file restavano sul disco, e dove la FK
      * file.id_anagrafica_certificazioni è SET NULL anche le righe di file ( 200 su polmasi, certificati medici ); ora
-     * _anagrafica.certificazioni.before.php cancella righe e file, salvo un percorso usato anche da un'altra riga
+     * _anagrafica.certificazioni.before.php cancella le righe e sposta i file nel cestino ( trashFile(), dal 04/11/2026 ),
+     * salvo un percorso usato anche da un'altra riga
      *
      * le righe si cancellano passando da controller(); certificazioni e file di test hanno il prefisso TEST-E2E-
      *
@@ -34,6 +35,10 @@
             $I->deleteTestRecords( 'anagrafica_certificazioni', 'nome' );
 
             foreach( glob( DIR_BASE . 'var/uploads/certificazioni/TEST-E2E-*' ) as $f ) {
+                unlink( $f );
+            }
+
+            foreach( glob( DIR_TMP_GARBAGE . '*/var/uploads/certificazioni/TEST-E2E-*' ) as $f ) {
                 unlink( $f );
             }
 
@@ -85,7 +90,7 @@
 
         }
 
-        // cancellando la certificazione vanno via la riga di file e il file sul disco
+        // cancellando la certificazione vanno via la riga di file e il file sul disco, che finisce nel cestino
         public function fileCancellatoConLaCertificazione( BackendTester $I ) {
 
             list( $id, $path ) = $this->certificazioneConFile( $I );
@@ -96,6 +101,7 @@
             $I->dontSeeInDatabase( 'anagrafica_certificazioni', array( 'id' => $id ) );
             $I->dontSeeInDatabase( 'file', array( 'path' => $path ) );
             $I->assertFileDoesNotExist( DIR_BASE . $path );
+            $I->assertFileExists( DIR_TMP_GARBAGE . date( 'Ymd' ) . '/' . $path );
 
         }
 

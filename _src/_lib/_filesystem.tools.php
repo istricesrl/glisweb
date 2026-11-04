@@ -109,6 +109,8 @@
      * checkFile()              | verifica l'esistenza e la scrivibilità di un file, creando sia il percorso che il file se necessario
      * deleteFolder()           | elimina una directory
      * deleteFile()             | elimina un file
+     * trashFile()              | sposta un file nel cestino invece di eliminarlo
+     * emptyTrash()             | svuota le cartelle del cestino più vecchie di un certo numero di giorni
      * recursiveDelete()        | questa funzione cancella un intero albero di cartelle
      * emptyFolder()            | svuota una cartella
      * moveFile()               | sposta un file
@@ -854,6 +856,97 @@
     }
 
     /**
+     * sposta un file nel cestino
+     * 
+     * Questa funzione è l'alternativa a deleteFile() per i file che qualcuno potrebbe rivolere indietro, per esempio quelli
+     * caricati dagli utenti: invece di cancellare il file lo sposta nel cestino, nella cartella del giorno e con il suo
+     * percorso relativo ( tmp/.garbage/20261104/var/uploads/certificazioni/certificato.pdf ), e da lì si recupera finché
+     * emptyTrash() non svuota quella cartella. Se nella cartella del giorno c'è già un file con lo stesso percorso, il
+     * secondo va in AAAAMMGG.2/, il terzo in AAAAMMGG.3/ e così via: nel cestino non si sovrascrive niente.
+     *
+     * @param   string      $f      il percorso del file da spostare nel cestino
+     * @param   string      $d      la cartella del cestino ( default DIR_TMP_GARBAGE )
+     * 
+     * @return  boolean             restituisce true se il file non esiste o è stato spostato, false altrimenti
+     *
+     */
+    function trashFile( $f, $d = DIR_TMP_GARBAGE ) {
+
+        // prelevo il percorso completo
+        $f = getFullPath( $f );
+        $d = rtrim( getFullPath( $d ), '/' ) . '/';
+
+        // restituisco true se il file non esiste, come deleteFile()
+        if( ! file_exists( $f ) ) {
+            return true;
+        }
+
+        // un file che non potrei cancellare non lo sposto
+        if( ! is_writeable( $f ) ) {
+            return false;
+        }
+
+        // cartella del giorno, senza sovrascrivere un file già nel cestino
+        $r = getShortPath( $f );
+        $g = date( 'Ymd' );
+        for( $i = 2; file_exists( $d . $g . '/' . $r ); $i++ ) {
+            $g = date( 'Ymd' ) . '.' . $i;
+        }
+
+        // sposto il file e restituisco il risultato
+        return moveFile( $f, $d . $g . '/' . $r );
+
+    }
+
+    /**
+     * svuota il cestino
+     * 
+     * Questa funzione cancella le cartelle del cestino ( vedi trashFile() ) più vecchie di $g giorni. Decide dal nome della
+     * cartella, che è il giorno in cui i file ci sono finiti, e non dalla data dei file, che lo spostamento lascia com'era:
+     * un file caricato un anno fa e cestinato oggi resta nel cestino $g giorni da oggi. Una cartella del giorno si cancella
+     * quando ha più di $g giorni, quindi un file cestinato il 04/11 con $g a 30 va via dal 05/12; $g sotto 1 vale 1, per
+     * non cancellare mai quello che è stato cestinato oggi. Il resto del contenuto del cestino non si tocca.
+     *
+     * @param   integer     $g      i giorni di permanenza nel cestino
+     * @param   string      $d      la cartella del cestino ( default DIR_TMP_GARBAGE )
+     * @param   boolean     $s      se true non cancella niente e restituisce solo le cartelle che cancellerebbe
+     * 
+     * @return  array               le cartelle cancellate ( o da cancellare ); quelle che non si riesce a cancellare vanno nel log
+     *
+     */
+    function emptyTrash( $g, $d = DIR_TMP_GARBAGE, $s = false ) {
+
+        // prelevo il percorso completo
+        $d = rtrim( getFullPath( $d ), '/' ) . '/';
+
+        // le cartelle del giorno fino a questa si cancellano
+        $l = date( 'Ymd', time() - ( max( 1, intval( $g ) ) * 86400 ) );
+
+        // cartelle cancellate
+        $c = array();
+
+        // un cestino che non c'è è un cestino vuoto
+        if( ! is_dir( $d ) ) {
+            return $c;
+        }
+
+        // le cartelle del giorno si chiamano AAAAMMGG o AAAAMMGG.N
+        foreach( scandir( $d ) as $n ) {
+            if( preg_match( '/^([0-9]{8})(\.[0-9]+)?$/', $n, $m ) && is_dir( $d . $n ) && $m[1] < $l ) {
+                if( $s === true || recursiveDelete( $d . $n ) === true ) {
+                    $c[] = $d . $n . '/';
+                } else {
+                    logger( 'impossibile svuotare ' . $d . $n . ' dal cestino', 'filesystem', LOG_ERR );
+                }
+            }
+        }
+
+        // restituisco le cartelle cancellate
+        return $c;
+
+    }
+
+    /**
      * questa funzione cancella un intero albero di cartelle
      * 
      * Per cancellare una cartella che non è vuota, è necessario svuotarla prima e quindi utilizziamo
@@ -862,19 +955,29 @@
      * 
      * @param       string          $d          il percorso da cancellare
      * @param       boolean         $p          se true (default) elimina anche la cartella $d altrimenti la svuota soltanto
+     * @param       array           $x          i nomi del primo livello di $d da non toccare, con il loro contenuto; ha senso
+     *                                          solo con $p a false ( _tmp.clean.php svuota tmp/ ma non il cestino )
      * 
      * @return      boolean                     true se è andato tutto bene, false altrimenti
      * 
      * TODO implementare i controlli (vedi deleteFolder)
      *
      */
-    function recursiveDelete( $d, $p = true ) {
+    function recursiveDelete( $d, $p = true, $x = array() ) {
 
         // prelevo il percorso completo
         $d = getFullPath( $d );
 
+        // prefisso per riconoscere il primo livello di $d
+        $b = rtrim( $d, '/' ) . '/';
+
         // prelevo l'iteratore per la cartella
         foreach( getFolderIterator( $d ) as $f ) {
+
+            // salto i nomi esclusi e quello che contengono
+            if( ! empty( $x ) && in_array( strtok( substr( $f->getPathname(), strlen( $b ) ), '/' ), (array) $x ) ) {
+                continue;
+            }
 
             // elimino il contenuto
             if( $f->isFile() ) {

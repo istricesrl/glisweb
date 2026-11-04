@@ -279,6 +279,20 @@
     define( 'RELEASE_LATEST', $cf['common']['release']['latest'] );
 
     /**
+     * cestino dei file
+     * ================
+     * I file cancellati con trashFile() finiscono in tmp/.garbage/AAAAMMGG/ e ci restano per il numero di giorni indicato
+     * qui; li toglie il task _src/_api/_task/_garbage.clean.php, che va pianificato. Si cambia da src/config.json con la
+     * chiave common.garbage.giorni. Nel cestino finiscono anche dati personali, per esempio i certificati medici di
+     * _mod/_6700.certificazioni: il termine va rispettato in tutt'e due i sensi, quindi nessuno svuota tmp/.garbage/
+     * prima ( _tmp.clean.php lo salta ) e il task che lo svuota dopo deve girare davvero.
+     *
+     */
+
+    // giorni di permanenza dei file nel cestino
+    $cf['common']['garbage']['giorni'] = 30;
+
+    /**
      * debug del runlevel
      * ==================
      * 
