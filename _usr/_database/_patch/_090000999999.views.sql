@@ -2901,25 +2901,26 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.data_archiviazione,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
-		concat(
-			tipologie_documenti.sigla,
+		concat_ws(
 			' ',
+			tipologie_documenti.sigla,
 			concat_ws(
 				'/',
 				documenti.numero,
 				documenti.sezionale
 			),
-			' del ',
-			documenti.data,
-			' per ',
-			coalesce(
-				a2.denominazione,
-				concat(
-					a2.cognome,
-					' ',
-					a2.nome
-				),
-				''
+			concat( 'del ', documenti.data ),
+			concat(
+				'per ',
+				coalesce(
+					a2.denominazione,
+					concat(
+						a2.cognome,
+						' ',
+						a2.nome
+					),
+					''
+				)
 			)
 		) AS __label__
     FROM
