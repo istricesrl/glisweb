@@ -1,10 +1,17 @@
 <?php
 
     /**
+     * attivita' di una riga di documento
      *
+     * la tabella attivita non ha una colonna id_documenti_articoli: un'attivita' appartiene alla riga attraverso la
+     * sua todo ( attivita.id_todo -> todo.id_documenti_articoli ), che e' lo stesso legame che attivita_view usa per
+     * quantita_prevista; per questo la vista si filtra su id_todo, con le todo della riga
      *
+     * fino al 2026-11-04 la macro chiedeva ad attivita_view note_programmazione, note_interne, testo e
+     * id_documenti_articoli, che la vista non ha ( e la tabella non ha nemmeno note_interne e testo ): la scheda
+     * si fermava con un 1054 ( polmasi, 2026-11-04 ); la vista non si tocca perche' quella viva ha colonne in piu'
+     * del canone su molti database, e ricrearla le toglierebbe
      *
-     * @todo documentare
      * @todo filtrare la tendina dei gruppi in base all'account connesso
      *
      * @file
@@ -13,7 +20,7 @@
 
     // tabella gestita
     $ct['form']['table'] = 'documenti_articoli';
-    
+
     // tabella della vista
 	$ct['view']['table'] = 'attivita';
 
@@ -25,13 +32,11 @@
 	    'id' => '#',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
-        'note_programmazione' => 'compito',
+        'todo' => 'compito',
         'data_attivita' => 'esecuzione',
 	    '__label__' => 'attività',
 	    'anagrafica' => 'svolta da',
-	    'ore' => 'ore',
-        'testo' => 'testo',
-        'note_interne' => 'note_interne'
+	    'ore' => 'ore'
     );
 
     // stili della vista
@@ -41,23 +46,24 @@
 	    'data_programmazione' => 'text-left no-wrap',
 	    'ora_inizio_programmazione' => 'text-left no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
-	    'note_programmazione' => 'text-left',
-        'note_interne' => 'd-none',
-        'testo' => 'd-none'
+	    'todo' => 'text-left'
     );
-    
-    // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'attivita.form';
-
-    // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'attivita.form';
-
-    // campo per il preset di apertura
-	$ct['view']['open']['preset']['field'] = 'id_documenti_articoli';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
-        // preset filtro custom progetti aperti
-	    $ct['view']['__restrict__']['id_documenti_articoli']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+
+        // todo della riga
+        $idTodo = mysqlSelectColumn(
+            'id',
+            $cf['mysql']['connection'],
+            'SELECT id FROM todo WHERE id_documenti_articoli = ? ',
+            array(
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+            )
+        );
+
+        // preset filtro attivita' delle todo della riga ( una riga senza todo non ha attivita' )
+        $ct['view']['__restrict__']['id_todo']['IN'] = ( empty( $idTodo ) ? '0' : implode( '|', $idTodo ) );
+
     }
 
     // gestione default
@@ -74,7 +80,6 @@
             if(!empty($row['data_programmazione'])){$row['data_programmazione'] = ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $row['data_programmazione'] ) ? date('d/m/Y', strtotime($row['data_programmazione'])) : $row['data_programmazione'] );}
 
             if(!empty($row['data_attivita'])){$row['data_attivita'] = ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $row['data_attivita'] ) ? date('d/m/Y', strtotime($row['data_attivita'])) : $row['data_attivita'] );}
-            $row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);
-            $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
+            if(!empty($row['ora_inizio_programmazione'])){$row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);}
 		}
 	}
