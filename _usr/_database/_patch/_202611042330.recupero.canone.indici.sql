@@ -330,11 +330,9 @@ ALTER TABLE `attivita`
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_08_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_09_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_10_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_11_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_12_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_13_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_14_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_15_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_16_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_17_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `attivita_ibfk_18_nofollow`,
@@ -374,11 +372,9 @@ ALTER TABLE `attivita`
 	ADD CONSTRAINT `attivita_ibfk_08_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_09_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_10_nofollow` FOREIGN KEY (`id_asset`) REFERENCES `asset` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-	ADD CONSTRAINT `attivita_ibfk_11_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_12_nofollow` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_13_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_14_nofollow` FOREIGN KEY (`id_step`) REFERENCES `step` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-	ADD CONSTRAINT `attivita_ibfk_15_nofollow` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_16_nofollow` FOREIGN KEY (`id_matricola`) REFERENCES `matricole` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `attivita_ibfk_18_nofollow` FOREIGN KEY (`id_messaggio`) REFERENCES `messaggi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -723,12 +719,6 @@ ALTER TABLE `carrelli_articoli`
 
 -- | 202611042386
 
--- carrelli_consensi: via i vincoli che cambiano
-ALTER TABLE `carrelli_consensi`
-	DROP FOREIGN KEY IF EXISTS `carrelli_consensi_ibfk_04_nofollow`;
-
--- | 202611042387
-
 -- carrelli_consensi: indici nella forma del canone
 ALTER TABLE `carrelli_consensi`
 	DROP INDEX IF EXISTS `indice`,
@@ -736,27 +726,21 @@ ALTER TABLE `carrelli_consensi`
 	ADD KEY `indice` (`id`,`ordine`,`id_carrello`,`id_anagrafica`,`id_account`,`id_consenso`,`se_prestato`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042388
-
--- carrelli_consensi: vincoli nella forma del canone
-ALTER TABLE `carrelli_consensi`
-	ADD CONSTRAINT `carrelli_consensi_ibfk_04_nofollow` FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
--- | 202611042389
+-- | 202611042387
 
 -- casse_previdenziali: via i vincoli che cambiano
 ALTER TABLE `casse_previdenziali`
 	DROP FOREIGN KEY IF EXISTS `casse_previdenziali_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `casse_previdenziali_ibfk_99_nofollow`;
 
--- | 202611042390
+-- | 202611042388
 
 -- casse_previdenziali: indici nella forma del canone
 ALTER TABLE `casse_previdenziali`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 
--- | 202611042391
+-- | 202611042389
 
 -- categorie_anagrafica: indici nella forma del canone
 ALTER TABLE `categorie_anagrafica`
@@ -785,7 +769,7 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_relazioni` (`se_relazioni`),
 	ADD KEY `se_risorse` (`se_risorse`);
 
--- | 202611042392
+-- | 202611042390
 
 -- categorie_annunci: indici nella forma del canone
 ALTER TABLE `categorie_annunci`
@@ -794,7 +778,7 @@ ALTER TABLE `categorie_annunci`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042393
+-- | 202611042391
 
 -- categorie_conversazioni: via i vincoli che cambiano
 ALTER TABLE `categorie_conversazioni`
@@ -802,7 +786,7 @@ ALTER TABLE `categorie_conversazioni`
 	DROP FOREIGN KEY IF EXISTS `categorie_conversazioni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `categorie_conversazioni_ibfk_99_nofollow`;
 
--- | 202611042394
+-- | 202611042392
 
 -- categorie_conversazioni: indici nella forma del canone
 ALTER TABLE `categorie_conversazioni`
@@ -817,7 +801,7 @@ ALTER TABLE `categorie_conversazioni`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042395
+-- | 202611042393
 
 -- categorie_conversazioni: vincoli nella forma del canone
 ALTER TABLE `categorie_conversazioni`
@@ -825,7 +809,7 @@ ALTER TABLE `categorie_conversazioni`
 	ADD CONSTRAINT `categorie_conversazioni_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `categorie_conversazioni_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042396
+-- | 202611042394
 
 -- categorie_marchi: via i vincoli che cambiano
 ALTER TABLE `categorie_marchi`
@@ -834,7 +818,7 @@ ALTER TABLE `categorie_marchi`
 	DROP FOREIGN KEY IF EXISTS `categorie_marchi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `categorie_marchi_ibfk_99_nofollow`;
 
--- | 202611042397
+-- | 202611042395
 
 -- categorie_marchi: indici nella forma del canone
 ALTER TABLE `categorie_marchi`
@@ -853,7 +837,7 @@ ALTER TABLE `categorie_marchi`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042398
+-- | 202611042396
 
 -- categorie_marchi: vincoli nella forma del canone
 ALTER TABLE `categorie_marchi`
@@ -862,7 +846,7 @@ ALTER TABLE `categorie_marchi`
 	ADD CONSTRAINT `categorie_marchi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `categorie_marchi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042399
+-- | 202611042397
 
 -- categorie_notizie: indici nella forma del canone
 ALTER TABLE `categorie_notizie`
@@ -871,7 +855,7 @@ ALTER TABLE `categorie_notizie`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042400
+-- | 202611042398
 
 -- categorie_prodotti: indici nella forma del canone
 ALTER TABLE `categorie_prodotti`
@@ -880,7 +864,7 @@ ALTER TABLE `categorie_prodotti`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042401
+-- | 202611042399
 
 -- categorie_progetti: indici nella forma del canone
 ALTER TABLE `categorie_progetti`
@@ -891,7 +875,7 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042402
+-- | 202611042400
 
 -- categorie_risorse: indici nella forma del canone
 ALTER TABLE `categorie_risorse`
@@ -900,20 +884,20 @@ ALTER TABLE `categorie_risorse`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`,`id_pagina`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042403
+-- | 202611042401
 
 -- causali: indici nella forma del canone
 ALTER TABLE `causali`
 	DROP INDEX IF EXISTS `nome`;
 
--- | 202611042404
+-- | 202611042402
 
 -- chiavi: via i vincoli che cambiano
 ALTER TABLE `chiavi`
 	DROP FOREIGN KEY IF EXISTS `chiavi_ibfk_01`,
 	DROP FOREIGN KEY IF EXISTS `chiavi_ibfk_01_nofollow`;
 
--- | 202611042405
+-- | 202611042403
 
 -- chiavi: indici nella forma del canone
 ALTER TABLE `chiavi`
@@ -921,41 +905,41 @@ ALTER TABLE `chiavi`
 	DROP INDEX IF EXISTS `unica`,
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_licenza`,`seriale`);
 
--- | 202611042406
+-- | 202611042404
 
 -- chiavi: vincoli nella forma del canone
 ALTER TABLE `chiavi`
 	ADD CONSTRAINT `chiavi_ibfk_01` FOREIGN KEY (`id_licenza`) REFERENCES `licenze` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042407
+-- | 202611042405
 
 -- classi_energetiche: via i vincoli che cambiano
 ALTER TABLE `classi_energetiche`
 	DROP FOREIGN KEY IF EXISTS `classi_energetiche_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `classi_energetiche_ibfk_99_nofollow`;
 
--- | 202611042408
+-- | 202611042406
 
 -- classi_energetiche: indici nella forma del canone
 ALTER TABLE `classi_energetiche`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`nome`,`ep_min`,`ep_max`,`hex`);
 
--- | 202611042409
+-- | 202611042407
 
 -- colli: indici nella forma del canone
 ALTER TABLE `colli`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`codice`,`nome`);
 
--- | 202611042410
+-- | 202611042408
 
 -- colori: via i vincoli che cambiano
 ALTER TABLE `colori`
 	DROP FOREIGN KEY IF EXISTS `colori_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `colori_ibfk_99_nofollow`;
 
--- | 202611042411
+-- | 202611042409
 
 -- colori: indici nella forma del canone
 ALTER TABLE `colori`
@@ -972,7 +956,7 @@ ALTER TABLE `colori`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`hex`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042412
+-- | 202611042410
 
 -- comuni: via i vincoli che cambiano
 ALTER TABLE `comuni`
@@ -980,7 +964,7 @@ ALTER TABLE `comuni`
 	DROP FOREIGN KEY IF EXISTS `comuni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `comuni_ibfk_99_nofollow`;
 
--- | 202611042413
+-- | 202611042411
 
 -- comuni: indici nella forma del canone
 ALTER TABLE `comuni`
@@ -991,20 +975,20 @@ ALTER TABLE `comuni`
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `indice` (`id`,`nome`,`id_provincia`,`codice_istat`,`codice_catasto`);
 
--- | 202611042414
+-- | 202611042412
 
 -- comuni: vincoli nella forma del canone
 ALTER TABLE `comuni`
 	ADD CONSTRAINT `comuni_ibfk_01_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042415
+-- | 202611042413
 
 -- condizioni: via i vincoli che cambiano
 ALTER TABLE `condizioni`
 	DROP FOREIGN KEY IF EXISTS `condizioni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `condizioni_ibfk_99_nofollow`;
 
--- | 202611042416
+-- | 202611042414
 
 -- condizioni: indici nella forma del canone
 ALTER TABLE `condizioni`
@@ -1017,14 +1001,14 @@ ALTER TABLE `condizioni`
 	ADD KEY `se_asset` (`se_asset`),
 	ADD UNIQUE KEY `unica` (`nome`);
 
--- | 202611042417
+-- | 202611042415
 
 -- condizioni_pagamento: via i vincoli che cambiano
 ALTER TABLE `condizioni_pagamento`
 	DROP FOREIGN KEY IF EXISTS `condizioni_pagamento_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `condizioni_pagamento_ibfk_99_nofollow`;
 
--- | 202611042418
+-- | 202611042416
 
 -- condizioni_pagamento: indici nella forma del canone
 ALTER TABLE `condizioni_pagamento`
@@ -1034,14 +1018,14 @@ ALTER TABLE `condizioni_pagamento`
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 
--- | 202611042419
+-- | 202611042417
 
 -- consensi: via i vincoli che cambiano
 ALTER TABLE `consensi`
 	DROP FOREIGN KEY IF EXISTS `consensi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `consensi_ibfk_99_nofollow`;
 
--- | 202611042420
+-- | 202611042418
 
 -- consensi: indici nella forma del canone
 ALTER TABLE `consensi`
@@ -1049,13 +1033,13 @@ ALTER TABLE `consensi`
 	DROP INDEX IF EXISTS `nome`,
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 
--- | 202611042421
+-- | 202611042419
 
 -- consensi_contatti: via i vincoli che cambiano
 ALTER TABLE `consensi_contatti`
 	DROP FOREIGN KEY IF EXISTS `consensi_contatti_ibfk_01_nofollow`;
 
--- | 202611042422
+-- | 202611042420
 
 -- consensi_contatti: indici nella forma del canone
 ALTER TABLE `consensi_contatti`
@@ -1068,19 +1052,19 @@ ALTER TABLE `consensi_contatti`
 	ADD KEY `se_prestato` (`se_prestato`),
 	ADD UNIQUE KEY `unica` (`id_contatto`,`id_consenso`,`modulo`);
 
--- | 202611042423
+-- | 202611042421
 
 -- consensi_contatti: vincoli nella forma del canone
 ALTER TABLE `consensi_contatti`
 	ADD CONSTRAINT `consensi_contatti_ibfk_01_nofollow` FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042424
+-- | 202611042422
 
 -- consensi_moduli: via i vincoli che cambiano
 ALTER TABLE `consensi_moduli`
 	DROP FOREIGN KEY IF EXISTS `consensi_moduli_ibfk_02_nofollow`;
 
--- | 202611042425
+-- | 202611042423
 
 -- consensi_moduli: indici nella forma del canone
 ALTER TABLE `consensi_moduli`
@@ -1092,20 +1076,20 @@ ALTER TABLE `consensi_moduli`
 	DROP INDEX IF EXISTS `se_richiesto`,
 	ADD KEY `indice` (`id`,`ordine`,`nome`,`id_lingua`,`id_consenso`,`modulo`);
 
--- | 202611042426
+-- | 202611042424
 
 -- consensi_moduli: vincoli nella forma del canone
 ALTER TABLE `consensi_moduli`
 	ADD CONSTRAINT `consensi_moduli_ibfk_02_nofollow` FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042427
+-- | 202611042425
 
 -- contatti: via i vincoli che cambiano
 ALTER TABLE `contatti`
 	DROP FOREIGN KEY IF EXISTS `contatti_ibfk_03_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `contatti_ibfk_04_nofollow`;
 
--- | 202611042428
+-- | 202611042426
 
 -- contatti: indici nella forma del canone
 ALTER TABLE `contatti`
@@ -1120,12 +1104,11 @@ ALTER TABLE `contatti`
 	ADD KEY `modulo` (`modulo`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042429
+-- | 202611042427
 
 -- contenuti: via i vincoli che cambiano
 ALTER TABLE `contenuti`
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_02`,
-	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_03`,
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_04`,
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_05`,
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_06`,
@@ -1153,7 +1136,7 @@ ALTER TABLE `contenuti`
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_28`,
 	DROP FOREIGN KEY IF EXISTS `contenuti_ibfk_29`;
 
--- | 202611042430
+-- | 202611042428
 
 -- contenuti: indici nella forma del canone
 ALTER TABLE `contenuti`
@@ -1205,12 +1188,11 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_lingua`),
 	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_lingua`);
 
--- | 202611042431
+-- | 202611042429
 
 -- contenuti: vincoli nella forma del canone
 ALTER TABLE `contenuti`
 	ADD CONSTRAINT `contenuti_ibfk_02` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	ADD CONSTRAINT `contenuti_ibfk_03` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `contenuti_ibfk_04` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `contenuti_ibfk_05` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `contenuti_ibfk_06` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1238,21 +1220,21 @@ ALTER TABLE `contenuti`
 	ADD CONSTRAINT `contenuti_ibfk_28` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `contenuti_ibfk_29` FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042432
+-- | 202611042430
 
 -- continenti: via i vincoli che cambiano
 ALTER TABLE `continenti`
 	DROP FOREIGN KEY IF EXISTS `continenti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `continenti_ibfk_99_nofollow`;
 
--- | 202611042433
+-- | 202611042431
 
 -- contratti: via i vincoli che cambiano
 ALTER TABLE `contratti`
 	DROP FOREIGN KEY IF EXISTS `contratti_ibfk_05_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `contratti_ibfk_07_nofollow`;
 
--- | 202611042434
+-- | 202611042432
 
 -- contratti: indici nella forma del canone
 ALTER TABLE `contratti`
@@ -1265,13 +1247,13 @@ ALTER TABLE `contratti`
 	ADD KEY `indice` ( `id`, `id_tipologia`, `codice`, `nome`, `id_immobile`, `id_progetto`, `data_archiviazione` ),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042435
+-- | 202611042433
 
 -- conversazioni: via i vincoli che cambiano
 ALTER TABLE `conversazioni`
 	DROP FOREIGN KEY IF EXISTS `conversazioni_ibfk_02_nofollow`;
 
--- | 202611042436
+-- | 202611042434
 
 -- conversazioni: indici nella forma del canone
 ALTER TABLE `conversazioni`
@@ -1280,13 +1262,13 @@ ALTER TABLE `conversazioni`
 	ADD UNIQUE KEY `codice` ( `codice` ),
 	ADD KEY `indice` ( `id`, `codice`, `nome`, `id_annuncio`, `timestamp_apertura`, `timestamp_chiusura` );
 
--- | 202611042437
+-- | 202611042435
 
 -- conversazioni_account: via i vincoli che cambiano
 ALTER TABLE `conversazioni_account`
 	DROP FOREIGN KEY IF EXISTS `conversazioni_account_ibfk_03_nofollow`;
 
--- | 202611042438
+-- | 202611042436
 
 -- conversazioni_account: indici nella forma del canone
 ALTER TABLE `conversazioni_account`
@@ -1297,13 +1279,13 @@ ALTER TABLE `conversazioni_account`
 	ADD KEY `indice` (`id`,`ordine`,`id_conversazione`,`id_account`,`id_ruolo`,`timestamp_lettura`,`timestamp_entrata`,`timestamp_uscita`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042439
+-- | 202611042437
 
 -- conversazioni_account: vincoli nella forma del canone
 ALTER TABLE `conversazioni_account`
 	ADD CONSTRAINT `conversazioni_account_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_conversazioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042440
+-- | 202611042438
 
 -- conversazioni_categorie: via i vincoli che cambiano
 ALTER TABLE `conversazioni_categorie`
@@ -1312,7 +1294,7 @@ ALTER TABLE `conversazioni_categorie`
 	DROP FOREIGN KEY IF EXISTS `conversazioni_categorie_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `conversazioni_categorie_ibfk_99_nofollow`;
 
--- | 202611042441
+-- | 202611042439
 
 -- conversazioni_categorie: indici nella forma del canone
 ALTER TABLE `conversazioni_categorie`
@@ -1329,7 +1311,7 @@ ALTER TABLE `conversazioni_categorie`
 	ADD KEY `indice` (`id`,`ordine`,`id_conversazione`,`id_categoria`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042442
+-- | 202611042440
 
 -- conversazioni_categorie: vincoli nella forma del canone
 ALTER TABLE `conversazioni_categorie`
@@ -1338,7 +1320,7 @@ ALTER TABLE `conversazioni_categorie`
 	ADD CONSTRAINT `conversazioni_categorie_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `conversazioni_categorie_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042443
+-- | 202611042441
 
 -- corrispondenza: via i vincoli che cambiano
 ALTER TABLE `corrispondenza`
@@ -1353,7 +1335,7 @@ ALTER TABLE `corrispondenza`
 	DROP FOREIGN KEY IF EXISTS `corrispondenza_ibfk_10_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `corrispondenza_ibfk_11_nofollow`;
 
--- | 202611042444
+-- | 202611042442
 
 -- corrispondenza: indici nella forma del canone
 ALTER TABLE `corrispondenza`
@@ -1375,7 +1357,7 @@ ALTER TABLE `corrispondenza`
 	ADD KEY `id_udm_peso` (`id_udm_peso`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`);
 
--- | 202611042445
+-- | 202611042443
 
 -- corrispondenza: vincoli nella forma del canone
 ALTER TABLE `corrispondenza`
@@ -1390,7 +1372,7 @@ ALTER TABLE `corrispondenza`
 	ADD CONSTRAINT `corrispondenza_ibfk_10_nofollow` FOREIGN KEY (`id_formato`) REFERENCES `formati_tipologie_corrispondenza` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `corrispondenza_ibfk_11_nofollow` FOREIGN KEY (`id_peso`) REFERENCES `pesi_tipologie_corrispondenza` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042446
+-- | 202611042444
 
 -- costi_contratti: indici nella forma del canone
 ALTER TABLE `costi_contratti`
@@ -1400,14 +1382,14 @@ ALTER TABLE `costi_contratti`
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_contratto`,`costo_orario`),
 	ADD UNIQUE KEY `unica` (`id_contratto`,`id_tipologia`);
 
--- | 202611042447
+-- | 202611042445
 
 -- coupon: via i vincoli che cambiano
 ALTER TABLE `coupon`
 	DROP FOREIGN KEY IF EXISTS `coupon_ibfk_02_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `coupon_ibfk_03_nofollow`;
 
--- | 202611042448
+-- | 202611042446
 
 -- coupon: indici nella forma del canone
 ALTER TABLE `coupon`
@@ -1418,21 +1400,21 @@ ALTER TABLE `coupon`
 	ADD KEY `causale_id_rinnovo` (`causale_id_rinnovo`),
 	ADD KEY `indice` (`id`,`codice`,`nome`,`id_anagrafica`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`,`se_vincolato`,`timestamp_inizio`,`timestamp_fine`);
 
--- | 202611042449
+-- | 202611042447
 
 -- coupon: vincoli nella forma del canone
 ALTER TABLE `coupon`
 	ADD CONSTRAINT `coupon_ibfk_02_nofollow` FOREIGN KEY (`causale_id_contratto`) REFERENCES `contratti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `coupon_ibfk_03_nofollow` FOREIGN KEY (`causale_id_rinnovo`) REFERENCES `rinnovi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042450
+-- | 202611042448
 
 -- coupon_articoli: via i vincoli che cambiano
 ALTER TABLE `coupon_articoli`
 	DROP FOREIGN KEY IF EXISTS `coupon_articoli_ibfk_01`,
 	DROP FOREIGN KEY IF EXISTS `coupon_articoli_ibfk_01_nofollow`;
 
--- | 202611042451
+-- | 202611042449
 
 -- coupon_articoli: indici nella forma del canone
 ALTER TABLE `coupon_articoli`
@@ -1443,13 +1425,13 @@ ALTER TABLE `coupon_articoli`
 	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_articolo`,`gruppo_alternative`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042452
+-- | 202611042450
 
 -- coupon_articoli: vincoli nella forma del canone
 ALTER TABLE `coupon_articoli`
 	ADD CONSTRAINT `coupon_articoli_ibfk_01` FOREIGN KEY (`id_coupon`) REFERENCES `coupon` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042453
+-- | 202611042451
 
 -- coupon_categorie_prodotti: indici nella forma del canone
 ALTER TABLE `coupon_categorie_prodotti`
@@ -1458,7 +1440,7 @@ ALTER TABLE `coupon_categorie_prodotti`
 	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_categoria`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042454
+-- | 202611042452
 
 -- coupon_listini: indici nella forma del canone
 ALTER TABLE `coupon_listini`
@@ -1467,7 +1449,7 @@ ALTER TABLE `coupon_listini`
 	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_listino`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042455
+-- | 202611042453
 
 -- coupon_marchi: indici nella forma del canone
 ALTER TABLE `coupon_marchi`
@@ -1476,7 +1458,7 @@ ALTER TABLE `coupon_marchi`
 	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_marchio`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042456
+-- | 202611042454
 
 -- coupon_prodotti: indici nella forma del canone
 ALTER TABLE `coupon_prodotti`
@@ -1485,7 +1467,7 @@ ALTER TABLE `coupon_prodotti`
 	ADD KEY `indice` (`id`,`ordine`,`id_coupon`,`id_prodotto`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042457
+-- | 202611042455
 
 -- crediti: via i vincoli che cambiano
 ALTER TABLE `crediti`
@@ -1498,7 +1480,7 @@ ALTER TABLE `crediti`
 	DROP FOREIGN KEY IF EXISTS `crediti_ibfk_07_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `crediti_ibfk_08_nofollow`;
 
--- | 202611042458
+-- | 202611042456
 
 -- crediti: indici nella forma del canone
 ALTER TABLE `crediti`
@@ -1508,7 +1490,7 @@ ALTER TABLE `crediti`
 	DROP INDEX IF EXISTS `unica`,
 	ADD KEY `indice` (`id`,`nome`,`id_pianificazione`,`id_documenti_articolo`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`quantita`,`data`);
 
--- | 202611042459
+-- | 202611042457
 
 -- crediti: vincoli nella forma del canone
 ALTER TABLE `crediti`
@@ -1519,21 +1501,21 @@ ALTER TABLE `crediti`
 	ADD CONSTRAINT `crediti_ibfk_05_nofollow` FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `crediti_ibfk_06_nofollow` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042460
+-- | 202611042458
 
 -- dichiarazioni_intento: indici nella forma del canone
 ALTER TABLE `dichiarazioni_intento`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_anagrafica`,`protocollo`,`data_protocollo`,`anno`,`data_inizio`,`data_fine`,`importo`);
 
--- | 202611042461
+-- | 202611042459
 
 -- disponibilita: via i vincoli che cambiano
 ALTER TABLE `disponibilita`
 	DROP FOREIGN KEY IF EXISTS `disponibilita_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `disponibilita_ibfk_99_nofollow`;
 
--- | 202611042462
+-- | 202611042460
 
 -- disponibilita: indici nella forma del canone
 ALTER TABLE `disponibilita`
@@ -1544,13 +1526,13 @@ ALTER TABLE `disponibilita`
 	ADD KEY `indice` (`id`,`nome`,`se_catalogo`,`se_immobili`),
 	ADD UNIQUE KEY `unica` (`nome`);
 
--- | 202611042463
+-- | 202611042461
 
 -- distinta: via i vincoli che cambiano
 ALTER TABLE `distinta`
 	DROP FOREIGN KEY IF EXISTS `distinta_ibfk_02_nofollow`;
 
--- | 202611042464
+-- | 202611042462
 
 -- distinta: indici nella forma del canone
 ALTER TABLE `distinta`
@@ -1559,22 +1541,20 @@ ALTER TABLE `distinta`
 	ADD KEY `indice` (`id`,`ordine`,`id_articolo`,`id_componente`,`quantita`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042465
+-- | 202611042463
 
 -- distinta: vincoli nella forma del canone
 ALTER TABLE `distinta`
 	ADD CONSTRAINT `distinta_ibfk_02_nofollow` FOREIGN KEY (`id_componente`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042466
+-- | 202611042464
 
 -- documenti: via i vincoli che cambiano
 ALTER TABLE `documenti`
 	DROP FOREIGN KEY IF EXISTS `documenti_ibfk_03_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `documenti_ibfk_05_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `documenti_ibfk_12_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `documenti_ibfk_16_nofollow`;
+	DROP FOREIGN KEY IF EXISTS `documenti_ibfk_12_nofollow`;
 
--- | 202611042467
+-- | 202611042465
 
 -- documenti: indici nella forma del canone
 ALTER TABLE `documenti`
@@ -1589,15 +1569,13 @@ ALTER TABLE `documenti`
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`,`id_carrelli_articoli`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042468
+-- | 202611042466
 
 -- documenti: vincoli nella forma del canone
 ALTER TABLE `documenti`
-	ADD CONSTRAINT `documenti_ibfk_03_nofollow` FOREIGN KEY (`id_sede_emittente`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-	ADD CONSTRAINT `documenti_ibfk_05_nofollow` FOREIGN KEY (`id_sede_destinatario`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-	ADD CONSTRAINT `documenti_ibfk_16_nofollow` FOREIGN KEY (`id_sede_destinatario_spedizione`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+	ADD CONSTRAINT `documenti_ibfk_03_nofollow` FOREIGN KEY (`id_sede_emittente`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042469
+-- | 202611042467
 
 -- documenti_articoli: via i vincoli che cambiano
 ALTER TABLE `documenti_articoli`
@@ -1605,7 +1583,7 @@ ALTER TABLE `documenti_articoli`
 	DROP FOREIGN KEY IF EXISTS `documenti_articoli_ibfk_22_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `documenti_articoli_ibfk_23_nofollow`;
 
--- | 202611042470
+-- | 202611042468
 
 -- documenti_articoli: indici nella forma del canone
 ALTER TABLE `documenti_articoli`
@@ -1623,7 +1601,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia_documento`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_carrello`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042471
+-- | 202611042469
 
 -- documenti_articoli: vincoli nella forma del canone
 ALTER TABLE `documenti_articoli`
@@ -1631,7 +1609,7 @@ ALTER TABLE `documenti_articoli`
 	ADD CONSTRAINT `documenti_articoli_ibfk_22_nofollow` FOREIGN KEY (`id_missione`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `documenti_articoli_ibfk_23_nofollow` FOREIGN KEY (`id_packing_list`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042472
+-- | 202611042470
 
 -- documenti_casse_previdenziali: indici nella forma del canone
 ALTER TABLE `documenti_casse_previdenziali`
@@ -1642,7 +1620,7 @@ ALTER TABLE `documenti_casse_previdenziali`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_documento`,`id_cassa_previdenziale`,`id_iva`);
 
--- | 202611042473
+-- | 202611042471
 
 -- documenti_ritenute: indici nella forma del canone
 ALTER TABLE `documenti_ritenute`
@@ -1651,7 +1629,7 @@ ALTER TABLE `documenti_ritenute`
 	ADD KEY `indice` (`id`,`ordine`,`id_documento`,`id_ritenuta`,`aliquota`,`causale_pagamento`,`importo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042474
+-- | 202611042472
 
 -- edifici: via i vincoli che cambiano
 ALTER TABLE `edifici`
@@ -1659,7 +1637,7 @@ ALTER TABLE `edifici`
 	DROP FOREIGN KEY IF EXISTS `edifici_ibfk_02_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `edifici_ibfk_03_nofollow`;
 
--- | 202611042475
+-- | 202611042473
 
 -- edifici: indici nella forma del canone
 ALTER TABLE `edifici`
@@ -1668,7 +1646,7 @@ ALTER TABLE `edifici`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`, `id_genitore`, `id_tipologia`, `codice`, `nome`, `id_indirizzo`);
 
--- | 202611042476
+-- | 202611042474
 
 -- edifici: vincoli nella forma del canone
 ALTER TABLE `edifici`
@@ -1676,7 +1654,7 @@ ALTER TABLE `edifici`
 	ADD CONSTRAINT `edifici_ibfk_02_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_edifici` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
 	ADD CONSTRAINT `edifici_ibfk_03_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042477
+-- | 202611042475
 
 -- edifici_anagrafica: via i vincoli che cambiano
 ALTER TABLE `edifici_anagrafica`
@@ -1686,7 +1664,7 @@ ALTER TABLE `edifici_anagrafica`
 	DROP FOREIGN KEY IF EXISTS `edifici_anagrafica_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `edifici_anagrafica_ibfk_99_nofollow`;
 
--- | 202611042478
+-- | 202611042476
 
 -- edifici_anagrafica: indici nella forma del canone
 ALTER TABLE `edifici_anagrafica`
@@ -1705,7 +1683,7 @@ ALTER TABLE `edifici_anagrafica`
 	ADD KEY `indice` (`id`,`ordine`,`id_edificio`,`id_anagrafica`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042479
+-- | 202611042477
 
 -- edifici_anagrafica: vincoli nella forma del canone
 ALTER TABLE `edifici_anagrafica`
@@ -1715,7 +1693,7 @@ ALTER TABLE `edifici_anagrafica`
 	ADD CONSTRAINT `edifici_anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `edifici_anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042480
+-- | 202611042478
 
 -- edifici_caratteristiche: indici nella forma del canone
 ALTER TABLE `edifici_caratteristiche`
@@ -1726,7 +1704,7 @@ ALTER TABLE `edifici_caratteristiche`
 	ADD KEY `indice` (`id`,`ordine`,`id_edificio`,`id_caratteristica`,`id_lingua`,`se_assente`),
 	ADD UNIQUE KEY `unica` (`id_edificio`,`id_caratteristica`,`id_lingua`);
 
--- | 202611042481
+-- | 202611042479
 
 -- file: via i vincoli che cambiano
 ALTER TABLE `file`
@@ -1771,7 +1749,7 @@ ALTER TABLE `file`
 	DROP FOREIGN KEY IF EXISTS `file_ibfk_36`,
 	DROP FOREIGN KEY IF EXISTS `file_ibfk_37_nofollow`;
 
--- | 202611042482
+-- | 202611042480
 
 -- file: indici nella forma del canone
 ALTER TABLE `file`
@@ -1880,7 +1858,7 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_video` (`id_video`,`id_ruolo`,`id_lingua`,`path`);
 
--- | 202611042483
+-- | 202611042481
 
 -- file: vincoli nella forma del canone
 ALTER TABLE `file`
@@ -1922,7 +1900,7 @@ ALTER TABLE `file`
 	ADD CONSTRAINT `file_ibfk_36` FOREIGN KEY (`id_vano`) REFERENCES `vani` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `file_ibfk_37_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_file` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042484
+-- | 202611042482
 
 -- formati_tipologie_corrispondenza: via i vincoli che cambiano
 ALTER TABLE `formati_tipologie_corrispondenza`
@@ -1931,7 +1909,7 @@ ALTER TABLE `formati_tipologie_corrispondenza`
 	DROP FOREIGN KEY IF EXISTS `formati_tipologie_corrispondenza_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `formati_tipologie_corrispondenza_ibfk_99_nofollow`;
 
--- | 202611042485
+-- | 202611042483
 
 -- formati_tipologie_corrispondenza: indici nella forma del canone
 ALTER TABLE `formati_tipologie_corrispondenza`
@@ -1948,7 +1926,7 @@ ALTER TABLE `formati_tipologie_corrispondenza`
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042486
+-- | 202611042484
 
 -- formati_tipologie_corrispondenza: vincoli nella forma del canone
 ALTER TABLE `formati_tipologie_corrispondenza`
@@ -1957,7 +1935,7 @@ ALTER TABLE `formati_tipologie_corrispondenza`
 	ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `formati_tipologie_corrispondenza_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042487
+-- | 202611042485
 
 -- funnel: via i vincoli che cambiano
 ALTER TABLE `funnel`
@@ -1965,7 +1943,7 @@ ALTER TABLE `funnel`
 	DROP FOREIGN KEY IF EXISTS `funnel_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `funnel_ibfk_99_nofollow`;
 
--- | 202611042488
+-- | 202611042486
 
 -- funnel: indici nella forma del canone
 ALTER TABLE `funnel`
@@ -1978,7 +1956,7 @@ ALTER TABLE `funnel`
 	ADD KEY `id_campagna` (`id_campagna`),
 	ADD KEY `indice` (`id`,`nome`,`id_campagna`);
 
--- | 202611042489
+-- | 202611042487
 
 -- funnel: vincoli nella forma del canone
 ALTER TABLE `funnel`
@@ -1986,26 +1964,26 @@ ALTER TABLE `funnel`
 	ADD CONSTRAINT `funnel_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `funnel_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042490
+-- | 202611042488
 
 -- giorni: via i vincoli che cambiano
 ALTER TABLE `giorni`
 	DROP FOREIGN KEY IF EXISTS `giorni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `giorni_ibfk_99_nofollow`;
 
--- | 202611042491
+-- | 202611042489
 
 -- giorni: indici nella forma del canone
 ALTER TABLE `giorni`
 	DROP INDEX IF EXISTS `nome`;
 
--- | 202611042492
+-- | 202611042490
 
 -- iban: via i vincoli che cambiano
 ALTER TABLE `iban`
 	DROP FOREIGN KEY IF EXISTS `iban_ibfk_01`;
 
--- | 202611042493
+-- | 202611042491
 
 -- iban: indici nella forma del canone
 ALTER TABLE `iban`
@@ -2016,13 +1994,13 @@ ALTER TABLE `iban`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`iban`);
 
--- | 202611042494
+-- | 202611042492
 
 -- iban: vincoli nella forma del canone
 ALTER TABLE `iban`
 	ADD CONSTRAINT `iban_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042495
+-- | 202611042493
 
 -- immagini: via i vincoli che cambiano
 ALTER TABLE `immagini`
@@ -2060,7 +2038,7 @@ ALTER TABLE `immagini`
 	DROP FOREIGN KEY IF EXISTS `immagini_ibfk_28`,
 	DROP FOREIGN KEY IF EXISTS `immagini_ibfk_29_nofollow`;
 
--- | 202611042496
+-- | 202611042494
 
 -- immagini: indici nella forma del canone
 ALTER TABLE `immagini`
@@ -2143,7 +2121,7 @@ ALTER TABLE `immagini`
 	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_video` (`id_video`,`id_ruolo`,`id_lingua`,`path`);
 
--- | 202611042497
+-- | 202611042495
 
 -- immagini: vincoli nella forma del canone
 ALTER TABLE `immagini`
@@ -2177,13 +2155,13 @@ ALTER TABLE `immagini`
 	ADD CONSTRAINT `immagini_ibfk_28` FOREIGN KEY (`id_vano`) REFERENCES `vani` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `immagini_ibfk_29_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_immagini` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042498
+-- | 202611042496
 
 -- immobili: via i vincoli che cambiano
 ALTER TABLE `immobili`
 	DROP FOREIGN KEY IF EXISTS `immobili_ibfk_02_nofollow`;
 
--- | 202611042499
+-- | 202611042497
 
 -- immobili: indici nella forma del canone
 ALTER TABLE `immobili`
@@ -2195,20 +2173,20 @@ ALTER TABLE `immobili`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_edificio`);
 
--- | 202611042500
+-- | 202611042498
 
 -- immobili: vincoli nella forma del canone
 ALTER TABLE `immobili`
 	ADD CONSTRAINT `immobili_ibfk_02_nofollow` FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042501
+-- | 202611042499
 
 -- immobili_anagrafica: indici nella forma del canone
 ALTER TABLE `immobili_anagrafica`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`ordine`,`id_immobile`,`id_anagrafica`,`id_ruolo`);
 
--- | 202611042502
+-- | 202611042500
 
 -- immobili_caratteristiche: indici nella forma del canone
 ALTER TABLE `immobili_caratteristiche`
@@ -2219,7 +2197,7 @@ ALTER TABLE `immobili_caratteristiche`
 	ADD KEY `indice` (`id`,`ordine`,`id_immobile`,`id_caratteristica`,`id_lingua`,`se_assente`),
 	ADD UNIQUE KEY `unica` (`id_immobile`,`id_caratteristica`,`id_lingua`);
 
--- | 202611042503
+-- | 202611042501
 
 -- indirizzi_caratteristiche: indici nella forma del canone
 ALTER TABLE `indirizzi_caratteristiche`
@@ -2230,14 +2208,14 @@ ALTER TABLE `indirizzi_caratteristiche`
 	ADD KEY `indice` (`id`,`ordine`,`id_indirizzo`,`id_caratteristica`,`id_lingua`,`se_assente`),
 	ADD UNIQUE KEY `unica` (`id_indirizzo`,`id_caratteristica`,`id_lingua`);
 
--- | 202611042504
+-- | 202611042502
 
 -- iva: via i vincoli che cambiano
 ALTER TABLE `iva`
 	DROP FOREIGN KEY IF EXISTS `iva_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `iva_ibfk_99_nofollow`;
 
--- | 202611042505
+-- | 202611042503
 
 -- iva: indici nella forma del canone
 ALTER TABLE `iva`
@@ -2246,7 +2224,7 @@ ALTER TABLE `iva`
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `indice` (`id`,`codice`,`nome`,`aliquota`,`data_archiviazione`);
 
--- | 202611042506
+-- | 202611042504
 
 -- licenze_software: indici nella forma del canone
 ALTER TABLE `licenze_software`
@@ -2255,14 +2233,14 @@ ALTER TABLE `licenze_software`
 	ADD KEY `indice` (`id`,`ordine`,`id_licenza`,`id_software`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042507
+-- | 202611042505
 
 -- lingue: via i vincoli che cambiano
 ALTER TABLE `lingue`
 	DROP FOREIGN KEY IF EXISTS `lingue_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `lingue_ibfk_99_nofollow`;
 
--- | 202611042508
+-- | 202611042506
 
 -- liste: indici nella forma del canone
 ALTER TABLE `liste`
@@ -2271,7 +2249,7 @@ ALTER TABLE `liste`
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 
--- | 202611042509
+-- | 202611042507
 
 -- liste_mail: indici nella forma del canone
 ALTER TABLE `liste_mail`
@@ -2280,7 +2258,7 @@ ALTER TABLE `liste_mail`
 	ADD KEY `indice` (`id`,`ordine`,`id_lista`,`id_mail`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042510
+-- | 202611042508
 
 -- listini: via i vincoli che cambiano
 ALTER TABLE `listini`
@@ -2289,7 +2267,7 @@ ALTER TABLE `listini`
 	DROP FOREIGN KEY IF EXISTS `listini_ibfk_03_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `listini_ibfk_04_nofollow`;
 
--- | 202611042511
+-- | 202611042509
 
 -- listini: indici nella forma del canone
 ALTER TABLE `listini`
@@ -2298,7 +2276,7 @@ ALTER TABLE `listini`
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`nome`);
 
--- | 202611042512
+-- | 202611042510
 
 -- listini: vincoli nella forma del canone
 ALTER TABLE `listini`
@@ -2307,7 +2285,7 @@ ALTER TABLE `listini`
 	ADD CONSTRAINT `listini_ibfk_03_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `listini_ibfk_04_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042513
+-- | 202611042511
 
 -- listini_clienti: indici nella forma del canone
 ALTER TABLE `listini_clienti`
@@ -2316,14 +2294,14 @@ ALTER TABLE `listini_clienti`
 	ADD KEY `indice` (`id`,`ordine`,`id_listino`,`id_cliente`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042514
+-- | 202611042512
 
 -- listini_zone: indici nella forma del canone
 ALTER TABLE `listini_zone`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`ordine`,`id_listino`,`id_zona`);
 
--- | 202611042515
+-- | 202611042513
 
 -- lotti: via i vincoli che cambiano
 ALTER TABLE `lotti`
@@ -2332,7 +2310,7 @@ ALTER TABLE `lotti`
 	DROP FOREIGN KEY IF EXISTS `lotti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `lotti_ibfk_99_nofollow`;
 
--- | 202611042516
+-- | 202611042514
 
 -- lotti: indici nella forma del canone
 ALTER TABLE `lotti`
@@ -2353,7 +2331,7 @@ ALTER TABLE `lotti`
 	ADD KEY `indice` (`id`,`codice`,`nome`,`id_articolo`,`id_produttore`,`data_scadenza`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042517
+-- | 202611042515
 
 -- lotti: vincoli nella forma del canone
 ALTER TABLE `lotti`
@@ -2362,7 +2340,7 @@ ALTER TABLE `lotti`
 	ADD CONSTRAINT `lotti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `lotti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042518
+-- | 202611042516
 
 -- luoghi: via i vincoli che cambiano
 ALTER TABLE `luoghi`
@@ -2371,7 +2349,7 @@ ALTER TABLE `luoghi`
 	DROP FOREIGN KEY IF EXISTS `luoghi_ibfk_04_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `luoghi_ibfk_05_nofollow`;
 
--- | 202611042519
+-- | 202611042517
 
 -- luoghi: indici nella forma del canone
 ALTER TABLE `luoghi`
@@ -2382,7 +2360,7 @@ ALTER TABLE `luoghi`
 	ADD KEY `indice` (`id`, `id_genitore`, `id_tipologia`, `nome`, `id_indirizzo`, `id_edificio`, `id_immobile`, `id_vano`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042520
+-- | 202611042518
 
 -- luoghi: vincoli nella forma del canone
 ALTER TABLE `luoghi`
@@ -2391,7 +2369,7 @@ ALTER TABLE `luoghi`
 	ADD CONSTRAINT `luoghi_ibfk_04_nofollow` FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `luoghi_ibfk_05_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042521
+-- | 202611042519
 
 -- macro: via i vincoli che cambiano
 ALTER TABLE `macro`
@@ -2411,7 +2389,7 @@ ALTER TABLE `macro`
 	DROP FOREIGN KEY IF EXISTS `macro_ibfk_14`,
 	DROP FOREIGN KEY IF EXISTS `macro_ibfk_15`;
 
--- | 202611042522
+-- | 202611042520
 
 -- macro: indici nella forma del canone
 ALTER TABLE `macro`
@@ -2445,7 +2423,7 @@ ALTER TABLE `macro`
 	ADD UNIQUE KEY `unica_marchio` (`id_marchio`,`macro`),
 	ADD UNIQUE KEY `unica_pianificazione` (`id_pianificazione`,`macro`);
 
--- | 202611042523
+-- | 202611042521
 
 -- macro: vincoli nella forma del canone
 ALTER TABLE `macro`
@@ -2465,7 +2443,7 @@ ALTER TABLE `macro`
 	ADD CONSTRAINT `macro_ibfk_14` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `macro_ibfk_15` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042524
+-- | 202611042522
 
 -- mail: via i vincoli che cambiano
 ALTER TABLE `mail`
@@ -2474,7 +2452,7 @@ ALTER TABLE `mail`
 	DROP FOREIGN KEY IF EXISTS `mail_ibfk_02`,
 	DROP FOREIGN KEY IF EXISTS `mail_ibfk_02_nofollow`;
 
--- | 202611042525
+-- | 202611042523
 
 -- mail: indici nella forma del canone
 ALTER TABLE `mail`
@@ -2483,21 +2461,21 @@ ALTER TABLE `mail`
 	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`id_ruolo`,`indirizzo`,`se_notifiche`,`se_pec`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042526
+-- | 202611042524
 
 -- mail: vincoli nella forma del canone
 ALTER TABLE `mail`
 	ADD CONSTRAINT `mail_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `mail_ibfk_02_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_mail` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042527
+-- | 202611042525
 
 -- mail_out: via i vincoli che cambiano
 ALTER TABLE `mail_out`
 	DROP FOREIGN KEY IF EXISTS `mail_out_ibfk_01_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `mail_out_ibfk_02_nofollow`;
 
--- | 202611042528
+-- | 202611042526
 
 -- mail_out: indici nella forma del canone
 ALTER TABLE `mail_out`
@@ -2511,20 +2489,20 @@ ALTER TABLE `mail_out`
 	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `token` (`token`);
 
--- | 202611042529
+-- | 202611042527
 
 -- mail_out: vincoli nella forma del canone
 ALTER TABLE `mail_out`
 	ADD CONSTRAINT `mail_out_ibfk_01_nofollow` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042530
+-- | 202611042528
 
 -- mail_sent: via i vincoli che cambiano
 ALTER TABLE `mail_sent`
 	DROP FOREIGN KEY IF EXISTS `mail_sent_ibfk_01_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `mail_sent_ibfk_02_nofollow`;
 
--- | 202611042531
+-- | 202611042529
 
 -- mail_sent: indici nella forma del canone
 ALTER TABLE `mail_sent`
@@ -2538,20 +2516,20 @@ ALTER TABLE `mail_sent`
 	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `token` (`token`);
 
--- | 202611042532
+-- | 202611042530
 
 -- mail_sent: vincoli nella forma del canone
 ALTER TABLE `mail_sent`
 	ADD CONSTRAINT `mail_sent_ibfk_01_nofollow` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042533
+-- | 202611042531
 
 -- mailing: indici nella forma del canone
 ALTER TABLE `mailing`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`nome`,`timestamp_invio`);
 
--- | 202611042534
+-- | 202611042532
 
 -- mailing_liste: indici nella forma del canone
 ALTER TABLE `mailing_liste`
@@ -2560,7 +2538,7 @@ ALTER TABLE `mailing_liste`
 	ADD KEY `indice` (`id`,`ordine`,`id_lista`,`id_mailing`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042535
+-- | 202611042533
 
 -- mailing_mail: indici nella forma del canone
 ALTER TABLE `mailing_mail`
@@ -2573,7 +2551,7 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica_mail` (`id_mailing`,`id_mail`);
 
--- | 202611042536
+-- | 202611042534
 
 -- marchi: indici nella forma del canone
 ALTER TABLE `marchi`
@@ -2584,7 +2562,7 @@ ALTER TABLE `marchi`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `indice` (`id`,`nome`,`id_produttore`,`id_sito`,`id_pagina`);
 
--- | 202611042537
+-- | 202611042535
 
 -- marchi_categorie: via i vincoli che cambiano
 ALTER TABLE `marchi_categorie`
@@ -2593,7 +2571,7 @@ ALTER TABLE `marchi_categorie`
 	DROP FOREIGN KEY IF EXISTS `marchi_categorie_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `marchi_categorie_ibfk_99_nofollow`;
 
--- | 202611042538
+-- | 202611042536
 
 -- marchi_categorie: indici nella forma del canone
 ALTER TABLE `marchi_categorie`
@@ -2610,7 +2588,7 @@ ALTER TABLE `marchi_categorie`
 	ADD KEY `indice` (`id`,`id_marchio`,`id_categoria`,`ordine`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042539
+-- | 202611042537
 
 -- marchi_categorie: vincoli nella forma del canone
 ALTER TABLE `marchi_categorie`
@@ -2619,7 +2597,7 @@ ALTER TABLE `marchi_categorie`
 	ADD CONSTRAINT `marchi_categorie_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `marchi_categorie_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042540
+-- | 202611042538
 
 -- mastri: via i vincoli che cambiano
 ALTER TABLE `mastri`
@@ -2628,7 +2606,7 @@ ALTER TABLE `mastri`
 	DROP FOREIGN KEY IF EXISTS `mastri_ibfk_05_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `mastri_ibfk_06_nofollow`;
 
--- | 202611042541
+-- | 202611042539
 
 -- mastri: indici nella forma del canone
 ALTER TABLE `mastri`
@@ -2648,7 +2626,7 @@ ALTER TABLE `mastri`
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`nome`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042542
+-- | 202611042540
 
 -- mastri: vincoli nella forma del canone
 ALTER TABLE `mastri`
@@ -2657,7 +2635,7 @@ ALTER TABLE `mastri`
 	ADD CONSTRAINT `mastri_ibfk_05_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `mastri_ibfk_06_nofollow` FOREIGN KEY (`id_anagrafica_indirizzi`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042543
+-- | 202611042541
 
 -- mastri_articoli: via i vincoli che cambiano
 ALTER TABLE `mastri_articoli`
@@ -2666,7 +2644,7 @@ ALTER TABLE `mastri_articoli`
 	DROP FOREIGN KEY IF EXISTS `mastri_articoli_ibfk_03_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `mastri_articoli_ibfk_04_nofollow`;
 
--- | 202611042544
+-- | 202611042542
 
 -- mastri_articoli: indici nella forma del canone
 ALTER TABLE `mastri_articoli`
@@ -2677,7 +2655,7 @@ ALTER TABLE `mastri_articoli`
 	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_mastro`,`id_articolo`,`id_ruolo`),
 	ADD UNIQUE KEY `unica` (`id_mastro`,`id_articolo`);
 
--- | 202611042545
+-- | 202611042543
 
 -- mastri_articoli: vincoli nella forma del canone
 ALTER TABLE `mastri_articoli`
@@ -2685,14 +2663,14 @@ ALTER TABLE `mastri_articoli`
 	ADD CONSTRAINT `mastri_articoli_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_mastri` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
 	ADD CONSTRAINT `mastri_articoli_ibfk_04_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042546
+-- | 202611042544
 
 -- mastri_tipologie_veicoli: via i vincoli che cambiano
 ALTER TABLE `mastri_tipologie_veicoli`
 	DROP FOREIGN KEY IF EXISTS `mastri_tipologie_veicoli_ibfk_01`,
 	DROP FOREIGN KEY IF EXISTS `mastri_tipologie_veicoli_ibfk_01_nofollow`;
 
--- | 202611042547
+-- | 202611042545
 
 -- mastri_tipologie_veicoli: indici nella forma del canone
 ALTER TABLE `mastri_tipologie_veicoli`
@@ -2701,22 +2679,20 @@ ALTER TABLE `mastri_tipologie_veicoli`
 	ADD KEY `indice` (`id`,`ordine`,`id_mastro`,`id_tipologia`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042548
+-- | 202611042546
 
 -- mastri_tipologie_veicoli: vincoli nella forma del canone
 ALTER TABLE `mastri_tipologie_veicoli`
 	ADD CONSTRAINT `mastri_tipologie_veicoli_ibfk_01` FOREIGN KEY (`id_mastro`) REFERENCES `mastri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042549
+-- | 202611042547
 
 -- matricole: via i vincoli che cambiano
 ALTER TABLE `matricole`
-	DROP FOREIGN KEY IF EXISTS `matricole_ibfk_01_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `matricole_ibfk_02_nofollow`,
-	DROP FOREIGN KEY IF EXISTS `matricole_ibfk_03_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `matricole_ibfk_04_nofollow`;
 
--- | 202611042550
+-- | 202611042548
 
 -- matricole: indici nella forma del canone
 ALTER TABLE `matricole`
@@ -2731,16 +2707,14 @@ ALTER TABLE `matricole`
 	ADD KEY `matricola` (`matricola`),
 	ADD UNIQUE KEY `unica` (`id_articolo`,`matricola`);
 
--- | 202611042551
+-- | 202611042549
 
 -- matricole: vincoli nella forma del canone
 ALTER TABLE `matricole`
-	ADD CONSTRAINT `matricole_ibfk_01_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
 	ADD CONSTRAINT `matricole_ibfk_02_nofollow` FOREIGN KEY (`id_lotto`) REFERENCES `lotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-	ADD CONSTRAINT `matricole_ibfk_03_nofollow` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `matricole_ibfk_04_nofollow` FOREIGN KEY (`id_produttore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042552
+-- | 202611042550
 
 -- menu: via i vincoli che cambiano
 ALTER TABLE `menu`
@@ -2759,7 +2733,7 @@ ALTER TABLE `menu`
 	DROP FOREIGN KEY IF EXISTS `menu_ibfk_13`,
 	DROP FOREIGN KEY IF EXISTS `menu_ibfk_14_nofollow`;
 
--- | 202611042553
+-- | 202611042551
 
 -- menu: indici nella forma del canone
 ALTER TABLE `menu`
@@ -2797,7 +2771,7 @@ ALTER TABLE `menu`
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_lingua`,`menu`,`nome`,`ancora`),
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_lingua`,`menu`,`nome`,`ancora`);
 
--- | 202611042554
+-- | 202611042552
 
 -- menu: vincoli nella forma del canone
 ALTER TABLE `menu`
@@ -2814,13 +2788,13 @@ ALTER TABLE `menu`
 	ADD CONSTRAINT `menu_ibfk_13` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `menu_ibfk_14_nofollow` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042555
+-- | 202611042553
 
 -- messaggi: via i vincoli che cambiano
 ALTER TABLE `messaggi`
 	DROP FOREIGN KEY IF EXISTS `messaggi_ibfk_01_nofollow`;
 
--- | 202611042556
+-- | 202611042554
 
 -- messaggi: indici nella forma del canone
 ALTER TABLE `messaggi`
@@ -2831,13 +2805,13 @@ ALTER TABLE `messaggi`
 	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_invio`),
 	ADD KEY `timestamp_invio` (`timestamp_invio`);
 
--- | 202611042557
+-- | 202611042555
 
 -- messaggi: vincoli nella forma del canone
 ALTER TABLE `messaggi`
 	ADD CONSTRAINT `messaggi_ibfk_01_nofollow` FOREIGN KEY (`id_conversazione`) REFERENCES `conversazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042558
+-- | 202611042556
 
 -- messaggi_account: via i vincoli che cambiano
 ALTER TABLE `messaggi_account`
@@ -2846,7 +2820,7 @@ ALTER TABLE `messaggi_account`
 	DROP FOREIGN KEY IF EXISTS `messaggi_account_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `messaggi_account_ibfk_99_nofollow`;
 
--- | 202611042559
+-- | 202611042557
 
 -- messaggi_account: indici nella forma del canone
 ALTER TABLE `messaggi_account`
@@ -2865,7 +2839,7 @@ ALTER TABLE `messaggi_account`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `timestamp_lettura` (`timestamp_lettura`);
 
--- | 202611042560
+-- | 202611042558
 
 -- messaggi_account: vincoli nella forma del canone
 ALTER TABLE `messaggi_account`
@@ -2874,7 +2848,7 @@ ALTER TABLE `messaggi_account`
 	ADD CONSTRAINT `messaggi_account_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `messaggi_account_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042561
+-- | 202611042559
 
 -- metadati: via i vincoli che cambiano
 ALTER TABLE `metadati`
@@ -2917,7 +2891,7 @@ ALTER TABLE `metadati`
 	DROP FOREIGN KEY IF EXISTS `metadati_ibfk_40`,
 	DROP FOREIGN KEY IF EXISTS `metadati_ibfk_41`;
 
--- | 202611042562
+-- | 202611042560
 
 -- metadati: indici nella forma del canone
 ALTER TABLE `metadati`
@@ -2960,7 +2934,7 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_valutazione` (`id_valutazione`,`id_lingua`,`nome`),
 	ADD UNIQUE KEY `unica_vano` (`id_vano`,`id_lingua`,`nome`);
 
--- | 202611042563
+-- | 202611042561
 
 -- metadati: vincoli nella forma del canone
 ALTER TABLE `metadati`
@@ -3003,14 +2977,14 @@ ALTER TABLE `metadati`
 	ADD CONSTRAINT `metadati_ibfk_40` FOREIGN KEY (`id_tipologia_corrispondenza`) REFERENCES `tipologie_corrispondenza` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `metadati_ibfk_41` FOREIGN KEY (`id_peso_tipologie_corrispondenza`) REFERENCES `pesi_tipologie_corrispondenza` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042564
+-- | 202611042562
 
 -- modalita_pagamento: via i vincoli che cambiano
 ALTER TABLE `modalita_pagamento`
 	DROP FOREIGN KEY IF EXISTS `modalita_pagamento_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `modalita_pagamento_ibfk_99_nofollow`;
 
--- | 202611042565
+-- | 202611042563
 
 -- modalita_pagamento: indici nella forma del canone
 ALTER TABLE `modalita_pagamento`
@@ -3021,7 +2995,7 @@ ALTER TABLE `modalita_pagamento`
 	ADD KEY `indice` (`id`,`nome`,`codice_sdi`),
 	ADD UNIQUE KEY `nome` (`nome`);
 
--- | 202611042566
+-- | 202611042564
 
 -- modalita_spedizione: via i vincoli che cambiano
 ALTER TABLE `modalita_spedizione`
@@ -3034,7 +3008,7 @@ ALTER TABLE `modalita_spedizione`
 	DROP FOREIGN KEY IF EXISTS `modalita_spedizione_ibfk_05`,
 	DROP FOREIGN KEY IF EXISTS `modalita_spedizione_ibfk_05_nofollow`;
 
--- | 202611042567
+-- | 202611042565
 
 -- modalita_spedizione: indici nella forma del canone
 ALTER TABLE `modalita_spedizione`
@@ -3043,7 +3017,7 @@ ALTER TABLE `modalita_spedizione`
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`importo_netto`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`);
 
--- | 202611042568
+-- | 202611042566
 
 -- modalita_spedizione: vincoli nella forma del canone
 ALTER TABLE `modalita_spedizione`
@@ -3052,7 +3026,7 @@ ALTER TABLE `modalita_spedizione`
 	ADD CONSTRAINT `modalita_spedizione_ibfk_04_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `modalita_spedizione_ibfk_05_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042569
+-- | 202611042567
 
 -- notizie: indici nella forma del canone
 ALTER TABLE `notizie`
@@ -3061,14 +3035,14 @@ ALTER TABLE `notizie`
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`id_sito`,`id_pagina`);
 
--- | 202611042570
+-- | 202611042568
 
 -- notizie_anagrafica: via i vincoli che cambiano
 ALTER TABLE `notizie_anagrafica`
 	DROP FOREIGN KEY IF EXISTS `notizie_anagrafica_ibfk_01`,
 	DROP FOREIGN KEY IF EXISTS `notizie_anagrafica_ibfk_01_nofollow`;
 
--- | 202611042571
+-- | 202611042569
 
 -- notizie_anagrafica: indici nella forma del canone
 ALTER TABLE `notizie_anagrafica`
@@ -3077,19 +3051,19 @@ ALTER TABLE `notizie_anagrafica`
 	ADD KEY `indice` (`id`,`ordine`,`id_notizia`,`id_anagrafica`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042572
+-- | 202611042570
 
 -- notizie_anagrafica: vincoli nella forma del canone
 ALTER TABLE `notizie_anagrafica`
 	ADD CONSTRAINT `notizie_anagrafica_ibfk_01` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042573
+-- | 202611042571
 
 -- notizie_categorie: via i vincoli che cambiano
 ALTER TABLE `notizie_categorie`
 	DROP FOREIGN KEY IF EXISTS `notizie_categorie_ibfk_03_nofollow`;
 
--- | 202611042574
+-- | 202611042572
 
 -- notizie_categorie: indici nella forma del canone
 ALTER TABLE `notizie_categorie`
@@ -3098,13 +3072,13 @@ ALTER TABLE `notizie_categorie`
 	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria`,`ordine`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042575
+-- | 202611042573
 
 -- orari_contratti: via i vincoli che cambiano
 ALTER TABLE `orari_contratti`
 	DROP FOREIGN KEY IF EXISTS `orari_contratti_ibfk_02_nofollow`;
 
--- | 202611042576
+-- | 202611042574
 
 -- orari_contratti: indici nella forma del canone
 ALTER TABLE `orari_contratti`
@@ -3117,19 +3091,19 @@ ALTER TABLE `orari_contratti`
 	ADD UNIQUE KEY `unica_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
 	ADD UNIQUE KEY `unica_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`);
 
--- | 202611042577
+-- | 202611042575
 
 -- orari_contratti: vincoli nella forma del canone
 ALTER TABLE `orari_contratti`
 	ADD CONSTRAINT `orari_contratti_ibfk_02_nofollow` FOREIGN KEY (`id_costo`) REFERENCES `costi_contratti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042578
+-- | 202611042576
 
 -- organizzazioni: via i vincoli che cambiano
 ALTER TABLE `organizzazioni`
 	DROP FOREIGN KEY IF EXISTS `organizzazioni_ibfk_03_nofollow`;
 
--- | 202611042579
+-- | 202611042577
 
 -- organizzazioni: indici nella forma del canone
 ALTER TABLE `organizzazioni`
@@ -3140,13 +3114,13 @@ ALTER TABLE `organizzazioni`
 	ADD KEY `nome` (`nome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042580
+-- | 202611042578
 
 -- pagine: via i vincoli che cambiano
 ALTER TABLE `pagine`
 	DROP FOREIGN KEY IF EXISTS `pagine_ibfk_02_nofollow`;
 
--- | 202611042581
+-- | 202611042579
 
 -- pagine: indici nella forma del canone
 ALTER TABLE `pagine`
@@ -3161,20 +3135,20 @@ ALTER TABLE `pagine`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042582
+-- | 202611042580
 
 -- pagine: vincoli nella forma del canone
 ALTER TABLE `pagine`
 	ADD CONSTRAINT `pagine_ibfk_02_nofollow` FOREIGN KEY (`id_pagina_contenuti`) REFERENCES `pagine` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042583
+-- | 202611042581
 
 -- periodi: via i vincoli che cambiano
 ALTER TABLE `periodi`
 	DROP FOREIGN KEY IF EXISTS `periodi_ibfk_03`,
 	DROP FOREIGN KEY IF EXISTS `periodi_ibfk_03_nofollow`;
 
--- | 202611042584
+-- | 202611042582
 
 -- periodi: indici nella forma del canone
 ALTER TABLE `periodi`
@@ -3186,27 +3160,27 @@ ALTER TABLE `periodi`
 	ADD KEY `data_inizio` (`data_inizio`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`nome`,`id_contratto`,`data_inizio`,`data_fine`);
 
--- | 202611042585
+-- | 202611042583
 
 -- periodi: vincoli nella forma del canone
 ALTER TABLE `periodi`
 	ADD CONSTRAINT `periodi_ibfk_03` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042586
+-- | 202611042584
 
 -- periodicita: via i vincoli che cambiano
 ALTER TABLE `periodicita`
 	DROP FOREIGN KEY IF EXISTS `periodicita_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `periodicita_ibfk_99_nofollow`;
 
--- | 202611042587
+-- | 202611042585
 
 -- periodicita: indici nella forma del canone
 ALTER TABLE `periodicita`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`nome`,`giorni`);
 
--- | 202611042588
+-- | 202611042586
 
 -- pesi_tipologie_corrispondenza: indici nella forma del canone
 ALTER TABLE `pesi_tipologie_corrispondenza`
@@ -3217,7 +3191,7 @@ ALTER TABLE `pesi_tipologie_corrispondenza`
 	ADD KEY `nome` (`nome`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`);
 
--- | 202611042589
+-- | 202611042587
 
 -- pianificazioni: via i vincoli che cambiano
 ALTER TABLE `pianificazioni`
@@ -3227,7 +3201,7 @@ ALTER TABLE `pianificazioni`
 	DROP FOREIGN KEY IF EXISTS `pianificazioni_ibfk_05`,
 	DROP FOREIGN KEY IF EXISTS `pianificazioni_ibfk_06_nofollow`;
 
--- | 202611042590
+-- | 202611042588
 
 -- pianificazioni: indici nella forma del canone
 ALTER TABLE `pianificazioni`
@@ -3256,7 +3230,7 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_id_sede_destinatario` (`model_id_sede_destinatario`),
 	ADD KEY `model_id_sede_emittente` (`model_id_sede_emittente`);
 
--- | 202611042591
+-- | 202611042589
 
 -- pianificazioni: vincoli nella forma del canone
 ALTER TABLE `pianificazioni`
@@ -3266,7 +3240,7 @@ ALTER TABLE `pianificazioni`
 	ADD CONSTRAINT `pianificazioni_ibfk_05` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pianificazioni_ibfk_06_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042592
+-- | 202611042590
 
 -- popup: indici nella forma del canone
 ALTER TABLE `popup`
@@ -3281,7 +3255,7 @@ ALTER TABLE `popup`
 	ADD KEY `se_ovunque` (`se_ovunque`),
 	ADD KEY `template` (`template`);
 
--- | 202611042593
+-- | 202611042591
 
 -- prezzi: via i vincoli che cambiano
 ALTER TABLE `prezzi`
@@ -3289,14 +3263,14 @@ ALTER TABLE `prezzi`
 	DROP FOREIGN KEY IF EXISTS `prezzi_ibfk_04_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `prezzi_ibfk_05_nofollow`;
 
--- | 202611042594
+-- | 202611042592
 
 -- prezzi: indici nella forma del canone
 ALTER TABLE `prezzi`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_listino`,`id_prodotto`,`id_articolo`,`qta_min`,`qta_max`,`data_inizio`,`data_fine`,`prezzo`,`id_iva`);
 
--- | 202611042595
+-- | 202611042593
 
 -- prezzi: vincoli nella forma del canone
 ALTER TABLE `prezzi`
@@ -3304,27 +3278,27 @@ ALTER TABLE `prezzi`
 	ADD CONSTRAINT `prezzi_ibfk_04_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `prezzi_ibfk_05_nofollow` FOREIGN KEY (`id_reparto`) REFERENCES `reparti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042596
+-- | 202611042594
 
 -- prodotti: via i vincoli che cambiano
 ALTER TABLE `prodotti`
 	DROP FOREIGN KEY IF EXISTS `prodotti_ibfk_01`,
 	DROP FOREIGN KEY IF EXISTS `prodotti_ibfk_01_nofollow`;
 
--- | 202611042597
+-- | 202611042595
 
 -- prodotti: indici nella forma del canone
 ALTER TABLE `prodotti`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_marchio`,`id_sito`,`id_pagina`);
 
--- | 202611042598
+-- | 202611042596
 
 -- prodotti: vincoli nella forma del canone
 ALTER TABLE `prodotti`
 	ADD CONSTRAINT `prodotti_ibfk_01_nofollow` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042599
+-- | 202611042597
 
 -- prodotti_caratteristiche: indici nella forma del canone
 ALTER TABLE `prodotti_caratteristiche`
@@ -3333,13 +3307,13 @@ ALTER TABLE `prodotti_caratteristiche`
 	ADD KEY `indice` (`id`,`ordine`,`id_prodotto`,`id_caratteristica`,`id_lingua`),
 	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`,`id_lingua`);
 
--- | 202611042600
+-- | 202611042598
 
 -- prodotti_categorie: via i vincoli che cambiano
 ALTER TABLE `prodotti_categorie`
 	DROP FOREIGN KEY IF EXISTS `prodotti_categorie_ibfk_03_nofollow`;
 
--- | 202611042601
+-- | 202611042599
 
 -- prodotti_categorie: indici nella forma del canone
 ALTER TABLE `prodotti_categorie`
@@ -3348,27 +3322,27 @@ ALTER TABLE `prodotti_categorie`
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`ordine`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042602
+-- | 202611042600
 
 -- progetti: via i vincoli che cambiano
 ALTER TABLE `progetti`
 	DROP FOREIGN KEY IF EXISTS `progetti_ibfk_05_nofollow`;
 
--- | 202611042603
+-- | 202611042601
 
 -- progetti: indici nella forma del canone
 ALTER TABLE `progetti`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_cliente`,`id_sito`,`id_pagina`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
 
--- | 202611042604
+-- | 202611042602
 
 -- progetti_anagrafica: indici nella forma del canone
 ALTER TABLE `progetti_anagrafica`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_anagrafica`,`id_ruolo`);
 
--- | 202611042605
+-- | 202611042603
 
 -- progetti_certificazioni: indici nella forma del canone
 ALTER TABLE `progetti_certificazioni`
@@ -3379,14 +3353,14 @@ ALTER TABLE `progetti_certificazioni`
 	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_certificazione`,`id_ruolo`),
 	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`,`id_ruolo`);
 
--- | 202611042606
+-- | 202611042604
 
 -- progetti_matricole: indici nella forma del canone
 ALTER TABLE `progetti_matricole`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`ordine`,`id_progetto`,`id_matricola`,`id_ruolo`);
 
--- | 202611042607
+-- | 202611042605
 
 -- provincie: via i vincoli che cambiano
 ALTER TABLE `provincie`
@@ -3394,7 +3368,7 @@ ALTER TABLE `provincie`
 	DROP FOREIGN KEY IF EXISTS `provincie_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `provincie_ibfk_99_nofollow`;
 
--- | 202611042608
+-- | 202611042606
 
 -- provincie: indici nella forma del canone
 ALTER TABLE `provincie`
@@ -3406,20 +3380,18 @@ ALTER TABLE `provincie`
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `indice` (`id`,`nome`,`id_regione`,`sigla`,`codice_istat`);
 
--- | 202611042609
+-- | 202611042607
 
 -- provincie: vincoli nella forma del canone
 ALTER TABLE `provincie`
 	ADD CONSTRAINT `provincie_ibfk_01_nofollow` FOREIGN KEY (`id_regione`) REFERENCES `regioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042610
+-- | 202611042608
 
 -- pubblicazioni: via i vincoli che cambiano
 ALTER TABLE `pubblicazioni`
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_02`,
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_03`,
-	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_04`,
-	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_05`,
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_06`,
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_07`,
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_08`,
@@ -3433,7 +3405,7 @@ ALTER TABLE `pubblicazioni`
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_16`,
 	DROP FOREIGN KEY IF EXISTS `pubblicazioni_ibfk_17`;
 
--- | 202611042611
+-- | 202611042609
 
 -- pubblicazioni: indici nella forma del canone
 ALTER TABLE `pubblicazioni`
@@ -3454,14 +3426,12 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `timestamp_fine` (`timestamp_fine`),
 	ADD KEY `timestamp_inizio` (`timestamp_inizio`);
 
--- | 202611042612
+-- | 202611042610
 
 -- pubblicazioni: vincoli nella forma del canone
 ALTER TABLE `pubblicazioni`
 	ADD CONSTRAINT `pubblicazioni_ibfk_02` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pubblicazioni_ibfk_03` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	ADD CONSTRAINT `pubblicazioni_ibfk_04` FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-	ADD CONSTRAINT `pubblicazioni_ibfk_05` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pubblicazioni_ibfk_06` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pubblicazioni_ibfk_07` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pubblicazioni_ibfk_08` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -3475,7 +3445,7 @@ ALTER TABLE `pubblicazioni`
 	ADD CONSTRAINT `pubblicazioni_ibfk_16` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `pubblicazioni_ibfk_17` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042613
+-- | 202611042611
 
 -- ranking: indici nella forma del canone
 ALTER TABLE `ranking`
@@ -3491,7 +3461,7 @@ ALTER TABLE `ranking`
 	ADD KEY `se_partner` (`se_partner`),
 	ADD KEY `se_produttore` (`se_produttore`);
 
--- | 202611042614
+-- | 202611042612
 
 -- recensioni: via i vincoli che cambiano
 ALTER TABLE `recensioni`
@@ -3511,7 +3481,7 @@ ALTER TABLE `recensioni`
 	DROP FOREIGN KEY IF EXISTS `recensioni_ibfk_13`,
 	DROP FOREIGN KEY IF EXISTS `recensioni_ibfk_14`;
 
--- | 202611042615
+-- | 202611042613
 
 -- recensioni: indici nella forma del canone
 ALTER TABLE `recensioni`
@@ -3534,7 +3504,7 @@ ALTER TABLE `recensioni`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `se_approvata` (`se_approvata`);
 
--- | 202611042616
+-- | 202611042614
 
 -- recensioni: vincoli nella forma del canone
 ALTER TABLE `recensioni`
@@ -3548,20 +3518,20 @@ ALTER TABLE `recensioni`
 	ADD CONSTRAINT `recensioni_ibfk_13` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 	ADD CONSTRAINT `recensioni_ibfk_14` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042617
+-- | 202611042615
 
 -- redirect: indici nella forma del canone
 ALTER TABLE `redirect`
 	DROP INDEX IF EXISTS `id_sito`;
 
--- | 202611042618
+-- | 202611042616
 
 -- regimi: via i vincoli che cambiano
 ALTER TABLE `regimi`
 	DROP FOREIGN KEY IF EXISTS `regimi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `regimi_ibfk_99_nofollow`;
 
--- | 202611042619
+-- | 202611042617
 
 -- regimi: indici nella forma del canone
 ALTER TABLE `regimi`
@@ -3573,7 +3543,7 @@ ALTER TABLE `regimi`
 	ADD KEY `indice` (`id`,`nome`,`codice_sdi`),
 	ADD UNIQUE KEY `nome` (`nome`);
 
--- | 202611042620
+-- | 202611042618
 
 -- regioni: via i vincoli che cambiano
 ALTER TABLE `regioni`
@@ -3581,7 +3551,7 @@ ALTER TABLE `regioni`
 	DROP FOREIGN KEY IF EXISTS `regioni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `regioni_ibfk_99_nofollow`;
 
--- | 202611042621
+-- | 202611042619
 
 -- regioni: indici nella forma del canone
 ALTER TABLE `regioni`
@@ -3592,13 +3562,13 @@ ALTER TABLE `regioni`
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `indice` (`id`,`nome`,`id_stato`,`codice_istat`);
 
--- | 202611042622
+-- | 202611042620
 
 -- regioni: vincoli nella forma del canone
 ALTER TABLE `regioni`
 	ADD CONSTRAINT `regioni_ibfk_01_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042623
+-- | 202611042621
 
 -- relazioni_anagrafica: indici nella forma del canone
 ALTER TABLE `relazioni_anagrafica`
@@ -3610,13 +3580,13 @@ ALTER TABLE `relazioni_anagrafica`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_anagrafica_collegata`,`id_ruolo`);
 
--- | 202611042624
+-- | 202611042622
 
 -- relazioni_articoli: via i vincoli che cambiano
 ALTER TABLE `relazioni_articoli`
 	DROP FOREIGN KEY IF EXISTS `relazioni_articoli_ibfk_04`;
 
--- | 202611042625
+-- | 202611042623
 
 -- relazioni_articoli: indici nella forma del canone
 ALTER TABLE `relazioni_articoli`
@@ -3630,19 +3600,19 @@ ALTER TABLE `relazioni_articoli`
 	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_articolo_collegato`,`id_ruolo`),
 	ADD UNIQUE KEY `unica_prodotto` (`id_articolo`,`id_prodotto_collegato`,`id_ruolo`);
 
--- | 202611042626
+-- | 202611042624
 
 -- relazioni_articoli: vincoli nella forma del canone
 ALTER TABLE `relazioni_articoli`
 	ADD CONSTRAINT `relazioni_articoli_ibfk_04` FOREIGN KEY (`id_prodotto_collegato`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042627
+-- | 202611042625
 
 -- relazioni_categorie_progetti: via i vincoli che cambiano
 ALTER TABLE `relazioni_categorie_progetti`
 	DROP FOREIGN KEY IF EXISTS `relazioni_categorie_progetti_ibfk_03_nofollow`;
 
--- | 202611042628
+-- | 202611042626
 
 -- relazioni_categorie_progetti: indici nella forma del canone
 ALTER TABLE `relazioni_categorie_progetti`
@@ -3654,13 +3624,13 @@ ALTER TABLE `relazioni_categorie_progetti`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_categoria`,`id_categoria_collegata`,`id_ruolo`);
 
--- | 202611042629
+-- | 202611042627
 
 -- relazioni_categorie_progetti: vincoli nella forma del canone
 ALTER TABLE `relazioni_categorie_progetti`
 	ADD CONSTRAINT `relazioni_categorie_progetti_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_categorie_progetti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042630
+-- | 202611042628
 
 -- relazioni_documenti: indici nella forma del canone
 ALTER TABLE `relazioni_documenti`
@@ -3669,7 +3639,7 @@ ALTER TABLE `relazioni_documenti`
 	ADD KEY `indice` (`id`,`ordine`,`id_documento`,`id_documento_collegato`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042631
+-- | 202611042629
 
 -- relazioni_documenti_articoli: indici nella forma del canone
 ALTER TABLE `relazioni_documenti_articoli`
@@ -3681,7 +3651,7 @@ ALTER TABLE `relazioni_documenti_articoli`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
 
--- | 202611042632
+-- | 202611042630
 
 -- relazioni_pagamenti: indici nella forma del canone
 ALTER TABLE `relazioni_pagamenti`
@@ -3695,13 +3665,13 @@ ALTER TABLE `relazioni_pagamenti`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_pagamento`,`id_pagamento_collegato`,`id_ruolo`);
 
--- | 202611042633
+-- | 202611042631
 
 -- relazioni_prodotti: via i vincoli che cambiano
 ALTER TABLE `relazioni_prodotti`
 	DROP FOREIGN KEY IF EXISTS `relazioni_prodotti_ibfk_04_nofollow`;
 
--- | 202611042634
+-- | 202611042632
 
 -- relazioni_prodotti: indici nella forma del canone
 ALTER TABLE `relazioni_prodotti`
@@ -3715,13 +3685,13 @@ ALTER TABLE `relazioni_prodotti`
 	ADD UNIQUE KEY `unica_articolo` (`id_prodotto`,`id_articolo_collegato`,`id_ruolo`),
 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_prodotto_collegato`,`id_ruolo`);
 
--- | 202611042635
+-- | 202611042633
 
 -- relazioni_prodotti: vincoli nella forma del canone
 ALTER TABLE `relazioni_prodotti`
 	ADD CONSTRAINT `relazioni_prodotti_ibfk_04_nofollow` FOREIGN KEY (`id_articolo_collegato`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042636
+-- | 202611042634
 
 -- relazioni_progetti: indici nella forma del canone
 ALTER TABLE `relazioni_progetti`
@@ -3733,7 +3703,7 @@ ALTER TABLE `relazioni_progetti`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`);
 
--- | 202611042637
+-- | 202611042635
 
 -- relazioni_software: indici nella forma del canone
 ALTER TABLE `relazioni_software`
@@ -3747,7 +3717,7 @@ ALTER TABLE `relazioni_software`
 	ADD KEY `ordine` (`ordine`),
 	ADD UNIQUE KEY `unica` (`id_software`,`id_software_collegato`,`id_ruolo`);
 
--- | 202611042638
+-- | 202611042636
 
 -- relazioni_step: via i vincoli che cambiano
 ALTER TABLE `relazioni_step`
@@ -3757,7 +3727,7 @@ ALTER TABLE `relazioni_step`
 	DROP FOREIGN KEY IF EXISTS `relazioni_step_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `relazioni_step_ibfk_99_nofollow`;
 
--- | 202611042639
+-- | 202611042637
 
 -- relazioni_step: indici nella forma del canone
 ALTER TABLE `relazioni_step`
@@ -3776,7 +3746,7 @@ ALTER TABLE `relazioni_step`
 	ADD KEY `indice` (`id`,`ordine`,`id_step`,`id_step_collegato`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042640
+-- | 202611042638
 
 -- relazioni_step: vincoli nella forma del canone
 ALTER TABLE `relazioni_step`
@@ -3786,13 +3756,13 @@ ALTER TABLE `relazioni_step`
 	ADD CONSTRAINT `relazioni_step_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `relazioni_step_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042641
+-- | 202611042639
 
 -- reparti: via i vincoli che cambiano
 ALTER TABLE `reparti`
 	DROP FOREIGN KEY IF EXISTS `reparti_ibfk_01_nofollow`;
 
--- | 202611042642
+-- | 202611042640
 
 -- reparti: indici nella forma del canone
 ALTER TABLE `reparti`
@@ -3802,20 +3772,20 @@ ALTER TABLE `reparti`
 	ADD KEY `indice` (`id`,`nome`,`id_iva`,`id_settore`),
 	ADD UNIQUE KEY `unica` (`nome`);
 
--- | 202611042643
+-- | 202611042641
 
 -- reparti: vincoli nella forma del canone
 ALTER TABLE `reparti`
 	ADD CONSTRAINT `reparti_ibfk_01_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042644
+-- | 202611042642
 
 -- risorse: via i vincoli che cambiano
 ALTER TABLE `risorse`
 	DROP FOREIGN KEY IF EXISTS `risorse_ibfk_02_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `risorse_ibfk_03_nofollow`;
 
--- | 202611042645
+-- | 202611042643
 
 -- risorse: indici nella forma del canone
 ALTER TABLE `risorse`
@@ -3828,14 +3798,14 @@ ALTER TABLE `risorse`
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`anno_pubblicazione`,`id_sito`,`id_pagina`,`data_archiviazione`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042646
+-- | 202611042644
 
 -- risorse: vincoli nella forma del canone
 ALTER TABLE `risorse`
 	ADD CONSTRAINT `risorse_ibfk_02_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `risorse_ibfk_03_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042647
+-- | 202611042645
 
 -- risorse_account: indici nella forma del canone
 ALTER TABLE `risorse_account`
@@ -3844,21 +3814,21 @@ ALTER TABLE `risorse_account`
 	ADD KEY `id_carrelli_articoli` (`id_carrelli_articoli`),
 	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_account`,`id_carrelli_articoli`);
 
--- | 202611042648
+-- | 202611042646
 
 -- risorse_anagrafica: indici nella forma del canone
 ALTER TABLE `risorse_anagrafica`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_anagrafica`,`id_ruolo`);
 
--- | 202611042649
+-- | 202611042647
 
 -- risorse_categorie: indici nella forma del canone
 ALTER TABLE `risorse_categorie`
 	DROP INDEX IF EXISTS `unica`,
 	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_categoria`);
 
--- | 202611042650
+-- | 202611042648
 
 -- risorse_organizzazioni: via i vincoli che cambiano
 ALTER TABLE `risorse_organizzazioni`
@@ -3868,7 +3838,7 @@ ALTER TABLE `risorse_organizzazioni`
 	DROP FOREIGN KEY IF EXISTS `risorse_organizzazioni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `risorse_organizzazioni_ibfk_99_nofollow`;
 
--- | 202611042651
+-- | 202611042649
 
 -- risorse_organizzazioni: indici nella forma del canone
 ALTER TABLE `risorse_organizzazioni`
@@ -3887,7 +3857,7 @@ ALTER TABLE `risorse_organizzazioni`
 	ADD KEY `indice` (`id`,`ordine`,`id_risorsa`,`id_organizzazione`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042652
+-- | 202611042650
 
 -- risorse_organizzazioni: vincoli nella forma del canone
 ALTER TABLE `risorse_organizzazioni`
@@ -3897,14 +3867,14 @@ ALTER TABLE `risorse_organizzazioni`
 	ADD CONSTRAINT `risorse_organizzazioni_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `risorse_organizzazioni_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042653
+-- | 202611042651
 
 -- ritenute: via i vincoli che cambiano
 ALTER TABLE `ritenute`
 	DROP FOREIGN KEY IF EXISTS `ritenute_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ritenute_ibfk_99_nofollow`;
 
--- | 202611042654
+-- | 202611042652
 
 -- ritenute: indici nella forma del canone
 ALTER TABLE `ritenute`
@@ -3916,14 +3886,14 @@ ALTER TABLE `ritenute`
 	ADD KEY `indice` (`id`,`nome`,`codice_sdi`),
 	ADD UNIQUE KEY `nome` (`nome`);
 
--- | 202611042655
+-- | 202611042653
 
 -- ruoli_anagrafica: via i vincoli che cambiano
 ALTER TABLE `ruoli_anagrafica`
 	DROP FOREIGN KEY IF EXISTS `ruoli_anagrafica_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_anagrafica_ibfk_99_nofollow`;
 
--- | 202611042656
+-- | 202611042654
 
 -- ruoli_anagrafica: indici nella forma del canone
 ALTER TABLE `ruoli_anagrafica`
@@ -3932,14 +3902,14 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042657
+-- | 202611042655
 
 -- ruoli_articoli: via i vincoli che cambiano
 ALTER TABLE `ruoli_articoli`
 	DROP FOREIGN KEY IF EXISTS `ruoli_articoli_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_articoli_ibfk_99_nofollow`;
 
--- | 202611042658
+-- | 202611042656
 
 -- ruoli_articoli: indici nella forma del canone
 ALTER TABLE `ruoli_articoli`
@@ -3948,14 +3918,14 @@ ALTER TABLE `ruoli_articoli`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042659
+-- | 202611042657
 
 -- ruoli_audio: via i vincoli che cambiano
 ALTER TABLE `ruoli_audio`
 	DROP FOREIGN KEY IF EXISTS `ruoli_audio_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_audio_ibfk_99_nofollow`;
 
--- | 202611042660
+-- | 202611042658
 
 -- ruoli_audio: indici nella forma del canone
 ALTER TABLE `ruoli_audio`
@@ -3964,14 +3934,14 @@ ALTER TABLE `ruoli_audio`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042661
+-- | 202611042659
 
 -- ruoli_categorie_progetti: via i vincoli che cambiano
 ALTER TABLE `ruoli_categorie_progetti`
 	DROP FOREIGN KEY IF EXISTS `ruoli_categorie_progetti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_categorie_progetti_ibfk_99_nofollow`;
 
--- | 202611042662
+-- | 202611042660
 
 -- ruoli_categorie_progetti: indici nella forma del canone
 ALTER TABLE `ruoli_categorie_progetti`
@@ -3981,13 +3951,13 @@ ALTER TABLE `ruoli_categorie_progetti`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042663
+-- | 202611042661
 
 -- ruoli_certificazioni: via i vincoli che cambiano
 ALTER TABLE `ruoli_certificazioni`
 	DROP FOREIGN KEY IF EXISTS `ruoli_certificazioni_ibfk_01_nofollow`;
 
--- | 202611042664
+-- | 202611042662
 
 -- ruoli_certificazioni: indici nella forma del canone
 ALTER TABLE `ruoli_certificazioni`
@@ -3996,19 +3966,19 @@ ALTER TABLE `ruoli_certificazioni`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042665
+-- | 202611042663
 
 -- ruoli_certificazioni: vincoli nella forma del canone
 ALTER TABLE `ruoli_certificazioni`
 	ADD CONSTRAINT `ruoli_certificazioni_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042666
+-- | 202611042664
 
 -- ruoli_conversazioni: via i vincoli che cambiano
 ALTER TABLE `ruoli_conversazioni`
 	DROP FOREIGN KEY IF EXISTS `ruoli_conversazioni_ibfk_01_nofollow`;
 
--- | 202611042667
+-- | 202611042665
 
 -- ruoli_conversazioni: indici nella forma del canone
 ALTER TABLE `ruoli_conversazioni`
@@ -4017,20 +3987,20 @@ ALTER TABLE `ruoli_conversazioni`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042668
+-- | 202611042666
 
 -- ruoli_conversazioni: vincoli nella forma del canone
 ALTER TABLE `ruoli_conversazioni`
 	ADD CONSTRAINT `ruoli_conversazioni_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_conversazioni` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042669
+-- | 202611042667
 
 -- ruoli_documenti: via i vincoli che cambiano
 ALTER TABLE `ruoli_documenti`
 	DROP FOREIGN KEY IF EXISTS `ruoli_documenti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_documenti_ibfk_99_nofollow`;
 
--- | 202611042670
+-- | 202611042668
 
 -- ruoli_documenti: indici nella forma del canone
 ALTER TABLE `ruoli_documenti`
@@ -4039,14 +4009,14 @@ ALTER TABLE `ruoli_documenti`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042671
+-- | 202611042669
 
 -- ruoli_file: via i vincoli che cambiano
 ALTER TABLE `ruoli_file`
 	DROP FOREIGN KEY IF EXISTS `ruoli_file_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_file_ibfk_99_nofollow`;
 
--- | 202611042672
+-- | 202611042670
 
 -- ruoli_file: indici nella forma del canone
 ALTER TABLE `ruoli_file`
@@ -4055,14 +4025,14 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042673
+-- | 202611042671
 
 -- ruoli_immagini: via i vincoli che cambiano
 ALTER TABLE `ruoli_immagini`
 	DROP FOREIGN KEY IF EXISTS `ruoli_immagini_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_immagini_ibfk_99_nofollow`;
 
--- | 202611042674
+-- | 202611042672
 
 -- ruoli_immagini: indici nella forma del canone
 ALTER TABLE `ruoli_immagini`
@@ -4071,14 +4041,14 @@ ALTER TABLE `ruoli_immagini`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042675
+-- | 202611042673
 
 -- ruoli_indirizzi: via i vincoli che cambiano
 ALTER TABLE `ruoli_indirizzi`
 	DROP FOREIGN KEY IF EXISTS `ruoli_indirizzi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_indirizzi_ibfk_99_nofollow`;
 
--- | 202611042676
+-- | 202611042674
 
 -- ruoli_indirizzi: indici nella forma del canone
 ALTER TABLE `ruoli_indirizzi`
@@ -4091,14 +4061,14 @@ ALTER TABLE `ruoli_indirizzi`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042677
+-- | 202611042675
 
 -- ruoli_mail: via i vincoli che cambiano
 ALTER TABLE `ruoli_mail`
 	DROP FOREIGN KEY IF EXISTS `ruoli_mail_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_mail_ibfk_99_nofollow`;
 
--- | 202611042678
+-- | 202611042676
 
 -- ruoli_mail: indici nella forma del canone
 ALTER TABLE `ruoli_mail`
@@ -4107,14 +4077,14 @@ ALTER TABLE `ruoli_mail`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042679
+-- | 202611042677
 
 -- ruoli_mastri: via i vincoli che cambiano
 ALTER TABLE `ruoli_mastri`
 	DROP FOREIGN KEY IF EXISTS `ruoli_mastri_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_mastri_ibfk_99_nofollow`;
 
--- | 202611042680
+-- | 202611042678
 
 -- ruoli_mastri: indici nella forma del canone
 ALTER TABLE `ruoli_mastri`
@@ -4123,27 +4093,27 @@ ALTER TABLE `ruoli_mastri`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042681
+-- | 202611042679
 
 -- ruoli_matricole: via i vincoli che cambiano
 ALTER TABLE `ruoli_matricole`
 	DROP FOREIGN KEY IF EXISTS `ruoli_matricole_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_matricole_ibfk_99_nofollow`;
 
--- | 202611042682
+-- | 202611042680
 
 -- ruoli_matricole: indici nella forma del canone
 ALTER TABLE `ruoli_matricole`
 	DROP INDEX IF EXISTS `unica`,
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042683
+-- | 202611042681
 
 -- ruoli_pagamenti: via i vincoli che cambiano
 ALTER TABLE `ruoli_pagamenti`
 	DROP FOREIGN KEY IF EXISTS `ruoli_pagamenti_ibfk_01_nofollow`;
 
--- | 202611042684
+-- | 202611042682
 
 -- ruoli_pagamenti: indici nella forma del canone
 ALTER TABLE `ruoli_pagamenti`
@@ -4152,20 +4122,20 @@ ALTER TABLE `ruoli_pagamenti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042685
+-- | 202611042683
 
 -- ruoli_pagamenti: vincoli nella forma del canone
 ALTER TABLE `ruoli_pagamenti`
 	ADD CONSTRAINT `ruoli_pagamenti_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_pagamenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042686
+-- | 202611042684
 
 -- ruoli_prodotti: via i vincoli che cambiano
 ALTER TABLE `ruoli_prodotti`
 	DROP FOREIGN KEY IF EXISTS `ruoli_prodotti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_prodotti_ibfk_99_nofollow`;
 
--- | 202611042687
+-- | 202611042685
 
 -- ruoli_prodotti: indici nella forma del canone
 ALTER TABLE `ruoli_prodotti`
@@ -4174,14 +4144,14 @@ ALTER TABLE `ruoli_prodotti`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042688
+-- | 202611042686
 
 -- ruoli_progetti: via i vincoli che cambiano
 ALTER TABLE `ruoli_progetti`
 	DROP FOREIGN KEY IF EXISTS `ruoli_progetti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_progetti_ibfk_99_nofollow`;
 
--- | 202611042689
+-- | 202611042687
 
 -- ruoli_progetti: indici nella forma del canone
 ALTER TABLE `ruoli_progetti`
@@ -4193,13 +4163,13 @@ ALTER TABLE `ruoli_progetti`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042690
+-- | 202611042688
 
 -- ruoli_risorse: via i vincoli che cambiano
 ALTER TABLE `ruoli_risorse`
 	DROP FOREIGN KEY IF EXISTS `ruoli_risorse_ibfk_01_nofollow`;
 
--- | 202611042691
+-- | 202611042689
 
 -- ruoli_risorse: indici nella forma del canone
 ALTER TABLE `ruoli_risorse`
@@ -4208,19 +4178,19 @@ ALTER TABLE `ruoli_risorse`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042692
+-- | 202611042690
 
 -- ruoli_risorse: vincoli nella forma del canone
 ALTER TABLE `ruoli_risorse`
 	ADD CONSTRAINT `ruoli_risorse_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_risorse` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042693
+-- | 202611042691
 
 -- ruoli_software: via i vincoli che cambiano
 ALTER TABLE `ruoli_software`
 	DROP FOREIGN KEY IF EXISTS `ruoli_software_ibfk_01_nofollow`;
 
--- | 202611042694
+-- | 202611042692
 
 -- ruoli_software: indici nella forma del canone
 ALTER TABLE `ruoli_software`
@@ -4229,19 +4199,19 @@ ALTER TABLE `ruoli_software`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042695
+-- | 202611042693
 
 -- ruoli_software: vincoli nella forma del canone
 ALTER TABLE `ruoli_software`
 	ADD CONSTRAINT `ruoli_software_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_software` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042696
+-- | 202611042694
 
 -- ruoli_step: via i vincoli che cambiano
 ALTER TABLE `ruoli_step`
 	DROP FOREIGN KEY IF EXISTS `ruoli_step_ibfk_01_nofollow`;
 
--- | 202611042697
+-- | 202611042695
 
 -- ruoli_step: indici nella forma del canone
 ALTER TABLE `ruoli_step`
@@ -4250,20 +4220,20 @@ ALTER TABLE `ruoli_step`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`);
 
--- | 202611042698
+-- | 202611042696
 
 -- ruoli_step: vincoli nella forma del canone
 ALTER TABLE `ruoli_step`
 	ADD CONSTRAINT `ruoli_step_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_step` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042699
+-- | 202611042697
 
 -- ruoli_video: via i vincoli che cambiano
 ALTER TABLE `ruoli_video`
 	DROP FOREIGN KEY IF EXISTS `ruoli_video_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `ruoli_video_ibfk_99_nofollow`;
 
--- | 202611042700
+-- | 202611042698
 
 -- ruoli_video: indici nella forma del canone
 ALTER TABLE `ruoli_video`
@@ -4272,34 +4242,34 @@ ALTER TABLE `ruoli_video`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`);
 
--- | 202611042701
+-- | 202611042699
 
 -- sconti: via i vincoli che cambiano
 ALTER TABLE `sconti`
 	DROP FOREIGN KEY IF EXISTS `sconti_ibfk_02`,
 	DROP FOREIGN KEY IF EXISTS `sconti_ibfk_02_nofollow`;
 
--- | 202611042702
+-- | 202611042700
 
 -- sconti: indici nella forma del canone
 ALTER TABLE `sconti`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`id_valuta`,`sconto_percentuale`,`sconto_fisso`,`qta_min`,`timestamp_inizio`,`timestamp_fine`);
 
--- | 202611042703
+-- | 202611042701
 
 -- sconti: vincoli nella forma del canone
 ALTER TABLE `sconti`
 	ADD CONSTRAINT `sconti_ibfk_02_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042704
+-- | 202611042702
 
 -- sconti_articoli: via i vincoli che cambiano
 ALTER TABLE `sconti_articoli`
 	DROP FOREIGN KEY IF EXISTS `sconti_articoli_ibfk_02`,
 	DROP FOREIGN KEY IF EXISTS `sconti_articoli_ibfk_02_nofollow`;
 
--- | 202611042705
+-- | 202611042703
 
 -- sconti_articoli: indici nella forma del canone
 ALTER TABLE `sconti_articoli`
@@ -4308,13 +4278,13 @@ ALTER TABLE `sconti_articoli`
 	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_articolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042706
+-- | 202611042704
 
 -- sconti_articoli: vincoli nella forma del canone
 ALTER TABLE `sconti_articoli`
 	ADD CONSTRAINT `sconti_articoli_ibfk_02_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042707
+-- | 202611042705
 
 -- sconti_categorie_prodotti: via i vincoli che cambiano
 ALTER TABLE `sconti_categorie_prodotti`
@@ -4323,7 +4293,7 @@ ALTER TABLE `sconti_categorie_prodotti`
 	DROP FOREIGN KEY IF EXISTS `sconti_categorie_prodotti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `sconti_categorie_prodotti_ibfk_99_nofollow`;
 
--- | 202611042708
+-- | 202611042706
 
 -- sconti_categorie_prodotti: indici nella forma del canone
 ALTER TABLE `sconti_categorie_prodotti`
@@ -4340,7 +4310,7 @@ ALTER TABLE `sconti_categorie_prodotti`
 	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_categoria`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042709
+-- | 202611042707
 
 -- sconti_categorie_prodotti: vincoli nella forma del canone
 ALTER TABLE `sconti_categorie_prodotti`
@@ -4349,14 +4319,14 @@ ALTER TABLE `sconti_categorie_prodotti`
 	ADD CONSTRAINT `sconti_categorie_prodotti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `sconti_categorie_prodotti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042710
+-- | 202611042708
 
 -- sconti_listini: via i vincoli che cambiano
 ALTER TABLE `sconti_listini`
 	DROP FOREIGN KEY IF EXISTS `sconti_listini_ibfk_02`,
 	DROP FOREIGN KEY IF EXISTS `sconti_listini_ibfk_02_nofollow`;
 
--- | 202611042711
+-- | 202611042709
 
 -- sconti_listini: indici nella forma del canone
 ALTER TABLE `sconti_listini`
@@ -4365,13 +4335,13 @@ ALTER TABLE `sconti_listini`
 	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_listino`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042712
+-- | 202611042710
 
 -- sconti_listini: vincoli nella forma del canone
 ALTER TABLE `sconti_listini`
 	ADD CONSTRAINT `sconti_listini_ibfk_02_nofollow` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042713
+-- | 202611042711
 
 -- sconti_marchi: via i vincoli che cambiano
 ALTER TABLE `sconti_marchi`
@@ -4380,7 +4350,7 @@ ALTER TABLE `sconti_marchi`
 	DROP FOREIGN KEY IF EXISTS `sconti_marchi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `sconti_marchi_ibfk_99_nofollow`;
 
--- | 202611042714
+-- | 202611042712
 
 -- sconti_marchi: indici nella forma del canone
 ALTER TABLE `sconti_marchi`
@@ -4397,7 +4367,7 @@ ALTER TABLE `sconti_marchi`
 	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_marchio`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042715
+-- | 202611042713
 
 -- sconti_marchi: vincoli nella forma del canone
 ALTER TABLE `sconti_marchi`
@@ -4406,7 +4376,7 @@ ALTER TABLE `sconti_marchi`
 	ADD CONSTRAINT `sconti_marchi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `sconti_marchi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042716
+-- | 202611042714
 
 -- sconti_prodotti: via i vincoli che cambiano
 ALTER TABLE `sconti_prodotti`
@@ -4415,7 +4385,7 @@ ALTER TABLE `sconti_prodotti`
 	DROP FOREIGN KEY IF EXISTS `sconti_prodotti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `sconti_prodotti_ibfk_99_nofollow`;
 
--- | 202611042717
+-- | 202611042715
 
 -- sconti_prodotti: indici nella forma del canone
 ALTER TABLE `sconti_prodotti`
@@ -4432,7 +4402,7 @@ ALTER TABLE `sconti_prodotti`
 	ADD KEY `indice` (`id`,`ordine`,`id_sconto`,`id_prodotto`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042718
+-- | 202611042716
 
 -- sconti_prodotti: vincoli nella forma del canone
 ALTER TABLE `sconti_prodotti`
@@ -4441,21 +4411,21 @@ ALTER TABLE `sconti_prodotti`
 	ADD CONSTRAINT `sconti_prodotti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `sconti_prodotti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042719
+-- | 202611042717
 
 -- settori: via i vincoli che cambiano
 ALTER TABLE `settori`
 	DROP FOREIGN KEY IF EXISTS `settori_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `settori_ibfk_99_nofollow`;
 
--- | 202611042720
+-- | 202611042718
 
 -- settori: indici nella forma del canone
 ALTER TABLE `settori`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `indice` (`id`,`id_genitore`,`ateco`,`soprannome`);
 
--- | 202611042721
+-- | 202611042719
 
 -- sms_out: indici nella forma del canone
 ALTER TABLE `sms_out`
@@ -4468,7 +4438,7 @@ ALTER TABLE `sms_out`
 	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `token` (`token`);
 
--- | 202611042722
+-- | 202611042720
 
 -- sms_sent: indici nella forma del canone
 ALTER TABLE `sms_sent`
@@ -4481,14 +4451,14 @@ ALTER TABLE `sms_sent`
 	ADD KEY `timestamp_invio` (`timestamp_invio`),
 	ADD KEY `token` (`token`);
 
--- | 202611042723
+-- | 202611042721
 
 -- software: via i vincoli che cambiano
 ALTER TABLE `software`
 	DROP FOREIGN KEY IF EXISTS `software_ibfk_02_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `software_ibfk_03_nofollow`;
 
--- | 202611042724
+-- | 202611042722
 
 -- software: indici nella forma del canone
 ALTER TABLE `software`
@@ -4499,14 +4469,14 @@ ALTER TABLE `software`
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `indice` (`id`,`id_genitore`,`codice`,`nome`,`id_prodotto`,`id_articolo`);
 
--- | 202611042725
+-- | 202611042723
 
 -- software: vincoli nella forma del canone
 ALTER TABLE `software`
 	ADD CONSTRAINT `software_ibfk_02_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `software_ibfk_03_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042726
+-- | 202611042724
 
 -- stati: via i vincoli che cambiano
 ALTER TABLE `stati`
@@ -4514,7 +4484,7 @@ ALTER TABLE `stati`
 	DROP FOREIGN KEY IF EXISTS `stati_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `stati_ibfk_99_nofollow`;
 
--- | 202611042727
+-- | 202611042725
 
 -- stati: indici nella forma del canone
 ALTER TABLE `stati`
@@ -4525,13 +4495,13 @@ ALTER TABLE `stati`
 	ADD KEY `id_successore` (`id_successore`),
 	ADD KEY `indice` (`id`,`nome`,`id_continente`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
 
--- | 202611042728
+-- | 202611042726
 
 -- stati: vincoli nella forma del canone
 ALTER TABLE `stati`
 	ADD CONSTRAINT `stati_ibfk_01_nofollow` FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
--- | 202611042729
+-- | 202611042727
 
 -- stati_lingue: via i vincoli che cambiano
 ALTER TABLE `stati_lingue`
@@ -4539,39 +4509,39 @@ ALTER TABLE `stati_lingue`
 	DROP FOREIGN KEY IF EXISTS `stati_lingue_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `stati_lingue_ibfk_99_nofollow`;
 
--- | 202611042730
+-- | 202611042728
 
 -- stati_lingue: vincoli nella forma del canone
 ALTER TABLE `stati_lingue`
 	ADD CONSTRAINT `stati_lingue_ibfk_01_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042731
+-- | 202611042729
 
 -- step: via i vincoli che cambiano
 ALTER TABLE `step`
 	DROP FOREIGN KEY IF EXISTS `step_ibfk_01`;
 
--- | 202611042732
+-- | 202611042730
 
 -- step: indici nella forma del canone
 ALTER TABLE `step`
 	DROP INDEX IF EXISTS `ordine`,
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042733
+-- | 202611042731
 
 -- step: vincoli nella forma del canone
 ALTER TABLE `step`
 	ADD CONSTRAINT `step_ibfk_01` FOREIGN KEY (`id_funnel`) REFERENCES `funnel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- | 202611042734
+-- | 202611042732
 
 -- tipologie_annunci: via i vincoli che cambiano
 ALTER TABLE `tipologie_annunci`
 	DROP FOREIGN KEY IF EXISTS `tipologie_annunci_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_annunci_ibfk_99_nofollow`;
 
--- | 202611042735
+-- | 202611042733
 
 -- tipologie_asset: via i vincoli che cambiano
 ALTER TABLE `tipologie_asset`
@@ -4579,7 +4549,7 @@ ALTER TABLE `tipologie_asset`
 	DROP FOREIGN KEY IF EXISTS `tipologie_asset_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_asset_ibfk_99_nofollow`;
 
--- | 202611042736
+-- | 202611042734
 
 -- tipologie_asset: indici nella forma del canone
 ALTER TABLE `tipologie_asset`
@@ -4596,7 +4566,7 @@ ALTER TABLE `tipologie_asset`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042737
+-- | 202611042735
 
 -- tipologie_asset: vincoli nella forma del canone
 ALTER TABLE `tipologie_asset`
@@ -4604,7 +4574,7 @@ ALTER TABLE `tipologie_asset`
 	ADD CONSTRAINT `tipologie_asset_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `tipologie_asset_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042738
+-- | 202611042736
 
 -- tipologie_campagne: via i vincoli che cambiano
 ALTER TABLE `tipologie_campagne`
@@ -4612,7 +4582,7 @@ ALTER TABLE `tipologie_campagne`
 	DROP FOREIGN KEY IF EXISTS `tipologie_campagne_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_campagne_ibfk_99_nofollow`;
 
--- | 202611042739
+-- | 202611042737
 
 -- tipologie_campagne: indici nella forma del canone
 ALTER TABLE `tipologie_campagne`
@@ -4629,7 +4599,7 @@ ALTER TABLE `tipologie_campagne`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042740
+-- | 202611042738
 
 -- tipologie_campagne: vincoli nella forma del canone
 ALTER TABLE `tipologie_campagne`
@@ -4637,7 +4607,7 @@ ALTER TABLE `tipologie_campagne`
 	ADD CONSTRAINT `tipologie_campagne_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `tipologie_campagne_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042741
+-- | 202611042739
 
 -- tipologie_documenti_articoli: indici nella forma del canone
 ALTER TABLE `tipologie_documenti_articoli`
@@ -4648,35 +4618,35 @@ ALTER TABLE `tipologie_documenti_articoli`
 	ADD KEY `se_dettaglio` (`se_dettaglio`),
 	ADD KEY `se_evasione` (`se_evasione`);
 
--- | 202611042742
+-- | 202611042740
 
 -- tipologie_indirizzi: via i vincoli che cambiano
 ALTER TABLE `tipologie_indirizzi`
 	DROP FOREIGN KEY IF EXISTS `tipologie_indirizzi_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_indirizzi_ibfk_99_nofollow`;
 
--- | 202611042743
+-- | 202611042741
 
 -- tipologie_mail_status: via i vincoli che cambiano
 ALTER TABLE `tipologie_mail_status`
 	DROP FOREIGN KEY IF EXISTS `tipologie_mail_status_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_mail_status_ibfk_99_nofollow`;
 
--- | 202611042744
+-- | 202611042742
 
 -- tipologie_sconti: via i vincoli che cambiano
 ALTER TABLE `tipologie_sconti`
 	DROP FOREIGN KEY IF EXISTS `tipologie_sconti_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_sconti_ibfk_99_nofollow`;
 
--- | 202611042745
+-- | 202611042743
 
 -- tipologie_spedizioni: via i vincoli che cambiano
 ALTER TABLE `tipologie_spedizioni`
 	DROP FOREIGN KEY IF EXISTS `tipologie_spedizioni_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_spedizioni_ibfk_99_nofollow`;
 
--- | 202611042746
+-- | 202611042744
 
 -- tipologie_vani: via i vincoli che cambiano
 ALTER TABLE `tipologie_vani`
@@ -4684,7 +4654,7 @@ ALTER TABLE `tipologie_vani`
 	DROP FOREIGN KEY IF EXISTS `tipologie_vani_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_vani_ibfk_99_nofollow`;
 
--- | 202611042747
+-- | 202611042745
 
 -- tipologie_vani: indici nella forma del canone
 ALTER TABLE `tipologie_vani`
@@ -4701,7 +4671,7 @@ ALTER TABLE `tipologie_vani`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042748
+-- | 202611042746
 
 -- tipologie_vani: vincoli nella forma del canone
 ALTER TABLE `tipologie_vani`
@@ -4709,28 +4679,28 @@ ALTER TABLE `tipologie_vani`
 	ADD CONSTRAINT `tipologie_vani_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `tipologie_vani_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042749
+-- | 202611042747
 
 -- tipologie_zone: via i vincoli che cambiano
 ALTER TABLE `tipologie_zone`
 	DROP FOREIGN KEY IF EXISTS `tipologie_zone_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `tipologie_zone_ibfk_99_nofollow`;
 
--- | 202611042750
+-- | 202611042748
 
 -- udm: via i vincoli che cambiano
 ALTER TABLE `udm`
 	DROP FOREIGN KEY IF EXISTS `udm_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `udm_ibfk_99_nofollow`;
 
--- | 202611042751
+-- | 202611042749
 
 -- valute: via i vincoli che cambiano
 ALTER TABLE `valute`
 	DROP FOREIGN KEY IF EXISTS `valute_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `valute_ibfk_99_nofollow`;
 
--- | 202611042752
+-- | 202611042750
 
 -- vani: via i vincoli che cambiano
 ALTER TABLE `vani`
@@ -4739,7 +4709,7 @@ ALTER TABLE `vani`
 	DROP FOREIGN KEY IF EXISTS `vani_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `vani_ibfk_99_nofollow`;
 
--- | 202611042753
+-- | 202611042751
 
 -- vani: indici nella forma del canone
 ALTER TABLE `vani`
@@ -4756,7 +4726,7 @@ ALTER TABLE `vani`
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_immobile`),
 	ADD KEY `nome` (`nome`);
 
--- | 202611042754
+-- | 202611042752
 
 -- vani: vincoli nella forma del canone
 ALTER TABLE `vani`
@@ -4765,7 +4735,7 @@ ALTER TABLE `vani`
 	ADD CONSTRAINT `vani_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `vani_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042755
+-- | 202611042753
 
 -- vani_anagrafica: via i vincoli che cambiano
 ALTER TABLE `vani_anagrafica`
@@ -4775,7 +4745,7 @@ ALTER TABLE `vani_anagrafica`
 	DROP FOREIGN KEY IF EXISTS `vani_anagrafica_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `vani_anagrafica_ibfk_99_nofollow`;
 
--- | 202611042756
+-- | 202611042754
 
 -- vani_anagrafica: indici nella forma del canone
 ALTER TABLE `vani_anagrafica`
@@ -4794,7 +4764,7 @@ ALTER TABLE `vani_anagrafica`
 	ADD KEY `indice` (`id`,`ordine`,`id_vano`,`id_anagrafica`,`id_ruolo`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042757
+-- | 202611042755
 
 -- vani_anagrafica: vincoli nella forma del canone
 ALTER TABLE `vani_anagrafica`
@@ -4804,7 +4774,7 @@ ALTER TABLE `vani_anagrafica`
 	ADD CONSTRAINT `vani_anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `vani_anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042758
+-- | 202611042756
 
 -- vani_caratteristiche: via i vincoli che cambiano
 ALTER TABLE `vani_caratteristiche`
@@ -4814,7 +4784,7 @@ ALTER TABLE `vani_caratteristiche`
 	DROP FOREIGN KEY IF EXISTS `vani_caratteristiche_ibfk_98_nofollow`,
 	DROP FOREIGN KEY IF EXISTS `vani_caratteristiche_ibfk_99_nofollow`;
 
--- | 202611042759
+-- | 202611042757
 
 -- vani_caratteristiche: indici nella forma del canone
 ALTER TABLE `vani_caratteristiche`
@@ -4833,7 +4803,7 @@ ALTER TABLE `vani_caratteristiche`
 	ADD KEY `indice` (`id`,`ordine`,`id_vano`,`id_caratteristica`,`id_lingua`,`se_assente`),
 	ADD KEY `ordine` (`ordine`);
 
--- | 202611042760
+-- | 202611042758
 
 -- vani_caratteristiche: vincoli nella forma del canone
 ALTER TABLE `vani_caratteristiche`
@@ -4843,14 +4813,14 @@ ALTER TABLE `vani_caratteristiche`
 	ADD CONSTRAINT `vani_caratteristiche_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `vani_caratteristiche_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611042761
+-- | 202611042759
 
 -- video: via i vincoli che cambiano
 ALTER TABLE `video`
 	DROP FOREIGN KEY IF EXISTS `video_ibfk_19`,
 	DROP FOREIGN KEY IF EXISTS `video_ibfk_20`;
 
--- | 202611042762
+-- | 202611042760
 
 -- video: indici nella forma del canone
 ALTER TABLE `video`
@@ -4873,7 +4843,7 @@ ALTER TABLE `video`
 	ADD UNIQUE KEY `unica_audio` (`id_audio`,`id_ruolo`,`id_lingua`,`path`),
 	ADD UNIQUE KEY `unica_immagine` (`id_immagine`,`id_ruolo`,`id_lingua`,`path`);
 
--- | 202611042763
+-- | 202611042761
 
 -- video: vincoli nella forma del canone
 ALTER TABLE `video`
