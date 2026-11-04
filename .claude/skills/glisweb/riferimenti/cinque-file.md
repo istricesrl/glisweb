@@ -17,6 +17,7 @@ non è ordine estetico, è la condizione perché restino leggibili.
 | `DONE.md` | **cosa è successo, e perché si è deciso così**: `[v]`, `[x]` e le cronache | append, non si rilegge: si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | si **riscrive**: non è un diario, è una fotografia di adesso |
 | `DEPLOY.md` | **cosa è andato su test e su prod, e quando** | lo appende `_deploy.run.sh`; a mano una riga sola |
+| `DOWNTIME.md` | **quando il sito è stato giù, e per quanto** | lo genera il controllo di uptime; a mano mai |
 
 Il confine fra i primi due: il `CLAUDE.md` dice **come comportarsi** (le regole, cosa non fare, le
 convenzioni), il `READ.md` dice **i fatti** (dove sta la roba, come ci si entra, quali comandi). Se
@@ -197,6 +198,21 @@ file trasferiti: 12 — elenco completo in var/deploy/20261026-1040-stable.log
   riparte da un file nuovo, con una riga che ci rimanda;
 - `chiusura.py` legge da qui gli `--exclude` dell'ultimo `rsync`: il comando resta scritto per intero.
 
+### `DOWNTIME.md`: i periodi di down del sito ( dal 04/11/2026 )
+
+È il settimo file canonico: risponde a **"quando il sito è stato giù, e per quanto"**. Lo genera
+`_src/_cli/_uptime.check.php`, il controllo di uptime che ha preso il posto di Site24x7, ogni volta
+che un sito del deploy cambia stato: una riga per periodo, dal più recente, con inizio, fine,
+durata, conferma e motivo. La fonte è il registro `var/uptime/registro.jsonl` del deploy da cui
+gira il controllo, e il file si riscrive intero da lì:
+
+- **non si modifica a mano**: la prossima riscrittura cancellerebbe la modifica. Una nota su un
+  periodo ( la causa vera, cosa si è fatto ) va nel `DONE.md`;
+- un periodo **non confermato** l'ha visto giù un server solo, mentre gli altri non rispondevano:
+  di solito è un problema di quel server, non del sito;
+- il capitano lo legge nel suo giro; il funzionamento è nel capitolo `125.uptime` del manuale
+  sviluppatore.
+
 ### La cartella del progetto: i file canonici, e niente altro ( dal 26/10/2026 )
 
 Nella cartella del progetto ( `/var/www/<progetto>/`, quella che contiene `dev/` ) stanno solo:
@@ -204,7 +220,7 @@ Nella cartella del progetto ( `/var/www/<progetto>/`, quella che contiene `dev/`
 | cosa                     | quali                                                              |
 |--------------------------|--------------------------------------------------------------------|
 | i file di progetto       | `CLAUDE.md` `READ.md` `TODO.md` `DONE.md` `CHAT.md` `DEPLOY.md`    |
-| generati                 | `burndown.md` `CHAT.md.flock` `phpmalwarefinder.log`               |
+| generati                 | `burndown.md` `CHAT.md.flock` `phpmalwarefinder.log` `DOWNTIME.md` |
 | aggiornamento e gabbie   | `update.*.conf` `devuser.conf` `ftpuser.conf`                      |
 | cartelle                 | `dev/ stable/ test/ var/ backups/ disallineamenti/ .claude/`       |
 

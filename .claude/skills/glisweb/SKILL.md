@@ -119,6 +119,8 @@ scrive `_deploy.run.sh` a ogni deploy ( quando, quale canale, quanti file, dov'�
 e a mano ci si aggiunge una riga sola quando un deploy fa qualcosa che lo script non vede ( un
 passo a mano, un ritorno indietro ). Non è un log: l'elenco dei file trasferiti sta in
 `var/deploy/`, e il diario resta leggibile con `less`. Dettaglio in `riferimenti/cinque-file.md`.
+Dal 04/11/2026 c'è anche il **`DOWNTIME.md`**, i periodi di down del sito: lo genera il controllo
+di uptime e non si modifica mai a mano.
 
 ⚠ **La cartella del progetto contiene solo i file canonici** ( dal 26/10/2026 ): i sei qui sopra,
 quelli generati e le cartelle `dev/ stable/ test/ var/ backups/ disallineamenti/ .claude/`. Tutto

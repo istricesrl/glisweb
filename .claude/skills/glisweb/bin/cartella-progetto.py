@@ -23,7 +23,7 @@ import os, re, sys, glob, datetime
 
 FILE_CANONICI = {
     'CLAUDE.md', 'READ.md', 'TODO.md', 'DONE.md', 'CHAT.md', 'DEPLOY.md',   # i file di progetto
-    'burndown.md', 'CHAT.md.flock',                                         # generati
+    'burndown.md', 'CHAT.md.flock', 'DOWNTIME.md',                          # generati
     'update.branch.conf', 'update.check.conf', 'update.repository.conf',    # aggiornamento del framework
     'devuser.conf', 'ftpuser.conf',                                         # gabbie chroot
     'phpmalwarefinder.log',                                                 # scansione malware notturna
