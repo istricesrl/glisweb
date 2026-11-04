@@ -7,8 +7,9 @@
      *
      * introduzione
      * ============
-     * Ogni server del cluster controlla una volta al minuto tutti i siti glisweb del cluster, i propri e quelli che
-     * gli altri server pubblicano, e pubblica a sua volta quello che vede. Un sito è giù quando un server lo trova giù
+     * Ogni server del cluster controlla una volta al minuto tutti i siti glisweb di produzione del cluster, i propri e
+     * quelli che gli altri server pubblicano, più i siti esterni elencati nella configurazione del cluster, e pubblica a
+     * sua volta quello che vede. Di produzione vuol dire un host a cui il deploy dà un profilo che comincia per PROD. Un sito è giù quando un server lo trova giù
      * per UPTIME_DEFAULT['soglia'] controlli consecutivi e almeno un altro server lo vede giù: il server che non
      * raggiunge niente ha un problema suo, non del sito. Se nessun altro server risponde, il sito è giù ma non
      * confermato, e l'avviso va solo a noi.
@@ -32,7 +33,10 @@
      * ---------------------------------|---------------------------------------------------------------
      * uptimeVhost()                    | legge gli host HTTPS dei virtual host di Apache e nginx
  * uptimePubblico()                 | dice se un host si risolve nel DNS pubblico verso un IP pubblico
- * uptimeSiti()                     | raccoglie i siti glisweb dei deploy del server
+ * uptimeConfig()                   | legge la configurazione di un deploy come la legge il bootstrap
+ * uptimeProfilo()                  | ricava il profilo ( DEV, TEST, PROD... ) che un deploy dà a un host
+ * uptimeSiti()                     | raccoglie i siti glisweb di produzione dei deploy del server
+ * uptimeEsterni()                  | prepara i siti esterni della configurazione del cluster
      * uptimeControlla()                | controlla in parallelo un elenco di siti
      * uptimeVista()                    | legge la vista pubblicata da un altro server
      * uptimeAggiorna()                 | applica l'isteresi agli esiti di un giro
@@ -140,25 +144,118 @@
     }
 
     /**
-     * raccoglie i siti glisweb dei deploy del server
+     * legge la configurazione di un deploy come la legge il bootstrap
      *
-     * Un deploy glisweb è una cartella <radice>/<deploy>/dev con _src/_config.php. I suoi siti sono gli host HTTPS
-     * che il server web associa a quella document root ( vedi uptimeVhost() ), più i file etc/uptime/<host>.yaml,
-     * che sovrascrivono i default del sito con lo stesso host o ne aggiungono uno ( con url: anche un sito non
-     * glisweb ); un file con attivo: false toglie il sito dal controllo. A parità di host vince il primo deploy in
+     * Fonde nello stesso ordine di _src/_config.php, dal meno al più importante, i file YAML e poi quelli JSON, prima
+     * src/config/ext/ poi src/, prima config.* poi shadow.*. Serve a uptimeProfilo(), che ha bisogno dei siti.
+     *
+     * @param   string      $dev            la document root del deploy, con la barra finale
+     *
+     * @return  array                       la configurazione fusa
+     *
+     */
+    function uptimeConfig( $dev ) {
+
+        $config = array();
+
+        foreach( array( 'src/config/ext/config.yaml', 'src/config/ext/shadow.yaml', 'src/config.yaml', 'src/shadow.yaml',
+            'src/config/ext/config.json', 'src/config/ext/shadow.json', 'src/config.json', 'src/shadow.json' ) as $file ) {
+            if( ! is_readable( $dev . $file ) ) {
+                continue;
+            }
+            if( substr( $file, -5 ) === '.yaml' ) {
+                $parte = function_exists( 'yaml_parse_file' ) ? @yaml_parse_file( $dev . $file ) : false;
+            } else {
+                $parte = json_decode( file_get_contents( $dev . $file ), true );
+            }
+            if( is_array( $parte ) ) {
+                $config = array_replace_recursive( $config, $parte );
+            }
+        }
+
+        return $config;
+
+    }
+
+    /**
+     * ricava il profilo ( DEV, TEST, PROD... ) che un deploy dà a un host
+     *
+     * È la stessa regola con cui _src/_config/_015.site.php decide SITE_STATUS dall'HTTP_HOST: per ogni sito e per
+     * ogni stato un'espressione regolare su host, domini e loro alias, e vince la prima che fa match. Se si cambia
+     * lì va cambiata anche qui.
+     *
+     * @param   string      $host           l'host
+     * @param   array       $sites          la chiave sites della configurazione del deploy
+     *
+     * @return  string|null                 il profilo, NULL se nessun sito del deploy risponde a quell'host
+     *
+     */
+    function uptimeProfilo( $host, $sites ) {
+
+        foreach( (array) $sites as $site ) {
+
+            if( empty( $site['domains'] ) || ! is_array( $site['domains'] ) ) {
+                continue;
+            }
+
+            foreach( $site['domains'] as $status => $domain ) {
+
+                if( empty( $domain ) ) {
+                    continue;
+                }
+
+                $hosts = isset( $site['hosts'][ $status ] ) ? array( $site['hosts'][ $status ] ) : array();
+                if( isset( $site['alias']['hosts'][ $status ] ) ) {
+                    $hosts = array_merge( $hosts, (array) $site['alias']['hosts'][ $status ] );
+                }
+
+                $domains = array( $domain );
+                if( isset( $site['alias']['domains'][ $status ] ) ) {
+                    $domains = array_merge( $domains, (array) $site['alias']['domains'][ $status ] );
+                }
+
+                $numerator = ( in_array( 'www', $hosts ) ) ? '{0,1}' : '{1}';
+                $regex = '/^(?:' . implode( '|', $hosts ) . ')' . $numerator . '(?:\.)*(' . str_replace( '.', '\.', implode( '|', $domains ) ) . '){1}/i';
+
+                if( preg_match( $regex, $host ) === 1 ) {
+                    return $status;
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    /**
+     * raccoglie i siti glisweb di produzione dei deploy del server
+     *
+     * Un deploy glisweb è una document root <radice>/<progetto>/<cartella> con _src/_config.php, dove la cartella è
+     * dev, stable o test: la produzione di solito sta in stable ( crm.trbitaly.com, 04/11/2026 ). I suoi siti sono
+     * gli host HTTPS che il server web associa a quella document root ( vedi uptimeVhost() ), più i file
+     * etc/uptime/<host>.yaml, che sovrascrivono i default del sito con lo stesso host o ne aggiungono uno; un file
+     * con attivo: false toglie il sito dal controllo. I siti che non stanno su un server del cluster sono esterni
+     * ( vedi uptimeEsterni() ). A parità di host vince il primo deploy in
      * ordine alfabetico, a meno che l'host abbia un file in etc/uptime/ in un altro deploy.
      *
-     * Restano fuori gli host di $escludi e quelli che non si risolvono nel DNS pubblico ( uptimePubblico() ): i
+     * Si controllano solo i siti di produzione: un host entra se il deploy gli dà un profilo che comincia per PROD
+     * ( PROD, PRODWMS... ), con la regola di uptimeProfilo(); gli ambienti DEV e TEST non sono siti che qualcuno usa
+     * ( decisione di Fabio del 04/11/2026 ).
+     *
+     * Restano fuori anche gli host di $escludi e quelli che non si risolvono nel DNS pubblico ( uptimePubblico() ): i
      * vhost di prova solo locali, in /etc/hosts verso 127.0.0.1 col certificato snakeoil, davano un falso down
      * ( salviamossn e sostienigimbe sul dev di gimbe, 04/11/2026 ), e gli altri server non li raggiungerebbero.
      *
-     * I domini dei profili in src/config.json non bastano: il 04/11/2026 il PROD di glisweb era glisweb.it, che
-     * web03 non serve, mentre il sito risponde come glisweb.istricesrl.it.
+     * Gli host vengono dai virtual host e non dai domini della configurazione, che decidono solo il profilo: un
+     * dominio PROD può stare su un altro server ( il 04/11/2026 il PROD di glisweb era glisweb.it, che web03 non
+     * serve ).
      *
      * @param   string      $radice         la cartella dei deploy
      * @param   array       $vhost          gli host per document root, di solito uptimeVhost()
      * @param   array       $escludi        gli host da non controllare
-     * @param   array       $scartati       riceve gli host scartati perché non pubblici
+     * @param   array       $scartati       riceve gli host scartati, col motivo: profilo o dns
      *
      * @return  array                       i siti, indicizzati per host
      *
@@ -167,7 +264,7 @@
 
         $siti = array();
 
-        foreach( glob( rtrim( $radice, '/' ) . '/*/dev/_src/_config.php' ) as $bootstrap ) {
+        foreach( glob( rtrim( $radice, '/' ) . '/*/*/_src/_config.php' ) as $bootstrap ) {
 
             $dev = dirname( $bootstrap, 2 ) . '/';
 
@@ -179,6 +276,10 @@
                 $base['testo'] = NULL;
                 $base['codice'] = NULL;
             }
+
+            // i siti del deploy, per il profilo degli host
+            $sites = uptimeConfig( $dev );
+            $sites = isset( $sites['sites'] ) ? $sites['sites'] : array();
 
             // gli host HTTPS che il server web associa al deploy
             $host = array();
@@ -208,8 +309,13 @@
                 if( empty( $sito['url'] ) ) {
                     $sito['url'] = 'https://' . $h . $sito['percorso'];
                 }
+                $profilo = uptimeProfilo( $h, $sites );
+                if( $profilo === NULL || strpos( $profilo, 'PROD' ) !== 0 ) {
+                    $scartati[ $h ] = 'profilo ' . ( ( $profilo === NULL ) ? 'nessuno' : $profilo );
+                    continue;
+                }
                 if( ! uptimePubblico( parse_url( $sito['url'], PHP_URL_HOST ) ) ) {
-                    $scartati[] = $h;
+                    $scartati[ $h ] = 'dns';
                     continue;
                 }
                 $sito['deploy'] = $dev;
@@ -220,6 +326,34 @@
         }
 
         ksort( $siti );
+
+        return $siti;
+
+    }
+
+    /**
+     * prepara i siti esterni della configurazione del cluster
+     *
+     * I siti esterni sono quelli che non stanno su un server del cluster ( la produzione GIMBE su Azure, 04/11/2026 ):
+     * li elenca la sezione esterni: di /etc/glisweb/uptime.yaml, uguale su tutti i server, così li controllano tutti e
+     * vale il consenso come per gli altri. Non hanno /status/uptime: si guarda la pagina indicata da url:, col codice
+     * 200 e, se c'è, il testo atteso. Un sito senza url: si scarta.
+     *
+     * @param   array       $esterni        la sezione esterni:, indicizzata per host
+     *
+     * @return  array                       i siti, indicizzati per host, come quelli di uptimeSiti() ma senza deploy
+     *
+     */
+    function uptimeEsterni( $esterni ) {
+
+        $siti = array();
+
+        foreach( (array) $esterni as $h => $sito ) {
+            if( empty( $sito['url'] ) ) {
+                continue;
+            }
+            $siti[ $h ] = array_replace( UPTIME_DEFAULT, array( 'testo' => NULL, 'codice' => 200 ), (array) $sito, array( 'deploy' => NULL, 'esterno' => true ) );
+        }
 
         return $siti;
 

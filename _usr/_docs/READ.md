@@ -38,7 +38,7 @@ Il numero in testa al nome di un capitolo serve solo a tenerlo in ordine, e racc
 | fascia | cosa ci sta |
 |---|---|
 | `0xx` | i fondamenti: installazione, aggiornamento, cartelle, entità |
-| `1xx` | le funzioni del framework, una per capitolo: cache, task, job, autenticazione, mail, stampe, privacy, deploy, test |
+| `1xx` | le funzioni del framework, una per capitolo: cache, task, job, autenticazione, mail, stampe, privacy, deploy, test, e i componenti accessori, come il controllo di uptime ( `125` ) |
 | `2xx` | la reference: le variabili globali, e i file del framework descritti uno per uno |
 | `3xx` | la reference del database, spezzata per iniziale della tabella |
 | `4xx` | gli **howto**: una procedura per sezione, cercata per compito e non per argomento |

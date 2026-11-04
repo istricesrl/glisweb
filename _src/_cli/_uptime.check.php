@@ -103,7 +103,7 @@
     // i siti di questo server e quelli che pubblicano gli altri
     $scartati = array();
     $locali = uptimeSiti( $conf['radice'], uptimeVhost(), isset( $conf['escludi'] ) ? (array) $conf['escludi'] : array(), $scartati );
-    $siti = $locali;
+    $siti = array_replace( uptimeEsterni( isset( $conf['esterni'] ) ? $conf['esterni'] : array() ), $locali );
     foreach( $altri as $nome => $a ) {
         if( $a !== NULL ) {
             foreach( $a['siti'] as $h => $s ) {
@@ -131,6 +131,14 @@
 
     // consenso, registro, avvisi
     $eventi = array();
+
+    // un sito uscito dal controllo mentre era giù chiude il suo periodo, altrimenti resterebbe in corso per sempre
+    foreach( array_diff_key( $prima_vista, $vista ) as $h => $v ) {
+        if( isset( $v['globale'] ) && $v['globale'] !== 'su' && isset( $v['dal'] ) ) {
+            $eventi[] = array( 'evento' => 'fine', 'sito' => $h, 'ora' => date( 'c', $ora ), 'inizio' => date( 'c', $v['dal'] ),
+                'durata' => $ora - $v['dal'], 'confermato' => ! empty( $v['confermato'] ), 'rimosso' => true );
+        }
+    }
     $posta = array();
 
     foreach( $vista as $h => $v ) {
@@ -193,9 +201,10 @@
 
     // se il server ha dei siti ma nessuno risulta pubblico, il problema è più probabilmente il DNS del server che i
     // siti: senza questo avviso il controllo si spegnerebbe in silenzio
-    if( empty( $locali ) && ! empty( $scartati ) && $primo && ( ! isset( $prima['dns'] ) || $prima['dns'] !== date( 'Y-m-d', $ora ) ) ) {
+    $irrisolti = array_keys( $scartati, 'dns' );
+    if( empty( $locali ) && ! empty( $irrisolti ) && $primo && ( ! isset( $prima['dns'] ) || $prima['dns'] !== date( 'Y-m-d', $ora ) ) ) {
         $posta[] = array( isset( $conf['avvisa']['noi'] ) ? $conf['avvisa']['noi'] : array(), '[uptime] ' . $io . ': nessun sito risolto nel DNS',
-            'Nessuno dei ' . count( $scartati ) . ' siti di ' . $io . ' si risolve nel DNS pubblico: controllare il resolver del server.' . PHP_EOL );
+            'Nessuno dei ' . count( $irrisolti ) . ' siti di produzione di ' . $io . ' si risolve nel DNS pubblico: controllare il resolver del server.' . PHP_EOL );
         $dns = date( 'Y-m-d', $ora );
     } else {
         $dns = isset( $prima['dns'] ) ? $prima['dns'] : NULL;
@@ -206,8 +215,8 @@
         foreach( $vista as $h => $v ) {
             echo str_pad( $h, 40 ) . ' ' . str_pad( $v['globale'], 14 ) . ' ' . $v['fallimenti'] . ' ' . $v['tempo'] . 's ' . ( $v['certificato'] === NULL ? '' : $v['certificato'] . 'gg ' ) . $v['errore'] . PHP_EOL;
         }
-        foreach( $scartati as $h ) {
-            echo 'scartato, non pubblico nel DNS: ' . $h . PHP_EOL;
+        foreach( $scartati as $h => $motivo ) {
+            echo 'scartato ( ' . $motivo . ' ): ' . $h . PHP_EOL;
         }
         foreach( $eventi as $e ) {
             echo 'evento: ' . json_encode( $e ) . PHP_EOL;

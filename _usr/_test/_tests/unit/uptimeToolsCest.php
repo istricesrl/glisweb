@@ -26,6 +26,25 @@ class uptimeToolsCest
         $I->see('pubblico nessuno.invalid: false');
     }
 
+    // uptimeProfilo() -> il profilo che il bootstrap darebbe all'host: si controllano solo quelli che cominciano per PROD
+    public function profilo(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_uptime.tools/_uptime.01.php');
+        $I->see("profilo esempio.istricesrl.it: 'DEV'");
+        $I->see("profilo www.esempio.it: 'PROD'");
+        $I->see("profilo esempio.it: 'PROD'"); // con www fra gli host, il www è facoltativo
+        $I->see("profilo magazzino.interno.esempio.it: 'PRODWMS'");
+        $I->see("profilo altro.it: NULL");
+    }
+
+    // uptimeEsterni() -> i siti esterni hanno i default, codice 200 e nessun testo atteso, e non hanno deploy
+    public function esterni(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_uptime.tools/_uptime.01.php');
+        $I->see('esterni: www.esterno.it');
+        $I->see('esterno: codice 200, testo NULL, lento 5, soglia 3, deploy NULL');
+    }
+
     // uptimeVhost() -> solo i virtual host sulla 443, col primo nome, e la document root senza barra finale
     public function vhost(UnitTester $I)
     {

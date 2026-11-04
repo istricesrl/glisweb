@@ -6,6 +6,8 @@
      * Non tocca il database e non scrive niente; l'unica rete è la domanda al DNS di uptimePubblico():
      * - uptimePubblico() su un IP pubblico e uno privato, che non interrogano il DNS, e su localhost e un dominio
      *   .invalid, che il DNS non risolve;
+     * - uptimeProfilo() con un sito che ha DEV e PROD e uno con un profilo PRODWMS, come su bernispa;
+     * - uptimeEsterni() con un sito esterno completo e uno senza url;
      * - uptimeVhost() sui due file di _vhost/: un Apache con un vhost sulla 80 e uno sulla 443, un nginx con un
      *   server sulla 443 e uno sulla 80; contano solo quelli sulla 443, col primo nome;
      * - uptimeAggiorna() su tre fallimenti e un controllo riuscito: il sito passa giù al terzo e torna su al primo ok;
@@ -27,6 +29,20 @@
     foreach( array( '35.195.114.10', '10.0.0.1', 'localhost', 'nessuno.invalid' ) as $h ) {
         echo 'pubblico ' . $h . ': ' . var_export( uptimePubblico( $h ), true ) . PHP_EOL;
     }
+
+    // profili: la stessa regola di _src/_config/_015.site.php
+    $sites = array(
+        1 => array( 'domains' => array( 'DEV' => 'istricesrl.it', 'PROD' => 'esempio.it' ), 'hosts' => array( 'DEV' => 'esempio', 'PROD' => 'www' ) ),
+        2 => array( 'domains' => array( 'PRODWMS' => 'interno.esempio.it' ), 'hosts' => array( 'PRODWMS' => 'magazzino' ) )
+    );
+    foreach( array( 'esempio.istricesrl.it', 'www.esempio.it', 'esempio.it', 'magazzino.interno.esempio.it', 'altro.it' ) as $h ) {
+        echo 'profilo ' . $h . ': ' . var_export( uptimeProfilo( $h, $sites ), true ) . PHP_EOL;
+    }
+
+    // siti esterni: codice 200, nessun testo se non lo si chiede, nessun deploy; senza url si scartano
+    $esterni = uptimeEsterni( array( 'www.esterno.it' => array( 'url' => 'https://www.esterno.it/', 'lento' => 5, 'avvisa' => array( 'abilitato' => true ) ), 'senzaurl.it' => array() ) );
+    echo 'esterni: ' . implode( ', ', array_keys( $esterni ) ) . PHP_EOL;
+    echo 'esterno: codice ' . $esterni['www.esterno.it']['codice'] . ', testo ' . var_export( $esterni['www.esterno.it']['testo'], true ) . ', lento ' . $esterni['www.esterno.it']['lento'] . ', soglia ' . $esterni['www.esterno.it']['soglia'] . ', deploy ' . var_export( $esterni['www.esterno.it']['deploy'], true ) . PHP_EOL;
 
     // virtual host
     $vhost = uptimeVhost( array( __DIR__ . '/_vhost/' ) );
