@@ -3371,3 +3371,247 @@
         // restituisco le patch applicate
         return $r;
     }
+
+    /**
+     * FUNZIONI PER IL RICARICAMENTO DEI FILE BASE
+     *
+     * Le patch datate portano ai database già installati le modifiche di tabelle, indici e vincoli, ma non quelle di
+     * procedure, viste, statiche e report: dal 26/10/2026 una patch non crea viste ( la copia in una patch resta indietro
+     * quando il canone va avanti ), e i file base, i cui marcatori stanno sotto il livello di qualunque database
+     * installato, non arrivano mai. Il 04/11/2026 sui database creati prima del canone del 04/10 le viste erano rimaste
+     * quelle di un mese prima ( su utensilerialughese 169 diverse e 28 assenti su 279 ). Fabio ha deciso lo stesso
+     * giorno, come deroga voluta al principio "ai deploy arrivano solo le patch", che _mysql.upgrade.sh dopo le patch
+     * riesegua i file base di procedure, viste, statiche e report quando sono cambiati ( 300.database.md, *il
+     * ricaricamento dei file base* ).
+     *
+     * Le viste, le funzioni e le tabelle che il progetto ridefinisce con le sue patch ( usr/database/patch/ ) si
+     * SALTANO, non si riapplicano dopo: la patch di progetto che le ridefinisce è stata applicata una volta e
+     * registrata, e può contenere altro ( ALTER, INSERT, UPDATE ) che rieseguito farebbe danni; saltarle lascia
+     * l'oggetto esattamente come l'ha lasciato il progetto. Il prezzo è che se lo standard cambia una vista che il
+     * progetto ha ridefinito, il progetto non lo vede: è lo stesso di oggi, ed è il progetto a doverla riallineare.
+     *
+     */
+
+    /**
+     * restituisce i file base da ricaricare, nell'ordine
+     *
+     * L'ordine conta: le viste chiamano le funzioni di _070000999999.procedures.sql, le statiche seguono le viste di
+     * _090000999999.views.sql, e i report leggono le une e le altre.
+     *
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               i percorsi dei file che esistono, nell'ordine di ricaricamento
+     *
+     */
+    function mysqlPatchReloadFiles($b)
+    {
+
+        // file base da ricaricare, nell'ordine
+        $f = array();
+        foreach (array('_070000999999.procedures.sql', '_090000999999.views.sql', '_080000999999.static.sql', '_100000999999.reports.sql') as $n) {
+            if (is_file($b . '_usr/_database/_patch/' . $n)) {
+                $f[] = $b . '_usr/_database/_patch/' . $n;
+            }
+        }
+
+        // restituisco l'elenco
+        return $f;
+    }
+
+    /**
+     * restituisce il nome dell'oggetto che una query crea o cancella
+     *
+     * Riconosce CREATE [ OR REPLACE ] VIEW, CREATE [ DEFINER = ... ] FUNCTION / PROCEDURE, CREATE TABLE [ IF NOT EXISTS ]
+     * e i DROP corrispondenti, con o senza backtick; i commenti a inizio riga si ignorano.
+     *
+     * @param       string      $q      la query
+     *
+     * @return      mixed               il nome dell'oggetto in minuscolo, false se la query non crea né cancella niente
+     *
+     */
+    function mysqlPatchReloadObject($q)
+    {
+
+        // tolgo i commenti a inizio riga
+        $q = preg_replace('/^\s*--.*$/m', '', $q);
+
+        // cerco il primo oggetto creato o cancellato
+        if (preg_match('/\b(?:CREATE|DROP)\b[\s\S]*?\b(?:VIEW|FUNCTION|PROCEDURE|TABLE)\s+(?:IF\s+(?:NOT\s+)?EXISTS\s+)?`?(\w+)`?/i', $q, $m)) {
+            return strtolower($m[1]);
+        }
+
+        // la query non crea niente
+        return false;
+    }
+
+    /**
+     * restituisce gli oggetti che il progetto ridefinisce con le sue patch
+     *
+     * Legge i file *.sql di usr/database/patch/ e raccoglie i nomi di viste, funzioni, procedure e tabelle che creano:
+     * mysqlPatchReload() li salta, perché li possiede il progetto.
+     *
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               i nomi, in minuscolo, come chiavi, con il file che li definisce come valore
+     *
+     */
+    function mysqlPatchReloadOwned($b)
+    {
+
+        // oggetti del progetto
+        $o = array();
+        foreach (glob($b . 'usr/database/patch/*.sql') ?: array() as $f) {
+            $t = preg_replace('/^\s*--.*$/m', '', file_get_contents($f));
+            preg_match_all('/\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:DEFINER\s*=\s*\S+\s+)?(?:VIEW|FUNCTION|PROCEDURE|TABLE)\s+(?:IF\s+NOT\s+EXISTS\s+)?`?(\w+)`?/i', $t, $m);
+            foreach ($m[1] as $n) {
+                $o[strtolower($n)] = basename($f);
+            }
+        }
+
+        // restituisco l'elenco
+        return $o;
+    }
+
+    /**
+     * dice quali file base sono cambiati dall'ultimo ricaricamento
+     *
+     * Confronta l'md5 di ogni file di mysqlPatchReloadFiles() con quello registrato in __canone__ all'ultimo
+     * ricaricamento riuscito. La tabella __canone__ la crea mysqlPatchReload(), come mysqlPatchApply() crea __patch__:
+     * un database che non ce l'ha non è mai stato ricaricato, e i file risultano tutti cambiati.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      mixed               i file cambiati, eventualmente vuoto, o false se __canone__ non si legge
+     *
+     */
+    function mysqlPatchReloadChanged($c, $b)
+    {
+
+        // impronte registrate
+        $r = array();
+        // 1146 vuol dire che la tabella non c'è: il database non è mai stato ricaricato
+        try {
+            $x = mysqli_query($c, 'SELECT `file`, `md5` FROM `__canone__`');
+            $n = mysqli_errno($c);
+        } catch (mysqli_sql_exception $e) {
+            $x = false;
+            $n = $e->getCode();
+        }
+        if ($x instanceof mysqli_result) {
+            while ($w = mysqli_fetch_row($x)) {
+                $r[$w[0]] = $w[1];
+            }
+            mysqli_free_result($x);
+        } elseif ($n != 1146) {
+            return false;
+        }
+
+        // file cambiati
+        $f = array();
+        foreach (mysqlPatchReloadFiles($b) as $p) {
+            if (($r[basename($p)] ?? '') !== md5_file($p)) {
+                $f[] = $p;
+            }
+        }
+
+        // restituisco l'elenco
+        return $f;
+    }
+
+    /**
+     * riesegue i file base di procedure, viste, statiche e report
+     *
+     * Ogni blocco dei file di mysqlPatchReloadFiles() passa da mysqlPatchApply() con id NULL, quindi con la stessa
+     * traduzione per MySQL e la stessa collation delle patch, ma senza registrarsi in __patch__. Si saltano i blocchi
+     * il cui oggetto è ridefinito dal progetto ( mysqlPatchReloadOwned() ). Un blocco che fallisce non ferma gli altri,
+     * a differenza delle patch: qui non c'è un livello da far avanzare, e una vista che non si crea non deve lasciare
+     * indietro tutte quelle dopo. Poi si aggiungono alle statiche <t>_view_static le colonne della loro <t>_view che
+     * non hanno ( si riempiono per nome, refreshStaticView() ). Le impronte in __canone__ si scrivono solo se non c'è
+     * stato nessun errore: altrimenti il ricaricamento si ripete al giro dopo.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               'eseguiti' ( numero ), 'saltati' ( oggetto => file del progetto ), 'colonne'
+     *                                  ( statica.colonna aggiunte ), 'errori' ( array con file, oggetto, errno, error )
+     *
+     */
+    function mysqlPatchReload($c, $b)
+    {
+
+        // esito
+        $s = array('eseguiti' => 0, 'saltati' => array(), 'colonne' => array(), 'errori' => array());
+
+        // oggetti del progetto
+        $o = mysqlPatchReloadOwned($b);
+
+        // un file alla volta, un blocco alla volta
+        foreach (mysqlPatchReloadFiles($b) as $f) {
+            $w = array();
+            foreach (mysqlPatchRead(array($f), '000000000000', $w) as $p) {
+                $n = mysqlPatchReloadObject($p['query']);
+                if ($n !== false && isset($o[$n])) {
+                    $s['saltati'][$n] = $o[$n];
+                    continue;
+                }
+                $e = array();
+                mysqlPatchApply($c, array(array('file' => $f, 'id' => NULL, 'query' => $p['query'])), $e);
+                if (empty($e)) {
+                    $s['eseguiti']++;
+                } else {
+                    $s['errori'][] = array('file' => basename($f), 'oggetto' => $n, 'errno' => $e['errno'], 'error' => $e['error']);
+                }
+            }
+        }
+
+        // colonne delle viste che mancano alle statiche
+        $x = mysqli_query($c, "SELECT v.table_name, v.column_name, v.column_type FROM information_schema.columns v
+            JOIN information_schema.tables t ON t.table_schema = v.table_schema AND t.table_name = concat( v.table_name, '_static' )
+            LEFT JOIN information_schema.columns s ON s.table_schema = v.table_schema AND s.table_name = t.table_name AND s.column_name = v.column_name
+            WHERE v.table_schema = database() AND v.table_name LIKE '%\\_view' AND s.column_name IS NULL
+            ORDER BY v.table_name, v.ordinal_position");
+        $a = array();
+        while ($x instanceof mysqli_result && $r = mysqli_fetch_row($x)) {
+            if (! isset($o[strtolower($r[0] . '_static')])) {
+                $a[$r[0] . '_static'][] = array($r[1], $r[2]);
+            }
+        }
+        foreach ($a as $t => $l) {
+            $q = 'ALTER TABLE `' . $t . '` ' . implode(', ', array_map(function ($k) {
+                return 'ADD COLUMN IF NOT EXISTS `' . $k[0] . '` ' . $k[1] . ' DEFAULT NULL';
+            }, $l));
+            $e = array();
+            mysqlPatchApply($c, array(array('file' => NULL, 'id' => NULL, 'query' => $q)), $e);
+            if (empty($e)) {
+                foreach ($l as $k) {
+                    $s['colonne'][] = $t . '.' . $k[0];
+                }
+            } else {
+                $s['errori'][] = array('file' => NULL, 'oggetto' => $t, 'errno' => $e['errno'], 'error' => $e['error']);
+            }
+        }
+
+        // impronte, solo se è andato tutto bene
+        if (empty($s['errori'])) {
+            mysqli_query($c, 'CREATE TABLE IF NOT EXISTS `__canone__` (
+                `file` char(64) NOT NULL PRIMARY KEY,
+                `md5` char(32) NOT NULL,
+                `timestamp_esecuzione` int(11) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci');
+            foreach (mysqlPatchReloadFiles($b) as $f) {
+                $y = mysqli_prepare($c, 'REPLACE INTO `__canone__` ( `file`, `md5`, `timestamp_esecuzione` ) VALUES ( ?, ?, ? )');
+                if ($y) {
+                    $n = basename($f);
+                    $m = md5_file($f);
+                    $t = time();
+                    mysqli_stmt_bind_param($y, 'ssi', $n, $m, $t);
+                    mysqli_stmt_execute($y);
+                    mysqli_stmt_close($y);
+                }
+            }
+        }
+
+        // restituisco l'esito
+        return $s;
+    }

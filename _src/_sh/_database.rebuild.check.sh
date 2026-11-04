@@ -23,7 +23,7 @@
 #      stesso ordine ( si riempiono con REPLACE ... SELECT *, quindi conta la posizione ); con
 #      --inventario anche le colonne dello stesso nome e tipo diverso, che non fanno fallire;
 #   4. le patch datate dopo 202610261200 che creano una vista: dal 26/10/2026 le viste vivono solo
-#      nei file base e ai deploy arrivano con le migrazioni del canone, perche' la copia di una vista
+#      nei file base e ai deploy arrivano col ricaricamento dei file base, perche' la copia di una vista
 #      in una patch resta indietro quando il canone va avanti ( fino a quel giorno fermava ogni
 #      costruzione da zero ). Fa fallire lo script come le divergenze.
 #
@@ -126,7 +126,7 @@ def oggetti( s, db ):
         "SELECT c.table_name, t.table_type, group_concat( c.column_name ORDER BY c.ordinal_position ) "
         "FROM information_schema.columns c JOIN information_schema.tables t "
         "ON t.table_schema = c.table_schema AND t.table_name = c.table_name "
-        "WHERE c.table_schema = database() AND c.table_name <> '%s' "
+        "WHERE c.table_schema = database() AND c.table_name NOT IN ( '%s', '__canone__' ) "
         "GROUP BY c.table_name, t.table_type;" % MARCA )
     d = {}
     for riga in out.split( '\n' ):

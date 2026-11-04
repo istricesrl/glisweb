@@ -34,6 +34,13 @@
 #                   arretrato fermandosi prima di una patch che chiede di guardare il deploy, come la
 #                   conversione degli id ( _202609301900.id.numerici.sql: --fino 202609301859 )
 #
+# DOPO LE PATCH riesegue i file base di procedure, viste, statiche e report se sono cambiati dall'ultima volta
+# ( impronte md5 nella tabella __canone__ ): e' una deroga voluta da Fabio il 04/11/2026 al principio "ai deploy
+# arrivano solo le patch", perche' dal 26/10 le patch non creano viste e i file base non arrivavano mai. Si saltano
+# gli oggetti che il progetto ridefinisce in usr/database/patch/, si riprova al giro dopo se qualcosa fallisce, e con
+# --fino non si ricarica niente ( lo schema resterebbe a meta' ). Dettaglio in mysqlPatchReload() di
+# _src/_lib/_mysql.tools.php e in 300.database.md, *il ricaricamento dei file base*.
+#
 # PRIMA DI APPLICARE fa un dump del database nella cartella dei backup del progetto, un livello
 # sopra la document root, con lo stesso nome e la stessa rotazione dei dump di _backup.nightly.sh.
 # Se il dump non riesce non applica niente.
@@ -210,8 +217,16 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
         echo '  ATTENZIONE: ' . $w . PHP_EOL;
     }
 
-    if( empty( $daApplicare ) ) {
-        echo '  nessuna patch da applicare: il database e\' allineato' . PHP_EOL;
+    // i file base di procedure, viste, statiche e report cambiati dall'ultimo ricaricamento ( vedi sopra ); con --fino
+    // no, perche' lo schema resterebbe a meta' e le viste fallirebbero
+    $ricaricare = ( empty( $fino ) ) ? mysqlPatchReloadChanged( $cn, $docroot . '/' ) : array();
+    if( $ricaricare === false ) {
+        echo '  ATTENZIONE: __canone__ illeggibile ( ' . mysqli_errno( $cn ) . ' ' . mysqli_error( $cn ) . ' ), i file base non si ricaricano' . PHP_EOL;
+        $ricaricare = array();
+    }
+
+    if( empty( $daApplicare ) && empty( $ricaricare ) ) {
+        echo '  nessuna patch da applicare e nessun file base da ricaricare: il database e\' allineato' . PHP_EOL;
         exit( 0 );
     }
 
@@ -224,6 +239,10 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     foreach( $perFile as $f => $ids ) {
         printf( '    %-58s %4d  %s' . PHP_EOL, str_replace( $docroot . '/', '', $f ), count( $ids ),
             ( count( $ids ) > 1 ) ? reset( $ids ) . ' .. ' . end( $ids ) : reset( $ids ) );
+    }
+
+    if( ! empty( $ricaricare ) ) {
+        echo '  file base da ricaricare dopo le patch: ' . implode( ', ', array_map( 'basename', $ricaricare ) ) . PHP_EOL;
     }
 
     if( $esegui != '1' ) {
@@ -300,9 +319,25 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
         $patchLevel = $p['id'];
     }
 
+    // ricaricamento dei file base, solo se le patch sono andate tutte a buon fine
+    $ricarica = NULL;
+    if( empty( $errore ) && ! empty( $ricaricare ) ) {
+        $ricarica = mysqlPatchReload( $cn, $docroot . '/' );
+        echo PHP_EOL . '  file base ricaricati: ' . $ricarica['eseguiti'] . ' blocchi, ' . count( $ricarica['colonne'] ) . ' colonne aggiunte alle statiche' . PHP_EOL;
+        foreach( $ricarica['saltati'] as $o => $f ) {
+            echo '    saltato ' . $o . ': lo ridefinisce il progetto ( ' . $f . ' )' . PHP_EOL;
+        }
+        foreach( $ricarica['errori'] as $e ) {
+            echo '  ATTENZIONE ' . $e['file'] . ' ' . $e['oggetto'] . ': ' . $e['errno'] . ' ' . $e['error'] . PHP_EOL;
+        }
+        if( ! empty( $ricarica['errori'] ) ) {
+            echo '  ricaricamento con errori: le impronte non si registrano, si riprova al prossimo giro' . PHP_EOL;
+        }
+    }
+
     // le query in cache possono avere i dati di prima delle patch: si cancellano le chiavi MYSQL_ di tutti i siti del
     // deploy, come fa il task ( vedi memcacheCleanQueries() ), ma qui senza bootstrap: server e siti dal config.json
-    if( $patchLevel !== $livelloIniziale ) {
+    if( $patchLevel !== $livelloIniziale || $ricarica !== NULL ) {
         require_once $docroot . '/_src/_lib/_memcache.tools.php';
         $mc = $cf['memcache'] ?? array();
         $prefissi = array();
@@ -335,6 +370,11 @@ php -d error_reporting=E_ALL -- "$DOCROOT" "$STATO" "$SERVER" "$ESEGUI" "$BACKUP
     }
 
     echo PHP_EOL . '  livello di patch: ' . $livelloIniziale . ' -> ' . $patchLevel . PHP_EOL;
+
+    // un ricaricamento con errori non ferma niente, ma va detto a chi ha lanciato lo script
+    if( $ricarica !== NULL && ! empty( $ricarica['errori'] ) ) {
+        exit( 1 );
+    }
 PHP
 
 ESITO=$?
