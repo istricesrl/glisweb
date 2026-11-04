@@ -101,7 +101,8 @@
     }
 
     // i siti di questo server e quelli che pubblicano gli altri
-    $locali = uptimeSiti( $conf['radice'], uptimeVhost() );
+    $scartati = array();
+    $locali = uptimeSiti( $conf['radice'], uptimeVhost(), isset( $conf['escludi'] ) ? (array) $conf['escludi'] : array(), $scartati );
     $siti = $locali;
     foreach( $altri as $nome => $a ) {
         if( $a !== NULL ) {
@@ -190,10 +191,23 @@
 
     }
 
+    // se il server ha dei siti ma nessuno risulta pubblico, il problema è più probabilmente il DNS del server che i
+    // siti: senza questo avviso il controllo si spegnerebbe in silenzio
+    if( empty( $locali ) && ! empty( $scartati ) && $primo && ( ! isset( $prima['dns'] ) || $prima['dns'] !== date( 'Y-m-d', $ora ) ) ) {
+        $posta[] = array( isset( $conf['avvisa']['noi'] ) ? $conf['avvisa']['noi'] : array(), '[uptime] ' . $io . ': nessun sito risolto nel DNS',
+            'Nessuno dei ' . count( $scartati ) . ' siti di ' . $io . ' si risolve nel DNS pubblico: controllare il resolver del server.' . PHP_EOL );
+        $dns = date( 'Y-m-d', $ora );
+    } else {
+        $dns = isset( $prima['dns'] ) ? $prima['dns'] : NULL;
+    }
+
     // a secco si stampa e ci si ferma
     if( $secco ) {
         foreach( $vista as $h => $v ) {
             echo str_pad( $h, 40 ) . ' ' . str_pad( $v['globale'], 14 ) . ' ' . $v['fallimenti'] . ' ' . $v['tempo'] . 's ' . ( $v['certificato'] === NULL ? '' : $v['certificato'] . 'gg ' ) . $v['errore'] . PHP_EOL;
+        }
+        foreach( $scartati as $h ) {
+            echo 'scartato, non pubblico nel DNS: ' . $h . PHP_EOL;
         }
         foreach( $eventi as $e ) {
             echo 'evento: ' . json_encode( $e ) . PHP_EOL;
@@ -214,7 +228,7 @@
         unset( $s['deploy'], $s['dichiarato'], $s['avvisa'] );
         $pubblici[ $h ] = $s;
     }
-    file_put_contents( $cartella . 'stato.json', json_encode( array( 'server' => $io, 'ora' => date( 'c', $ora ), 'siti' => $pubblici, 'vista' => $vista ), JSON_PRETTY_PRINT ), LOCK_EX );
+    file_put_contents( $cartella . 'stato.json', json_encode( array( 'server' => $io, 'ora' => date( 'c', $ora ), 'dns' => $dns, 'siti' => $pubblici, 'vista' => $vista ), JSON_PRETTY_PRINT ), LOCK_EX );
     @chgrp( $cartella . 'stato.json', 'www-data' );
     @chmod( $cartella . 'stato.json', 0640 );
 

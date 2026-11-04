@@ -16,6 +16,16 @@ class uptimeToolsCest
     {
     }
 
+    // uptimePubblico() -> un vhost di prova solo locale ( /etc/hosts verso 127.0.0.1 ) non si controlla
+    public function pubblico(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_uptime.tools/_uptime.01.php');
+        $I->see('pubblico 35.195.114.10: true');
+        $I->see('pubblico 10.0.0.1: false');
+        $I->see('pubblico localhost: false');
+        $I->see('pubblico nessuno.invalid: false');
+    }
+
     // uptimeVhost() -> solo i virtual host sulla 443, col primo nome, e la document root senza barra finale
     public function vhost(UnitTester $I)
     {

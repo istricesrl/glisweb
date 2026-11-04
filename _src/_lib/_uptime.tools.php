@@ -31,6 +31,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * uptimeVhost()                    | legge gli host HTTPS dei virtual host di Apache e nginx
+ * uptimePubblico()                 | dice se un host si risolve nel DNS pubblico verso un IP pubblico
  * uptimeSiti()                     | raccoglie i siti glisweb dei deploy del server
      * uptimeControlla()                | controlla in parallelo un elenco di siti
      * uptimeVista()                    | legge la vista pubblicata da un altro server
@@ -113,6 +114,31 @@
     }
 
     /**
+     * dice se un host si risolve nel DNS pubblico verso un IP pubblico
+     *
+     * Usa dns_get_record(), che interroga il DNS e non legge /etc/hosts: un vhost di prova puntato a 127.0.0.1 solo
+     * su questo server non è un sito che qualcuno visita. Un IP privato o riservato vale come non pubblico.
+     *
+     * @param   string      $host           il nome, o un IP
+     *
+     * @return  bool                        true se almeno un indirizzo è pubblico
+     *
+     */
+    function uptimePubblico( $host ) {
+
+        $ip = ( filter_var( $host, FILTER_VALIDATE_IP ) ) ? array( $host ) : array_column( (array) @dns_get_record( $host, DNS_A ), 'ip' );
+
+        foreach( $ip as $i ) {
+            if( filter_var( $i, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    /**
      * raccoglie i siti glisweb dei deploy del server
      *
      * Un deploy glisweb è una cartella <radice>/<deploy>/dev con _src/_config.php. I suoi siti sono gli host HTTPS
@@ -121,16 +147,22 @@
      * glisweb ); un file con attivo: false toglie il sito dal controllo. A parità di host vince il primo deploy in
      * ordine alfabetico, a meno che l'host abbia un file in etc/uptime/ in un altro deploy.
      *
+     * Restano fuori gli host di $escludi e quelli che non si risolvono nel DNS pubblico ( uptimePubblico() ): i
+     * vhost di prova solo locali, in /etc/hosts verso 127.0.0.1 col certificato snakeoil, davano un falso down
+     * ( salviamossn e sostienigimbe sul dev di gimbe, 04/11/2026 ), e gli altri server non li raggiungerebbero.
+     *
      * I domini dei profili in src/config.json non bastano: il 04/11/2026 il PROD di glisweb era glisweb.it, che
      * web03 non serve, mentre il sito risponde come glisweb.istricesrl.it.
      *
      * @param   string      $radice         la cartella dei deploy
      * @param   array       $vhost          gli host per document root, di solito uptimeVhost()
+     * @param   array       $escludi        gli host da non controllare
+     * @param   array       $scartati       riceve gli host scartati perché non pubblici
      *
      * @return  array                       i siti, indicizzati per host
      *
      */
-    function uptimeSiti( $radice = '/var/www/', $vhost = array() ) {
+    function uptimeSiti( $radice = '/var/www/', $vhost = array(), $escludi = array(), &$scartati = array() ) {
 
         $siti = array();
 
@@ -168,12 +200,16 @@
                     continue;
                 }
                 $sito = array_replace( $base, $override );
-                if( isset( $sito['attivo'] ) && $sito['attivo'] === false ) {
+                if( ( isset( $sito['attivo'] ) && $sito['attivo'] === false ) || in_array( $h, $escludi ) ) {
                     unset( $siti[ $h ] );
                     continue;
                 }
                 if( empty( $sito['url'] ) ) {
                     $sito['url'] = 'https://' . $h . $sito['percorso'];
+                }
+                if( ! uptimePubblico( parse_url( $sito['url'], PHP_URL_HOST ) ) ) {
+                    $scartati[] = $h;
+                    continue;
                 }
                 $sito['deploy'] = $dev;
                 $sito['dichiarato'] = ! empty( $propri[ $h ] );

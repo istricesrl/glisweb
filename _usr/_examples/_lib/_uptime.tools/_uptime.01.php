@@ -3,7 +3,9 @@
     /**
      * file di esempio per le funzioni pure del controllo di uptime
      *
-     * Non tocca la rete né il database, e non scrive niente:
+     * Non tocca il database e non scrive niente; l'unica rete è la domanda al DNS di uptimePubblico():
+     * - uptimePubblico() su un IP pubblico e uno privato, che non interrogano il DNS, e su localhost e un dominio
+     *   .invalid, che il DNS non risolve;
      * - uptimeVhost() sui due file di _vhost/: un Apache con un vhost sulla 80 e uno sulla 443, un nginx con un
      *   server sulla 443 e uno sulla 80; contano solo quelli sulla 443, col primo nome;
      * - uptimeAggiorna() su tre fallimenti e un controllo riuscito: il sito passa giù al terzo e torna su al primo ok;
@@ -19,6 +21,11 @@
 
     // output
     header( 'Content-type: text/plain' );
+
+    // host pubblici
+    foreach( array( '35.195.114.10', '10.0.0.1', 'localhost', 'nessuno.invalid' ) as $h ) {
+        echo 'pubblico ' . $h . ': ' . var_export( uptimePubblico( $h ), true ) . PHP_EOL;
+    }
 
     // virtual host
     $vhost = uptimeVhost( array( __DIR__ . '/_vhost/' ) );
