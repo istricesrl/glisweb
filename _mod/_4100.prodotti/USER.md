@@ -44,7 +44,7 @@ I filtri sono **pubblicazione** e **categoria**, oltre alla ricerca per parola c
 | categorie | le categorie del prodotto, ciascuna con un ordine |
 | caratteristiche | coppie caratteristica–valore per lingua (con ordine e note), più le stagioni di listino |
 | relazioni | i collegamenti con altri prodotti e altri articoli, ciascuno con il tipo di relazione |
-| articoli | elenco in sola lettura degli articoli del prodotto (numero, nome, EAN); il **+** crea un articolo già legato al prodotto |
+| articoli | elenco in sola lettura degli articoli del prodotto (numero, codice, nome, EAN), in cui la ricerca trova anche il codice; il **+** crea un articolo già legato al prodotto |
 | prezzi | un prezzo per riga: data di inizio, listino, prefisso, prezzo, suffisso, quantità minima, percentuale su articoli, percentuale di provvigione, IVA |
 | web, SEM/SMM, testo | contenuti e aspetto sul sito, dati per i motori di ricerca, testi: stessi campi della scheda delle categorie (vedi il capitolo *catalogo*) |
 | immagini, video, audio, file, metadati | allegati e coppie nome–valore |

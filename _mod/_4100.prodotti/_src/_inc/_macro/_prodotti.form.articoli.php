@@ -18,8 +18,10 @@
 	$ct['view']['table'] = 'articoli';
 
     // campi della vista
+	// il codice c'e' come nell'elenco degli articoli: la ricerca della sotto vista guarda solo le colonne mostrate
 	$ct['view']['cols'] = array(
 	    'id' => '#',
+	    'codice' => 'codice',
 	    'nome' => 'articolo',
         'id_prodotto' => 'id_prodotto',
         'ean' => 'ean'
@@ -28,6 +30,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'text-left',
+	    'codice' => 'text-left',
 	    'nome' => 'text-left',
         'id_prodotto' => 'd-none'
 	);
