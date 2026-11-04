@@ -61,6 +61,10 @@ Nella linguetta *web* compare anche il sotto-elenco delle **pubblicazioni** (per
 
 Colonne: prodotto, # , articolo (codice), nome, EAN, pubblicazione, tipologia e una colonna di azioni. Filtri: **pubblicazione**, **tipologia** e ricerca per parola chiave.
 
+L'elenco si aggiorna appena si salva: un articolo, il suo prodotto, le categorie del prodotto o le caratteristiche
+dell'articolo. Fino al 04/11/2026 un articolo nuovo o modificato dal back-end non compariva, o compariva com'era prima,
+finché qualcuno non rigenerava a mano la vista degli articoli.
+
 <!-- @pubblico: operatore, amministratore -->
 <!-- @pagina: articoli.form -->
 
