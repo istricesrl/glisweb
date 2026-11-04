@@ -21,6 +21,21 @@ if [ ! -f "$GIT_DIR/MERGE_HEAD" ]; then
     fi
 fi
 
+## guardia delle patch, su ogni branch
+#
+# un commit che cambia lo schema nei file base porta la sua patch datata, o dichiara perche' non la
+# porta con una riga "Senza-patch: <motivo>" ( regola di Fabio del 04/11/2026, vedi
+# _src/_sh/_patch.guardia.sh ): ai database gia' installati i file base non arrivano mai
+if [ ! -f "$GIT_DIR/MERGE_HEAD" ]; then
+    if ! SENZA="$( bash _src/_sh/_patch.guardia.sh --staged "$MSG_FILE" )"; then
+        echo "commit rifiutato: cambia lo schema nei file base senza una patch datata" >&2
+        echo "$SENZA" | sed 's/^/    /' >&2
+        echo "aggiungi la patch _usr/_database/_patch/_AAAAMMGGHHMM.<descrizione>.sql oppure, se lo schema" >&2
+        echo "non cambia, dichiara nel messaggio 'Senza-patch: <motivo>' ( _usr/_docs/_read/300.database.md )" >&2
+        exit 1
+    fi
+fi
+
 if [ "$BRANCH" != "master" ]; then
     exit 0
 fi

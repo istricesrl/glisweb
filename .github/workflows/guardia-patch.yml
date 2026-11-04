@@ -1,0 +1,50 @@
+# guardia delle patch, lato GitHub
+#
+# regola di Fabio del 04/11/2026: un commit che cambia lo schema nei file base porta la sua patch datata, o
+# dichiara perche' non la porta con una riga "Senza-patch: <motivo>" nel messaggio. In locale lo controlla
+# l'hook .githooks/commit-msg; questo workflow e' il controllo che non si aggira da locale ( --no-verify,
+# hook non installato, clone nuovo ): ripassa ogni commit arrivato con un push o con una pull request e, se
+# uno e' fuori regola, il run fallisce e lo nomina
+#
+# la logica e' una sola, quella di _src/_sh/_patch.guardia.sh: qui si sceglie solo quali commit guardare
+#
+
+name: guardia delle patch
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  guardia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: commit che cambiano lo schema senza patch
+        env:
+          PRIMA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          DOPO: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          # branch nuovo o storia riscritta: il commit di partenza non c'e', si guarda solo l'ultimo
+          if [ -z "$PRIMA" ] || [ "$PRIMA" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$PRIMA^{commit}" 2> /dev/null; then
+            ELENCO="$DOPO"
+          else
+            ELENCO="$( git rev-list --no-merges "$PRIMA..$DOPO" )"
+          fi
+
+          FUORI=0
+          for h in $ELENCO; do
+            if ! TOCCATI="$( bash _src/_sh/_patch.guardia.sh --commit "$h" )"; then
+              FUORI=$(( FUORI + 1 ))
+              echo "::error title=commit senza patch::$( git log -1 --format='%h %s' "$h" ) — tocca $( echo $TOCCATI )"
+            fi
+          done
+
+          echo "commit guardati: $( echo $ELENCO | wc -w ), fuori regola: $FUORI"
+          if [ $FUORI -gt 0 ]; then
+            echo "aggiungi la patch datata o dichiara 'Senza-patch: <motivo>' nel messaggio ( _usr/_docs/_read/300.database.md )"
+            exit 1
+          fi
