@@ -28,6 +28,9 @@
 --   limite di InnoDB e' 64;
 -- - un vincolo il cui nome sul deploy e' gia' preso da un'altra colonna si salta in silenzio ( la numerazione
 --   <tabella>_ibfk_N diverge fra deploy e standard, TODO di glisweb );
+-- - i tipi delle colonne che c'erano, tranne funnel e tipologie_asset: su crmtrb esistono con id int( 11 ), e i
+--   vincoli verso di loro non si creerebbero ( errno 150 ), quindi il loro ALTER porta id e chiavi a bigint ( 04/11
+--   notte ); metadati.id_asset, int( 11 ) anche quella, la porta la fase 2 ( _202611042330 );
 -- - le colonne rinominate e quelle ridefinite: la colonna nuova entra vuota accanto alla vecchia, i dati non si
 --   spostano ( 35 nuove hanno nella stessa tabella una tolta dello stesso tipo, da guardare una per una ).
 --
@@ -1165,6 +1168,7 @@ ALTER TABLE `formati_tipologie_corrispondenza`
 
 -- funnel: id_account_aggiornamento, id_account_inserimento, id_campagna, nome, note, timestamp_aggiornamento, timestamp_inserimento
 ALTER TABLE `funnel`
+	MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	ADD COLUMN IF NOT EXISTS `nome` char(255) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `id_campagna` bigint(20) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `note` text DEFAULT NULL,
@@ -2026,6 +2030,10 @@ ALTER TABLE `stati`
 
 -- tipologie_asset: font_awesome, html_entity, id_account_aggiornamento, id_account_inserimento, id_genitore, nome, ordine, timestamp_aggiornamento, timestamp_inserimento
 ALTER TABLE `tipologie_asset`
+	MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT,
+	MODIFY COLUMN IF EXISTS `id_genitore` bigint(20) DEFAULT NULL,
+	MODIFY COLUMN IF EXISTS `id_account_inserimento` bigint(20) DEFAULT NULL,
+	MODIFY COLUMN IF EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `id_genitore` bigint(20) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `ordine` int(11) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `nome` char(64) DEFAULT NULL,
