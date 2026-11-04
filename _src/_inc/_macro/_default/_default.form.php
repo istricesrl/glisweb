@@ -96,6 +96,20 @@
             if( isset( $ct['form']['table'] ) ) {
                 $ct['page']['etc']['tabs'] = array( $ct['page']['id'] );
             }
+
+            // l'oggetto nuovo aperto dal + di una sub view prende l'ordine dopo i fratelli ( 2026-11-04 )
+            if( isset( $_REQUEST['__preset__'][ $ct['form']['table'] ] ) && is_array( $_REQUEST['__preset__'][ $ct['form']['table'] ] )
+                && ! isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['ordine'] ) ) {
+                foreach( $_REQUEST['__preset__'][ $ct['form']['table'] ] as $pField => $pValue ) {
+                    if( is_scalar( $pValue ) && strpos( $pField, 'id_' ) === 0 ) {
+                        $pOrdine = getNextOrder( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['form']['table'], $pField, $pValue );
+                        if( $pOrdine !== NULL ) {
+                            $_REQUEST['__preset__'][ $ct['form']['table'] ]['ordine'] = $pOrdine;
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         // timer

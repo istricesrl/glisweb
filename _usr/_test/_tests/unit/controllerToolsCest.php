@@ -42,4 +42,19 @@ class controllerToolsCest
         $I->see('token col percorso JPEG: NULL');
     }
 
+    // isFieldPresent(), getNextOrder() e controller() -> le sottoform senza indice SORTING seguono il campo ordine, e la prossima riga prende il multiplo di dieci dopo il più alto
+    public function ordineSottoform(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_controller.tools/_controller.03.php');
+        $I->dontSee('segreto di importazione assente');
+        $I->dontSee('servono almeno tre gruppi');
+        $I->see('ordine in account_gruppi: true');
+        $I->see('campo inesistente: false');
+        $I->see('inserimento: 200');
+        $I->see("prossimo ordine: '40'");
+        $I->see('campo non valido: NULL');
+        $I->see('tabella senza ordine: NULL');
+        $I->see('ordine delle sottoform: 15, 20, 30');
+    }
+
 }

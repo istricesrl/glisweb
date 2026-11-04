@@ -1286,6 +1286,10 @@
                                      * per non aggiungere mai nessun ORDER BY.
                                      */
                                     $idx = array_column(mysqlCachedQuery($mc, $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"', false, 3600), 'Column_name');
+                                    // senza l'indice SORTING le righe dei sotto moduli seguono il campo ordine, se c'è ( 2026-11-04 )
+                                    if (!count($idx) && isFieldPresent($mc, $c, $ref['TABLE_NAME'], 'ordine')) {
+                                        $idx = array('ordine', 'id');
+                                    }
                                     $q = "SELECT id FROM " . $ref['TABLE_NAME'] . " WHERE " . implode(' OR ', $refCols) . ((count($idx)) ? ' ORDER BY ' . implode(', ', $idx) : NULL);
                                     $rows = mysqlQuery($c, $q);
                                     logWrite("cerco le referenze a " . $ref['TABLE_NAME'] . " dove " . implode($ref['COLUMN_NAME']) . " è " . $d['id'] . ", " . count($rows) . " referenze trovate", 'controller');
@@ -1607,6 +1611,83 @@
         } else {
             return false;
         }
+
+    }
+
+    /**
+     * verifica se una tabella o una vista ha un certo campo
+     *
+     * Serve a decidere se un oggetto si può ordinare per `ordine` ( le righe dei sotto moduli, le sub view ) e a
+     * validare il nome di un campo che arriva dalla richiesta prima di usarlo in una query. Lo schema si legge da
+     * INFORMATION_SCHEMA.COLUMNS, che contiene anche le viste, con una query in cache per un'ora: è schema e non
+     * dato, cambia con le migrazioni e non con i salvataggi, e il TTL esplicito evita che dove MEMCACHE_DEFAULT_TTL
+     * vale 0 resti in cache per sempre.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       mysqli      $c      la connessione al database
+     * @param       string      $table  il nome della tabella o della vista
+     * @param       string      $field  il nome del campo
+     *
+     * @return      bool                true se il campo esiste, false altrimenti
+     *
+     */
+    function isFieldPresent( $m, $c, $table, $field ) {
+
+        $n = mysqlSelectCachedValue( $m, $c,
+            'SELECT count( * )
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array(
+                array( 's' => $table ),
+                array( 's' => $field )
+            ),
+            3600
+        );
+
+        return ( intval( $n ) > 0 );
+
+    }
+
+    /**
+     * calcola l'ordine di default di un nuovo oggetto figlio
+     *
+     * Quando si aggiunge un oggetto a un genitore ( p.es. dal pulsante + di una sub view ) il campo `ordine` parte
+     * dal multiplo di dieci successivo al più alto fra i fratelli: 10, 20, 30… lasciano spazio per inserire un
+     * oggetto in mezzo senza rinumerare gli altri. Se il campo `ordine` non è numerico il valore si completa con gli
+     * zeri a sinistra ( 0010 ), perché un ordine testuale senza zeri metterebbe 100 prima di 20. La stessa regola,
+     * lato client, la applica duplicate() di main.js alle righe nuove dei sotto moduli.
+     *
+     * Il campo del genitore arriva di solito dalla richiesta ( __preset__ ), quindi lo si accetta solo se il nome
+     * è quello di una chiave esterna e se la tabella ce l'ha davvero.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       mysqli      $c      la connessione al database
+     * @param       string      $table  la tabella dell'oggetto figlio
+     * @param       string      $field  il campo che punta al genitore ( id_... )
+     * @param       string      $value  l'id del genitore
+     *
+     * @return      string|null         l'ordine di default, o null se la tabella non ha `ordine` o il campo non è valido
+     *
+     */
+    function getNextOrder( $m, $c, $table, $field, $value ) {
+
+        if( ! preg_match( '/^id_[a-z0-9_]+$/', $field ) || ! isFieldPresent( $m, $c, $table, 'ordine' ) || ! isFieldPresent( $m, $c, $table, $field ) ) {
+            return NULL;
+        }
+
+        $max = mysqlSelectValue( $c,
+            'SELECT max( ordine ) FROM ' . $table . ' WHERE ' . $field . ' = ?',
+            array( array( 's' => $value ) )
+        );
+
+        $next = ( floor( intval( $max ) / 10 ) + 1 ) * 10;
+
+        if( ! isFieldNumeric( $m, $c, $table, 'ordine' ) ) {
+            $next = str_pad( $next, max( 4, strlen( $max ?? '' ) ), '0', STR_PAD_LEFT );
+        }
+
+        return (string) $next;
 
     }
 
