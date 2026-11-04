@@ -210,6 +210,22 @@
         $dns = isset( $prima['dns'] ) ? $prima['dns'] : NULL;
     }
 
+    // la sezione esterni: deve essere uguale su tutti i server: se un altro ne pubblica un'impronta diversa, una volta al giorno
+    $impronta = uptimeImpronta( isset( $conf['esterni'] ) ? $conf['esterni'] : array() );
+    $diversi = array();
+    foreach( $altri as $nome => $a ) {
+        if( $a !== NULL && isset( $a['impronta'] ) && $a['impronta'] !== $impronta ) {
+            $diversi[] = $nome;
+        }
+    }
+    if( ! empty( $diversi ) && $primo && ( ! isset( $prima['divergenza'] ) || $prima['divergenza'] !== date( 'Y-m-d', $ora ) ) ) {
+        $posta[] = array( isset( $conf['avvisa']['noi'] ) ? $conf['avvisa']['noi'] : array(), '[uptime] esterni: diversi fra ' . $io . ' e ' . implode( ', ', $diversi ),
+            'La sezione esterni: di /etc/glisweb/uptime.yaml di ' . $io . ' non e\' uguale a quella di ' . implode( ', ', $diversi ) . ': i siti esterni non li controllano tutti allo stesso modo. Va riscritta uguale su tutti i server.' . PHP_EOL );
+        $divergenza = date( 'Y-m-d', $ora );
+    } else {
+        $divergenza = isset( $prima['divergenza'] ) ? $prima['divergenza'] : NULL;
+    }
+
     // a secco si stampa e ci si ferma
     if( $secco ) {
         foreach( $vista as $h => $v ) {
@@ -218,6 +234,7 @@
         foreach( $scartati as $h => $motivo ) {
             echo 'scartato ( ' . $motivo . ' ): ' . $h . PHP_EOL;
         }
+        echo 'esterni: impronta ' . $impronta . ( empty( $diversi ) ? '' : ', diversa da ' . implode( ', ', $diversi ) ) . PHP_EOL;
         foreach( $eventi as $e ) {
             echo 'evento: ' . json_encode( $e ) . PHP_EOL;
         }
@@ -237,7 +254,7 @@
         unset( $s['deploy'], $s['dichiarato'], $s['avvisa'] );
         $pubblici[ $h ] = $s;
     }
-    file_put_contents( $cartella . 'stato.json', json_encode( array( 'server' => $io, 'ora' => date( 'c', $ora ), 'dns' => $dns, 'siti' => $pubblici, 'vista' => $vista ), JSON_PRETTY_PRINT ), LOCK_EX );
+    file_put_contents( $cartella . 'stato.json', json_encode( array( 'server' => $io, 'ora' => date( 'c', $ora ), 'dns' => $dns, 'impronta' => $impronta, 'divergenza' => $divergenza, 'siti' => $pubblici, 'vista' => $vista ), JSON_PRETTY_PRINT ), LOCK_EX );
     @chgrp( $cartella . 'stato.json', 'www-data' );
     @chmod( $cartella . 'stato.json', 0640 );
 

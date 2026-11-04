@@ -37,6 +37,7 @@
  * uptimeProfilo()                  | ricava il profilo ( DEV, TEST, PROD... ) che un deploy dà a un host
  * uptimeSiti()                     | raccoglie i siti glisweb di produzione dei deploy del server
  * uptimeEsterni()                  | prepara i siti esterni della configurazione del cluster
+ * uptimeImpronta()                 | calcola l'impronta della sezione esterni:, da confrontare fra i server
      * uptimeControlla()                | controlla in parallelo un elenco di siti
      * uptimeVista()                    | legge la vista pubblicata da un altro server
      * uptimeAggiorna()                 | applica l'isteresi agli esiti di un giro
@@ -356,6 +357,32 @@
         }
 
         return $siti;
+
+    }
+
+    /**
+     * calcola l'impronta della sezione esterni: della configurazione del cluster
+     *
+     * La sezione deve essere uguale su tutti i server ( vedi uptimeEsterni() ): ognuno pubblica l'impronta della sua
+     * nella vista, e il giro la confronta con quella degli altri. Le chiavi si ordinano prima, così l'impronta non
+     * cambia se nello yaml cambia solo l'ordine.
+     *
+     * @param   array       $esterni        la sezione esterni:, indicizzata per host
+     *
+     * @return  string                      l'impronta, md5 della sezione con le chiavi ordinate
+     *
+     */
+    function uptimeImpronta( $esterni ) {
+
+        $ordina = function( $a ) use( &$ordina ) {
+            if( is_array( $a ) ) {
+                ksort( $a );
+                $a = array_map( $ordina, $a );
+            }
+            return $a;
+        };
+
+        return md5( json_encode( $ordina( (array) $esterni ) ) );
 
     }
 

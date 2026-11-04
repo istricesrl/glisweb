@@ -45,6 +45,13 @@ class uptimeToolsCest
         $I->see('esterno: codice 200, testo NULL, lento 5, soglia 3, deploy NULL');
     }
 
+    // uptimeImpronta() -> l'impronta della sezione esterni: non cambia con l'ordine delle chiavi, cambia col contenuto
+    public function impronta(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_uptime.tools/_uptime.01.php');
+        $I->see('impronta riordinata: true, impronta diversa: true');
+    }
+
     // uptimeVhost() -> solo i virtual host sulla 443, col primo nome, e la document root senza barra finale
     public function vhost(UnitTester $I)
     {
