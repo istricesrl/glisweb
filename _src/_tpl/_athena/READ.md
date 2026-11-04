@@ -257,13 +257,21 @@ garantire la leggibilità dello schema. La prima parte è dedicata alle operazio
 {% if request[ table ].id %}
     {% set method = 'update' %}
     {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% if request[ table ][ 'timestamp_aggiornamento' ] %}
+        {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% else %}
+        {% set legend = 'data di aggiornamento non registrata' %}
+    {% endif %}
 {% else %}
     {% set method = 'post' %}
     {% set activity = 'inserimento' %}
     {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
 ```
+La data di aggiornamento va controllata prima di passarla a `|date`: su un valore vuoto il filtro di Twig
+restituisce l'ora corrente, e i record scritti senza passare dal controller ( importazioni, query dirette ) la
+legenda li darebbe aggiornati adesso. Dal 04/11/2026 tutti i template del framework hanno questa guardia.
+
 Qui c'è da osservare innanzitutto l'importazione dei file di macro, lo standard _bin/_form.html soprattutto che contiene
 le macro necessarie a creare i campi del form. Il file bin/default.html contiene invece le macro di default del template,
 la più importante è quella che genera i controlli di chiusura del form (bottoni di salvataggio, cancellazione, eccetera).

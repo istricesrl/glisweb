@@ -20,7 +20,12 @@
 {% if request[ table ].id %}
     {% set method = 'update' %}
     {% set activity = 'aggiornamento' %}
+    {% if request[ table ][ 'timestamp_aggiornamento' ] %}
     {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% else %}
+    {# senza data |date stamperebbe l'ora corrente #}
+    {% set legend = 'data di aggiornamento non registrata' %}
+    {% endif %}
 {% else %}
     {% set method = 'post' %}
     {% set activity = 'inserimento' %}
