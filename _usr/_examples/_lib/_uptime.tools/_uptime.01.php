@@ -6,7 +6,8 @@
      * Non tocca il database e non scrive niente; l'unica rete è la domanda al DNS di uptimePubblico():
      * - uptimePubblico() su un IP pubblico e uno privato, che non interrogano il DNS, e su localhost e un dominio
      *   .invalid, che il DNS non risolve;
-     * - uptimeProfilo() con un sito che ha DEV e PROD e uno con un profilo PRODWMS, come su bernispa;
+     * - uptimeProfilo() con un sito che ha DEV e PROD e uno con un profilo PRODWMS, come su bernispa, e sui siti
+     *   veri del deploy, dove deve dare all'host della richiesta lo stesso SITE_STATUS del bootstrap;
      * - uptimeEsterni() con un sito esterno completo e uno senza url;
      * - uptimeImpronta() sulla stessa sezione esterni: con le chiavi in un altro ordine, e su una diversa;
      * - uptimeVhost() sui due file di _vhost/: un Apache con un vhost sulla 80 e uno sulla 443, un nginx con un
@@ -39,6 +40,9 @@
     foreach( array( 'esempio.istricesrl.it', 'www.esempio.it', 'esempio.it', 'magazzino.interno.esempio.it', 'altro.it' ) as $h ) {
         echo 'profilo ' . $h . ': ' . var_export( uptimeProfilo( $h, $sites ), true ) . PHP_EOL;
     }
+
+    // la regola di uptimeProfilo() e quella di _015.site.php sono una: sull'host della richiesta danno lo stesso stato
+    echo 'profilo come il bootstrap: ' . var_export( uptimeProfilo( $_SERVER['HTTP_HOST'], $cf['sites'] ) === SITE_STATUS, true ) . PHP_EOL;
 
     // siti esterni: codice 200, nessun testo se non lo si chiede, nessun deploy; senza url si scartano
     $esterni = uptimeEsterni( array( 'www.esterno.it' => array( 'url' => 'https://www.esterno.it/', 'lento' => 5, 'avvisa' => array( 'abilitato' => true ) ), 'senzaurl.it' => array() ) );

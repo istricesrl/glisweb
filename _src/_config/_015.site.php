@@ -116,45 +116,11 @@
             // echo $status . '->' . $domain . PHP_EOL;
             // echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 
+            // espressione regolare dello stato, la stessa che usa uptimeProfilo()
+            $regex = site2regexp( $site, $status );
+
             // se c'è un dominio per questo status
-            if( ! empty( $domain ) ) {
-
-                // inizializzazioni
-                $hosts = $domains = array();
-
-                // per lo stato corrente, verifico se c'è un host specificato
-                if( isset( $site['hosts'][ $status ] ) ) {
-                    $hosts[] = $site['hosts'][ $status ];
-                }
-
-                // per lo stato corrente, verifico se ci sono degli alias di host
-                if( isset( $site['alias']['hosts'][ $status ] ) ) {
-                    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ] );
-                }
-
-                // per lo stato corrente, aggiungo il domain
-                $domains[] = $site['domains'][ $status ];
-
-                // per lo stato corrente, verifico se ci sono degli alias di domain
-                if( isset( $site['alias']['domains'][ $status ] ) ) {
-                    $domains = array_merge( $domains, $site['alias']['domains'][ $status ] );
-                }
-
-                // numeratore host in base a www
-                if( in_array( 'www', $hosts ) ) {
-                    $numerator = '{0,1}';
-                } else {
-                    $numerator = '{1}';
-                }
-
-                // regola di match per i domini
-                $drule = str_replace( '.', '\.', implode( '|', $domains ) );
-
-                // regola di match per gli host
-                $hrule = implode( '|', $hosts );
-
-                // composizione dell'espressione regolare, senza distinzione di maiuscole come fa Apache sull'Host
-                $regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/i';
+            if( $regex !== NULL ) {
 
                 // debug
                 // echo $regex .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;

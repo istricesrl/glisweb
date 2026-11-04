@@ -35,6 +35,7 @@ class uptimeToolsCest
         $I->see("profilo esempio.it: 'PROD'"); // con www fra gli host, il www è facoltativo
         $I->see("profilo magazzino.interno.esempio.it: 'PRODWMS'");
         $I->see("profilo altro.it: NULL");
+        $I->see('profilo come il bootstrap: true'); // uptimeProfilo() e _015.site.php usano la stessa site2regexp()
     }
 
     // uptimeEsterni() -> i siti esterni hanno i default, codice 200 e nessun testo atteso, e non hanno deploy

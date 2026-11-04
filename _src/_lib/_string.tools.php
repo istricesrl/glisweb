@@ -90,6 +90,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * str_starts_with_array()          | verifica se una stringa comincia con uno dei prefissi dati
      * inRegexpArray()                  | verifica se una stringa corrisponde ad almeno una delle espressioni regolari date
+     * site2regexp()                    | costruisce l'espressione regolare degli host di un sito per uno stato
      * isBinaryString()                 | verifica se una stringa non è testo UTF-8 valido
      *
      * funzioni di compatibilità
@@ -905,6 +906,46 @@
         }
 
         return $match;
+
+    }
+
+    /**
+     * costruisce l'espressione regolare degli host di un sito per uno stato
+     *
+     * È la regola con cui _src/_config/_015.site.php riconosce il sito corrente e il suo stato dall'HTTP_HOST, e con
+     * cui uptimeProfilo() ricava il profilo di un host senza il bootstrap: per questo sta qui, in una libreria che non
+     * dipende da $cf. Mette insieme host e domini dello stato con i loro alias; se fra gli host c'è www, l'host è
+     * facoltativo. Il confronto non distingue maiuscole e minuscole, come fa Apache sull'Host.
+     *
+     * @param       array       $site       un sito della configurazione ( domains, hosts, alias )
+     * @param       string      $status     lo stato ( DEV, TEST, PROD... )
+     *
+     * @return      string|null             l'espressione regolare, NULL se il sito non ha un dominio per quello stato
+     *
+     */
+    function site2regexp( $site, $status ) {
+
+        // senza dominio lo stato non risponde a nessun host
+        if( empty( $site['domains'][ $status ] ) ) {
+            return NULL;
+        }
+
+        // host dello stato e loro alias
+        $hosts = isset( $site['hosts'][ $status ] ) ? array( $site['hosts'][ $status ] ) : array();
+        if( isset( $site['alias']['hosts'][ $status ] ) ) {
+            $hosts = array_merge( $hosts, (array) $site['alias']['hosts'][ $status ] );
+        }
+
+        // dominio dello stato e suoi alias
+        $domains = array( $site['domains'][ $status ] );
+        if( isset( $site['alias']['domains'][ $status ] ) ) {
+            $domains = array_merge( $domains, (array) $site['alias']['domains'][ $status ] );
+        }
+
+        // numeratore host in base a www
+        $numerator = ( in_array( 'www', $hosts ) ) ? '{0,1}' : '{1}';
+
+        return '/^(?:' . implode( '|', $hosts ) . ')' . $numerator . '(?:\.)*(' . str_replace( '.', '\.', implode( '|', $domains ) ) . '){1}/i';
 
     }
 

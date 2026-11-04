@@ -201,6 +201,20 @@ class stringToolsCest
         $I->see('bool(false)');
     }
 
+    // site2regexp() -> l'espressione regolare degli host di un sito: www facoltativo, alias, niente dominio niente regola
+    public function site2regexp(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_site2regexp.01.php');
+        $I->see('www.esempio.it PROD: true');
+        $I->see('esempio.it PROD: true');
+        $I->see('WWW.ESEMPIO.IT PROD: true');
+        $I->see('www.esempio.com PROD: true');
+        $I->see('shop.esempio.it PROD: true');
+        $I->see('esempio.istricesrl.it DEV: true');
+        $I->see('istricesrl.it DEV: false');
+        $I->see('TEST: NULL');
+    }
+
     // clean_string() -> deve restituire una stringa pulita
     public function clean_string(UnitTester $I)
     {

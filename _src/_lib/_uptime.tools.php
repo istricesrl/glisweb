@@ -51,6 +51,7 @@
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * sendMail()                       | _src/_lib/_mail.tools.php
+     * site2regexp()                    | _src/_lib/_string.tools.php
      *
      * Servono le estensioni curl e yaml; non legge $cf e non richiede il bootstrap del framework.
      *
@@ -181,9 +182,8 @@
     /**
      * ricava il profilo ( DEV, TEST, PROD... ) che un deploy dà a un host
      *
-     * È la stessa regola con cui _src/_config/_015.site.php decide SITE_STATUS dall'HTTP_HOST: per ogni sito e per
-     * ogni stato un'espressione regolare su host, domini e loro alias, e vince la prima che fa match. Se si cambia
-     * lì va cambiata anche qui.
+     * È la regola con cui _src/_config/_015.site.php decide SITE_STATUS dall'HTTP_HOST: per ogni sito e per ogni
+     * stato l'espressione regolare di site2regexp(), che tutt'e due usano, e vince la prima che fa match.
      *
      * @param   string      $host           l'host
      * @param   array       $sites          la chiave sites della configurazione del deploy
@@ -199,26 +199,11 @@
                 continue;
             }
 
-            foreach( $site['domains'] as $status => $domain ) {
+            foreach( array_keys( $site['domains'] ) as $status ) {
 
-                if( empty( $domain ) ) {
-                    continue;
-                }
+                $regex = site2regexp( $site, $status );
 
-                $hosts = isset( $site['hosts'][ $status ] ) ? array( $site['hosts'][ $status ] ) : array();
-                if( isset( $site['alias']['hosts'][ $status ] ) ) {
-                    $hosts = array_merge( $hosts, (array) $site['alias']['hosts'][ $status ] );
-                }
-
-                $domains = array( $domain );
-                if( isset( $site['alias']['domains'][ $status ] ) ) {
-                    $domains = array_merge( $domains, (array) $site['alias']['domains'][ $status ] );
-                }
-
-                $numerator = ( in_array( 'www', $hosts ) ) ? '{0,1}' : '{1}';
-                $regex = '/^(?:' . implode( '|', $hosts ) . ')' . $numerator . '(?:\.)*(' . str_replace( '.', '\.', implode( '|', $domains ) ) . '){1}/i';
-
-                if( preg_match( $regex, $host ) === 1 ) {
+                if( $regex !== NULL && preg_match( $regex, $host ) === 1 ) {
                     return $status;
                 }
 

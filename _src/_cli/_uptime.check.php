@@ -76,6 +76,7 @@
     }
     require_once DIR_BASE . '_src/_lib/_filesystem.tools.php';
     require_once DIR_BASE . '_src/_lib/_mail.tools.php';
+    require_once DIR_BASE . '_src/_lib/_string.tools.php';
     require_once DIR_BASE . '_src/_lib/_uptime.tools.php';
 
     // prova degli avvisi
