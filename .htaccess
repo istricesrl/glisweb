@@ -285,7 +285,7 @@ AddType image/webp .webp
     # smettono di finire in attivita con id_tipologia = 43. Non si vede: nessun errore, e
     # il file continua a essere servito — a mancare e' solo la riga nel registro.
     # Un .htaccess di sottocartella SENZA direttive rewrite invece non rompe niente:
-    # var/gimbeducation/old_fatture/ ne ha uno e i suoi download si registrano regolarmente.
+    # per esempio uno che contiene solo Options -Indexes: i download si registrano regolarmente.
     # il percorso viaggia nella variabile d'ambiente GLIS_DOWNLOAD e non nella query string: un
     # __download__ in query il client poteva accodarlo o mandarlo chiamando l'API direttamente, e
     # PHP teneva il suo ( lettura di qualunque file del deploy, fino al 04/10/2026 )
