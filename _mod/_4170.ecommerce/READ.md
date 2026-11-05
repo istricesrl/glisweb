@@ -392,6 +392,15 @@ if( carrelloForm.checkValidity() ) {
                                                                                                   +----> |   API esito pagamento   |
                                                                                                          +-------------------------+
 
+  Importo dell'ordine e verifica alla cattura ( dal 05/11/2026 ). L'API dell'ordine ( _src/_api/_paypal.advanced.order.php ) manda a
+  PayPal quello che il carrello vale nel database, cioè importoOrdineCarrello() ( _src/_lib/_mysql.tools.add.php ): somma delle righe di
+  carrelli_articoli, meno il coupon, più la spedizione d'ordine; non più la testata in sessione. La cifra va in carrelli.importo_pagamento
+  insieme a ordine_pagamento. L'API di cattura ( _src/_api/_paypal.advanced.capture.php ), prima di chiamare PayPal, rifà il conto con
+  verificaImportoOrdineCarrello(): se il carrello non vale più l'importo dell'ordine ( una riga entrata o cancellata fuori sessione, uno
+  sconto ricalcolato ), o se l'ordine non è quello del carrello, non cattura e risponde con un errore; l'ordine resta approvato e scade, e
+  chi paga lo rifà sul carrello di adesso. Così PayPal incassa sempre quello che i post-hook registrano dalle righe. Il test è
+  _usr/_test/_tests/backend/paypalOrdineImportoRigheCest.php del modulo.
+
   pagamento tramite Nexi
   ----------------------
 

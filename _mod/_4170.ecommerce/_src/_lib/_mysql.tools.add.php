@@ -519,3 +519,74 @@
 
     }
 
+
+    /**
+     * importo da mandare a PayPal per l'ordine di un carrello
+     *
+     * Calcola l'importo del carrello dal database, non dalla testata in sessione: somma delle righe ( il prezzo 0 può essere
+     * salvato NULL ), meno il coupon, che si toglie dalla testata e non dalle righe, più la spedizione d'ordine, che vale
+     * zero con la spedizione per articolo ( vedi trovaCostoSpedizioneCarrello() ). Sono le stesse voci con cui il controller
+     * del carrello ( _750.controller.php ) costruisce prezzo_lordo_finale, ma lette dove le leggono i post-hook che emettono
+     * le ricevute: fino al 2026-11-05 l'ordine partiva con $_SESSION['carrello']['prezzo_lordo_finale'], e una riga entrata
+     * fuori sessione o uno sconto ricalcolato fra ordine e cattura facevano incassare una cifra e registrarne un'altra
+     * ( polmasi, dal 01/09/2026 circa 30 catture con differenza ).
+     *
+     * @param  mysqli  $c  connessione
+     * @param  integer $id id del carrello
+     *
+     * @return mixed       l'importo arrotondato al centesimo, oppure false se il carrello non esiste
+     */
+    function importoOrdineCarrello( $c, $id ) {
+
+        $r = mysqlSelectRow(
+            $c,
+            'SELECT ( SELECT coalesce( sum( coalesce( carrelli_articoli.prezzo_lordo_finale, 0 ) ), 0 ) FROM carrelli_articoli WHERE carrelli_articoli.id_carrello = carrelli.id )
+                - coalesce( carrelli.sconto_valore_coupon, 0 ) + coalesce( carrelli.costo_spedizione_lordo, 0 ) AS importo
+                FROM carrelli WHERE carrelli.id = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( ! isset( $r['importo'] ) ) {
+            return false;
+        }
+
+        return round( (float) $r['importo'], 2 );
+
+    }
+
+    /**
+     * verifica che il carrello valga ancora l'importo dell'ordine PayPal
+     *
+     * Confronta l'importo che l'API dell'ordine ha mandato a PayPal e scritto in carrelli.importo_pagamento con quello che
+     * il carrello vale adesso ( importoOrdineCarrello() ): la cattura la chiama prima di muovere i soldi, e se non tornano
+     * non cattura. Un ordine che non è di questo carrello, o creato prima di questa verifica ( senza importo_pagamento ),
+     * non torna: chi paga rifà il pagamento, e non si incassa niente di diverso da quello che si registra.
+     *
+     * @param  mysqli  $c       connessione
+     * @param  integer $id      id del carrello
+     * @param  string  $ordine  id dell'ordine PayPal
+     *
+     * @return array            array( 'ok' => bool, 'atteso' => importo dell'ordine, 'trovato' => importo del carrello adesso )
+     */
+    function verificaImportoOrdineCarrello( $c, $id, $ordine ) {
+
+        $atteso = mysqlSelectValue(
+            $c,
+            'SELECT importo_pagamento FROM carrelli WHERE id = ? AND ordine_pagamento = ?',
+            array(
+                array( 's' => $id ),
+                array( 's' => $ordine )
+            )
+        );
+
+        $trovato = importoOrdineCarrello( $c, $id );
+
+        return array(
+            'ok' => ( $atteso !== NULL && $atteso !== false && $trovato !== false && (float) $atteso > 0 && round( (float) $atteso, 2 ) == $trovato ),
+            'atteso' => $atteso,
+            'trovato' => $trovato
+        );
+
+    }

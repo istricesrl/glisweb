@@ -70,6 +70,22 @@
 
         $descrizione .= ' - ordine ' . $_SESSION['carrello']['id'];
 
+        // importo dell'ordine: quello che il carrello vale nel database, che è quello che i post-hook della cattura
+        // registrano, e non la testata in sessione ( vedi importoOrdineCarrello() )
+        $importo = importoOrdineCarrello( $cf['mysql']['connection'], $_SESSION['carrello']['id'] );
+
+        // la testata in sessione non torna con il database: si manda il database, e si scrive perché
+        if( round( (float) $_SESSION['carrello']['prezzo_lordo_finale'], 2 ) != $importo ) {
+            logWrite( 'ordine PayPal del carrello ' . $_SESSION['carrello']['id'] . ': testata in sessione ' . $_SESSION['carrello']['prezzo_lordo_finale'] . ' EUR, righe nel database ' . var_export( $importo, true ) . ' EUR, mando le righe', 'paypal', LOG_WARNING );
+        }
+
+        // cintura di sicurezza: un carrello che non c'è o che non vale niente non si manda a PayPal
+        if( (float) $importo <= 0 ) {
+            appendToFile( 'ordine non creato: importo del carrello ' . var_export( $importo, true ), $fileRicevuta );
+            buildJson( array( 'id' => NULL, 'skipped' => 'zero_amount' ) );
+            return;
+        }
+
         // dati dell'ordine
         $order = array(
             'intent' => 'CAPTURE',
@@ -80,7 +96,7 @@
                     'description' => substr( $descrizione, 0, 127 ),
                     'amount' => array(
                         'currency_code' => 'EUR',
-                        'value' => number_format( ( float) $_SESSION['carrello']['prezzo_lordo_finale'], 2, '.', '' )
+                        'value' => number_format( $importo, 2, '.', '' )
                     )
                 )
             )
@@ -104,10 +120,12 @@
         // log
         appendToFile( 'esito creazione ordine: ' . print_r( $result, true ), $fileRicevuta );
 
-        // dati di pagamento
+        // dati di pagamento: con l'ordine si registra anche la cifra mandata a PayPal, che la cattura confronta con quello
+        // che il carrello vale in quel momento ( verificaImportoOrdineCarrello() ); la cattura la sostituisce con l'incassato
         $order = array(
             'id'						=> $_SESSION['carrello']['id'],
             'ordine_pagamento'			=> $result['id'],
+            'importo_pagamento'			=> number_format( $importo, 2, '.', '' )
         );
 
         // registro il pagamento
