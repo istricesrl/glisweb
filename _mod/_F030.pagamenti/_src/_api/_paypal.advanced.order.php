@@ -137,6 +137,22 @@
             )
         );
 
+        // pagamenti figli del "paga insieme": quelli ancora aperti e quanto valgono
+        $figli = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT count( id ) AS aperti, coalesce( sum( importo_lordo_finale ), 0 ) AS importo FROM pagamenti
+                WHERE id_genitore = ? AND timestamp_pagamento IS NULL AND id_documento IS NULL',
+            array( array( 's' => $dati['id'] ) )
+        );
+
+        // se il pagamento è un master, a PayPal va la somma dei figli aperti di adesso, non l'importo della riga: la
+        // cattura registra i figli, e un master non aggiornato farebbe incassare una cifra e registrarne un'altra
+        // ( polmasi 2026-11-01: 640 EUR incassati, 128 registrati ); senza figli aperti l'importo è zero e l'ordine
+        // non parte ( vedi la cintura di sicurezza qui sotto )
+        if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM pagamenti WHERE id_genitore = ?', array( array( 's' => $dati['id'] ) ) ) ) {
+            $dati['importo_lordo_finale'] = $figli['importo'];
+        }
+
     }
 
     // verifico che esista un carrello
@@ -193,10 +209,12 @@
         // log
         appendToFile( 'esito creazione ordine: ' . print_r( $result, true ), $fileRicevuta );
 
-        // dati di pagamento
+        // dati di pagamento: con l'ordine si registra anche la cifra mandata a PayPal, che la cattura confronta con
+        // quello che sta per registrare ( verificaFigliOrdinePaypal() )
         $order = array(
             'id'						=> $dati['id'],
             'ordine_pagamento'			=> $result['id'],
+            'importo_pagamento'			=> number_format( ( float ) $dati['importo_lordo_finale'], 2, '.', '' )
         );
 
         // registro il pagamento
@@ -205,6 +223,15 @@
             $order,
             'pagamenti'
         );
+
+        // marco con l'ordine i figli aperti che sono entrati nell'importo: la cattura registra solo questi
+        if( ! empty( $result['id'] ) ) {
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE pagamenti SET ordine_pagamento = ? WHERE id_genitore = ? AND timestamp_pagamento IS NULL AND id_documento IS NULL',
+                array( array( 's' => $result['id'] ), array( 's' => $dati['id'] ) )
+            );
+        }
 
         // debug
         // print_r( $result );

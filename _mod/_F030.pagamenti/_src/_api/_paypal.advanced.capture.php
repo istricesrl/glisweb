@@ -44,7 +44,11 @@
         // recupero pagamento
         $pagamento = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT * FROM pagamenti WHERE ordine_pagamento = ?',
+            // i figli del "paga insieme" portano lo stesso ordine_pagamento del master ( li marca l'API dell'ordine ):
+            // il pagamento dell'ordine è quello che non ha un genitore con lo stesso ordine
+            'SELECT pagamenti.* FROM pagamenti '.
+                'LEFT JOIN pagamenti AS genitori ON genitori.id = pagamenti.id_genitore AND genitori.ordine_pagamento = pagamenti.ordine_pagamento '.
+                'WHERE pagamenti.ordine_pagamento = ? AND genitori.id IS NULL',
             array( array( 's' => $_REQUEST['id'] ) )
         );
 
@@ -83,6 +87,47 @@
 
             // esito
             buildJson( array( 'error' => 'pagamento non trovato per l\'ordine ' . $_REQUEST['id'] ) );
+
+            // fine script
+            exit;
+
+        }
+
+        /**
+         * Si cattura solo quello che si registrerà.
+         * ========================================
+         *
+         * Fix 2026-11-05. PayPal incassa la cifra fissata quando nasce l'ordine, la cattura
+         * registra i figli che trova adesso: fra i due istanti i figli possono essere stati
+         * rifatti, spostati su un altro master, scontati o pagati altrove. Fino a oggi non
+         * si confrontava niente, e su polmasi da settembre nove incassi non tornavano con la
+         * registrazione, per 988 EUR ( l'ultimo il 01/11: 640 EUR incassati, 128 registrati ).
+         *
+         * L'API dell'ordine scrive sul master la cifra mandata a PayPal e marca i figli con
+         * l'ordine; qui, prima di muovere i soldi, la somma dei figli marcati e ancora aperti
+         * deve essere quella cifra, altrimenti non si cattura. L'ordine approvato e non
+         * catturato scade da solo, e chi paga ripete il pagamento con la cifra giusta.
+         */
+        $verifica = verificaFigliOrdinePaypal( $pagamento['id'], $_REQUEST['id'] );
+
+        if( empty( $verifica['ok'] ) ) {
+
+            // log
+            logWrite(
+                'cattura rifiutata: ordine ' . $_REQUEST['id'] . ' da ' . $verifica['atteso'] . ' EUR, ' .
+                ( ( empty( $verifica['totali'] ) ) ? 'pagamento' : 'figli' ) . ' per ' . $verifica['trovato'] . ' EUR ( pagamento #' . $pagamento['id'] . ' )',
+                'paypal',
+                LOG_ERR
+            );
+
+            // log
+            appendToFile(
+                'cattura rifiutata: ordine ' . $_REQUEST['id'] . ' da ' . $verifica['atteso'] . ' EUR, registrabili ' . $verifica['trovato'] . ' EUR',
+                DIR_VAR_SPOOL_PAYMENT . 'details/paypal-advanced/pagamenti.' . sprintf( '%08d', $pagamento['id'] ) . '.log'
+            );
+
+            // esito
+            buildJson( array( 'error' => 'importo dell\'ordine ' . $_REQUEST['id'] . ' diverso dai pagamenti da registrare' ) );
 
             // fine script
             exit;
@@ -138,12 +183,9 @@
             // log
             appendToFile( 'controller post pagamento trovate: ' . print_r( $cnts, true ), $fileRicevuta );
 
-            // controllo se ci sono pagamenti figli
-            $childPayments = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SELECT * FROM pagamenti WHERE id_genitore = ?',
-                array( array( 's' => $pagamento['id'] ) )
-            );
+            // pagamenti figli da registrare: solo quelli marcati con l'ordine e ancora aperti, già letti dalla verifica,
+            // perché un pagamento chiuso non si riscrive mai
+            $childPayments = $verifica['figli'];
 
             if( empty( $childPayments ) ) {
 
@@ -226,8 +268,13 @@
             // ...
             memcacheDelete( $cf['memcache']['connection'], $pagamento['token_pagamento'] );
 
-            // se il pagamento originario era un master, lo elimino
-            if( ! empty( $childPayments ) ) {
+            // se il pagamento originario era un master, lo elimino; se gli restano figli aperti ( aggiunti dopo l'ordine,
+            // quindi non incassati ) resta al suo posto, così che si possano ancora pagare
+            if( ! empty( $childPayments ) && ! mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT count( id ) FROM pagamenti WHERE id_genitore = ? AND timestamp_pagamento IS NULL',
+                array( array( 's' => $pagamento['id'] ) )
+            ) ) {
                 mysqlQuery(
                     $cf['mysql']['connection'],
                     'DELETE FROM pagamenti WHERE id = ?',
