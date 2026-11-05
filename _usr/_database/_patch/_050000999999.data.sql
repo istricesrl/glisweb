@@ -4506,6 +4506,16 @@ INSERT INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`
 (4,	NULL,	NULL,	NULL,	'anno sportivo',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	NULL,	'sospensione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+
+-- | 050000054200
+
+-- tipologie_popup
+-- id fissi: _3400.popup/_420.pages.php traduce 1-4 nelle classi popup-open, popup-close, popup-delay, popup-scroll
+INSERT IGNORE INTO `tipologie_popup` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	10,	'all''apertura della pagina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	20,	'alla chiusura della pagina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	30,	'dopo secondi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	40,	'dopo scroll',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 -- | 050000054600
 
 -- tipologie_listini

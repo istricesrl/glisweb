@@ -7502,7 +7502,6 @@ CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
 -- | 090000050451
 
 -- tipologie_badge_view
--- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `tipologie_badge_view` AS
 	SELECT
 		tipologie_badge.id,
@@ -7520,8 +7519,6 @@ CREATE OR REPLACE VIEW `tipologie_badge_view` AS
 -- | 090000050501
 
 -- tipologie_banner_view
--- tipologia: tabella assistita
--- verifica: 2022-07-20 17:22 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 	SELECT
 		tipologie_banner.id,
@@ -7539,7 +7536,6 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 -- | 090000050551
 
 -- tipologie_campagne_view
--- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
 	SELECT
 		tipologie_campagne.id,
@@ -7557,8 +7553,6 @@ CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
 -- | 090000050601
 
 -- tipologie_chiavi_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
 	SELECT
 		tipologie_chiavi.id,
@@ -7715,8 +7709,6 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 -- | 090000052801
 
 -- tipologie_edifici_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-27 17:00 Chiara GDL
 CREATE OR REPLACE VIEW tipologie_edifici_view AS
 	SELECT
 	tipologie_edifici.id,
@@ -7772,8 +7764,6 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 -- | 090000053201
 
 -- tipologie_licenze_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 	SELECT
 		tipologie_licenze.id,
@@ -7791,8 +7781,6 @@ CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 -- | 090000053301
 
 -- tipologie_luoghi_view
--- tipologia: tabella gestita
--- verifica: 2022-02-21 15:30 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
 	SELECT
 		tipologie_luoghi.id,
@@ -7882,8 +7870,6 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 -- | 090000054001
 
 -- tipologie_pagamenti_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 	SELECT
 		tipologie_pagamenti.id,
@@ -7924,8 +7910,6 @@ CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 -- | 090000054201
 
 -- tipologie_popup_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_popup_view` AS
 	SELECT
 		tipologie_popup.id,
@@ -8039,8 +8023,6 @@ CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 -- | 090000055801
 
 -- tipologie_risorse_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 	SELECT
 		tipologie_risorse.id,
