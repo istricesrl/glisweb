@@ -1098,6 +1098,7 @@
     define( 'DIR_VAR_SITEMAP'                           , DIR_BASE . 'var/sitemap/' );
     define( 'DIR_VAR_SPOOL'                             , DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_AUTOMAZIONI'                 , DIR_BASE . 'var/spool/automazioni/' );
+    define( 'DIR_VAR_SPOOL_CACHE'                       , DIR_BASE . 'var/spool/cache/' );
     define( 'DIR_VAR_SPOOL_CART'                        , DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'                        , DIR_BASE . 'var/spool/docs/' );
     define( 'DIR_VAR_SPOOL_EXPORT'                      , DIR_BASE . 'var/spool/export/' );

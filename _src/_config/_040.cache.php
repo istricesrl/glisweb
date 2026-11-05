@@ -159,6 +159,9 @@
      * 
      */
 
+    // stringa di unicità per sito della cache chiave-valore su disco ( _disk.tools.php )
+    define( 'DISK_UNIQUE_SEED'                  , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+
     // profili di funzionamento del sistema cache su disco per DEV e TEST
     $cf['cache']['profiles'][ DEVELOPEMENT ]    =
     $cf['cache']['profiles'][ TESTING ]         = array();

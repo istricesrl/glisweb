@@ -221,6 +221,9 @@
     // costante per il default TTL
     define( 'APCU_DEFAULT_TTL'        , ( ( isset( $cf['apcu']['ttl'] ) ) ? $cf['apcu']['ttl'] : 0 ) );
 
+    // costante per il default TTL della cache chiave-valore su disco ( _disk.tools.php )
+    define( 'DISK_DEFAULT_TTL'        , ( ( isset( $cf['disk']['ttl'] ) ) ? $cf['disk']['ttl'] : 0 ) );
+
     /**
      * sezione cache su disco
      * ======================
