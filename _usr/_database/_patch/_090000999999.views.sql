@@ -7390,12 +7390,12 @@ CREATE OR REPLACE VIEW `template_view` AS
 -- | 090000045001
 
 -- testate_view
--- tipologia: tabella gestita
--- verifica: 2021-09-10 16:54 Fabio Mosti
 CREATE OR REPLACE VIEW `testate_view` AS
 	SELECT
 		testate.id,
 		testate.nome,
+		testate.id_account_inserimento,
+		testate.id_account_aggiornamento,
 		testate.nome AS __label__
 	FROM testate
 ;

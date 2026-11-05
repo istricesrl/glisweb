@@ -7,8 +7,8 @@ actor: BackendTester
 modules:
     enabled:
         - \Helper\Glisweb:
-            # roots e users li crea comunque l'helper, d'ufficio: qui restano per chiarezza
-            gruppi: [ roots, users ]
+            # roots e users li crea comunque l'helper, d'ufficio: qui restano per chiarezza; staff serve ad aclTestateCest
+            gruppi: [ roots, users, staff ]
         - WebDriver:
             url: '%GLISWEB_TEST_URL%'
             browser: chrome

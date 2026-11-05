@@ -7302,16 +7302,23 @@ CREATE TABLE IF NOT EXISTS `template` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i testate
+-- funzione: contiene le testate su cui sono uscite le risorse d'archivio
 --
-CREATE TABLE IF NOT EXISTS `testate` (
-  `id` bigint(20) NOT NULL,
-  `nome` char(128) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella contiene le testate ( giornali, riviste, emittenti, siti di informazione ) su cui sono uscite le
+-- risorse dell'archivio documentale, una riga per testata; la risorsa vi punta con risorse.id_testata, accanto alla
+-- data di pubblicazione originale; è un classificatore delle risorse, come categorie_risorse, quindi il nome è unico
+--
+-- NOTA la testata non è l'editore: un editore ne pubblica molte, e la testata non ha recapiti né rapporti commerciali,
+-- per questo non sta in anagrafica ( decisione del 2026-11-05, punto 6 dello schema canonico, riga 190 )
+--
+CREATE TABLE IF NOT EXISTS `testate` (                          --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                                  -- nome della testata
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000050000
 

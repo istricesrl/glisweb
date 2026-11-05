@@ -4412,11 +4412,9 @@ ALTER TABLE `template` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000045000
 
 -- testate
--- tipologia: tabella gestita
--- verifica: 2021-09-10 11:57 Fabio Mosti
 ALTER TABLE `testate`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`);
