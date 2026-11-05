@@ -4361,13 +4361,12 @@ ALTER TABLE `task`
 	ADD KEY `giorno_della_settimana` (`giorno_della_settimana`),
 	ADD KEY `settimana` (`settimana`),
 	ADD KEY `task` (`task`),
-	ADD KEY `iterazioni` (`iterazioni`),
-	ADD KEY `delay` (`delay`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `token` (`token`),
 	ADD KEY `timestamp_esecuzione` (`timestamp_esecuzione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`minuto`,`ora`,`giorno_del_mese`,`mese`,`giorno_della_settimana`,`settimana`,`task`,`iterazioni`,`delay`,`token`,`timestamp_esecuzione`);
+	ADD KEY `indice` (`id`,`minuto`,`ora`,`giorno_del_mese`,`mese`,`giorno_della_settimana`,`settimana`,`task`,`data_archiviazione`,`token`,`timestamp_esecuzione`);
 
 -- | 030000043001
 

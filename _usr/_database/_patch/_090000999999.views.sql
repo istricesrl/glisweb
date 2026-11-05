@@ -7303,6 +7303,8 @@ CREATE OR REPLACE VIEW task_view AS
 		task.giorno_della_settimana,
 		task.settimana,
 		task.task,
+		task.data_archiviazione,
+		task.note_archiviazione,
 		task.iterazioni,
 		task.delay,
 		task.token,
@@ -7311,7 +7313,6 @@ CREATE OR REPLACE VIEW task_view AS
 		task.id_account_inserimento,
 		task.id_account_aggiornamento,
 		CONCAT(
-			' / ',
 			coalesce( task.minuto, '*' ),
 			' / ',
 			coalesce( task.ora, '*' ),

@@ -7188,27 +7188,36 @@ CREATE TABLE IF NOT EXISTS `step` (                             --
 -- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i task pianificati del sistema
+-- funzione: contiene i task pianificati, cioè i lavori puntuali che il cron esegue a orari stabiliti
 --
--- questa tabella contiene i task pianificati del sistema, per maggiori informazioni si veda la documentazione relativa ai file
--- /_src/_api/_cron.php e /_src/_api/_job.php
--- 
+-- questa tabella dice quale file di task ( task ) eseguire e quando, con i campi del crontab di Linux ma non la sua
+-- sintassi: ogni campo vale un solo numero confrontato per uguaglianza con l'ora del giro, oppure NULL che vale "ogni";
+-- non ci sono liste né intervalli, quindi lo stesso task si pianifica su più righe, e la domenica è 7 come date( 'N' ).
+-- Un task è un lavoro puntuale in cui ogni esecuzione non ha contezza delle altre, e può quindi lavorare su perimetri
+-- indefiniti; i lavori lunghi dal perimetro predefinito sono i job. Il blocco iterazioni, delay, token e
+-- timestamp_esecuzione è quello comune alle automazioni ( job, task, pianificazioni ); un task di un modulo non attivo
+-- non gira; id_account_inserimento NULL vuol dire task di sistema. Si veda /_src/_api/_cron.php
+-- NOTA un task si spegne archiviandolo ( data_archiviazione ), non cancellandolo: le righe standard cancellate
+-- tornerebbero col file di dati, e la nota di archiviazione dice perché è spento
+--
 CREATE TABLE IF NOT EXISTS `task` (                           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `minuto` int(11) DEFAULT NULL,                              -- minuto di esecuzione (0-59, NULL sta per ogni minuto)
-  `ora` int(11) DEFAULT NULL,                                 -- ora di esecuzione (0-23, NULL sta per ogni ora)
-  `giorno_del_mese` int(11) DEFAULT NULL,                     -- giorno del mese di esecuzione (1-31, NULL sta per ogni giorno del mese)
-  `mese` int(11) DEFAULT NULL,                                -- mese di esecuzione (1-12, NULL sta per ogni mese)
-  `giorno_della_settimana` int(11) DEFAULT NULL,              -- giorno della settimana di esecuzione (1-7, 1 lunedì e 7 domenica come date( 'N' ), NULL sta per ogni giorno della settimana)
-  `settimana` int(11) DEFAULT NULL,                           -- settimana di esecuzione (1-53, NULL sta per ogni settimana)
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `minuto` int(11) DEFAULT NULL,                              -- minuto di esecuzione ( 0-59, NULL sta per ogni minuto )
+  `ora` int(11) DEFAULT NULL,                                 -- ora di esecuzione ( 0-23, NULL sta per ogni ora )
+  `giorno_del_mese` int(11) DEFAULT NULL,                     -- giorno del mese di esecuzione ( 1-31, NULL sta per ogni giorno del mese )
+  `mese` int(11) DEFAULT NULL,                                -- mese di esecuzione ( 1-12, NULL sta per ogni mese )
+  `giorno_della_settimana` int(11) DEFAULT NULL,              -- giorno della settimana di esecuzione ( 1-7, 1 lunedì e 7 domenica come date( 'N' ), NULL sta per ogni giorno della settimana )
+  `settimana` int(11) DEFAULT NULL,                           -- settimana di esecuzione ( 1-53, NULL sta per ogni settimana )
   `task` char(255) DEFAULT NULL,                              -- percorso del file del task
-  `iterazioni` int(11) DEFAULT NULL,                          -- numero di iterazioni del task per ogni esecuzione
-  `delay` int(11) DEFAULT NULL,                               -- delay in secondi tra un'esecuzione e l'altra del task
-  `token` char(254) DEFAULT NULL,                             -- token di lock del task
-  `timestamp_esecuzione` int(11) DEFAULT NULL,                -- timestamp dell'ultima esecuzione del task
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il task
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione, un task archiviato non gira
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione, perché il task è spento
+  `iterazioni` int(11) DEFAULT NULL,                          -- iterazioni per passata, NULL vuol dire 1
+  `delay` int(11) DEFAULT NULL,                               -- secondi minimi fra due iterazioni
+  `token` char(254) DEFAULT NULL,                             -- token di lock della passata in corso
+  `timestamp_esecuzione` int(11) DEFAULT NULL,                -- ultima presa in carico, scritto al lock
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il task
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
