@@ -53,4 +53,35 @@
 
         }
 
+        // lo scarto di un task di un modulo spento è un warning solo la prima volta del giorno
+        // NOTA le richieste dei test scrivono in var/log/test/, il nome del task è unico per run
+        public function taskDiModuloSpentoUnWarningAlGiorno( BackendTester $I ) {
+
+            $I->deleteTestRecords( 'task', 'task', true );
+
+            $task = '_mod/_ZZ000.spento/_src/_api/_task/_' . $I->grabTestName( 'cron' ) . '.php';
+            $log = DIR_VAR_LOG . 'test/cron.warning.' . date( 'Ym' ) . '.log';
+
+            $id = $I->haveInDatabase( 'task', array(
+                'task' => $task,
+                'iterazioni' => 1
+            ) );
+
+            $I->amLoggedInAs( 'roots' );
+            $I->amOnPage( '/api/cron' );
+            $I->see( 'del modulo ZZ000.spento, che non' );
+
+            // la prima passata del giorno scrive il warning
+            $I->assertEquals( 1, substr_count( file_get_contents( $log ), $task ) );
+
+            // la passata dopo, nello stesso giorno, no
+            $I->updateInDatabase( 'task', array( 'id' => $id, 'timestamp_esecuzione' => strtotime( '-2 minutes' ) ) );
+            $I->amOnPage( '/api/cron' );
+            $I->see( 'del modulo ZZ000.spento, che non' );
+            $I->assertEquals( 1, substr_count( file_get_contents( $log ), $task ) );
+
+            $I->deleteTestRecords( 'task', 'task', true );
+
+        }
+
     }

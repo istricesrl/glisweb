@@ -347,8 +347,15 @@
                 // status
                 $cf['cron']['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo';
 
-                // log
-                logger( 'il task ' . $task['id'] . ' -> ' . $task['task'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo: non lo eseguo', 'cron', LOG_WARNING );
+                // log, warning solo al primo scarto del giorno e debug gli altri
+                // NOTA il task resta in pianificazione e il cron lo ripesca a ogni passata: fino al 2026-11-05 il warning
+                // usciva ogni volta, 1440 righe al giorno per deploy con un task di ogni minuto; timestamp_esecuzione è
+                // quello della passata precedente, perché il lock scrive solo il token
+                logger(
+                    'il task ' . $task['id'] . ' -> ' . $task['task'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo: non lo eseguo',
+                    'cron',
+                    ( empty( $task['timestamp_esecuzione'] ) || date( 'Ymd', $task['timestamp_esecuzione'] ) != date( 'Ymd', $cf['cron']['time'] ) ) ? LOG_WARNING : LOG_DEBUG
+                );
 
             // controllo che il file del task esista
             } elseif( file_exists( DIR_BASE . $task['task'] ) ) {
