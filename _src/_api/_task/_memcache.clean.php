@@ -3,6 +3,12 @@
     /**
      * svuotamento della cache memcache
      *
+     * Dal 2026-11-05 svuota anche l'APCU e la cache chiave-valore su disco ( var/spool/cache/ ): quando manca memcache
+     * l'albero delle pagine finisce lì ( _src/_lib/_cache.utils.php ), e senza questo passaggio la modifica a un file di
+     * definizione delle pagine non si vedrebbe. Il nome del task resta questo perché lo chiamano il cron, gli script di
+     * deploy e chi lo usa a mano. Le due portate qui sotto valgono per tutti e tre i motori; l'APCU si svuota solo chiamando
+     * il task via HTTP, perché da riga di comando ( cron ) l'APCU è un'altra da quella di Apache.
+     *
      * Si chiama con l'URL /task/memcache.clean e vuole il privilegio GESTIONE_CACHE
      * ( il task non e' piu' raggiungibile da anonimo dal 2026-09-05 ).
      *
@@ -183,6 +189,26 @@
     $status['query'] = memcacheCleanQueries( $status['portata'] === 'deploy' );
     if( $status['query'] === false ) {
         $status['esito'] = false;
+    }
+
+    // APCU e disco, per il sito corrente o per tutti i siti del deploy ( apcuFlush() e diskFlush() svuotano un sito alla
+    // volta: apcu_clear_cache() svuoterebbe l'APCU di tutti i deploy del server )
+    $semi = array( $cf['site']['fqdn'] );
+    if( $status['portata'] === 'deploy' ) {
+        $semi = array();
+        foreach( $cf['sites'] as $id => $sito ) {
+            $seme = memcacheSiteSeed( $sito, SITE_STATUS, $cf['sites']['1']['domains'][ SITE_STATUS ] );
+            if( $seme !== false ) {
+                $semi[ $id ] = $seme['fqdn'];
+            }
+        }
+    }
+    foreach( $semi as $fqdn ) {
+        $status['apcu'][ $fqdn ] = ( function_exists( 'apcu_enabled' ) && apcu_enabled() ) ? apcuFlush( $fqdn ) : null;
+        $status['disk'][ $fqdn ] = diskFlush( $fqdn );
+        if( $status['apcu'][ $fqdn ] === false || $status['disk'][ $fqdn ] === false ) {
+            $status['esito'] = false;
+        }
     }
 
     // controllo

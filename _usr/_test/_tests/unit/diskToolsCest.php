@@ -83,11 +83,11 @@ class diskToolsCest
         $I->see('bool(false)');
     }
 
-    // diskFlush() -> deve restituire true e togliere le chiavi
+    // diskFlush() -> deve togliere le chiavi del sito corrente e lasciare quelle degli altri siti
     public function diskFlush(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_disk.tools/_diskFlush.01.php');
-        $I->seeInSource("bool(true)\nbool(true)\nbool(false)");
+        $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
     }
 
     // settaggi post test

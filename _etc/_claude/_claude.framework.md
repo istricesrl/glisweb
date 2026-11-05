@@ -404,9 +404,11 @@ I file dei moduli vengono caricati dopo quelli base ad ogni passata di runlevel.
 ### Le definizioni delle pagine stanno in cache, e modificarle non basta
 
 L'array delle pagine — quello che nasce dai file `_src/_inc/_pages/*.php`, dai loro corrispettivi custom
-e dal database — **non viene ricostruito a ogni richiesta**: `_src/_config/_300.pages.php` lo legge da
-memcache (`CONTENTS_PAGES_KEY`, insieme ad albero, indice, reverse e shortcut) e lo rigenera solo se la
-cache manca o se `CONTENTS_PAGES_UPDATED` è più recente di `CONTENTS_PAGES_CACHED`.
+e dal database — **non viene ricostruito a ogni richiesta**: `_src/_config/_300.pages.php` lo legge dalla
+cache (`CONTENTS_PAGES_KEY`, insieme ad albero, indice, reverse e shortcut) e lo rigenera solo se la
+cache manca o se `CONTENTS_PAGES_UPDATED` è più recente di `CONTENTS_PAGES_CACHED`. Dal 05/11/2026 la cache
+è memcache se c'è, altrimenti APCu o `var/spool/cache/` ( `_src/_lib/_cache.utils.php` ): la trappola qui sotto
+vale **anche sui deploy senza memcache**, che prima ricostruivano a ogni richiesta.
 
 La conseguenza pratica è che **si modifica un file di definizione pagine e non cambia niente**: nessun
 errore, nessun avviso, la pagina continua a rispondere con la definizione vecchia. Non è opcache — quella
@@ -415,7 +417,8 @@ altra modifica al framework (il CSS di un template, uno snippet Twig, una librer
 solo questa no. Il 2026-09-15 ha nascosto per una decina di minuti una correzione di una riga.
 
 Per farli rileggere: `/task/memcache.clean` (vuole il privilegio `GESTIONE_CACHE`), con `?deploy=1` se
-il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente.
+il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente. Il task svuota anche APCu e disco, ma
+l'APCu solo se lo si chiama via HTTP: da cron l'APCu è un'altra.
 Vale per tutto ciò che finisce nell'array delle pagine: `menu`, `auth.groups`, `template`, `macro`.
 
 ### Librerie (`_src/_lib/`)

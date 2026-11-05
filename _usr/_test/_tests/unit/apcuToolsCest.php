@@ -65,12 +65,13 @@ class apcuToolsCest
         $I->see('bool(true)');
     }
 
-    // apcuFlush() -> deve restituire true
+    // apcuFlush() -> deve togliere le chiavi del sito corrente e lasciare quelle degli altri siti ( l'APCU e' una sola per
+    // tutti i deploy del server )
     public function apcuFlush(UnitTester $I)
     {
         $this->saltaSenzaApcu($I);
         $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuFlush.01.php');
-        $I->see('bool(true)');
+        $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
     }
 
     // settaggi post test

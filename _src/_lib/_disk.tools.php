@@ -52,7 +52,7 @@
      * diskWrite()                      | scrive un dato in cache
      * diskWriteFile()                  | scrive in modo atomico il contenuto di un file della cache
      * diskDelete()                    | cancella un dato dalla cache
-     * diskFlush()                      | cancella tutti i dati dalla cache
+     * diskFlush()                      | cancella dalla cache i dati di un sito
      *
      * funzioni per la lettura dei dati
      * --------------------------------
@@ -264,24 +264,31 @@
     }
 
     /**
-     * cancella tutti i dati dalla cache
+     * cancella dalla cache i dati di un sito
      *
-     * Questa funzione cancella tutti i file della cartella della cache (flush), per tutti i siti del deploy, come fa apcuFlush()
-     * per tutta la cache APCU.
+     * Questa funzione cancella i file della cartella della cache le cui chiavi cominciano con il seme del sito indicato, o del
+     * sito corrente se non se ne indica uno, compresi i temporanei di una scrittura interrotta; come apcuFlush() e
+     * memcacheFlush(), per pulire tutti i siti del deploy si chiama la funzione per ciascuno.
      *
-     * @return      bool                  true se la cache è stata svuotata, false altrimenti
+     * @param       string|null     $site     il sito da svuotare (opzionale, se non specificato si usa il sito corrente)
+     *
+     * @return      bool                      true se la cache del sito è stata svuotata, false altrimenti
      *
      */
-    function diskFlush() {
+    function diskFlush( $site = null ) {
 
         if( ! is_dir( DIR_VAR_SPOOL_CACHE ) ) {
             return true;
         }
 
+        $prefix = '';
+        diskUniqueKey( $prefix, $site );
+        $prefix = rawurlencode( $prefix );
+
         $r = true;
 
         foreach( glob( DIR_VAR_SPOOL_CACHE . '*' ) as $f ) {
-            if( is_file( $f ) && ! @unlink( $f ) ) {
+            if( strpos( basename( $f ), $prefix ) === 0 && is_file( $f ) && ! @unlink( $f ) ) {
                 $r = false;
             }
         }
