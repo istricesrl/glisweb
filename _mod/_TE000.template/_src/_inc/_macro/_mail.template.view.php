@@ -26,7 +26,7 @@
         'cols'  => array(
             'id' => '#',
             'nome' => 'nome',
-            '__label__' => 'ruolo',
+            '__label__' => 'codice',
             NULL => 'azioni'
         ),
         'class' => array(

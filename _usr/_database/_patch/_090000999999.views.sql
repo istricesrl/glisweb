@@ -7375,16 +7375,15 @@ CREATE OR REPLACE VIEW `telefoni_view` AS
 CREATE OR REPLACE VIEW `template_view` AS
 	SELECT
 		template.id,
-		template.ruolo,
+		template.codice,
 		template.nome,
 		template.tipo,
 		template.note,
-		template.latenza_invio,
 		template.se_mail,
 		template.se_sms,
 		template.id_account_inserimento,
 		template.id_account_aggiornamento,
-		template.ruolo AS __label__
+		template.codice AS __label__
 	FROM template
 ;
 

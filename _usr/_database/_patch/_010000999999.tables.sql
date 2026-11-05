@@ -7267,24 +7267,34 @@ CREATE TABLE IF NOT EXISTS `telefoni` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i template per le comunicazioni automatiche
+-- funzione: contiene i template delle mail e degli SMS che l'applicazione manda da sola
 --
--- questa tabella contiene i template per mail e sms
--- 
-CREATE TABLE IF NOT EXISTS `template` (                       --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `nome` char(128) DEFAULT NULL,                              -- nome del template
-  `ruolo` char(32) DEFAULT NULL,                              -- ruolo del template
-  `tipo` char(32) DEFAULT NULL,                               -- tipo di template
-  `note` text DEFAULT NULL,                                   -- note sul template
-  `latenza_invio` int(11) DEFAULT NULL,                       -- latenza in secondi per l'invio del template
-  `se_mail` tinyint(1) DEFAULT NULL,                          -- flag che indica se il template è per le mail
-  `se_sms` tinyint(1) DEFAULT NULL,                           -- flag che indica se il template è per gli SMS
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il template
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il template
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- questa tabella contiene i template delle comunicazioni automatiche, una riga per template, con il codice con cui
+-- il codice lo chiama, il nome per chi legge l'elenco, il motore che lo compone e i flag che dicono se è una mail o un
+-- SMS; il testo, una versione per lingua, sta in contenuti ( contenuti.id_template ), gli allegati in file
+-- ( file.id_template ); all'avvio _350.mail.php e _340.sms.php li caricano in $cf['mail']['tpl'] e $cf['sms']['tpl']
+-- con il codice come chiave
+--
+-- NOTA il codice è lo stesso nome con cui i template si dichiarano nella configurazione ( $cf['mail']['tpl'],
+-- $cf['sms']['tpl'] ), e un template del database con lo stesso codice di uno della configurazione prende il suo posto:
+-- è il modo in cui si personalizza un messaggio standard; fino al 2026-11-05 la colonna si chiamava ruolo
+-- ( decisione del 2026-11-05, punto 6 dello schema canonico, riga 189 )
+--
+-- NOTA il tipo dice quale motore compone il template ( _mail.tools.php ); oggi l'unico è twig
+--
+CREATE TABLE IF NOT EXISTS `template` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                                 -- codice con cui l'applicazione chiama il template
+  `nome` char(255) DEFAULT NULL,                                  -- nome descrittivo del template
+  `tipo` char(32) DEFAULT NULL,                                   -- motore che compone il template ( twig )
+  `note` text DEFAULT NULL,                                       -- note sul template
+  `se_mail` tinyint(1) DEFAULT NULL,                              -- se il template è una mail
+  `se_sms` tinyint(1) DEFAULT NULL,                               -- se il template è un SMS
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito il template
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato il template
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000045000
 

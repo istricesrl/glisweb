@@ -4399,10 +4399,10 @@ ALTER TABLE `telefoni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- template
 ALTER TABLE `template`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`ruolo`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`latenza_invio`, `se_mail`,`se_sms`);
+	ADD KEY `indice` (`id`,`codice`,`nome`,`tipo`,`se_mail`,`se_sms`);
 
 -- | 030000044001
 
