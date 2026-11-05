@@ -2415,7 +2415,6 @@ CREATE OR REPLACE VIEW `corrispondenza_view` AS
 		corrispondenza.id,
 		corrispondenza.id_tipologia,
 		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
-		tipologie_corrispondenza.se_pesata,
 		corrispondenza.codice,
 		corrispondenza.nome,
 		corrispondenza.id_mittente,
@@ -7430,8 +7429,8 @@ CREATE OR REPLACE VIEW `tipologie_annunci_view` AS
 		tipologie_annunci.id,
 		tipologie_annunci.id_genitore,
 		tipologie_annunci.ordine,
+		tipologie_annunci.codice,
 		tipologie_annunci.nome,
-		tipologie_annunci.sigla,
 		tipologie_annunci.html_entity,
 		tipologie_annunci.font_awesome,
 		tipologie_annunci_path( tipologie_annunci.id ) AS __label__
@@ -7446,6 +7445,7 @@ CREATE OR REPLACE VIEW `tipologie_asset_view` AS                --
 		tipologie_asset.id,                                     --
 		tipologie_asset.id_genitore,                            --
 		tipologie_asset.ordine,                                 --
+		tipologie_asset.codice,                                 --
 		tipologie_asset.nome,                                   --
 		tipologie_asset.html_entity,                            --
 		tipologie_asset.font_awesome,                           --
@@ -7458,28 +7458,25 @@ CREATE OR REPLACE VIEW `tipologie_asset_view` AS                --
 -- | 090000050400
 
 -- tipologie_attivita_view
-CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
-	SELECT                                                    --
-		tipologie_attivita.id,                                --
-		tipologie_attivita.id_genitore,                       --
-		tipologie_attivita.ordine,                            --
-		tipologie_attivita.codice,                            --
-		tipologie_attivita.nome,                              --
-		tipologie_attivita.html_entity,                       --
-		tipologie_attivita.font_awesome,                      --
-		tipologie_attivita.se_anagrafica,                     --
-		tipologie_attivita.se_agenda,                         --
-		tipologie_attivita.se_sistema,                        --
-		tipologie_attivita.se_stampa,                         --
-		tipologie_attivita.se_cartellini,                     --
-		tipologie_attivita.se_corsi,                          --
-		tipologie_attivita.se_accesso,                        --
-		tipologie_attivita.id_account_inserimento,            --
-		tipologie_attivita.id_account_aggiornamento,          --
-		tipologie_attivita_path(                              --
-            tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
-	FROM tipologie_attivita                                   --
-;                                                             --
+CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
+	SELECT
+		tipologie_attivita.id,
+		tipologie_attivita.id_genitore,
+		tipologie_attivita.ordine,
+		tipologie_attivita.codice,
+		tipologie_attivita.nome,
+		tipologie_attivita.html_entity,
+		tipologie_attivita.font_awesome,
+		tipologie_attivita.se_anagrafica,
+		tipologie_attivita.se_agenda,
+		tipologie_attivita.se_sistema,
+		tipologie_attivita.se_stampa,
+		tipologie_attivita.se_corsi,
+		tipologie_attivita.id_account_inserimento,
+		tipologie_attivita.id_account_aggiornamento,
+		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
+	FROM tipologie_attivita
+;
 
 -- | 090000050431
 
@@ -7507,6 +7504,7 @@ CREATE OR REPLACE VIEW `tipologie_badge_view` AS
 		tipologie_badge.id,
 		tipologie_badge.id_genitore,
 		tipologie_badge.ordine,
+		tipologie_badge.codice,
 		tipologie_badge.nome,
 		tipologie_badge.html_entity,
 		tipologie_badge.font_awesome,
@@ -7524,6 +7522,7 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 		tipologie_banner.id,
 		tipologie_banner.id_genitore,
 		tipologie_banner.ordine,
+		tipologie_banner.codice,
 		tipologie_banner.nome,
 		tipologie_banner.html_entity,
 		tipologie_banner.font_awesome,
@@ -7541,6 +7540,7 @@ CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
 		tipologie_campagne.id,
 		tipologie_campagne.id_genitore,
 		tipologie_campagne.ordine,
+		tipologie_campagne.codice,
 		tipologie_campagne.nome,
 		tipologie_campagne.html_entity,
 		tipologie_campagne.font_awesome,
@@ -7558,6 +7558,7 @@ CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
 		tipologie_chiavi.id,
 		tipologie_chiavi.id_genitore,
 		tipologie_chiavi.ordine,
+		tipologie_chiavi.codice,
 		tipologie_chiavi.nome,
 		tipologie_chiavi.html_entity,
 		tipologie_chiavi.font_awesome,
@@ -7592,6 +7593,7 @@ CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
 		tipologie_contatti.id,
 		tipologie_contatti.id_genitore,
 		tipologie_contatti.ordine,
+		tipologie_contatti.codice,
 		tipologie_contatti.nome,
 		tipologie_contatti.html_entity,
 		tipologie_contatti.font_awesome,
@@ -7641,10 +7643,13 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 	SELECT
 		tipologie_corrispondenza.id,
 		tipologie_corrispondenza.id_genitore,
+		tipologie_corrispondenza.ordine,
+		tipologie_corrispondenza.codice,
 		tipologie_corrispondenza.nome,
+		tipologie_corrispondenza.html_entity,
+		tipologie_corrispondenza.font_awesome,
 		tipologie_corrispondenza.se_massivo,
 		tipologie_corrispondenza.se_corrispondenza,
-		tipologie_corrispondenza.se_pesata,
 		tipologie_corrispondenza.se_atto,
 		tipologie_corrispondenza.se_ricevuta_ritorno,
 		tipologie_corrispondenza.id_account_inserimento,
@@ -7691,6 +7696,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 		tipologie_documenti_articoli.id,
 		tipologie_documenti_articoli.id_genitore,
 		tipologie_documenti_articoli.ordine,
+		tipologie_documenti_articoli.codice,
 		tipologie_documenti_articoli.nome,
 		tipologie_documenti_articoli.sigla,
 		tipologie_documenti_articoli.html_entity,
@@ -7714,6 +7720,7 @@ CREATE OR REPLACE VIEW tipologie_edifici_view AS
 	tipologie_edifici.id,
 	tipologie_edifici.id_genitore,
 	tipologie_edifici.ordine,
+	tipologie_edifici.codice,
 	tipologie_edifici.nome,
 	tipologie_edifici.html_entity,
 	tipologie_edifici.font_awesome,
@@ -7726,23 +7733,22 @@ CREATE OR REPLACE VIEW tipologie_edifici_view AS
 -- | 090000052901
 
 -- tipologie_immobili_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-27 17:00 Chiara GDL
-CREATE OR REPLACE VIEW tipologie_immobili_view AS
+CREATE OR REPLACE VIEW `tipologie_immobili_view` AS
 	SELECT
-	tipologie_immobili.id,
-	tipologie_immobili.id_genitore,
-	tipologie_immobili.ordine,
-	tipologie_immobili.nome,
-	tipologie_immobili.html_entity,
-	tipologie_immobili.font_awesome,
-	tipologie_immobili.se_residenziale ,
-	tipologie_immobili.se_industriale ,
-	tipologie_immobili.id_account_inserimento,
-	tipologie_immobili.id_account_aggiornamento,
-	tipologie_immobili_path( tipologie_immobili.id )  AS __label__
+		tipologie_immobili.id,
+		tipologie_immobili.id_genitore,
+		tipologie_immobili.ordine,
+		tipologie_immobili.codice,
+		tipologie_immobili.nome,
+		tipologie_immobili.html_entity,
+		tipologie_immobili.font_awesome,
+		tipologie_immobili.se_residenziale,
+		tipologie_immobili.se_commerciale,
+		tipologie_immobili.id_account_inserimento,
+		tipologie_immobili.id_account_aggiornamento,
+		tipologie_immobili_path( tipologie_immobili.id ) AS __label__
 	FROM tipologie_immobili
-	;
+;
 
 -- | 090000053000
 
@@ -7752,6 +7758,7 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 		tipologie_indirizzi.id,                               --
 		tipologie_indirizzi.id_genitore,                      --
 		tipologie_indirizzi.ordine,                           --
+		tipologie_indirizzi.codice,                           --
 		tipologie_indirizzi.nome,                             --
 		tipologie_indirizzi.html_entity,                      --
 		tipologie_indirizzi.font_awesome,                     --
@@ -7769,6 +7776,7 @@ CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 		tipologie_licenze.id,
 		tipologie_licenze.id_genitore,
 		tipologie_licenze.ordine,
+		tipologie_licenze.codice,
 		tipologie_licenze.nome,
 		tipologie_licenze.html_entity,
 		tipologie_licenze.font_awesome,
@@ -7786,6 +7794,7 @@ CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
 		tipologie_luoghi.id,
 		tipologie_luoghi.id_genitore,
 		tipologie_luoghi.ordine,
+		tipologie_luoghi.codice,
 		tipologie_luoghi.nome,
 		tipologie_luoghi.html_entity,
 		tipologie_luoghi.font_awesome,
@@ -7813,13 +7822,12 @@ CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
 -- | 090000053401
 
 -- tipologie_mastri_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 	SELECT
 		tipologie_mastri.id,
 		tipologie_mastri.id_genitore,
 		tipologie_mastri.ordine,
+		tipologie_mastri.codice,
 		tipologie_mastri.nome,
 		tipologie_mastri.html_entity,
 		tipologie_mastri.font_awesome,
@@ -7841,6 +7849,7 @@ CREATE OR REPLACE VIEW `tipologie_listini_view` AS
 		tipologie_listini.id,
 		tipologie_listini.id_genitore,
 		tipologie_listini.ordine,
+		tipologie_listini.codice,
 		tipologie_listini.nome,
 		tipologie_listini.html_entity,
 		tipologie_listini.font_awesome,
@@ -7858,6 +7867,7 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 		tipologie_notizie.id,
 		tipologie_notizie.id_genitore,
 		tipologie_notizie.ordine,
+		tipologie_notizie.codice,
 		tipologie_notizie.nome,
 		tipologie_notizie.html_entity,
 		tipologie_notizie.font_awesome,
@@ -7875,6 +7885,7 @@ CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 		tipologie_pagamenti.id,
 		tipologie_pagamenti.id_genitore,
 		tipologie_pagamenti.ordine,
+		tipologie_pagamenti.codice,
 		tipologie_pagamenti.nome,
 		tipologie_pagamenti.html_entity,
 		tipologie_pagamenti.font_awesome,
@@ -7887,8 +7898,6 @@ CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 -- | 090000054101
 
 -- tipologie_periodi_view
--- tipologia: tabella gestita
--- verifica: 2022-05-24 11:00 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 	SELECT
 		tipologie_periodi.id,
@@ -7915,6 +7924,7 @@ CREATE OR REPLACE VIEW `tipologie_popup_view` AS
 		tipologie_popup.id,
 		tipologie_popup.id_genitore,
 		tipologie_popup.ordine,
+		tipologie_popup.codice,
 		tipologie_popup.nome,
 		tipologie_popup.html_entity,
 		tipologie_popup.font_awesome,
@@ -7932,20 +7942,21 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.id,
 		tipologie_prodotti.id_genitore,
 		tipologie_prodotti.ordine,
+		tipologie_prodotti.codice,
 		tipologie_prodotti.nome,
 		tipologie_prodotti.html_entity,
 		tipologie_prodotti.font_awesome,
 		tipologie_prodotti.se_colori,
 		tipologie_prodotti.se_taglie,
+		tipologie_prodotti.se_periodicita,
+		tipologie_prodotti.se_tipologia_rinnovo,
 		tipologie_prodotti.se_dimensioni,
-		tipologie_prodotti.se_imballo,
-		tipologie_prodotti.se_spedizione,
-		tipologie_prodotti.se_trasporto,
-		tipologie_prodotti.se_prodotto,
-		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
 		tipologie_prodotti.se_peso,
+		tipologie_prodotti.se_imballo,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -7960,6 +7971,7 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 		tipologie_progetti.id,
 		tipologie_progetti.id_genitore,
 		tipologie_progetti.ordine,
+		tipologie_progetti.codice,
 		tipologie_progetti.nome,
 		tipologie_progetti.html_entity,
 		tipologie_progetti.font_awesome,
@@ -7979,39 +7991,41 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 -- | 090000055400
 
 -- tipologie_pubblicazioni_view
-CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS        --
-	SELECT                                                      --
-		tipologie_pubblicazioni.id,                             --
-		tipologie_pubblicazioni.id_genitore,                    --
-		tipologie_pubblicazioni.ordine,                         --
-		tipologie_pubblicazioni.nome,                           --
-		tipologie_pubblicazioni.html_entity,                    --
-		tipologie_pubblicazioni.font_awesome,                   --
-		tipologie_pubblicazioni.id_account_inserimento,         --
-		tipologie_pubblicazioni.id_account_aggiornamento,       --
-		tipologie_pubblicazioni_path(                           --
-            tipologie_pubblicazioni.id                          --
-        ) AS __label__                                          -- etichetta per le tendine e le liste
-	FROM tipologie_pubblicazioni                                --
-;                                                               --
+CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS
+	SELECT
+		tipologie_pubblicazioni.id,
+		tipologie_pubblicazioni.id_genitore,
+		tipologie_pubblicazioni.ordine,
+		tipologie_pubblicazioni.codice,
+		tipologie_pubblicazioni.nome,
+		tipologie_pubblicazioni.html_entity,
+		tipologie_pubblicazioni.font_awesome,
+		tipologie_pubblicazioni.se_bozza,
+		tipologie_pubblicazioni.se_pubblicato,
+		tipologie_pubblicazioni.se_evidenza,
+		tipologie_pubblicazioni.se_anteprima,
+		tipologie_pubblicazioni.id_account_inserimento,
+		tipologie_pubblicazioni.id_account_aggiornamento,
+		tipologie_pubblicazioni_path( tipologie_pubblicazioni.id ) AS __label__
+	FROM tipologie_pubblicazioni
+;
 
 -- | 090000055701
 
 -- tipologie_rinnovi_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-29 17:45 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 	SELECT
 		tipologie_rinnovi.id,
 		tipologie_rinnovi.id_genitore,
 		tipologie_rinnovi.ordine,
+		tipologie_rinnovi.codice,
 		tipologie_rinnovi.nome,
 		tipologie_rinnovi.html_entity,
 		tipologie_rinnovi.font_awesome,
-		tipologie_rinnovi.se_tesseramenti, 
-		tipologie_rinnovi.se_iscrizioni, 
+		tipologie_rinnovi.se_tesseramenti,
+		tipologie_rinnovi.se_iscrizioni,
 		tipologie_rinnovi.se_abbonamenti,
-		tipologie_rinnovi.se_licenze, 
+		tipologie_rinnovi.se_licenze,
 		tipologie_rinnovi.se_contratti,
 		tipologie_rinnovi.se_progetti,
 		tipologie_rinnovi.id_account_inserimento,
@@ -8028,6 +8042,7 @@ CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 		tipologie_risorse.id,
 		tipologie_risorse.id_genitore,
 		tipologie_risorse.ordine,
+		tipologie_risorse.codice,
 		tipologie_risorse.nome,
 		tipologie_risorse.html_entity,
 		tipologie_risorse.font_awesome,
@@ -8056,6 +8071,7 @@ CREATE OR REPLACE VIEW `tipologie_spedizioni_view` AS
 		tipologie_spedizioni.id,
 		tipologie_spedizioni.id_genitore,
 		tipologie_spedizioni.ordine,
+		tipologie_spedizioni.codice,
 		tipologie_spedizioni.nome,
 		tipologie_spedizioni.html_entity,
 		tipologie_spedizioni.font_awesome,
@@ -8071,6 +8087,7 @@ CREATE OR REPLACE VIEW `tipologie_telefoni_view` AS           --
 		tipologie_telefoni.id,                                --
 		tipologie_telefoni.id_genitore,                       --
 		tipologie_telefoni.ordine,                            --
+		tipologie_telefoni.codice,                            --
 		tipologie_telefoni.nome,                              --
 		tipologie_telefoni.html_entity,                       --
 		tipologie_telefoni.font_awesome,                      --
@@ -8084,21 +8101,25 @@ CREATE OR REPLACE VIEW `tipologie_telefoni_view` AS           --
 -- | 090000056601
 
 -- tipologie_todo_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:12 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 	SELECT
 		tipologie_todo.id,
 		tipologie_todo.id_genitore,
 		tipologie_todo.ordine,
+		tipologie_todo.codice,
 		tipologie_todo.nome,
 		tipologie_todo.html_entity,
 		tipologie_todo.font_awesome,
 		tipologie_todo.se_agenda,
 		tipologie_todo.se_ticket,
+		tipologie_todo.se_ordinaria,
+		tipologie_todo.se_straordinaria,
 		tipologie_todo.se_commerciale,
 		tipologie_todo.se_produzione,
 		tipologie_todo.se_amministrazione,
+		tipologie_todo.se_risorse_umane,
+		tipologie_todo.se_logistica,
+		tipologie_todo.se_corsi,
 		tipologie_todo.id_account_inserimento,
 		tipologie_todo.id_account_aggiornamento,
 		tipologie_todo_path( tipologie_todo.id ) AS __label__
@@ -8113,6 +8134,7 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 		tipologie_url.id,                                     --
 		tipologie_url.id_genitore,                            --
 		tipologie_url.ordine,                                 --
+		tipologie_url.codice,                                 --
 		tipologie_url.nome,                                   --
 		tipologie_url.html_entity,                            --
 		tipologie_url.font_awesome,                           --
@@ -8130,6 +8152,7 @@ CREATE OR REPLACE VIEW `tipologie_vani_view` AS                --
 		tipologie_vani.id,                                     --
 		tipologie_vani.id_genitore,                            --
 		tipologie_vani.ordine,                                 --
+		tipologie_vani.codice,                                 --
 		tipologie_vani.nome,                                   --
 		tipologie_vani.html_entity,                            --
 		tipologie_vani.font_awesome,                           --
@@ -8147,6 +8170,7 @@ CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
 		tipologie_veicoli.id,                                     --
 		tipologie_veicoli.id_genitore,                            --
 		tipologie_veicoli.ordine,                                 --
+		tipologie_veicoli.codice,                                 --
 		tipologie_veicoli.nome,                                   --
 		tipologie_veicoli.html_entity,                            --
 		tipologie_veicoli.font_awesome,                           --
@@ -8158,17 +8182,21 @@ CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
 
 -- | 090000056951
 
--- tipologie_zone
--- tipologia: tabella gestita
--- verifica: 2022-06-16 16:40 Chiara GDL
+-- tipologie_zone_view
 CREATE OR REPLACE VIEW `tipologie_zone_view` AS
 	SELECT
 		tipologie_zone.id,
 		tipologie_zone.id_genitore,
 		tipologie_zone.ordine,
+		tipologie_zone.codice,
 		tipologie_zone.nome,
 		tipologie_zone.html_entity,
 		tipologie_zone.font_awesome,
+		tipologie_zone.se_ecommerce,
+		tipologie_zone.se_commerciale,
+		tipologie_zone.se_immobiliare,
+		tipologie_zone.id_account_inserimento,
+		tipologie_zone.id_account_aggiornamento,
 		tipologie_zone_path( tipologie_zone.id ) AS __label__
 	FROM tipologie_zone
 ;

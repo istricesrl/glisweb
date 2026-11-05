@@ -7356,17 +7356,20 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (           --
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i tipologie annunci
+-- funzione: contiene le tipologie di annunci
 --
-CREATE TABLE IF NOT EXISTS `tipologie_annunci` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `sigla` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- dice di che genere è un annuncio ( annunci.id_tipologia ); fa parte dell'applicazione e si aggiorna col
+-- dataserver, quindi non ha la coda di audit; il 050 non carica righe
+--
+CREATE TABLE IF NOT EXISTS `tipologie_annunci` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL                            -- icona Font Awesome per la tipologia
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000050200
 
@@ -7384,6 +7387,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_asset` (                    --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7396,34 +7400,34 @@ CREATE TABLE IF NOT EXISTS `tipologie_asset` (                    --
 -- | 010000050400
 
 -- tipologie_attivita
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di attività
--- 
--- questa tabella contiene le tipologie di attività, con le informazioni relative al nome, al codice e alle
--- funzionalità associate
 --
-CREATE TABLE IF NOT EXISTS `tipologie_attivita` (             --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
-  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
-  `se_anagrafica` tinyint(1) DEFAULT NULL,                    -- flag che indica se la tipologia è associabile alle anagrafiche
-  `se_agenda` tinyint(1) DEFAULT NULL,                        -- flag che indica se la tipologia è associabile all'agenda
-  `se_sistema` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia è una tipologia di sistema
-  `se_stampa` tinyint(1) DEFAULT NULL,                        -- flag che indica se la tipologia è associabile alle stampe
-  `se_cartellini` tinyint(1) DEFAULT NULL,                    -- flag che indica se la tipologia è associabile ai cartellini
-  `se_corsi` tinyint(1) DEFAULT NULL,                         -- flag che indica se la tipologia è associabile ai corsi
-  `se_accesso` tinyint(1) DEFAULT NULL,                       -- flag che indica se la tipologia è associabile agli accessi
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- dice di che genere è un'attività ( attivita.id_tipologia ): il 050 carica a id fissi un albero ( lavoro, ferie,
+-- permessi, malattie, le notifiche SDI coi loro codici, didattica, stampe, invii, mailing, accessi, chat, banner... )
+-- che l'utente può modificare o eliminare; il codice sceglie una classe di tipologie con un flag e una tipologia
+-- precisa col codice ( _attivita.before.php traduce codice_tipologia in id_tipologia ), mai con l'id
+--
+CREATE TABLE IF NOT EXISTS `tipologie_attivita` (                 --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_anagrafica` tinyint(1) DEFAULT NULL,                        -- se la tipologia si può proporre dalla scheda anagrafica
+  `se_agenda` tinyint(1) DEFAULT NULL,                            -- se la tipologia è associabile all'agenda
+  `se_sistema` tinyint(1) DEFAULT NULL,                           -- se la tipologia è una tipologia di sistema
+  `se_stampa` tinyint(1) DEFAULT NULL,                            -- se la tipologia è associabile alle stampe
+  `se_corsi` tinyint(1) DEFAULT NULL,                             -- se la tipologia è del ramo dei corsi ( didattica e figlie )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000050430
 
@@ -7464,6 +7468,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_badge` (                    --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7488,6 +7493,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_banner` (                   --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7512,6 +7518,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_campagne` (                 --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7536,6 +7543,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_chiavi` (                   --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7587,6 +7595,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (                 --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7638,32 +7647,33 @@ CREATE TABLE IF NOT EXISTS `tipologie_contratti` (                          --
 -- | 010000051000
 
 -- tipologie_corrispondenza
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di corrispondenza
 --
--- questa tabella contiene le tipologie della corrispondenza cartacea ( posta ordinaria, raccomandata, atto giudiziario
--- e così via ), organizzate ad albero; i flag dicono come si comporta la corrispondenza della tipologia. La tabella
--- appartiene al modulo corrispondenza.
--- NOTA se_corrispondenza marca le tipologie che compaiono in corrispondenza_view
--- NOTA se_massivo vuol dire che la tipologia si spedisce in forma aggregata, se_pesata che va pesata, se_atto che è un
--- atto giudiziario, se_ricevuta_ritorno che prevede la ricevuta di ritorno
+-- dice che prodotto postale o che atto è una corrispondenza ( corrispondenza.id_tipologia ): il 050 carica i
+-- prodotti di Poste ( 1-18, se_corrispondenza, e sono quelli che compaiono in corrispondenza_view ) e gli atti da
+-- notificare ( 52-71, se_atto ), che l'utente può modificare o eliminare; gli scaglioni di peso stanno in
+-- pesi_tipologie_corrispondenza. La usa il modulo corrispondenza
 --
-CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (       --
-  `id` bigint(20) NOT NULL,                                   -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                      -- tipologia genitore
-  `nome` char(255) DEFAULT NULL,                              -- nome della tipologia
-  `se_massivo` tinyint(1) DEFAULT NULL,                       -- se la tipologia si spedisce in forma aggregata
-  `se_corrispondenza` tinyint(1) DEFAULT NULL,                -- se la tipologia compare fra la corrispondenza
-  `se_pesata` tinyint(1) DEFAULT NULL,                        -- se la corrispondenza va pesata
-  `se_atto` tinyint(1) DEFAULT NULL,                          -- se è un atto giudiziario
-  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,              -- se prevede la ricevuta di ritorno
-  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp dell'ultimo aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_massivo` tinyint(1) DEFAULT NULL,                           -- se il prodotto postale si spedisce in forma massiva, aggregata
+  `se_corrispondenza` tinyint(1) DEFAULT NULL,                    -- se la tipologia è un prodotto postale, e compare in corrispondenza_view
+  `se_atto` tinyint(1) DEFAULT NULL,                              -- se la tipologia è un atto da notificare ( Atti giudiziari è invece un prodotto postale )
+  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,                  -- se il prodotto prevede la ricevuta di ritorno
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000052600
 
@@ -7723,24 +7733,25 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (            --
 -- ubicazione ) ed evasione ( se_evasione, tipologia 6: la figlia evade la madre in tutto o in parte ). Decisione di
 -- Fabio del 13/10/2026
 --
-CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (   --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `nome` char(255) DEFAULT NULL,                                -- nome della tipologia
-  `sigla` char(16) DEFAULT NULL,                                -- sigla della tipologia
-  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
-  `se_raggruppamento` tinyint(1) DEFAULT NULL,                  -- se la riga raggruppa le righe figlie invece di essere una riga a sé
-  `se_somma` tinyint(1) DEFAULT NULL,                           -- se le righe raggruppate concorrono al totale del documento
-  `se_alternativa` tinyint(1) DEFAULT NULL,                     -- se le righe raggruppate sono alternative fra loro e non si sommano
-  `se_dettaglio` tinyint(1) DEFAULT NULL,                       -- se la riga dettaglia la riga genitore ( p.es. la ripartisce per ubicazione )
-  `se_evasione` tinyint(1) DEFAULT NULL,                        -- se la riga evade in tutto o in parte la riga genitore
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+CREATE TABLE IF NOT EXISTS `tipologie_documenti_articoli` (       --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `sigla` char(16) DEFAULT NULL,                                  -- sigla della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_raggruppamento` tinyint(1) DEFAULT NULL,                    -- se la riga raggruppa le righe figlie invece di essere una riga a sé
+  `se_somma` tinyint(1) DEFAULT NULL,                             -- se le righe raggruppate concorrono al totale del documento
+  `se_alternativa` tinyint(1) DEFAULT NULL,                       -- se le righe raggruppate sono alternative fra loro e non si sommano
+  `se_dettaglio` tinyint(1) DEFAULT NULL,                         -- se la riga dettaglia la riga genitore ( p.es. la ripartisce per ubicazione )
+  `se_evasione` tinyint(1) DEFAULT NULL,                          -- se la riga evade in tutto o in parte la riga genitore
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000052800
 
@@ -7758,6 +7769,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_edifici` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7770,25 +7782,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_edifici` (                  --
 -- | 010000052900
 
 -- tipologie_immobili
--- tipologia: tabella di supporto
+-- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i tipologie immobili
+-- funzione: contiene le tipologie di immobili
 --
-CREATE TABLE IF NOT EXISTS `tipologie_immobili` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_residenziale` tinyint(1) DEFAULT NULL,
-  `se_industriale` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- dice di che genere è un immobile ( immobili.id_tipologia ): il 050 carica appartamento, abitazione, garage,
+-- magazzino, ufficio e negozio, divisi fra mercato residenziale e commerciale, che l'utente può modificare o
+-- eliminare; la usa il modulo V300.immobiliari
+--
+CREATE TABLE IF NOT EXISTS `tipologie_immobili` (                 --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_residenziale` tinyint(1) DEFAULT NULL,                      -- se la tipologia è destinata al mercato residenziale
+  `se_commerciale` tinyint(1) DEFAULT NULL,                       -- se la tipologia è destinata al mercato commerciale e produttivo ( magazzino, ufficio, negozio )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000053000
 
@@ -7806,6 +7823,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (                --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL                            -- icona Font Awesome per la tipologia
@@ -7826,6 +7844,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7850,6 +7869,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (                   --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7865,24 +7885,28 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (                   --
 -- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i tipologie mastri
+-- funzione: contiene le tipologie di mastri
 --
-CREATE TABLE IF NOT EXISTS `tipologie_mastri` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_magazzino` tinyint(1) DEFAULT NULL,
-  `se_conto` tinyint(1) DEFAULT NULL,
-  `se_registro` tinyint(1) DEFAULT NULL,
-  `se_credito` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- dice di che genere è un mastro ( mastri.id_tipologia ): il 050 carica magazzino, conto, registro ore e crediti,
+-- che l'utente può modificare o eliminare; i flag li leggono mastri_view, le giacenze, i conti e i registri
+--
+CREATE TABLE IF NOT EXISTS `tipologie_mastri` (                   --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_magazzino` tinyint(1) DEFAULT NULL,                         -- se il mastro è un magazzino, che tiene le giacenze degli articoli
+  `se_conto` tinyint(1) DEFAULT NULL,                             -- se il mastro è un conto, che tiene movimenti in denaro
+  `se_registro` tinyint(1) DEFAULT NULL,                          -- se il mastro è un registro, che tiene le ore
+  `se_credito` tinyint(1) DEFAULT NULL,                           -- se il mastro tiene dei crediti
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000053600
 
@@ -7899,6 +7923,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_listini` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7945,6 +7970,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7970,6 +7996,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (                --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -7982,27 +8009,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (                --
 -- | 010000054100
 
 -- tipologie_periodi
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i tipologie periodi
+-- funzione: contiene le tipologie di periodi
 --
-CREATE TABLE IF NOT EXISTS `tipologie_periodi` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_corsi` tinyint(1) DEFAULT NULL,
-  `se_tesseramenti` tinyint(1) DEFAULT NULL,
-  `se_abbonamenti` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- dice di che genere è un periodo ( periodi.id_tipologia ): il 050 carica feste, ferie, lavoro, anno sportivo e
+-- sospensione, che l'utente può modificare o eliminare; i flag dicono a quale ambito vale il periodo
+--
+CREATE TABLE IF NOT EXISTS `tipologie_periodi` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_corsi` tinyint(1) DEFAULT NULL,                             -- se il periodo vale per i corsi
+  `se_tesseramenti` tinyint(1) DEFAULT NULL,                      -- se il periodo vale per i tesseramenti
+  `se_abbonamenti` tinyint(1) DEFAULT NULL,                       -- se il periodo vale per gli abbonamenti
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000054200
 
@@ -8020,6 +8050,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (                    --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8032,116 +8063,133 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (                    --
 -- | 010000054600
 
 -- tipologie_prodotti
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero delle tipologie di prodotto e le caratteristiche che abilitano
-CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_colori` tinyint(1) DEFAULT NULL,
-  `se_taglie` tinyint(1) DEFAULT NULL,
-  `se_periodicita` tinyint(1) DEFAULT NULL,
-  `se_tipologia_rinnovo` tinyint(1) DEFAULT NULL,
-  `se_dimensioni` tinyint(1) DEFAULT NULL,
-  `se_volume` tinyint(1) DEFAULT NULL,
-  `se_capacita` tinyint(1) DEFAULT NULL,
-  `se_peso` tinyint(1) DEFAULT NULL,
-  `se_imballo` tinyint(1) DEFAULT NULL,
-  `se_spedizione` tinyint(1) DEFAULT NULL,
-  `se_trasporto` tinyint(1) DEFAULT NULL,
-  `se_prodotto` tinyint(1) DEFAULT NULL,
-  `se_servizio` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le tipologie di prodotti
+--
+-- dice di che genere è un prodotto ( prodotti.id_tipologia ): il 050 carica un albero fra prodotti e servizi, che
+-- l'utente può modificare o eliminare; se_prodotto e se_servizio dicono la natura, gli altri flag quali campi il
+-- form di gestione espone per i prodotti della tipologia
+--
+CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (                 --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_colori` tinyint(1) DEFAULT NULL,                            -- se il prodotto della tipologia espone i campi per i colori nel form di gestione
+  `se_taglie` tinyint(1) DEFAULT NULL,                            -- se il prodotto della tipologia espone i campi per le taglie nel form di gestione
+  `se_periodicita` tinyint(1) DEFAULT NULL,                       -- se il prodotto della tipologia espone i campi per la periodicità nel form di gestione
+  `se_tipologia_rinnovo` tinyint(1) DEFAULT NULL,                 -- se il prodotto della tipologia espone la tipologia di rinnovo nel form di gestione
+  `se_dimensioni` tinyint(1) DEFAULT NULL,                        -- se il prodotto della tipologia espone i campi per le dimensioni nel form di gestione
+  `se_volume` tinyint(1) DEFAULT NULL,                            -- se il prodotto della tipologia espone i campi per il volume nel form di gestione
+  `se_capacita` tinyint(1) DEFAULT NULL,                          -- se il prodotto della tipologia espone i campi per la capacità nel form di gestione
+  `se_peso` tinyint(1) DEFAULT NULL,                              -- se il prodotto della tipologia espone i campi per il peso nel form di gestione
+  `se_imballo` tinyint(1) DEFAULT NULL,                           -- se il prodotto della tipologia espone i campi per l'imballo nel form di gestione
+  `se_prodotto` tinyint(1) DEFAULT NULL,                          -- se la tipologia è un prodotto
+  `se_servizio` tinyint(1) DEFAULT NULL,                          -- se la tipologia è un servizio
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000055000
 
 -- tipologie_progetti
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero delle tipologie di progetto e le modalita che abilitano
-CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_produzione` tinyint(1) DEFAULT NULL,
-  `se_contratto` tinyint(1) DEFAULT NULL,
-  `se_pacchetto` tinyint(1) DEFAULT NULL,
-  `se_progetto` tinyint(1) DEFAULT NULL,
-  `se_consuntivo` tinyint(1) DEFAULT NULL,
-  `se_forfait` tinyint(1) DEFAULT NULL,
-  `se_didattica` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le tipologie di progetti
+--
+-- dice di che genere è un progetto ( progetti.id_tipologia ): il 050 carica contratto, pacchetto, progetto,
+-- consuntivo, forfait e corso, che l'utente può modificare o eliminare; i flag dicono la modalità di lavoro, e
+-- valgono anche per le figlie e per le tipologie che l'utente aggiunge
+--
+CREATE TABLE IF NOT EXISTS `tipologie_progetti` (                 --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_produzione` tinyint(1) DEFAULT NULL,                        -- se i progetti della tipologia sono di produzione
+  `se_contratto` tinyint(1) DEFAULT NULL,                         -- se si lavora a contratto
+  `se_pacchetto` tinyint(1) DEFAULT NULL,                         -- se si lavora a pacchetto
+  `se_progetto` tinyint(1) DEFAULT NULL,                          -- se si lavora a progetto
+  `se_consuntivo` tinyint(1) DEFAULT NULL,                        -- se si lavora a consuntivo
+  `se_forfait` tinyint(1) DEFAULT NULL,                           -- se si lavora a forfait
+  `se_didattica` tinyint(1) DEFAULT NULL,                         -- se i progetti della tipologia sono corsi
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000055400
 
 -- tipologie_pubblicazioni
--- tipologia: tabella di supporto
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di pubblicazioni
 --
--- questa tabella contiene le tipologie di pubblicazioni, con le informazioni relative al nome, alle icone associate
--- e ai vari stati di pubblicazione (bozza, pubblicato, evidenza)
+-- dice in che stato è una pubblicazione ( pubblicazioni.id_tipologia ): il 050 carica bozza, pubblicato, in
+-- evidenza e anteprima, che l'utente può modificare o eliminare; i flag dicono cosa fa lo stato, e valgono anche
+-- per gli stati che i deploy aggiungono
 --
-CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (          --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `nome` char(32) DEFAULT NULL,                                 -- nome della tipologia
-  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
-  `se_bozza` tinyint(1) DEFAULT NULL,                           -- se bozza
-  `se_pubblicato` tinyint(1) DEFAULT NULL,                      -- se pubblicato
-  `se_evidenza` tinyint(1) DEFAULT NULL,                        -- se evidenza
-  `se_anteprima` tinyint(1) DEFAULT NULL,                       -- se anteprima, visibile solo al gruppo anteprima
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_bozza` tinyint(1) DEFAULT NULL,                             -- se lo stato è una bozza, non ancora visibile
+  `se_pubblicato` tinyint(1) DEFAULT NULL,                        -- se lo stato rende visibile la pubblicazione
+  `se_evidenza` tinyint(1) DEFAULT NULL,                          -- se lo stato mette la pubblicazione in evidenza
+  `se_anteprima` tinyint(1) DEFAULT NULL,                         -- se anteprima, visibile solo al gruppo anteprima
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000055700
 
 -- tipologie_rinnovi
--- tipologia: tabella di supporto
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero delle tipologie di rinnovo e gli ambiti che abilitano
-CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_tesseramenti` tinyint(1) DEFAULT NULL,
-  `se_iscrizioni` tinyint(1) DEFAULT NULL,
-  `se_abbonamenti` tinyint(1) DEFAULT NULL,
-  `se_licenze` tinyint(1) DEFAULT NULL,
-  `se_contratti` tinyint(1) DEFAULT NULL,
-  `se_progetti` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le tipologie di rinnovi
+--
+-- dice di che genere è un rinnovo ( rinnovi.id_tipologia ): il 050 carica ordinario, straordinario e ridotto, che
+-- l'utente può modificare o eliminare; i flag dicono a cosa è pertinente il rinnovo
+--
+CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (                  --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_tesseramenti` tinyint(1) DEFAULT NULL,                      -- descrive i rinnovi che sono pertinenti ai tesseramenti
+  `se_iscrizioni` tinyint(1) DEFAULT NULL,                        -- descrive i rinnovi delle iscrizioni
+  `se_abbonamenti` tinyint(1) DEFAULT NULL,                       -- descrive i rinnovi che sono pertinenti agli abbonamenti
+  `se_licenze` tinyint(1) DEFAULT NULL,                           -- descrive i rinnovi che sono pertinenti alle licenze ( rinnovi.id_licenza )
+  `se_contratti` tinyint(1) DEFAULT NULL,                         -- descrive i rinnovi che sono pertinenti ai contratti ( rinnovi.id_contratto )
+  `se_progetti` tinyint(1) DEFAULT NULL,                          -- descrive i rinnovi che sono pertinenti ai progetti ( rinnovi.id_progetto )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000055800
 
@@ -8158,6 +8206,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8199,6 +8248,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_spedizioni` (               --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL                            -- icona Font Awesome per la tipologia
@@ -8219,6 +8269,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_telefoni` (                 --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8231,34 +8282,38 @@ CREATE TABLE IF NOT EXISTS `tipologie_telefoni` (                 --
 -- | 010000056600
 
 -- tipologie_todo
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di todo
 --
--- questa tabella contiene le tipologie di todo, con le informazioni relative al nome, alle icone associate
--- e ai vari ambiti di utilizzo (agenda, ticket, ordinaria, straordinaria, commerciale, produzione, amministrazione, corsi)
+-- dice di che genere è una todo ( todo.id_tipologia ): il 050 carica le cinque aree ( produzione, commerciale,
+-- amministrazione, risorse umane, logistica, ognuna col suo flag ) con le figlie, fra cui il ramo dei corsi
+-- ( formazione e figlie, se_corsi ), che l'utente può modificare o eliminare
 --
-CREATE TABLE IF NOT EXISTS `tipologie_todo` (                   --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
-  `nome` char(64) DEFAULT NULL,                                 -- nome della tipologia
-  `html_entity` char(8) DEFAULT NULL,                           -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                         -- icona Font Awesome per la tipologia
-  `se_agenda` tinyint(1) DEFAULT NULL,                          -- se agenda
-  `se_ticket` tinyint(1) DEFAULT NULL,                          -- se ticket
-  `se_ordinaria` tinyint(1) DEFAULT NULL,                       -- se ordinaria
-  `se_straordinaria` tinyint(1) DEFAULT NULL,                   -- se straordinaria
-  `se_commerciale` tinyint(1) DEFAULT NULL,                     -- se commerciale
-  `se_produzione` tinyint(1) DEFAULT NULL,                      -- se produzione
-  `se_amministrazione` tinyint(1) DEFAULT NULL,                 -- se amministrazione
-  `se_corsi` tinyint(1) DEFAULT NULL,                           -- se corsi
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+CREATE TABLE IF NOT EXISTS `tipologie_todo` (                     --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_agenda` tinyint(1) DEFAULT NULL,                            -- se la todo della tipologia compare in agenda
+  `se_ticket` tinyint(1) DEFAULT NULL,                            -- se la todo della tipologia è un ticket
+  `se_ordinaria` tinyint(1) DEFAULT NULL,                         -- se la tipologia è ordinaria ( p.es. la lezione del calendario )
+  `se_straordinaria` tinyint(1) DEFAULT NULL,                     -- se la tipologia è straordinaria ( p.es. il recupero o la prova )
+  `se_commerciale` tinyint(1) DEFAULT NULL,                       -- se la tipologia è dell'area commerciale
+  `se_produzione` tinyint(1) DEFAULT NULL,                        -- se la tipologia è dell'area produzione
+  `se_amministrazione` tinyint(1) DEFAULT NULL,                   -- se la tipologia è dell'area amministrazione
+  `se_risorse_umane` tinyint(1) DEFAULT NULL,                     -- se la tipologia è dell'area risorse umane
+  `se_logistica` tinyint(1) DEFAULT NULL,                         -- se la tipologia è dell'area logistica
+  `se_corsi` tinyint(1) DEFAULT NULL,                             -- se la tipologia è del ramo dei corsi ( formazione e figlie )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000056800
 
@@ -8276,6 +8331,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                      --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8300,6 +8356,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_vani` (                     --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8324,6 +8381,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
@@ -8336,24 +8394,31 @@ CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (                  --
 -- | 010000056950
 
 -- tipologie_zone
--- tipologia: tabella standard
+-- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di zone
 --
--- questa tabella contiene le tipologie di zone, con i flag che dicono in quali ambiti si usano
+-- dice di che genere è una zona ( zone.id_tipologia ): il 050 carica e-commerce, commerciale e immobiliare, che
+-- l'utente può modificare o eliminare o affiancare con tipologie sue; i flag dicono in quali ambiti vale la zona,
+-- perché le zone commerciali assegnate agli agenti possono non coincidere con le aree servite dall'e-commerce
 --
-CREATE TABLE IF NOT EXISTS `tipologie_zone` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `se_ecommerce` tinyint(1) DEFAULT NULL,
-  `se_commerciale` tinyint(1) DEFAULT NULL,
-  `se_immobiliare` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `tipologie_zone` (                     --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_ecommerce` tinyint(1) DEFAULT NULL,                         -- se le zone della tipologia valgono per l'e-commerce
+  `se_commerciale` tinyint(1) DEFAULT NULL,                       -- se le zone della tipologia valgono per la rete commerciale ( le zone degli agenti )
+  `se_immobiliare` tinyint(1) DEFAULT NULL,                       -- se le zone della tipologia valgono per gli immobili
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000060000
 
@@ -8956,7 +9021,7 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i rinnovi di contratti, licenze, progetti e pianificazioni
+-- funzione: contiene i rinnovi di contratti, licenze e progetti, anche generati da una pianificazione
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` bigint(20) NOT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,

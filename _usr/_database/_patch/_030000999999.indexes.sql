@@ -4452,11 +4452,11 @@ ALTER TABLE `tipologie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMEN
 -- tipologie_annunci
 ALTER TABLE `tipologie_annunci`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000050101
 
@@ -4469,6 +4469,7 @@ ALTER TABLE `tipologie_annunci` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_asset`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4485,20 +4486,13 @@ ALTER TABLE `tipologie_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_attivita
 ALTER TABLE `tipologie_attivita`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `se_anagrafica` (`se_anagrafica`),
-	ADD KEY `se_agenda` (`se_agenda`),
-	ADD KEY `se_sistema` (`se_sistema`),
-	ADD KEY `se_stampa` (`se_stampa`),
-	ADD KEY `se_corsi` (`se_corsi`),
-	ADD KEY `se_accesso` (`se_accesso`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`,`se_stampa`,`se_corsi`);
 
 -- | 030000050401
 
@@ -4528,6 +4522,7 @@ ALTER TABLE `tipologie_attivita_inps` MODIFY `id` bigint(20) NOT NULL AUTO_INCRE
 ALTER TABLE `tipologie_badge`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4546,6 +4541,7 @@ ALTER TABLE `tipologie_badge` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_banner`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4564,6 +4560,7 @@ ALTER TABLE `tipologie_banner` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_campagne`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4582,6 +4579,7 @@ ALTER TABLE `tipologie_campagne` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_chiavi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4621,6 +4619,7 @@ ALTER TABLE `tipologie_colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_contatti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4670,11 +4669,12 @@ ALTER TABLE `tipologie_contratti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 ALTER TABLE `tipologie_corrispondenza`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_massivo`,`se_corrispondenza`,`se_atto`,`se_ricevuta_ritorno`);
 
 -- | 030000051001
 
@@ -4718,18 +4718,12 @@ ALTER TABLE `tipologie_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 ALTER TABLE `tipologie_documenti_articoli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `sigla` (`sigla`),
-	ADD KEY `se_raggruppamento` (`se_raggruppamento`),
-	ADD KEY `se_somma` (`se_somma`),
-	ADD KEY `se_alternativa` (`se_alternativa`),
-	ADD KEY `se_dettaglio` (`se_dettaglio`),
-	ADD KEY `se_evasione` (`se_evasione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`se_raggruppamento`,`se_somma`,`se_alternativa`,`se_dettaglio`,`se_evasione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`font_awesome`,`se_raggruppamento`,`se_somma`,`se_alternativa`,`se_dettaglio`,`se_evasione`);
 
 -- | 030000052701
 
@@ -4742,6 +4736,7 @@ ALTER TABLE `tipologie_documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_
 ALTER TABLE `tipologie_edifici`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4757,19 +4752,15 @@ ALTER TABLE `tipologie_edifici` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000052900
 
 -- tipologie_immobili
--- tipologia: tabella di supporto
--- verifica: 2022-04-27 17:00 Chiara GDL
 ALTER TABLE `tipologie_immobili`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY  `se_residenziale` (`se_residenziale`),
-  	ADD KEY `se_industriale` (`se_industriale`),
-  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_residenziale`, `se_industriale`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_residenziale`,`se_commerciale`);
 
 -- | 030000052901
 
@@ -4783,6 +4774,7 @@ ALTER TABLE `tipologie_immobili` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_indirizzi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
@@ -4798,6 +4790,7 @@ ALTER TABLE `tipologie_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 ALTER TABLE `tipologie_licenze`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4816,6 +4809,7 @@ ALTER TABLE `tipologie_licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_luoghi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4831,17 +4825,15 @@ ALTER TABLE `tipologie_luoghi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000053400
 
 -- tipologie_mastri
--- tipologia: tabella assistita
--- verifica: 2021-10-15 16:17 Fabio Mosti
 ALTER TABLE `tipologie_mastri`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_magazzino`,`se_conto`,`se_registro`,`se_credito`);
 
 -- | 030000053401
 
@@ -4855,6 +4847,7 @@ ALTER TABLE `tipologie_mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_listini`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4885,6 +4878,7 @@ ALTER TABLE `tipologie_mail_status` MODIFY `id` bigint(20) NOT NULL AUTO_INCREME
 ALTER TABLE `tipologie_notizie`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4902,6 +4896,7 @@ ALTER TABLE `tipologie_notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_pagamenti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4916,18 +4911,15 @@ ALTER TABLE `tipologie_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT
 -- | 030000054100
 
 -- tipologie_periodi
--- tipologia: tabella gestita
--- verifica: 2022-05-24 11:00 Chiara GDL
 ALTER TABLE `tipologie_periodi`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_corsi`,`se_tesseramenti`,`se_abbonamenti`);
 
 -- | 030000054101
 
@@ -4941,6 +4933,7 @@ ALTER TABLE `tipologie_periodi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_popup`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -4957,11 +4950,14 @@ ALTER TABLE `tipologie_popup` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- tipologie_prodotti
 ALTER TABLE `tipologie_prodotti`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_colori`,`se_taglie`,`se_periodicita`,`se_tipologia_rinnovo`,`se_dimensioni`,`se_volume`,`se_capacita`,`se_peso`,`se_imballo`,`se_prodotto`,`se_servizio`);
 
 -- | 030000054601
 
@@ -4972,11 +4968,14 @@ ALTER TABLE `tipologie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- tipologie_progetti
 ALTER TABLE `tipologie_progetti`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_produzione`,`se_contratto`,`se_pacchetto`,`se_progetto`,`se_consuntivo`,`se_forfait`,`se_didattica`);
 
 -- | 030000055001
 
@@ -4987,11 +4986,14 @@ ALTER TABLE `tipologie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- tipologie_pubblicazioni
 ALTER TABLE `tipologie_pubblicazioni`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_bozza`,`se_pubblicato`,`se_evidenza`,`se_anteprima`);
 
 -- | 030000055401
 
@@ -5002,11 +5004,14 @@ ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCRE
 
 -- tipologie_rinnovi
 ALTER TABLE `tipologie_rinnovi`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_tesseramenti`,`se_iscrizioni`,`se_abbonamenti`,`se_licenze`,`se_contratti`,`se_progetti`);
 
 -- | 030000055701
 
@@ -5019,6 +5024,7 @@ ALTER TABLE `tipologie_rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_risorse`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -5052,6 +5058,7 @@ ALTER TABLE `tipologie_sconti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_spedizioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
@@ -5067,6 +5074,7 @@ ALTER TABLE `tipologie_spedizioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMEN
 ALTER TABLE `tipologie_telefoni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -5083,19 +5091,13 @@ ALTER TABLE `tipologie_telefoni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_todo
 ALTER TABLE `tipologie_todo`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `se_agenda` (`se_agenda`),
-	ADD KEY `se_ticket` (`se_ticket`),
-	ADD KEY `se_commerciale` (`se_commerciale`),
-	ADD KEY `se_produzione` (`se_produzione`),
-	ADD KEY `se_amministrazione` (`se_amministrazione`),
-	ADD KEY `se_corsi` (`se_corsi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`,`se_ticket`,`se_commerciale`,`se_produzione`,`se_amministrazione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_agenda`,`se_ticket`,`se_ordinaria`,`se_straordinaria`,`se_commerciale`,`se_produzione`,`se_amministrazione`,`se_risorse_umane`,`se_logistica`,`se_corsi`);
 
 -- | 030000056601
 
@@ -5108,6 +5110,7 @@ ALTER TABLE `tipologie_todo` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_url`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -5125,6 +5128,7 @@ ALTER TABLE `tipologie_url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_vani`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -5142,6 +5146,7 @@ ALTER TABLE `tipologie_vani` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_veicoli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -5156,15 +5161,15 @@ ALTER TABLE `tipologie_veicoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000056950
 
 -- tipologie_zone
--- tipologia: tabella gestita
--- verifica: 2022-06-16 16:40 Chiara GDL
 ALTER TABLE `tipologie_zone`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_ecommerce`,`se_commerciale`,`se_immobiliare`);
 
 -- | 030000056951
 
