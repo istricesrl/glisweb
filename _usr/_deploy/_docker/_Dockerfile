@@ -1,0 +1,101 @@
+#
+# IMMAGINE DOCKER DEL FRAMEWORK
+#
+# l'immagine contiene il framework senza nessun progetto: niente src/, mod/ ed etc/, quindi nessun
+# modulo attivo e nessuna configurazione. Un deploy la usa in due modi:
+#
+# - montando la configurazione in src/config/ext/ ( config.yaml e shadow.yaml, su Kubernetes da una
+#   ConfigMap e da un Secret ), che il bootstrap legge per prima ( vedi _claude.framework.md );
+# - come base di un'immagine di progetto, FROM istricesrl/glisweb più COPY di src/, mod/ ed etc/,
+#   con il Dockerfile custom in usr/deploy/docker/Dockerfile
+#
+# la costruisce e la pubblica .github/workflows/container.yml: istricesrl/glisdev da develop,
+# istricesrl/glisweb dai tag di release; per costruirla a mano dalla document root:
+#
+#   docker build -t glisweb:prova -f _usr/_deploy/_docker/_Dockerfile .
+#
+# lo stato del deploy ( var/: log, cache, spool, contenuti, immagini ) va su un volume, le sessioni
+# su Redis se le repliche sono più di una ( _src/_config/_050.session.php ), il cron si chiama da
+# fuori su /api/cron; dettagli in _usr/_docs/_read/404.howto.deploy.md
+#
+
+## BASE DI PARTENZA
+# bookworm porta PHP 8.2; la si fissa invece di stable perché un cambio di Debian cambia la versione
+# di PHP sotto i piedi del framework
+ARG DEBIAN=bookworm
+FROM debian:${DEBIAN}
+
+## AMBIENTE
+ENV TERM=xterm-256color
+ENV DEBIAN_FRONTEND=noninteractive
+
+## PACCHETTI
+# gli stessi di _src/_sh/_lamp.setup.sh, meno quelli che servono solo a sviluppare ( php-dev,
+# php-pear, php-xdebug ) e php-imap, che bookworm non ha più come pacchetto separato
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    apache2 \
+    php \
+    libapache2-mod-php \
+    composer \
+    php-common \
+    php-curl \
+    php-ssh2 \
+    php-gd \
+    php-xml \
+    php-yaml \
+    php-tidy \
+    php-apcu \
+    php-memcache \
+    php-memcached \
+    php-redis \
+    php-zip \
+    php-intl \
+    php-mysqli \
+    php-mbstring \
+    && rm -rf /var/lib/apt/lists/*
+
+## CONTENUTO DEL CONTAINER
+COPY ./ /var/www/html/
+COPY ./_usr/_deploy/_docker/_000-default.conf /etc/apache2/sites-enabled/000-default.conf
+
+## LIBRERIE ESTERNE
+# _src/_lib/_ext non è versionata e il composer.lock nemmeno: si installano qui, come fa
+# _src/_sh/_composer.update.sh --soft
+WORKDIR /var/www/html
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer update --no-interaction --no-progress && composer clearcache
+
+## CARTELLE SCRIVIBILI
+# var/ e tmp/ non sono versionate, quindi in un checkout pulito non ci sono; senza, lo script dei
+# permessi non le rende scrivibili e il framework non riesce a scrivere log e cache
+RUN mkdir -p var/log var/cache tmp
+
+## APACHE
+ENV APACHE_RUN_USER=www-data
+ENV APACHE_RUN_GROUP=www-data
+ENV APACHE_PID_FILE=/var/run/apache2/apache2.pid
+ENV APACHE_RUN_DIR=/var/run/apache2
+ENV APACHE_LOCK_DIR=/var/lock/apache2
+ENV APACHE_LOG_DIR=/var/log/apache2
+
+RUN a2enmod rewrite
+RUN a2enmod expires
+RUN a2enmod headers
+RUN a2enmod ssl
+
+# i log di Apache escono dal container, dove li raccoglie docker logs o Kubernetes; quelli del
+# framework restano in var/log/, sul volume
+RUN ln -sf /dev/stdout /var/log/apache2/access.log && ln -sf /dev/stderr /var/log/apache2/error.log
+
+## PERMESSI
+RUN /var/www/html/_src/_sh/_lamp.permissions.secure.sh
+
+## CONTROLLO DI SALUTE
+# _uptime.php risponde OK senza login, e 503 se il database è configurato ma non risponde: è la stessa
+# URL da usare per le probe di Kubernetes
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD curl -fs http://localhost/_src/_api/_status/_uptime.php || exit 1
+
+EXPOSE 80
+CMD ["apache2", "-D", "FOREGROUND"]

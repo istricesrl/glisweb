@@ -1,0 +1,133 @@
+# immagini Docker del framework
+#
+# costruisce l'immagine da _usr/_deploy/_docker/_Dockerfile, la accende e la prova, e se la prova passa
+# la pubblica su Docker Hub:
+#
+# - push su develop        -> istricesrl/glisdev:<versione> e istricesrl/glisdev:latest
+# - tag di release X.Y.Z   -> istricesrl/glisweb:X.Y.Z, istricesrl/glisweb:<versione> e istricesrl/glisweb:latest
+# - pull request e altri branch: solo costruzione e prova, niente pubblicazione
+#
+# <versione> e' il timestamp di _etc/_current.version, lo stesso formato dei tag pubblicati a mano fino al
+# 2025 con docker-build.sh ( radice di glisdev ). Per pubblicare servono i secret DOCKERHUB_USERNAME e
+# DOCKERHUB_TOKEN: senza, il workflow costruisce e prova ma salta la pubblicazione, e lo dice
+#
+# l'immagine serve a far girare il framework su Docker e Kubernetes: _usr/_docs/_read/404.howto.deploy.md
+#
+
+name: immagini Docker
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+
+jobs:
+  immagine:
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: nome e tag dell'immagine
+        id: nome
+        run: |
+          VERS="$( tr -d '[:space:]' < _etc/_current.version )"
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            IMMAGINE="istricesrl/glisweb"
+            TAG="$IMMAGINE:${{ github.ref_name }},$IMMAGINE:$VERS,$IMMAGINE:latest"
+            PUBBLICA=1
+          elif [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref_name }}" = "develop" ]; then
+            IMMAGINE="istricesrl/glisdev"
+            TAG="$IMMAGINE:$VERS,$IMMAGINE:latest"
+            PUBBLICA=1
+          else
+            TAG=""
+            PUBBLICA=0
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "pubblica=$PUBBLICA" >> "$GITHUB_OUTPUT"
+          echo "versione $VERS, tag: ${TAG:-nessuno, solo prova}"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: costruzione
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: _usr/_deploy/_docker/_Dockerfile
+          load: true
+          tags: glisweb:prova
+
+      - name: prova del container
+        run: |
+          # la configurazione minima della FAQ, montata dove la monterebbe un deploy
+          mkdir -p prova/conf
+          printf '%s\n' \
+            'sites:' \
+            '  1:' \
+            '    __label__: "prova Docker"' \
+            '    name:' \
+            '      it-IT: "prova Docker"' \
+            '    protocols:' \
+            '      DEV: "http"' \
+            '    hosts:' \
+            '      DEV: ""' \
+            '    domains:' \
+            '      DEV: "localhost"' \
+            > prova/conf/config.yaml
+          docker run -d --name prova -p 8080:80 -v "$PWD/prova/conf/:/var/www/html/src/config/ext/:ro" glisweb:prova
+
+          # si aspetta che Apache risponda, al massimo trenta secondi
+          for i in $( seq 1 30 ); do
+            curl -fs -o /dev/null http://localhost:8080/_src/_api/_status/_uptime.php && break
+            sleep 1
+          done
+
+          FALLITE=0
+
+          # il bootstrap completo del framework, senza login
+          UPTIME="$( curl -s http://localhost:8080/_src/_api/_status/_uptime.php )"
+          if [ "$UPTIME" = "OK" ]; then echo "[ OK ] uptime"; else echo "::error title=uptime::risposta '$UPTIME'"; FALLITE=$(( FALLITE + 1 )); fi
+
+          # la home del sito configurato: basta che non sia un errore del server
+          HOME_HTTP="$( curl -s -o /dev/null -w '%{http_code}' -H 'Host: localhost' http://localhost:8080/ )"
+          if [ "$HOME_HTTP" -lt 500 ]; then echo "[ OK ] home, HTTP $HOME_HTTP"; else echo "::error title=home::HTTP $HOME_HTTP"; FALLITE=$(( FALLITE + 1 )); fi
+
+          # le estensioni PHP che il framework usa
+          for e in curl gd intl mbstring memcache memcached mysqli redis tidy xml yaml zip apcu; do
+            if ! docker exec prova php -m | grep -qix "$e"; then echo "::error title=estensione PHP::manca $e"; FALLITE=$(( FALLITE + 1 )); fi
+          done
+
+          # nessun fatal di PHP nei log di Apache
+          if docker logs prova 2>&1 | grep -q 'PHP Fatal'; then echo "::error title=PHP::fatal nei log"; FALLITE=$(( FALLITE + 1 )); fi
+
+          echo "--- log del container"
+          docker logs prova 2>&1 | tail -40
+
+          echo "prove fallite: $FALLITE"
+          [ $FALLITE -eq 0 ]
+
+      - name: accesso a Docker Hub
+        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      - name: pubblicazione
+        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN != ''
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: _usr/_deploy/_docker/_Dockerfile
+          push: true
+          tags: ${{ steps.nome.outputs.tag }}
+
+      - name: pubblicazione saltata
+        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN == ''
+        run: echo "::warning title=Docker Hub::mancano i secret DOCKERHUB_USERNAME e DOCKERHUB_TOKEN, immagine costruita e provata ma non pubblicata"
