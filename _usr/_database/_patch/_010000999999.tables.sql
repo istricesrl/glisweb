@@ -7227,23 +7227,39 @@ CREATE TABLE IF NOT EXISTS `task` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i numeri di telefono delle anagrafiche
+-- funzione: contiene i numeri di telefono delle anagrafiche e dei nodi organizzativi
 --
--- questa tabella contiene i numeri di telefono delle anagrafiche, con le informazioni relative alla tipologia,
--- al numero, alle notifiche e alle anagrafiche a cui sono associati
+-- questa tabella contiene i numeri di telefono, una riga per numero, con la tipologia ( tipologie_telefoni: telefono,
+-- mobile, fax ), le note e il flag per le notifiche; il numero appartiene a un'anagrafica oppure a un nodo di
+-- organizzazioni ( p.es. il centralino di un ufficio ); è il recapito a cui fanno riferimento i consensi
+-- ( anagrafica_consensi.id_telefono ) e l'account ( il telefono e il cellulare in sessione )
 --
-CREATE TABLE IF NOT EXISTS `telefoni` (                                     --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato il numero di telefono
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia del numero di telefono
-  `numero` char(32) DEFAULT NULL,                             -- numero di telefono
-  `note` text DEFAULT NULL,                                   -- note sul numero di telefono
-  `se_notifiche` tinyint(1) DEFAULT NULL,                     -- flag che indica se il numero di telefono è abilitato alle notifiche
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il numero di telefono
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il numero di telefono
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA un numero ha un solo proprietario: id_anagrafica oppure id_organizzazione, mai tutti e due; il proprietario
+-- di un nodo è la prima anagrafica che si incontra risalendo i nodi, e la ricerca dei numeri di un'anagrafica non
+-- risale l'albero ( decisione del 2026-10-21, comune ai recapiti: mail, telefoni, url ); per questo le chiavi uniche
+-- sono due, una per proprietario, perché il NULL dell'altro svuoterebbe una chiave unica sola
+--
+-- NOTA il numero di default è il primo nell'ordine ( ORDER BY ordine IS NULL, ordine, id ); lo stesso vale dentro un
+-- filtro: il cellulare di default è il primo fra quelli di tipologia mobile, e così per le notifiche ( decisione del
+-- 2026-10-19, comune ai recapiti dell'anagrafica: mail, telefoni, iban )
+--
+-- NOTA le chiavi esterne verso l'anagrafica e verso il nodo sono CASCADE: un numero non ha senso senza il suo
+-- proprietario, e chi scioglie un nodo ne sposta prima i numeri
+--
+CREATE TABLE IF NOT EXISTS `telefoni` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del numero ( telefono, mobile, fax… )
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine del numero fra quelli del proprietario, il primo è quello di default
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica a cui appartiene il numero
+  `id_organizzazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per il nodo organizzativo a cui appartiene il numero, in alternativa all'anagrafica
+  `numero` char(32) DEFAULT NULL,                                 -- numero di telefono
+  `note` text DEFAULT NULL,                                       -- note sul numero
+  `se_notifiche` tinyint(1) DEFAULT NULL,                         -- se il numero riceve le notifiche
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito il numero
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato il numero
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000044000
 

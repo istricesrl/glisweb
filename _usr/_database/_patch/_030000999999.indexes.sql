@@ -4378,13 +4378,16 @@ ALTER TABLE `task` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- telefoni
 ALTER TABLE `telefoni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`numero`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`numero`),
+	ADD UNIQUE KEY `unica_organizzazione` (`id_organizzazione`,`numero`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
 	ADD KEY `numero` (`numero`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`numero`,`se_notifiche`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_anagrafica`,`id_organizzazione`,`numero`,`se_notifiche`);
 
 -- | 030000043601
 

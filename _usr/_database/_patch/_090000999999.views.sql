@@ -7333,39 +7333,41 @@ CREATE OR REPLACE VIEW task_view AS
 -- | 090000043600
 
 -- telefoni_view
-CREATE OR REPLACE VIEW telefoni_view AS                       --
-	SELECT                                                    --
-		telefoni.id,                                          --
-		telefoni.id_anagrafica,                               --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat(                                           --
-                a1.cognome, ' ', a1.nome                      --
-            ),                                                --
-            ''                                                --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		telefoni.id_tipologia,                                --
-		t1.nome AS tipologia,                                 -- nome della tipologia
-		telefoni.numero,                                      --
-		telefoni.se_notifiche,                                --
-		telefoni.id_account_inserimento,                      --
-		telefoni.id_account_aggiornamento,                    --
-		concat_ws(                                            --
-			' ',                                              --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ),           --
-                ''                                            --
-            ),                                                --
-			t1.nome,                                          --
-			telefoni.numero                                   --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM telefoni                                             --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = telefoni.id_anagrafica                 --
-		LEFT JOIN tipologie_telefoni AS t1                    --
-            ON t1.id = telefoni.id_tipologia                  --
-;                                                             --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `telefoni_view` AS
+	SELECT
+		telefoni.id,
+		telefoni.id_tipologia,
+		tipologie_telefoni.nome AS tipologia,
+		telefoni.ordine,
+		telefoni.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		telefoni.id_organizzazione,
+		organizzazioni.nome AS organizzazione,
+		telefoni.numero,
+		telefoni.note,
+		telefoni.se_notifiche,
+		telefoni.id_account_inserimento,
+		telefoni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				),
+				organizzazioni.nome
+			),
+			tipologie_telefoni.nome,
+			telefoni.numero
+		) AS __label__
+	FROM telefoni
+		LEFT JOIN tipologie_telefoni ON tipologie_telefoni.id = telefoni.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = telefoni.id_anagrafica
+		LEFT JOIN organizzazioni ON organizzazioni.id = telefoni.id_organizzazione
+;
 
 -- | 090000044001
 
