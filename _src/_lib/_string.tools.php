@@ -912,10 +912,11 @@
     /**
      * costruisce l'espressione regolare degli host di un sito per uno stato
      *
-     * È la regola con cui _src/_config/_015.site.php riconosce il sito corrente e il suo stato dall'HTTP_HOST, e con
-     * cui uptimeProfilo() ricava il profilo di un host senza il bootstrap: per questo sta qui, in una libreria che non
-     * dipende da $cf. Mette insieme host e domini dello stato con i loro alias; se fra gli host c'è www, l'host è
-     * facoltativo. Il confronto non distingue maiuscole e minuscole, come fa Apache sull'Host.
+     * È la regola con cui _src/_config/_015.site.php riconosce il sito corrente e il suo stato dall'HTTP_HOST, e sta
+     * qui, in una libreria che non dipende da $cf. Il controllo di uptime ( glisweb-check-24x7, fuori dal framework )
+     * ne ha una copia, uptimeRegexp(), con cui dà il profilo agli host: se la regola cambia, va cambiata anche là.
+     * Mette insieme host e domini dello stato con i loro alias; se fra gli host c'è www, l'host è facoltativo. Il
+     * confronto non distingue maiuscole e minuscole, come fa Apache sull'Host.
      *
      * @param       array       $site       un sito della configurazione ( domains, hosts, alias )
      * @param       string      $status     lo stato ( DEV, TEST, PROD... )

@@ -201,17 +201,17 @@ file trasferiti: 12 — elenco completo in var/deploy/20261026-1040-stable.log
 ### `DOWNTIME.md`: i periodi di down del sito ( dal 04/11/2026 )
 
 È il settimo file canonico: risponde a **"quando il sito è stato giù, e per quanto"**. Lo genera
-`_src/_cli/_uptime.check.php`, il controllo di uptime che ha preso il posto di Site24x7, ogni volta
-che un sito del deploy cambia stato: una riga per periodo, dal più recente, con inizio, fine,
-durata, conferma e motivo. La fonte è il registro `var/uptime/registro.jsonl` del deploy da cui
-gira il controllo, e il file si riscrive intero da lì:
+glisweb-check-24x7, il controllo di uptime che ha preso il posto di Site24x7 ( fuori dal framework
+dal 05/11/2026, in `/opt/glisweb-check-24x7` ), ogni volta che un sito del deploy cambia stato: una
+riga per periodo, dal più recente, con inizio, fine, durata, conferma e motivo. La fonte è il
+registro `/var/lib/glisweb-check-24x7/registro.jsonl` del server, e il file si riscrive intero da lì:
 
 - **non si modifica a mano**: la prossima riscrittura cancellerebbe la modifica. Una nota su un
   periodo ( la causa vera, cosa si è fatto ) va nel `DONE.md`;
 - un periodo **non confermato** l'ha visto giù un server solo, mentre gli altri non rispondevano:
   di solito è un problema di quel server, non del sito;
-- il capitano lo legge nel suo giro; il funzionamento è nel capitolo `125.uptime` del manuale
-  sviluppatore.
+- il capitano lo legge nel suo giro; cosa fornisce il deploy al controllo è nel capitolo
+  `125.uptime` del manuale sviluppatore, il funzionamento nel manuale del progetto.
 
 ### La cartella del progetto: i file canonici, e niente altro ( dal 26/10/2026 )
 

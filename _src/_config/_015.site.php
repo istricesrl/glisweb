@@ -116,7 +116,7 @@
             // echo $status . '->' . $domain . PHP_EOL;
             // echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 
-            // espressione regolare dello stato, la stessa che usa uptimeProfilo()
+            // espressione regolare dello stato, la stessa che copia uptimeRegexp() di glisweb-check-24x7
             $regex = site2regexp( $site, $status );
 
             // se c'è un dominio per questo status
