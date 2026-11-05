@@ -80,6 +80,16 @@ jobs:
             '    domains:' \
             '      DEV: "localhost"' \
             > prova/conf/config.yaml
+
+          # la password di root per /status, casuale a ogni run, nello shadow come in un deploy vero
+          PASS="$( openssl rand -hex 16 )"
+          HASH="$( docker run --rm glisweb:prova php -r 'echo password_hash( $argv[1], PASSWORD_DEFAULT );' -- "$PASS" )"
+          printf '%s\n' \
+            'auth:' \
+            '  accounts:' \
+            '    root:' \
+            "      password: \"$HASH\"" \
+            > prova/conf/shadow.yaml
           docker run -d --name prova -p 8080:80 -v "$PWD/prova/conf/:/var/www/html/src/config/ext/:ro" glisweb:prova
 
           # si aspetta che Apache risponda, al massimo trenta secondi
@@ -93,6 +103,12 @@ jobs:
           # il bootstrap completo del framework, senza login
           UPTIME="$( curl -s http://localhost:8080/_src/_api/_status/_uptime.php )"
           if [ "$UPTIME" = "OK" ]; then echo "[ OK ] uptime"; else echo "::error title=uptime::risposta '$UPTIME'"; FALLITE=$(( FALLITE + 1 )); fi
+
+          # il report di /status, da root: deve arrivare in fondo, perche' i [FAIL] gravi lo interrompono con un die
+          STATUS_HTTP="$( curl -s -o prova/status.txt -w '%{http_code}' -u "root:$PASS" -H 'Host: localhost' http://localhost:8080/status )"
+          if [ "$STATUS_HTTP" = "200" ] && grep -q '^FINE REPORT' prova/status.txt; then echo "[ OK ] status"; else echo "::error title=status::HTTP $STATUS_HTTP, report interrotto"; FALLITE=$(( FALLITE + 1 )); fi
+          echo "--- /status"
+          cat prova/status.txt
 
           # la home del sito configurato: basta che non sia un errore del server
           HOME_HTTP="$( curl -s -o /dev/null -w '%{http_code}' -H 'Host: localhost' http://localhost:8080/ )"
