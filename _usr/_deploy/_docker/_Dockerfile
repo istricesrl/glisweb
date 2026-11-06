@@ -6,11 +6,12 @@
 #
 # - montando la configurazione in src/config/ext/ ( config.yaml e shadow.yaml, su Kubernetes da una
 #   ConfigMap e da un Secret ), che il bootstrap legge per prima ( vedi _claude.framework.md );
-# - come base di un'immagine di progetto, FROM istricesrl/glisweb più COPY di src/, mod/ ed etc/,
+# - come base di un'immagine di progetto, FROM ghcr.io/istricesrl/glisweb più COPY di src/, mod/ ed etc/,
 #   con il Dockerfile custom in usr/deploy/docker/Dockerfile
 #
-# la costruisce e la pubblica .github/workflows/container.yml: istricesrl/glisdev da develop,
-# istricesrl/glisweb dai tag di release; per costruirla a mano dalla document root:
+# la costruisce e la pubblica su ghcr.io .github/workflows/container.yml, col nome del repository
+# ( ghcr.io/istricesrl/glisdev e ghcr.io/istricesrl/glisweb ): latest e <versione> da develop, X.Y.Z dai
+# tag di release; per costruirla a mano dalla document root:
 #
 #   docker build -t glisweb:prova -f _usr/_deploy/_docker/_Dockerfile .
 #

@@ -1,20 +1,26 @@
 # immagini Docker del framework
 #
 # costruisce l'immagine da _usr/_deploy/_docker/_Dockerfile, la accende e la prova, e se la prova passa
-# la pubblica su Docker Hub:
+# la pubblica su GitHub Container Registry ( ghcr.io ):
 #
-# - push su develop        -> <repository>:<versione> e <repository>:latest
-# - tag di release X.Y.Z   -> <repository>:X.Y.Z e <repository>:<versione>
+# - push su develop        -> ghcr.io/<repository>:<versione> e ghcr.io/<repository>:latest
+# - tag di release X.Y.Z   -> ghcr.io/<repository>:X.Y.Z e ghcr.io/<repository>:<versione>
 # - pull request e altri branch: solo costruzione e prova, niente pubblicazione
 #
 # il file e' lo stesso nei due repository del framework ( hard link fra i deploy glisweb e glisdev ) e il
-# nome dell'immagine e' quello del repository: istricesrl/glisweb e' la linea oldstable, istricesrl/glisdev la
-# linea latest. latest segue develop, che e' la versione che i deploy distribuiscono; i tag fissano una release
+# nome dell'immagine e' quello del repository: ghcr.io/istricesrl/glisweb e' la linea oldstable,
+# ghcr.io/istricesrl/glisdev la linea latest. latest segue develop, che e' la versione che i deploy
+# distribuiscono; i tag fissano una release
 #
 # <versione> e' il timestamp di _etc/_current.version, lo stesso formato dei tag pubblicati a mano fino al
-# 2025 con docker-build.sh ( radice di glisdev ). Per pubblicare servono i secret DOCKERHUB_USERNAME e
-# DOCKERHUB_TOKEN in ciascuno dei due repository: senza, il workflow costruisce e prova ma salta la
-# pubblicazione, e lo dice. A mano ( workflow_dispatch ) si pubblica un branch o un tag gia' esistente
+# 2025 con docker-build.sh ( radice di glisdev ). Per pubblicare basta il GITHUB_TOKEN del workflow, con il
+# permesso packages: write; la label org.opencontainers.image.source, messa da metadata-action, collega il
+# pacchetto al repository da cui eredita i permessi. Fino al 06/11/2026 le immagini stavano su Docker Hub
+# ( istricesrl/glisweb e istricesrl/glisdev ). A mano ( workflow_dispatch ) si pubblica un branch o un tag
+# gia' esistente
+#
+# la cache dei layer sta nella cache di GitHub Actions ( type=gha ): la costruisce la prima build e la
+# riusano la pubblicazione e le esecuzioni successive
 #
 # l'immagine serve a far girare il framework su Docker e Kubernetes: _usr/_docs/_read/404.howto.deploy.md
 #
@@ -33,33 +39,40 @@ on:
 jobs:
   immagine:
     runs-on: ubuntu-latest
-    env:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: nome e tag dell'immagine
+      - name: versione e pubblicazione
         id: nome
         run: |
           VERS="$( tr -d '[:space:]' < _etc/_current.version )"
-          IMMAGINE="${{ github.repository }}"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            TAG=""
             PUBBLICA=0
           elif [ "${{ github.ref_type }}" = "tag" ]; then
-            TAG="$IMMAGINE:${{ github.ref_name }},$IMMAGINE:$VERS"
             PUBBLICA=1
           elif [ "${{ github.ref_name }}" = "develop" ]; then
-            TAG="$IMMAGINE:$VERS,$IMMAGINE:latest"
             PUBBLICA=1
           else
-            TAG=""
             PUBBLICA=0
           fi
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "versione=$VERS" >> "$GITHUB_OUTPUT"
           echo "pubblica=$PUBBLICA" >> "$GITHUB_OUTPUT"
-          echo "versione $VERS, tag: ${TAG:-nessuno, solo prova}"
+          echo "versione $VERS, pubblicazione: $PUBBLICA"
+
+      # tag e label dell'immagine: <versione> se si pubblica, latest solo da develop, X.Y.Z dai tag di release
+      - name: tag e label dell'immagine
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          flavor: latest=false
+          tags: |
+            type=raw,value=${{ steps.nome.outputs.versione }},enable=${{ steps.nome.outputs.pubblica == '1' }}
+            type=raw,value=latest,enable=${{ github.ref_type == 'branch' && github.ref_name == 'develop' }}
+            type=ref,event=tag
 
       - uses: docker/setup-buildx-action@v3
 
@@ -70,6 +83,9 @@ jobs:
           file: _usr/_deploy/_docker/_Dockerfile
           load: true
           tags: glisweb:prova
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: prova del container
         run: |
@@ -136,22 +152,21 @@ jobs:
           echo "prove fallite: $FALLITE"
           [ $FALLITE -eq 0 ]
 
-      - name: accesso a Docker Hub
-        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN != ''
+      - name: accesso a ghcr.io
+        if: steps.nome.outputs.pubblica == '1'
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: pubblicazione
-        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN != ''
+        if: steps.nome.outputs.pubblica == '1'
         uses: docker/build-push-action@v6
         with:
           context: .
           file: _usr/_deploy/_docker/_Dockerfile
           push: true
-          tags: ${{ steps.nome.outputs.tag }}
-
-      - name: pubblicazione saltata
-        if: steps.nome.outputs.pubblica == '1' && env.DOCKERHUB_TOKEN == ''
-        run: echo "::warning title=Docker Hub::mancano i secret DOCKERHUB_USERNAME e DOCKERHUB_TOKEN, immagine costruita e provata ma non pubblicata"
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
