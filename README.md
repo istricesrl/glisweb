@@ -273,7 +273,8 @@ che prevede **una ricompensa in denaro** per le segnalazioni confermate.
 **Compatibilità:** il framework è pensato per **Debian stable e Ubuntu** con Apache, PHP 8 e
 MySQL/MariaDB. Su questa linea serve Apache: il supporto a Nginx esiste solo su glisdev. Gli script di
 amministrazione sono scritti per Debian e Ubuntu e su altri sistemi potrebbero non funzionare. Su
-Windows si sviluppa con XAMPP.
+Windows si sviluppa con XAMPP. Il framework è anche su Docker Hub ( `istricesrl/glisweb` per questa linea,
+`istricesrl/glisdev` per glisdev ), e l'immagine gira su Docker e Kubernetes.
 
 ## Come si comincia
 
