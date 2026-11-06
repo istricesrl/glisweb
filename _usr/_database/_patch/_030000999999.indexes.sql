@@ -4430,17 +4430,13 @@ ALTER TABLE `testate` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_anagrafica
 ALTER TABLE `tipologie_anagrafica`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `se_persona_fisica` (`se_persona_fisica`),
-	ADD KEY `se_persona_giuridica` (`se_persona_giuridica`),
-	ADD KEY `se_pubblica_amministrazione` (`se_pubblica_amministrazione`),
-	ADD KEY `se_ecommerce` (`se_ecommerce`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`sigla`,`se_persona_fisica`,`se_persona_giuridica`,`se_pubblica_amministrazione`);
 
 -- | 030000050001
 

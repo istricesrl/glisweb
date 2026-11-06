@@ -4164,16 +4164,16 @@ INSERT IGNORE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `gi
 -- | 050000050000
 
 -- tipologie_anagrafica
-INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_persona_fisica`, `se_persona_giuridica`, `se_pubblica_amministrazione`, `se_ecommerce`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	10,	'persone fisiche',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	7,	10,	'signor',	'sig.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	8,	20,	'signora',	'sig.ra',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	2,	10,	'spettabile',	'spett.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	1,	NULL,	'gentilissimo',	'gent.mo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	1,	NULL,	'gentilissima',	'gent.ma',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	6,	NULL,	'spettabile',	'spett.',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `sigla`, `se_persona_fisica`, `se_persona_giuridica`, `se_pubblica_amministrazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	10,	'PERSONE_FISICHE',	'persone fisiche',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	20,	'PERSONE_GIURIDICHE',	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	7,	10,	'SIGNOR',	'signor',	NULL,	NULL,	'sig.',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	8,	20,	'SIGNORA',	'signora',	NULL,	NULL,	'sig.ra',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	2,	10,	'SPETTABILE',	'spettabile',	NULL,	NULL,	'spett.',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'PUBBLICA_AMMINISTRAZIONE',	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'GENTILISSIMO',	'gentilissimo',	NULL,	NULL,	'gent.mo',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'GENTILISSIMA',	'gentilissima',	NULL,	NULL,	'gent.ma',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	6,	NULL,	'SPETTABILE_PA',	'spettabile',	NULL,	NULL,	'spett.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050400
 

@@ -7405,24 +7405,26 @@ CREATE OR REPLACE VIEW `testate_view` AS
 -- | 090000050000
 
 -- tipologie_anagrafica_view
-CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS         --
-	SELECT                                                    --
-		tipologie_anagrafica.id,                              --
-		tipologie_anagrafica.id_genitore,                     --
-		tipologie_anagrafica.ordine,                          --
-		tipologie_anagrafica.nome,                            --
-		tipologie_anagrafica.html_entity,                     --
-		tipologie_anagrafica.font_awesome,                    --
-		tipologie_anagrafica.se_persona_fisica,               --
-        tipologie_anagrafica.se_persona_giuridica,            --
-        tipologie_anagrafica.se_pubblica_amministrazione,     --
-        tipologie_anagrafica.se_ecommerce,                    --
-		tipologie_anagrafica.id_account_inserimento,          --
-		tipologie_anagrafica.id_account_aggiornamento,        --
-		tipologie_anagrafica_path(                            --
-            tipologie_anagrafica.id ) AS __label__            -- etichetta per le tendine e le liste
-	FROM tipologie_anagrafica                                 --
-;                                                             --
+CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
+	SELECT
+		tipologie_anagrafica.id,
+		tipologie_anagrafica.id_genitore,
+		tipologie_anagrafica.ordine,
+		tipologie_anagrafica.codice,
+		tipologie_anagrafica.nome,
+		tipologie_anagrafica.html_entity,
+		tipologie_anagrafica.font_awesome,
+		tipologie_anagrafica.sigla,
+		radici.se_persona_fisica,
+		radici.se_persona_giuridica,
+		radici.se_pubblica_amministrazione,
+		tipologie_anagrafica.id_account_inserimento,
+		tipologie_anagrafica.id_account_aggiornamento,
+		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
+	FROM tipologie_anagrafica
+		-- i flag della natura sono quelli della radice, anche per le forme di cortesia aggiunte dall'utente
+		LEFT JOIN tipologie_anagrafica AS radici ON radici.id = tipologie_anagrafica_path_find_ancestor( tipologie_anagrafica.id )
+;
 
 -- | 090000050001
 

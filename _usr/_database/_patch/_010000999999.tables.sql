@@ -7323,31 +7323,36 @@ CREATE TABLE IF NOT EXISTS `testate` (                          --
 -- | 010000050000
 
 -- tipologie_anagrafica
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di anagrafica
 --
--- questa tabella contiene le tipologie di anagrafica, con le informazioni relative al nome, alla sigla e alle
--- funzionalità associate
+-- dice di che natura è un'anagrafica ( anagrafica.id_tipologia ) e con che forma di cortesia ci si rivolge a lei;
+-- le radici sono le tre nature del framework ( persone fisiche, persone giuridiche, pubblica amministrazione, coi
+-- loro flag ), sotto ciascuna l'utente fa crescere un albero aperto di forme di cortesia, profondo quanto serve
+-- ( "spett. dott. comm.", "preg.mo avv." ), che il 050 avvia con gentilissimo, signor, spettabile e sorelle
 --
-CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
-  `note` text DEFAULT NULL,                                   -- note della tipologia
-  `sigla` char(32) DEFAULT NULL,                              -- sigla della tipologia
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
-  `se_persona_fisica` tinyint(1) DEFAULT NULL,                -- flag che indica se la tipologia rappresenta persone fisiche
-  `se_persona_giuridica` tinyint(1) DEFAULT NULL,             -- flag che indica se la tipologia rappresenta persone giuridiche
-  `se_pubblica_amministrazione` tinyint(1) DEFAULT NULL,      -- flag che indica se la tipologia rappresenta pubbliche amministrazioni
-  `se_ecommerce` tinyint(1) DEFAULT NULL,                     -- flag che indica se la tipologia è associabile all'e-commerce
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+-- NOTA: i flag della natura valgono sulle radici; la vista dà a ogni riga quelli della sua radice, così una forma
+-- di cortesia aggiunta dall'utente sa di che natura è anche senza ripeterli; il 050 li ripete sulle sue righe per i
+-- lettori che leggono la tabella; la forma di cortesia completa è il percorso delle sigle ( tipologie_anagrafica_path_sigla )
+--
+CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (               --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `sigla` char(32) DEFAULT NULL,                                  -- sigla della forma di cortesia ( p.es. spett., sig.ra )
+  `se_persona_fisica` tinyint(1) DEFAULT NULL,                    -- se la tipologia è di persone fisiche ( vale sulla radice )
+  `se_persona_giuridica` tinyint(1) DEFAULT NULL,                 -- se la tipologia è di persone giuridiche ( vale sulla radice )
+  `se_pubblica_amministrazione` tinyint(1) DEFAULT NULL,          -- se la tipologia è di pubbliche amministrazioni ( vale sulla radice )
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000050100
