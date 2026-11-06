@@ -24,6 +24,22 @@
 
         }
 
+        // patch 202611061200: caratteristiche_prodotti si scrive, come promette il suo commento; con una colonna
+        // derivata la INSERT prende l'errore 1471 e haveInDatabase() fallisce
+        public function vistaCaratteristicheProdottiInseribile( BackendTester $I ) {
+
+            $I->deleteTestRecords( 'caratteristiche', 'nome' );
+
+            $nome = $I->grabTestName( 'caratteristica-vista' );
+
+            $id = $I->haveInDatabase( 'caratteristiche_prodotti', array( 'nome' => $nome, 'se_articolo' => 1 ) );
+
+            $I->seeInDatabase( 'caratteristiche', array( 'id' => $id, 'nome' => $nome, 'se_articoli' => 1 ) );
+
+            $I->deleteTestRecords( 'caratteristiche', 'nome' );
+
+        }
+
         /**
          * verifica che ogni vista abbia tutte le colonne attese
          *

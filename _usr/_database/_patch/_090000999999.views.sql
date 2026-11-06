@@ -545,6 +545,10 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 -- l'albero sta in caratteristiche e questa vista lo espone con i nomi di colonna di allora, cosi' il codice dei
 -- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare. Sta qui e
 -- non accanto a caratteristiche_view perche' articoli_view, subito sotto, la usa
+--
+-- ci si scrive solo finche' ogni colonna e' una colonna di caratteristiche: una sola colonna derivata ( c'era NULL AS
+-- se_categoria, uscita il 06/11/2026 ) la rende non inseribile, ogni INSERT prende l'errore 1471, e su
+-- utensilerialughese l'import delle macchine ha svuotato le caratteristiche di 135 schede
 CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
 	SELECT
 		caratteristiche.id,
@@ -552,7 +556,6 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
 		caratteristiche.nome,
 		caratteristiche.font_awesome,
 		caratteristiche.html_entity,
-		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
