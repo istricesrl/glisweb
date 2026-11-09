@@ -7613,41 +7613,50 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (                 --
 -- | 010000050900
 
 -- tipologie_contratti
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di contratti
 --
--- questa tabella contiene le tipologie di contratti, con le informazioni relative al nome, al prodotto collegato
--- e alle funzionalità associate (tesseramento, abbonamento, iscrizione, immobili, acquisto, locazione, libero, prenotazione, scalare,
--- affiliazione, online)
+-- dice di che genere è un contratto ( contratti.id_tipologia, rinnovi.id_tipologia_contratto ); le radici sono i
+-- generi del framework che il 050 carica ( vendita, locazione, tesseramento, abbonamento, iscrizione, affiliazione,
+-- servizi ), coi loro flag di classe, e sotto ciascuna l'utente fa crescere le sue tipologie ( p.es. le tessere e i
+-- pacchetti di lezioni di una palestra ); la usano i moduli contratti, tesseramenti, iscrizioni, abbonamenti e corsi
 --
-CREATE TABLE IF NOT EXISTS `tipologie_contratti` (                          --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
-  `id_prodotto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il prodotto collegato
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto collegato
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,               -- chiave esterna per la categoria di progetti collegata
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
-  `se_tesseramento` tinyint(1) DEFAULT NULL,                  -- se tesseramento
-  `se_abbonamento` tinyint(1) DEFAULT NULL,                   -- se abbonamento
-  `se_iscrizione` tinyint(1) DEFAULT NULL,                    -- se iscrizione
-  `se_immobili` tinyint(1) DEFAULT NULL,                      -- se immobili
-  `se_acquisto` tinyint(1) DEFAULT NULL,                      -- se acquisto
-  `se_locazione` tinyint(1) DEFAULT NULL,                     -- se locazione
-  `se_libero` tinyint(1) DEFAULT NULL,                        -- se libero
-	`se_prenotazione` tinyint(1) DEFAULT NULL,                -- se prenotazione
-	`se_scalare` tinyint(1) DEFAULT NULL,                     -- se scalare
-  `se_affiliazione` tinyint(1) DEFAULT NULL,                  -- se affiliazione
-  `se_online` tinyint(1) DEFAULT NULL,                        -- se online
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA: i flag di classe ( se_tesseramento, se_abbonamento, se_iscrizione, se_affiliazione, se_acquisto, se_locazione )
+-- valgono sulla radice e la vista li dà ereditati a ogni riga; il 050 li ripete sulle sue righe per i lettori che leggono
+-- la tabella; i flag di modalità ( se_libero, se_prenotazione, se_scalare, come le modalità di tipologie_progetti ) e
+-- le qualità ( se_immobili, se_online ) sono invece della singola tipologia
+--
+-- NOTA: id_prodotto e id_articolo sono il meccanismo canonico d'acquisto: id_prodotto vuol dire che qualunque articolo
+-- del prodotto dà un contratto di questa tipologia, id_articolo solo quell'articolo
+--
+CREATE TABLE IF NOT EXISTS `tipologie_contratti` (                -- 
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto che, acquistato, dà il contratto
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo che, acquistato, dà il contratto
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_tesseramento` tinyint(1) DEFAULT NULL,                      -- se la tipologia è di tesseramenti ( vale sulla radice )
+  `se_abbonamento` tinyint(1) DEFAULT NULL,                       -- se la tipologia è di abbonamenti ( vale sulla radice )
+  `se_iscrizione` tinyint(1) DEFAULT NULL,                        -- se la tipologia è di iscrizioni ( vale sulla radice )
+  `se_affiliazione` tinyint(1) DEFAULT NULL,                      -- se la tipologia è di affiliazioni ( vale sulla radice )
+  `se_acquisto` tinyint(1) DEFAULT NULL,                          -- se la tipologia è di compravendite ( vale sulla radice )
+  `se_locazione` tinyint(1) DEFAULT NULL,                         -- se la tipologia è di locazioni ( vale sulla radice )
+  `se_libero` tinyint(1) DEFAULT NULL,                            -- se si accede liberamente per la durata del contratto
+  `se_prenotazione` tinyint(1) DEFAULT NULL,                      -- se si accede prenotando la singola lezione o il singolo servizio
+  `se_scalare` tinyint(1) DEFAULT NULL,                           -- se il contratto è un pacchetto di accessi che si consuma
+  `se_immobili` tinyint(1) DEFAULT NULL,                          -- se il contratto riguarda un immobile
+  `se_online` tinyint(1) DEFAULT NULL,                            -- se la tipologia si vende on-line
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000051000
 

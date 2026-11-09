@@ -7611,34 +7611,34 @@ CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
 -- | 090000050901
 
 -- tipologie_contratti_view
--- tipologia: tabella gestita
--- verifica: 2022-02-21 11:47 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 	SELECT
 		tipologie_contratti.id,
 		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
+		tipologie_contratti.codice,
 		tipologie_contratti.nome,
 		tipologie_contratti.id_prodotto,
-		tipologie_contratti.id_progetto,
-		tipologie_contratti.id_categoria_progetti,
+		tipologie_contratti.id_articolo,
 		tipologie_contratti.html_entity,
 		tipologie_contratti.font_awesome,
-		tipologie_contratti.se_abbonamento,
-		tipologie_contratti.se_iscrizione,
-		tipologie_contratti.se_tesseramento,
-		tipologie_contratti.se_immobili,
-		tipologie_contratti.se_acquisto,
-		tipologie_contratti.se_locazione,
+		radici.se_tesseramento,
+		radici.se_abbonamento,
+		radici.se_iscrizione,
+		radici.se_affiliazione,
+		radici.se_acquisto,
+		radici.se_locazione,
 		tipologie_contratti.se_libero,
 		tipologie_contratti.se_prenotazione,
 		tipologie_contratti.se_scalare,
-		tipologie_contratti.se_affiliazione,
+		tipologie_contratti.se_immobili,
 		tipologie_contratti.se_online,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
 	FROM tipologie_contratti
+		-- i flag di classe sono quelli della radice, anche per le tipologie aggiunte dall'utente
+		LEFT JOIN tipologie_contratti AS radici ON radici.id = tipologie_contratti_path_find_ancestor( tipologie_contratti.id )
 ;
 
 -- | 090000051001

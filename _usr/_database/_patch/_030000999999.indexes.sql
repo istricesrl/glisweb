@@ -4630,29 +4630,17 @@ ALTER TABLE `tipologie_contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000050900
 
 -- tipologie_contratti
-ALTER TABLE `tipologie_contratti` 
+ALTER TABLE `tipologie_contratti`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-  	ADD KEY `ordine` (`ordine`),
-  	ADD KEY `nome` (`nome`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
-	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
-  	ADD KEY `se_tesseramento`(`se_tesseramento`),
-  	ADD KEY `se_abbonamento`(`se_abbonamento`),
-  	ADD KEY `se_iscrizione`(`se_iscrizione`),
-  	ADD KEY `se_immobili`(`se_immobili`),
-  	ADD KEY `se_acquisto`(`se_acquisto`),
-  	ADD KEY `se_locazione`(`se_locazione`),
-	ADD KEY `se_libero` (`se_libero`),
-  	ADD KEY `se_prenotazione`(`se_prenotazione`),
-  	ADD KEY `se_scalare`(`se_scalare`),
-	ADD KEY `se_affiliazione`(`se_affiliazione`),
-	ADD KEY `se_online`(`se_online`),
-  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`, `se_immobili`, `se_acquisto`, `se_locazione`, `se_affiliazione`);
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_tesseramento`,`se_abbonamento`,`se_iscrizione`,`se_affiliazione`,`se_acquisto`,`se_locazione`,`se_libero`,`se_prenotazione`,`se_scalare`,`se_immobili`,`se_online`);
 
 -- | 030000050901
 
