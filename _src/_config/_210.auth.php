@@ -855,7 +855,7 @@
                     'id' => $_SESSION['id'],
                     'timestamp' => time(),
                     'ip' => $_SERVER['REMOTE_ADDR'],
-                    'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
                     'site' => $cf['site']['fqdn']
                 );
 

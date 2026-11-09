@@ -64,6 +64,30 @@
 
         }
 
+        // api/login chiamata senza User-Agent ( curl di PHP, script ): la risposta resta un JSON solo, senza Notice davanti
+        // restCall() qui non si usa perche' dal processo dei test manda il marcatore nello User-Agent
+        public function loginSenzaUserAgent( BackendTester $I ) {
+
+            global $cf;
+
+            $account = $I->grabTestAccount( 'users' );
+
+            $curl = curl_init( rtrim( $cf['site']['url'], '/' ) . '/api/login' );
+            curl_setopt( $curl, CURLOPT_POST, true );
+            curl_setopt( $curl, CURLOPT_POSTFIELDS, json_encode( array( '__login__' => array( 'user' => $account['username'], 'pasw' => $account['password'] ) ) ) );
+            curl_setopt( $curl, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json' ) );
+            curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+            $raw = curl_exec( $curl );
+            curl_close( $curl );
+
+            $risposta = json_decode( (string) $raw, true );
+
+            $I->assertIsArray( $risposta, 'senza User-Agent la risposta non e\' JSON: ' . substr( (string) $raw, 0, 200 ) );
+            $I->assertEquals( $account['username'], $risposta['username'] ?? NULL, 'risposta: ' . substr( (string) $raw, 0, 300 ) );
+            $I->assertNotEmpty( $risposta['token'] ?? NULL, 'manca il token' );
+
+        }
+
         // S-015 api/login: password sbagliata, utente inesistente, credenziali vuote e JSON non valido danno tutti 'login errato'
         public function loginErrato( BackendTester $I ) {
 

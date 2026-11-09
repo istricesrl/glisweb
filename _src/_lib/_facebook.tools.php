@@ -156,7 +156,7 @@
                             'action_source' => 'website',
                             'event_source_url' => $cf['site']['url'] . ( ( isset( $_SERVER['REDIRECT_URL'] ) ) ? $_SERVER['REDIRECT_URL'] : substr( $_SERVER['REQUEST_URI'], strlen( $cf['site']['root'] ) ) ),
                             'client_ip_address' => getenv("REMOTE_ADDR"),
-                            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
+                            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
                             'user_data' => array(
                                 'external_id' => array(
                                     hash( 'sha256', $carrello['id'] )
