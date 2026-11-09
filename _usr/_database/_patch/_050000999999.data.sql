@@ -4227,6 +4227,13 @@ INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 (46,	44,	NULL,	'BANNER_CLICK',	'click',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (47,	NULL,	NULL,	'REDIRECT',	'redirect',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000050431
+
+-- tipologie_attivita_inps
+INSERT IGNORE INTO `tipologie_attivita_inps` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `codice_inps`, `se_quadratura`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'ORDINARIO',	'ordinario',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'STRAORDINARIO',	'straordinario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000050450
 
 -- tipologie_badge

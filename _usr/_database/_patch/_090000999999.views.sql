@@ -7486,18 +7486,20 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 -- | 090000050431
 
 -- tipologie_attivita_inps_view
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
 CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
 	SELECT
 		tipologie_attivita_inps.id,
 		tipologie_attivita_inps.id_genitore,
-		tipologie_attivita_inps.nome,
+		tipologie_attivita_inps.ordine,
 		tipologie_attivita_inps.codice,
+		tipologie_attivita_inps.nome,
+		tipologie_attivita_inps.html_entity,
+		tipologie_attivita_inps.font_awesome,
+		tipologie_attivita_inps.codice_inps,
 		tipologie_attivita_inps.se_quadratura,
-		concat(
-			if( tipologie_attivita_inps.codice IS NOT NULL, concat( tipologie_attivita_inps.codice, ' - ' ), '' ),
-			tipologie_attivita_inps.nome
-		) AS __label__
+		tipologie_attivita_inps.id_account_inserimento,
+		tipologie_attivita_inps.id_account_aggiornamento,
+		tipologie_attivita_inps_path( tipologie_attivita_inps.id ) AS __label__
 	FROM tipologie_attivita_inps
 ;
 

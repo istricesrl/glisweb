@@ -7440,22 +7440,34 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (                 --
 -- tipologia: tabella assistita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene le tipologie di attivita' ai fini INPS, a cui si legano i costi dei contratti
+-- funzione: contiene le tipologie di attività ai fini delle paghe, a cui si legano i costi dei contratti
 --
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 ), portata a
--- bigint: la usano i moduli _0600.contratti, _1000.produzione e _0920.corsi
+-- dice di che genere sono le ore lavorate ai fini delle paghe ( ordinario, straordinario, ferie, permessi... ): a una
+-- tipologia si lega il costo orario di un contratto ( costi_contratti.id_tipologia ) e da lì le ore previste
+-- ( orari_contratti ); il 050 carica a id fissi le due radici ORDINARIO e STRAORDINARIO, l'utente aggiunge le altre;
+-- il codice trova una riga col codice, mai con l'id; servirà al modulo risorse umane, oggi la leggono solo i legacy
+-- _0600.contratti, _8100.cartellini e _0200.attivita
 --
-CREATE TABLE IF NOT EXISTS `tipologie_attivita_inps` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `se_quadratura` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA codice_inps è il codice della voce nel gestionale paghe ( l'esportazione Zucchetti di _8100.cartellini lo
+-- scrive nel tracciato ): è un codice esterno, per questo non sta in codice, che è quello delle righe del framework
+-- NOTA se_quadratura dice quali tipologie contano nelle ore ordinarie previste dal contratto, con cui il cartellino
+-- e i report delle ore fanno la quadratura
+--
+CREATE TABLE IF NOT EXISTS `tipologie_attivita_inps` (            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `codice_inps` char(32) DEFAULT NULL,                            -- codice della voce nel gestionale paghe
+  `se_quadratura` tinyint(1) DEFAULT NULL,                        -- se le ore della tipologia contano nella quadratura del contratto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000050450
 

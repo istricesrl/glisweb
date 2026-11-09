@@ -4500,12 +4500,14 @@ ALTER TABLE `tipologie_attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_attivita_inps
 ALTER TABLE `tipologie_attivita_inps`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unico` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `se_quadratura` (`se_quadratura`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `codice_inps` (`codice_inps`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`codice_inps`,`se_quadratura`);
 
 -- | 030000050431
 
