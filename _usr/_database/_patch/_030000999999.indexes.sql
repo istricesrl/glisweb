@@ -4835,8 +4835,10 @@ ALTER TABLE `tipologie_listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_mail_status
 ALTER TABLE `tipologie_mail_status`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`codice`),
-	ADD KEY `indice` (`id`,`codice`,`nome`,`se_recapitabile`);
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`ordine`,`codice`,`nome`,`se_recapitabile`);
 
 -- | 030000053701
 

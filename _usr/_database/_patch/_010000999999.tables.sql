@@ -7962,22 +7962,23 @@ CREATE TABLE IF NOT EXISTS `tipologie_listini` (                  --
 
 -- tipologie_mail_status
 -- tipologia: tabella standard
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene gli stati di verifica degli indirizzi mail
+-- funzione: contiene la scala dei verdetti di verifica degli indirizzi mail
 --
--- questa tabella contiene la scala degli stati di verifica di un indirizzo mail ( Rating A+/A/B/D/F
--- piu' gli stati dei servizi di mailing ); se_recapitabile codifica la regola del framework per cui
--- si boccia solo sulla prova esplicita di non recapitabilita'
+-- dice in che stato di verifica è un indirizzo mail ( mail_status.id_tipologia ): il 050 carica la scala Rating
+-- A+/A/B/D/F di Emailable e gli stati del gestionale di mailing di gimbe ( MC_mail_status_tipo ), con gli stessi id
+-- del gestionale, che sono gli stessi su tutti i deploy; non è ricorsiva perché è una scala chiusa, non un albero;
+-- se_recapitabile codifica la regola del framework per cui si boccia solo sulla prova esplicita di non recapitabilità;
+-- il codice trova la riga col codice, mai con l'id
 --
 CREATE TABLE IF NOT EXISTS `tipologie_mail_status` (          --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
   `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
-  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
-  `note` text DEFAULT NULL,                                   -- descrizione estesa della tipologia
-  `se_recapitabile` tinyint(1) DEFAULT NULL,                  -- flag che indica se a un indirizzo in questo stato si puo' spedire
-  `se_sistema` tinyint(1) DEFAULT NULL                        -- flag che indica se la tipologia e' una tipologia di sistema
+  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                              -- nome della tipologia
+  `note` text DEFAULT NULL,                                   -- cosa vuol dire lo stato e cosa ne fa chi spedisce
+  `se_recapitabile` tinyint(1) DEFAULT NULL                   -- flag che indica se a un indirizzo in questo stato si puo' spedire
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000053800

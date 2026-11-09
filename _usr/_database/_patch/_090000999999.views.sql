@@ -7820,8 +7820,8 @@ CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
 		tipologie_mail_status.ordine,
 		tipologie_mail_status.codice,
 		tipologie_mail_status.nome,
+		tipologie_mail_status.note,
 		tipologie_mail_status.se_recapitabile,
-		tipologie_mail_status.se_sistema,
 		tipologie_mail_status.nome AS __label__
 	FROM tipologie_mail_status
 ;

@@ -4460,16 +4460,16 @@ INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `codice`, 
 -- | 050000053700
 
 -- tipologie_mail_status
-INSERT IGNORE INTO `tipologie_mail_status` (`id`, `ordine`, `codice`, `nome`, `note`, `se_recapitabile`, `se_sistema`) VALUES
-(1,	1,	'Rating A+',	'Deliverable +',	'Engagement Activity These emails are deliverable and have a history of clicks or opens. These addresses are always safe to send to!',	1,	1),
-(2,	2,	'Rating A',	'Deliverable',	'These emails are deliverable. These addresses are always safe to send to!',	1,	1),
-(3,	3,	'Rating B',	'Accepts All',	'These emails have been deemed as "Accepts All", meaning the server will accept all mail and may bounce it back to sender. We do not recommend sending to the "Accept All" category. All emails with a grade of B should be segmented (until later confirmed valid).',	1,	1),
-(4,	4,	'Rating D',	'Indeterminate',	'In checking for an email, we were not able to do anything. We do not recommend sending to the "Indeterminate" category. All emails with a grade of D should be segmented off your list.',	1,	1),
-(5,	5,	'Rating F',	'Undeliverable',	'The emails given a grade of F have been deemed as undeliverable and invalid. Do not send mail to these addresses.',	0,	1),
-(8,	6,	'Cleaned',	'Puliti da MailChimp / Hard Bounce',	'-',	0,	1),
-(9,	7,	'Blacklisted',	'Cancellati su MChimp / Blacklisted',	'-',	0,	1),
-(10,	8,	'Non importabile',	'-',	'-',	0,	1),
-(20,	9,	'OK',	'-',	'-',	1,	1);
+INSERT IGNORE INTO `tipologie_mail_status` (`id`, `ordine`, `codice`, `nome`, `note`, `se_recapitabile`) VALUES
+(1,	1,	'RATING_A_PLUS',	'Deliverable +',	'Rating A+: indirizzo recapitabile e con una storia di aperture o clic; si può sempre spedire.',	1),
+(2,	2,	'RATING_A',	'Deliverable',	'Rating A: indirizzo recapitabile; si può sempre spedire.',	1),
+(3,	3,	'RATING_B',	'Accepts All',	'Rating B: il server accetta qualunque indirizzo e può rimbalzare la mail dopo averla accettata; va segmentato finché non è confermato valido.',	1),
+(4,	4,	'RATING_D',	'Indeterminate',	'Rating D: la verifica non ha potuto concludere; va segmentato.',	1),
+(5,	5,	'RATING_F',	'Undeliverable',	'Rating F: indirizzo non recapitabile o non valido; non si spedisce.',	0),
+(8,	6,	'MAILCHIMP_CLEANED',	'Puliti da MailChimp / Hard Bounce',	'indirizzo tolto da MailChimp dopo un rimbalzo permanente; non si spedisce.',	0),
+(9,	7,	'MAILCHIMP_BLACKLISTED',	'Cancellati su MChimp / Blacklisted',	'indirizzo cancellato su MailChimp o in lista nera; non si spedisce.',	0),
+(10,	8,	'NON_IMPORTABILE',	'Non importabile',	'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; non si spedisce.',	0),
+(20,	9,	'OK',	'OK',	'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; si può spedire.',	1);
 
 -- | 050000053800
 
