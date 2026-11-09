@@ -7561,29 +7561,37 @@ CREATE TABLE IF NOT EXISTS `tipologie_chiavi` (                   --
 -- | 010000050700
 
 -- tipologie_colli
--- tipologia: tabella gestita
--- rango: tabella principale
+-- tipologia: tabella assistita
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene l albero delle tipologie di collo, con dimensioni e peso
-CREATE TABLE IF NOT EXISTS `tipologie_colli` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `larghezza` decimal(7,2) DEFAULT NULL,
-  `lunghezza` decimal(7,2) DEFAULT NULL,
-  `altezza` decimal(7,2) DEFAULT NULL,
-  `id_udm_dimensioni` bigint(20) DEFAULT NULL,
-  `peso` decimal(7,2) DEFAULT NULL,
-  `id_udm_peso` bigint(20) DEFAULT NULL,
-  `sigla` char(32) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le tipologie di collo, con il loro ingombro e il loro peso
+--
+-- dice che contenitore è un collo ( colli.id_tipologia ): il 050 carica container, pallet e scatola, che l'utente può
+-- modificare o eliminare, e sotto ciascuno l'utente fa crescere i suoi formati ( p.es. i pallet 120x80 con le loro
+-- sponde ); la tabella appartiene al modulo logistica
+--
+-- NOTA: le misure sono a blocchi, ogni grandezza col suo id_udm_*, come in colli e articoli; dicono che ingombro e che
+-- peso ha quel tipo di collo, e valgono da default per le misure del collo quando lo si prepara o lo si chiude
+--
+CREATE TABLE IF NOT EXISTS `tipologie_colli` (                    --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `larghezza` decimal(7,2) DEFAULT NULL,                          -- larghezza di questo tipo di collo
+  `lunghezza` decimal(7,2) DEFAULT NULL,                          -- lunghezza di questo tipo di collo
+  `altezza` decimal(7,2) DEFAULT NULL,                            -- altezza di questo tipo di collo
+  `id_udm_dimensioni` bigint(20) DEFAULT NULL,                    -- unità di misura di larghezza, lunghezza e altezza
+  `peso` decimal(7,2) DEFAULT NULL,                               -- peso di questo tipo di collo
+  `id_udm_peso` bigint(20) DEFAULT NULL,                          -- unità di misura del peso
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000050800
 
