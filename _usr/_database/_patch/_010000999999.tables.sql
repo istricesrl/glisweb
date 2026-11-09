@@ -7692,41 +7692,52 @@ CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (           --
 -- | 010000052600
 
 -- tipologie_documenti
--- tipologia: tabella di supporto
--- rango: tabella principale
+-- tipologia: tabella standard
+-- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di documenti
 --
--- questa tabella contiene le tipologie di documenti, con le informazioni relative al nome,
--- al codice, alle funzionalità associate e ai modelli di stampa
+-- dice di che genere è un documento ( documenti.id_tipologia, documenti_articoli.id_tipologia_documento,
+-- carrelli.fatturazione_id_tipologia_documento ); le 38 righe del 050 fanno parte dell'applicazione, hanno gli stessi id
+-- su tutti i deploy e si aggiornano col dataserver, perché da loro dipendono la fatturazione elettronica, la numerazione
+-- e le stampe: l'utente non le modifica, e per questo la tabella non ha la coda di audit; la usano i moduli documenti,
+-- fatture, offerte, pianificazioni, logistica, casse ed e-commerce
 --
-CREATE TABLE IF NOT EXISTS `tipologie_documenti` (            --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
-  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
-  `codice` char(32) DEFAULT NULL,                             -- codice della tipologia
-  `numerazione` char(1) DEFAULT NULL,                         -- tipo di numerazione (A=automatica, M=manuale, N=nessuna)
-  `nome` char(255) DEFAULT NULL,                              -- nome della tipologia
-  `sigla` char(16) DEFAULT NULL,                              -- sigla della tipologia
-  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
-  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
-  `se_fattura` tinyint(1) DEFAULT NULL,                       -- se fattura
-  `se_nota_credito` tinyint(1) DEFAULT NULL,                  -- se nota di credito
-  `se_nota_debito` tinyint(1) DEFAULT NULL,                   -- se nota di debito
-  `se_trasporto` tinyint(1) DEFAULT NULL,                     -- se trasporto
-  `se_pro_forma` tinyint(1) DEFAULT NULL,                     -- se pro forma
-  `se_offerta` tinyint(1) DEFAULT NULL,                       -- se offerta
-  `se_ordine` tinyint(1) DEFAULT NULL,                        -- se ordine
-  `se_missione` tinyint(1) DEFAULT NULL,                      -- se missione
-  `se_ricevuta` tinyint(1) DEFAULT NULL,                      -- se ricevuta
-  `se_ecommerce` tinyint(1) DEFAULT NULL,                     -- se e-commerce
-  `stampa_xml` char(255) DEFAULT NULL,                        -- modello di stampa XML
-  `stampa_pdf` char(255) DEFAULT NULL,                        -- modello di stampa PDF
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA: codice è il codice del framework ( unico, la chiave con cui il codice trova la riga ), codice_sdi è il
+-- TipoDocumento della fattura elettronica, che si ripete quando le righe sono varianti operative dello stesso documento
+-- ( TD01 su fattura e fattura accompagnatoria )
+--
+-- NOTA: i flag di classe ( se_fattura, se_nota_credito, se_nota_debito, se_pro_forma, se_offerta, se_ordine,
+-- se_missione, se_ricevuta ) valgono sulla radice e la vista li dà ereditati a ogni riga; il 050 li ripete dove i
+-- lettori legacy li leggono dalla tabella; se_trasporto ( DDT e fattura accompagnatoria ) e se_ecommerce ( la
+-- tipologia che emette il carrello ) sono invece qualità della singola riga
+--
+-- NOTA: numerazione è la lettera della serie: i documenti con la stessa lettera condividono la sequenza dei numeri per
+-- emittente e sezionale; stampa_pdf è il modello di stampa, e se manca la stampa ripiega su quello del genitore
+--
+CREATE TABLE IF NOT EXISTS `tipologie_documenti` (                --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia ( unico )
+  `codice_sdi` char(32) DEFAULT NULL,                             -- TipoDocumento della fattura elettronica ( TD01... )
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `sigla` char(16) DEFAULT NULL,                                  -- sigla della tipologia, nelle etichette dei documenti
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_fattura` tinyint(1) DEFAULT NULL,                           -- se è una fattura ( vale sulla radice )
+  `se_nota_credito` tinyint(1) DEFAULT NULL,                      -- se è una nota di credito ( vale sulla radice )
+  `se_nota_debito` tinyint(1) DEFAULT NULL,                       -- se è una nota di debito ( vale sulla radice )
+  `se_pro_forma` tinyint(1) DEFAULT NULL,                         -- se è una pro forma ( vale sulla radice )
+  `se_offerta` tinyint(1) DEFAULT NULL,                           -- se è un'offerta ( vale sulla radice )
+  `se_ordine` tinyint(1) DEFAULT NULL,                            -- se è un ordine ( vale sulla radice )
+  `se_missione` tinyint(1) DEFAULT NULL,                          -- se è una missione di magazzino ( vale sulla radice )
+  `se_ricevuta` tinyint(1) DEFAULT NULL,                          -- se è una ricevuta ( vale sulla radice )
+  `se_trasporto` tinyint(1) DEFAULT NULL,                         -- se accompagna la merce ( DDT, fattura accompagnatoria )
+  `se_ecommerce` tinyint(1) DEFAULT NULL,                         -- se è la tipologia che emette il carrello
+  `numerazione` char(1) DEFAULT NULL,                             -- lettera della serie di numerazione
+  `stampa_pdf` char(255) DEFAULT NULL                             -- modello di stampa PDF
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000052700
 

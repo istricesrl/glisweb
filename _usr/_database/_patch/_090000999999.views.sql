@@ -7672,25 +7672,27 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.id_genitore,
 		tipologie_documenti.ordine,
 		tipologie_documenti.codice,
-		tipologie_documenti.numerazione,
+		tipologie_documenti.codice_sdi,
 		tipologie_documenti.nome,
 		tipologie_documenti.sigla,
 		tipologie_documenti.html_entity,
 		tipologie_documenti.font_awesome,
-		tipologie_documenti.se_fattura,
-		tipologie_documenti.se_nota_credito,
-		tipologie_documenti.se_nota_debito,
+		radici.se_fattura,
+		radici.se_nota_credito,
+		radici.se_nota_debito,
+		radici.se_pro_forma,
+		radici.se_offerta,
+		radici.se_ordine,
+		radici.se_missione,
+		radici.se_ricevuta,
 		tipologie_documenti.se_trasporto,
-		tipologie_documenti.se_pro_forma,
-		tipologie_documenti.se_offerta,
-		tipologie_documenti.se_ordine,
-		tipologie_documenti.se_missione,
-		tipologie_documenti.se_ricevuta,
 		tipologie_documenti.se_ecommerce,
-		tipologie_documenti.id_account_inserimento,
-		tipologie_documenti.id_account_aggiornamento,
+		tipologie_documenti.numerazione,
+		tipologie_documenti.stampa_pdf,
 		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
 	FROM tipologie_documenti
+		-- i flag di classe sono quelli della radice
+		LEFT JOIN tipologie_documenti AS radici ON radici.id = tipologie_documenti_path_find_ancestor( tipologie_documenti.id )
 ;
 
 -- | 090000052700

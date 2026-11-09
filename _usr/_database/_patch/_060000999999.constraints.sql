@@ -2425,9 +2425,7 @@ ALTER TABLE `tipologie_corrispondenza`
 
 -- tipologie_documenti
 ALTER TABLE `tipologie_documenti`
-    ADD CONSTRAINT `tipologie_documenti_ibfk_01_nofollow`     FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-    ADD CONSTRAINT `tipologie_documenti_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `tipologie_documenti_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `tipologie_documenti_ibfk_01_nofollow`     FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000052700
 

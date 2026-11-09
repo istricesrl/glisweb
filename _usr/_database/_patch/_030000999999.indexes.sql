@@ -4670,25 +4670,12 @@ ALTER TABLE `tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCR
 -- tipologie_documenti
 ALTER TABLE `tipologie_documenti`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `codice_sdi` (`codice_sdi`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `sigla` (`sigla`),
-	ADD KEY `numerazione`(`numerazione`),
-	ADD KEY `se_fattura` (`se_fattura`),
-	ADD KEY `se_nota_credito` (`se_nota_credito`),
-	ADD KEY `se_nota_debito` (`se_nota_debito`),
-	ADD KEY `se_trasporto` (`se_trasporto`),
-	ADD KEY `se_pro_forma` (`se_pro_forma`),
-	ADD KEY `se_offerta` (`se_offerta`),
-	ADD KEY `se_ordine` (`se_ordine`),
-	ADD KEY `se_ricevuta` (`se_ricevuta`),
-	ADD KEY `se_ecommerce` (`se_ecommerce`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_missione`,`se_ricevuta`,`se_trasporto`,`se_ecommerce`);
 
 -- | 030000052601
 
