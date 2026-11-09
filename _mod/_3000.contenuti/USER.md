@@ -139,7 +139,8 @@ La linguetta **azioni pagina** ha due riquadri.
   di menu… ). Chiede conferma.
 - **pubblica pagina** porta la pagina e le sue entità collegate su un altro ambiente del sito. Si sceglie la
   **destinazione** fra gli altri ambienti configurati; la finestra mostra quanti file verranno trasferiti e
-  una barra di avanzamento.
+  una barra di avanzamento. Se la pubblicazione riesce la scheda si ricarica; se non riesce ( per esempio
+  perché la destinazione non è raggiungibile ) la finestra resta aperta e mostra in rosso il motivo.
 
 > **attenzione** — durante la pubblicazione non si chiude la finestra finché il trasferimento non è
 > finito.

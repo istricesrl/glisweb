@@ -36,14 +36,29 @@
                 // server
                 $server = $cf['mysql']['servers'][ $cf['mysql']['profiles'][ $_REQUEST['target'] ]['servers'][0] ];
 
+                // inizializzo la connessione al database target
+                $cTarget = mysqli_init();
+
+                // riduco il tempo massimo di connessione: senza, un target irraggiungibile tiene ferma la modale per
+                // default_socket_timeout ( 60 secondi ) prima di rispondere ( segnalato da gimbe il 09/11/2026 )
+                mysqli_options( $cTarget, MYSQLI_OPT_CONNECT_TIMEOUT, 5 );
+
                 // connessione al database target
-                $cTarget = mysqli_connect(
-                    $server['address'],
-                    $server['username'],
-                    $server['password'],
-                    $server['db'],
-                    ( ( ! empty( $server['port'] ) ) ? (int) $server['port'] : NULL )
-                );
+                // NOTA su PHP 8 mysqli_real_connect() lancia un'eccezione invece di restituire false
+                try {
+                    if( ! @mysqli_real_connect(
+                        $cTarget,
+                        $server['address'],
+                        $server['username'],
+                        $server['password'],
+                        $server['db'],
+                        ( ( ! empty( $server['port'] ) ) ? (int) $server['port'] : NULL )
+                    ) ) {
+                        $cTarget = false;
+                    }
+                } catch( Exception $e ) {
+                    $cTarget = false;
+                }
 
                 // verifico la connessione target
                 if( ! empty( $cTarget ) ) {
@@ -452,6 +467,9 @@
         $status['err'][] = 'ID della pagina non passato';
 
     }
+
+    // esito complessivo: la modale di pubblicazione ricarica la pagina solo se e' OK, altrimenti mostra gli errori
+    $status['esito'] = ( empty( $status['err'] ) ) ? 'OK' : 'KO';
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
