@@ -278,7 +278,8 @@
                 @ssh2_sftp_mkdir( $conn['sftp'], dirname( $remoteFile ), 0755, true );
             }
 
-            $result = @copy( $localFile, 'ssh2.sftp://' . intval( $conn['sftp'] ) . $remoteFile );
+            $result = @copy( $localFile, ftpSftpUrl( $conn, $remoteFile, $link ) );
+            ftpSftpUnlink( $conn, $link );
 
             if( $result == false ) {
                 logger( 'impossibile caricare il file ' . $localFile . ' su ' . $remoteFile, 'ftp', LOG_ERR );
@@ -344,7 +345,8 @@
 
         // SFTP
         if( is_array( $conn ) ) {
-            $result = @copy( 'ssh2.sftp://' . intval( $conn['sftp'] ) . ftpSftpPath( $conn, $remoteFile ), $localFile );
+            $result = @copy( ftpSftpUrl( $conn, ftpSftpPath( $conn, $remoteFile ), $link ), $localFile );
+            ftpSftpUnlink( $conn, $link );
         } else {
             $type = ftpGetUploadTypeByFile( $remoteFile );
             $result = ftp_get( $conn, $localFile, $remoteFile, $type );
@@ -402,7 +404,8 @@
         // SFTP
         if( is_array( $conn ) ) {
             $dir = ftpSftpPath( $conn, $path );
-            $files = @scandir( 'ssh2.sftp://' . intval( $conn['sftp'] ) . $dir );
+            $files = @scandir( ftpSftpUrl( $conn, $dir, $link ) );
+            ftpSftpUnlink( $conn, $link );
             if( empty( $files ) ) {
                 return array();
             }
@@ -471,5 +474,59 @@
         }
 
         return $conn['home'] . $path;
+
+    }
+
+    /**
+     * restituisce l'URL del wrapper ssh2.sftp:// per un percorso remoto SFTP assoluto
+     *
+     * Il wrapper legge il percorso come un URL e non lo decodifica: un # o un ? nel nome ne tronca il resto, che diventa
+     * frammento o query ( var/contenuti/#21OTT.pdf diventa var/contenuti/, e copy() si ferma perché la destinazione è una
+     * cartella ), e scritto come %23 o %3F resta letterale nel nome. Il 10/11/2026 la pubblicazione SFTP di gimbe ha
+     * perso così 95 file. Per questi percorsi la funzione crea nella cartella di login un collegamento simbolico dal nome
+     * neutro che punta al percorso vero, anche se non esiste ancora, e restituisce l'URL del collegamento, che chi la
+     * chiama toglie con ftpSftpUnlink() dopo l'uso. Le funzioni ssh2_sftp_*() prendono il percorso così com'è e non
+     * hanno bisogno di niente.
+     *
+     * @param       $conn       array       oggetto connessione SFTP restituito da ftpConnect()
+     * @param       $path       string      percorso remoto assoluto
+     * @param       $link       string      il collegamento creato, NULL se non è servito; modificato sul posto
+     *
+     * @return      string      l'URL da passare a copy(), scandir() e simili
+     *
+     */
+    function ftpSftpUrl( $conn, $path, &$link = NULL ) {
+
+        $link = NULL;
+
+        if( strpbrk( $path, '#?' ) === false ) {
+            return 'ssh2.sftp://' . intval( $conn['sftp'] ) . $path;
+        }
+
+        $link = $conn['home'] . '.glisweb.' . md5( $path . microtime( true ) . mt_rand() );
+
+        if( @ssh2_sftp_symlink( $conn['sftp'], $path, $link ) === false ) {
+            logger( 'impossibile creare il collegamento ' . $link . ' per ' . $path, 'ftp', LOG_ERR );
+            $link = NULL;
+        }
+
+        return 'ssh2.sftp://' . intval( $conn['sftp'] ) . ( ( $link === NULL ) ? $path : $link );
+
+    }
+
+    /**
+     * toglie il collegamento simbolico creato da ftpSftpUrl()
+     *
+     * @param       $conn       array       oggetto connessione SFTP restituito da ftpConnect()
+     * @param       $link       string      il collegamento restituito da ftpSftpUrl(), NULL se non ce n'è
+     *
+     * @return      void
+     *
+     */
+    function ftpSftpUnlink( $conn, $link ) {
+
+        if( $link !== NULL ) {
+            @ssh2_sftp_unlink( $conn['sftp'], $link );
+        }
 
     }

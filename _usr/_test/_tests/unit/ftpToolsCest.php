@@ -145,6 +145,17 @@ class ftpToolsCest
         $I->see('bool(false)');
     }
 
+    // ftpPutFile(), ftpListFiles() e ftpGetFile() in SFTP -> # e ? nei nomi, che il wrapper ssh2.sftp:// leggerebbe come URL
+    public function sftpNomiConCancelletto(UnitTester $I)
+    {
+        $this->sftp( $I );
+        $I->amOnPage('/_usr/_examples/_lib/_ftp.tools/_ftpPutFile.03.php');
+        $I->see('caricato: bool(true)');
+        $I->see('elencato: bool(true)');
+        $I->see('riscaricato uguale: bool(true)');
+        $I->see('collegamenti rimasti: int(0)');
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {
