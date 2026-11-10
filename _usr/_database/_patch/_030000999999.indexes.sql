@@ -5016,10 +5016,13 @@ ALTER TABLE `tipologie_risorse` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologie_sconti
 ALTER TABLE `tipologie_sconti`
 	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `nome` (`nome`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
 -- | 030000055901
 

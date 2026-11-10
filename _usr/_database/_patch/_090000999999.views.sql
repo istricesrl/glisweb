@@ -8078,8 +8078,15 @@ CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 CREATE OR REPLACE VIEW `tipologie_sconti_view` AS
 	SELECT
 		tipologie_sconti.id,
+		tipologie_sconti.id_genitore,
+		tipologie_sconti.ordine,
+		tipologie_sconti.codice,
 		tipologie_sconti.nome,
-		tipologie_sconti.nome AS __label__
+		tipologie_sconti.html_entity,
+		tipologie_sconti.font_awesome,
+		tipologie_sconti.id_account_inserimento,
+		tipologie_sconti.id_account_aggiornamento,
+		tipologie_sconti_path( tipologie_sconti.id ) AS __label__
 	FROM tipologie_sconti
 ;
 

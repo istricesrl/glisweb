@@ -8265,18 +8265,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (                  --
 -- | 010000055900
 
 -- tipologie_sconti
--- tipologia: tabella standard
+-- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
 -- funzione: contiene le tipologie di sconti
 --
--- questa tabella contiene le tipologie di sconti
+-- dice di che genere è uno sconto ( sconti.id_tipologia ): parte vuota e la riempie l'utente, il 050 non carica righe
+-- e nessun codice del framework la usa per decidere; la legge la tendina della gestione sconti del modulo listini
 --
-CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
-  `id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA se il modulo listini vorrà comportamenti diversi per tipo di sconto ( quantità, promozione… ) nasceranno come
+-- flag se_* di classe sulle radici, col loro 050 ( punto 6 del canone, riga 221 )
+--
+CREATE TABLE IF NOT EXISTS `tipologie_sconti` (                   --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
+  `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
+  `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000056000
 
