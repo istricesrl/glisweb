@@ -8288,19 +8288,24 @@ CREATE OR REPLACE VIEW todo_matricole_view AS
 -- | 090000062000
 
 -- udm_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW udm_view AS
 	SELECT
 		udm.id,
 		coalesce( udm.id_base, udm.id ) AS id_base,
-		coalesce( udm.conversione, 1 ) AS conversione,
 		udm.nome,
 		udm.sigla,
+		coalesce( udm.conversione, 1 ) AS conversione,
 		udm.se_lunghezza,
 		udm.se_volume,
 		udm.se_peso,
 		udm.se_tempo,
 		udm.se_quantita,
 		udm.se_area,
+		udm.url_riferimento,
+		udm.note,
+		udm.id_account_inserimento,
+		udm.id_account_aggiornamento,
 		udm.sigla AS __label__
 	FROM udm
 ;

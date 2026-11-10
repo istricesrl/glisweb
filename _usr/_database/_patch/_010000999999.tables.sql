@@ -8599,25 +8599,40 @@ CREATE TABLE IF NOT EXISTS `todo_matricole` (                   --
 -- | 010000062000
 
 -- udm
--- tipologia: tabella standard
+-- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le unita di misura, con la conversione verso la propria base
-CREATE TABLE IF NOT EXISTS `udm` (
-  `id` bigint(20) NOT NULL,
-  `id_base` bigint(20) DEFAULT NULL,
-  `conversione` float DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `sigla` char(8) DEFAULT NULL,
-  `url_riferimento` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `se_lunghezza` tinyint(1) DEFAULT NULL,
-  `se_volume` tinyint(1) DEFAULT NULL,
-  `se_peso` tinyint(1) DEFAULT NULL,
-  `se_tempo` tinyint(1) DEFAULT NULL,
-  `se_quantita` tinyint(1) DEFAULT NULL,
-  `se_area` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le unità di misura, con la conversione verso l'unità base della loro grandezza
+--
+-- le unità di misura dicono in che unità sono espresse quantità e misure ( le righe dei documenti, le scorte dei mastri,
+-- i blocchi misura di articoli, colli, tipologie di collo e corrispondenza ): il 050 carica a id fissi le unità del
+-- sistema metrico, quelle del tempo e i pezzi, che l'utente può modificare o eliminare, e accanto a quelle l'utente
+-- aggiunge le sue ( p.es. le unità di confezionamento, come scatole e risme ); i flag se_* dicono a quale grandezza
+-- appartiene l'unità e filtrano le tendine dei blocchi misura
+--
+-- NOTA id_base punta all'unità base della grandezza ( mm, mg, ml, s, mm² ), che ha id_base vuoto e conversione 1; è un
+-- livello solo, non un albero, e la vista dà a ogni base sé stessa come base; conversione dice quante unità base vale
+-- una unità della riga ( il kilometro vale 1000000 millimetri ), ed è double perché un float tiene solo sette cifre
+-- NOTA un'unità di area è un'area e non una lunghezza: ha se_area e non se_lunghezza
+CREATE TABLE IF NOT EXISTS `udm` (                            --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `id_base` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'unità base della grandezza
+  `nome` char(255) DEFAULT NULL,                              -- nome per esteso dell'unità di misura
+  `sigla` char(8) DEFAULT NULL,                               -- sigla dell'unità di misura, con cui la si mostra
+  `conversione` double DEFAULT NULL,                          -- quante unità base vale una unità di questa riga
+  `se_lunghezza` tinyint(1) DEFAULT NULL,                     -- flag per le unità di lunghezza
+  `se_volume` tinyint(1) DEFAULT NULL,                        -- flag per le unità di volume
+  `se_peso` tinyint(1) DEFAULT NULL,                          -- flag per le unità di peso
+  `se_tempo` tinyint(1) DEFAULT NULL,                         -- flag per le unità di tempo
+  `se_quantita` tinyint(1) DEFAULT NULL,                      -- flag per le unità di quantità ( pezzi, confezioni )
+  `se_area` tinyint(1) DEFAULT NULL,                          -- flag per le unità di area
+  `url_riferimento` char(255) DEFAULT NULL,                   -- pagina che definisce l'unità di misura
+  `note` text DEFAULT NULL,                                   -- note sull'unità di misura
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000062600
 

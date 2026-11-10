@@ -28,7 +28,7 @@ STANDARD = frozenset( (
     'modalita_pagamento', 'periodicita', 'provincie', 'regimi', 'regioni',
     'ruoli_anagrafica', 'ruoli_articoli', 'ruoli_audio', 'ruoli_file', 'ruoli_immagini',
     'ruoli_indirizzi', 'ruoli_mail', 'ruoli_matricole', 'ruoli_prodotti', 'ruoli_video',
-    'settori', 'stati', 'stati_lingue', 'udm', 'valute',
+    'settori', 'stati', 'stati_lingue', 'valute',
 ) )
 
 ASSISTITE = frozenset( (
@@ -38,7 +38,7 @@ ASSISTITE = frozenset( (
     'tipologie_indirizzi', 'tipologie_licenze', 'tipologie_luoghi', 'tipologie_mastri',
     'tipologie_notizie', 'tipologie_pagamenti', 'tipologie_popup', 'tipologie_prodotti',
     'tipologie_progetti', 'tipologie_pubblicazioni', 'tipologie_risorse',
-    'tipologie_telefoni', 'tipologie_todo', 'tipologie_url',
+    'tipologie_telefoni', 'tipologie_todo', 'tipologie_url', 'udm',
 ) )
 
 GESTITE = frozenset( (

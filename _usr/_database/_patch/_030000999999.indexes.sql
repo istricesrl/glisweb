@@ -5231,8 +5231,12 @@ ALTER TABLE `todo_matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- udm
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
-	ADD KEY `id_base` (`id_base`);
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `sigla` (`sigla`),
+	ADD KEY `id_base` (`id_base`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_base`,`nome`,`sigla`,`conversione`);
 
 -- | 030000062001
 
