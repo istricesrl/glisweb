@@ -8500,7 +8500,9 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 CREATE OR REPLACE VIEW `valute_view` AS
 	SELECT
 		valute.id,
+		valute.nome,
 		valute.iso4217,
+		valute.decimali,
 		valute.html_entity,
 		valute.utf8,
 		valute.iso4217 AS __label__

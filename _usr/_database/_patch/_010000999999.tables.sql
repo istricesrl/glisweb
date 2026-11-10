@@ -8816,16 +8816,25 @@ CREATE TABLE IF NOT EXISTS `valutazioni_certificazioni` (
 -- tipologia: tabella standard
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le valute utilizzate nel sistema
+-- funzione: contiene le valute correnti dello standard ISO 4217
 --
--- questa tabella contiene le valute utilizzate nel sistema, con le informazioni relative al codice ISO 4217,
--- all'entità HTML, e ai caratteri UTF-8 associati
+-- questa tabella contiene le valute correnti dello standard ISO 4217, una per riga, col codice alfabetico, il
+-- numero di decimali ( la minor unit dello standard: 2 per l'euro, 0 per lo yen, 3 per il dinaro kuwaitiano ) e il
+-- simbolo; la leggono i listini, gli sconti, le campagne, le modalita' di spedizione, le valutazioni e i movimenti
+-- dei mastri di denaro per dire in che valuta e' espresso un importo; la moneta di conto del deploy non sta qui ma
+-- nella configurazione ( $cf['localization']['currency']['iso4217'] )
+--
+-- NOTA la tabella fa parte dell'applicazione: ha gli stessi id su tutti i deploy ( l'euro e' 1, le altre seguono in
+-- ordine di codice ) e si aggiorna col dataserver, l'utente non la modifica
+-- NOTA utf8 e' NULL per le valute che non hanno un simbolo proprio: chi la mostra ripiega sul codice
 --
 CREATE TABLE IF NOT EXISTS `valute` (
-  `id` bigint(20) NOT NULL,
-  `iso4217` char(3) DEFAULT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `utf8` char(1) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `nome` char(255) NOT NULL,                                    -- nome della valuta
+  `iso4217` char(3) NOT NULL,                                   -- codice alfabetico ISO 4217
+  `decimali` int(1) DEFAULT NULL,                               -- numero di decimali ( minor unit ISO 4217 )
+  `html_entity` char(16) DEFAULT NULL,                          -- simbolo della valuta come entita' HTML
+  `utf8` char(8) DEFAULT NULL                                   -- simbolo della valuta in UTF-8
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000063200

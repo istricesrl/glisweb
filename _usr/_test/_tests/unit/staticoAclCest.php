@@ -109,4 +109,17 @@
 
         }
 
+        // valute come le altre tabelle standard di consultazione: le gestisce solo roots, lo staff le legge
+        // ( fino al 2026-11-10 non aveva una voce; punto 6 dello schema canonico, riga 234 )
+        public function valute( UnitTester $I ) {
+
+            global $cf;
+
+            $chiavi = $this->chiavi();
+
+            $I->assertSame( 1, $chiavi['valute'] ?? 0, 'valute deve essere dichiarata una volta sola' );
+            $I->assertSame( $cf['auth']['permissions']['udm'], $cf['auth']['permissions']['valute'] ?? NULL, 'valute come udm' );
+
+        }
+
     }

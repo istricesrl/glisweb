@@ -5344,7 +5344,9 @@ ALTER TABLE `valutazioni_certificazioni` MODIFY `id` bigint(20) NOT NULL AUTO_IN
 -- valute
 ALTER TABLE `valute`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`iso4217`);
+	ADD UNIQUE KEY `unica` (`iso4217`),
+	ADD UNIQUE KEY `unica_nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`iso4217`,`decimali`);
 
 -- | 030000063001
 

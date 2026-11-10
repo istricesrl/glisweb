@@ -405,6 +405,10 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff' )
         ),
+        'valute' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff' )
+        ),
         'listini' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
