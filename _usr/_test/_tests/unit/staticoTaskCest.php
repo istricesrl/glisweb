@@ -44,4 +44,15 @@
 
         }
 
+        // il resoconto di _security.clean.php va nel log a LOG_WARNING: la produzione lo scrive ancora, e da LOG_CRIT
+        // in su il controllo dei log lo contava come errore grave anche quando era solo un possibile falso positivo
+        public function securityCleanResocontoWarning( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_api/_task/_security.clean.php' );
+
+            $I->assertStringContainsString( "logWrite( \$resoconto, 'security', LOG_WARNING )", $codice );
+            $I->assertDoesNotMatchRegularExpression( "/logWrite\(\s*\\\$resoconto[^;]*LOG_(CRIT|ALERT|EMERG)/", $codice );
+
+        }
+
     }

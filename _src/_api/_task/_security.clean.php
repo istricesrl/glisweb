@@ -17,7 +17,9 @@
      *
      * Gli allarmi sono i segni di un falso positivo: ogni sblocco con la verifica umana, e un bando o un blocco su una
      * richiesta con un referer dello stesso sito. Quando ce ne sono il resoconto va anche nel log del framework al
-     * livello LOG_CRIT, così lo vede chi guarda i log.
+     * livello LOG_WARNING, così lo vede chi guarda i log: è il livello più basso che la produzione scrive ancora, e
+     * non più alto perché un possibile falso positivo non è un guasto, e da LOG_CRIT in su il controllo dei log lo
+     * conta come errore grave.
      *
      * Va pianificato una volta al giorno, dopo mezzanotte, con una riga nella tabella task:
      *
@@ -103,7 +105,7 @@
 
     // con gli allarmi il resoconto va anche nel log del framework
     if( ! empty( $status['allarmi'] ) ) {
-        logWrite( $resoconto, 'security', LOG_CRIT );
+        logWrite( $resoconto, 'security', LOG_WARNING );
     }
 
     // output
