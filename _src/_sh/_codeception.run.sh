@@ -83,6 +83,13 @@ while (echo > /dev/tcp/127.0.0.1/$PORTA_FTP) 2>/dev/null; do
     PORTA_FTP=$(( PORTA_FTP + 1 ))
 done
 
+## porta del server SFTP di prova
+# il server SFTP dei test e' un sshd non privilegiato su 127.0.0.1, alla prima porta libera da 2222 in su
+PORTA_SFTP=2222
+while (echo > /dev/tcp/127.0.0.1/$PORTA_SFTP) 2>/dev/null; do
+    PORTA_SFTP=$(( PORTA_SFTP + 1 ))
+done
+
 ## esecuzione come www-data se lanciato da root
 if [ "$(id -u)" = "0" ]; then
     ESEGUI="sudo -u www-data env HOME=$(pwd)/var/test GLISWEB_CHROMEDRIVER_PORT=$PORTA"
@@ -177,6 +184,29 @@ head -c 48 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 32 > var/test/lo
 chmod 640 var/test/rest.mock var/test/log.remoti
 [ -f var/test/ftp.mock ] && chmod 640 var/test/ftp.mock
 
+## server SFTP di prova
+# un sshd lanciato dall'utente dei test, che accetta solo lui, solo con la chiave generata qui e solo in SFTP, con la
+# cartella di partenza in var/test/sftp.mock.d/home/; host key e chiave del client sono nuove a ogni giro e in PEM,
+# che e' quello che legge il libssh2 di Debian 10. Senza sshd, ssh-keygen o l'estensione ssh2 i test SFTP si saltano
+rm -rf var/test/sftp.mock.d
+rm -f var/test/sftp.mock
+if [ -x /usr/sbin/sshd ] && command -v ssh-keygen > /dev/null && php -m | grep -qx ssh2; then
+    if [ "$(id -u)" = "0" ]; then UTENTE_SFTP=www-data; else UTENTE_SFTP=$(id -un); fi
+    SFTP_DIR=$(pwd)/var/test/sftp.mock.d
+    mkdir -p $SFTP_DIR/home
+    ssh-keygen -q -t rsa -b 2048 -m PEM -N '' -f $SFTP_DIR/host > /dev/null
+    ssh-keygen -q -t rsa -b 2048 -m PEM -N '' -f $SFTP_DIR/client > /dev/null
+    cp $SFTP_DIR/client.pub $SFTP_DIR/authorized_keys
+    printf '%s\n' "Port $PORTA_SFTP" "ListenAddress 127.0.0.1" "HostKey $SFTP_DIR/host" "PidFile $SFTP_DIR/sshd.pid" \
+        "AuthorizedKeysFile $SFTP_DIR/authorized_keys" "PasswordAuthentication no" "ChallengeResponseAuthentication no" \
+        "UsePAM no" "StrictModes no" "AllowUsers $UTENTE_SFTP" "Subsystem sftp internal-sftp" \
+        "ForceCommand internal-sftp -d $SFTP_DIR/home" > $SFTP_DIR/sshd_config
+    SFTP_IMPRONTA=$(ssh-keygen -l -E md5 -f $SFTP_DIR/host.pub | awk '{print $2}' | sed 's/^MD5://; s/://g')
+    printf '%s\n%s\n%s\n' $PORTA_SFTP $SFTP_IMPRONTA $UTENTE_SFTP > var/test/sftp.mock
+    chmod 600 $SFTP_DIR/host $SFTP_DIR/client
+    chmod 640 var/test/sftp.mock
+fi
+
 ## permessi
 if [ "$(id -u)" = "0" ]; then
     chown -R www-data:www-data var/test var/spool/test
@@ -216,6 +246,12 @@ arresto() {
     fi
     rm -f var/test/ftp.mock var/test/log.remoti
 
+    # server SFTP di prova
+    if [ -f var/test/sftp.mock.d/sshd.pid ]; then
+        kill $(cat var/test/sftp.mock.d/sshd.pid) 2>/dev/null
+    fi
+    rm -f var/test/sftp.mock
+
     # reCAPTCHA riacceso anche se la suite si e' interrotta ( vedi _src/_config/_115.google.php )
     rm -f var/test/recaptcha.off
 
@@ -253,6 +289,16 @@ if [ -f var/test/ftp.mock ]; then
     done
 fi
 
+## avvio del server SFTP di prova
+# sshd va da solo in background e scrive il suo PID in sshd.pid, da cui lo spegne arresto()
+if [ -f var/test/sftp.mock ]; then
+    $ESEGUI /usr/sbin/sshd -f $(pwd)/var/test/sftp.mock.d/sshd_config -E $(pwd)/var/test/sftp.mock.d/sshd.log
+    for i in $(seq 30); do
+        (echo > /dev/tcp/127.0.0.1/$PORTA_SFTP) 2>/dev/null && break
+        sleep 0.1
+    done
+fi
+
 ## generazione degli actor
 $ESEGUI $CODECEPT build -c _usr/_test/codeception.yml --no-ansi > /dev/null
 CODECEPTION_EXIT_CODE=$?
@@ -262,6 +308,7 @@ if [ "$CODECEPTION_EXIT_CODE" = "0" ]; then
     for s in $SUITE; do
         touch var/test/rest.mock var/test/log.remoti
         [ -f var/test/ftp.mock ] && touch var/test/ftp.mock
+        [ -f var/test/sftp.mock ] && touch var/test/sftp.mock
         $ESEGUI $CODECEPT run $s -c _usr/_test/codeception.yml --no-colors --steps --html $s.report.html --xml $s.report.xml "$@" 2>&1 | tee var/test/output/$s.log
         ESITO=${PIPESTATUS[0]}
         [ "$ESITO" = "0" ] || CODECEPTION_EXIT_CODE=$ESITO

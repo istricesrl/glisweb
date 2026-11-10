@@ -138,7 +138,9 @@ La linguetta **azioni pagina** ha due riquadri.
 - **duplica pagina** crea una copia della pagina e di tutto ciò che ha collegato ( immagini, video, voci
   di menu… ). Chiede conferma.
 - **pubblica pagina** porta la pagina e le sue entità collegate su un altro ambiente del sito. Si sceglie la
-  **destinazione** fra gli altri ambienti configurati; la finestra mostra quanti file verranno trasferiti e
+  **destinazione** fra gli altri ambienti configurati. Dei file si mandano solo quelli della pagina
+  ( immagini, file e video collegati ) e quelli del suo template, e di questi solo quelli più recenti della
+  copia già presente sulla destinazione; la finestra mostra quanti file verranno trasferiti e
   una barra di avanzamento. Se la pubblicazione riesce la scheda si ricarica; se non riesce ( per esempio
   perché la destinazione non è raggiungibile ) la finestra resta aperta e mostra in rosso il motivo.
 

@@ -14,6 +14,26 @@
 
     class pagineUploadEsitoCest {
 
+        // il task carica i file con _ftp.tools.php ( FTP o SFTP secondo il server ), solo quelli della pagina e del
+        // template, e solo se piu' recenti di quelli della destinazione ( decisione di Fabio del 09/11/2026 )
+        public function fileDellaPaginaConLaLibreria( BackendTester $I ) {
+
+            $task = file_get_contents( DIR_BASE . '_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php' );
+
+            // niente piu' chiamate dirette a ftp_*, che non sanno l'SFTP
+            $I->assertEquals( 0, preg_match( '/\bftp_[a-z_]+\s*\(/', $task ), 'il task chiama ancora ftp_* direttamente' );
+            foreach( array( 'ftpConnect(', 'ftpGetFileTime(', 'ftpPutFile(', 'ftpClose(' ) as $f ) {
+                $I->assertStringContainsString( $f, $task );
+            }
+
+            // non si manda piu' tutta var/contenuti/
+            $I->assertStringNotContainsString( 'getRecursiveFileList( DIR_VAR_CONTENUTI', $task );
+
+            // i file collegati alla pagina sono immagini, file e video
+            $I->assertStringContainsString( "array( 'immagini', 'file', 'video' ) as \$entita ) {\n                                    \$toFtp", $task );
+
+        }
+
         // su uno stage senza server il task risponde KO col motivo
         public function esitoKoSenzaServer( BackendTester $I ) {
 
