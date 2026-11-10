@@ -9,7 +9,11 @@
      * esisteva solo in italiano, e anche quella italiana restava vuota finche' la configurazione aveva il titolare sotto
      * privacy.titolare, la forma vecchia
      *
-     * il test apre la pagina in ogni lingua attiva del sito e verifica che ci sia il testo con la denominazione del titolare;
+     * lo stesso giorno il testo italiano citava ancora gli artt. 7, 13 e 29 del D.Lgs. 196/2003, abrogati dal D.Lgs. 101/2018, e non
+     * diceva del reclamo al Garante, obbligatorio per l'art. 13, par. 2, lett. d del GDPR
+     *
+     * il test apre la pagina in ogni lingua attiva del sito e verifica che ci sia il testo con la denominazione del titolare
+     * e il rimando al Garante per il reclamo;
      * un deploy senza titolare in configurazione mostra la pagina "in fase di aggiornamento", e lo si salta
      *
      */
@@ -38,6 +42,7 @@
 
                 $I->dontSee( 'Unable to find template' );
                 $I->see( $cf['privacy']['persone']['titolare']['denominazione'], 'main' );
+                $I->seeElement( 'main a[href="https://www.garanteprivacy.it"]' );
 
             }
 
