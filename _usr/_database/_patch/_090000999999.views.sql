@@ -8313,39 +8313,41 @@ CREATE OR REPLACE VIEW udm_view AS
 -- | 090000062600
 
 -- url_view
-CREATE OR REPLACE VIEW url_view AS                            --
-	SELECT                                                    --
-		url.id,                                               --
-		url.id_tipologia,                                     --
-		tipologie_url.nome AS tipologia,                      -- nome della tipologia
-		url.id_anagrafica,                                    --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat( a1.cognome, ' ', a1.nome ),               --
-            ''                                                --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		url.url,                                              --
-		url.nome,                                             --
-		url.username,                                         --
-		url.password,                                         --
-		url.id_account_inserimento,                           --
-		url.id_account_aggiornamento,                         --
-		concat_ws(                                            --
-			' ',                                              --
-			url.url,                                          --
-			tipologie_url.nome,                               --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ),           --
-                ''                                            --
-            )                                                 --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM url                                                  --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = url.id_anagrafica                      --
-		LEFT JOIN tipologie_url                               --
-            ON tipologie_url.id = url.id_tipologia            --
-;                                                             --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `url_view` AS
+	SELECT
+		url.id,
+		url.id_tipologia,
+		tipologie_url.nome AS tipologia,
+		url.ordine,
+		url.nome,
+		url.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		url.id_organizzazione,
+		organizzazioni.nome AS organizzazione,
+		url.url,
+		url.note,
+		url.id_account_inserimento,
+		url.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			url.url,
+			tipologie_url.nome,
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				),
+				organizzazioni.nome
+			)
+		) AS __label__
+	FROM url
+		LEFT JOIN tipologie_url ON tipologie_url.id = url.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = url.id_anagrafica
+		LEFT JOIN organizzazioni ON organizzazioni.id = url.id_organizzazione
+;
 
 -- | 090000062901
 

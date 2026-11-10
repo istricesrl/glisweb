@@ -5247,14 +5247,17 @@ ALTER TABLE `udm` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- url
 ALTER TABLE `url`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_anagrafica`,`url`),
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `url` (`url`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`url`); 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`url`),
+	ADD UNIQUE KEY `unica_organizzazione` (`id_organizzazione`,`url`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
+	ADD KEY `url` (`url`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`nome`,`id_anagrafica`,`id_organizzazione`,`url`);
 
 -- | 030000062601
 

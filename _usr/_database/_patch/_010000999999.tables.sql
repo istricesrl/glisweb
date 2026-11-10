@@ -8640,25 +8640,43 @@ CREATE TABLE IF NOT EXISTS `udm` (                            --
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene gli URL delle anagrafiche
+-- funzione: contiene gli URL delle anagrafiche e dei nodi organizzativi
 --
--- questa tabella contiene gli URL delle anagrafiche, con le informazioni relative alla tipologia, al nome,
--- al nome utente e alla password, oltre che all'URL vero e proprio
+-- questa tabella contiene gli indirizzi web, una riga per indirizzo, con la tipologia ( tipologie_url: web, social,
+-- servizi e i loro rami, p.es. sito, blog, LinkedIn ), un nome descrittivo e le note; l'indirizzo appartiene a
+-- un'anagrafica oppure a un nodo di organizzazioni ( p.es. il sito di una filiale )
 --
-CREATE TABLE IF NOT EXISTS `url` (                            --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia dell'URL
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica a cui è associato l'URL
-  `url` char(255) DEFAULT NULL,                               -- URL
-  `nome` char(128) DEFAULT NULL,                              -- nome dell'URL
-  `username` char(128) DEFAULT NULL,                          -- nome utente per l'accesso all'URL
-  `password` char(128) DEFAULT NULL,                          -- password per l'accesso all'URL
-  `note` text DEFAULT NULL,                                   -- note sull'URL
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito l'URL
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato l'URL
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA un URL ha un solo proprietario: id_anagrafica oppure id_organizzazione, mai tutti e due; il proprietario di un
+-- nodo è la prima anagrafica che si incontra risalendo i nodi, e la ricerca degli URL di un'anagrafica non risale
+-- l'albero ( decisione del 2026-10-21, comune ai recapiti: mail, telefoni, url ); per questo le chiavi uniche sono due,
+-- una per proprietario, perché il NULL dell'altro svuoterebbe una chiave unica sola; la tipologia non entra nelle
+-- chiavi uniche: lo stesso indirizzo è una cosa sola, anche se lo si potrebbe classificare in due modi
+--
+-- NOTA l'URL di default è il primo nell'ordine ( ORDER BY ordine IS NULL, ordine, id ); lo stesso vale dentro un
+-- filtro: il sito di default è il primo fra quelli di tipologia sito ( decisione del 2026-10-19 sui recapiti,
+-- estesa a url il 2026-11-10 )
+--
+-- NOTA le chiavi esterne verso l'anagrafica e verso il nodo sono CASCADE: un URL non ha senso senza il suo
+-- proprietario, e chi scioglie un nodo ne sposta prima gli URL
+--
+-- NOTA fino al 2026-11-10 la tabella aveva anche username e password, la parte credenziali di un sistema rudimentale
+-- per associare utente e password agli URL ( account.id_url ); sono uscite col sistema, che andrà rifatto con una
+-- tabella apposita
+--
+CREATE TABLE IF NOT EXISTS `url` (                              --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia dell'URL ( sito, blog, LinkedIn… )
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine dell'URL fra quelli del proprietario, il primo è quello di default
+  `nome` char(255) DEFAULT NULL,                                  -- nome descrittivo dell'URL
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica a cui appartiene l'URL
+  `id_organizzazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per il nodo organizzativo a cui appartiene l'URL, in alternativa all'anagrafica
+  `url` char(255) DEFAULT NULL,                                   -- URL comprensivo di protocollo
+  `note` text DEFAULT NULL,                                       -- note sull'URL
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito l'URL
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato l'URL
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000062900
 
