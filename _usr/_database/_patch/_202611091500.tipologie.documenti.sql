@@ -8,6 +8,8 @@
 -- patch sposta non hanno documenti su nessun database misurato, e le chiavi entranti sono comunque ON UPDATE CASCADE.
 --
 -- Cosa fa:
+-- - porta codice a char(32), la misura del canone: dove è più corto ( eurosnodi crm char(8) ) gli UPDATE IGNORE
+--   sotto troncherebbero in silenzio i codici lunghi del framework;
 -- - aggiunge codice_sdi dopo codice, con la sua KEY, e ci copia i codici TD che oggi stanno in codice;
 -- - riordina le colonne ( nome, sigla, icone, flag di classe, qualità, numerazione, stampa_pdf ), allarga nome a
 --   char(255), toglie le KEY su nome, sigla, numerazione e sui singoli flag e ricrea indice;
@@ -30,6 +32,7 @@
 
 -- tipologie_documenti: codice_sdi, nome a char(255), colonne riordinate, via le KEY su nome, sigla, numerazione e flag
 ALTER TABLE `tipologie_documenti`
+	MODIFY `codice` char(32) DEFAULT NULL,
 	ADD COLUMN IF NOT EXISTS `codice_sdi` char(32) DEFAULT NULL AFTER `codice`,
 	MODIFY `nome` char(255) DEFAULT NULL AFTER `codice_sdi`,
 	MODIFY `sigla` char(16) DEFAULT NULL AFTER `nome`,
@@ -79,12 +82,20 @@ UPDATE `tipologie_documenti` SET `codice_sdi` = `codice` WHERE `codice_sdi` IS N
 -- tipologie_documenti: le righe che sui deploy hanno un id diverso dal canone
 UPDATE IGNORE `tipologie_documenti` SET `id` = 37
 	WHERE `id` <> 37 AND `id_genitore` = 1 AND `nome` = 'acquisti da San Marino con IVA (fattura cartacea)';
+
+-- | 202611091504
+
+-- tipologie_documenti: le righe che sui deploy hanno un id diverso dal canone
 UPDATE IGNORE `tipologie_documenti` SET `id` = 38
 	WHERE `id` <> 38 AND `id_genitore` = 1 AND `nome` = 'comunicazione per omessa o irregolare fatturazione';
+
+-- | 202611091505
+
+-- tipologie_documenti: le righe che sui deploy hanno un id diverso dal canone
 UPDATE IGNORE `tipologie_documenti` SET `id` = 35
 	WHERE `id` <> 35 AND `nome` = 'missione di prelievo';
 
--- | 202611091504
+-- | 202611091506
 
 -- tipologie_documenti: le righe canoniche che mancano ( sulle righe col codice SdI codice resta il TipoDocumento, vedi sopra )
 INSERT IGNORE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `codice_sdi`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_nota_debito`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_missione`, `se_ricevuta`, `se_trasporto`, `se_ecommerce`, `numerazione`, `stampa_pdf`) VALUES
@@ -127,32 +138,96 @@ INSERT IGNORE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice
 	(37, 1, NULL, 'TD28', 'TD28', 'acquisti da San Marino con IVA (fattura cartacea)', 'integr.', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'F', NULL),
 	(38, 1, NULL, 'TD29', 'TD29', 'comunicazione per omessa o irregolare fatturazione', 'comunic.', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'F', NULL);
 
--- | 202611091505
+-- | 202611091507
 
 -- tipologie_documenti: la missione di prelievo, che alcuni deploy hanno come radice, sotto la missione
 UPDATE `tipologie_documenti` SET `id_genitore` = 34
 	WHERE `id_genitore` IS NULL AND ( id, nome ) IN ( ( 35, 'missione di prelievo' ), ( 36, 'missione di movimentazione' ) )
 	AND EXISTS ( SELECT 1 FROM ( SELECT id FROM `tipologie_documenti` WHERE id = 34 AND nome = 'missione' ) AS m );
 
--- | 202611091506
+-- | 202611091508
 
 -- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DOCUMENTO_DI_TRASPORTO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 4, 'documento di trasporto' ) );
+
+-- | 202611091509
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'PRO_FORMA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 5, 'pro forma' ) );
+
+-- | 202611091510
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'OFFERTA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 6, 'offerta' ) );
+
+-- | 202611091511
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'ORDINE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 7, 'ordine' ) );
+
+-- | 202611091512
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'RICEVUTA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 8, 'ricevuta' ) );
+
+-- | 202611091513
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'SCONTRINO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 9, 'scontrino' ) );
+
+-- | 202611091514
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DOCUMENTO_DI_RITIRO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 10, 'documento di ritiro' ) );
+
+-- | 202611091515
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DOCUMENTO_DI_CONSEGNA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 11, 'documento di consegna' ) );
+
+-- | 202611091516
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DOCUMENTO_DI_RESO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 12, 'documento di reso' ) );
+
+-- | 202611091517
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DISTINTA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 29, 'distinta' ) );
+
+-- | 202611091518
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DISTINTA_ANALITICA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 30, 'distinta analitica' ) );
+
+-- | 202611091519
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DISTINTA_EASY' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 31, 'distinta easy' ) );
+
+-- | 202611091520
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'DISTINTA_ITALIA_ESTERO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 32, 'distinta Italia / estero contest, racc. market, ass. market' ) );
+
+-- | 202611091521
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'ORDINE_DI_PRODUZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 33, 'ordine di produzione' ) );
+
+-- | 202611091522
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'MISSIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 34, 'missione' ) );
+
+-- | 202611091523
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'MISSIONE_DI_PRELIEVO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 35, 'missione di prelievo' ) );
+
+-- | 202611091524
+
+-- tipologie_documenti: codice sulle righe senza codice SdI
 UPDATE IGNORE `tipologie_documenti` SET `codice` = 'MISSIONE_DI_MOVIMENTAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 36, 'missione di movimentazione' ) );
 
 -- | FINE

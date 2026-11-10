@@ -44,16 +44,48 @@ ALTER TABLE `tipologie_anagrafica`
 
 -- tipologie_anagrafica: codice sulle righe del 050
 UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'PERSONE_FISICHE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 1, 'persone fisiche' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'PERSONE_GIURIDICHE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 2, 'persone giuridiche' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SIGNOR' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 3, 'signor' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SIGNORA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 4, 'signora' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SPETTABILE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 5, 'spettabile' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'PUBBLICA_AMMINISTRAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 6, 'pubblica amministrazione' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'GENTILISSIMO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 7, 'gentilissimo' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'GENTILISSIMA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 8, 'gentilissima' ) );
-UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SPETTABILE_PA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 9, 'spettabile' ) );
 
 -- | 202611061213
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'PERSONE_GIURIDICHE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 2, 'persone giuridiche' ) );
+
+-- | 202611061214
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SIGNOR' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 3, 'signor' ) );
+
+-- | 202611061215
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SIGNORA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 4, 'signora' ) );
+
+-- | 202611061216
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SPETTABILE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 5, 'spettabile' ) );
+
+-- | 202611061217
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'PUBBLICA_AMMINISTRAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 6, 'pubblica amministrazione' ) );
+
+-- | 202611061218
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'GENTILISSIMO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 7, 'gentilissimo' ) );
+
+-- | 202611061219
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'GENTILISSIMA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 8, 'gentilissima' ) );
+
+-- | 202611061220
+
+-- tipologie_anagrafica: codice sulle righe del 050
+UPDATE IGNORE `tipologie_anagrafica` SET `codice` = 'SPETTABILE_PA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 9, 'spettabile' ) );
+
+-- | 202611061221
 
 -- tipologie_anagrafica: se_persona_giuridica sulla 5 spettabile, figlia di persone giuridiche
 UPDATE `tipologie_anagrafica` SET `se_persona_giuridica` = 1

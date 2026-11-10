@@ -25,16 +25,48 @@
 
 -- tipologie_mail_status: codici, nomi e note per id
 UPDATE `tipologie_mail_status` SET `codice` = 'RATING_A_PLUS', `nome` = 'Deliverable +', `note` = 'Rating A+: indirizzo recapitabile e con una storia di aperture o clic; si può sempre spedire.' WHERE `id` = 1;
-UPDATE `tipologie_mail_status` SET `codice` = 'RATING_A', `nome` = 'Deliverable', `note` = 'Rating A: indirizzo recapitabile; si può sempre spedire.' WHERE `id` = 2;
-UPDATE `tipologie_mail_status` SET `codice` = 'RATING_B', `nome` = 'Accepts All', `note` = 'Rating B: il server accetta qualunque indirizzo e può rimbalzare la mail dopo averla accettata; va segmentato finché non è confermato valido.' WHERE `id` = 3;
-UPDATE `tipologie_mail_status` SET `codice` = 'RATING_D', `nome` = 'Indeterminate', `note` = 'Rating D: la verifica non ha potuto concludere; va segmentato.' WHERE `id` = 4;
-UPDATE `tipologie_mail_status` SET `codice` = 'RATING_F', `nome` = 'Undeliverable', `note` = 'Rating F: indirizzo non recapitabile o non valido; non si spedisce.' WHERE `id` = 5;
-UPDATE `tipologie_mail_status` SET `codice` = 'MAILCHIMP_CLEANED', `nome` = 'Puliti da MailChimp / Hard Bounce', `note` = 'indirizzo tolto da MailChimp dopo un rimbalzo permanente; non si spedisce.' WHERE `id` = 8;
-UPDATE `tipologie_mail_status` SET `codice` = 'MAILCHIMP_BLACKLISTED', `nome` = 'Cancellati su MChimp / Blacklisted', `note` = 'indirizzo cancellato su MailChimp o in lista nera; non si spedisce.' WHERE `id` = 9;
-UPDATE `tipologie_mail_status` SET `codice` = 'NON_IMPORTABILE', `nome` = 'Non importabile', `note` = 'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; non si spedisce.' WHERE `id` = 10;
-UPDATE `tipologie_mail_status` SET `codice` = 'OK', `nome` = 'OK', `note` = 'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; si può spedire.' WHERE `id` = 20;
 
 -- | 202611091601
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'RATING_A', `nome` = 'Deliverable', `note` = 'Rating A: indirizzo recapitabile; si può sempre spedire.' WHERE `id` = 2;
+
+-- | 202611091602
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'RATING_B', `nome` = 'Accepts All', `note` = 'Rating B: il server accetta qualunque indirizzo e può rimbalzare la mail dopo averla accettata; va segmentato finché non è confermato valido.' WHERE `id` = 3;
+
+-- | 202611091603
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'RATING_D', `nome` = 'Indeterminate', `note` = 'Rating D: la verifica non ha potuto concludere; va segmentato.' WHERE `id` = 4;
+
+-- | 202611091604
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'RATING_F', `nome` = 'Undeliverable', `note` = 'Rating F: indirizzo non recapitabile o non valido; non si spedisce.' WHERE `id` = 5;
+
+-- | 202611091605
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'MAILCHIMP_CLEANED', `nome` = 'Puliti da MailChimp / Hard Bounce', `note` = 'indirizzo tolto da MailChimp dopo un rimbalzo permanente; non si spedisce.' WHERE `id` = 8;
+
+-- | 202611091606
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'MAILCHIMP_BLACKLISTED', `nome` = 'Cancellati su MChimp / Blacklisted', `note` = 'indirizzo cancellato su MailChimp o in lista nera; non si spedisce.' WHERE `id` = 9;
+
+-- | 202611091607
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'NON_IMPORTABILE', `nome` = 'Non importabile', `note` = 'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; non si spedisce.' WHERE `id` = 10;
+
+-- | 202611091608
+
+-- tipologie_mail_status: codici, nomi e note per id
+UPDATE `tipologie_mail_status` SET `codice` = 'OK', `nome` = 'OK', `note` = 'stato del gestionale di mailing di gimbe ( MC_mail_status_tipo ), senza descrizione nel gestionale; si può spedire.' WHERE `id` = 20;
+
+-- | 202611091609
 
 -- tipologie_mail_status: nome a char(255), chiavi del modello
 ALTER TABLE `tipologie_mail_status`
@@ -44,7 +76,7 @@ ALTER TABLE `tipologie_mail_status`
 	DROP INDEX IF EXISTS `ordine`,
 	DROP INDEX IF EXISTS `indice`;
 
--- | 202611091602
+-- | 202611091610
 
 -- tipologie_mail_status: chiavi ricreate
 ALTER TABLE `tipologie_mail_status`
@@ -53,17 +85,4 @@ ALTER TABLE `tipologie_mail_status`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `indice` (`id`,`ordine`,`codice`,`nome`,`se_recapitabile`);
 
--- | 202611091603
-
--- tipologie_mail_status_view
-CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
-	SELECT
-		tipologie_mail_status.id,
-		tipologie_mail_status.ordine,
-		tipologie_mail_status.codice,
-		tipologie_mail_status.nome,
-		tipologie_mail_status.note,
-		tipologie_mail_status.se_recapitabile,
-		tipologie_mail_status.nome AS __label__
-	FROM tipologie_mail_status
-;
+-- | FINE

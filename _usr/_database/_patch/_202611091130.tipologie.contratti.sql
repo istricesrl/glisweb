@@ -80,18 +80,46 @@ ALTER TABLE `tipologie_contratti`
 
 -- tipologie_contratti: codice sulle righe del 050
 UPDATE IGNORE `tipologie_contratti` SET `codice` = 'VENDITA' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 1, 'vendita' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'LOCAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 2, 'locazione' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'TESSERAMENTO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 3, 'tesseramento' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'ABBONAMENTO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 4, 'abbonamento' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'ISCRIZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 5, 'iscrizione' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'AFFILIAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 6, 'affiliazione' ) );
-UPDATE IGNORE `tipologie_contratti` SET `codice` = 'SERVIZI' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 7, 'servizi' ) );
 
 -- | 202611091135
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'LOCAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 2, 'locazione' ) );
+
+-- | 202611091136
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'TESSERAMENTO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 3, 'tesseramento' ) );
+
+-- | 202611091137
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'ABBONAMENTO' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 4, 'abbonamento' ) );
+
+-- | 202611091138
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'ISCRIZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 5, 'iscrizione' ) );
+
+-- | 202611091139
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'AFFILIAZIONE' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 6, 'affiliazione' ) );
+
+-- | 202611091140
+
+-- tipologie_contratti: codice sulle righe del 050
+UPDATE IGNORE `tipologie_contratti` SET `codice` = 'SERVIZI' WHERE `codice` IS NULL AND ( id, nome ) IN ( ( 7, 'servizi' ) );
+
+-- | 202611091141
 
 -- tipologie_contratti: i flag di classe di vendita e locazione, sulle loro radici
 UPDATE `tipologie_contratti` SET `se_acquisto` = 1
 	WHERE `se_acquisto` IS NULL AND `id_genitore` IS NULL AND ( id, nome ) IN ( ( 1, 'vendita' ) );
+
+-- | 202611091142
+
+-- tipologie_contratti: i flag di classe di vendita e locazione, sulle loro radici
 UPDATE `tipologie_contratti` SET `se_locazione` = 1
 	WHERE `se_locazione` IS NULL AND `id_genitore` IS NULL AND ( id, nome ) IN ( ( 2, 'locazione' ) );
 

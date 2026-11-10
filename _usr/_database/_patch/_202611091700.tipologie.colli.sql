@@ -47,30 +47,4 @@ UPDATE IGNORE `tipologie_colli` JOIN (
 	SET `tipologie_colli`.codice = c050.codice
 	WHERE `tipologie_colli`.codice IS NULL;
 
--- | 202611091703
-
--- tipologie_colli_view
-CREATE OR REPLACE VIEW `tipologie_colli_view` AS
-	SELECT
-		tipologie_colli.id,
-		tipologie_colli.id_genitore,
-		tipologie_colli.ordine,
-		tipologie_colli.codice,
-		tipologie_colli.nome,
-		tipologie_colli.larghezza,
-		tipologie_colli.lunghezza,
-		tipologie_colli.altezza,
-		tipologie_colli.id_udm_dimensioni,
-		udm_dimensioni.sigla AS udm_dimensioni,
-		tipologie_colli.peso,
-		tipologie_colli.id_udm_peso,
-		udm_peso.sigla AS udm_peso,
-		tipologie_colli.html_entity,
-		tipologie_colli.font_awesome,
-		tipologie_colli.id_account_inserimento,
-		tipologie_colli.id_account_aggiornamento,
-		tipologie_colli_path( tipologie_colli.id ) AS __label__
-	FROM tipologie_colli
-		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = tipologie_colli.id_udm_dimensioni
-		LEFT JOIN udm AS udm_peso ON udm_peso.id = tipologie_colli.id_udm_peso
-;
+-- | FINE

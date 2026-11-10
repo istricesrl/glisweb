@@ -53,23 +53,7 @@ ALTER TABLE `tipologie_sconti`
 
 -- tipologie_sconti: chiavi esterne della coda di audit
 ALTER TABLE `tipologie_sconti`
-	ADD CONSTRAINT IF NOT EXISTS `tipologie_sconti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-	ADD CONSTRAINT IF NOT EXISTS `tipologie_sconti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+	ADD CONSTRAINT `tipologie_sconti_ibfk_98_nofollow` FOREIGN KEY IF NOT EXISTS (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+	ADD CONSTRAINT `tipologie_sconti_ibfk_99_nofollow` FOREIGN KEY IF NOT EXISTS (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611101104
-
--- tipologie_sconti_view
-CREATE OR REPLACE VIEW `tipologie_sconti_view` AS
-	SELECT
-		tipologie_sconti.id,
-		tipologie_sconti.id_genitore,
-		tipologie_sconti.ordine,
-		tipologie_sconti.codice,
-		tipologie_sconti.nome,
-		tipologie_sconti.html_entity,
-		tipologie_sconti.font_awesome,
-		tipologie_sconti.id_account_inserimento,
-		tipologie_sconti.id_account_aggiornamento,
-		tipologie_sconti_path( tipologie_sconti.id ) AS __label__
-	FROM tipologie_sconti
-;
+-- | FINE

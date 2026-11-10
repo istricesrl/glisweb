@@ -80,22 +80,4 @@ INSERT IGNORE INTO `tipologie_attivita_inps` (`id`, `id_genitore`, `ordine`, `co
 (1,	NULL,	NULL,	'ORDINARIO',	'ordinario',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'STRAORDINARIO',	'straordinario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
--- | 202611091807
-
--- tipologie_attivita_inps_view
-CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
-	SELECT
-		tipologie_attivita_inps.id,
-		tipologie_attivita_inps.id_genitore,
-		tipologie_attivita_inps.ordine,
-		tipologie_attivita_inps.codice,
-		tipologie_attivita_inps.nome,
-		tipologie_attivita_inps.html_entity,
-		tipologie_attivita_inps.font_awesome,
-		tipologie_attivita_inps.codice_inps,
-		tipologie_attivita_inps.se_quadratura,
-		tipologie_attivita_inps.id_account_inserimento,
-		tipologie_attivita_inps.id_account_aggiornamento,
-		tipologie_attivita_inps_path( tipologie_attivita_inps.id ) AS __label__
-	FROM tipologie_attivita_inps
-;
+-- | FINE
