@@ -483,10 +483,12 @@
      * Il wrapper legge il percorso come un URL e non lo decodifica: un # o un ? nel nome ne tronca il resto, che diventa
      * frammento o query ( var/contenuti/#21OTT.pdf diventa var/contenuti/, e copy() si ferma perché la destinazione è una
      * cartella ), e scritto come %23 o %3F resta letterale nel nome. Il 10/11/2026 la pubblicazione SFTP di gimbe ha
-     * perso così 95 file. Per questi percorsi la funzione crea nella cartella di login un collegamento simbolico dal nome
-     * neutro che punta al percorso vero, anche se non esiste ancora, e restituisce l'URL del collegamento, che chi la
-     * chiama toglie con ftpSftpUnlink() dopo l'uso. Le funzioni ssh2_sftp_*() prendono il percorso così com'è e non
-     * hanno bisogno di niente.
+     * perso così 95 file. Per questi percorsi la funzione crea un collegamento simbolico dal nome neutro che punta al
+     * percorso vero, anche se non esiste ancora, e restituisce l'URL del collegamento, che chi la chiama toglie con
+     * ftpSftpUnlink() dopo l'uso. Il collegamento va nella cartella più profonda del percorso senza # né ?, che per un
+     * caricamento è di solito quella del file e quindi scrivibile, e solo se lì non riesce nella cartella di login: la
+     * radice di un chroot OpenSSH è di root e non si scrive. Le funzioni ssh2_sftp_*() prendono il percorso così com'è
+     * e non hanno bisogno di niente.
      *
      * @param       $conn       array       oggetto connessione SFTP restituito da ftpConnect()
      * @param       $path       string      percorso remoto assoluto
@@ -503,11 +505,20 @@
             return 'ssh2.sftp://' . intval( $conn['sftp'] ) . $path;
         }
 
-        $link = $conn['home'] . '.glisweb.' . md5( $path . microtime( true ) . mt_rand() );
+        // cartella più profonda senza # né ?, poi la cartella di login
+        $dir = substr( $path, 0, strcspn( $path, '#?' ) );
+        $dir = substr( $dir, 0, strrpos( $dir, '/' ) + 1 );
+        $nome = '.glisweb.' . md5( $path . microtime( true ) . mt_rand() );
 
-        if( @ssh2_sftp_symlink( $conn['sftp'], $path, $link ) === false ) {
-            logger( 'impossibile creare il collegamento ' . $link . ' per ' . $path, 'ftp', LOG_ERR );
-            $link = NULL;
+        foreach( array_unique( array( $dir, $conn['home'] ) ) as $d ) {
+            if( @ssh2_sftp_symlink( $conn['sftp'], $path, $d . $nome ) !== false ) {
+                $link = $d . $nome;
+                break;
+            }
+        }
+
+        if( $link === NULL ) {
+            logger( 'impossibile creare il collegamento per ' . $path . ' in ' . $dir . ' e in ' . $conn['home'], 'ftp', LOG_ERR );
         }
 
         return 'ssh2.sftp://' . intval( $conn['sftp'] ) . ( ( $link === NULL ) ? $path : $link );
