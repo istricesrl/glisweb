@@ -68,17 +68,17 @@
     $cf['privacy']['cookie']['propri']['tecnici'] = array(
         'sessione' => array(
             'id' => 'PHPSESSID',
-            'nome' => array( 'it-IT' => 'cookie di sessione' ),
-            'motivazione' => array( 'it-IT' => 'gestione della sessione utente' ),
-            'descrizione' => array( 'it-IT' => 'cookie di sessione per la gestione della sessione utente, viene eliminato alla chiusura del browser' ),
-            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
+            'nome' => array( 'it-IT' => 'cookie di sessione', 'en-GB' => 'session cookie' ),
+            'motivazione' => array( 'it-IT' => 'gestione della sessione utente', 'en-GB' => 'management of the user session' ),
+            'descrizione' => array( 'it-IT' => 'cookie di sessione per la gestione della sessione utente, viene eliminato alla chiusura del browser', 'en-GB' => 'session cookie for the management of the user session, deleted when the browser is closed' ),
+            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser', 'en-GB' => 'until the browser is closed' ),
         ),
         'privacy' => array(
             'id' => 'privacy',
-            'nome' => array( 'it-IT' => 'cookie per la gestione della privacy' ),
-            'motivazione' => array( 'it-IT' => 'gestione dei consensi della privacy' ),
-            'descrizione' => array( 'it-IT' => 'cookie per la gestione dei consensi della privacy, viene eliminato alla chiusura del browser' ),
-            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
+            'nome' => array( 'it-IT' => 'cookie per la gestione della privacy', 'en-GB' => 'privacy management cookie' ),
+            'motivazione' => array( 'it-IT' => 'gestione dei consensi della privacy', 'en-GB' => 'management of privacy consents' ),
+            'descrizione' => array( 'it-IT' => 'cookie per la gestione dei consensi della privacy, viene eliminato alla chiusura del browser', 'en-GB' => 'cookie for the management of privacy consents, deleted when the browser is closed' ),
+            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser', 'en-GB' => 'until the browser is closed' ),
         ),
     );
 

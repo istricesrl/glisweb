@@ -1,0 +1,280 @@
+{% if privacy.persone.titolare %}
+<h2>information notice pursuant to Articles 13 and 14 of Regulation (EU) 2016/679 ( GDPR )</h2>
+
+<p>This page describes how and why the personal data of those who visit this website, available at <a href="{{ site.url }}">{{ site.fqdn }}</a>
+( hereinafter also simply "the site" ), are processed. This notice is provided pursuant to <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank">Articles 13
+and 14 of Regulation (EU) 2016/679</a> ( General Data Protection Regulation, GDPR ) and to the Italian Personal Data Protection Code ( Legislative Decree no. 196 of
+30 June 2003, as amended by Legislative Decree no. 101 of 10 August 2018 ). It applies only to browsing and interacting with this site, and not to third-party
+websites the user may reach through external links on the site.</p>
+
+<h3>data controller</h3>
+
+<p>Visiting this site and using any services it provides may involve, as detailed below, the processing of personal data supplied by users by the data
+controller, <strong>{{ privacy.persone.titolare.denominazione }}</strong>, with registered office in <strong>{{ privacy.persone.titolare.citta }} ({{ privacy.persone.titolare.provincia }})</strong>,
+<strong>{{ privacy.persone.titolare.indirizzo }}</strong>, VAT number <strong>{{ privacy.persone.titolare.piva }}</strong>, tax code <strong>{{ privacy.persone.titolare.cf }}</strong>. The controller
+can be reached by telephone at <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ privacy.persone.titolare.telefono }}</a></strong> or by e-mail
+at <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
+
+{% if privacy.dpo %}
+<h3>data protection officer</h3>
+<p>The Data Protection Officer ( DPO ), <strong>{{ privacy.dpo.denominazione }}</strong>, can be contacted by post at <strong>{{ privacy.dpo.indirizzo }}</strong>,
+<strong>{{ privacy.dpo.citta }} ({{ privacy.dpo.provincia }})</strong>, by telephone at <strong><a href="tel:{{ privacy.dpo.telefono }}">{{ privacy.dpo.telefono }}</a></strong>
+or by e-mail at <strong><a href="mailto:{{ privacy.dpo.mail }}">{{ privacy.dpo.mail }}</a></strong>.</p>
+{% endif %}
+
+{% if privacy.responsabili %}
+<h3>data processors</h3>
+
+<p>Pursuant to Article 28 of the GDPR, the controller has appointed the following data processors:</p>
+<ul>
+    {% for responsabile in privacy.responsabili %}
+    <li>
+	<strong>{{ responsabile.denominazione }}</strong>, as <strong>{{ responsabile.motivazione[ localization.language.ietf ] }}</strong>;<br />
+	{{ responsabile.denominazione }} can be reached by telephone at
+	<strong><a href="tel:{{ responsabile.telefono }}">{{ responsabile.telefono }}</a></strong> or by e-mail
+	at <strong><a href="mailto:{{ responsabile.mail }}">{{ responsabile.mail }}</a></strong>
+    </li>
+    {% endfor %}
+</ul>
+<p>A detailed list of the persons authorised to process the data can be requested by e-mail at <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
+{% endif %}
+
+<h3>legal basis for the processing</h3>
+
+<p>The personal data described on this page are processed on the basis of the consent given by the data subjects ( Article 6(1)(a) GDPR ) and, where the
+data are needed to provide a service the user has requested or to take steps at the user's request, of the performance of that request ( Article 6(1)(b) GDPR ).
+Browsing data are processed on the basis of the controller's legitimate interest in the security and proper operation of the site ( Article 6(1)(f) GDPR ).
+Where processing is based on consent, consent can be withdrawn at any time, without affecting the lawfulness of the processing carried out before withdrawal.</p>
+
+<h3>types of data processed and purposes of the processing</h3>
+<p>The types of data processed on this site, and how and why they are processed, are described below.</p>
+
+<h4>browsing data</h4>
+<p>The computer systems that run this site acquire, in the course of their normal operation, some personal data whose transmission is implicit in the use
+of Internet communication protocols. These data are not collected in order to be associated with identified data subjects, but by their very nature they
+could, through processing and association with data held by third parties, allow users to be identified.</p>
+<p>These data ( IP addresses or domain names of the computers used to connect to the site, URIs of the requested resources, date and time of the requests,
+content and outcome of the responses given by the site, and the like ) are used only to obtain statistical information and to check that the site works
+properly, and are deleted periodically in the course of normal maintenance.</p>
+<p>These data may be used to establish liability in the event of computer crimes against the site; in that case they may be kept for longer and disclosed to
+the competent authorities.</p>
+
+<h4>data provided voluntarily by the user</h4>
+<p>Sending e-mail to the addresses shown on the site, which is optional, explicit and voluntary, involves the acquisition of the sender's address, needed to
+reply to requests, as well as of any other personal data included in the message.</p>
+<p>Specific information notices are provided on the pages of the site that ask users to submit data in order to provide services or send information.</p>
+
+{% for form, dettagli in contatti %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} When the form is used, the data submitted are processed for the following purposes, for each of which
+consent can be given separately:</p>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}required{% else %}optional{% endif %})</li>{% endfor %}</ul>
+{% endif %}
+{% endfor %}
+
+{% for form, dettagli in registrazione.moduli %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} When the form is used, the data submitted are processed for the following purposes, for each of which
+consent can be given separately:</p>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}required{% else %}optional{% endif %})</li>{% endfor %}</ul>
+{% endif %}
+{% endfor %}
+
+{% for form, dettagli in ecommerce.moduli %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} When the form is used, the data submitted are processed for the following purposes, for each of which
+consent can be given separately:</p>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}required{% else %}optional{% endif %})</li>{% endfor %}</ul>
+{% endif %}
+{% endfor %}
+
+<h3>provision of data</h3>
+
+<p>Apart from browsing data, users are free to provide their personal data by filling in the forms on the site, as described in the previous section, in order
+to request newsletters, information material or other communications; users are informed and aware that failing to provide those data may make it impossible
+to obtain what they requested.</p>
+
+<h3>methods of processing and retention</h3>
+
+<p>The data are processed manually and by automated means, in digital and paper form, only for the time needed to pursue the purposes stated in this notice
+and in any case not longer than required by the law in force; at the end of that period they are deleted or made anonymous.</p>
+<p>Appropriate technical and organisational security measures are in place to prevent the loss, alteration, theft or any unlawful use of the data processed.</p>
+
+<h3>purposes of the processing</h3>
+
+<p>Unless otherwise specified, all collection and subsequent processing of data is aimed at managing and fulfilling customers' requests, and the data collected
+are kept only for the time needed to carry out that activity.</p>
+<p>The controller never uses the data provided for purposes other than those listed. Detailed information is provided together with the request for consent in
+any forms on the site designed to collect data subjects' data.</p>
+
+<h3>rights of the data subjects</h3>
+
+<p>The persons to whom the personal data processed by the site refer, and site users in general, have the right at any time, under Articles 15 to 22 of the GDPR, to:</p>
+<ul>
+    <li>obtain confirmation as to whether or not data concerning them are being processed, and access those data and the information on their processing ( Article 15 )</li>
+    <li>obtain the rectification of inaccurate data and the completion of incomplete data ( Article 16 )</li>
+    <li>obtain the erasure of their data, in the cases provided for by the GDPR ( Article 17 )</li>
+    <li>obtain the restriction of processing ( Article 18 )</li>
+    <li>receive the data they have provided in a structured, commonly used and machine-readable format, and have them transmitted to another controller ( Article 20 )</li>
+    <li>object at any time, on grounds relating to their particular situation, to processing based on legitimate interest ( Article 21 )</li>
+    <li>withdraw consent at any time, where processing is based on consent ( Article 7(3) )</li>
+</ul>
+<p>Requests to exercise these rights can be made without any particular formality using the following contact details:</p>
+<ul>
+    {% if privacy.persone.titolare.mail %}<li>by e-mail, at <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong></li>{% endif %}
+    {% if privacy.persone.titolare.telefono %}<li>by telephone, at <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ privacy.persone.titolare.telefono }}</a></strong></li>{% endif %}
+    <li>by post, writing to <strong>{{ privacy.persone.titolare.denominazione }}, {{ privacy.persone.titolare.indirizzo }}, {{ privacy.persone.titolare.cap }} {{ privacy.persone.titolare.citta }} ({{ privacy.persone.titolare.provincia }}), Italy</strong></li>
+</ul>
+<p>Data subjects who believe that the processing of their data infringes the GDPR also have the right to lodge a complaint with a supervisory authority ( Article 77 GDPR ),
+which in Italy is the <a href="https://www.garanteprivacy.it" target="_blank">Garante per la protezione dei dati personali</a>.</p>
+
+<h2>cookies and other tracking tools</h2>
+
+<p>Cookies are small text files that the user's browser stores at the request of the websites it visits. Cookies can be used in different ways, and each use
+gives rise to a category of cookies that are technically identical but functionally different.</p>
+
+<p>From a functional point of view, technical cookies, whose purpose is to make the site and its services work, are distinguished from profiling cookies, whose
+purpose is not related to the operation of the site but to analysing the profiles and preferences of its visitors; analytics cookies sit in between, and can be
+treated as technical or as profiling cookies depending on whether the data collected can be traced back to a specific person. Analytics cookies are therefore
+further divided into anonymous analytics cookies, which do not collect information identifying the user, and identifying ones, which make it possible to trace
+the data collected back to the user.</p>
+
+<p>Anonymous analytics cookies neither collect nor contain identifying information; since, thanks to the technical anonymisation measures adopted, they cannot
+lead to the identification of the user, the law in force ( Guidelines on cookies and other tracking tools of the Italian Data Protection Authority, 10 June 2021 )
+does not require the user's consent for their use. Since these cookies are managed directly by third parties, please refer to their respective notices for
+further details.</p>
+
+<p>Identifying analytics cookies, on the other hand, may contain information that can lead to the identification of the user, and the law in force therefore
+requires the user's prior consent for their use. In this case too, since these cookies are managed directly by third parties, please refer to their respective
+notices for further details.</p>
+
+<p>The use of profiling cookies and of other tools for tracking users' profiles, preferences and personal data in general always requires the data subject's
+prior consent.</p>
+
+<p>As regards their origin, first-party cookies, set directly by the data controller named above, are distinguished from third-party cookies, set by external
+parties whose services are included in the site to add further features to it.</p>
+
+<p>As regards how long they remain on the user's device, session cookies, which are deleted automatically at the end of the browsing session or when the browser
+is closed, are distinguished from persistent cookies, which remain stored until their expiry date or until they are deleted by the site or by the user.</p>
+
+<h3>first-party technical cookies</h3>
+{% if privacy.cookie.propri.tecnici %}
+<p>This site uses technical cookies to manage browsing sessions and user preferences, and to make the site more convenient and secure to use. These cookies
+only carry randomly generated session identifiers and do not involve sending the user's personal data to the site. The technical cookies used by this site never
+involve the acquisition of personal data identifying the user, nor do they affect the confidentiality of the user's browsing. Under the law in force, technical
+cookies do not require the user's consent, only information about their use. The site uses the following first-party technical cookies:</p>
+<ul>
+    {% for cookie, dettagli in privacy.cookie.propri.tecnici %}
+    <li>
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong>{% if dettagli.titolare[ localization.language.ietf ] %}, owned by {{ dettagli.titolare[ localization.language.ietf ] }}, {% endif %}
+		{% if dettagli.id %}({% for id in dettagli.id %}{{ id }}{% endfor %}){% endif %} used for
+		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; the cookie is kept {{ dettagli.conservazione[ localization.language.ietf ] }}
+		and the related data are processed {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
+		for further details please refer to the full notice available at this link:
+		<a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>This site does not use first-party technical cookies.</p>
+{% endif %}
+
+<h3>first-party analytics cookies</h3>
+{% if privacy.cookie.propri.analitici %}
+<!-- TODO -->
+{% else %}
+<p>This site does not use first-party analytics cookies.</p>
+{% endif %}
+
+<h3>third-party technical cookies</h3>
+{% if privacy.cookie.terzi.tecnici %}
+<p>This site includes third-party services that use technical cookies, for which no consent is required since they contain no information that can lead to
+the identification of the user and collect no personal data or other personal information about the user; in particular the site uses the following services:</p>
+<ul>
+    {% for cookie, dettagli in privacy.cookie.terzi.tecnici %}
+    <li>
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong>{% if dettagli.titolare[ localization.language.ietf ] %}, owned by {{ dettagli.titolare[ localization.language.ietf ] }}, {% endif %}
+		{% if dettagli.id %}({% for id in dettagli.id %}{{ id }}{% endfor %}){% endif %} used for
+		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; the cookie is kept {{ dettagli.conservazione[ localization.language.ietf ] }}
+		and the related data are processed {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
+		for further details please refer to the full notice available at this link:
+		<a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>This site does not use third-party technical cookies.</p>
+{% endif %}
+
+<h3>third-party analytics cookies</h3>
+{% if privacy.cookie.terzi.analitici %}
+<p>This site uses third-party cookies to analyse traffic and improve the user experience; the data acquired in this way are not used for purposes other than
+those stated. Under the law in force, anonymous analytics cookies are distinguished from identifying ones.</p>
+<p>The following table lists all the third-party analytics cookies used by the site:</p>
+<table class="table">
+	<thead>
+		<tr class="">
+			<th>provider</th>
+			<th>cookie name</th>
+			<th>purpose</th>
+			<th>notice</th>
+			<th>retention</th>
+			<th>place of processing</th>
+			<th>consent</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
+		<tr>
+			<td class=""><strong>{{ dettagli.nome[ localization.language.ietf ] }}<br>{{ dettagli.titolare[ localization.language.ietf ] }}</strong></td>
+			<td>{% for id in dettagli.id %}{{ id }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+			<td>{{ dettagli.motivazione[ localization.language.ietf ]|raw }}</td>
+			<td><a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a></td>
+			<td>{{ dettagli.conservazione[ localization.language.ietf ] }}</td>
+			<td>{{ dettagli.luogo[ localization.language.ietf ] }}</td>
+			{% if dettagli.anonimo %}
+			<td>not required</td>
+			{% else %}
+			<td><form action="" method="post">
+				<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
+				<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
+				{% if dettagli.consenso == 'ok' %}
+				<input type="hidden" name="__cookie__[{{ cookie }}][value]" value="no">
+				<input type="submit" class="btn btn-default btn-dark btn-sm" value="withdraw">
+				{% else %}
+				<input type="hidden" name="__cookie__[{{ cookie }}][value]" value="ok">
+				<input type="submit" class="btn btn-default btn-dark btn-sm" value="allow">
+			{% endif %}
+			</form></td>
+			{% endif %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% else %}
+<p>This site does not use third-party analytics cookies.</p>
+{% endif %}
+
+<h3>first-party profiling cookies</h3>
+{% if privacy.cookie.propri.profilazione %}
+<!-- TODO -->
+{% else %}
+<p>This site does not use first-party cookies to profile users, nor does it use any other tracking method that could personally identify and profile the user.</p>
+{% endif %}
+
+<h3>third-party profiling cookies</h3>
+{% if privacy.cookie.terzi.profilazione %}
+<!-- TODO -->
+{% else %}
+<p>This site does not use third-party cookies to profile users, nor does it use any other tracking method that could personally identify and profile the user.</p>
+{% endif %}
+
+{% else %}
+<p>Privacy and cookie policy being updated.</p>
+{% endif %}
