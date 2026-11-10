@@ -24,7 +24,7 @@
 #   riempirle a caso sarebbe peggio che lasciarle vuote.
 
 STANDARD = frozenset( (
-    'colori', 'comuni', 'condizioni_pagamento', 'continenti', 'iva', 'lingue',
+    'comuni', 'condizioni_pagamento', 'continenti', 'iva', 'lingue',
     'modalita_pagamento', 'periodicita', 'provincie', 'regimi', 'regioni',
     'ruoli_anagrafica', 'ruoli_articoli', 'ruoli_audio', 'ruoli_file', 'ruoli_immagini',
     'ruoli_indirizzi', 'ruoli_mail', 'ruoli_matricole', 'ruoli_prodotti', 'ruoli_video',
@@ -32,7 +32,7 @@ STANDARD = frozenset( (
 ) )
 
 ASSISTITE = frozenset( (
-    'categorie_anagrafica', 'certificazioni', 'listini', 'ranking', 'reparti', 'task',
+    'categorie_anagrafica', 'certificazioni', 'colori', 'listini', 'ranking', 'reparti', 'task',
     'tipologie_anagrafica', 'tipologie_attivita', 'tipologie_chiavi', 'tipologie_contatti',
     'tipologie_contratti', 'tipologie_documenti', 'tipologie_documenti_articoli',
     'tipologie_indirizzi', 'tipologie_licenze', 'tipologie_luoghi', 'tipologie_mastri',

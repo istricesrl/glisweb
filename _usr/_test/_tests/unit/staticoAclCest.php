@@ -122,6 +122,19 @@
 
         }
 
+        // colori come le altre tabelle assistite: le gestisce solo roots, lo staff le legge
+        // ( fino al 2026-11-10 non aveva una voce; punto 6g dello schema canonico )
+        public function colori( UnitTester $I ) {
+
+            global $cf;
+
+            $chiavi = $this->chiavi();
+
+            $I->assertSame( 1, $chiavi['colori'] ?? 0, 'colori deve essere dichiarata una volta sola' );
+            $I->assertSame( $cf['auth']['permissions']['udm'], $cf['auth']['permissions']['colori'] ?? NULL, 'colori come udm' );
+
+        }
+
         // taglie come le altre tabelle assistite: le gestisce solo roots, lo staff le legge
         // ( fino al 2026-11-10 non aveva una voce; punto 6 dello schema canonico, riga 235 )
         public function taglie( UnitTester $I ) {

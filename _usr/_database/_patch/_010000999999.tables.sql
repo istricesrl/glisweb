@@ -1831,20 +1831,29 @@ CREATE TABLE IF NOT EXISTS `colli` (                          --
 -- | 010000005100
 
 -- colori
--- tipologia: tabella standard
+-- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene i colori
+-- funzione: contiene i colori, descritti secondo più codifiche e organizzati per famiglie
 --
--- i colori, descritti secondo più codifiche ( esadecimale, RGB, RAL, Pantone, CMYK ) e organizzati ad albero: un
--- colore può avere come figli le sue varianti. È un classificatore, quindi fra fratelli il colore si identifica col
--- nome. Serve soprattutto come variante degli articoli ( articoli.id_colore ), e per associare un colore ad altri
--- oggetti, p.es. ai contenuti o in vista di grafici e infografiche.
+-- i colori, descritti secondo più codifiche ( esadecimale, RGB, RAL, Pantone, CMYK ) e organizzati ad albero: le radici
+-- sono le famiglie di colore, e sotto ognuna stanno i colori che le appartengono e le loro varianti. È un classificatore,
+-- quindi fra fratelli il colore si identifica col nome. Serve soprattutto come variante degli articoli ( articoli.id_colore ),
+-- e per associare un colore ad altri oggetti, p.es. ai contenuti o in vista di grafici e infografiche; il 050 carica a id
+-- fissi le undici famiglie, i 141 colori con nome di CSS Color 4 e tre RAL, che l'utente può modificare o eliminare, e
+-- accanto a quelli l'utente aggiunge i suoi
+--
+-- NOTA codice_css è la parola chiave del colore in CSS Color 4 ( W3C, named colors ), che ne fissa l'hex; le grafie con
+-- grey ( grey, darkgrey… ) sono sinonimi di quelle con gray e non hanno una riga loro; i nomi italiani e il raggruppamento
+-- in famiglie sono una convenzione del framework, perché lo standard elenca i colori in ordine alfabetico
+-- NOTA RAL e Pantone non pubblicano un hex normativo: per i colori RAL l'hex è un'approssimazione, e l'elenco Pantone non
+-- si distribuisce; c, m, y e k restano vuoti nel 050 perché la conversione da RGB dipende dal processo di stampa
 -- NOTA css serve per i colori che non si riducono a una tinta ( p.es. un effetto carbonio ) e può stare da solo
 CREATE TABLE IF NOT EXISTS `colori` (                         --
   `id` bigint(20) NOT NULL,                                   -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                      -- colore di cui questo è una variante
+  `id_genitore` bigint(20) DEFAULT NULL,                      -- famiglia o colore di cui questo è una variante
   `nome` char(255) DEFAULT NULL,                              -- nome del colore, unico fra i fratelli
+  `codice_css` char(32) DEFAULT NULL,                         -- parola chiave del colore in CSS Color 4
   `hex` char(8) DEFAULT NULL,                                 -- colore in esadecimale
   `r` int(3) DEFAULT NULL,                                    -- componente rossa in RGB
   `g` int(3) DEFAULT NULL,                                    -- componente verde in RGB
@@ -1855,7 +1864,11 @@ CREATE TABLE IF NOT EXISTS `colori` (                         --
   `m` decimal(5,2) DEFAULT NULL,                              -- componente magenta in CMYK
   `y` decimal(5,2) DEFAULT NULL,                              -- componente gialla in CMYK
   `k` decimal(5,2) DEFAULT NULL,                              -- componente nera in CMYK
-  `css` text DEFAULT NULL                                     -- dichiarazioni CSS, per i colori che non sono una tinta sola
+  `css` text DEFAULT NULL,                                    -- dichiarazioni CSS, per i colori che non sono una tinta sola
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000005300

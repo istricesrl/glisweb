@@ -1942,11 +1942,13 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 -- | 090000005101
 
 -- colori_view
-CREATE OR REPLACE VIEW colori_view AS
+-- tipologia: tabella assistita
+CREATE OR REPLACE VIEW `colori_view` AS
 	SELECT
 		colori.id,
 		colori.id_genitore,
 		colori.nome,
+		colori.codice_css,
 		colori.hex,
 		colori.r,
 		colori.g,
@@ -1958,6 +1960,8 @@ CREATE OR REPLACE VIEW colori_view AS
 		colori.y,
 		colori.k,
 		colori.css,
+		colori.id_account_inserimento,
+		colori.id_account_aggiornamento,
 		colori_path( colori.id ) AS __label__
 	FROM colori
 ;

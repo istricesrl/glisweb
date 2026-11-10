@@ -1083,8 +1083,11 @@ ALTER TABLE `colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `colori`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `unica_css` (`codice_css`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`hex`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`codice_css`,`hex`);
 
 -- | 030000005101
 
