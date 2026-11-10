@@ -232,3 +232,5 @@ INSERT IGNORE INTO `colori` ( `id`, `id_genitore`, `nome`, `codice_css`, `hex`, 
 		UNION ALL SELECT 145, 15, 'grigio ardesia scuro', 'darkslategray', '2f4f4f', 47, 79, 79, NULL
 	) s
 	WHERE EXISTS ( SELECT 1 FROM `colori` f WHERE f.id = 1 AND f.nome = 'rosso' );
+
+-- | FINE

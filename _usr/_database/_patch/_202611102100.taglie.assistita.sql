@@ -134,3 +134,5 @@ INSERT IGNORE INTO `taglie` ( `id`, `nome`, `id_tipologia_prodotti`, `sesso`, `t
 	) s
 	WHERE EXISTS ( SELECT 1 FROM `taglie` f WHERE f.id = 1 AND f.nome = 'abbigliamento XXXS uomo' )
 		AND EXISTS ( SELECT 1 FROM `tipologie_prodotti` p WHERE p.id = s.t );
+
+-- | FINE

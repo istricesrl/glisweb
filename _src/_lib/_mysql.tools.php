@@ -2818,9 +2818,9 @@
      * traduce per MySQL un ALTER TABLE scritto per MariaDB, per mysqlPatchTranslate()
      *
      * Le clausole condizionali ( ADD COLUMN / KEY / UNIQUE KEY / PRIMARY KEY / CONSTRAINT FOREIGN KEY IF NOT EXISTS, DROP
-     * FOREIGN KEY / INDEX / KEY IF EXISTS ), che MySQL non conosce, si risolvono leggendo lo schema: la clausola si toglie
-     * se l'oggetto c'è già ( o non c'è, per le DROP ), altrimenti si toglie solo l'IF. Poi due casi che su MySQL fallirebbero
-     * anche con la sintassi giusta:
+     * FOREIGN KEY / INDEX / KEY / COLUMN IF EXISTS, MODIFY / CHANGE COLUMN IF EXISTS ), che MySQL non conosce, si
+     * risolvono leggendo lo schema: la clausola si toglie se l'oggetto c'è già ( o non c'è, per le DROP, MODIFY e CHANGE ),
+     * altrimenti si toglie solo l'IF. Poi due casi che su MySQL fallirebbero anche con la sintassi giusta:
      *
      * - una chiave esterna fra colonne di tipo diverso ( 3780 ): sui deploy vecchi gli id sono int e le colonne nuove delle
      *   patch nascono bigint, su MariaDB passa e su MySQL no; la colonna che fa riferimento prende il tipo della colonna
@@ -2888,6 +2888,12 @@
                     continue;
                 }
                 $x = 'DROP COLUMN `' . $y[1] . '`';
+            } elseif (preg_match('/^(MODIFY|CHANGE)\s+(COLUMN\s+)?IF\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                if (! mysqlPatchSchemaHas($c, 'colonna', $t, $y[3])) {
+                    $n[] = $t . '.' . $y[3] . ' non c\'è';
+                    continue;
+                }
+                $x = strtoupper($y[1]) . ' COLUMN `' . $y[3] . '`' . $y[4];
             } elseif (preg_match('/^ADD\s+PRIMARY\s+KEY\s+IF\s+NOT\s+EXISTS\s*(.*)$/is', $x, $y)) {
                 if (mysqlPatchSchemaHas($c, 'indice', $t, 'PRIMARY') && ! mysqlPatchSchemaHas($c, 'pk_invisibile', $t)) {
                     $n[] = $t . ' chiave primaria c\'è già';
@@ -3009,6 +3015,8 @@
                     $o[] = 'IF EXISTS( ' . $w('indice', $t, $y[2]) . ' ) THEN ALTER TABLE `' . $t . '` DROP INDEX `' . $y[2] . '`; END IF;';
                 } elseif (preg_match('/^DROP\s+COLUMN\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
                     $o[] = 'IF EXISTS( ' . $w('colonna', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` DROP COLUMN `' . $y[1] . '`; END IF;';
+                } elseif (preg_match('/^(MODIFY|CHANGE)\s+(COLUMN\s+)?IF\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                    $o[] = 'IF EXISTS( ' . $w('colonna', $t, $y[3]) . ' ) THEN ALTER TABLE `' . $t . '` ' . strtoupper($y[1]) . ' COLUMN `' . $y[3] . '`' . $y[4] . '; END IF;';
                 } else {
                     $o[] = 'ALTER TABLE `' . $t . '` ' . $x . ';';
                 }

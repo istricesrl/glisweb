@@ -124,7 +124,7 @@ ALTER TABLE `tipologie_prodotti`
 	DROP INDEX IF EXISTS `codice`,
 	ADD UNIQUE KEY `codice` (`codice`),
 	DROP INDEX IF EXISTS `indice`,
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_colori`,`se_taglie`,`se_periodicita`,`se_tipologia_rinnovo`,`se_dimensioni`,`se_volume`,`se_capacita`,`se_peso`,`se_imballo`,`se_prodotto`,`se_servizio`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_colori`,`se_taglie`,`se_periodicita`,`se_tipologia_rinnovo`,`se_dimensioni`,`se_volume`,`se_capacita`,`se_peso`,`se_imballo`,`se_prodotto`,`se_servizio`);
 
 -- | 202611051807
 

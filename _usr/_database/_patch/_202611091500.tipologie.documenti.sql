@@ -70,7 +70,7 @@ ALTER TABLE `tipologie_documenti`
 -- tipologie_documenti: la KEY di codice_sdi e indice
 ALTER TABLE `tipologie_documenti`
 	ADD KEY IF NOT EXISTS `codice_sdi` (`codice_sdi`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_missione`,`se_ricevuta`,`se_trasporto`,`se_ecommerce`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_missione`,`se_ricevuta`,`se_trasporto`,`se_ecommerce`);
 
 -- | 202611091502
 

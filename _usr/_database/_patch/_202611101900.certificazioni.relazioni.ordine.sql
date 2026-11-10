@@ -41,3 +41,5 @@ ALTER TABLE `valutazioni_certificazioni`
 	DROP INDEX IF EXISTS `indice`,
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `indice` (`id`,`ordine`,`id_valutazione`,`id_certificazione`,`codice`,`id_emittente`,`nome`,`data_emissione`,`data_scadenza`);
+
+-- | FINE

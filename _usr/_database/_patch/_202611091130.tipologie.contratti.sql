@@ -68,7 +68,7 @@ ALTER TABLE `tipologie_contratti`
 ALTER TABLE `tipologie_contratti`
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY IF NOT EXISTS `id_articolo` (`id_articolo`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_tesseramento`,`se_abbonamento`,`se_iscrizione`,`se_affiliazione`,`se_acquisto`,`se_locazione`,`se_libero`,`se_prenotazione`,`se_scalare`,`se_immobili`,`se_online`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_tesseramento`,`se_abbonamento`,`se_iscrizione`,`se_affiliazione`,`se_acquisto`,`se_locazione`,`se_libero`,`se_prenotazione`,`se_scalare`,`se_immobili`,`se_online`);
 
 -- | 202611091133
 

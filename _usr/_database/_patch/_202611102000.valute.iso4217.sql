@@ -223,3 +223,5 @@ CREATE OR REPLACE VIEW `valute_view` AS
 		valute.iso4217 AS __label__
 	FROM valute
 ;
+
+-- | FINE

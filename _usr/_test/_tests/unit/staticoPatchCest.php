@@ -92,4 +92,27 @@
 
         }
 
+        // MySQL ammette al massimo 16 colonne per indice ( 1070 ), MariaDB 32: nelle patch e nel file base degli indici
+        public function indiciAlMassimoSedici( UnitTester $I ) {
+
+            $query = array();
+            foreach( $this->blocchi() as $p ) {
+                $query[ $p['id'] . ' ' . basename( $p['file'] ) ] = $p['query'];
+            }
+            $query['_030000999999.indexes.sql'] = file_get_contents( DIR_BASE . '_usr/_database/_patch/_030000999999.indexes.sql' );
+
+            $lunghi = array();
+            foreach( $query as $dove => $q ) {
+                preg_match_all( '/\bKEY\s+(IF\s+NOT\s+EXISTS\s+)?`?([a-z0-9_]+)`?\s*\(([^)]*)\)/i', $q, $m, PREG_SET_ORDER );
+                foreach( $m as $k ) {
+                    if( count( explode( ',', $k[3] ) ) > 16 ) {
+                        $lunghi[] = $dove . ' ' . $k[2];
+                    }
+                }
+            }
+
+            $I->assertEmpty( $lunghi, 'indici con piu\' di 16 colonne, MySQL li rifiuta con 1070: ' . implode( ', ', $lunghi ) );
+
+        }
+
     }

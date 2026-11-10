@@ -4666,7 +4666,7 @@ ALTER TABLE `tipologie_contratti`
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_tesseramento`,`se_abbonamento`,`se_iscrizione`,`se_affiliazione`,`se_acquisto`,`se_locazione`,`se_libero`,`se_prenotazione`,`se_scalare`,`se_immobili`,`se_online`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_tesseramento`,`se_abbonamento`,`se_iscrizione`,`se_affiliazione`,`se_acquisto`,`se_locazione`,`se_libero`,`se_prenotazione`,`se_scalare`,`se_immobili`,`se_online`);
 
 -- | 030000050901
 
@@ -4701,7 +4701,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `codice_sdi` (`codice_sdi`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_missione`,`se_ricevuta`,`se_trasporto`,`se_ecommerce`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`sigla`,`html_entity`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_missione`,`se_ricevuta`,`se_trasporto`,`se_ecommerce`);
 
 -- | 030000052601
 
@@ -4956,7 +4956,7 @@ ALTER TABLE `tipologie_prodotti`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_colori`,`se_taglie`,`se_periodicita`,`se_tipologia_rinnovo`,`se_dimensioni`,`se_volume`,`se_capacita`,`se_peso`,`se_imballo`,`se_prodotto`,`se_servizio`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_colori`,`se_taglie`,`se_periodicita`,`se_tipologia_rinnovo`,`se_dimensioni`,`se_volume`,`se_capacita`,`se_peso`,`se_imballo`,`se_prodotto`,`se_servizio`);
 
 -- | 030000054601
 

@@ -27,4 +27,14 @@ class mysqlToolsCest
         $I->see('anteriore al canone');
     }
 
+    // mysqlPatchTranslateAlter() -> MODIFY / CHANGE COLUMN IF EXISTS: senza IF se la colonna c'è, clausola tolta se non c'è
+    public function mysqlPatchTranslateAlter(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPatchTranslateAlter.01.php');
+        $I->see('ALTER TABLE `account` MODIFY COLUMN `username` char(255) DEFAULT NULL');
+        $I->see('ALTER TABLE `account` CHANGE COLUMN `username` `username` char(255) DEFAULT NULL');
+        $I->see('account.colonna_inesistente non c\'è');
+        $I->dontSee('clausola non tradotta');
+    }
+
 }
