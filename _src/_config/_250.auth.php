@@ -397,6 +397,10 @@
         'relazioni_articoli' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'taglie' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff' )
+        ),
         'tipologie_prodotti' => array(
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff' )

@@ -122,4 +122,17 @@
 
         }
 
+        // taglie come le altre tabelle assistite: le gestisce solo roots, lo staff le legge
+        // ( fino al 2026-11-10 non aveva una voce; punto 6 dello schema canonico, riga 235 )
+        public function taglie( UnitTester $I ) {
+
+            global $cf;
+
+            $chiavi = $this->chiavi();
+
+            $I->assertSame( 1, $chiavi['taglie'] ?? 0, 'taglie deve essere dichiarata una volta sola' );
+            $I->assertSame( $cf['auth']['permissions']['udm'], $cf['auth']['permissions']['taglie'] ?? NULL, 'taglie come udm' );
+
+        }
+
     }

@@ -37,7 +37,7 @@ ASSISTITE = frozenset( (
     'tipologie_contratti', 'tipologie_documenti', 'tipologie_documenti_articoli',
     'tipologie_indirizzi', 'tipologie_licenze', 'tipologie_luoghi', 'tipologie_mastri',
     'tipologie_notizie', 'tipologie_pagamenti', 'tipologie_popup', 'tipologie_prodotti',
-    'tipologie_progetti', 'tipologie_pubblicazioni', 'tipologie_risorse',
+    'taglie', 'tipologie_progetti', 'tipologie_pubblicazioni', 'tipologie_risorse',
     'tipologie_telefoni', 'tipologie_todo', 'tipologie_url', 'udm',
 ) )
 

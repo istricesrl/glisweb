@@ -8606,11 +8606,27 @@ CREATE OR REPLACE VIEW `vani_caratteristiche_view` AS
 -- | 090000063500
 
 -- taglie_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `taglie_view` AS
 	SELECT
 		taglie.id,
+		taglie.nome,
+		taglie.id_tipologia_prodotti,
+		tipologie_prodotti.nome AS tipologia,
+		taglie.sesso,
+		taglie.taglia_internazionale,
+		taglie.taglia_it,
+		taglie.taglia_eu,
+		taglie.taglia_fr,
+		taglie.taglia_uk,
+		taglie.taglia_us,
+		taglie.misura_min,
+		taglie.misura_max,
+		taglie.id_account_inserimento,
+		taglie.id_account_aggiornamento,
 		taglie.nome AS __label__
 	FROM taglie
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = taglie.id_tipologia_prodotti
 ;
 
 -- | 090000063600

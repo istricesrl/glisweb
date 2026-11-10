@@ -8924,29 +8924,41 @@ CREATE TABLE IF NOT EXISTS `vani_caratteristiche` (             --
 -- | 010000063500
 
 -- taglie
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: le taglie degli articoli
+-- funzione: contiene le taglie degli articoli, con le sigle dei vari paesi e la misura del corpo a cui corrispondono
 --
--- articoli.id_taglia punta qui, e _mod/_4100.prodotti/_src/_inc/_macro/_articoli.form.php popola
--- la sua tendina da taglie_view. La tabella pero' non era mai stata scritta in queste patch: sui
--- database dove non c'era, la scheda articolo faceva fallire quella query a ogni apertura.
--- Aggiunta l'08/09/2026 nella forma che ha sui deploy dove esiste.
+-- la taglia di un articolo ( articoli.id_taglia ) si sceglie fra le righe della tipologia del suo prodotto, quando la
+-- tipologia ha se_taglie; il 050 carica a id fissi le taglie più comuni di maglieria da uomo e da donna, caschi, calzature
+-- e intimo, che l'utente può modificare o eliminare, e accanto a quelle l'utente aggiunge le sue
 --
-CREATE TABLE IF NOT EXISTS `taglie` (
-  `id` bigint(20) NOT NULL,                                     -- chiave primaria
-  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,              -- chiave esterna per la tipologia di prodotto
-  `nome` char(64) DEFAULT NULL,                                 -- nome della taglia
-  `sesso` enum('M','F','-') DEFAULT NULL,                       -- sesso a cui la taglia si riferisce
-  `taglia_internazionale` char(8) DEFAULT NULL,                 -- corrispondenza internazionale
-  `circonferenza_testa_min` int(11) DEFAULT NULL,               -- per i capi che si misurano sulla testa
-  `circonferenza_testa_max` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTA non esiste una tabella di conversione normativa fra i paesi: EN 13402 designa la taglia con le misure del corpo,
+-- ISO 19407 converte le calzature dalla lunghezza del piede; le sigle del 050 sono le convenzioni più diffuse, indicative,
+-- mentre la misura è il dato stabile; per le calzature taglia_eu è il punto di Parigi e la taglia US da donna è circa
+-- quella da uomo più 1,5
+-- NOTA misura_min e misura_max sono in millimetri, e misurano la dimensione primaria EN 13402 della tipologia: il petto
+-- per la maglieria da uomo, il seno per quella da donna, la circonferenza della testa per i caschi, la lunghezza del
+-- piede per le calzature
+CREATE TABLE IF NOT EXISTS `taglie` (                         --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL,                              -- nome della taglia, con la tipologia e il sesso a cui si riferisce
+  `id_tipologia_prodotti` bigint(20) DEFAULT NULL,            -- chiave esterna per la tipologia di prodotto della taglia
+  `sesso` enum('M','F','-') DEFAULT NULL,                     -- sesso a cui la taglia si riferisce
+  `taglia_internazionale` char(8) DEFAULT NULL,               -- sigla internazionale a lettere ( XS, S, M, L… )
+  `taglia_it` char(8) DEFAULT NULL,                           -- taglia italiana
+  `taglia_eu` char(8) DEFAULT NULL,                           -- taglia europea ( tedesca per i capi, punto di Parigi per le calzature )
+  `taglia_fr` char(8) DEFAULT NULL,                           -- taglia francese
+  `taglia_uk` char(8) DEFAULT NULL,                           -- taglia britannica
+  `taglia_us` char(8) DEFAULT NULL,                           -- taglia statunitense
+  `misura_min` int(11) DEFAULT NULL,                          -- misura minima del corpo in millimetri
+  `misura_max` int(11) DEFAULT NULL,                          -- misura massima del corpo in millimetri
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000064000
 
 -- veicoli
