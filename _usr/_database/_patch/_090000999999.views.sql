@@ -167,6 +167,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
 CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	SELECT
 		anagrafica_certificazioni.id,
+		anagrafica_certificazioni.ordine,
 		anagrafica_certificazioni.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		anagrafica_certificazioni.id_certificazione,
@@ -177,13 +178,12 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		anagrafica_certificazioni.codice,
 		anagrafica_certificazioni.data_emissione,
 		anagrafica_certificazioni.data_scadenza,
+		anagrafica_certificazioni.note,
 		from_unixtime( anagrafica_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			certificazioni.nome,
-			' - ',
-			anagrafica_certificazioni.codice
+			concat_ws( ' - ', certificazioni.nome, anagrafica_certificazioni.codice )
 		) AS __label__
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
@@ -8472,6 +8472,7 @@ CREATE OR REPLACE VIEW `valutazioni_caratteristiche_view` AS
 CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 	SELECT
 		valutazioni_certificazioni.id,
+		valutazioni_certificazioni.ordine,
 		valutazioni_certificazioni.id_valutazione,
 		valutazioni_certificazioni.id_certificazione,
 		certificazioni.nome AS certificazione,
@@ -8481,15 +8482,16 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 		valutazioni_certificazioni.codice,
 		valutazioni_certificazioni.data_emissione,
 		valutazioni_certificazioni.data_scadenza,
+		valutazioni_certificazioni.note,
+		from_unixtime( valutazioni_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
-			valutazioni_certificazioni.id_valutazione, ' ',
-			certificazioni.nome,
-			' - ',
-			valutazioni_certificazioni.codice
+			'valutazione ', valutazioni_certificazioni.id_valutazione,
+			' / ',
+			concat_ws( ' - ', certificazioni.nome, valutazioni_certificazioni.codice )
 		) AS __label__
 	FROM valutazioni_certificazioni
 		LEFT JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
-		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
+		LEFT JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione
 ;
 
 -- | 090000063000

@@ -787,10 +787,6 @@
         'valutazioni_caratteristiche' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-        'valutazioni_certificazioni' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
-        ),
         'luoghi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),

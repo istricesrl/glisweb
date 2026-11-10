@@ -33,7 +33,6 @@
             'sconti_listini' => 2,
             'tipologie_sconti' => 2,
             'todo' => 2,
-            'valutazioni_certificazioni' => 2,
             'video' => 2
         );
 

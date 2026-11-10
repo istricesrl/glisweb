@@ -311,24 +311,36 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (           --
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene i anagrafica certificazioni
+-- funzione: associa alle anagrafiche le certificazioni che possiedono
+--
+-- questa tabella registra le certificazioni possedute da un'anagrafica ( certificati medici, documenti
+-- d'identita', attestati, abilitazioni, ecc. ): il tipo sta in certificazioni, qui ci sono il numero del documento
+-- ( codice ), chi l'ha rilasciato ( id_emittente ), le date di emissione e di scadenza; la scadenza serve per i
+-- controlli e gli avvisi sui certificati in scadenza; le scansioni si collegano tramite
+-- file.id_anagrafica_certificazioni; e' gemella di valutazioni_certificazioni
+--
+-- NOTA la terna ( id_anagrafica, id_certificazione, codice ) e' unica, ma codice puo' essere NULL e in quel
+-- caso l'unicita' non vale: un rinnovo senza numero non viene scartato
+-- NOTA id_emittente e' l'anagrafica dell'ente o del professionista che ha rilasciato la certificazione ( ente,
+-- scuola, medico... ); se l'emittente viene cancellato la certificazione resta, senza emittente
 --
 CREATE TABLE IF NOT EXISTS `anagrafica_certificazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_certificazione` bigint(20) DEFAULT NULL,
-  `id_emittente` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `data_emissione` date DEFAULT NULL,
-  `data_scadenza` date DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica che possiede la certificazione
+  `id_certificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per il tipo di certificazione
+  `id_emittente` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica che ha rilasciato la certificazione
+  `nome` char(255) DEFAULT NULL,                                -- nome o descrizione del documento
+  `codice` char(32) DEFAULT NULL,                               -- numero del documento
+  `data_emissione` date DEFAULT NULL,                           -- data di emissione
+  `data_scadenza` date DEFAULT NULL,                            -- data di scadenza
+  `note` text DEFAULT NULL,                                     -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000000700
@@ -8764,24 +8776,38 @@ CREATE TABLE IF NOT EXISTS `valutazioni_caratteristiche` (
 
 -- valutazioni_certificazioni
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: contiene i valutazioni certificazioni
+-- funzione: associa a una valutazione i documenti e le certificazioni che la accompagnano
+--
+-- questa tabella registra i documenti e le certificazioni che accompagnano una valutazione ( l'attestato di
+-- prestazione energetica di un immobile, il certificato di autenticita' o di conformita' di una matricola, il
+-- diploma o l'abilitazione di un candidato ): il tipo sta in certificazioni, qui ci sono il numero del documento
+-- ( codice ), chi l'ha rilasciato ( id_emittente ) e le date di emissione e di scadenza; e' gemella di
+-- anagrafica_certificazioni, che registra le certificazioni possedute da un'anagrafica in quanto tale, mentre
+-- queste valgono per la valutazione a cui appartengono; le scansioni si collegano tramite
+-- file.id_valutazione_certificazioni
+--
+-- NOTA la terna ( id_valutazione, id_certificazione, codice ) e' unica, ma codice puo' essere NULL e in quel
+-- caso l'unicita' non vale, come nella gemella
+-- NOTA id_emittente e' l'anagrafica dell'ente o del professionista che ha rilasciato la certificazione; se
+-- l'emittente viene cancellato la certificazione resta, senza emittente
 --
 CREATE TABLE IF NOT EXISTS `valutazioni_certificazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_valutazione` bigint(20) DEFAULT NULL,
-  `id_certificazione` bigint(20) DEFAULT NULL,
-  `id_emittente` bigint(20) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `data_emissione` date DEFAULT NULL,
-  `data_scadenza` date DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_valutazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la valutazione
+  `id_certificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per il tipo di certificazione
+  `id_emittente` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica che ha rilasciato la certificazione
+  `nome` char(255) DEFAULT NULL,                                -- nome o descrizione del documento
+  `codice` char(32) DEFAULT NULL,                               -- numero del documento
+  `data_emissione` date DEFAULT NULL,                           -- data di emissione
+  `data_scadenza` date DEFAULT NULL,                            -- data di scadenza
+  `note` text DEFAULT NULL,                                     -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000063000

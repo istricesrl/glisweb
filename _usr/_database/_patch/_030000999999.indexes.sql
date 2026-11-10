@@ -141,6 +141,7 @@ ALTER TABLE `anagrafica_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMEN
 ALTER TABLE `anagrafica_certificazioni`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_certificazione`, `codice`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_certificazione` (`id_certificazione`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
@@ -150,7 +151,7 @@ ALTER TABLE `anagrafica_certificazioni`
 	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+	ADD KEY `indice` (`id`,`ordine`,`id_anagrafica`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
 
 -- | 030000000601
 
@@ -5320,6 +5321,7 @@ ALTER TABLE `valutazioni_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_I
 ALTER TABLE `valutazioni_certificazioni`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_certificazione` (`id_certificazione`), 
 	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
@@ -5329,7 +5331,7 @@ ALTER TABLE `valutazioni_certificazioni`
 	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+	ADD KEY `indice` (`id`,`ordine`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
 
 -- | 030000062951
 
