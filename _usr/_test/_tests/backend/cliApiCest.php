@@ -5,7 +5,8 @@
      *
      * verifica _src/_api/_cli.php: senza chiave, o con una chiave che non esiste, risponde 401 con status KO e una sola
      * risposta JSON; con la chiave avuta da api/login risponde l'account senza password, permessi e privilegi, e l'albero
-     * del menu admin con le stesse regole di permesso di buildMenu()
+     * del menu admin con le stesse regole di permesso di buildMenu(); in POST JSON rinnova la chiave ( rinnova ), cerca
+     * nelle viste per le tendine ( cerca ) e restituisce le righe di una pagina vista ( pagina )
      *
      * si usano gli account test-roots e test-users creati dall'helper Glisweb, con la loro password vera ( grabTestAccount );
      * la chiave vive su Redis, quindi senza Redis il deploy non sa fare il login via chiave e il test lo dice
@@ -14,8 +15,9 @@
 
     class cliApiCest {
 
-        // chiama api/cli, con l'header gliswebAuthKey se c'e' una chiave; restituisce lo status HTTP e la risposta decodificata
-        private function cli( $chiave, &$risposta, &$raw ) {
+        // chiama api/cli, con l'header gliswebAuthKey se c'e' una chiave e in POST JSON se ci sono dati; restituisce lo
+        // status HTTP e la risposta decodificata
+        private function cli( $chiave, &$risposta, &$raw, $dati = NULL ) {
 
             global $cf;
 
@@ -25,8 +27,8 @@
 
             restCall(
                 rtrim( $cf['site']['url'], '/' ) . '/api/cli',
-                METHOD_GET,
-                NULL,
+                ( $dati === NULL ) ? METHOD_GET : METHOD_POST,
+                $dati,
                 MIME_APPLICATION_JSON,
                 MIME_TEXT_PLAIN,
                 $status,
@@ -158,6 +160,85 @@
                 count( $this->ids( $users['menu']['admin'] ?? array() ) ),
                 'test-users vede tutto il menu admin di test-roots'
             );
+
+        }
+
+        // rinnova: la chiave resta buona e la risposta e' corta, senza menu
+        public function rinnova( BackendTester $I ) {
+
+            $chiave = $this->chiave( $I, 'roots' );
+
+            $status = $this->cli( $chiave, $risposta, $raw, array( 'rinnova' => true ) );
+
+            $I->assertEquals( 200, $status, 'risposta: ' . substr( (string) $raw, 0, 300 ) );
+            $I->assertEquals( 'OK', $risposta['status'] ?? NULL );
+            $I->assertTrue( $risposta['rinnovato'] ?? false, 'non dice rinnovato' );
+            $I->assertArrayNotHasKey( 'menu', $risposta, 'il rinnovo ha dato il menu' );
+
+            $this->cli( $chiave, $risposta, $raw );
+            $I->assertEquals( 'OK', $risposta['status'] ?? NULL, 'dopo il rinnovo la chiave non vale piu\'' );
+
+        }
+
+        // cerca: solo sulle viste del framework, almeno due caratteri, per testo o per id
+        public function cerca( BackendTester $I ) {
+
+            $chiave = $this->chiave( $I, 'roots' );
+
+            $this->cli( $chiave, $risposta, $raw, array( 'cerca' => array( 'tabella' => 'tabella_che_non_esiste', 'q' => 'ita' ) ) );
+            $I->assertEquals( 'KO', $risposta['status'] ?? NULL, 'una tabella senza vista ha risposto: ' . substr( (string) $raw, 0, 200 ) );
+
+            $this->cli( $chiave, $risposta, $raw, array( 'cerca' => array( 'tabella' => 'lingue', 'q' => 'i' ) ) );
+            $I->assertEquals( 'KO', $risposta['status'] ?? NULL, 'un carattere solo ha risposto' );
+
+            $this->cli( $chiave, $risposta, $raw, array( 'cerca' => array( 'tabella' => 'lingue', 'q' => 'italia' ) ) );
+            $I->assertEquals( 'OK', $risposta['status'] ?? NULL, 'risposta: ' . substr( (string) $raw, 0, 300 ) );
+            $I->assertContains( 'italiano', array_column( $risposta['cerca']['voci'] ?? array(), '__label__' ), 'italiano non trovato' );
+
+            $this->cli( $chiave, $risposta, $raw, array( 'cerca' => array( 'tabella' => 'lingue', 'id' => 1 ) ) );
+            $I->assertEquals( 'italiano', $risposta['cerca']['voci'][0]['__label__'] ?? NULL, 'l\'id 1 non e\' italiano' );
+
+        }
+
+        // pagina: 404 se non esiste, le righe di una vista twig del menu admin; una vista della generazione vecchia
+        // ( .view.html, i deploy coi moduli legacy ) non e' ancora gestita e lo dice
+        public function pagina( BackendTester $I ) {
+
+            $chiave = $this->chiave( $I, 'roots' );
+
+            $status = $this->cli( $chiave, $risposta, $raw, array( 'pagina' => 'pagina.che.non.esiste' ) );
+            $I->assertEquals( 404, $status, 'pagina inesistente: ' . substr( (string) $raw, 0, 200 ) );
+            $I->assertEquals( 'KO', $risposta['status'] ?? NULL );
+
+            // una vista qualsiasi del menu admin per generazione, per non legarsi a un modulo
+            $this->cli( $chiave, $menu, $raw );
+            $viste = array();
+            $cerca = function( $voci ) use ( &$cerca, &$viste ) {
+                foreach( (array) $voci as $voce ) {
+                    if( preg_match( '/\.view\.(twig|html)$/', (string) ( $voce['schema'] ?? '' ), $m ) && ! isset( $viste[ $m[1] ] ) ) {
+                        $viste[ $m[1] ] = $voce['id'];
+                    }
+                    $cerca( $voce['content'] ?? array() );
+                }
+            };
+            $cerca( $menu['menu']['admin'] ?? array() );
+            $I->assertNotEmpty( $viste, 'nessuna vista nel menu admin di roots' );
+
+            if( isset( $viste['html'] ) ) {
+                $this->cli( $chiave, $risposta, $raw, array( 'pagina' => $viste['html'] ) );
+                $I->assertEquals( 'schema non ancora gestito', $risposta['err'] ?? NULL, $viste['html'] . ': ' . substr( (string) $raw, 0, 300 ) );
+            }
+
+            if( ! isset( $viste['twig'] ) ) {
+                return;
+            }
+            $vista = $viste['twig'];
+
+            $status = $this->cli( $chiave, $risposta, $raw, array( 'pagina' => $vista ) );
+            $I->assertEquals( 200, $status, $vista . ': ' . substr( (string) $raw, 0, 300 ) );
+            $I->assertEquals( 'OK', $risposta['status'] ?? NULL, $vista . ': ' . substr( (string) $raw, 0, 300 ) );
+            $I->assertEquals( $vista, $risposta['pagina'] ?? NULL );
+            $I->assertIsArray( $risposta['view']['data'] ?? NULL, $vista . ': la vista non ha righe' );
 
         }
 
