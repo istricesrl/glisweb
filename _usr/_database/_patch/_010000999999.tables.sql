@@ -1106,6 +1106,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (                  --
   `se_edifici` tinyint(1) DEFAULT NULL,                           -- flag per le caratteristiche assegnabili agli edifici
   `se_indirizzi` tinyint(1) DEFAULT NULL,                         -- flag per le caratteristiche assegnabili agli indirizzi
   `se_vani` tinyint(1) DEFAULT NULL,                            -- flag per le caratteristiche assegnabili ai vani
+  `se_valutazioni` tinyint(1) DEFAULT NULL,                     -- flag per le caratteristiche assegnabili alle valutazioni
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -8682,26 +8683,81 @@ CREATE TABLE IF NOT EXISTS `url` (                              --
 
 -- valutazioni
 -- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: fissa a una data i valori di un oggetto o di una persona
+--
+-- questa tabella fissa nel tempo l'associazione fra un soggetto e determinati valori: per un immobile lo stato
+-- ( condizione, disponibilita' ), la classe energetica, le superfici e la valutazione economica, che variano nel
+-- tempo e per questo non stanno su immobili; per un singolo oggetto ( una matricola, p.es. un pezzo d'antiquariato
+-- in un gestionale per antiquari ) la condizione e il valore; per una persona ( p.es. un candidato in un gestionale
+-- di selezione del personale ) i valori che la descrivono a quella data; ogni riga e' una valutazione, fatta da un
+-- valutatore al momento timestamp_valutazione, e la storia di un soggetto e' l'elenco delle sue valutazioni
+--
+-- NOTA il soggetto e' uno solo: id_immobile oppure id_matricola oppure id_anagrafica, mai piu' di uno; per questo le
+-- chiavi uniche sono tre, una per soggetto con la data, perche' il NULL degli altri svuoterebbe una chiave unica
+-- sola; un soggetto nuovo ( p.es. asset ) si aggiunge con la sua colonna e la sua chiave unica
+--
+-- NOTA id_anagrafica e' la persona valutata, non chi valuta: come in tutto il canone una colonna id_<oggetto>
+-- dice a chi appartiene la riga, e chi fa qualcosa ha il nome del suo ruolo ( id_valutatore, come id_emittente
+-- o id_agente ); fino al 2026-11-10 i form legacy ( 0800.valutazioni, V300.immobiliari ) usavano id_anagrafica
+-- per l'esecutore
+--
+-- NOTA le chiavi esterne verso il soggetto sono CASCADE: una valutazione non ha senso senza il soggetto valutato;
+-- quelle verso il valutatore, i vocabolari e la valuta sono SET NULL
+--
+-- NOTA i valori comuni hanno una colonna ( condizione, disponibilita', classe energetica, importo, superfici ), gli
+-- altri stanno in valutazioni_caratteristiche, con le caratteristiche che hanno se_valutazioni; documenti e
+-- attestati della valutazione ( p.es. l'APE ) stanno in valutazioni_certificazioni, foto e allegati nei media
+--
+CREATE TABLE IF NOT EXISTS `valutazioni` (                      --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile valutato
+  `id_matricola` bigint(20) DEFAULT NULL,                         -- chiave esterna per la matricola ( il singolo oggetto ) valutata
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per la persona valutata
+  `id_valutatore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica che ha fatto la valutazione
+  `id_condizione` bigint(20) DEFAULT NULL,                        -- chiave esterna per la condizione del soggetto ( nuovo, usato, da ristrutturare… )
+  `id_disponibilita` bigint(20) DEFAULT NULL,                     -- chiave esterna per la disponibilita' del soggetto
+  `id_classe_energetica` bigint(20) DEFAULT NULL,                 -- chiave esterna per la classe energetica dell'immobile
+  `id_valuta` bigint(20) DEFAULT NULL,                            -- chiave esterna per la valuta dell'importo
+  `importo` decimal(16,2) DEFAULT NULL,                           -- valutazione economica del soggetto
+  `mq_commerciali` decimal(15,2) DEFAULT NULL,                    -- superficie commerciale dell'immobile in metri quadri
+  `mq_calpestabili` decimal(15,2) DEFAULT NULL,                   -- superficie calpestabile dell'immobile in metri quadri
+  `note` text DEFAULT NULL,                                       -- note sulla valutazione
+  `timestamp_valutazione` int(11) DEFAULT NULL,                   -- momento a cui si riferisce la valutazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la valutazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la valutazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
+-- | 010000062925
+
+-- valutazioni_caratteristiche
+-- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione valutazioni e 
+-- funzione: collega una valutazione alle caratteristiche valutate
 --
-CREATE TABLE IF NOT EXISTS `valutazioni` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_matricola` bigint(20) DEFAULT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `mq_commerciali` decimal(15,2) DEFAULT NULL,
-  `mq_calpestabili` decimal(15,2) DEFAULT NULL,
-  `id_condizione` bigint(20) DEFAULT NULL,
-  `id_disponibilita` bigint(20) DEFAULT NULL,
-  `id_classe_energetica` bigint(20) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `timestamp_valutazione` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- questa tabella collega una valutazione all'albero delle caratteristiche ( caratteristiche ) e ne porta il
+-- valore a quella data: sono i valori della valutazione che non hanno una colonna in valutazioni ( p.es. l'epoca
+-- e l'autenticita' di un oggetto, le competenze di un candidato ); e' gemella di immobili_caratteristiche, quindi
+-- il valore e' per lingua, id_lingua fa parte della chiave unica, e se_assente dichiara che la caratteristica non
+-- c'e'; le caratteristiche proponibili sono quelle con caratteristiche.se_valutazioni ( nata il 2026-11-10 )
+--
+CREATE TABLE IF NOT EXISTS `valutazioni_caratteristiche` (
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_valutazione` bigint(20) DEFAULT NULL,                     -- chiave esterna per la valutazione
+  `id_caratteristica` bigint(20) DEFAULT NULL,                  -- chiave esterna per la caratteristica
+  `id_lingua` bigint(20) DEFAULT NULL,                          -- chiave esterna per la lingua del valore
+  `valore` text DEFAULT NULL,                                   -- valore della caratteristica
+  `note` text DEFAULT NULL,                                     -- note
+  `se_assente` tinyint(1) DEFAULT NULL,                         -- la caratteristica e' dichiarata assente
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000062950

@@ -648,7 +648,7 @@ ALTER TABLE `caratteristiche`
 	ADD KEY `se_articoli` (`se_articoli`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`se_prodotti`,`se_articoli`,`se_immobili`,`se_edifici`,`se_indirizzi`,`se_vani`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`se_prodotti`,`se_articoli`,`se_immobili`,`se_edifici`,`se_indirizzi`,`se_vani`,`se_valutazioni`);
 
 -- | 030000002901
 
@@ -5270,23 +5270,47 @@ ALTER TABLE `url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-04-28 Chiara GDL
 ALTER TABLE `valutazioni`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_immobile`,`timestamp_valutazione`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_matricola` (`id_matricola`), 
-	ADD KEY `id_immobile` (`id_immobile`), 
-	ADD KEY `id_condizione` (`id_condizione`), 
-	ADD KEY `id_disponibilita` (`id_disponibilita`), 
-	ADD KEY `id_classe_energetica` (`id_classe_energetica`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_matricola`,`id_anagrafica`,`id_immobile`, `id_condizione`, `id_disponibilita`, `id_classe_energetica`); 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`timestamp_valutazione`),
+	ADD UNIQUE KEY `unica_matricola` (`id_matricola`,`timestamp_valutazione`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`timestamp_valutazione`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_matricola` (`id_matricola`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_valutatore` (`id_valutatore`),
+	ADD KEY `id_condizione` (`id_condizione`),
+	ADD KEY `id_disponibilita` (`id_disponibilita`),
+	ADD KEY `id_classe_energetica` (`id_classe_energetica`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `timestamp_valutazione` (`timestamp_valutazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_matricola`,`id_anagrafica`,`id_valutatore`,`id_condizione`,`id_disponibilita`,`id_classe_energetica`,`timestamp_valutazione`); 
 
 -- | 030000062901
 
 -- valutazioni
 -- tipologia: tabella gestita
 ALTER TABLE `valutazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000062925
+
+-- valutazioni_caratteristiche
+ALTER TABLE `valutazioni_caratteristiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_caratteristica`,`id_lingua`),
+	ADD KEY `id_valutazione` (`id_valutazione`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_valutazione`,`id_caratteristica`,`id_lingua`,`se_assente`);
+
+-- | 030000062926
+
+-- valutazioni_caratteristiche
+ALTER TABLE `valutazioni_caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000062950
 

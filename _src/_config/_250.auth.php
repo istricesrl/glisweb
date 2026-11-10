@@ -649,9 +649,6 @@
         'menu' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-        'valutazioni' => array(
-            CONTROL_FULL => array( 'roots' )
-        ),
         'licenze' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -786,6 +783,9 @@
         'valutazioni' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
+        ),
+        'valutazioni_caratteristiche' => array(
+            CONTROL_FULL => array( 'roots' )
         ),
         'valutazioni_certificazioni' => array(
             CONTROL_FULL => array('roots'),

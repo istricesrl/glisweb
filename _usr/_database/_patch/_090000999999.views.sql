@@ -1354,6 +1354,7 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.se_edifici,
 		caratteristiche.se_indirizzi,
 		caratteristiche.se_vani,
+		caratteristiche.se_valutazioni,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -8354,82 +8355,74 @@ CREATE OR REPLACE VIEW `url_view` AS
 -- valutazioni_view
 -- tipologia: tabella gestita
 -- verifica: 2022-04-28 Chiara GDL
-CREATE OR REPLACE VIEW valutazioni_view AS
+CREATE OR REPLACE VIEW `valutazioni_view` AS
 	SELECT
 		valutazioni.id,
-		valutazioni.id_anagrafica,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
-		valutazioni.id_matricola,
-		matricole.matricola AS matricola,
 		valutazioni.id_immobile,
 		concat_ws(
 			' ',
-			tipologie_immobili.nome, 
-			coalesce(
-			concat('scala ', immobili.scala), 
-			''
-			), 
-			coalesce(
-			concat('piano ', immobili.piano), 
-			''
-			), 
-			coalesce(
-			concat('int. ', immobili.interno), 
-			''
-			),
+			tipologie_immobili.nome,
+			concat( 'scala ', immobili.scala ),
+			concat( 'piano ', immobili.piano ),
+			concat( 'int. ', immobili.interno ),
 			tipologie_edifici.nome,
 			edifici.nome,
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
 			comuni.nome,
 			provincie.sigla
 		) AS immobile,
-		valutazioni.mq_commerciali,
-		valutazioni.mq_calpestabili,
+		valutazioni.id_matricola,
+		matricole.matricola AS matricola,
+		valutazioni.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		valutazioni.id_valutatore,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS valutatore,
 		valutazioni.id_condizione,
 		condizioni.nome AS condizione,
 		valutazioni.id_disponibilita,
 		disponibilita.nome AS disponibilita,
 		valutazioni.id_classe_energetica,
 		classi_energetiche.nome AS classe_energetica,
+		valutazioni.id_valuta,
+		valute.iso4217 AS valuta,
+		valutazioni.importo,
+		valutazioni.mq_commerciali,
+		valutazioni.mq_calpestabili,
+		valutazioni.note,
 		valutazioni.timestamp_valutazione,
 		valutazioni.id_account_inserimento,
 		valutazioni.id_account_aggiornamento,
-		concat('valutazione ', 	concat_ws(
+		concat_ws(
 			' ',
-			tipologie_immobili.nome, 
+			'valutazione',
 			coalesce(
-			concat('scala ', immobili.scala), 
-			''
-			), 
-			coalesce(
-			concat('piano ', immobili.piano), 
-			''
-			), 
-			coalesce(
-			concat('int. ', immobili.interno), 
-			''
+				nullif( concat_ws(
+					' ',
+					tipologie_immobili.nome,
+					concat( 'scala ', immobili.scala ),
+					concat( 'piano ', immobili.piano ),
+					concat( 'int. ', immobili.interno ),
+					tipologie_edifici.nome,
+					edifici.nome,
+					tipologie_indirizzi.nome,
+					indirizzi.indirizzo,
+					indirizzi.civico,
+					indirizzi.cap,
+					indirizzi.localita,
+					comuni.nome,
+					provincie.sigla
+				), '' ),
+				matricole.matricola,
+				nullif( coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ), '' )
 			),
-			tipologie_edifici.nome,
-			edifici.nome,
-			tipologie_indirizzi.nome,
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) ) AS __label__
+			from_unixtime( valutazioni.timestamp_valutazione, '%Y-%m-%d' )
+		) AS __label__
 	FROM valutazioni
-		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
-		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
 		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
-		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
-		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
-		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica
 		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
 		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
 		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
@@ -8437,8 +8430,39 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN regioni ON regioni.id = provincie.id_regione
-		LEFT JOIN stati ON stati.id = regioni.id_stato;
+		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
+		LEFT JOIN anagrafica AS a1 ON a1.id = valutazioni.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = valutazioni.id_valutatore
+		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
+		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica
+		LEFT JOIN valute ON valute.id = valutazioni.id_valuta
+;
+
+-- | 090000062926
+
+-- valutazioni_caratteristiche_view
+CREATE OR REPLACE VIEW `valutazioni_caratteristiche_view` AS
+	SELECT
+		valutazioni_caratteristiche.id,
+		valutazioni_caratteristiche.ordine,
+		valutazioni_caratteristiche.id_valutazione,
+		valutazioni_caratteristiche.id_caratteristica,
+		valutazioni_caratteristiche.id_lingua,
+		caratteristiche.nome AS caratteristica,
+		valutazioni_caratteristiche.valore,
+		valutazioni_caratteristiche.note,
+		valutazioni_caratteristiche.se_assente,
+		valutazioni_caratteristiche.id_account_inserimento,
+		valutazioni_caratteristiche.id_account_aggiornamento,
+		concat(
+			valutazioni_caratteristiche.id_valutazione,
+			' / ',
+			caratteristiche.nome
+		) AS __label__
+	FROM valutazioni_caratteristiche
+		LEFT JOIN caratteristiche ON caratteristiche.id = valutazioni_caratteristiche.id_caratteristica
+;
 
 -- | 090000062951
 
