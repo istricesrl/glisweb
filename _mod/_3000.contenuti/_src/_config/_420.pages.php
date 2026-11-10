@@ -145,16 +145,25 @@
 
         // die( 'contenuto ' . print_r( $cnt, true ) );
 
+        // le librerie di macro dei testi dipendono dalla generazione del template: i template Twig ( _tpl ) hanno le
+        // librerie di _src/_twig/_lib/ e lib/default.twig, come in _PA000.pagine, quelli HTML ( _templates ) le loro;
+        // importare bin/default.html in un template Twig ferma la pagina su Unable to find template
+        $twig = ( isset( $cf['contents']['page']['template']['path'] ) && preg_match( '/(^|\/)_?tpl\//', $cf['contents']['page']['template']['path'] ) );
+
         // se sono presenti contenuti
         if( ! empty( $cnt ) ) {
 
             // assegno i contenuti
             foreach( array( 'content', 'abstract', 'specifiche' ) as $k ) {
                 if( empty( $cf['contents']['page'][ $k ] ) ) {
-                    $cf['contents']['page'][ $k ][ $cf['localization']['language']['ietf'] ] =
+                    $cf['contents']['page'][ $k ][ $cf['localization']['language']['ietf'] ] = ( ( $twig ) ?
+                        "{% import '_lib/_default.twig' as cms %}\n\n".
+                        "{% import '_lib/_privacy.twig' as prv %}\n\n".
+                        "{% import 'lib/default.twig' as tpl %}\n\n"
+                        :
                         "{% import '_bin/_default.html' as cms %}\n\n".
                         "{% import '_bin/_privacy.html' as prv %}\n\n".
-                        "{% import 'bin/default.html' as tpl %}\n\n".
+                        "{% import 'bin/default.html' as tpl %}\n\n" ).
                         $cnt[ $k ];
                 }
             }
@@ -283,9 +292,12 @@
                     // assegno i contenuti
                     foreach( array( 'abstract', 'cappello' ) as $k ) {
                         if( empty( $cf['contents']['pages'][ $sid ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
-                            $cf['contents']['pages'][ $sid ][ $k ][ $cf['localization']['language']['ietf'] ] =
+                            $cf['contents']['pages'][ $sid ][ $k ][ $cf['localization']['language']['ietf'] ] = ( ( $twig ) ?
+                                "{% import '_lib/_default.twig' as cms %}\n\n".
+                                "{% import 'lib/default.twig' as def %}\n\n"
+                                :
                                 "{% import '_bin/_default.html' as cms %}\n\n".
-                                "{% import 'bin/default.html' as def %}\n\n".
+                                "{% import 'bin/default.html' as def %}\n\n" ).
                                 $sc[ $k ];
                         }
                     }
