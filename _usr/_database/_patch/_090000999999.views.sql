@@ -1068,6 +1068,34 @@ CREATE OR REPLACE VIEW `attivita_asset_view` AS
 		LEFT JOIN attivita ON attivita.id = attivita_asset.id_attivita
 ;
 
+-- | 090000002000
+
+-- attivita_matricole_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW attivita_matricole_view AS
+	SELECT
+		attivita_matricole.id,
+		attivita_matricole.ordine,
+		attivita_matricole.id_attivita,
+		attivita.nome AS attivita,
+		attivita_matricole.id_matricola,
+		matricole.matricola AS matricola,
+		attivita_matricole.id_ruolo,
+		ruoli_matricole_path( attivita_matricole.id_ruolo ) AS ruolo,
+		attivita_matricole.note,
+		attivita_matricole.id_account_inserimento,
+		attivita_matricole.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			attivita.nome,
+			matricole.matricola,
+			ruoli_matricole_path( attivita_matricole.id_ruolo )
+		) AS __label__
+	FROM attivita_matricole
+		LEFT JOIN attivita ON attivita.id = attivita_matricole.id_attivita
+		LEFT JOIN matricole ON matricole.id = attivita_matricole.id_matricola
+;
+
 -- | 090000002100
 
 -- audio_view
@@ -6838,6 +6866,7 @@ CREATE OR REPLACE VIEW ruoli_matricole_view AS
 		ruoli_matricole.nome,
 		ruoli_matricole.html_entity,
 		ruoli_matricole.font_awesome,
+		ruoli_matricole.se_attivita,
 		ruoli_matricole.se_progetti,
 		ruoli_matricole.se_todo,
 	 	ruoli_matricole_path( ruoli_matricole.id ) AS __label__
@@ -8232,23 +8261,24 @@ CREATE OR REPLACE VIEW `tipologie_zone_view` AS
 
 -- todo_matricole_view
 -- tipologia: tabella gestita
--- verifica: 2022-04-27 15:07 Chiara GDL
 CREATE OR REPLACE VIEW todo_matricole_view AS
 	SELECT
 		todo_matricole.id,
+		todo_matricole.ordine,
 		todo_matricole.id_todo,
 		todo.nome AS todo,
 		todo_matricole.id_matricola,
 		matricole.matricola AS matricola,
 		todo_matricole.id_ruolo,
 		ruoli_matricole_path( todo_matricole.id_ruolo ) AS ruolo,
-		todo_matricole.ordine,
+		todo_matricole.note,
 		todo_matricole.id_account_inserimento,
 		todo_matricole.id_account_aggiornamento,
  		concat_ws(
 			' ',
 			todo.nome,
-			matricole.matricola
+			matricole.matricola,
+			ruoli_matricole_path( todo_matricole.id_ruolo )
 		) AS __label__
 	FROM todo_matricole
 		LEFT JOIN todo ON todo.id = todo_matricole.id_todo

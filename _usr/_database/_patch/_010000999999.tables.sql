@@ -798,6 +798,34 @@ CREATE TABLE IF NOT EXISTS `attivita_asset` (                   --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000002000
+
+-- attivita_matricole
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: collega un'attivita' ai singoli pezzi con matricola che vi hanno un ruolo
+--
+-- questa tabella collega un'attivita' ai singoli pezzi con matricola che vi hanno un ruolo ( ruoli_matricole ), che
+-- possono essere piu' d'uno: l'attrezzatura usata, il prodotto realizzato o consegnato; il pezzo su cui si svolge
+-- l'attivita', che e' uno solo, sta invece in attivita.id_matricola, come per attivita_asset e attivita.id_asset
+--
+-- NOTA la chiave unica e' ( id_attivita, id_matricola, id_ruolo ): lo stesso pezzo puo' avere piu' ruoli; le note
+-- precisano il ruolo nel caso specifico
+--
+CREATE TABLE IF NOT EXISTS `attivita_matricole` (               --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_attivita` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'attivita'
+  `id_matricola` bigint(20) DEFAULT NULL,                       -- chiave esterna per la matricola
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_matricole )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
+
 -- | 010000002100
 
 -- audio
@@ -6606,11 +6634,12 @@ CREATE TABLE IF NOT EXISTS `ruoli_mastri` (                   --
 -- tipologia: tabella standard
 -- rango: tabella secondaria
 -- struttura: tabella ricorsiva
--- funzione: contiene i ruoli che un pezzo con matricola svolge in un progetto o in un'attivita'
+-- funzione: contiene i ruoli che un pezzo con matricola svolge in un'attivita', in un progetto o in una todo
 --
 -- questa tabella contiene i ruoli di un pezzo con matricola ( l'attrezzatura usata, il prodotto realizzato o
--- consegnato ); la leggono progetti_matricole.id_ruolo e todo_matricole.id_ruolo, e i ruoli proponibili sono quelli
--- con se_progetti e con se_todo rispettivamente ( decisione del 28/10/2026 )
+-- consegnato ); la leggono attivita_matricole.id_ruolo, progetti_matricole.id_ruolo e todo_matricole.id_ruolo, e i
+-- ruoli proponibili sono quelli con se_attivita, se_progetti e se_todo rispettivamente ( decisioni del 28/10/2026 e
+-- del 10/11/2026 )
 --
 CREATE TABLE IF NOT EXISTS `ruoli_matricole` (                --
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
@@ -6618,6 +6647,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (                --
   `nome` char(255) DEFAULT NULL,                                -- nome del ruolo
   `html_entity` char(8) DEFAULT NULL,                           -- entita' HTML che rappresenta il ruolo
   `font_awesome` char(16) DEFAULT NULL,                         -- classe Font Awesome dell'icona del ruolo
+  `se_attivita` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili in attivita_matricole
   `se_progetti` tinyint(1) DEFAULT NULL,                        -- flag per i ruoli proponibili in progetti_matricole
   `se_todo` tinyint(1) DEFAULT NULL                             -- flag per i ruoli proponibili in todo_matricole
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
@@ -8544,19 +8574,27 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione todo e matricole
+-- funzione: collega una todo ai singoli pezzi con matricola che vi hanno un ruolo
 --
-CREATE TABLE IF NOT EXISTS `todo_matricole` (
-  `id` bigint(20) NOT NULL,
-  `id_todo` bigint(20) DEFAULT NULL,
-  `id_matricola` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- questa tabella collega una todo ai singoli pezzi con matricola che vi hanno un ruolo ( ruoli_matricole ), che
+-- possono essere piu' d'uno: l'attrezzatura da usare, il prodotto da realizzare o consegnare; il pezzo e' una riga
+-- di matricole, il lotto da cui viene sta in matricole.id_lotto
+--
+-- NOTA la chiave unica e' ( id_todo, id_matricola, id_ruolo ): lo stesso pezzo puo' avere piu' ruoli; le note
+-- precisano il ruolo nel caso specifico
+--
+CREATE TABLE IF NOT EXISTS `todo_matricole` (                   --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_todo` bigint(20) DEFAULT NULL,                            -- chiave esterna per la todo
+  `id_matricola` bigint(20) DEFAULT NULL,                       -- chiave esterna per la matricola
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_matricole )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000062000
 

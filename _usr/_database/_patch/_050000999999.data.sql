@@ -772,9 +772,9 @@ INSERT IGNORE INTO `ruoli_mastri` (`id`, `id_genitore`, `nome`, `html_entity`, `
 -- | 050000034900
 
 -- ruoli_matricole
-INSERT IGNORE INTO `ruoli_matricole` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_todo`) VALUES
-(1,	NULL,	'attrezzatura',	NULL,	NULL,	1,	1),
-(2,	NULL,	'prodotto',	NULL,	NULL,	1,	1);
+INSERT IGNORE INTO `ruoli_matricole` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_attivita`, `se_progetti`, `se_todo`) VALUES
+(1,	NULL,	'attrezzatura',	NULL,	NULL,	1,	1,	1),
+(2,	NULL,	'prodotto',	NULL,	NULL,	1,	1,	1);
 
 -- | 050000034950
 

@@ -434,10 +434,31 @@ ALTER TABLE `attivita_asset`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`ordine`,`id_attivita`,`id_asset`);
 
+-- | 030000002000
+
+-- attivita_matricole
+-- tipologia: tabella gestita
+ALTER TABLE `attivita_matricole`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_attivita`,`id_matricola`,`id_ruolo`), 
+	ADD KEY `id_attivita` (`id_attivita`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_attivita`,`id_matricola`,`id_ruolo`);
+
 -- | 030000001901
 
 -- attivita_asset
 ALTER TABLE `attivita_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000002001
+
+-- attivita_matricole
+-- tipologia: tabella gestita
+ALTER TABLE `attivita_matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002100
 
@@ -5188,7 +5209,6 @@ ALTER TABLE `todo` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- todo_matricole
 -- tipologia: tabella gestita
--- verifica: 2022-04-27 15:00 Chiara GDL
 ALTER TABLE `todo_matricole`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_todo`,`id_matricola`,`id_ruolo`), 
@@ -5198,7 +5218,7 @@ ALTER TABLE `todo_matricole`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_todo`,`id_matricola`,`ordine`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`ordine`,`id_todo`,`id_matricola`,`id_ruolo`);
 
 -- | 030000060101
 
