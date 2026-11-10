@@ -5158,25 +5158,26 @@ ALTER TABLE `tipologie_zone` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- todo
 ALTER TABLE `todo`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice`),
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_cliente` (`id_cliente`), 
-	ADD KEY `id_indirizzo` (`id_indirizzo`), 
-	ADD KEY `id_luogo` (`id_luogo`), 
-	ADD KEY `id_contatto` (`id_contatto`), 
-	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_documento` (`id_documento`), 
-	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`), 
-	ADD KEY `id_istruzione` (`id_istruzione`), 
-	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_cliente` (`id_cliente`),
+	ADD KEY `id_contatto` (`id_contatto`),
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_luogo` (`id_luogo`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_immobile` (`id_immobile`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_scadenza`,`ora_scadenza`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`data_chiusura`,`id_contatto`,`id_progetto`),
-	ADD KEY `indice_pianificazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`id_contatto`,`id_progetto`,`id_pianificazione`),
-	ADD KEY `indice_archiviazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`id_contatto`,`id_progetto`,`id_pianificazione`,`data_archiviazione`); 
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`),
+	ADD KEY `id_istruzione` (`id_istruzione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_contatto`,`id_luogo`,`id_progetto`,`id_pianificazione`,`data_chiusura`),
+	ADD KEY `indice_scadenza` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`data_scadenza`,`ora_scadenza`),
+	ADD KEY `indice_programmazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_luogo`,`id_progetto`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`),
+	ADD KEY `indice_archiviazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`data_archiviazione`); 
 
 -- | 030000060001
 

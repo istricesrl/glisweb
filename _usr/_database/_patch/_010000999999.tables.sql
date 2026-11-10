@@ -8484,50 +8484,58 @@ CREATE TABLE IF NOT EXISTS `tipologie_zone` (                     --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i todo del sistema
+-- funzione: contiene le todo, cioè le cose che qualcuno deve fare
+-- entità: questa tabella corrisponde all'entità todo
 --
--- questa tabella contiene i todo del sistema, con le informazioni relative alla tipologia, al codice, all'anagrafica,
--- al cliente, all'indirizzo, al luogo, alla data di apertura, alla scadenza, alla programmazione, alla chiusura,
--- al nome, al testo, al contatto, al progetto, al documento, all'istruzione, alla pianificazione, all'immobile,
--- all'archiviazione, alle note e agli account di inserimento e aggiornamento
+-- una todo è una cosa da fare: ha un responsabile ( id_anagrafica ), può avere un cliente, e può far parte di un
+-- progetto o riferirsi a un contatto, a un documento o a una sua riga, a un'istruzione, a un luogo o a un immobile;
+-- come le attività può essere scadenzata e programmata, e ognuna di queste fasi ha il suo blocco di colonne, poi si
+-- chiude ( data_chiusura ) e si archivia; le attività con cui la si svolge puntano a lei con attivita.id_todo, e una
+-- pianificazione può generarne in serie ( id_pianificazione, per esempio le lezioni di un corso )
+--
+-- NOTA la programmazione può essere puntuale ( data e ore ) oppure per settimana ( anno_programmazione e
+-- settimana_programmazione ), che è il modo in cui il backlog di produzione mette le todo negli sprint
+--
+-- NOTA note_pianificazione esce dal canone ( 10/11/2026 ): non la usa nessuna delle due linee e non ha dati su nessun
+-- deploy; le note sul calendario della todo stanno in note_programmazione
 --
 CREATE TABLE IF NOT EXISTS `todo` (                           --
   `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia del todo
-  `codice` char(32) DEFAULT NULL,                             -- codice univoco del todo
-  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica associata al todo
-  `id_cliente` bigint(20) DEFAULT NULL,                          -- chiave esterna per il cliente associato al todo
-  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo associato al todo
-  `id_luogo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il luogo associato al todo
-  `timestamp_apertura` int(11) DEFAULT NULL,                  -- timestamp di apertura del todo
-  `data_scadenza` date DEFAULT NULL,                          -- data di scadenza del todo
-  `ora_scadenza` time DEFAULT NULL,                           -- ora di scadenza del todo
-  `note_scadenza` text DEFAULT NULL,                          -- note sulla scadenza del todo
-  `data_programmazione` date DEFAULT NULL,                    -- data di programmazione del todo
-  `ora_inizio_programmazione` time DEFAULT NULL,              -- ora di inizio della programmazione del todo
-  `ora_fine_programmazione` time DEFAULT NULL,                -- ora di fine della programmazione del todo
-  `anno_programmazione` year(4) DEFAULT NULL,                 -- anno di programmazione del todo
-  `settimana_programmazione` int(11) DEFAULT NULL,            -- settimana di programmazione del todo
-  `ore_programmazione` decimal(5,2) DEFAULT NULL,             -- ore di programmazione del todo
-  `note_programmazione` text DEFAULT NULL,                    -- note sulla programmazione del todo
-  `data_chiusura` date DEFAULT NULL,                          -- data di chiusura del todo
-  `note_chiusura` text DEFAULT NULL,                          -- note sulla chiusura del todo
-  `nome` char(255) DEFAULT NULL,                              -- nome del todo 
-  `testo` text DEFAULT NULL,                                  -- testo del todo
-  `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto associato al todo
-  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto associato al todo
-  `id_documento` bigint(20) DEFAULT NULL,                        -- chiave esterna per il documento associato al todo
-  `id_documenti_articoli` bigint(20) DEFAULT NULL,               -- chiave esterna per l'articolo del documento associato al todo
-  `id_istruzione` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'istruzione associata al todo
-  `id_pianificazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la pianificazione associata al todo
-  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile associato al todo
-  `note_pianificazione` text DEFAULT NULL,                    -- note sulla pianificazione del todo
-  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione del todo
-  `note_archiviazione` text DEFAULT NULL,                     -- note sull'archiviazione del todo
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il todo
-  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il todo
-  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+  `id_tipologia` bigint(20) DEFAULT NULL,                        -- chiave esterna per la tipologia della todo
+  `codice` char(32) DEFAULT NULL,                                -- codice univoco della todo
+  `nome` char(255) DEFAULT NULL,                                 -- titolo sintetico della todo
+  `id_anagrafica` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica responsabile della todo
+  `id_cliente` bigint(20) DEFAULT NULL,                          -- chiave esterna per il cliente per cui si svolge la todo
+  `id_contatto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contatto che ha generato la todo
+  `id_indirizzo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'indirizzo dove si svolge la todo
+  `id_luogo` bigint(20) DEFAULT NULL,                            -- chiave esterna per il luogo dove si svolge la todo
+  `id_progetto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il progetto di cui la todo fa parte
+  `id_pianificazione` bigint(20) DEFAULT NULL,                   -- chiave esterna per la pianificazione che ha generato la todo
+  `id_immobile` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'immobile su cui si svolge la todo
+  `id_documento` bigint(20) DEFAULT NULL,                        -- chiave esterna per il documento a cui si riferisce la todo
+  `id_documenti_articoli` bigint(20) DEFAULT NULL,               -- chiave esterna per la riga di documento a cui si riferisce la todo
+  `id_istruzione` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'istruzione da seguire per svolgere la todo
+  `testo` text DEFAULT NULL,                                     -- testo descrittivo della todo
+  `timestamp_apertura` int(11) DEFAULT NULL,                     -- timestamp di apertura della todo
+  `data_scadenza` date DEFAULT NULL,                             -- data entro cui va svolta la todo
+  `ora_scadenza` time DEFAULT NULL,                              -- ora entro cui va svolta la todo
+  `note_scadenza` text DEFAULT NULL,                             -- note sulla scadenza
+  `data_programmazione` date DEFAULT NULL,                       -- data in cui è programmata la todo
+  `ora_inizio_programmazione` time DEFAULT NULL,                 -- ora di inizio programmata
+  `ora_fine_programmazione` time DEFAULT NULL,                   -- ora di fine programmata
+  `anno_programmazione` year(4) DEFAULT NULL,                    -- anno della settimana in cui è programmata la todo
+  `settimana_programmazione` int(11) DEFAULT NULL,               -- settimana dell'anno in cui è programmata la todo
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,                -- ore previste per svolgere la todo
+  `note_programmazione` text DEFAULT NULL,                       -- note sulla programmazione
+  `data_chiusura` date DEFAULT NULL,                             -- data in cui la todo è stata conclusa
+  `note_chiusura` text DEFAULT NULL,                             -- note sulla chiusura
+  `note_pianificazione` text DEFAULT NULL,                       -- esce dal canone ( riga 228 ), DROP al punto 12
+  `data_archiviazione` date DEFAULT NULL,                        -- data di archiviazione della todo
+  `note_archiviazione` text DEFAULT NULL,                        -- note sull'archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la todo
+  `timestamp_inserimento` int(11) DEFAULT NULL,                  -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la todo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                 -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000060100
