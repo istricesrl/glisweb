@@ -1,9 +1,12 @@
 # documentazione del template Lydia
 Lydia è il template Twig per il **sito pubblico con un'area riservata**: testata con logo e due menu, barra
 delle categorie con la ricerca, immagini di testata ( carosello o jumbotron ), contenuto con percorso e galleria,
-e le pagine per entrare, gestire il proprio account e reimpostare la password. È su **Bootstrap 4** ( 4.5.2 ):
-le classi vanno scritte in sintassi BS4 ( `data-toggle`, `ml-auto`, `form-row`, `btn-block`, `sr-only` ) e non
-convertite a BS5 finché il template dichiara quella versione in `etc/template.yaml`.
+e le pagine per entrare, gestire il proprio account e reimpostare la password. È su **Bootstrap 5** ( 5.3.2,
+convertito dalla 4.5.2 il 10/11/2026 ): le classi vanno scritte in sintassi BS5 ( `data-bs-toggle`, `ms-auto`,
+`text-end`, `w-100`, `visually-hidden` ), e il test `unit staticoTemplateCest::classiBs4NeiTemplateBs5` si ferma
+se ne torna una della 4. Restano di proposito `form-row`, sempre accanto a `row`, e la classe `jumbotron`, che in BS5
+non ha più regole ma è l'aggancio di `css/main.css`: il riquadro lo fanno le utility `py-5 px-4 mb-4 rounded-3`.
+Le macro condivise di `_src/_twig/_lib/` scrivono ancora markup BS4 finché esiste un template di pagina su BS4.
 
 Fra le pagine standard l'unica che oggi lo usa è `password.reinsert` ( `_src/_inc/_pages/_password.it-IT.php` );
 le altre pagine che nominano Lydia ( carrello, schede prodotto, risultati di ricerca, area utente, la versione
@@ -14,7 +17,7 @@ vecchia, e non a questo template.
 
 file                                    | descrizione
 ----------------------------------------|-----------------------------------------------------------------------------------
-etc/template.yaml                       | configurazione: menu, CSS e JS ( Bootstrap 4.5.2, jQuery, Colorbox, lazysizes, reCAPTCHA )
+etc/template.yaml                       | configurazione: menu, CSS e JS ( Bootstrap 5.3.2, jQuery, Colorbox, lazysizes, reCAPTCHA )
 css/main.css                            | foglio di stile del template
 js/main.js                              | Javascript del template: aggancia Colorbox alla galleria
 lib/default.twig                        | posto per le macro proprie del template ( oggi vuoto )

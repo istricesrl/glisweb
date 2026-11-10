@@ -58,4 +58,50 @@
 
         }
 
+        // template su Bootstrap 5: niente classi e attributi di Bootstrap 4
+        //
+        // la versione di Bootstrap la dichiara ogni template in etc/template.yaml, e una classe BS4 rimasta in un
+        // template BS5 non da' errore: semplicemente non corrisponde a nessuna regola ( ml-auto non allinea piu',
+        // data-toggle non apre piu' il menu, order-12 non ordina piu' ); il test guarda solo i file del template,
+        // non il livello condiviso di _src/_twig/, che resta congelato finche' esiste un template di pagina su BS4,
+        // e lascia stare form-row, che nel markup sta sempre accanto a row e a cui i CSS di progetto si agganciano, e
+        // jumbotron, che in BS5 non ha piu' regole ma resta come aggancio dei CSS di template ( _lydia/css/main.css )
+        public function classiBs4NeiTemplateBs5( UnitTester $I ) {
+
+            $morti = '/\b(?:data-(?:toggle|target|dismiss|ride|slide|slide-to|interval|parent|placement)=|'
+                . '(?<=["\s])(?:m[lr]-(?:sm-|md-|lg-|xl-)?(?:auto|[0-5])|p[lr]-(?:sm-|md-|lg-|xl-)?[0-5]|text-(?:left|right)|'
+                . 'float-(?:left|right)|no-gutters|font-weight-\w+|sr-only|input-group-(?:append|prepend)|btn-block|'
+                . 'order-(?:[6-9]|1[012])|badge-(?:primary|secondary|success|danger|warning|info|light|dark))(?=["\s]))/';
+
+            $controllati = 0;
+            $trovati = array();
+
+            foreach( (array) glob( DIR_BASE . '_src/_tpl/*/etc/template.yaml' ) as $yaml ) {
+
+                if( strpos( file_get_contents( $yaml ), 'bootstrap@5' ) === false ) {
+                    continue;
+                }
+
+                $controllati++;
+
+                foreach( (array) glob( dirname( dirname( $yaml ) ) . '/{,*/,*/*/}*.twig', GLOB_BRACE ) as $file ) {
+
+                    // i commenti Twig si svuotano tenendo gli a capo, cosi' i numeri di riga restano quelli del file
+                    $codice = preg_replace_callback( '/\{#.*?#\}/s', function( $c ) { return preg_replace( '/[^\n]/', ' ', $c[0] ); }, file_get_contents( $file ) );
+
+                    foreach( explode( "\n", $codice ) as $n => $riga ) {
+                        if( preg_match( $morti, $riga, $m ) ) {
+                            $trovati[] = str_replace( DIR_BASE, '', $file ) . ':' . ( $n + 1 ) . ' ( ' . $m[0] . ' )';
+                        }
+                    }
+                }
+
+            }
+
+            $I->assertGreaterThan( 0, $controllati, 'nessun template su Bootstrap 5 trovato: il test non prova niente' );
+
+            $I->assertEmpty( $trovati, 'classi o attributi BS4 in template BS5: ' . implode( ', ', $trovati ) );
+
+        }
+
     }

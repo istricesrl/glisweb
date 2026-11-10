@@ -13,7 +13,7 @@
 <form action="" method="post" id="formAccount">
     <fieldset>
         <legend>{{ trn.trw({ 'w': 'i_tuoi_dati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'i tuoi dati' }) }}</legend>
-        <div class="form-row">
+        <div class="form-row row">
             <div class="col-12 col-md">
                 <span class="label-top">{{ trn.trw({ 'w': 'nome', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'nome' }) }}</span>
                 {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'nome' }, 'request': request, 'page': page } ) }}
@@ -23,7 +23,7 @@
                 {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'cognome' }, 'request': request, 'page': page } ) }}
             </div>
         </div>
-        <div class="form-row">
+        <div class="form-row row">
             <div class="col-12 col-md">
                 <span class="label-top">{{ trn.trw({ 'w': 'email', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'e-mail' }) }}</span>
                 {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'mail' }, 'request': request, 'page': page } ) }}
@@ -40,7 +40,7 @@
     </fieldset>
     <fieldset>
         <legend>cambio password per l'utente {{ session.account.username }}</legend>
-        <div class="form-row">
+        <div class="form-row row">
             <div class="col-12 col-md">
                 <span class="label-top">{{ trn.trw({ 'w': 'password_corrente', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password corrente' }) }}</span>
                 {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password0', 'type': 'password' }, 'page': page, 'extras': 'also-required="__account___password1,__account___password2"' } ) }}
@@ -56,7 +56,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <div class="form-row">
+        <div class="form-row row">
             <div class="col">
                 {{ cms.formButton( { 'field': { 'text': trn.trw({ 'w': 'modifica_dati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'modifica dati' }) }, 'form': { 'id': 'formAccount', 'table': '__account__' }, 'recaptcha': google.profile.recaptcha } ) }}
             </div>
@@ -67,9 +67,9 @@
 <form action="{{ page.path[ localization.language.ietf ] }}" method="post" class="mt-auto" id="formLogout">
     <input type="hidden" name="__logout__" value="1">
     <fieldset>
-        <div class="form-row">
+        <div class="form-row row">
             <div class="col">
-                <button type="submit" class="btn btn-sm btn-secondary btn-block">{{ trn.trw({ 'w': 'logout', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'logout' }) }}</button>
+                <button type="submit" class="btn btn-sm btn-secondary w-100">{{ trn.trw({ 'w': 'logout', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'logout' }) }}</button>
             </div>
         </div>
     </fieldset>

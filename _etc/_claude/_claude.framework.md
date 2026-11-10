@@ -439,7 +439,7 @@ Le librerie esterne (Composer) si trovano in `_src/_lib/_ext/`, non in `vendor/`
 
 La versione di Bootstrap la dichiara **ogni template** ( `etc/template.yaml`/`template.conf` ), non è
 globale: **guardarla prima di toccare classi Bootstrap**, perché convertire un template ancora su BS4 lo
-rompe. Su BS5: `_src/_tpl/_athena`, `_cassandra`, `_minerva` e `_src/_templates/_minerva`; gli altri sono
+rompe. Su BS5: `_src/_tpl/_athena`, `_cassandra`, `_lydia`, `_minerva` e `_src/_templates/_minerva`; gli altri sono
 ancora BS4. Il livello condiviso ( `_src/_twig/`, `_src/_html/`, template di modulo ) è **congelato**
 finché esiste una pagina BS4. Due trappole: `form-row` **non si tocca**, e `order-*` in BS5 si ferma a
 5 ( un `order-12` rimasto non dà errore, smette solo di ordinare ). La linea latest non ha
