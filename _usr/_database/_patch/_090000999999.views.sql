@@ -8904,18 +8904,16 @@ CREATE OR REPLACE VIEW zone_stati_view AS
 -- | 090000999000
 
 -- test_view
-CREATE OR REPLACE VIEW test_view AS                           --
-  SELECT                                                      --
-    test.id,                                                  --
-    test.codice,                                              --
-    test.nome,                                                --
-    concat_ws(                                                --
-      ' ',                                                    --
-      test.codice,                                            --
-      test.nome                                               --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM test                                                   --
-;                                                             --
+CREATE OR REPLACE VIEW `test_view` AS
+	SELECT
+		test.id,
+		test.codice,
+		test.nome,
+		test.id_account_inserimento,
+		test.id_account_aggiornamento,
+		concat_ws( ' ', test.codice, test.nome ) AS __label__
+	FROM test
+;
 
 -- | 090000999200
 

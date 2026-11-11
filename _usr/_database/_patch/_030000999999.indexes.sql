@@ -5594,9 +5594,10 @@ ALTER TABLE `zone_stati` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- test
 ALTER TABLE `test`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `codice` (`codice`),
+	ADD UNIQUE KEY `unica` (`codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`codice`,`nome`);
 
 -- | 030000999001
 

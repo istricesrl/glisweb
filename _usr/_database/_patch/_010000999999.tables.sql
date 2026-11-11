@@ -9245,20 +9245,25 @@ CREATE TABLE IF NOT EXISTS `zone_stati` (                         --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: test del database
--- entità: questa tabella corrisponde all'entità test
+-- funzione: entità bersaglio dei test automatici del framework
 --
--- questa tabella viene utilizzata per testare la creazione di tabelle e la loro struttura; non è una tabella di produzione
+-- questa tabella è l'entità su cui scrivono i test del framework quando devono provare un meccanismo generico senza
+-- toccare dati veri: la usano importCest ( importazione dei CSV dallo spool, righe TEST-E2E-import-% ), lo script
+-- _src/_sh/_test.import.sh e gli esempi _usr/_examples/_core/_controller.0N.php della funzione controller(); non
+-- contiene dati di produzione, e su un deploy in regola è vuota
 --
-CREATE TABLE IF NOT EXISTS `test` (                           --
-  `id` bigint(20) NOT NULL,                                      -- chiave primaria
-  `codice` char(32) DEFAULT NULL,                             -- codice univoco
-  `nome` char(255) DEFAULT NULL,                               -- dato di test
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+-- NOTA le righe sono temporanee: chi le scrive le marca ( nel nome o nel codice ) e le toglie alla fine del test; il
+-- codice è unico, così un test del controller può provare anche la violazione di unicità
+--
+CREATE TABLE IF NOT EXISTS `test` (                             --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                                 -- codice univoco della riga di test
+  `nome` char(255) DEFAULT NULL,                                  -- dato di test, col marcatore del test che l'ha scritto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000999001
 
