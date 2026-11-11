@@ -959,6 +959,16 @@ progetto cliente. Se sei in una sessione con `CLAUDE.md` già attivo, il file fr
 **non richiamarlo né rileggerlo**, basta consultarlo per riferimento. Se stai facendo bootstrap di un nuovo
 progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.framework.md` manualmente con `Read`.
 
+## Glossario
+
+Le parole del gergo di glisweb che non si capiscono dal nome.
+
+- **vista virtuale**: la vista di una tabella base ristretta a una **classe** di righe, di solito col flag della tipologia
+  ( `abbonamenti_view`, `iscrizioni_view` e `tesseramenti_view` su `contratti`; `progetti_produzione` su `progetti`;
+  `veicoli_view` sugli `asset` di classe veicolo ). Un modulo che gestisce una sola classe lavora sulla sua vista virtuale e
+  scrive sulla tabella base: non si crea una tabella per ogni classe. Non sono viste virtuali le **viste di stato**
+  ( `*_attivi_*`, `*_archiviati_*` ), che il canone esclude: lo stato il codice lo filtra sulla vista base.
+
 ## 8. Note sulla skill stessa
 
 - Questa skill è distribuita **dentro al repository del framework** (cartella `.claude/skills/glisweb/`). È
