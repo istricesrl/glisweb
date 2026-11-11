@@ -12,7 +12,18 @@
 #
 # ambiente:
 #   DOCS_USER, DOCS_PASS   credenziali dell'utente con cui fotografare le maschere
-#   DOCS_HOST              host da fotografare, default $( hostname -f ) del sito corrente
+#   DOCS_HOST              host da fotografare, default $( hostname -f ) del sito corrente; va
+#                          scritto COL PROTOCOLLO ( https://... ): senza, il <base href> esce
+#                          sbagliato e curl perde l'HTTP Basic sul redirect a https, e quello che
+#                          si fotografa e' il login. Per questo un host senza protocollo si rifiuta
+#
+# SUI DEPLOY CLIENTE SI SCRIVE SOLO DENTRO usr/
+#
+# Gli scatti dello standard ( _usr/_docs/_shot/ ) si rigenerano solo dove esiste
+# var/docs.build.conf, cioe' sui deploy del framework, con la stessa regola di _docs.build.sh.
+# Altrove si saltano anche con --force: il mv sostituirebbe l'inode dei PNG standard, rompendo
+# l'hard link, e ci metterebbe dentro le maschere coi dati del cliente. L'11/11/2026 su
+# utensilerialughese e' successo agli otto PNG dello standard.
 #
 # COME SI DICHIARA UNO SCATTO
 #
@@ -123,6 +134,11 @@ if [ -z "$HOST" ]; then
     exit 1
 fi
 
+if ! [[ "$HOST" =~ ^https?:// ]]; then
+    echo "host da fotografare senza protocollo ( $HOST ): scriverlo come https://$HOST" >&2
+    exit 1
+fi
+
 ## raccolta delle dichiarazioni dai sorgenti della documentazione
 #
 # Gli alberi sono gli stessi che compone _src/_cli/_docs.build.php: i capitoli di _usr/_docs,
@@ -223,6 +239,12 @@ echo "$DICHIARAZIONI" | while IFS='|' read -r ID PERCORSO DIM SELETTORE ATTESA; 
     DEST="./_usr/_docs/_shot/$ID.png"
     grep -ql "@shot:[[:space:]]*$ID" ./usr/docs/*.md ./usr/docs/*/*.md ./mod/*/*.md ./src/tpl/*/*.md 2> /dev/null \
         && DEST="./usr/docs/shot/$ID.png"
+
+    ## lo standard si fotografa solo sui deploy del framework ( vedi in testata )
+    if [ "${DEST#./_usr/}" != "$DEST" ] && [ ! -f ./var/docs.build.conf ]; then
+        echo "  saltato   $ID: scatto dello standard, e qui non c'e' var/docs.build.conf"
+        continue
+    fi
 
     ## serve rigenerare?
     if [ $FORZA -eq 0 ] && [ -f "$DEST" ]; then
