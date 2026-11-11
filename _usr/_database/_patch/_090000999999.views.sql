@@ -8826,12 +8826,13 @@ CREATE OR REPLACE VIEW zone_view AS
 CREATE OR REPLACE VIEW zone_cap_view AS
 	SELECT
 		zone_cap.id,
-		zone_cap.cap,
-		zone_cap.id_zona,
 		zone_cap.ordine,
+		zone_cap.id_zona,
+		zone_path( zone_cap.id_zona ) AS zona,
+		zone_cap.cap,
 		zone_cap.id_account_inserimento,
 		zone_cap.id_account_aggiornamento,
-		concat(zone_cap.cap, ' - ', zone_cap.id_zona) AS __label__
+		concat( zone_cap.cap, ' - ', zone_path( zone_cap.id_zona ) ) AS __label__
 	FROM zone_cap
 ;
 

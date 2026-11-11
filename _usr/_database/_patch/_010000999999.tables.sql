@@ -9157,19 +9157,29 @@ CREATE TABLE IF NOT EXISTS `zone` (                               --
 
 -- zone_cap
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i zone cap
+-- funzione: contiene i CAP che fanno parte di una zona
 --
-CREATE TABLE IF NOT EXISTS `zone_cap` (
-  `id` bigint(20) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `cap` char(8) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- questa tabella dice quali CAP fanno parte di una zona, p.es. per attribuire i clienti agli agenti o per gestire le
+-- spedizioni; il CAP è un valore della zona, non un oggetto, quindi la tabella è una secondaria di zone e non una
+-- relazione; la legge l'assegnazione della zona a un indirizzo dal suo CAP nei task di geolocalizzazione del modulo
+-- _GE000.geolocalizzazione ( oggi commentata )
+--
+-- NOTA lo stesso CAP fa parte per natura di più zone, una per ambito ( l'agente e la spedizione ), quindi chi cerca la
+-- zona di un CAP deve filtrare sull'ambito ( i flag di tipologie_zone ); dentro un ambito il CAP si mette nella zona più
+-- piccola e le zone genitrici lo ereditano dall'albero; sviluppo previsto: il CAP come prefisso ( 20 per tutta la
+-- provincia di Milano ), col prefisso più lungo che vince
+--
+CREATE TABLE IF NOT EXISTS `zone_cap` (                           --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine del CAP nella zona
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
+  `cap` char(11) DEFAULT NULL,                                    -- CAP, della stessa larghezza di indirizzi.cap
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000100200
