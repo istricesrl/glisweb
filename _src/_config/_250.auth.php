@@ -32,7 +32,10 @@
      * dichiarazione dei permessi
      * ==========================
      * 
-     * 
+     * NOTA CONTROL_FILTERED vuol dire "filtrato dalle ACL di riga": se esiste __acl_<tabella>__ ( _040000999999.acl.sql )
+     * getAclRightsTable() la unisce e l'account vede e apre solo le righe con una ACL dei suoi gruppi o inserite da lui,
+     * altrimenti equivale a CONTROL_FULL. Dal 2026-11-05 le entità pubblicate hanno la loro __acl_<entità>__, vuota, e lo
+     * staff, che su quelle tabelle era FILTERED, ha perso tutte le righe: per questo lì ha CONTROL_FULL ( 2026-11-11 )
      * 
      */
 
@@ -254,12 +257,10 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'notizie' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_notizie' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'notizie_categorie' => array(
             CONTROL_FULL => array('roots'),
@@ -286,12 +287,10 @@
             CONTROL_FILTERED => array('staff')
         ),
         'annunci' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_annunci' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'annunci_categorie' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -326,12 +325,10 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'risorse' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_risorse' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'risorse_categorie' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -342,8 +339,7 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'categorie_prodotti' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'categorie_prodotti_caratteristiche' => array(
@@ -371,13 +367,11 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'prodotti' => array(
-            CONTROL_FULL => array( 'roots' ),              
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'articoli' => array(
-            CONTROL_FULL => array( 'roots' ),              
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'prezzi' => array(
@@ -813,8 +807,7 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'progetti' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'progetti_archivio' => array(
             CONTROL_FULL => array( 'roots' ),

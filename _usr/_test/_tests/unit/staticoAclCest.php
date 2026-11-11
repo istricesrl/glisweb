@@ -148,4 +148,35 @@
 
         }
 
+        // le tabelle con la loro __acl_<tabella>__ che lo staff vede filtrate di proposito
+        protected $filtrateAcl = array(
+            'pagine'
+        );
+
+        // nessuna tabella con la sua __acl_<tabella>__ dà allo staff il solo CONTROL_FILTERED, salvo quelle di $filtrateAcl:
+        // con la tabella di ACL presente FILTERED mostra solo le righe con una ACL o inserite dall'account, e fino al
+        // 2026-11-11 lo staff non vedeva più articoli, prodotti, notizie, progetti, risorse e le loro categorie, che dal
+        // 2026-11-05 hanno la loro __acl_<entità>__ vuota ( patch _202611051700.acl.entita.sql )
+        public function staffConAcl( UnitTester $I ) {
+
+            global $cf;
+
+            preg_match_all( '/CREATE TABLE IF NOT EXISTS `__acl_([a-z_]+)__`/', file_get_contents( DIR_BASE . '_usr/_database/_patch/_040000999999.acl.sql' ), $m );
+
+            $I->assertGreaterThan( 10, count( $m[1] ), 'trovate meno di dieci tabelle di ACL: il test non legge il file giusto' );
+
+            foreach( $m[1] as $t ) {
+                $full = $cf['auth']['permissions'][ $t ][ CONTROL_FULL ] ?? array();
+                $filtered = $cf['auth']['permissions'][ $t ][ CONTROL_FILTERED ] ?? array();
+                if( in_array( 'staff', $filtered ) && ! in_array( 'staff', $full ) ) {
+                    $I->assertContains( $t, $this->filtrateAcl, $t . ' ha __acl_' . $t . '__ e lo staff solo FILTERED: vedrebbe solo le righe che ha inserito' );
+                }
+            }
+
+            foreach( array( 'prodotti', 'articoli', 'annunci', 'notizie', 'progetti', 'risorse', 'categorie_annunci', 'categorie_notizie', 'categorie_prodotti', 'categorie_risorse' ) as $t ) {
+                $I->assertContains( 'staff', $cf['auth']['permissions'][ $t ][ CONTROL_FULL ] ?? array(), 'lo staff deve avere CONTROL_FULL su ' . $t );
+            }
+
+        }
+
     }
