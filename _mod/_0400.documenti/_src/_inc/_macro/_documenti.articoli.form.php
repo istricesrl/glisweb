@@ -51,7 +51,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM iva_view WHERE timestamp_archiviazione IS NULL'
+	    'SELECT id, __label__ FROM iva_view WHERE data_archiviazione IS NULL'
 	);
 
 	// tendina listini
@@ -85,9 +85,9 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT reparti_view.id, concat( reparti_view.__label__, if( iva.timestamp_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
+	    'SELECT reparti_view.id, concat( reparti_view.__label__, if( iva.data_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
 	    'FROM reparti_view LEFT JOIN iva ON iva.id = reparti_view.id_iva '.
-	    'WHERE iva.timestamp_archiviazione IS NULL OR reparti_view.id = ?',
+	    'WHERE iva.data_archiviazione IS NULL OR reparti_view.id = ?',
 	    array( array( 's' => ( isset( $_REQUEST[ $ct['form']['table'] ]['id_reparto'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_reparto'] : NULL ) )
 	);
 

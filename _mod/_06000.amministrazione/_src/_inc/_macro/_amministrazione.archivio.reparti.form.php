@@ -19,8 +19,8 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, concat( __label__, if( timestamp_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
-        'FROM iva_view WHERE timestamp_archiviazione IS NULL OR id = ? ORDER BY __label__',
+        'SELECT id, concat( __label__, if( data_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
+        'FROM iva_view WHERE data_archiviazione IS NULL OR id = ? ORDER BY __label__',
         array( array( 's' => ( isset( $_REQUEST[ $ct['form']['table'] ]['id_iva'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_iva'] : NULL ) )
     );
 

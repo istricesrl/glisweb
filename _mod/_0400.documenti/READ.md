@@ -109,7 +109,7 @@ sotto moduli di `bin/documenti.form.dati.fiscali.sub.html` ), e la casella *sogg
 nelle schede delle righe di fatture, note di credito e documenti.
 
 Le aliquote 35 ( art. 71 con `N3.6` invece di `N3.3` ), 57 e 58 ( natura generica `N6` ) dal
-2026-09-30 sono **archiviate** ( `iva.timestamp_archiviazione` ): restano per i documenti già emessi,
+2026-09-30 sono **archiviate** ( `iva.data_archiviazione` ): restano per i documenti già emessi,
 ma le tendine dei reparti e delle aliquote dei documenti non le propongono più, e una fattura che le
 usa ancora si vede e si scarica ma non si invia. Al loro posto ci sono la 60 ( `N3.3`, cessioni verso
 San Marino ) e le 61 - 69 ( `N6.1` - `N6.9` ).

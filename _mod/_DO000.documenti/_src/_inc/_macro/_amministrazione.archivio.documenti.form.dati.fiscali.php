@@ -41,8 +41,8 @@
     // NOTA senza le aliquote archiviate, tranne quelle che i contributi del documento usano già, perché salvando non vadano perse
     $ct['etc']['select']['iva'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT id, concat( __label__, if( timestamp_archiviazione IS NULL, "", " ( archiviata )" ) ) AS __label__ FROM iva_view '.
-        'WHERE timestamp_archiviazione IS NULL OR id IN ( SELECT id_iva FROM documenti_casse_previdenziali WHERE id_documento = ? ) '.
+        'SELECT id, concat( __label__, if( data_archiviazione IS NULL, "", " ( archiviata )" ) ) AS __label__ FROM iva_view '.
+        'WHERE data_archiviazione IS NULL OR id IN ( SELECT id_iva FROM documenti_casse_previdenziali WHERE id_documento = ? ) '.
         'ORDER BY aliquota DESC, __label__ ASC',
         array( array( 's' => ( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id'] : NULL ) )
     );

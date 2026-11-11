@@ -13,7 +13,7 @@ Questa è la macro della scheda aggregate della pagina di gestione delle righe d
 
 ### /_mod/_DO000.documenti/_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php
 Questa è la macro della pagina di gestione delle righe dei documenti. La tendina dei reparti propone solo
-quelli con un'aliquota IVA non archiviata ( `iva.timestamp_archiviazione` vuoto ): dal 2026-09-30 sono
+quelli con un'aliquota IVA non archiviata ( `iva.data_archiviazione` vuota ): dal 2026-09-30 sono
 archiviate le aliquote con la natura generica N6, che lo SDI scarta, e quella dell'art. 71 con la natura
 N3.6. Il reparto già scelto per la riga resta nella tendina, con la scritta *aliquota archiviata*, perché
 salvando la scheda non vada perso; è lo stesso criterio della tendina delle entità delle pianificazioni.
