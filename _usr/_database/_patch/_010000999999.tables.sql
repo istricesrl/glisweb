@@ -9218,15 +9218,25 @@ CREATE TABLE IF NOT EXISTS `zone_indirizzi` (                     --
 -- struttura: tabella base
 -- funzione: mette in relazione zone e stati
 --
-CREATE TABLE IF NOT EXISTS `zone_stati` (
-  `id` bigint(20) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `id_stato` bigint(20) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- questa tabella dice quali stati fanno parte di una zona, p.es. per gestire le spedizioni all'estero o i listini per
+-- paese; è la relazione molti a molti fra zone e stati, quindi lo stesso stato può stare in più zone; la scrive la
+-- gestione zone del modulo legacy _0020.archivio, e la legge il controller del carrello di _4170.ecommerce per ricavare
+-- la zona dallo stato dell'intestatario
+--
+-- NOTA uno stato fa parte per natura di più zone, una per ambito ( l'agente e la spedizione ), quindi chi cerca la
+-- zona di uno stato deve filtrare sull'ambito ( i flag di tipologie_zone ); dentro un ambito lo stato si mette nella
+-- zona più piccola e le zone genitrici lo ereditano dall'albero; il controller di _4170.ecommerce oggi prende una zona
+-- sola senza filtrare, e va riscritto con la migrazione del modulo
+--
+CREATE TABLE IF NOT EXISTS `zone_stati` (                         --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine dello stato nella zona
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
+  `id_stato` bigint(20) DEFAULT NULL,                             -- chiave esterna per lo stato
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999000

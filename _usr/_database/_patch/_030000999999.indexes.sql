@@ -5575,14 +5575,13 @@ ALTER TABLE `zone_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 ALTER TABLE `zone_stati`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_zona`,`id_stato`), 
-	ADD KEY `ordine` (`ordine`),	
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_stato`),
+	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_stato` (`id_stato`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
-	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`),
-	ADD KEY `id_zona` (`id_zona`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_stato`);
 
 -- | 030000100401
 
