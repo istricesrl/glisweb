@@ -9190,15 +9190,24 @@ CREATE TABLE IF NOT EXISTS `zone_cap` (                           --
 -- struttura: tabella base
 -- funzione: mette in relazione zone e indirizzi
 --
-CREATE TABLE IF NOT EXISTS `zone_indirizzi` (
-  `id` bigint(20) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,  
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- questa tabella dice a quali zone appartiene un indirizzo, p.es. per attribuire i clienti agli agenti o per gestire le
+-- spedizioni; è la relazione molti a molti fra zone e indirizzi, quindi lo stesso indirizzo può stare in più zone; la
+-- scrive il form degli indirizzi del modulo legacy _0020.archivio, e la leggono contratti_view e immobili_view
+--
+-- NOTA un indirizzo fa parte per natura di più zone, una per ambito ( l'agente e la spedizione ), quindi chi cerca la
+-- zona di un indirizzo deve filtrare sull'ambito ( i flag di tipologie_zone ); dentro un ambito l'indirizzo si mette
+-- nella zona più piccola e le zone genitrici lo ereditano dall'albero; la colonna indirizzi.id_zona, che ne tiene una
+-- sola, si valuta con la migrazione del modulo _GE000.geolocalizzazione
+--
+CREATE TABLE IF NOT EXISTS `zone_indirizzi` (                     --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine della zona per l'indirizzo
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000100400

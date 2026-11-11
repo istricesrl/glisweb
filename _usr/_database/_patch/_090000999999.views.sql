@@ -8844,14 +8844,42 @@ CREATE OR REPLACE VIEW zone_cap_view AS
 CREATE OR REPLACE VIEW zone_indirizzi_view AS
 	SELECT
 		zone_indirizzi.id,
-		zone_indirizzi.id_indirizzo,
-		zone_indirizzi.id_zona,
 		zone_indirizzi.ordine,
+		zone_indirizzi.id_zona,
+		zone_path( zone_indirizzi.id_zona ) AS zona,
+		zone_indirizzi.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzi.indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
 		zone_indirizzi.id_account_inserimento,
 		zone_indirizzi.id_account_aggiornamento,
-		concat(zone_indirizzi.id_indirizzo, ' - ', zone_indirizzi.id_zona) AS __label__
+		concat_ws(
+			' - ',
+			concat_ws(
+				' ',
+				tipologie_indirizzi.nome,
+				indirizzi.indirizzo,
+				indirizzi.civico,
+				indirizzi.cap,
+				indirizzi.localita,
+				comuni.nome,
+				provincie.sigla
+			),
+			zone_path( zone_indirizzi.id_zona )
+		) AS __label__
 	FROM zone_indirizzi
-; 
+		LEFT JOIN indirizzi ON indirizzi.id = zone_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
 
 -- | 090000100401
 

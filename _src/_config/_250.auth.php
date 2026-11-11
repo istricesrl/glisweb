@@ -1037,7 +1037,8 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'zone_indirizzi' => array(
-            CONTROL_FULL => array( 'roots', 'staff' )
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         ),
         'tipologie_attivita' => array(
             CONTROL_FULL => array( 'roots' ),
