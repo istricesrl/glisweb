@@ -9057,57 +9057,68 @@ CREATE TABLE IF NOT EXISTS `veicoli` (
 -- tipologia: tabella gestita
 -- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i video collegati a varie entità del sistema
+-- funzione: contiene i video collegati agli oggetti delle tabelle principali
 --
--- questa tabella contiene i video collegati a varie entità del sistema, con le informazioni relative
--- all'anagrafica, alla pagina, al file, al prodotto, all'articolo,
--- alla categoria prodotti, alla risorsa, alla categoria risorse, alla notizia, all'annuncio,
--- alla categoria notizie, alla categoria annunci, alla lingua, al ruolo, al progetto,
--- alla categoria progetti, all'indirizzo, all'edificio, all'immobile, alla valutazione, oltre che ai dati specifici del video come
--- l'ordine, il nome, il path, l'ID embed, il codice embed, l'embed custom, il target, l'orientamento, il ratio,
--- e agli account di inserimento e aggiornamento
+-- questa tabella fa parte del gruppo delle tabelle dei media ( audio, video, immagini, file ), che collegano un
+-- media a un oggetto di una tabella principale; ogni riga descrive un oggetto solo, indicato da una delle chiavi
+-- esterne id_*, ed è qualificata dalla lingua e dal ruolo che il media ha per quell'oggetto; lo stesso file può
+-- descrivere più oggetti, e per questo le chiavi uniche sono una per oggetto e non una globale sul path
 --
-CREATE TABLE IF NOT EXISTS `video` (
-  `id` bigint(20) NOT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_pagina` bigint(20) DEFAULT NULL,
-  `id_file` bigint(20) DEFAULT NULL,
-  `id_prodotto` bigint(20) DEFAULT NULL,
-  `id_articolo` bigint(20) DEFAULT NULL,
-  `id_categoria_prodotti` bigint(20) DEFAULT NULL,
-  `id_marchio` bigint(20) DEFAULT NULL,
-  `id_categoria_marchi` bigint(20) DEFAULT NULL,
-  `id_risorsa` bigint(20) DEFAULT NULL,
-  `id_categoria_risorse` bigint(20) DEFAULT NULL,
-  `id_notizia` bigint(20) DEFAULT NULL,
-  `id_annuncio` bigint(20) DEFAULT NULL,
-  `id_categoria_notizie` bigint(20) DEFAULT NULL,
-  `id_categoria_annunci` bigint(20) DEFAULT NULL,
-  `id_lingua` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,
-  `id_indirizzo` bigint(20) DEFAULT NULL,
-  `id_edificio` bigint(20) DEFAULT NULL,
-  `id_immobile` bigint(20) DEFAULT NULL,
-  `id_valutazione` bigint(20) DEFAULT NULL,
-  `id_audio` bigint(20) DEFAULT NULL,
-  `id_immagine` bigint(20) DEFAULT NULL,
-  `id_vano` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
-  `path` char(255) DEFAULT NULL,
-  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,
-  `codice_embed` char(128) DEFAULT NULL,
-  `embed_custom` char(128) DEFAULT NULL,
-  `target` char(255) DEFAULT NULL,
-  `orientamento` enum('L','P','S') DEFAULT NULL,
-  `ratio` char(8) DEFAULT NULL,
-  `note` text DEFAULT NULL,                                  
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- NOTA questa tabella è la gemella di audio e ne ha le stesse colonne di collegamento, più orientamento e ratio,
+-- che il template di embed ( _src/_twig/_lib/_default.twig ) usa per il contenitore del video
+--
+-- NOTA quasi tutti i video sono incorporati da una piattaforma ( embed e codice_embed ) e hanno il path NULL: le
+-- chiavi uniche per oggetto comprendono il path e quindi non li proteggono dai doppioni; è la stessa scelta fatta
+-- per audio, decisa il 2026-11-11, e lo stesso codice_embed può descrivere più oggetti
+--
+-- NOTA un media può appartenere a ciascuno degli altri tre ( matrice dei media, decisa il 2026-10-16 ): per questo
+-- il video ha id_file, id_audio e id_immagine; la colonna sta sempre sul media che appartiene e punta a quello a cui
+-- appartiene
+--
+-- NOTA le chiavi esterne verso gli oggetti descritti sono CASCADE: un video non ha senso senza il suo oggetto, e
+-- se l'oggetto viene cancellato le sue righe se ne vanno con lui
+--
+CREATE TABLE IF NOT EXISTS `video` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione del video
+  `nome` char(255) DEFAULT NULL,                                  -- nome del video
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica descritta
+  `id_annuncio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'annuncio descritto
+  `id_prodotto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il prodotto descritto
+  `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo descritto
+  `id_lingua` bigint(20) DEFAULT NULL,                            -- chiave esterna per la lingua del video
+  `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo descritto
+  `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto descritto
+  `id_immobile` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immobile descritto
+  `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina descritta
+  `id_file` bigint(20) DEFAULT NULL,                              -- chiave esterna per il file descritto
+  `id_categoria_prodotti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria prodotti descritta
+  `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio descritto
+  `id_categoria_marchi` bigint(20) DEFAULT NULL,                  -- chiave esterna per la categoria di marchi descritta
+  `id_risorsa` bigint(20) DEFAULT NULL,                           -- chiave esterna per la risorsa descritta
+  `id_categoria_risorse` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria risorse descritta
+  `id_notizia` bigint(20) DEFAULT NULL,                           -- chiave esterna per la notizia descritta
+  `id_categoria_notizie` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria notizie descritta
+  `id_categoria_annunci` bigint(20) DEFAULT NULL,                 -- chiave esterna per la categoria annunci descritta
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,                -- chiave esterna per la categoria progetti descritta
+  `id_edificio` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'edificio descritto
+  `id_valutazione` bigint(20) DEFAULT NULL,                       -- chiave esterna per la valutazione descritta
+  `id_audio` bigint(20) DEFAULT NULL,                             -- chiave esterna per l'audio descritto
+  `id_immagine` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'immagine descritta
+  `id_vano` bigint(20) DEFAULT NULL,                              -- chiave esterna per il vano descritto
+  `id_ruolo` bigint(20) DEFAULT NULL,                             -- chiave esterna per il ruolo del video
+  `path` char(255) DEFAULT NULL,                                  -- percorso del file video
+  `embed` enum('html5','vimeo','youtube') DEFAULT NULL,           -- piattaforma del video incorporato
+  `codice_embed` char(128) DEFAULT NULL,                          -- codice del video sulla piattaforma
+  `embed_custom` char(128) DEFAULT NULL,                          -- codice di incorporamento personalizzato
+  `target` char(255) DEFAULT NULL,                                -- destinazione del collegamento
+  `orientamento` enum('L','P','S') DEFAULT NULL,                  -- orientamento del video ( L orizzontale, P verticale, S quadrato )
+  `ratio` char(8) DEFAULT NULL,                                   -- rapporto d'aspetto del video ( p.es. 16x9 ), letto dal template di embed
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000100000
