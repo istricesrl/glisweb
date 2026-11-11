@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'tipologie_veicoli';
+    $ct['form']['table'] = 'tipologie_asset';
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(

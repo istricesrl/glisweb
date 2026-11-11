@@ -1,7 +1,7 @@
 # veicoli
 
 Il modulo tiene l'elenco dei **mezzi dell'azienda**: furgoni, auto, camion, carrelli. È il posto
-dove si ritrovano targa, modello e costruttore di ogni mezzo senza cercarli nei documenti.
+dove si ritrovano targa, modello e produttore di ogni mezzo senza cercarli nei documenti.
 
 Il modulo sta nell'area **logistica**, alla voce **veicoli**, ed è aperto a chi appartiene allo
 **staff** o agli **amministratori**.
@@ -23,13 +23,13 @@ La linguetta *gestione* ha tre riquadri:
 
 | riquadro | campi |
 |---|---|
-| dati generali | **tipologia**, dall'elenco delle tipologie; **targa**; **nome**, il modo in cui il mezzo viene chiamato in azienda ( *il furgone grande* ) |
-| costruttore e modello | **costruttore**, scelto fra le anagrafiche che hanno la scheda di produttore; **modello** |
-| descrizione | annotazioni libere sul mezzo |
+| dati generali | **tipologia**, dall'elenco delle tipologie; **codice**, il numero di flotta interno ( p.es. *MUL-01* per un muletto che la targa non ce l'ha ); **targa**; **nome**, il modo in cui il mezzo viene chiamato in azienda ( *il furgone grande* ) |
+| produttore e modello | **produttore**, scelto fra le anagrafiche che hanno la scheda di produttore; **modello** |
+| note | annotazioni libere sul mezzo |
 
 Le altre linguette della scheda sono **archiviazione** e **azioni**.
 
-> **nota** — il **costruttore** si sceglie solo fra le anagrafiche che hanno la scheda di
+> **nota** — il **produttore** si sceglie solo fra le anagrafiche che hanno la scheda di
 > *produttore*: se la casa costruttrice non compare nella tendina, va registrata nell'anagrafica e
 > compilata quella scheda ( vedi il capitolo dell'anagrafica ).
 

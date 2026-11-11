@@ -797,14 +797,20 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		asset.id_genitore,
 		asset.id_tipologia,
 		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
-		asset.id_condizione,
-		condizioni.nome AS condizione,
 		asset.codice,
 		asset.nome,
+		asset.id_condizione,
+		condizioni.nome AS condizione,
+		asset.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		asset.modello,
+		asset.targa,
 		asset.hostname,
 		asset.ip_address,
 		asset.cespite,
 		asset.note,
+		asset.data_archiviazione,
+		asset.note_archiviazione,
 		asset.id_account_inserimento,
 		asset.timestamp_inserimento,
 		asset.id_account_aggiornamento,
@@ -812,6 +818,7 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		concat_ws( ' ', concat( '#', asset.codice ), asset_path( asset.id ) ) AS __label__
 	FROM asset
 		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
+		LEFT JOIN anagrafica AS a1 ON a1.id = asset.id_produttore
 ;
 
 -- | 090000001800
@@ -4468,6 +4475,44 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		LEFT JOIN udm ON udm.id = mastri_articoli.id_udm
 ;
 
+-- | 090000020750
+
+-- mastri_tipologie_asset_view
+-- la colonna `tipologie` porta su OGNI riga l'elenco completo delle tipologie associate a quel
+-- mastro, separate da virgola: serve agli elenchi, dove interessa sapere con che mezzi si arriva
+-- a una collocazione senza doverne leggere le righe una per una. La grana della vista resta
+-- quella della tabella ( una riga per associazione, GROUP BY sulla chiave primaria ) perche' il
+-- controller standard fa SELECT * FROM <tabella>_view WHERE id = ? per caricare il record
+CREATE OR REPLACE VIEW `mastri_tipologie_asset_view` AS
+    SELECT
+        mastri_tipologie_asset.id,
+        mastri_tipologie_asset.ordine,
+        mastri_tipologie_asset.id_mastro,
+        mastri_path( mastri_tipologie_asset.id_mastro ) AS mastro,
+        mastri_tipologie_asset.id_tipologia,
+        tipologie_asset_path( mastri_tipologie_asset.id_tipologia ) AS tipologia,
+        group_concat(
+            DISTINCT tipologie_asset_path( altre.id_tipologia )
+            ORDER BY tipologie_asset_path( altre.id_tipologia )
+            SEPARATOR ', '
+        ) AS tipologie,
+        mastri_tipologie_asset.note,
+        mastri_tipologie_asset.id_account_inserimento,
+        mastri_tipologie_asset.id_account_aggiornamento,
+        concat_ws(
+            ' / ',
+            mastri_path( mastri_tipologie_asset.id_mastro ),
+            group_concat(
+                DISTINCT tipologie_asset_path( altre.id_tipologia )
+                ORDER BY tipologie_asset_path( altre.id_tipologia )
+                SEPARATOR ', '
+            )
+        ) AS __label__
+    FROM mastri_tipologie_asset
+    LEFT JOIN mastri_tipologie_asset AS altre ON altre.id_mastro = mastri_tipologie_asset.id_mastro
+    GROUP BY mastri_tipologie_asset.id
+;
+
 -- | 090000020800
 
 -- mastri_tipologie_veicoli_view
@@ -7488,10 +7533,13 @@ CREATE OR REPLACE VIEW `tipologie_asset_view` AS                --
 		tipologie_asset.nome,                                   --
 		tipologie_asset.html_entity,                            --
 		tipologie_asset.font_awesome,                           --
+		radici.se_veicoli,                                      -- flag di classe, quello della radice
 		tipologie_asset.id_account_inserimento,                 --
 		tipologie_asset.id_account_aggiornamento,               --
 		tipologie_asset_path( tipologie_asset.id ) AS __label__   -- etichetta per le tendine e le liste
 	FROM tipologie_asset                                        --
+		-- i flag di classe sono quelli della radice, anche per le tipologie aggiunte sotto dall'utente
+		LEFT JOIN tipologie_asset AS radici ON radici.id = tipologie_asset_path_find_ancestor( tipologie_asset.id )
 ;                                                             --
 
 -- | 090000050400
@@ -8651,27 +8699,43 @@ CREATE OR REPLACE VIEW `periodicita_view` AS
 -- | 090000064000
 
 -- veicoli_view
-CREATE OR REPLACE VIEW veicoli_view AS
-    SELECT
-        veicoli.id,
-        veicoli.id_tipologia,
-        tipologie_veicoli_path( veicoli.id_tipologia ) AS tipologia,
-        veicoli.id_costruttore,
-        coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
-        veicoli.modello,
-        veicoli.targa,
-        veicoli.data_archiviazione,
-        veicoli.id_account_inserimento,
-        veicoli.id_account_aggiornamento,
-        concat_ws(
-            ' - ',
-            coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ),
-            veicoli.nome,
-            veicoli.modello,
-            veicoli.targa
-        ) AS __label__
-    FROM veicoli
-        LEFT JOIN anagrafica AS a1 ON a1.id = veicoli.id_costruttore
+-- vista virtuale: i veicoli sono gli asset la cui tipologia sta in un ramo con se_veicoli sulla radice ( canone, riga
+-- 236 ); il modulo VE000.veicoli legge da qui e scrive su asset. Non espone hostname e ip_address, che sono degli
+-- asset informatici
+CREATE OR REPLACE VIEW `veicoli_view` AS
+	SELECT
+		asset.id,
+		asset.id_genitore,
+		asset.id_tipologia,
+		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
+		asset.codice,
+		asset.nome,
+		asset.id_condizione,
+		condizioni.nome AS condizione,
+		asset.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		asset.modello,
+		asset.targa,
+		asset.cespite,
+		asset.note,
+		asset.data_archiviazione,
+		asset.note_archiviazione,
+		asset.id_account_inserimento,
+		asset.timestamp_inserimento,
+		asset.id_account_aggiornamento,
+		asset.timestamp_aggiornamento,
+		concat_ws(
+			' - ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ),
+			asset.nome,
+			asset.modello,
+			asset.targa
+		) AS __label__
+	FROM asset
+		INNER JOIN tipologie_asset AS radici ON radici.id = tipologie_asset_path_find_ancestor( asset.id_tipologia )
+		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
+		LEFT JOIN anagrafica AS a1 ON a1.id = asset.id_produttore
+	WHERE radici.se_veicoli = 1
 ;
 
 -- | 090000065000

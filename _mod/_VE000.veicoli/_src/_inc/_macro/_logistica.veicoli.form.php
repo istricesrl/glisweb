@@ -11,8 +11,8 @@
      * 
      */
 
-    // tabella gestita
-    $ct['form']['table'] = 'veicoli';
+    // tabella gestita: i veicoli sono asset ( la vista virtuale veicoli_view li elenca )
+    $ct['form']['table'] = 'asset';
 
     // tendina tipologie veicoli
     $ct['etc']['select']['tipologie_veicoli'] = tendinaTipologieVeicoli();

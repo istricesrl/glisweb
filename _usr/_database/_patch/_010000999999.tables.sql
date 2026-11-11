@@ -674,33 +674,42 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
--- funzione: contiene gli asset, cioè gli oggetti fisici o logici gestiti o catalogati tramite il framework
+-- funzione: contiene gli asset, cioè i beni fisici o logici gestiti o catalogati tramite il framework
 -- entità: questa tabella corrisponde all'entità asset
 --
--- questa tabella descrive in astratto oggetti di vario tipo ( cespiti, macchinari, attrezzature... ) che possono essere
--- utilizzati, gestiti o anche semplicemente catalogati tramite il framework; il tipo di oggetto lo dice id_tipologia, che
--- punta a tipologie_asset; la tabella è ricorsiva perché un asset può contenerne altri ( ad esempio un modulo di un
--- macchinario ), e id_genitore punta all'asset che lo contiene
+-- questa tabella descrive in astratto oggetti di vario tipo ( cespiti, macchinari, attrezzature, veicoli... ) che possono
+-- essere utilizzati, gestiti o anche semplicemente catalogati tramite il framework; il tipo di oggetto lo dice id_tipologia,
+-- che punta a tipologie_asset; la tabella è ricorsiva perché un asset può contenerne altri ( ad esempio un modulo di un
+-- macchinario, o l'attrezzo montato su un muletto ), e id_genitore punta all'asset che lo contiene. Le classi di beni
+-- ( veicoli, macchine... ) non hanno una tabella loro: sono rami di tipologie_asset con il flag di classe sulla radice
+-- ( se_veicoli ), e il modulo di una classe legge la sua vista virtuale ( veicoli_view per VE000.veicoli ) e scrive qui
 --
--- NOTA hostname e ip_address servono per gli asset informatici e per le macchine collegate in rete; cespite è il codice
--- che l'asset ha nel registro dei beni ammortizzabili, quando ne fa parte
+-- NOTA hostname e ip_address servono per gli asset informatici e per le macchine collegate in rete, targa per i veicoli;
+-- cespite è il codice che l'asset ha nel registro dei beni ammortizzabili, quando ne fa parte
+-- NOTA id_produttore e modello dicono chi ha fabbricato il bene e quale modello è, come id_produttore di prodotti e
+-- matricole; i veicoli li hanno presi da qui quando la tabella veicoli è confluita in asset ( canone, riga 236 )
 --
 CREATE TABLE IF NOT EXISTS `asset` (                            --
-  `id` bigint(20) NOT NULL,                                        -- chiave primaria
-  `id_genitore` bigint(20) DEFAULT NULL,                           -- chiave esterna per l'asset che contiene questo
-  `id_tipologia` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia di asset
-  `id_condizione` bigint(20) DEFAULT NULL,                         -- chiave esterna per la condizione dell'asset
-  `codice` char(32) DEFAULT NULL,                               -- codice dell'asset
-  `nome` char(128) DEFAULT NULL,                                -- nome dell'asset
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'asset che contiene questo
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di asset
+  `codice` char(32) DEFAULT NULL,                               -- codice dell'asset ( p.es. il numero di flotta di un veicolo )
+  `nome` char(255) DEFAULT NULL,                                -- nome dell'asset
+  `id_condizione` bigint(20) DEFAULT NULL,                      -- chiave esterna per la condizione dell'asset
+  `id_produttore` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica del produttore
+  `modello` char(255) DEFAULT NULL,                             -- modello dell'asset
+  `targa` char(16) DEFAULT NULL,                                -- targa, per i veicoli che ce l'hanno
   `hostname` char(128) DEFAULT NULL,                            -- hostname dell'asset
   `ip_address` char(32) DEFAULT NULL,                           -- indirizzo IP dell'asset
   `cespite` char(32) DEFAULT NULL,                              -- codice cespite dell'asset
   `note` text DEFAULT NULL,                                     -- note sull'asset
-  `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'asset
+  `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'asset
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'asset
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'asset
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                          --
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000001800
 
@@ -4224,6 +4233,35 @@ CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000020750
+
+-- mastri_tipologie_asset
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: contiene la relazione molti a molti tra mastri e tipologie di asset
+--
+-- questa tabella dice con quali tipi di mezzo si raggiunge un mastro di magazzino ( p.es. una collocazione servita
+-- dal macchinino o dalla gabbia ): associa a un mastro una TIPOLOGIA di asset, di solito un ramo di veicoli
+-- ( se_veicoli ), non un asset; la leggono la scheda veicoli dei magazzini e i report di giacenza, per dire con che
+-- mezzi si arriva a una collocazione. Una coppia mastro / tipologia compare una volta sola. Sostituisce
+-- mastri_tipologie_veicoli ( canone, riga 236 )
+-- NOTA qui id_tipologia non e' la tipologia della riga ma una chiave della relazione, verso l'unico classificatore
+-- che la tabella collega: per questo ha il nome generico, sta dopo ordine ed e' CASCADE, come id_categoria in
+-- coupon_categorie_prodotti e nelle tabelle *_categorie
+--
+CREATE TABLE IF NOT EXISTS `mastri_tipologie_asset` (           --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine della tipologia fra quelle del mastro
+  `id_mastro` bigint(20) DEFAULT NULL,                          -- chiave esterna per il mastro
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia di asset ( tipologie_asset )
+  `note` text DEFAULT NULL,                                     -- note sull'associazione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'associazione
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'associazione
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000020800
 
 -- mastri_tipologie_veicoli
@@ -4239,6 +4277,9 @@ CREATE TABLE IF NOT EXISTS `mastri_articoli` (                  --
 -- NOTA qui id_tipologia non e' la tipologia della riga ma una chiave della relazione, verso l'unico classificatore
 -- che la tabella collega: per questo ha il nome generico, sta dopo ordine ed e' CASCADE, come id_categoria in
 -- coupon_categorie_prodotti e nelle tabelle *_categorie
+--
+-- NOTA esce dal canone ( riga 236, 11/11/2026 ): la sostituisce mastri_tipologie_asset, che punta a tipologie_asset; resta nei file base per i lettori legacy fino al punto 11, al
+-- punto 12 il travaso e il DROP
 --
 CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (         --
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
@@ -7441,8 +7482,12 @@ CREATE TABLE IF NOT EXISTS `tipologie_annunci` (                  --
 -- funzione: contiene le tipologie di asset
 --
 -- dice di che genere è l'oggetto descritto da una riga di asset ( un cespite, un macchinario, un'attrezzatura, un
--- modulo di un macchinario... ), che la cita con asset.id_tipologia; è ricorsiva perché le tipologie si possono
--- organizzare ad albero. Parte vuota: le tipologie le crea l'utente
+-- modulo di un macchinario, un veicolo... ), che la cita con asset.id_tipologia; è ricorsiva perché le tipologie si
+-- possono organizzare ad albero. Parte vuota: le tipologie le crea l'utente
+--
+-- NOTA i flag se_* sono di classe: dicono a quale classe di beni appartiene un ramo, valgono sulla radice e la vista li
+-- dà a tutto il ramo ( tipologie_asset_path_find_ancestor ); se_veicoli segna i veicoli, che il modulo VE000.veicoli
+-- legge da veicoli_view e le cui tipologie crea col flag acceso ( canone, riga 236 )
 --
 CREATE TABLE IF NOT EXISTS `tipologie_asset` (                    --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
@@ -7452,6 +7497,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_asset` (                    --
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
+  `se_veicoli` tinyint(1) DEFAULT NULL,                           -- il ramo è di veicoli ( flag di classe, sulla radice )
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la tipologia
@@ -8491,6 +8537,9 @@ CREATE TABLE IF NOT EXISTS `tipologie_vani` (                     --
 -- dice di che genere è un veicolo ( veicoli.id_tipologia ), ed è anche il dato a cui mastri_tipologie_veicoli
 -- collega le collocazioni di magazzino; la usa il modulo VE000.veicoli. Parte vuota: le tipologie le crea l'utente
 --
+-- NOTA esce dal canone ( riga 236, 11/11/2026 ): le tipologie di veicolo sono i rami di tipologie_asset con se_veicoli; resta nei file base per i lettori legacy fino al punto 11, al
+-- punto 12 il travaso e il DROP
+--
 CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
@@ -8982,6 +9031,9 @@ CREATE TABLE IF NOT EXISTS `taglie` (                         --
 --
 -- questa tabella contiene i veicoli del sistema, con le informazioni relative alla targa, alla marca, al modello, 
 -- al nome e alla descrizione del veicolo
+--
+-- NOTA esce dal canone ( riga 236, 11/11/2026 ): i veicoli sono asset di una tipologia con se_veicoli, e veicoli_view è la loro vista virtuale; resta nei file base per i lettori legacy fino al punto 11, al
+-- punto 12 il travaso e il DROP
 --
 CREATE TABLE IF NOT EXISTS `veicoli` (
   `id` bigint(20) NOT NULL,

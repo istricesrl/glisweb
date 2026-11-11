@@ -357,13 +357,16 @@ ALTER TABLE `articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `asset`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`codice`),
+	ADD UNIQUE KEY `targa` (`targa`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_condizione` (`id_condizione`),
 	ADD KEY `codice` (`codice`),
+	ADD KEY `id_condizione` (`id_condizione`),
+	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`targa`,`data_archiviazione`);
 
 -- | 030000001701
 
@@ -2547,6 +2550,24 @@ ALTER TABLE `mastri_articoli`
 -- mastri_articoli
 ALTER TABLE `mastri_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+-- | 030000020750
+
+-- mastri_tipologie_asset
+ALTER TABLE `mastri_tipologie_asset`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_mastro`,`id_tipologia`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_mastro` (`id_mastro`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_mastro`,`id_tipologia`);
+
+-- | 030000020751
+
+-- mastri_tipologie_asset
+ALTER TABLE `mastri_tipologie_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000020800
 
 -- mastri_tipologie_veicoli
@@ -4495,7 +4516,7 @@ ALTER TABLE `tipologie_asset`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_veicoli`);
 
 -- | 030000050201
 

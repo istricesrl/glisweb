@@ -101,6 +101,7 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        // vista virtuale degli asset di classe veicolo ( VE000.veicoli ): le scritture vanno su asset
         'veicoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
@@ -1264,7 +1265,13 @@
         'tipologie_veicoli' => array(
             CONTROL_FULL => array( 'roots','staff' )
         ),
+        'tipologie_asset' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'mastri_tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'mastri_tipologie_asset' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'mastri_articoli' => array(

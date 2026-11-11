@@ -25,10 +25,10 @@
 
     // informazioni della vista
     $ct['view'] = array(
-        'table' => 'tipologie_veicoli',
+        'table' => 'tipologie_asset',
         'open' => array(
             'page' => 'logistica.tipologie.veicoli.form',
-            'table' => 'tipologie_veicoli'
+            'table' => 'tipologie_asset'
         ),
         'cols' => array(
             'id' => '#',
@@ -44,6 +44,7 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
+            'se_veicoli' => array( 'EQ' => 1 )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
