@@ -470,7 +470,7 @@ function disallineamenti-raccogli() {
 # Qui si fa una copia per hard link ( rsync --link-dest ): costa quasi niente in spazio e in tempo,
 # e resta intatta anche dopo il deploy, perche' rsync non scrive i file sul posto ma li sostituisce.
 # Si escludono le stesse cose del deploy ( $3 ), cosi' il rollback non tocca var/ e gli altri dati
-# che il deploy non porta. La copia sta in <progetto>/var/<data>-deploy-<stadio>/, fuori dalla
+# che il deploy non porta. La copia sta in <progetto>/var/<data>-deploy-<stadio>-<ora>/, fuori dalla
 # document root, e se ne tengono le ultime tre per stadio.
 #
 # $1 percorso della document root di destinazione
@@ -484,12 +484,12 @@ function deploy-snapshot() {
     local DST="$1"
     local VIA="$2"
     local EXC="$3"
-    local SNAP="$( dirname "$DST" )/var/$( date '+%Y%m%d%H%M%S' )-deploy-$( basename "$DST" )"
+    local SNAP="$( dirname "$DST" )/var/$( date '+%Y%m%d' )-deploy-$( basename "$DST" )-$( date '+%H%M%S' )"
 
     local SCRIPT='
         mkdir -p "$2" || exit 1
         rsync -a '"$EXC"' --link-dest="$1/" "$1/" "$2/" || exit 1
-        ls -d "$( dirname "$2" )"/*-deploy-"$( basename "$1" )" | sort | head -n -3 | xargs -r rm -rf
+        ls -d "$( dirname "$2" )"/*-deploy-"$( basename "$1" )"-[0-9]* | sort | head -n -3 | xargs -r rm -rf
     '
 
     if [ -n "$VIA" ]; then

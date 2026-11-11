@@ -268,7 +268,7 @@ else
                 echo "accesso FTP: $FTP_USER@$DST_HOST"
 
                 # copia della destinazione per il rollback, scaricata in locale
-                SNAPSHOT="$( dirname "$SRC_PATH" )/var/$( date '+%Y%m%d%H%M%S' )-deploy-$DST_STAGE"
+                SNAPSHOT="$( dirname "$SRC_PATH" )/var/$( date '+%Y%m%d' )-deploy-$DST_STAGE-$( date '+%H%M%S' )"
                 mkdir -p "$SNAPSHOT"
                 if ! deploy-lftp "mirror $EXCLUDE $DST_PATH $SNAPSHOT"; then
                     echo "ATTENZIONE: copia della destinazione non riuscita, un rollback andrebbe fatto a mano"
