@@ -7987,12 +7987,16 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (                --
 -- dice di che genere è una licenza distribuita ( licenze.id_tipologia ), l'anello fra contratti e chiavi.
 -- Parte vuota: le tipologie le crea l'utente
 --
+-- NOTA: giorni_validita e giorni_rinnovo sono la regola di durata delle licenze di questo tipo, con cui si creano il primo
+-- rinnovo e i successivi ( rinnovi.id_licenza ); NULL vuol dire senza scadenza. Sono della riga, la vista non le eredita.
 CREATE TABLE IF NOT EXISTS `tipologie_licenze` (                  --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la tipologia genitore
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
   `codice` char(32) DEFAULT NULL,                                 -- codice della tipologia, con cui il codice trova la riga
   `nome` char(255) DEFAULT NULL,                                  -- nome della tipologia
+  `giorni_validita` int(11) DEFAULT NULL,                         -- giorni di validità del primo rinnovo di una licenza di questo tipo
+  `giorni_rinnovo` int(11) DEFAULT NULL,                          -- giorni di cui si allunga la licenza a ogni rinnovo successivo
   `html_entity` char(8) DEFAULT NULL,                             -- entità HTML per l'icona della tipologia
   `font_awesome` char(16) DEFAULT NULL,                           -- icona Font Awesome per la tipologia
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la tipologia
@@ -9473,27 +9477,32 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (             --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene le licenze distribuite, con validita, rinnovo e postazioni
-CREATE TABLE IF NOT EXISTS `licenze` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_rivenditore` bigint(20) DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `postazioni` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `note` char(254) DEFAULT NULL,
-  `testo` text DEFAULT NULL,
-  `giorni_validita` int(11) DEFAULT NULL,
-  `giorni_rinnovo` int(11) DEFAULT NULL,
-  `timestamp_distribuzione` int(11) DEFAULT NULL,
-  `timestamp_inizio` int(11) DEFAULT NULL,
-  `timestamp_fine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- funzione: contiene le licenze distribuite
+--
+-- questa tabella contiene le licenze, il diritto d'uso concesso a un'anagrafica, di solito su uno o piu' software; la
+-- catena e' contratti -> licenze -> chiavi, e software -> licenze_software -> licenze -> chiavi: le chiavi ( chiavi.id_licenza )
+-- sono gli strumenti con cui si valida l'uso concesso. Serve sia a chi vende licenze sia a chi gestisce le proprie.
+--
+-- NOTA: la validita' di una licenza non sta qui ma nei suoi rinnovi ( rinnovi.id_licenza ), un periodo per riga, e il
+-- contratto che la copre e' quello dei suoi rinnovi ( rinnovi.id_contratto ); la durata con cui si creano il primo rinnovo e i
+-- successivi e' una regola della tipologia ( tipologie_licenze.giorni_validita e giorni_rinnovo ).
+-- NOTA: id_anagrafica serve quando l'intestatario non e' il contraente del contratto; se manca, la vista da' il contraente.
+CREATE TABLE IF NOT EXISTS `licenze` (                            --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- tipologia della licenza, che ne dà anche la durata
+  `codice` char(32) DEFAULT NULL,                                 -- codice della licenza, unico
+  `nome` char(255) DEFAULT NULL,                                  -- nome descrittivo della licenza
+  `id_anagrafica` bigint(20) DEFAULT NULL,                        -- intestatario della licenza, se diverso dal contraente del contratto
+  `id_rivenditore` bigint(20) DEFAULT NULL,                       -- anagrafica che ha venduto la licenza
+  `postazioni` int(11) DEFAULT NULL,                              -- numero di postazioni su cui la licenza vale
+  `testo` text DEFAULT NULL,                                      -- testo della licenza, le condizioni d'uso
+  `note` text DEFAULT NULL,                                       -- annotazioni libere sulla licenza
+  `timestamp_distribuzione` int(11) DEFAULT NULL,                 -- timestamp della consegna della licenza
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp dell'ultimo aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                             --
 
 -- | 010000999020
 

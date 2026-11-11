@@ -3791,36 +3791,34 @@ CREATE OR REPLACE VIEW job_view AS
 
 -- licenze_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-15 12:44 Chiara GDL
--- TODO i dati sul contratto vanno recuperati in maniera più precisa
--- NOTA il campo id_anagrafica nelle licenze è lì perché la licenza potrebbe avere un intestatario diverso dal contratto
-CREATE OR REPLACE VIEW licenze_view AS
+-- verifica: 2026-11-11 punto 6, riga 246
+CREATE OR REPLACE VIEW `licenze_view` AS
 	SELECT
-		licenze.id,                         
-    	licenze.id_tipologia,                
-		tipologie_licenze.nome AS tipologia,               
-		licenze.id_anagrafica,
-		group_concat( DISTINCT coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS anagrafica,
-		licenze.id_rivenditore,              
-		group_concat( DISTINCT coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) ) AS rivenditore,
-		licenze.codice,                      
-		licenze.postazioni,                  
-		licenze.nome,                        
-		licenze.note,                        
-		licenze.testo,                       
-		licenze.giorni_validita,             
-		licenze.giorni_rinnovo,
+		licenze.id,
+		licenze.id_tipologia,
+		tipologie_licenze.nome AS tipologia,
+		tipologie_licenze.giorni_validita,
+		tipologie_licenze.giorni_rinnovo,
+		licenze.codice,
+		licenze.nome,
+		coalesce( licenze.id_anagrafica, min( contratti_anagrafica.id_anagrafica ) ) AS id_anagrafica,
+		group_concat( DISTINCT coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) SEPARATOR ', ' ) AS anagrafica,
+		licenze.id_rivenditore,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,
+		licenze.postazioni,
+		licenze.testo,
+		licenze.note,
+		licenze.timestamp_distribuzione,
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
 		group_concat( DISTINCT tipologie_contratti.nome SEPARATOR ', ' ) AS tipologia_contratto,
 		group_concat( DISTINCT concat_ws( '§', software.codice, software.nome ) SEPARATOR ' | ' ) AS software,
-		licenze.timestamp_distribuzione,     
-		licenze.timestamp_inizio,            
-		licenze.timestamp_fine,              
-		licenze.id_account_inserimento,      
-		licenze.id_account_aggiornamento,    
-		licenze.nome AS __label__
+		licenze.id_account_inserimento,
+		licenze.timestamp_inserimento,
+		licenze.id_account_aggiornamento,
+		licenze.timestamp_aggiornamento,
+		concat_ws( ' ', coalesce( nullif( licenze.codice, '' ), nullif( licenze.nome, '' ), licenze.id ), tipologie_licenze.nome ) AS __label__
 	FROM licenze
 		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
 		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
@@ -3828,7 +3826,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN software ON software.id = licenze_software.id_software
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-		LEFT JOIN contratti_anagrafica ON ( contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo IN ( 32 ) )
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+			AND contratti_anagrafica.id_ruolo IN ( SELECT id FROM ruoli_anagrafica WHERE se_contraente = 1 )
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( licenze.id_anagrafica, contratti_anagrafica.id_anagrafica )
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 	GROUP BY licenze.id
@@ -7897,6 +7896,8 @@ CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 		tipologie_licenze.ordine,
 		tipologie_licenze.codice,
 		tipologie_licenze.nome,
+		tipologie_licenze.giorni_validita,
+		tipologie_licenze.giorni_rinnovo,
 		tipologie_licenze.html_entity,
 		tipologie_licenze.font_awesome,
 		tipologie_licenze.id_account_inserimento,

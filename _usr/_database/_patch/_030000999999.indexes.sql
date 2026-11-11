@@ -4818,7 +4818,7 @@ ALTER TABLE `tipologie_licenze`
 -- | 030000053201
 
 -- tipologie_licenze
--- tipologia: tabella assistita
+-- tipologia: tabella gestita
 ALTER TABLE `tipologie_licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053300
@@ -5673,18 +5673,12 @@ ALTER TABLE `rinnovi`
 ALTER TABLE `licenze`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `codice` (`codice`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `giorni_validita` (`giorni_validita`),
-	ADD KEY `giorni_rinnovo` (`giorni_rinnovo`),
-	ADD KEY `timestamp_distribuzione` (`timestamp_distribuzione`),
-	ADD KEY `timestamp_inizio` (`timestamp_inizio`),
-	ADD KEY `timestamp_fine` (`timestamp_fine`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_rivenditore` (`id_rivenditore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`),
-	ADD KEY `id_rivenditore` (`id_rivenditore`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_anagrafica`,`id_rivenditore`);
 
 -- | 030000999005
 
