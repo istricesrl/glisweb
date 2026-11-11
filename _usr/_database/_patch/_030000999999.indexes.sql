@@ -5656,19 +5656,16 @@ ALTER TABLE `carrelli`
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_codice` (`codice`),
-	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_tipologia_contratto`,`codice`,`data_inizio`,`data_fine`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`codice`,`data_inizio`,`data_fine`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_periodicita` (`id_periodicita`),
-	ADD KEY `id_contratto` (`id_contratto`),
-	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `id_tipologia_contratto` (`id_tipologia_contratto`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
-	ADD KEY `indice` (`id_contratto`,`id_tipologia`,`id_licenza`,`id_progetto`,`id_categoria_progetti`,`data_inizio`,`data_fine`,`codice`),
+	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `id_pianificazione` (`id_pianificazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`id_progetto`,`id_contratto`,`id_categoria_progetti`,`id_licenza`,`data_inizio`,`data_fine`,`se_automatico`);
 
 -- | 030000999004
 

@@ -6408,50 +6408,48 @@ CREATE OR REPLACE VIEW reparti_view AS
 
 -- rinnovi_view
 -- tipologia: tabella gestita
--- verifica: 2022-02-21 12:59 Chiara GDL
+-- verifica: 2026-11-11 punto 6, riga 244
 CREATE OR REPLACE VIEW `rinnovi_view` AS
 	SELECT
 		rinnovi.id,
 		rinnovi.id_tipologia,
 		tipologie_rinnovi.nome AS tipologia,
+		rinnovi.codice,
+		rinnovi.id_periodicita,
+		periodicita.nome AS periodicita,
+		rinnovi.id_progetto,
+		progetti.nome AS progetto,
 		rinnovi.id_contratto,
 		contratti.nome AS contratto,
+		rinnovi.id_pianificazione,
+		rinnovi.id_categoria_progetti,
+		categorie_progetti_path( rinnovi.id_categoria_progetti ) AS categoria_progetti,
 		rinnovi.id_licenza,
 		licenze.nome AS licenza,
 		licenze.codice AS codice_licenza,
-		rinnovi.id_progetto,
-		progetti.nome AS progetto,
-		rinnovi.id_categoria_progetti,
-		categorie_progetti_path( rinnovi.id_categoria_progetti ) AS categoria_progetti,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
-		rinnovi.codice,
-		rinnovi.id_pianificazione,
+		rinnovi.note,
+		rinnovi.se_automatico,
 		rinnovi.id_account_inserimento,
 		rinnovi.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			'rinnovo',
 			rinnovi.id,
-			progetti.nome,
+			coalesce( contratti.nome, progetti.nome, licenze.nome ),
 			'dal',
 			rinnovi.data_inizio,
 			'al',
-			rinnovi.data_fine,
-			coalesce( 
-				anagrafica.denominazione,
-				concat( anagrafica.cognome, ' ', anagrafica.nome )
-			)
+			rinnovi.data_fine
 		) AS __label__
 	FROM rinnovi
 		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
-		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
-		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 29
-		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
-		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
+		LEFT JOIN periodicita ON periodicita.id = rinnovi.id_periodicita
+		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto )
-	GROUP BY rinnovi.id
-	;
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza
+;
 
 -- | 090000031551
 

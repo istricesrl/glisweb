@@ -9396,28 +9396,44 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
 
 -- rinnovi
 -- tipologia: tabella gestita
--- rango: tabella principale
+-- rango: tabella secondaria
 -- struttura: tabella base
--- funzione: contiene i rinnovi di contratti, licenze e progetti, anche generati da una pianificazione
+-- funzione: contiene i periodi di validita' di contratti, progetti e licenze
+--
+-- questa tabella contiene i rinnovi: ogni riga e' un periodo ( data_inizio, data_fine ) in cui un contratto, un progetto
+-- o una licenza e' valido. La validita' di un contratto non sta sul contratto ma nei suoi rinnovi: un contratto e' in
+-- corso in una data se ha un rinnovo che la comprende, e senza rinnovi e' un dato incompleto; la chiusura di un
+-- contratto la danno i rinnovi, l'archiviazione ( contratti.data_archiviazione ) e' un'altra cosa. I rinnovi li scrivono
+-- i form e i checkout dei moduli contratti, tesseramenti, iscrizioni, abbonamenti e corsi, e il modulo pianificazioni
+-- quando li genera da una pianificazione; le righe di carrello, di documento e i pagamenti che li riguardano puntano al
+-- rinnovo ( id_rinnovo ).
+--
+-- NOTA: id_pianificazione e' la provenienza, la pianificazione che ha generato il rinnovo, non l'oggetto rinnovato:
+-- data_inizio e' la data della ripetizione, data_fine il giorno prima della successiva.
+--
+-- NOTA: se_automatico dice se nel contratto e' stato pattuito il tacito rinnovo; e' lo sviluppo previsto del modulo
+-- contratti, oggi nessun codice la scrive.
+--
+-- NOTA: id_categoria_progetti e' la disciplina del rinnovo ( p.es. il corso a cui da' accesso un abbonamento ).
+--
 CREATE TABLE IF NOT EXISTS `rinnovi` (
-  `id` bigint(20) NOT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `id_periodicita` bigint(20) DEFAULT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `id_licenza` bigint(20) DEFAULT NULL,
-  `id_progetto` bigint(20) DEFAULT NULL,
-  `id_tipologia_contratto` bigint(20) DEFAULT NULL,
-  `id_categoria_progetti` bigint(20) DEFAULT NULL,
-  `id_pianificazione` bigint(20) DEFAULT NULL,
-  `data_inizio` date DEFAULT NULL,
-  `data_fine` date DEFAULT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `se_automatico` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia del rinnovo
+  `codice` char(32) DEFAULT NULL,                               -- codice univoco del rinnovo
+  `id_periodicita` bigint(20) DEFAULT NULL,                     -- chiave esterna per la periodicita' del rinnovo
+  `id_progetto` bigint(20) DEFAULT NULL,                        -- chiave esterna per il progetto rinnovato
+  `id_contratto` bigint(20) DEFAULT NULL,                       -- chiave esterna per il contratto rinnovato
+  `id_pianificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per la pianificazione che ha generato il rinnovo
+  `id_categoria_progetti` bigint(20) DEFAULT NULL,              -- chiave esterna per la disciplina ( categoria di progetti )
+  `id_licenza` bigint(20) DEFAULT NULL,                         -- chiave esterna per la licenza rinnovata
+  `data_inizio` date DEFAULT NULL,                              -- primo giorno di validita'
+  `data_fine` date DEFAULT NULL,                                -- ultimo giorno di validita'
+  `note` text DEFAULT NULL,                                     -- note sul rinnovo
+  `se_automatico` tinyint(1) DEFAULT NULL,                      -- tacito rinnovo pattuito nel contratto
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999003
