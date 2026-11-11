@@ -9442,17 +9442,29 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 -- tipologia: tabella gestita
 -- rango: tabella di relazione
 -- struttura: tabella base
--- funzione: mette in relazione i contratti e le anagrafiche, con il ruolo di ciascuna
-CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
-  `id` bigint(20) NOT NULL,
-  `id_contratto` bigint(20) DEFAULT NULL,
-  `id_anagrafica` bigint(20) DEFAULT NULL,
-  `id_ruolo` bigint(20) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- funzione: collega un contratto alle anagrafiche che ne sono parte, con il ruolo di ciascuna
+--
+-- questa tabella contiene le parti dei contratti: un'anagrafica per riga, col ruolo che ha nel contratto ( proponente,
+-- contraente, iscritto, tesserato, abbonato, istituto... ); in origine le parti erano campi di contratti, poi sono
+-- state spostate qui per consentire piu' proponenti e piu' contraenti; i ruoli proponibili sono quelli con
+-- ruoli_anagrafica.se_contratti
+--
+-- NOTA chi propone e chi sottoscrive il contratto lo dicono i flag se_proponente e se_contraente del ruolo, non la
+-- relazione ( decisione del 22/10/2026 ); la chiave unica e' ( id_contratto, id_anagrafica, id_ruolo ): la stessa
+-- anagrafica puo' avere piu' ruoli; le note precisano il ruolo nel caso specifico; fra le righe con lo stesso ruolo
+-- quella di default e' la prima nell'ordine ( p.es. il contraente principale )
+--
+CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (             --
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                -- ordine di visualizzazione
+  `id_contratto` bigint(20) DEFAULT NULL,                       -- chiave esterna per il contratto
+  `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica parte del contratto
+  `id_ruolo` bigint(20) DEFAULT NULL,                           -- chiave esterna per il ruolo ( ruoli_anagrafica )
+  `note` text DEFAULT NULL,                                     -- note che precisano il ruolo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999004

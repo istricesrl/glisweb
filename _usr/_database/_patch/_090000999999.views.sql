@@ -2313,35 +2313,42 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 
 -- contratti_anagrafica_view
 -- tipologia: tabella gestita
--- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW contratti_anagrafica_view AS 
-	SELECT 
+-- verifica: 2026-11-11 punto 6, riga 245
+CREATE OR REPLACE VIEW `contratti_anagrafica_view` AS
+	SELECT
 		contratti_anagrafica.id,
+		contratti_anagrafica.ordine,
 		contratti_anagrafica.id_contratto,
 		contratti.codice,
+		contratti.nome,
 		contratti_anagrafica.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		contratti_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome AS ruolo,
-		contratti_anagrafica.ordine,
-		contratti_anagrafica.id_account_inserimento ,
-		contratti_anagrafica.id_account_aggiornamento ,
+		ruoli_anagrafica.se_proponente,
+		ruoli_anagrafica.se_contraente,
+		contratti_anagrafica.note,
+		tipologie_contratti.id AS id_tipologia,
+		tipologie_contratti.nome AS tipologia,
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
 		tipologie_contratti.se_tesseramento,
 		tipologie_contratti.se_immobili,
 		tipologie_contratti.se_acquisto,
 		tipologie_contratti.se_locazione,
-		ruoli_anagrafica.se_proponente,
-		ruoli_anagrafica.se_contraente,
-		tipologie_contratti.id AS id_tipologia,
-		tipologie_contratti.nome AS tipologia,
-		contratti.nome,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
-		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+		contratti_anagrafica.id_account_inserimento,
+		contratti_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			'contratto',
+			coalesce( nullif( contratti.codice, '' ), nullif( contratti.nome, '' ), contratti.id ),
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
 	FROM contratti_anagrafica
 		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia

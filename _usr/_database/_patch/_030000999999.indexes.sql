@@ -5698,7 +5698,7 @@ ALTER TABLE `contratti_anagrafica`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+	ADD KEY `indice` (`id`,`ordine`,`id_contratto`,`id_anagrafica`,`id_ruolo`);
 
 -- | 030000999010
 
