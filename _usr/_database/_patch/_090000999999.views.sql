@@ -8798,15 +8798,19 @@ CREATE OR REPLACE VIEW `video_view` AS
 -- | 090000100001
 
 -- zone_view
--- tipologia: tabella gestita
--- verifica: 2022-06-16 13:16 Chiara GDL
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW zone_view AS
 	SELECT
 		zone.id,
 		zone.id_genitore,
 		zone.id_tipologia,
 		tipologie_zone.nome AS tipologia,
+		tipologie_zone.se_ecommerce,
+		tipologie_zone.se_commerciale,
+		tipologie_zone.se_immobiliare,
+		zone.codice,
 		zone.nome,
+		zone.note,
 		zone.id_account_inserimento,
 		zone.id_account_aggiornamento,
 		zone_path( zone.id ) AS __label__

@@ -9124,23 +9124,33 @@ CREATE TABLE IF NOT EXISTS `video` (                            --
 -- | 010000100000
 
 -- zone
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- rango: tabella principale
 -- struttura: tabella ricorsiva
 -- funzione: contiene le zone geografiche e commerciali
 --
--- questa tabella contiene le zone a cui si legano listini, modalita' di spedizione e indirizzi
+-- una zona è un'area che per i clienti non coincide con l'albero della geografia, di rilevanza commerciale ( listini,
+-- banner, popup ), logistica ( spedizioni, e-commerce, corrispondenza ) o organizzativa ( immobili, progetti ); la
+-- tipologia dice in quali ambiti vale ( i flag di tipologie_zone ) e l'albero raccoglie le zone più piccole sotto quelle
+-- più ampie; alle zone si legano listini ( listini_zone ), modalità di spedizione, banner ( banner_zone ), indirizzi,
+-- CAP ( zone_cap ) e stati ( zone_stati )
 --
-CREATE TABLE IF NOT EXISTS `zone` (
-`id` bigint(20) NOT NULL,
-  `id_genitore` bigint(20) DEFAULT NULL,
-  `id_tipologia` bigint(20) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+-- NOTA: il 050 carica la zona di default ( codice DEFAULT ), su cui stanno le regole che valgono dove non c'è una zona più
+-- specifica ( p.es. la spedizione verso tutte le altre destinazioni ), e il codice la cerca per codice, non per id ( il
+-- legacy _4170.ecommerce cabla ancora l'id 1, fino alla migrazione dei moduli ); le zone dell'utente hanno un codice
+-- libero, o nessuno
+--
+CREATE TABLE IF NOT EXISTS `zone` (                               --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la zona genitore
+  `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della zona
+  `codice` char(32) DEFAULT NULL,                                 -- codice della zona ( DEFAULT per la zona di default )
+  `nome` char(255) DEFAULT NULL,                                  -- nome della zona
+  `note` text DEFAULT NULL,                                       -- note
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la zona
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la zona
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000100100

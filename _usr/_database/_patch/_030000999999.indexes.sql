@@ -5511,22 +5511,23 @@ ALTER TABLE `video` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 -- | 030000100000
 
 -- zone
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 ALTER TABLE `zone`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
-    ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `id_tipologia`);
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`nome`);
     
 
 -- | 030000100001
 
 -- zone
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 ALTER TABLE `zone` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000100100
