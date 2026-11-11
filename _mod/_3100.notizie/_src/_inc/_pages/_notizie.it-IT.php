@@ -90,7 +90,7 @@
 		'parent'		=> array( 'id'		=> 'notizie.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
@@ -103,7 +103,7 @@
 		'parent'		=> array( 'id'		=> 'notizie.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 	
@@ -116,7 +116,7 @@
 		'parent'		=> array( 'id'		=> 'notizie.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
@@ -129,7 +129,7 @@
 		'parent'		=> array( 'id'		=> 'notizie.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 

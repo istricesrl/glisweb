@@ -69,12 +69,39 @@ Le linguette della scheda, nell'ordine:
 | testo | i testi della pagina, lingua per lingua | staff, amministratori |
 | menu | la pagina nei menu del sito | staff, amministratori |
 | progetti ( icona della valigetta ) | i progetti collegati alla pagina, e il pulsante per collegarne uno; c'è solo se è attivo il modulo dei progetti | staff, amministratori |
-| immagini, video, audio, file | i media della pagina | amministratori |
+| immagini, video, audio, file | i media della pagina | staff, amministratori |
 | macro | i programmi che completano la pagina | amministratori |
 | metadati | coppie nome–valore aggiuntive | amministratori |
 | gruppi | chi può aprire la pagina | amministratori |
 | statistiche pagina | i dati di visita | staff, amministratori |
 | azioni pagina | duplicare e pubblicare | staff, amministratori |
+
+## i media della pagina
+<!-- @pubblico: operatore, amministratore -->
+<!-- @pagina: pagine.form.video -->
+
+Le linguette **immagini**, **video**, **audio** e **file** collegano alla pagina i suoi media, una riga per
+elemento. Ogni riga ha un **ordine**, la posizione fra gli elementi della stessa linguetta, un'**etichetta**,
+il nome nel gestionale, e un **ruolo**, obbligatorio, che dice al sito dove usare l'elemento ( fra le immagini,
+p.es., la *copertina* ). Le immagini e i file hanno anche la **lingua**, le immagini l'**orientamento**. Il
+pulsante col meno toglie la riga.
+
+Nella linguetta **video** il video si indica in uno di due modi:
+
+| campo | contenuto |
+|---|---|
+| embed | da dove viene il video: *YouTube*, *Vimeo*, oppure *HTML5* per un file caricato sul sito |
+| codice embed | per YouTube e Vimeo, il codice del video: in `https://www.youtube.com/watch?v=dQw4w9WgXcQ` è `dQw4w9WgXcQ` |
+| file | per HTML5, il file video da caricare |
+
+L'**audio** si indica allo stesso modo, coi campi *embed* e *codice embed*.
+
+> **attenzione** — un video si mette nella pagina **sempre dalla linguetta video**, scegliendo l'embed e il
+> ruolo. **Non si incolla nel testo il codice di incorporamento di YouTube** ( l'`<iframe>` che YouTube propone
+> con *Condividi → Incorpora* ): il video incollato così si carica anche al visitatore che non ha accettato i
+> cookie, e la pagina non rispetta più la sua scelta. Il video messo dalla linguetta, invece, lo inserisce il
+> template del sito, che può tenerlo fermo finché il visitatore non dà il consenso e mostrargli al suo posto
+> l'avviso con cui darlo.
 
 ## i testi della pagina
 <!-- @pubblico: operatore, amministratore -->
@@ -195,6 +222,6 @@ e **valutazione** ( tutti obbligatori ), la spunta **approvata** e il **testo**.
 
 - le schede di **corsi**, **discipline**, **fasce** e **livelli**, a cui il modulo aggiunge le linguette
   web, SEM/SMM, testo e menu, quando la gestione dei corsi è presente;
-- le linguette **immagini**, **video**, **audio**, **file** e **metadati** delle pagine;
+- la linguetta **metadati** delle pagine;
 - le **statistiche** delle pagine e dei redirect;
 - come l'approvazione di una recensione ne decide la comparsa sul sito.

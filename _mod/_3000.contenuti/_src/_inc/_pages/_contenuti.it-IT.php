@@ -161,7 +161,7 @@
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
@@ -174,7 +174,7 @@
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
@@ -187,7 +187,7 @@
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
@@ -200,7 +200,7 @@
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 

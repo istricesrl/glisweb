@@ -45,15 +45,21 @@ l'elenco delle **pubblicazioni**, una riga per periodo, con ordine, tipologia, i
 | web | contenuti e aspetto: **sito**, template, schema, tema, mappa del sito, cache, e le pubblicazioni | staff, amministratori |
 | SEM/SMM | dati per motori di ricerca e social | staff, amministratori |
 | testo | titoli e testi, lingua per lingua | staff, amministratori |
-| immagini, video, audio, file, metadati | media, allegati e coppie nome–valore | amministratori |
+| immagini, video, audio, file | media e allegati | staff, amministratori |
+| metadati | coppie nome–valore aggiuntive | amministratori |
 | azioni notizia | le operazioni sulla notizia | staff, amministratori |
 
 La linguetta **testo** ha in alto la scelta della **lingua**, poi i campi *valore del tag h1*, *h2*, *h3*
 e *cappello*, e sotto gli editor di testo. La linguetta **SEM/SMM** ha gli stessi campi delle pagine ( path
 e URL custom, tag title, keywords, description, robots, OpenGraph ): vedi il capitolo *contenuti*.
 
-Nella linguetta **immagini** ogni immagine ha un **ruolo**, che dice al sito dove usarla; fra i ruoli c'è
-anche **copertina**.
+Le linguette **immagini**, **video**, **audio** e **file** funzionano come quelle delle pagine: vedi il
+capitolo *contenuti*, sezione *i media della pagina*. Nella linguetta **immagini** ogni immagine ha un
+**ruolo**, che dice al sito dove usarla; fra i ruoli c'è anche **copertina**.
+
+> **attenzione** — un video si mette nella notizia **sempre dalla linguetta video** ( embed YouTube, Vimeo o
+> HTML5, e ruolo ). **Non si incolla nel testo il codice di incorporamento di YouTube**: il video incollato
+> così si carica anche al visitatore che non ha accettato i cookie.
 
 ## le categorie
 <!-- @pubblico: operatore, amministratore -->
@@ -84,5 +90,5 @@ le pagine nel capitolo *contenuti*.
 
 - l'ordine con cui le notizie compaiono nella pagina di una categoria;
 - le **tipologie** di notizia e di categoria e dove si definiscono;
-- le linguette dei media e dei metadati;
+- la linguetta dei metadati;
 - il contenuto della linguetta delle azioni.

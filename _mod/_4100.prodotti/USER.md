@@ -54,6 +54,13 @@ I filtri sono **pubblicazione** e **categoria**, oltre alla ricerca per parola c
 
 Nella linguetta *web* compare anche il sotto-elenco delle **pubblicazioni** (periodi di visibilità).
 
+Le linguette **immagini**, **video**, **audio** e **file** le vedono staff e amministratori, e funzionano come
+quelle delle pagine: vedi il capitolo *contenuti*, sezione *i media della pagina*.
+
+> **attenzione** — un video si mette nel prodotto **sempre dalla linguetta video** ( embed YouTube, Vimeo o
+> HTML5, e ruolo ). **Non si incolla nel testo il codice di incorporamento di YouTube**: il video incollato
+> così si carica anche al visitatore che non ha accettato i cookie.
+
 <!-- @pubblico: operatore, amministratore -->
 <!-- @pagina: articoli.view -->
 
