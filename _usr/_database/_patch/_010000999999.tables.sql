@@ -9271,108 +9271,125 @@ CREATE TABLE IF NOT EXISTS `test` (                             --
 -- tipologia: tabella gestita
 -- rango: tabella principale
 -- struttura: tabella base
--- funzione: contiene i carrelli, con i dati del destinatario e della spedizione
+-- funzione: contiene i carrelli dell'ecommerce, con intestatario, destinatario, importi, checkout e pagamento
+--
+-- questa tabella contiene i carrelli: un carrello nasce con la sessione del visitatore, raccoglie le righe
+-- ( carrelli_articoli ), porta l'intestatario del documento e il destinatario della merce, gli importi calcolati
+-- ( totali, spedizione, sconti, coupon ) e registra il checkout, il pagamento e l'evasione. Lo scrivono il carrello e
+-- il checkout del modulo ecommerce, a partire da $_SESSION['carrello']; il documento generato punta al carrello
+-- ( documenti.id_carrello, documenti_articoli.id_carrello ), non il contrario.
+--
+-- NOTA: i blocchi destinatario_* e intestazione_* sono il destinatario e l'intestatario "master" dell'ordine; ogni riga
+-- di carrelli_articoli puo' avere il suo destinatario ( ordini per piu' persone ). Quando l'intestatario manca, la vista
+-- ripiega sul destinatario ( cliente_* ).
+--
+-- NOTA: id_reseller, id_affiliato e id_affiliazione attribuiscono il carrello a chi lo ha portato: chi arriva su un sito
+-- da un link affiliato lascia il suo carrello associato all'affiliato ( e al reseller ), e da li' si calcola il compenso
+-- che gli spetta. E' il meccanismo del futuro modulo affiliazioni: oggi nessun codice le scrive.
+--
+-- NOTA: le colonne utm_* sono i tag UTM con cui il visitatore e' arrivato, gli stessi di contatti: sono la firma con cui
+-- una campagna aggancia i carrelli che ha portato ( id_campagna ). Oggi le UTM restano in sessione e non si scrivono qui.
+--
 CREATE TABLE IF NOT EXISTS `carrelli` (
-  `id` bigint(20) NOT NULL,
-  `codice` char(32) DEFAULT NULL,
-  `session` char(32) DEFAULT NULL,
-  `destinatario_nome` char(255) DEFAULT NULL,
-  `destinatario_cognome` char(255) DEFAULT NULL,
-  `destinatario_denominazione` char(255) DEFAULT NULL,
-  `destinatario_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,
-  `destinatario_id_anagrafica` bigint(20) DEFAULT NULL,
-  `destinatario_id_account` bigint(20) DEFAULT NULL,
-  `destinatario_indirizzo` char(255) DEFAULT NULL,
-  `destinatario_cap` char(16) DEFAULT NULL,
-  `destinatario_citta` char(255) DEFAULT NULL,
-  `destinatario_id_comune` bigint(20) DEFAULT NULL,
-  `destinatario_id_provincia` bigint(20) DEFAULT NULL,
-  `destinatario_id_stato` bigint(20) DEFAULT NULL,
-  `destinatario_telefono` char(255) DEFAULT NULL,
-  `destinatario_mobile` char(255) DEFAULT NULL,
-  `destinatario_fax` char(255) DEFAULT NULL,
-  `destinatario_mail` char(255) DEFAULT NULL,
-  `destinatario_codice_fiscale` char(255) DEFAULT NULL,
-  `destinatario_partita_iva` char(255) DEFAULT NULL,
-  `destinatario_id_comune_nascita` bigint(20) DEFAULT NULL,
-  `destinatario_id_provincia_nascita` bigint(20) DEFAULT NULL,
-  `destinatario_id_stato_nascita` bigint(20) DEFAULT NULL,
-  `destinatario_giorno_nascita` int(11) DEFAULT NULL,
-  `destinatario_mese_nascita` int(11) DEFAULT NULL,
-  `destinatario_anno_nascita` int(11) DEFAULT NULL,
-  `intestazione_nome` char(255) DEFAULT NULL,
-  `intestazione_cognome` char(255) DEFAULT NULL,
-  `intestazione_denominazione` char(255) DEFAULT NULL,
-  `intestazione_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,
-  `intestazione_id_anagrafica` bigint(20) DEFAULT NULL,
-  `intestazione_id_account` bigint(20) DEFAULT NULL,
-  `intestazione_indirizzo` char(255) DEFAULT NULL,
-  `intestazione_cap` char(16) DEFAULT NULL,
-  `intestazione_citta` char(255) DEFAULT NULL,
-  `intestazione_id_comune` bigint(20) DEFAULT NULL,
-  `intestazione_id_provincia` bigint(20) DEFAULT NULL,
-  `intestazione_id_stato` bigint(20) DEFAULT NULL,
-  `intestazione_telefono` char(255) DEFAULT NULL,
-  `intestazione_mobile` char(255) DEFAULT NULL,
-  `intestazione_fax` char(255) DEFAULT NULL,
-  `intestazione_mail` char(255) DEFAULT NULL,
-  `intestazione_codice_fiscale` char(255) DEFAULT NULL,
-  `intestazione_partita_iva` char(255) DEFAULT NULL,
-  `intestazione_sdi` char(32) DEFAULT NULL,
-  `intestazione_pec` char(255) DEFAULT NULL,
-  `intestazione_id_comune_nascita` bigint(20) DEFAULT NULL,
-  `intestazione_id_provincia_nascita` bigint(20) DEFAULT NULL,
-  `intestazione_id_stato_nascita` bigint(20) DEFAULT NULL,
-  `intestazione_giorno_nascita` int(11) DEFAULT NULL,
-  `intestazione_mese_nascita` int(11) DEFAULT NULL,
-  `intestazione_anno_nascita` int(11) DEFAULT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `id_listino` bigint(20) DEFAULT NULL,
-  `id_zona` bigint(20) DEFAULT NULL,
-  `id_documento` bigint(20) DEFAULT NULL,
-  `id_campagna` bigint(20) DEFAULT NULL,
-  `fatturazione_id_tipologia_documento` bigint(20) DEFAULT NULL,
-  `fatturazione_sezionale` char(16) DEFAULT NULL,
-  `fatturazione_strategia` enum('SINGOLA','MULTIPLA') DEFAULT NULL,
-  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
-  `id_coupon` bigint(20) DEFAULT NULL,
-  `codice_coupon` char(32) DEFAULT NULL,
-  `sconto_percentuale_coupon` decimal(16,5) DEFAULT NULL,
-  `sconto_valore_coupon` decimal(16,5) DEFAULT NULL,
-  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
-  `sconto_valore` decimal(16,5) DEFAULT NULL,
-  `costo_spedizione_netto` decimal(16,5) DEFAULT NULL,
-  `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,
-  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
-  `provider_checkout` char(128) DEFAULT NULL,
-  `timestamp_checkout` int(11) DEFAULT NULL,
-  `provider_pagamento` char(64) DEFAULT NULL,
-  `timestamp_pagamento` int(11) DEFAULT NULL,
-  `codice_pagamento` char(128) DEFAULT NULL,
-  `ordine_pagamento` char(128) DEFAULT NULL,
-  `status_pagamento` char(128) DEFAULT NULL,
-  `importo_pagamento` decimal(16,5) DEFAULT NULL,
-  `utm_id` char(128) DEFAULT NULL,
-  `utm_source` char(128) DEFAULT NULL,
-  `utm_medium` char(128) DEFAULT NULL,
-  `utm_campaign` char(128) DEFAULT NULL,
-  `utm_term` char(128) DEFAULT NULL,
-  `utm_content` char(128) DEFAULT NULL,
-  `spam_score` decimal(8,2) DEFAULT NULL,
-  `spam_check` int(1) DEFAULT NULL,
-  `id_reseller` bigint(20) DEFAULT NULL,
-  `id_affiliato` bigint(20) DEFAULT NULL,
-  `id_affiliazione` bigint(20) DEFAULT NULL,
-  `id_account_evasione` bigint(20) DEFAULT NULL,
-  `timestamp_evasione` int(11) DEFAULT NULL,
-  `note_evasione` text DEFAULT NULL,
-  `id_account_inserimento` bigint(20) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  `id_sito` bigint(20) DEFAULT NULL                               -- sito di provenienza del carrello ( id dei config.siti )
+  `id` bigint(20) NOT NULL,                                     -- chiave primaria
+  `codice` char(32) DEFAULT NULL,                               -- codice univoco del carrello
+  `nome` char(255) DEFAULT NULL,                                -- nome del carrello
+  `id_sito` bigint(20) DEFAULT NULL,                            -- sito di provenienza del carrello ( id dei config.siti )
+  `id_listino` bigint(20) DEFAULT NULL,                         -- chiave esterna per il listino applicato
+  `id_zona` bigint(20) DEFAULT NULL,                            -- chiave esterna per la zona di spedizione
+  `id_campagna` bigint(20) DEFAULT NULL,                        -- chiave esterna per la campagna che ha portato il carrello
+  `id_reseller` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica del reseller a cui si attribuisce il carrello
+  `id_affiliato` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'anagrafica dell'affiliato a cui si attribuisce il carrello
+  `id_affiliazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per il contratto di affiliazione
+  `session` char(32) DEFAULT NULL,                              -- id della sessione a cui è legato il carrello aperto
+  `fatturazione_id_tipologia_documento` bigint(20) DEFAULT NULL,-- chiave esterna per la tipologia del documento da emettere
+  `fatturazione_sezionale` char(16) DEFAULT NULL,               -- sezionale del documento da emettere
+  `fatturazione_strategia` enum('SINGOLA','MULTIPLA') DEFAULT NULL,-- strategia di fatturazione ( SINGOLA o MULTIPLA )
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,             -- totale netto delle righe
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,             -- totale lordo delle righe
+  `costo_spedizione_netto` decimal(16,5) DEFAULT NULL,          -- costo di spedizione netto
+  `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,          -- costo di spedizione lordo
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,              -- sconto in percentuale
+  `sconto_valore` decimal(16,5) DEFAULT NULL,                   -- sconto in valore
+  `id_coupon` bigint(20) DEFAULT NULL,                          -- chiave esterna per il coupon applicato
+  `codice_coupon` char(32) DEFAULT NULL,                        -- codice del coupon inserito
+  `sconto_percentuale_coupon` decimal(16,5) DEFAULT NULL,       -- sconto del coupon in percentuale
+  `sconto_valore_coupon` decimal(16,5) DEFAULT NULL,            -- sconto del coupon in valore
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,             -- prezzo netto finale, scontato e con la spedizione
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,             -- prezzo lordo finale, scontato e con la spedizione
+  `provider_checkout` char(128) DEFAULT NULL,                   -- provider con cui è stato fatto il checkout
+  `timestamp_checkout` int(11) DEFAULT NULL,                    -- timestamp del checkout
+  `provider_pagamento` char(64) DEFAULT NULL,                   -- provider del pagamento
+  `timestamp_pagamento` int(11) DEFAULT NULL,                   -- timestamp del pagamento
+  `codice_pagamento` char(128) DEFAULT NULL,                    -- codice della transazione presso il provider
+  `ordine_pagamento` char(128) DEFAULT NULL,                    -- numero d'ordine presso il provider
+  `status_pagamento` char(128) DEFAULT NULL,                    -- stato del pagamento restituito dal provider
+  `importo_pagamento` decimal(16,5) DEFAULT NULL,               -- importo pagato
+  `utm_id` char(128) DEFAULT NULL,                              -- tag UTM id con cui il visitatore è arrivato
+  `utm_source` char(128) DEFAULT NULL,                          -- tag UTM source
+  `utm_medium` char(128) DEFAULT NULL,                          -- tag UTM medium
+  `utm_campaign` char(128) DEFAULT NULL,                        -- tag UTM campaign
+  `utm_term` char(128) DEFAULT NULL,                            -- tag UTM term
+  `utm_content` char(128) DEFAULT NULL,                         -- tag UTM content
+  `spam_score` decimal(8,2) DEFAULT NULL,                       -- punteggio della verifica antispam ( reCAPTCHA )
+  `spam_check` int(1) DEFAULT NULL,                             -- esito della verifica antispam
+  `destinatario_nome` char(255) DEFAULT NULL,                   -- nome del destinatario
+  `destinatario_cognome` char(255) DEFAULT NULL,                -- cognome del destinatario
+  `destinatario_denominazione` char(255) DEFAULT NULL,          -- denominazione del destinatario
+  `destinatario_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,-- chiave esterna per la tipologia anagrafica del destinatario
+  `destinatario_id_anagrafica` bigint(20) DEFAULT NULL,         -- chiave esterna per l'anagrafica del destinatario
+  `destinatario_id_account` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account del destinatario
+  `destinatario_indirizzo` char(255) DEFAULT NULL,              -- indirizzo del destinatario
+  `destinatario_cap` char(16) DEFAULT NULL,                     -- CAP del destinatario
+  `destinatario_citta` char(255) DEFAULT NULL,                  -- città del destinatario
+  `destinatario_id_comune` bigint(20) DEFAULT NULL,             -- chiave esterna per il comune del destinatario
+  `destinatario_id_provincia` bigint(20) DEFAULT NULL,          -- chiave esterna per la provincia del destinatario
+  `destinatario_id_stato` bigint(20) DEFAULT NULL,              -- chiave esterna per lo stato del destinatario
+  `destinatario_telefono` char(255) DEFAULT NULL,               -- telefono del destinatario
+  `destinatario_mobile` char(255) DEFAULT NULL,                 -- cellulare del destinatario
+  `destinatario_fax` char(255) DEFAULT NULL,                    -- fax del destinatario
+  `destinatario_mail` char(255) DEFAULT NULL,                   -- mail del destinatario
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,         -- codice fiscale del destinatario
+  `destinatario_partita_iva` char(255) DEFAULT NULL,            -- partita IVA del destinatario
+  `destinatario_id_comune_nascita` bigint(20) DEFAULT NULL,     -- chiave esterna per il comune di nascita del destinatario
+  `destinatario_id_provincia_nascita` bigint(20) DEFAULT NULL,  -- chiave esterna per la provincia di nascita del destinatario
+  `destinatario_id_stato_nascita` bigint(20) DEFAULT NULL,      -- chiave esterna per lo stato di nascita del destinatario
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL,            -- giorno di nascita del destinatario
+  `destinatario_mese_nascita` int(2) DEFAULT NULL,              -- mese di nascita del destinatario
+  `destinatario_anno_nascita` int(4) DEFAULT NULL,              -- anno di nascita del destinatario
+  `intestazione_nome` char(255) DEFAULT NULL,                   -- nome del intestatario
+  `intestazione_cognome` char(255) DEFAULT NULL,                -- cognome del intestatario
+  `intestazione_denominazione` char(255) DEFAULT NULL,          -- denominazione del intestatario
+  `intestazione_id_tipologia_anagrafica` bigint(20) DEFAULT NULL,-- chiave esterna per la tipologia anagrafica del intestatario
+  `intestazione_id_anagrafica` bigint(20) DEFAULT NULL,         -- chiave esterna per l'anagrafica del intestatario
+  `intestazione_id_account` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account del intestatario
+  `intestazione_indirizzo` char(255) DEFAULT NULL,              -- indirizzo del intestatario
+  `intestazione_cap` char(16) DEFAULT NULL,                     -- CAP del intestatario
+  `intestazione_citta` char(255) DEFAULT NULL,                  -- città del intestatario
+  `intestazione_id_comune` bigint(20) DEFAULT NULL,             -- chiave esterna per il comune del intestatario
+  `intestazione_id_provincia` bigint(20) DEFAULT NULL,          -- chiave esterna per la provincia del intestatario
+  `intestazione_id_stato` bigint(20) DEFAULT NULL,              -- chiave esterna per lo stato del intestatario
+  `intestazione_telefono` char(255) DEFAULT NULL,               -- telefono del intestatario
+  `intestazione_mobile` char(255) DEFAULT NULL,                 -- cellulare del intestatario
+  `intestazione_fax` char(255) DEFAULT NULL,                    -- fax del intestatario
+  `intestazione_mail` char(255) DEFAULT NULL,                   -- mail del intestatario
+  `intestazione_codice_fiscale` char(255) DEFAULT NULL,         -- codice fiscale del intestatario
+  `intestazione_partita_iva` char(255) DEFAULT NULL,            -- partita IVA del intestatario
+  `intestazione_sdi` char(32) DEFAULT NULL,                     -- codice destinatario SdI del intestatario
+  `intestazione_pec` char(255) DEFAULT NULL,                    -- PEC del intestatario
+  `intestazione_id_comune_nascita` bigint(20) DEFAULT NULL,     -- chiave esterna per il comune di nascita del intestatario
+  `intestazione_id_provincia_nascita` bigint(20) DEFAULT NULL,  -- chiave esterna per la provincia di nascita del intestatario
+  `intestazione_id_stato_nascita` bigint(20) DEFAULT NULL,      -- chiave esterna per lo stato di nascita del intestatario
+  `intestazione_giorno_nascita` int(2) DEFAULT NULL,            -- giorno di nascita del intestatario
+  `intestazione_mese_nascita` int(2) DEFAULT NULL,              -- mese di nascita del intestatario
+  `intestazione_anno_nascita` int(4) DEFAULT NULL,              -- anno di nascita del intestatario
+  `id_account_evasione` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha evaso il carrello
+  `timestamp_evasione` int(11) DEFAULT NULL,                    -- timestamp di evasione
+  `note_evasione` text DEFAULT NULL,                            -- note di evasione
+  `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
+  `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000999002
