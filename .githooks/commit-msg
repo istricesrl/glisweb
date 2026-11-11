@@ -6,6 +6,20 @@ MSG_FILE="$1"
 GIT_DIR="$(git rev-parse --git-dir)"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
+## commit rifiutato: la versione torna quella dell'ultimo commit
+#
+# pre-commit scrive _etc/_current.version e lo mette in stage PRIMA che le guardie qui sotto
+# leggano il messaggio; se il commit si rifiuta, il file resterebbe cambiato senza nessun commit
+# dietro, e il primo commit o push successivo pubblicherebbe ai deploy una versione che non
+# corrisponde a niente. La versione cambia solo insieme a un commit: qui la si rimette com'era
+rifiuta() {
+    if git cat-file -e HEAD:_etc/_current.version 2> /dev/null; then
+        git show HEAD:_etc/_current.version > _etc/_current.version
+        git reset -q HEAD -- _etc/_current.version
+    fi
+    exit 1
+}
+
 ## guardia dei test, su ogni branch
 #
 # un commit che tocca il codice porta i suoi test, o dichiara perche' non li porta con una riga
@@ -17,7 +31,7 @@ if [ ! -f "$GIT_DIR/MERGE_HEAD" ]; then
         echo "$SENZA" | sed 's/^/    /' >&2
         echo "aggiungi il test ( _usr/_test/, _mod/<modulo>/_usr/_test/, _usr/_examples/ ) oppure" >&2
         echo "dichiara nel messaggio 'Senza-test: <motivo>' e apri la voce nel TODO.md, area test automatici" >&2
-        exit 1
+        rifiuta
     fi
 fi
 
@@ -32,7 +46,7 @@ if [ ! -f "$GIT_DIR/MERGE_HEAD" ]; then
         echo "$SENZA" | sed 's/^/    /' >&2
         echo "aggiungi la patch _usr/_database/_patch/_AAAAMMGGHHMM.<descrizione>.sql oppure, se lo schema" >&2
         echo "non cambia, dichiara nel messaggio 'Senza-patch: <motivo>' ( _usr/_docs/_read/300.database.md )" >&2
-        exit 1
+        rifiuta
     fi
 fi
 
