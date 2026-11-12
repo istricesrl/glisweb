@@ -392,8 +392,19 @@ CREATE OR REPLACE VIEW anagrafica_progetti_view AS
 -- | 090000000961
 
 -- attesa_view
--- le righe di anagrafica_progetti in lista di attesa ( se_attesa ), per il modulo _0635.attesa;
--- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026
+-- vista virtuale: la lista di attesa sono le righe di anagrafica_progetti con se_attesa ( canone, punto 6 ); il modulo
+-- _0635.attesa legge da qui e scrive su anagrafica_progetti. Oltre alle colonne della relazione espone quelle che
+-- servono all'elenco e al suo export, che rilegge le colonne dalla vista: la disciplina del corso, le note, le mail e
+-- i telefoni dell'anagrafica
+--
+-- NOTA disciplina e' la radice dell'albero delle categorie_progetti con se_disciplina, raggiunta risalendo
+-- id_genitore per quattro livelli e non con categorie_progetti_path_find_ancestor(), che costa ~25 ms a chiamata
+-- ( su 297 righe la vista passava da 0,02 a 9 secondi ); un quinto livello comparirebbe come nome intermedio
+-- NOTA mail e telefoni sono tutti quelli dell'anagrafica separati da " | ", come in anagrafica_view
+-- NOTA data_lezione e ora_lezione vengono dalla todo di anagrafica_progetti.id_todo, che oggi nessun modulo valorizza
+--
+-- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026; il 2026-11-12 ( schema canonico, punto 6 )
+-- ha preso la forma della patch di polmasi del 28/09/2026, che ne era un sovrainsieme
 CREATE OR REPLACE VIEW attesa_view AS
 	SELECT
 		anagrafica_progetti.id,
@@ -415,7 +426,28 @@ CREATE OR REPLACE VIEW attesa_view AS
 			progetti.nome,
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
 			ruoli_progetti.nome
-		) AS __label__
+		) AS __label__,
+		anagrafica_progetti.note,
+		(
+			SELECT group_concat( DISTINCT coalesce( g4.nome, g3.nome, g2.nome, g1.nome, categorie_progetti.nome ) SEPARATOR ', ' )
+			FROM progetti_categorie
+				INNER JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1
+				LEFT JOIN categorie_progetti AS g1 ON g1.id = categorie_progetti.id_genitore
+				LEFT JOIN categorie_progetti AS g2 ON g2.id = g1.id_genitore
+				LEFT JOIN categorie_progetti AS g3 ON g3.id = g2.id_genitore
+				LEFT JOIN categorie_progetti AS g4 ON g4.id = g3.id_genitore
+			WHERE progetti_categorie.id_progetto = anagrafica_progetti.id_progetto
+		) AS disciplina,
+		(
+			SELECT group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' )
+			FROM mail
+			WHERE mail.id_anagrafica = anagrafica_progetti.id_anagrafica
+		) AS mail,
+		(
+			SELECT group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' )
+			FROM telefoni
+			WHERE telefoni.id_anagrafica = anagrafica_progetti.id_anagrafica
+		) AS telefoni
 	FROM anagrafica_progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
 		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
