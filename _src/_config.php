@@ -1133,6 +1133,9 @@
     define( 'FILE_SECURITY_GLOBAL_BANS'                 , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.txt' );
     define( 'FILE_SECURITY_GLOBAL_BANS_LOCK'            , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.lock' );
 
+    // lock dell'importazione dallo spool, che un giro del cron tiene da _740.controller.php a _750.controller.php
+    define( 'FILE_IMPORT_LOCK'                          , DIR_VAR_SPOOL_IMPORT . 'import.lock' );
+
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
     define( 'FILE_CURRENT_VERSION'                      , DIR_ETC . '_current.version' );

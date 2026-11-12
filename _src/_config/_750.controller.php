@@ -351,6 +351,13 @@
         }
     }
 
+    // rilascio il lock dell'importazione, preso da _740.controller.php: righe scritte e file archiviati
+    if( ! empty( $cf['import']['lock'] ) ) {
+        flock( $cf['import']['lock'], LOCK_UN );
+        fclose( $cf['import']['lock'] );
+        $cf['import']['lock'] = false;
+    }
+
     /**
      * collegamenti e scorciatoie
      * ==========================

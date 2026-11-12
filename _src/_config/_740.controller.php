@@ -59,8 +59,45 @@
      * 
      */
 
-    // ...
+    /**
+     * lock dell'importazione
+     * ======================
+     * Un giro del cron importa solo se tiene il lock FILE_IMPORT_LOCK, dal primo blocco qui sotto fino a
+     * _750.controller.php, dove le righe sono state scritte e i file archiviati. Senza lock due giri concorrenti
+     * elaboravano gli stessi file, e le righe in POST senza id si scrivevano due volte ( 1533 righe invece di 1000
+     * il 12/11/2026 su utensilerialughese, col giro di un test e quello del cron di sistema a 5 secondi di distanza ).
+     * 
+     * Il lock si prende senza aspettare: se lo tiene un altro giro, questo non importa niente e i file restano
+     * dove sono per il giro dopo. È un flock(), quindi se il processo muore lo rilascia il sistema, e non c'è un
+     * lock vecchio da togliere a mano. Se il file del lock non si apre l'importazione va avanti senza, come prima,
+     * con un errore nel log.
+     * 
+     */
+
+    // presa del lock
     if( defined( 'CRON_RUNNING' ) ) {
+
+        // apro il file del lock
+        $cf['import']['lock'] = ( checkFolder( DIR_VAR_SPOOL_IMPORT ) ) ? @fopen( FILE_IMPORT_LOCK, 'c' ) : false;
+
+        // senza il file importo come prima, se un altro giro tiene il lock salto l'importazione
+        if( $cf['import']['lock'] === false ) {
+            logWrite( 'impossibile aprire il lock ' . FILE_IMPORT_LOCK . ', importo senza', 'import', LOG_ERR );
+            $cf['import']['attiva'] = true;
+        } elseif( flock( $cf['import']['lock'], LOCK_EX | LOCK_NB ) ) {
+            $cf['import']['attiva'] = true;
+        } else {
+            fclose( $cf['import']['lock'] );
+            $cf['import']['lock'] = false;
+            $cf['import']['attiva'] = false;
+            $cf['import']['info'][] = 'importazione in corso in un altro giro, salto';
+            logWrite( 'importazione in corso in un altro giro, salto', 'import', LOG_DEBUG );
+        }
+
+    }
+
+    // ...
+    if( ! empty( $cf['import']['attiva'] ) ) {
 
         // trovo le sottocartelle della cartella di importazione
         $cf['import']['programmati'] = getDirList( DIR_VAR_SPOOL_IMPORT_TODO );
@@ -171,7 +208,7 @@
      */
 
     // ...
-    if( defined( 'CRON_RUNNING' ) ) {
+    if( ! empty( $cf['import']['attiva'] ) ) {
 
         // ...
 
@@ -357,7 +394,7 @@
      */
 
     // ...
-    if( defined( 'CRON_RUNNING' ) ) {
+    if( ! empty( $cf['import']['attiva'] ) ) {
 
         // trovo le immagini presenti in var/spool/import/
         $cf['import']['img'] = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
