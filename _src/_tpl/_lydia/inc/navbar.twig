@@ -11,6 +11,7 @@
         <div class="collapse navbar-collapse nav-icons" id="navbarNavIcons">
             <ul class="navbar-nav flex-row ms-auto justify-content-end text-end">
                 {{ nav.menu( page.template.menu.icons, localization.language.ietf ) }}
+                {% include 'inc/flags.twig' %}
             </ul>
         </div>
     </nav>

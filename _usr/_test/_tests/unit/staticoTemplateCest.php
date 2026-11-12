@@ -124,6 +124,17 @@
 
         }
 
+        // il cambio lingua di _lydia: inc/flags.twig chiama la macro standard nav.flags() ed e' incluso nella testata; fino
+        // al 12/11/2026 era un segnaposto vuoto mai incluso, e da www.glisweb.it non si arrivava alle pagine inglesi
+        public function cambioLinguaLydia( UnitTester $I ) {
+
+            $I->assertStringContainsString( 'nav.flags( page, localization.language.ietf, site )', file_get_contents( DIR_BASE . '_src/_tpl/_lydia/inc/flags.twig' ) );
+            $I->assertStringContainsString( "{% include 'inc/flags.twig' %}", file_get_contents( DIR_BASE . '_src/_tpl/_lydia/inc/navbar.twig' ) );
+            $I->assertFileExists( DIR_BASE . '_src/_img/_flags/_webp/_gb.webp' );
+            $I->assertFileExists( DIR_BASE . '_src/_img/_flags/_webp/_it.webp' );
+
+        }
+
         // in _lydia il margine generale di .form-control staccava il campo di ricerca dal suo pulsante nell'input-group
         public function ricercaLydiaSenzaMargine( UnitTester $I ) {
 

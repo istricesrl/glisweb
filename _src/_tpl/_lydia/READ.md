@@ -30,6 +30,7 @@ account.twig                            | il modulo dell'account: dati anagrafic
 password.reset.twig                     | la reimpostazione della password in tre passaggi ( ramo `__pwreset__` )
 inc/header.twig                         | il logo
 inc/navbar.twig                         | i due menu della testata: `icons` e `main`
+inc/flags.twig                          | le bandiere del cambio lingua in coda a `icons`, con la macro `nav.flags()`, solo se il sito ha più di una lingua
 inc/categorie.twig                      | il menu `categorie` nella barra grigia
 inc/search.twig                         | la casella di ricerca, verso la pagina `ricerche.risultati`
 inc/megamenu.twig                       | il menu `mega`, solo se la pagina lo ha
