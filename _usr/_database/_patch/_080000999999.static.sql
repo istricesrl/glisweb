@@ -28,26 +28,38 @@
 -- controllano con count(*) e non con information_schema, che su InnoDB appena convertito riporta
 -- zero righe finche' non ricalcola le statistiche.
 --
--- TODO documentare
+-- LA FORMA DELLA FAMIGLIA ( Fabio, 12/11/2026, schema canonico punto 6, righe 251-255 )
+--
+-- Una statica e' la sua vista colonna per colonna: stessi nomi e stessi tipi ( quelli della colonna della
+-- tabella da cui la vista la prende; per le colonne calcolate o prese da un'altra tabella, 48 nelle cinque
+-- statiche, il tipo e' ancora da fissare: schema canonico, punti/06-251-statiche.md ), piu' la PRIMARY KEY
+-- su id, gli stessi UNIQUE della tabella base sulle colonne che espone ( codice ) e le KEY che servono
+-- all'ordine dell'elenco ( data ). Niente colonne proprie: timestamp_inserimento e
+-- timestamp_aggiornamento, che syncStaticView() usa per trovare le righe rimaste indietro, li espone la
+-- vista. Una statica sta nel canone solo insieme alla sua corte di task ( popolazione, pulizia,
+-- svuotamento ): getStaticViewExtension() legge dalla statica appena la tabella esiste, e una statica che
+-- nessuno riempie e' un elenco vuoto senza errori.
 --
 
 -- | 080000000400
 
 -- anagrafica_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza anagrafica_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _AN000.anagrafica.
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
   `id_tipologia` bigint(20) DEFAULT NULL,                         --
   `tipologia` char(32) DEFAULT NULL,                          --
   `codice` char(32) DEFAULT NULL,                             --
-  `riferimento` char(32) DEFAULT NULL,                        --
+  `riferimento` char(255) DEFAULT NULL,                       --
   `nome` char(64) DEFAULT NULL,                               --
   `cognome` char(255) DEFAULT NULL,                           --
   `denominazione` char(255) DEFAULT NULL,                     --
   `soprannome` char(128) DEFAULT NULL,                        --
-  `sesso` char(1) DEFAULT NULL,                               --
+  `sesso` enum('m','f','-') DEFAULT NULL,                     --
   `codice_fiscale` char(32) DEFAULT NULL,                     --
   `partita_iva` char(32) DEFAULT NULL,                        --
   `id_ranking` bigint(20) DEFAULT NULL,                          --
@@ -71,9 +83,9 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `categorie` text,                                           --
   `telefoni` text,                                            --
   `mail` text,                                                --
-  `anno_nascita` char(32),                                    --
-  `mese_nascita` char(32),                                    --
-  `giorno_nascita` char(32),                                  --
+  `anno_nascita` int(4) DEFAULT NULL,                         --
+  `mese_nascita` int(2) DEFAULT NULL,                         --
+  `giorno_nascita` int(2) DEFAULT NULL,                       --
   `data_nascita` char(32),                                    --
   `id_comune_nascita` bigint(20) DEFAULT NULL,                   --
   `data_archiviazione` date DEFAULT NULL,                     --
@@ -93,9 +105,11 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
 -- | 080000001300
 
 -- articoli_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza articoli_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _PR000.prodotti; nome e' varchar(512) perche' la vista lo compone.
 CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL,       -- le prime tre come in articoli_view ( 2026-10-04 )
   `pubblicazione` char(32) DEFAULT NULL,
@@ -156,14 +170,16 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
 -- | 080000001800
 
 -- attivita_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza attivita_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _AT000.attivita.
 CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
   `id_tipologia` bigint(20) DEFAULT NULL,                        --
   `tipologia` char(64) DEFAULT NULL,                          --
-  `codice` char(64) DEFAULT NULL,                             --
+  `codice` char(32) DEFAULT NULL,                             --
   `id_cliente` bigint(20) DEFAULT NULL,                          --
   `codice_cliente` char(64) DEFAULT NULL,                     --
   `cliente` char(255) DEFAULT NULL,                           --
@@ -227,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `mastro_provenienza` char(64) DEFAULT NULL,                 --
   `id_mastro_destinazione` bigint(20) DEFAULT NULL,              --
   `mastro_destinazione` char(64) DEFAULT NULL,                --
-  `codice_archivium` char(128) DEFAULT NULL,                  --
+  `codice_archivium` char(32) DEFAULT NULL,                   --
   `token` char(128) DEFAULT NULL,                             --
   `id_account_proprietario` bigint(20) DEFAULT NULL,             --
   `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
@@ -246,9 +262,11 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
 -- | 080000002300
 
 -- offerte_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza offerte_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _0400.documenti in glisweb; in latest e' da scrivere.
 --
 -- Comprende TUTTE le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ). Fino al
 -- 04/10/2026 si materializzava offerte_attive_view, cioe' le sole offerte emesse da
@@ -261,15 +279,13 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
 -- su 12.705 documenti l'08/09/2026: 13,5 secondi con la funzione, 0,1 senza ), e l'elenco delle
 -- offerte resta fra quelli che si aprono di piu'.
 --
--- Le colonne sono quelle della vista, piu' timestamp_inserimento e timestamp_aggiornamento come
--- nelle altre statiche: la vista non le espone, e' syncStaticView() a scriverle ( task
--- _mod/_0400.documenti/_src/_api/_task/_offerte.view.static.popolazione.php ), che le usa per
--- sapere quali righe sono rimaste indietro.
+-- timestamp_inserimento e timestamp_aggiornamento fino al 12/11/2026 stavano solo qui e li scriveva
+-- syncStaticView(); da allora li espone offerte_view.
 CREATE TABLE IF NOT EXISTS `offerte_view_static` (            --
   `id` bigint(20) PRIMARY KEY NOT NULL,                       --
   `id_tipologia` bigint(20) DEFAULT NULL,                     --
   `tipologia` char(255) DEFAULT NULL,                         --
-  `codice` char(64) DEFAULT NULL,                             --
+  `codice` char(32) DEFAULT NULL,                             --
   `numero` char(32) DEFAULT NULL,                             --
   `sezionale` char(32) DEFAULT NULL,                          --
   `data` date DEFAULT NULL,                                   --
@@ -297,96 +313,102 @@ CREATE TABLE IF NOT EXISTS `offerte_view_static` (            --
 -- | 080000009800
 
 -- documenti_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza documenti_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva una corte che in latest e' ancora da scrivere ( _DO000.documenti ).
 --
 -- documenti e' una delle tabelle piu' importanti del framework, e la sua vista una delle piu' care:
 -- tre JOIN su anagrafica, i totali sommati da pagamenti e i group_concat dei documenti antecedenti e
 -- successivi, ricalcolati riga per riga a ogni apertura dell'elenco e di ogni tendina. La statica la
 -- materializza ( decisione di Fabio, 14/10/2026 ), come offerte_view_static per le offerte.
 --
--- Le colonne sono quelle della vista, piu' timestamp_inserimento e timestamp_aggiornamento come
--- nelle altre statiche: la vista non le espone, e' syncStaticView() a scriverle, e le usa per sapere
--- quali righe sono rimaste indietro. refreshStaticView() elenca i campi per nome: conta che siano gli
--- stessi della vista, non il loro ordine.
+-- refreshStaticView() elenca i campi per nome: conta che siano gli stessi della vista, non il loro
+-- ordine. timestamp_inserimento e timestamp_aggiornamento li espone documenti_view dal 12/11/2026.
 --
 -- ATTENZIONE: getStaticViewExtension() ( _src/_lib/_mysql.tools.php ) legge dalla statica appena la
 -- tabella esiste. Su un deploy va quindi creata solo insieme al meccanismo che la popola e la tiene
 -- aggiornata ( task di popolazione, pulizia e svuotamento, aggiornamento quando si scrivono
 -- documenti, righe, pagamenti e relazioni_documenti ): una statica vuota, o ferma, svuota l'elenco
 -- dei documenti senza nessun errore.
-CREATE TABLE IF NOT EXISTS `documenti_view_static` (             --
-  `id` bigint(20) PRIMARY KEY NOT NULL,                          --
-  `id_tipologia` bigint(20) DEFAULT NULL,                        --
-  `tipologia` char(255) DEFAULT NULL,                            --
-  `codice` char(32) DEFAULT NULL,                                --
-  `numero` char(32) DEFAULT NULL,                                --
-  `sezionale` char(32) DEFAULT NULL,                             --
-  `numero_sezionale` varchar(65) DEFAULT NULL,                   --
-  `data` date DEFAULT NULL,                                      --
-  `nome` char(255) DEFAULT NULL,                                 --
-  `id_emittente` bigint(20) DEFAULT NULL,                        --
-  `emittente` varchar(320) DEFAULT NULL,                         --
-  `id_referente_emittente` bigint(20) DEFAULT NULL,              --
-  `id_sede_emittente` bigint(20) DEFAULT NULL,                   --
-  `id_destinatario` bigint(20) DEFAULT NULL,                     --
-  `destinatario` varchar(320) DEFAULT NULL,                      --
-  `id_sede_destinatario` bigint(20) DEFAULT NULL,                --
-  `id_destinatario_spedizione` bigint(20) DEFAULT NULL,          --
-  `destinatario_spedizione` varchar(320) DEFAULT NULL,           --
-  `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,     --
-  `id_condizione_pagamento` bigint(20) DEFAULT NULL,             --
-  `condizione_pagamento` char(32) DEFAULT NULL,                  --
-  `esigibilita` enum('I','D','S') DEFAULT NULL,                  --
-  `cig` char(16) DEFAULT NULL,                                   --
-  `cup` char(16) DEFAULT NULL,                                   --
-  `riferimento` char(255) DEFAULT NULL,                          --
-  `totale_lordo_finale` decimal(16,2) DEFAULT NULL,              --
-  `totale_coupon` decimal(16,2) DEFAULT NULL,                    --
-  `codice_sdi` char(64) DEFAULT NULL,                            --
-  `codice_archivium` char(64) DEFAULT NULL,                      --
-  `progressivo_invio` char(5) DEFAULT NULL,                      --
-  `timestamp_invio` int(11) DEFAULT NULL,                        --
-  `data_consegna` date DEFAULT NULL,                             --
-  `id_coupon` bigint(20) DEFAULT NULL,                           --
-  `id_carrello` bigint(20) DEFAULT NULL,                         --
-  `id_carrelli_articoli` bigint(20) DEFAULT NULL,                --
-  `id_mastro_provenienza` bigint(20) DEFAULT NULL,               --
-  `mastro_provenienza` char(64) DEFAULT NULL,                    --
-  `id_mastro_destinazione` bigint(20) DEFAULT NULL,              --
-  `mastro_destinazione` char(64) DEFAULT NULL,                   --
-  `id_causale` bigint(20) DEFAULT NULL,                          --
-  `id_trasportatore` bigint(20) DEFAULT NULL,                    --
-  `porto` enum('franco','assegnato','-') DEFAULT NULL,           --
-  `id_pianificazione` bigint(20) DEFAULT NULL,                   --
-  `id_progetto` bigint(20) DEFAULT NULL,                         --
-  `documenti_antecedenti` text,                                  --
-  `documenti_successivi` text,                                   --
-  `timestamp_chiusura` int(11) DEFAULT NULL,                     --
-  `data_ora_chiusura` char(16) DEFAULT NULL,                     --
-  `id_account_archiviazione` bigint(20) DEFAULT NULL,            --
-  `data_archiviazione` date DEFAULT NULL,                        --
-  `id_account_proprietario` bigint(20) DEFAULT NULL,             --
-  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
-  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
-  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
-  `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
-  `id_account_inserimento` bigint(20) DEFAULT NULL,              --
-  `timestamp_inserimento` int(11) DEFAULT NULL,                  --
-  `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,                --
-  `__label__` text,                                              --
-  UNIQUE KEY `codice` (`codice`),                                --
-  KEY `data` (`data`)                                            --
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
+-- SOSPESA DAL 12/11/2026 ( Fabio, punto 6 righe 251-255: una statica sta nel canone solo con la sua corte ):
+-- la CREATE e' commentata finche' _DO000.documenti non ha popolazione, pulizia, svuotamento e l'aggiornamento
+-- quando si scrivono documenti, righe, pagamenti e relazioni_documenti. Il ricaricamento dei file base l'ha creata
+-- vuota sui deploy, e su polmasi PROD ha svuotato la scheda documenti e l'elenco delle ricevute dall'11/11 sera.
+-- CREATE TABLE IF NOT EXISTS `documenti_view_static` (             --
+--   `id` bigint(20) PRIMARY KEY NOT NULL,                          --
+--   `id_tipologia` bigint(20) DEFAULT NULL,                        --
+--   `tipologia` char(255) DEFAULT NULL,                            --
+--   `codice` char(32) DEFAULT NULL,                                --
+--   `numero` char(32) DEFAULT NULL,                                --
+--   `sezionale` char(32) DEFAULT NULL,                             --
+--   `numero_sezionale` varchar(65) DEFAULT NULL,                   --
+--   `data` date DEFAULT NULL,                                      --
+--   `nome` char(255) DEFAULT NULL,                                 --
+--   `id_emittente` bigint(20) DEFAULT NULL,                        --
+--   `emittente` varchar(320) DEFAULT NULL,                         --
+--   `id_referente_emittente` bigint(20) DEFAULT NULL,              --
+--   `id_sede_emittente` bigint(20) DEFAULT NULL,                   --
+--   `id_destinatario` bigint(20) DEFAULT NULL,                     --
+--   `destinatario` varchar(320) DEFAULT NULL,                      --
+--   `id_sede_destinatario` bigint(20) DEFAULT NULL,                --
+--   `id_destinatario_spedizione` bigint(20) DEFAULT NULL,          --
+--   `destinatario_spedizione` varchar(320) DEFAULT NULL,           --
+--   `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,     --
+--   `id_condizione_pagamento` bigint(20) DEFAULT NULL,             --
+--   `condizione_pagamento` char(32) DEFAULT NULL,                  --
+--   `esigibilita` enum('I','D','S') DEFAULT NULL,                  --
+--   `cig` char(16) DEFAULT NULL,                                   --
+--   `cup` char(16) DEFAULT NULL,                                   --
+--   `riferimento` char(255) DEFAULT NULL,                          --
+--   `totale_lordo_finale` decimal(16,2) DEFAULT NULL,              --
+--   `totale_coupon` decimal(16,2) DEFAULT NULL,                    --
+--   `codice_sdi` char(64) DEFAULT NULL,                            --
+--   `codice_archivium` char(64) DEFAULT NULL,                      --
+--   `progressivo_invio` char(5) DEFAULT NULL,                      --
+--   `timestamp_invio` int(11) DEFAULT NULL,                        --
+--   `data_consegna` date DEFAULT NULL,                             --
+--   `id_coupon` bigint(20) DEFAULT NULL,                           --
+--   `id_carrello` bigint(20) DEFAULT NULL,                         --
+--   `id_carrelli_articoli` bigint(20) DEFAULT NULL,                --
+--   `id_mastro_provenienza` bigint(20) DEFAULT NULL,               --
+--   `mastro_provenienza` char(64) DEFAULT NULL,                    --
+--   `id_mastro_destinazione` bigint(20) DEFAULT NULL,              --
+--   `mastro_destinazione` char(64) DEFAULT NULL,                   --
+--   `id_causale` bigint(20) DEFAULT NULL,                          --
+--   `id_trasportatore` bigint(20) DEFAULT NULL,                    --
+--   `porto` enum('franco','assegnato','-') DEFAULT NULL,           --
+--   `id_pianificazione` bigint(20) DEFAULT NULL,                   --
+--   `id_progetto` bigint(20) DEFAULT NULL,                         --
+--   `documenti_antecedenti` text,                                  --
+--   `documenti_successivi` text,                                   --
+--   `timestamp_chiusura` int(11) DEFAULT NULL,                     --
+--   `data_ora_chiusura` char(16) DEFAULT NULL,                     --
+--   `id_account_archiviazione` bigint(20) DEFAULT NULL,            --
+--   `data_archiviazione` date DEFAULT NULL,                        --
+--   `id_account_proprietario` bigint(20) DEFAULT NULL,             --
+--   `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
+--   `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
+--   `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
+--   `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
+--   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
+--   `timestamp_inserimento` int(11) DEFAULT NULL,                  --
+--   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
+--   `timestamp_aggiornamento` int(11) DEFAULT NULL,                --
+--   `__label__` text,                                              --
+--   UNIQUE KEY `codice` (`codice`),                                --
+--   KEY `data` (`data`)                                            --
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
 
 -- | 080000999020
 
 -- todo_view_static
--- rango: tabella principale
--- struttura: tabella base
+-- rango: tabella di supporto
+-- struttura: vista statica
 -- funzione: materializza todo_view per le ricerche e le tendine
+--
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva una corte che in latest e' ancora da scrivere.
 -- Materializzazione di todo_view. Le colonne devono restare le STESSE della vista; l'ordine
 -- invece non conta, ed e' bene dirlo perche' qui c'era scritto il contrario.
 --
@@ -420,10 +442,10 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
-  `anno_programmazione` int(4) DEFAULT NULL,
-  `settimana_programmazione` int(4) DEFAULT NULL,
+  `anno_programmazione` year(4) DEFAULT NULL,
+  `settimana_programmazione` int(11) DEFAULT NULL,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
-  `data_chiusura` char(21) DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_contatto` bigint(20) DEFAULT NULL,
   `id_progetto` bigint(20) DEFAULT NULL,
@@ -437,16 +459,18 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `istruzione` char(255) DEFAULT NULL,
   `id_pianificazione` bigint(20) DEFAULT NULL,
   `id_immobile` bigint(20) DEFAULT NULL,
-  `data_archiviazione` char(32) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
   `id_account_proprietario` bigint(20) DEFAULT NULL,
   `id_gruppo_proprietario` bigint(20) DEFAULT NULL,
   `id_diritto_proprietario` bigint(20) DEFAULT NULL,
   `id_diritto_gruppo` bigint(20) DEFAULT NULL,
   `id_diritto_altri` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text DEFAULT NULL,
-  KEY `codice` (`codice`)
+  UNIQUE KEY `codice` (`codice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE

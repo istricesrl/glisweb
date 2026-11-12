@@ -2107,8 +2107,8 @@
      * se_offerta IS NOT NULL )' ): senza condizione, le righe della base che la vista non restituisce
      * risulterebbero mancanti a ogni giro. La stessa coppia va passata a cleanStaticView().
      *
-     * Una statica senza le colonne dei timestamp ( todo_view_static, a oggi ) viene riallineata solo
-     * per le righe mancanti, e lo si scrive nel log.
+     * Una statica senza le colonne dei timestamp ( todo_view_static fino al 12/11/2026, quando le ha
+     * prese da todo_view ) viene riallineata solo per le righe mancanti, e lo si scrive nel log.
      *
      * @param mysqli $c  connessione
      * @param string $t  nome della vista senza suffissi ( 'anagrafica', non 'anagrafica_view_static' )
