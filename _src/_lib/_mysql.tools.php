@@ -2291,6 +2291,13 @@
      * statica, '_view' altrimenti; il chiamante la accoda al nome della tabella per ottenere l'oggetto da cui leggere
      * ( es. in controller() e nel titolo delle schede tramite mysqlSelectLabel() ).
      *
+     * UNA STATICA VUOTA NON SI LEGGE ( 2026-11-12 ): se la statica esiste ma e' vuota e la tabella omonima ha righe,
+     * la statica non e' ancora stata popolata e la funzione restituisce '_view'. Il ricaricamento dei file base crea le
+     * statiche vuote sui deploy, e prima di questo controllo gli elenchi che le leggevano restavano vuoti senza errori
+     * finche' qualcuno non le popolava ( documenti_view_static su polmasi PROD, 11/11/2026 ). Le due letture sono una
+     * riga ciascuna e passano dalla cache come quella di information_schema; le statiche che non hanno una tabella
+     * omonima ( offerte_view_static nasce da documenti ) non hanno il controllo.
+     *
      * @param       object      $m      la connessione a memcache
      * @param       object      $c      la connessione mysqli
      * @param       string      $t      il nome della tabella, senza suffissi
@@ -2311,6 +2318,23 @@
 
         // se esiste la vista statica...
         if (! empty($stv)) {
+
+            // ...ma e' vuota mentre la tabella ha righe, non e' ancora popolata: si legge la vista
+            if (preg_match('/^[a-z0-9_]+$/', $t)) {
+                $base = mysqlSelectCachedValue(
+                    $m,
+                    $c,
+                    'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+                    array(array('s' => $t))
+                );
+                if (! empty($base)
+                    && empty(mysqlSelectCachedValue($m, $c, 'SELECT id FROM `' . $t . '_view_static` LIMIT 1'))
+                    && ! empty(mysqlSelectCachedValue($m, $c, 'SELECT id FROM `' . $t . '` LIMIT 1'))) {
+                    logger('la vista statica ' . $t . '_view_static e\' vuota: si legge ' . $t . '_view finche\' non e\' popolata', 'mysql', LOG_WARNING);
+                    return '_view';
+                }
+            }
+
             return '_view_static';
         } else {
             return '_view';

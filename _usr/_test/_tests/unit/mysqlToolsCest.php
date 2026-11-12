@@ -16,6 +16,16 @@ class mysqlToolsCest
         $I->see('string(12) "000000000000"');
     }
 
+    // getStaticViewExtension() -> '_view' senza statica e con una statica vuota accanto a una tabella piena, '_view_static' altrimenti
+    public function getStaticViewExtension(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_getStaticViewExtension.01.php');
+        $I->see('senza statica: [_view]');
+        $I->see('tutte e due vuote: [_view_static]');
+        $I->see('statica non popolata: [_view]');
+        $I->see('statica popolata: [_view_static]');
+    }
+
     // mysqlPatchCheck() -> deve accettare il livello vero e rifiutare un database pieno a zero o sotto il canone
     public function mysqlPatchCheck(UnitTester $I)
     {

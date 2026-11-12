@@ -1208,7 +1208,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		LEFT JOIN documenti_articoli AS da                    --
             ON da.id = todo.id_documenti_articoli             --
 	GROUP BY attivita.id                                      --
-;                                                             --
+;
 
 -- | 202611121250
 
@@ -1904,7 +1904,7 @@ CREATE OR REPLACE VIEW liste_view AS                          --
     liste.id_diritto_altri,                                   --
     liste.nome AS __label__                                   -- etichetta per le tendine e le liste
   FROM liste                                                  --
-  ;                                                           --
+  ;
 
 -- | 202611121263
 
@@ -2467,7 +2467,7 @@ CREATE OR REPLACE VIEW software_view AS                                         
     LEFT JOIN prodotti ON prodotti.id = software.id_prodotto                             --
     LEFT JOIN articoli ON articoli.id = software.id_articolo                             --
     LEFT JOIN prodotti AS p2 ON p2.id = articoli.id_prodotto                             --
-;                                                                                        --
+;
 
 -- | 202611121271
 
