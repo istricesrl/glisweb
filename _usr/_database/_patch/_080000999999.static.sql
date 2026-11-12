@@ -77,6 +77,11 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `data_nascita` char(32),                                    --
   `id_comune_nascita` bigint(20) DEFAULT NULL,                   --
   `data_archiviazione` date DEFAULT NULL,                     --
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
@@ -135,6 +140,11 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `prezzi` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     --
   `note_archiviazione` text,                                  --
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
@@ -219,6 +229,11 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
   `mastro_destinazione` char(64) DEFAULT NULL,                --
   `codice_archivium` char(128) DEFAULT NULL,                  --
   `token` char(128) DEFAULT NULL,                             --
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,               --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
@@ -352,6 +367,11 @@ CREATE TABLE IF NOT EXISTS `documenti_view_static` (             --
   `data_ora_chiusura` char(16) DEFAULT NULL,                     --
   `id_account_archiviazione` bigint(20) DEFAULT NULL,            --
   `data_archiviazione` date DEFAULT NULL,                        --
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              --
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             --
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   --
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    --
   `id_account_inserimento` bigint(20) DEFAULT NULL,              --
   `timestamp_inserimento` int(11) DEFAULT NULL,                  --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            --
@@ -418,6 +438,11 @@ CREATE TABLE IF NOT EXISTS `todo_view_static` (
   `id_pianificazione` bigint(20) DEFAULT NULL,
   `id_immobile` bigint(20) DEFAULT NULL,
   `data_archiviazione` char(32) DEFAULT NULL,
+  `id_account_proprietario` bigint(20) DEFAULT NULL,
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,
+  `id_diritto_altri` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
   `__label__` text DEFAULT NULL,

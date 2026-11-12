@@ -102,6 +102,11 @@ ALTER TABLE `anagrafica`
 	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `id_agente` (`id_agente`),
 	ADD KEY `id_responsabile_operativo` (`id_responsabile_operativo`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `se_importata` (`se_importata`),
@@ -298,6 +303,11 @@ ALTER TABLE `annunci`
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_udm` (`id_udm`),
 	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -342,6 +352,11 @@ ALTER TABLE `articoli`
 	ADD KEY `id_udm_capacita` (`id_udm_capacita`),
 	ADD KEY `id_udm_durata` (`id_udm_durata`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -364,6 +379,11 @@ ALTER TABLE `asset`
 	ADD KEY `id_condizione` (`id_condizione`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`targa`,`data_archiviazione`);
@@ -410,6 +430,11 @@ ALTER TABLE `attivita`
 	ADD KEY `id_oggetto` (`id_oggetto`),
 	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
 	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_contatto`,`id_progetto`,`id_todo`),
@@ -517,6 +542,11 @@ ALTER TABLE `badge`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_anagrafica`,`id_contratto`,`rfid`);
@@ -629,6 +659,11 @@ ALTER TABLE `campagne`
 	ADD KEY `utm_campaign` (`utm_campaign`),
 	ADD KEY `data_inizio` (`data_inizio`),
 	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`codice`,`nome`,`id_valuta`,`budget`,`data_inizio`,`data_fine`);
@@ -1034,6 +1069,11 @@ ALTER TABLE `chiavi`
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_licenza`,`seriale`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -1219,6 +1259,11 @@ ALTER TABLE `contatti`
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
 	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`), 
 	ADD KEY `data_archiviazione` (`data_archiviazione`), 
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_tipologia`, `nome`, `id_anagrafica`, `id_campagna`, `id_sito`, `modulo`, `timestamp_contatto`);
@@ -1299,6 +1344,11 @@ ALTER TABLE `contratti`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` ( `id`, `id_tipologia`, `codice`, `nome`, `id_immobile`, `id_progetto`, `data_archiviazione` );
@@ -1340,6 +1390,11 @@ ALTER TABLE `conversazioni`
 	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
 	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` ( `id`, `codice`, `nome`, `id_annuncio`, `timestamp_apertura`, `timestamp_chiusura` );
@@ -1413,6 +1468,11 @@ ALTER TABLE `corrispondenza`
 	ADD KEY `id_udm_peso` (`id_udm_peso`),
 	ADD KEY `id_distinta_spedizione` (`id_distinta_spedizione`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -1576,6 +1636,11 @@ ALTER TABLE `crediti`
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
 	ADD KEY `data` (`data`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_pianificazione`,`id_documenti_articolo`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`quantita`,`data`);
@@ -1604,6 +1669,21 @@ ALTER TABLE `dichiarazioni_intento`
 
 -- dichiarazioni_intento
 ALTER TABLE `dichiarazioni_intento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000008970
+
+-- diritti
+-- tipologia: tabella standard
+ALTER TABLE `diritti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+
+-- | 030000008971
+
+-- diritti
+-- tipologia: tabella standard
+ALTER TABLE `diritti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000009000
 
@@ -1653,6 +1733,11 @@ ALTER TABLE `documenti`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `tipologia_data` (`id_tipologia`,`data`),
@@ -1770,6 +1855,11 @@ ALTER TABLE `edifici`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_genitore`, `id_tipologia`, `codice`, `nome`, `id_indirizzo`);
@@ -1896,6 +1986,11 @@ ALTER TABLE `funnel`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_campagna` (`id_campagna`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_campagna`);
@@ -2017,6 +2112,11 @@ ALTER TABLE `immobili`
 	ADD KEY `catasto_foglio` (`catasto_foglio`),
 	ADD KEY `catasto_particella` (`catasto_particella`),
 	ADD KEY `catasto_sub` (`catasto_sub`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_edificio`);
@@ -2074,6 +2174,11 @@ ALTER TABLE `indirizzi`
 	ADD KEY `id_comune` (`id_comune`), 
 	ADD KEY `id_zona` (`id_zona`),
 	ADD KEY `timestamp_geolocalizzazione` (`timestamp_geolocalizzazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_comune`,`indirizzo`,`civico`,`cap`,`timestamp_geolocalizzazione`);
@@ -2179,6 +2284,11 @@ ALTER TABLE `liste`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`codice`,`nome`);
@@ -2276,6 +2386,11 @@ ALTER TABLE `lotti`
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `data_scadenza` (`data_scadenza`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`codice`,`nome`,`id_articolo`,`id_produttore`,`data_scadenza`);
@@ -2301,6 +2416,11 @@ ALTER TABLE `luoghi`
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_vano` (`id_vano`),
 	ADD KEY `url` (`url`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_genitore`, `id_tipologia`, `nome`, `id_indirizzo`, `id_edificio`, `id_immobile`, `id_vano`);
@@ -2419,6 +2539,11 @@ ALTER TABLE `mail_status` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mailing`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`timestamp_invio`);
@@ -2476,6 +2601,11 @@ ALTER TABLE `marchi`
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_produttore`,`id_sito`,`id_pagina`);
@@ -2520,6 +2650,11 @@ ALTER TABLE `mastri`
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_vano` (`id_vano`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`nome`);
@@ -2601,6 +2736,11 @@ ALTER TABLE `matricole`
 	ADD KEY `id_marchio` (`id_marchio`),
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_condizione` (`id_condizione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`matricola`,`nome`,`id_articolo`,`id_lotto`,`id_marchio`,`id_produttore`);
@@ -2816,6 +2956,11 @@ ALTER TABLE `notizie`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`id_sito`,`id_pagina`);
@@ -2894,6 +3039,11 @@ ALTER TABLE `organizzazioni`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_anagrafica`);
@@ -2923,6 +3073,11 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `id_carrello` (`id_carrello`);
@@ -2946,6 +3101,11 @@ ALTER TABLE `pagine`
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`codice`,`nome`,`id_sito`);
@@ -3057,6 +3217,11 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_id_todo` (`model_id_todo`),
 	ADD KEY `model_id_trasportatore` (`model_id_trasportatore`),
 	ADD KEY `model_id_udm` (`model_id_udm`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
@@ -3143,6 +3308,11 @@ ALTER TABLE `prodotti`
 	ADD KEY `id_produttore` (`id_produttore`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_marchio`,`id_sito`,`id_pagina`);
@@ -3194,6 +3364,11 @@ ALTER TABLE `progetti`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_cliente`,`id_sito`,`id_pagina`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
@@ -3367,6 +3542,24 @@ ALTER TABLE `pubblicazioni`
 
 -- pubblicazioni
 ALTER TABLE `pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000028500
+
+-- pubblicazioni_gruppi
+ALTER TABLE `pubblicazioni_gruppi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_pubblicazione`,`id_gruppo`),
+	ADD KEY `id_pubblicazione` (`id_pubblicazione`),
+	ADD KEY `id_gruppo` (`id_gruppo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`,`id_pubblicazione`,`id_gruppo`);
+
+-- | 030000028501
+
+-- pubblicazioni_gruppi
+ALTER TABLE `pubblicazioni_gruppi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000028600
 
@@ -3741,6 +3934,11 @@ ALTER TABLE `risorse`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`anno_pubblicazione`,`id_sito`,`id_pagina`,`data_archiviazione`);
@@ -4330,6 +4528,11 @@ ALTER TABLE `software`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`codice`,`nome`,`id_prodotto`,`id_articolo`);
@@ -5218,6 +5421,11 @@ ALTER TABLE `todo`
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`),
 	ADD KEY `id_istruzione` (`id_istruzione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_contatto`,`id_luogo`,`id_progetto`,`id_pianificazione`,`data_chiusura`),
@@ -5308,6 +5516,11 @@ ALTER TABLE `valutazioni`
 	ADD KEY `id_classe_energetica` (`id_classe_energetica`),
 	ADD KEY `id_valuta` (`id_valuta`),
 	ADD KEY `timestamp_valutazione` (`timestamp_valutazione`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_matricola`,`id_anagrafica`,`id_valutatore`,`id_condizione`,`id_disponibilita`,`id_classe_energetica`,`timestamp_valutazione`); 
@@ -5387,6 +5600,11 @@ ALTER TABLE `vani`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_immobile`);
@@ -5676,6 +5894,11 @@ ALTER TABLE `licenze`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_rivenditore` (`id_rivenditore`),
+	ADD KEY `id_account_proprietario` (`id_account_proprietario`),
+	ADD KEY `id_gruppo_proprietario` (`id_gruppo_proprietario`),
+	ADD KEY `id_diritto_proprietario` (`id_diritto_proprietario`),
+	ADD KEY `id_diritto_gruppo` (`id_diritto_gruppo`),
+	ADD KEY `id_diritto_altri` (`id_diritto_altri`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_anagrafica`,`id_rivenditore`);

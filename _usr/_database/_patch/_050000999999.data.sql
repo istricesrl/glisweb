@@ -302,6 +302,16 @@ INSERT IGNORE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (6,	'SA',	'America del Sud'),
 (7,	'AN',	'Antartide');
 
+-- | 050000008970
+
+-- diritti
+-- la scala dei diritti di riga; i nomi sono le chiavi di $cf['auth']['rights'] in _200.auth.php e non si cambiano
+INSERT IGNORE INTO `diritti` (`id`, `nome`) VALUES
+(1,		'nessuno'),
+(2,		'lettura'),
+(3,		'scrittura'),
+(4,		'completo');
+
 -- | 050000009000
 
 -- disponibilita

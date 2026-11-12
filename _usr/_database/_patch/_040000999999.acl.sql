@@ -8,6 +8,9 @@
 -- __acl_anagrafica__
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 17:39 Fabio Mosti
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_anagrafica__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -31,6 +34,9 @@ CREATE TABLE IF NOT EXISTS `__acl_anagrafica__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sugli annunci per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_annunci__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -55,6 +61,9 @@ CREATE TABLE IF NOT EXISTS `__acl_annunci__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sugli articoli per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_articoli__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -80,6 +89,9 @@ CREATE TABLE IF NOT EXISTS `__acl_articoli__` (
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle attivita per gruppo e per account
 -- verifica: 2021-05-28 17:45 Fabio Mosti
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -103,6 +115,9 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle categorie degli annunci per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_categorie_annunci__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -127,6 +142,9 @@ CREATE TABLE IF NOT EXISTS `__acl_categorie_annunci__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle categorie delle notizie per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_categorie_notizie__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -151,6 +169,9 @@ CREATE TABLE IF NOT EXISTS `__acl_categorie_notizie__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle categorie dei prodotti per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_categorie_prodotti__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -175,6 +196,9 @@ CREATE TABLE IF NOT EXISTS `__acl_categorie_prodotti__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle categorie dei progetti per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_categorie_progetti__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -199,6 +223,9 @@ CREATE TABLE IF NOT EXISTS `__acl_categorie_progetti__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle categorie delle risorse per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_categorie_risorse__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -223,6 +250,9 @@ CREATE TABLE IF NOT EXISTS `__acl_categorie_risorse__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle notizie per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_notizie__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -248,6 +278,9 @@ CREATE TABLE IF NOT EXISTS `__acl_notizie__` (
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle pagine per gruppo e per account
 -- verifica: 2021-05-28 17:45 Fabio Mosti
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -271,6 +304,9 @@ CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sui prodotti per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_prodotti__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -295,6 +331,9 @@ CREATE TABLE IF NOT EXISTS `__acl_prodotti__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sui progetti per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_progetti__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,
@@ -319,6 +358,9 @@ CREATE TABLE IF NOT EXISTS `__acl_progetti__` (
 -- rango: tabella di relazione
 -- struttura: tabella base
 -- funzione: contiene i permessi sulle risorse per gruppo e per account
+-- NOTA esce dal canone latest ( punto 6 del canone, righe 248-250, 12/11/2026 ): la visibilità sul sito sta in
+-- pubblicazioni_gruppi e i diritti di riga nelle colonne id_*_proprietario e id_diritto_* della tabella; resta solo
+-- per i moduli legacy di glisweb che la leggono, finché ci sono
 CREATE TABLE IF NOT EXISTS `__acl_risorse__` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_entita` bigint(20) NOT NULL,

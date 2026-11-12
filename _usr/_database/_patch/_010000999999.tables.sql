@@ -280,6 +280,11 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (                     --
   `token` char(255) DEFAULT NULL,                             -- token
   `se_importata` tinyint(1) DEFAULT NULL,                     -- flag per importazione
   `se_stampa_privacy` tinyint(1) DEFAULT NULL,                -- flag per stampa privacy
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account di aggiornamento
@@ -545,6 +550,11 @@ CREATE TABLE IF NOT EXISTS `annunci` (
   `data_fine_validita` date DEFAULT NULL,
   `ora_fine_validita` time DEFAULT NULL,
   `note_fine_validita` text DEFAULT NULL,
+  `id_account_proprietario` bigint(20) DEFAULT NULL,
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,
+  `id_diritto_altri` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -625,6 +635,11 @@ CREATE TABLE IF NOT EXISTS `articoli` (
   `note_codifica` text DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,
   `note_archiviazione` text DEFAULT NULL,
+  `id_account_proprietario` bigint(20) DEFAULT NULL,
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,
+  `id_diritto_altri` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -705,6 +720,11 @@ CREATE TABLE IF NOT EXISTS `asset` (                            --
   `note` text DEFAULT NULL,                                     -- note sull'asset
   `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'asset
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'asset
@@ -791,6 +811,11 @@ CREATE TABLE IF NOT EXISTS `attivita` (                         --
   `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato l'attività
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito l'attività
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato l'attività
@@ -940,6 +965,11 @@ CREATE TABLE IF NOT EXISTS `badge` (                            --
   `id_contratto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il contratto a cui è associato il badge
   `rfid` char(32) DEFAULT NULL,                                   -- codice RFID del badge, unico
   `note` text DEFAULT NULL,                                       -- note
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -1090,6 +1120,11 @@ CREATE TABLE IF NOT EXISTS `campagne` (                         --
   `utm_content` char(128) DEFAULT NULL,                           -- UTM content
   `data_inizio` date DEFAULT NULL,                                -- data di inizio della campagna
   `data_fine` date DEFAULT NULL,                                  -- data di fine della campagna
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -1759,6 +1794,11 @@ CREATE TABLE IF NOT EXISTS `chiavi` (                             --
   `nome` char(255) DEFAULT NULL,                                  -- nome descrittivo della chiave
   `id_licenza` bigint(20) DEFAULT NULL,                           -- licenza a cui appartiene la chiave
   `seriale` char(32) DEFAULT NULL,                                -- seriale legato alla chiave
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -2072,6 +2112,11 @@ CREATE TABLE IF NOT EXISTS `contatti` (
   `id_account_archiviazione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha archiviato il contatto
   `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
@@ -2222,6 +2267,11 @@ CREATE TABLE IF NOT EXISTS `contratti` (
   `id_account_archiviazione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha archiviato il contratto
   `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
@@ -2274,6 +2324,11 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
   `note` text DEFAULT NULL,                                     -- note sulla conversazione
   `timestamp_apertura` int(11) DEFAULT NULL,                    -- timestamp di apertura della conversazione
   `timestamp_chiusura` int(11) DEFAULT NULL,                    -- timestamp di chiusura della conversazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento della riga
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
@@ -2387,6 +2442,11 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (                 --
   `note_elaborazione` text DEFAULT NULL,                      -- note sull'ultima elaborazione
   `timestamp_gestione` int(11) DEFAULT NULL,                  -- timestamp dell'ultima gestione
   `note_gestione` text DEFAULT NULL,                          -- note sull'ultima gestione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,           -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                 -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- account che ha aggiornato la riga per ultimo
@@ -2617,6 +2677,11 @@ CREATE TABLE IF NOT EXISTS `crediti` (
   `quantita` decimal(9,2) DEFAULT NULL,                         -- quantita' di crediti movimentata
   `note` text DEFAULT NULL,                                     -- note sul movimento
   `data` date DEFAULT NULL,                                     -- data del movimento
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
@@ -2654,6 +2719,26 @@ CREATE TABLE IF NOT EXISTS `dichiarazioni_intento` (
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account di aggiornamento
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000008970
+
+-- diritti
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: contiene la scala dei diritti di riga
+--
+-- la scala dei diritti che un account ha su una riga delle tabelle coi diritti stile Linux: nessuno, lettura, scrittura e
+-- completo, che vuol dire anche cancellare la riga e cambiarne i diritti. Ogni riga di quelle tabelle porta il diritto del
+-- proprietario ( id_diritto_proprietario ), dei membri del gruppo proprietario ( id_diritto_gruppo ) e degli altri account
+-- che hanno il permesso sulla tabella ( id_diritto_altri ). La scala vive nel codice, in $cf['auth']['rights'] di
+-- _200.auth.php, con le azioni che ogni livello concede: questa tabella la rispecchia, e diritti_view la integra per nome
+-- come gruppi_view fa con $cf['auth']['groups'], così il framework funziona anche senza database.
+-- NOTA i nomi restano quelli del codice: è il nome, non l'id, che lega la riga al livello ( punto 6 del canone, 12/11/2026 )
+CREATE TABLE IF NOT EXISTS `diritti` (                        --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `nome` char(255) DEFAULT NULL                               -- nome del livello, uguale alla sua chiave in $cf['auth']['rights']
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000009000
 
@@ -2759,6 +2844,11 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
   `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato il documento
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito il documento
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato il documento
@@ -2953,6 +3043,11 @@ CREATE TABLE IF NOT EXISTS `edifici` (                          --
   `id_indirizzo` bigint(20) DEFAULT NULL,                       -- chiave esterna per l'indirizzo dell'edificio
   `piani` int(11) DEFAULT NULL,                                 -- numero di piani
   `note` text DEFAULT NULL,                                     -- note sull'edificio
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito l'edificio
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato l'edificio
@@ -3144,6 +3239,11 @@ CREATE TABLE IF NOT EXISTS `funnel` (                           --
   `nome` char(255) DEFAULT NULL,                                -- nome del funnel
   `id_campagna` bigint(20) DEFAULT NULL,                        -- chiave esterna per la campagna a cui appartiene il funnel
   `note` text DEFAULT NULL,                                     -- note sul funnel
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
@@ -3330,6 +3430,11 @@ CREATE TABLE IF NOT EXISTS `immobili` (                         --
   `catasto_superficie` char(255) DEFAULT NULL,                  -- superficie catastale
   `catasto_rendita` char(255) DEFAULT NULL,                     -- rendita catastale
   `note` text DEFAULT NULL,                                     -- note sull'immobile
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
@@ -3425,6 +3530,11 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (
   `timestamp_geolocalizzazione` int(11) DEFAULT NULL,         -- timestamp dell'ultima geolocalizzazione
   `note_geolocalizzazione` text DEFAULT NULL,                 -- note sulla geolocalizzazione dell'indirizzo
   `id_zona` bigint(20) DEFAULT NULL,                          -- chiave esterna per la zona, assegnata dal CAP ( zone_cap )
+  `id_account_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,           -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                 -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito l'indirizzo
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato l'indirizzo
@@ -3586,6 +3696,11 @@ CREATE TABLE IF NOT EXISTS `liste` (                            --
   `codice` char(32) DEFAULT NULL,                               -- codice della lista
   `nome` char(255) DEFAULT NULL,                                -- nome della lista
   `note` text DEFAULT NULL,                                     -- note sulla lista
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
@@ -3729,6 +3844,11 @@ CREATE TABLE IF NOT EXISTS `lotti` (                            --
   `note` text DEFAULT NULL,                                     -- note sul lotto
   `data_produzione` date DEFAULT NULL,                          -- data di produzione o di confezionamento del lotto
   `data_scadenza` date DEFAULT NULL,                            -- data di scadenza del lotto
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il lotto
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il lotto
@@ -3766,6 +3886,11 @@ CREATE TABLE IF NOT EXISTS `luoghi` (                           --
   `id_vano` bigint(20) DEFAULT NULL,                            -- chiave esterna per il vano dove si trova il luogo
   `url` char(255) DEFAULT NULL,                                 -- link del luogo virtuale
   `note` text DEFAULT NULL,                                     -- note sul luogo
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il luogo
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il luogo
@@ -4011,6 +4136,11 @@ CREATE TABLE IF NOT EXISTS `mailing` (                        --
   `nome` char(255) DEFAULT NULL,                              -- nome del mailing
   `note` text DEFAULT NULL,                                   -- note sul mailing
   `timestamp_invio` int(11) DEFAULT NULL,                     -- timestamp dell'invio previsto
+  `id_account_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,           -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                 -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
@@ -4108,6 +4238,11 @@ CREATE TABLE IF NOT EXISTS `marchi` (                             --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -4189,6 +4324,11 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `note` text DEFAULT NULL,                                     -- note sul mastro
   `data_archiviazione` date DEFAULT NULL,                       -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                       -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il mastro
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il mastro
@@ -4325,6 +4465,11 @@ CREATE TABLE IF NOT EXISTS `matricole` (                        --
   `id_condizione` bigint(20) DEFAULT NULL,                      -- chiave esterna per la condizione del pezzo
   `note` text DEFAULT NULL,                                     -- note sulla matricola
   `data_scadenza` date DEFAULT NULL,                            -- data di scadenza del pezzo ( garanzia, revisione )
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la matricola
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la matricola
@@ -4639,6 +4784,11 @@ CREATE TABLE IF NOT EXISTS `notizie` (                            --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -4797,6 +4947,11 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
   `nome` char(255) DEFAULT NULL,                                -- nome del nodo ( reparto, ufficio, sede, ente )
   `id_anagrafica` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'ente che il nodo rappresenta, se c'e'
   `note` text DEFAULT NULL,                                     -- note sul nodo
+  `id_account_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,                -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                      -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'organizzazione
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'organizzazione
@@ -4846,6 +5001,11 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `codice_pagamento` char(128) DEFAULT NULL,
   `status_pagamento` char(128) DEFAULT NULL,
   `importo_pagamento` decimal(16,5) DEFAULT NULL,
+  `id_account_proprietario` bigint(20) DEFAULT NULL,
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,
+  `id_diritto_altri` bigint(20) DEFAULT NULL,
   `id_account_inserimento` bigint(20) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,
@@ -4901,6 +5061,11 @@ CREATE TABLE IF NOT EXISTS `pagine` (                             --
   `id_sito` bigint(20) DEFAULT NULL,                              -- sito della configurazione a cui appartiene la pagina
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -5100,6 +5265,11 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (                 --
   `iterazioni` int(11) DEFAULT NULL,                          -- oggetti per passata, NULL vuol dire 1
   `delay` int(11) DEFAULT NULL,                               -- secondi minimi fra due iterazioni
   `token` char(254) DEFAULT NULL,                             -- token di lock della passata in corso
+  `id_account_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,           -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,          -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                 -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
@@ -5251,6 +5421,11 @@ CREATE TABLE IF NOT EXISTS `prodotti` (                           --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -5348,6 +5523,11 @@ CREATE TABLE IF NOT EXISTS `progetti` (                           --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -5590,6 +5770,30 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (                     --
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- account che ha aggiornato la riga per ultimo
   `timestamp_aggiornamento` int(11) DEFAULT NULL                 -- timestamp dell'ultimo aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
+
+-- | 010000028500
+
+-- pubblicazioni_gruppi
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: riserva la visibilità sul sito di una pubblicazione ad alcuni gruppi
+--
+-- i gruppi a cui è riservata una pubblicazione. Una pubblicazione senza righe qui è visibile a tutti; con delle righe è
+-- visibile solo agli account di quei gruppi e dei loro antenati, perché il gruppo padre vede quello che vedono i figli.
+-- aggiungiGruppi() la legge per mettere i gruppi in auth.groups della pagina. Per la visibilità prende il posto delle
+-- tabelle __acl_<entità>__, che restano solo per i moduli legacy ( punto 6 del canone, righe 248-250, 12/11/2026 ).
+--
+CREATE TABLE IF NOT EXISTS `pubblicazioni_gruppi` (           --
+  `id` bigint(20) NOT NULL,                                   -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `id_pubblicazione` bigint(20) DEFAULT NULL,                 -- chiave esterna per la pubblicazione
+  `id_gruppo` bigint(20) DEFAULT NULL,                        -- chiave esterna per il gruppo a cui è riservata
+  `id_account_inserimento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,         -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
 -- | 010000028600
 
@@ -6169,6 +6373,11 @@ CREATE TABLE IF NOT EXISTS `risorse` (                            --
   `id_pagina` bigint(20) DEFAULT NULL,                            -- chiave esterna per la pagina genitore nell'albero del sito
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione
   `note_archiviazione` text DEFAULT NULL,                         -- note di archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
@@ -7187,6 +7396,11 @@ CREATE TABLE IF NOT EXISTS `software` (                           --
   `id_articolo` bigint(20) DEFAULT NULL,                          -- chiave esterna per l'articolo con cui si compra il software
   `json` text DEFAULT NULL,                                       -- regole di attivazione del software, in JSON
   `note` text DEFAULT NULL,                                       -- note sul software
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account di inserimento
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di aggiornamento
@@ -8641,6 +8855,11 @@ CREATE TABLE IF NOT EXISTS `todo` (                           --
   `note_pianificazione` text DEFAULT NULL,                       -- esce dal canone ( riga 228 ), DROP al punto 12
   `data_archiviazione` date DEFAULT NULL,                        -- data di archiviazione della todo
   `note_archiviazione` text DEFAULT NULL,                        -- note sull'archiviazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la todo
   `timestamp_inserimento` int(11) DEFAULT NULL,                  -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la todo
@@ -8803,6 +9022,11 @@ CREATE TABLE IF NOT EXISTS `valutazioni` (                      --
   `mq_calpestabili` decimal(15,2) DEFAULT NULL,                   -- superficie calpestabile dell'immobile in metri quadri
   `note` text DEFAULT NULL,                                       -- note sulla valutazione
   `timestamp_valutazione` int(11) DEFAULT NULL,                   -- momento a cui si riferisce la valutazione
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la valutazione
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la valutazione
@@ -8925,6 +9149,11 @@ CREATE TABLE IF NOT EXISTS `vani` (                             --
   `id_immobile` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'immobile che contiene il vano
   `superficie` decimal(16,2) DEFAULT NULL,                      -- superficie del vano in metri quadrati
   `note` text DEFAULT NULL,                                     -- note sul vano
+  `id_account_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,             -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,            -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                  -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                   -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato la riga
@@ -9498,6 +9727,11 @@ CREATE TABLE IF NOT EXISTS `licenze` (                            --
   `testo` text DEFAULT NULL,                                      -- testo della licenza, le condizioni d'uso
   `note` text DEFAULT NULL,                                       -- annotazioni libere sulla licenza
   `timestamp_distribuzione` int(11) DEFAULT NULL,                 -- timestamp della consegna della licenza
+  `id_account_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per l'account proprietario della riga
+  `id_gruppo_proprietario` bigint(20) DEFAULT NULL,               -- chiave esterna per il gruppo proprietario della riga
+  `id_diritto_proprietario` bigint(20) DEFAULT NULL,              -- chiave esterna per il diritto del proprietario ( diritti )
+  `id_diritto_gruppo` bigint(20) DEFAULT NULL,                    -- chiave esterna per il diritto dei membri del gruppo proprietario
+  `id_diritto_altri` bigint(20) DEFAULT NULL,                     -- chiave esterna per il diritto degli altri account col permesso
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- account che ha aggiornato la riga per ultimo
