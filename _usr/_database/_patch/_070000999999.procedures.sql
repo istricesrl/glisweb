@@ -10070,6 +10070,9 @@ END;
 -- | 070000057400
 
 -- caratteristiche_prodotti_path
+--
+-- NOTA solo-legacy ( canone, punto 6, 12/11/2026 ): questo trio legge la vista di compatibilita' caratteristiche_prodotti
+-- e se ne va con lei; latest usa caratteristiche_path, caratteristiche_path_check e caratteristiche_path_find_ancestor
 DROP FUNCTION IF EXISTS `caratteristiche_prodotti_path`;
 
 -- | 070000057401

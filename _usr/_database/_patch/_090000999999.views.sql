@@ -585,8 +585,12 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 --
 -- vista di compatibilita': fino al 01/10/2026 caratteristiche_prodotti era la tabella dell'albero dei prodotti, ora
 -- l'albero sta in caratteristiche e questa vista lo espone con i nomi di colonna di allora, cosi' il codice dei
--- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare. Sta qui e
--- non accanto a caratteristiche_view perche' articoli_view, subito sotto, la usa
+-- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare
+--
+-- NOTA solo-legacy ( canone, punto 6, 12/11/2026 ): la usano il modulo _4100.prodotti di glisweb e il codice custom dei
+-- progetti che lo hanno; latest non la legge da nessuna parte ( articoli_view legge caratteristiche ). E' deprecata e
+-- si toglie, con caratteristiche_prodotti_view e il trio caratteristiche_prodotti_path*, quando _4100 lascia glisweb e
+-- il custom dei progetti e' passato a caratteristiche
 --
 -- ci si scrive solo finche' ogni colonna e' una colonna di caratteristiche: una sola colonna derivata ( c'era NULL AS
 -- se_categoria, uscita il 06/11/2026 ) la rende non inseribile, ogni INSERT prende l'errore 1471, e su
@@ -660,8 +664,8 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		-- a cinque. La sottoquery scalare da' lo stesso valore e non tocca la cardinalita'
 		( SELECT tipo_voce.nome
 			FROM articoli_caratteristiche AS ac_tipo
-			INNER JOIN caratteristiche_prodotti AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
-			INNER JOIN caratteristiche_prodotti AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
+			INNER JOIN caratteristiche AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
+			INNER JOIN caratteristiche AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
 			WHERE ac_tipo.id_articolo = articoli.id
 			AND radice_tipo.nome = 'TIPO DI VOCE A LISTINO'
 			LIMIT 1
@@ -1444,6 +1448,10 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 -- l'albero delle caratteristiche con i nomi di colonna di caratteristiche_prodotti; l'etichetta e' il PERCORSO, come
 -- per tutte le viste ad albero: senza il gruppo davanti, in un elenco "Attacco mandrino" compare quattro volte
 -- identico e non si sa quale scegliere
+--
+-- NOTA solo-legacy come caratteristiche_prodotti ( vedi sopra ): la legge il REST /api/caratteristiche_prodotti per la
+-- tendina del form delle caratteristiche di _4100.prodotti; NULL AS se_categoria e' uscita il 12/11/2026, la colonna
+-- non esiste piu' da nessuna parte
 CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 	SELECT
 		caratteristiche.id,
@@ -1451,7 +1459,6 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
-		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
