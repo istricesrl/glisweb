@@ -106,7 +106,7 @@
      * legge l'età di una chiave in cache
      *
      * Questa funzione legge il timestamp di scrittura di una chiave, con il motore della richiesta corrente. Come
-     * memcacheGetKeyAge(), se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_memcache.clean.php )
+     * memcacheGetKeyAge(), se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_cache.rebuild.php )
      * restituisce false, così che il refresh forzato rigeneri tutto.
      *
      * @param       string      $key        la chiave di cui leggere l'età, senza il seme

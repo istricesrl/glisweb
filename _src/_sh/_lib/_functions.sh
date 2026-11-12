@@ -215,12 +215,15 @@ function deploy-invalidate-caches() {
 
         local CACHE_URL="$DST_URL/task/memcache.clean?deploy=1"
 
+        # dal 12/11/2026 il task ricostruisce la cache di ogni sito prima di rispondere ( _cache.rebuild.php ),
+        # e su un deploy con tanti siti grandi un minuto non basta
+
         echo "svuoto la cache dei contenuti: $CACHE_URL"
 
         if [ -n "$VIA" ]; then
-            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | $VIA "curl -s -f -o /dev/null --max-time 60 -K - '$CACHE_URL'"
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | $VIA "curl -s -f -o /dev/null --max-time 600 -K - '$CACHE_URL'"
         else
-            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 60 -K - "$CACHE_URL"
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 600 -K - "$CACHE_URL"
         fi
 
         if [ $? -eq 0 ]; then

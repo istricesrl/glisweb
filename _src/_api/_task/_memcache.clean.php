@@ -9,6 +9,12 @@
      * deploy e chi lo usa a mano. Le due portate qui sotto valgono per tutti e tre i motori; l'APCU si svuota solo chiamando
      * il task via HTTP, perché da riga di comando ( cron ) l'APCU è un'altra da quella di Apache.
      *
+     * Dal 2026-11-12 non ricostruisce più la cache da sé: dopo il controllo dei privilegi chiama, per ogni sito da pulire,
+     * /task/cache.rebuild ( _src/_api/_task/_cache.rebuild.php ) sul suo host, che ricostruisce l'albero delle pagine, svuota
+     * la cache del sito, riscrive l'albero e risponde con un report: i report stanno in siti.<id>.ricostruzione della risposta.
+     * Così nessun visitatore paga la ricostruzione e un anonimo respinto non la innesca. Se la ricostruzione di un sito non
+     * riesce, il task lo svuota da sé come prima ( siti.<id>.riserva ) e l'esito è negativo.
+     *
      * Si chiama con l'URL /task/memcache.clean e vuole il privilegio GESTIONE_CACHE
      * ( il task non e' piu' raggiungibile da anonimo dal 2026-09-05 ).
      *
@@ -45,9 +51,9 @@
 
     // NOTA potete chiamare questa API con l'URL /task/memcache.clean
 
-    // inclusione del framework
+    // inclusione del framework; la ricostruzione forzata ( MEMCACHE_REFRESH ) non si chiede qui ma in _cache.rebuild.php,
+    // dopo il controllo dei privilegi: fino al 2026-11-12 la chiedeva questo task, e la faceva anche per gli anonimi respinti
     if( ! defined( 'CRON_RUNNING' ) ) {
-        define( 'MEMCACHE_REFRESH', 1 );
         if( ! defined( 'INCLUDE_SUBDIR' ) ) {
             require '../../_config.php';
         } else {
@@ -87,99 +93,129 @@
     // controllo
     $status['controllo']['chiavi'] = memcacheRead( $cf['memcache']['connection'], memcacheUniqueKey( $key ) );
 
-    if( $status['portata'] === 'sito' ) {
+    // siti da pulire: quello corrente, o tutti quelli del deploy; un sito senza dominio per lo stato corrente non ha cache
+    // da svuotare. Il suffisso del seed è lo stesso per tutti i siti del deploy, e il seed si ricostruisce come in
+    // _src/_config/_040.cache.php, a partire dal FQDN del sito: host di configurazione più dominio ( vedi memcacheSiteSeed() )
+    $coda = $cf['sites']['1']['domains'][ SITE_STATUS ];
+    $siti = array();
+    foreach( $cf['sites'] as $id => $sito ) {
+        if( $status['portata'] === 'deploy' || $id == SITE_CURRENT ) {
+            $seme = memcacheSiteSeed( $sito, SITE_STATUS, $coda );
+            if( $seme !== false ) {
+                $siti[ $id ] = $seme;
+            }
+        }
+    }
 
-        // faccio il flush della cache del solo sito corrente
-        $status['esito'] = memcacheFlush( $cf['memcache']['connection'], $cf['sites']['1']['domains'][ SITE_STATUS ] );
+    // la ricostruzione di un sito grande dura anche minuti, e non deve fermarsi se chi ha chiamato il task si stanca
+    ignore_user_abort( true );
+    set_time_limit( 0 );
 
-    } else {
+    // ricostruzione: per ogni sito si chiama _cache.rebuild.php sul suo host, perché la cache di un sito si legge e si
+    // scrive col seed del suo FQDN, e l'APCU giusta è quella di Apache; il gettone, un file con un nome casuale in
+    // DIR_VAR_SPOOL_REBUILD, è quello che _cache.rebuild.php controlla prima di far partire il framework
+    $status['esito'] = true;
+    $schema = parse_url( $cf['site']['url'], PHP_URL_SCHEME );
+    $radice = rtrim( (string) parse_url( $cf['site']['url'], PHP_URL_PATH ), '/' );
+    $fallite = array();
+    foreach( $siti as $id => $seme ) {
 
-        $conn = $cf['memcache']['connection'];
+        $gettone = bin2hex( random_bytes( 16 ) );
+        $report = false;
+        $codice = NULL;
+        $errore = NULL;
+        $raw = NULL;
+        $intestazioni = array();
 
-        if( ! is_object( $conn ) ) {
+        if( checkFolder( DIR_VAR_SPOOL_REBUILD ) && touch( DIR_VAR_SPOOL_REBUILD . $gettone ) ) {
 
-            logWrite( 'connessione al server assente per il flush di deploy', 'memcache', LOG_ERR );
+            $report = restCall( $schema . '://' . $seme['fqdn'] . $radice . '/task/cache.rebuild?t=' . $gettone, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $codice, array(), NULL, NULL, $errore, NULL, CURLAUTH_BASIC, $raw, $intestazioni, 600 );
 
-            $status['esito'] = false;
+            // se la chiamata non è arrivata il gettone è ancora lì
+            @unlink( DIR_VAR_SPOOL_REBUILD . $gettone );
 
         } else {
 
-            $status['esito'] = true;
+            $errore = 'impossibile scrivere il gettone in ' . DIR_VAR_SPOOL_REBUILD;
 
-            // il suffisso del seed e' lo stesso per tutti i siti del deploy
-            $coda = $cf['sites']['1']['domains'][ SITE_STATUS ];
+        }
 
-            foreach( $cf['sites'] as $id => $sito ) {
+        $status['siti'][ $id ] = array(
+            'fqdn'          => $seme['fqdn'],
+            'status'        => $codice,
+            'ricostruzione' => $report
+        );
 
-                // un sito senza dominio per lo stato corrente non ha cache da svuotare
-                if( empty( $sito['domains'][ SITE_STATUS ] ) ) {
-                    continue;
-                }
+        if( empty( $report['esito'] ) ) {
 
-                // il seed si ricostruisce come in _src/_config/_040.cache.php, a partire dal
-                // FQDN del sito: host di configurazione piu' dominio ( vedi memcacheSiteSeed() )
-                $seme = memcacheSiteSeed( $sito, SITE_STATUS, $coda );
-                $fqdn = $seme['fqdn'];
-                $seed = $seme['seed'];
-                // indice delle chiavi di QUESTO sito, letto con la chiave gia' completa.
-                // memcacheWrite() salva sempre serialize( $dato ), e memcacheRead() lo scioglie
-                // in lettura: leggendo dalla connessione quel passaggio va rifatto a mano,
-                // altrimenti qui arriva la stringa serializzata e l'indice sembra vuoto
-                $grezzo = $conn->get( $seed . $nomeIndice );
-                $indice = ( is_string( $grezzo ) && $grezzo !== '' ) ? @unserialize( $grezzo ) : $grezzo;
+            $status['siti'][ $id ]['errore'] = $errore;
+            $fallite[ $id ] = $seme;
+            $status['esito'] = false;
 
-                if( ! is_array( $indice ) || empty( $indice ) ) {
-                    $status['siti'][ $id ] = array( 'fqdn' => $fqdn, 'chiavi' => 0 );
-                    continue;
-                }
+            logWrite( 'ricostruzione della cache di ' . $seme['fqdn'] . ' fallita ( ' . $codice . ' ' . $errore . ' ), la svuoto da qui', 'memcache', LOG_ERR );
 
-                $eliminate = 0;
-                $errori    = 0;
+        }
 
-                foreach( array_keys( $indice ) as $chiave ) {
+    }
 
-                    if( $conn->delete( $chiave ) === false ) {
+    // riserva: i siti la cui ricostruzione non è riuscita si svuotano da qui, come faceva il task fino al 2026-11-12, così
+    // almeno la cache vecchia non resta. Il giro non passa da memcacheRead()/memcacheDelete()/memcacheWrite(), che seedano
+    // la chiave con quella del sito corrente e quindi andrebbero a leggere e a scrivere nel posto sbagliato: si lavora sulla
+    // connessione, con le chiavi già complete
+    $conn = $cf['memcache']['connection'];
+    foreach( $fallite as $id => $seme ) {
 
-                        $codice = $conn->getResultCode();
+        $fqdn = $seme['fqdn'];
+        $seed = $seme['seed'];
 
-                        // una chiave gia' scaduta non e' un errore
-                        if( ( defined( 'Memcached::RES_NOTFOUND' ) && $codice === Memcached::RES_NOTFOUND ) || $codice === 16 ) {
-                            logWrite( 'chiave gia\' assente (' . $codice . '): ' . $chiave, 'memcache' );
-                        } else {
-                            logWrite( 'impossibile (' . $codice . ') eliminare la chiave: ' . $chiave, 'memcache', LOG_ERR );
-                            $errori++;
-                        }
+        if( is_object( $conn ) ) {
 
+            // indice delle chiavi di QUESTO sito, letto con la chiave già completa.
+            // memcacheWrite() salva sempre serialize( $dato ), e memcacheRead() lo scioglie
+            // in lettura: leggendo dalla connessione quel passaggio va rifatto a mano,
+            // altrimenti qui arriva la stringa serializzata e l'indice sembra vuoto
+            $grezzo = $conn->get( $seed . $nomeIndice );
+            $indice = ( is_string( $grezzo ) && $grezzo !== '' ) ? @unserialize( $grezzo ) : $grezzo;
+
+            $eliminate = 0;
+            $errori    = 0;
+
+            foreach( array_keys( (array) $indice ) as $chiave ) {
+
+                if( $conn->delete( $chiave ) === false ) {
+
+                    $codice = $conn->getResultCode();
+
+                    // una chiave già scaduta non è un errore
+                    if( ( defined( 'Memcached::RES_NOTFOUND' ) && $codice === Memcached::RES_NOTFOUND ) || $codice === 16 ) {
+                        logWrite( 'chiave gia\' assente (' . $codice . '): ' . $chiave, 'memcache' );
                     } else {
-                        logWrite( 'chiave eliminata: ' . $chiave, 'memcache' );
-                        $eliminate++;
+                        logWrite( 'impossibile (' . $codice . ') eliminare la chiave: ' . $chiave, 'memcache', LOG_ERR );
+                        $errori++;
                     }
 
-                }
-
-                // l'indice del sito resta, ma vuoto, e serializzato come lo scrive il framework
-                $conn->set( $seed . $nomeIndice, serialize( array() ) );
-
-                $status['siti'][ $id ] = array(
-                    'fqdn'      => $fqdn,
-                    'chiavi'    => count( $indice ),
-                    'eliminate' => $eliminate,
-                    'errori'    => $errori
-                );
-
-                if( $errori > 0 ) {
-                    $status['esito'] = false;
+                } else {
+                    logWrite( 'chiave eliminata: ' . $chiave, 'memcache' );
+                    $eliminate++;
                 }
 
             }
 
-            logWrite(
-                'flush di deploy: ' . count( $status['siti'] ) . ' siti passati',
-                'memcache',
-                ( $status['esito'] ) ? LOG_INFO : LOG_ERR
+            // l'indice del sito resta, ma vuoto, e serializzato come lo scrive il framework
+            $conn->set( $seed . $nomeIndice, serialize( array() ) );
+
+            $status['siti'][ $id ]['riserva']['memcache'] = array(
+                'chiavi'    => count( (array) $indice ),
+                'eliminate' => $eliminate,
+                'errori'    => $errori
             );
 
         }
+
+        // APCU e disco ( apcuFlush() e diskFlush() svuotano un sito alla volta: apcu_clear_cache() svuoterebbe l'APCU di
+        // tutti i deploy del server )
+        $status['siti'][ $id ]['riserva']['apcu'] = ( function_exists( 'apcu_enabled' ) && apcu_enabled() ) ? apcuFlush( $fqdn ) : null;
+        $status['siti'][ $id ]['riserva']['disk'] = diskFlush( $fqdn );
 
     }
 
@@ -187,28 +223,9 @@
     // senza indice restavano in cache anche dopo questo task, e dopo la conversione degli id del 30/09/2026 le
     // tendine continuavano a mostrare gli id vecchi ( polmasi, 01/10/2026: 6.826 chiavi, circa 419 nell'indice )
     $status['query'] = memcacheCleanQueries( $status['portata'] === 'deploy' );
-    if( $status['query'] === false ) {
+    // senza memcache non ci sono query in cache, e memcacheCleanQueries() risponde false senza che sia un errore
+    if( $status['query'] === false && is_object( $cf['memcache']['connection'] ) ) {
         $status['esito'] = false;
-    }
-
-    // APCU e disco, per il sito corrente o per tutti i siti del deploy ( apcuFlush() e diskFlush() svuotano un sito alla
-    // volta: apcu_clear_cache() svuoterebbe l'APCU di tutti i deploy del server )
-    $semi = array( $cf['site']['fqdn'] );
-    if( $status['portata'] === 'deploy' ) {
-        $semi = array();
-        foreach( $cf['sites'] as $id => $sito ) {
-            $seme = memcacheSiteSeed( $sito, SITE_STATUS, $cf['sites']['1']['domains'][ SITE_STATUS ] );
-            if( $seme !== false ) {
-                $semi[ $id ] = $seme['fqdn'];
-            }
-        }
-    }
-    foreach( $semi as $fqdn ) {
-        $status['apcu'][ $fqdn ] = ( function_exists( 'apcu_enabled' ) && apcu_enabled() ) ? apcuFlush( $fqdn ) : null;
-        $status['disk'][ $fqdn ] = diskFlush( $fqdn );
-        if( $status['apcu'][ $fqdn ] === false || $status['disk'][ $fqdn ] === false ) {
-            $status['esito'] = false;
-        }
     }
 
     // controllo

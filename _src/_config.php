@@ -1108,6 +1108,7 @@
     define( 'DIR_VAR_SPOOL_MAIL'                        , DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
+    define( 'DIR_VAR_SPOOL_REBUILD'                     , DIR_BASE . 'var/spool/rebuild/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
     define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
     define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL'             , DIR_BASE . 'var/spool/security/globale/' );

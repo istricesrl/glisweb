@@ -21,7 +21,9 @@
             $status = NULL;
             $error = NULL;
             $raw = NULL;
+            $headers = array();
 
+            // un timeout esplicito: con quello di default ( 5 s ) un task lento dava status 0 e sembrava aperto
             restCall(
                 rtrim( $cf['site']['url'], '/' ) . '/task/' . $nome . ( $jwt ? '?j=' . rawurlencode( $jwt ) : '' ),
                 METHOD_GET,
@@ -35,7 +37,9 @@
                 $error,
                 NULL,
                 CURLAUTH_BASIC,
-                $raw
+                $raw,
+                $headers,
+                60
             );
 
             return (int) $status;

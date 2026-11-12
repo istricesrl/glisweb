@@ -417,8 +417,8 @@ altra modifica al framework (il CSS di un template, uno snippet Twig, una librer
 solo questa no. Il 2026-09-15 ha nascosto per una decina di minuti una correzione di una riga.
 
 Per farli rileggere: `/task/memcache.clean` (vuole il privilegio `GESTIONE_CACHE`), con `?deploy=1` se
-il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente. Il task svuota anche APCu e disco, ma
-l'APCu solo se lo si chiama via HTTP: da cron l'APCu è un'altra.
+il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente. Il task svuota anche APCu e disco, e
+prima di rispondere ricostruisce l'albero di ogni sito ( `/task/cache.rebuild` ): la prima richiesta lo trova pronto.
 Vale per tutto ciò che finisce nell'array delle pagine: `menu`, `auth.groups`, `template`, `macro`.
 
 ### Librerie (`_src/_lib/`)

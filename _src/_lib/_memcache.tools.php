@@ -161,7 +161,7 @@
      * questa non esiste restituisce false. I chiamanti ( i runlevel _310.pages.php dei moduli dei contenuti ) confrontano
      * il timestamp di aggiornamento di una pagina con questo valore, e la rigenerano se è più recente.
      *
-     * Se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_memcache.clean.php ) la funzione
+     * Se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_cache.rebuild.php ) la funzione
      * restituisce false, così che il refresh forzato rigeneri tutte le pagine anche quando una chiave è sfuggita al flush
      * perché mancava dall'indice CACHE_INDEX; senza questo accorgimento la pagina resterebbe quella in cache ( 2026-09-24 ).
      *
