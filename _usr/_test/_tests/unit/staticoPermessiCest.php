@@ -34,7 +34,7 @@
             $rumorose = array();
 
             foreach( explode( "\n", $codice ) as $n => $riga ) {
-                if( preg_match( '/^(chown|find)\s.*\.\/\$SUB\/(src\/tpl|src\/templates|mod\/\*\/src\/tpl|mod\/\*\/src\/templates|tmp)[\s\/]/', $riga ) && strpos( $riga, '2>/dev/null' ) === false ) {
+                if( preg_match( '/^(chown|find)\s.*\.\/\$SUB\/(src\/tpl|src\/templates|mod\/\*\/src\/tpl|mod\/\*\/src\/templates|tmp)([\s\/]|$)/', $riga ) && strpos( $riga, '2>/dev/null' ) === false ) {
                     $rumorose[] = ( $n + 1 );
                 }
             }
