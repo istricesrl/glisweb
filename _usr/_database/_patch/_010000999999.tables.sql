@@ -4968,8 +4968,13 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (                   --
 --
 -- questa tabella contiene i pagamenti, con le informazioni principali
 --
+-- NOTA id_genitore lega le righe che nascono da un'altra e muoiono con lei ( le rate di un pagamento, le catture di
+-- un'autorizzazione online, le differenze cambio e le rettifiche di chiusura ); due movimenti autonomi collegati
+-- stanno invece in relazioni_pagamenti ( decisione del 23/10/2026, riga 152 )
+--
 CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id` bigint(20) NOT NULL,
+  `id_genitore` bigint(20) DEFAULT NULL,
   `id_tipologia` bigint(20) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
   `id_modalita_pagamento` bigint(20) DEFAULT NULL,
@@ -9437,6 +9442,32 @@ CREATE TABLE IF NOT EXISTS `zone_indirizzi` (                     --
   `ordine` int(11) DEFAULT NULL,                                  -- ordine della zona per l'indirizzo
   `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
   `id_indirizzo` bigint(20) DEFAULT NULL,                         -- chiave esterna per l'indirizzo
+  `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
+  `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
+  `timestamp_aggiornamento` int(11) DEFAULT NULL                  -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- rango: tabella di relazione
+-- struttura: tabella base
+-- funzione: mette in relazione zone e provincie
+--
+-- questa tabella dice quali provincie fanno parte di una zona, p.es. per le zone di un agente o di una spedizione
+-- che seguono i confini provinciali; è la relazione molti a molti fra zone e provincie, gemella di zone_stati, quindi
+-- la stessa provincia può stare in più zone; oggi nessun codice standard la scrive o la legge
+--
+-- NOTA come per zone_stati, una provincia fa parte di più zone, una per ambito ( i flag di tipologie_zone ), e dentro
+-- un ambito si mette nella zona più piccola; rientrata nel canone il 13/10/2026 ( P9 ) e nei file base il 12/11/2026
+--
+CREATE TABLE IF NOT EXISTS `zone_provincie` (                     --
+  `id` bigint(20) NOT NULL,                                       -- chiave primaria
+  `ordine` int(11) DEFAULT NULL,                                  -- ordine della provincia nella zona
+  `id_zona` bigint(20) DEFAULT NULL,                              -- chiave esterna per la zona
+  `id_provincia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la provincia
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga

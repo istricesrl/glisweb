@@ -43,6 +43,8 @@ ALTER TABLE `anagrafica`
     ADD CONSTRAINT `anagrafica_ibfk_02_nofollow`              FOREIGN KEY (`id_badge`) REFERENCES `badge` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_03_nofollow`              FOREIGN KEY (`id_pec_sdi`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_04_nofollow`              FOREIGN KEY (`id_regime`) REFERENCES `regimi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `anagrafica_ibfk_05_nofollow`              FOREIGN KEY (`id_stato_nascita`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `anagrafica_ibfk_06_nofollow`              FOREIGN KEY (`id_comune_nascita`) REFERENCES `comuni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_07_nofollow`              FOREIGN KEY (`id_ranking`) REFERENCES `ranking` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_08_nofollow`              FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_09_nofollow`              FOREIGN KEY (`id_responsabile_operativo`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1715,7 +1717,8 @@ ALTER TABLE `pagamenti`
     ADD CONSTRAINT `pagamenti_ibfk_98_nofollow`               FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_99_nofollow`               FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_13_nofollow`                             FOREIGN KEY (`id_rinnovo`) REFERENCES `rinnovi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `pagamenti_ibfk_14_nofollow`                             FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `pagamenti_ibfk_14_nofollow`                             FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `pagamenti_ibfk_15_nofollow`                             FOREIGN KEY (`id_genitore`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- | 060000023200
 
@@ -3067,6 +3070,17 @@ ALTER TABLE `zone_indirizzi`
     ADD CONSTRAINT `zone_indirizzi_ibfk_02` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `zone_indirizzi_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_indirizzi_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+-- | 060000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- verifica: 2026-11-12 punto 7b
+ALTER TABLE `zone_provincie`
+    ADD CONSTRAINT `zone_provincie_ibfk_01` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `zone_provincie_ibfk_02_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `zone_provincie_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `zone_provincie_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 -- | 060000100400
 

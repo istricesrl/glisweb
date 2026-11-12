@@ -9167,6 +9167,26 @@ CREATE OR REPLACE VIEW zone_indirizzi_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
+-- | 090000100301
+
+-- zone_provincie_view
+-- tipologia: tabella gestita
+-- verifica: 2026-11-12 punto 7b
+CREATE OR REPLACE VIEW zone_provincie_view AS
+	SELECT
+		zone_provincie.id,
+		zone_provincie.ordine,
+		zone_provincie.id_zona,
+		zone_path( zone_provincie.id_zona ) AS zona,
+		zone_provincie.id_provincia,
+		provincie.nome AS provincia,
+		zone_provincie.id_account_inserimento,
+		zone_provincie.id_account_aggiornamento,
+		concat( provincie.nome, ' - ', zone_path( zone_provincie.id_zona ) ) AS __label__
+	FROM zone_provincie
+		LEFT JOIN provincie ON provincie.id = zone_provincie.id_provincia
+;
+
 -- | 090000100401
 
 -- zone_stati_view

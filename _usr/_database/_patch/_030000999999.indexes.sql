@@ -3060,6 +3060,7 @@ ALTER TABLE `pagamenti`
  	ADD PRIMARY KEY (`id`),
 	ADD KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_documento`,`data_scadenza`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `id_documento` (`id_documento`),
@@ -5786,6 +5787,26 @@ ALTER TABLE `zone_indirizzi`
 -- zone_indirizzi
 -- tipologia: tabella gestita
 ALTER TABLE `zone_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- verifica: 2026-11-12 punto 7b
+ALTER TABLE `zone_provincie`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_provincia`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_provincia` (`id_provincia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_provincia`);
+
+-- | 030000100301
+
+-- zone_provincie
+-- tipologia: tabella gestita
+ALTER TABLE `zone_provincie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000100400
 
