@@ -5203,6 +5203,11 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 -- tutte le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ); ricavata il 2026-10-04 dalla vecchia
 -- offerte_attive_view ( tolta dal canone in d975b4a15 ) togliendo il filtro sull'emittente gestito, che adesso
 -- applica l'elenco ( _offerte.commerciale.view.php ); materializzata in offerte_view_static
+--
+-- NOTA solo-legacy, deprecata ( schema canonico, punto 6, 12/11/2026 ): la leggono soltanto _0400.documenti di glisweb
+-- e la sua statica; in latest le offerte sono una classe di righe di documenti, e _DO040.offerte le prende da
+-- documenti_view_static restringendo su id_tipologia. Una classe di righe si filtra, non si materializza ( Fabio,
+-- 12/11/2026 ): vista e statica si tolgono quando _0400 lascia glisweb
 CREATE OR REPLACE VIEW `offerte_view` AS
     SELECT
 		documenti.id,

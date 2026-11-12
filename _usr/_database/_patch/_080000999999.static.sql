@@ -266,7 +266,11 @@ CREATE TABLE IF NOT EXISTS `attivita_view_static` (                         --
 -- struttura: vista statica
 -- funzione: materializza offerte_view per le ricerche e le tendine
 --
--- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _0400.documenti in glisweb; in latest e' da scrivere.
+-- Le colonne sono quelle della vista, con gli stessi nomi e gli stessi tipi; la tiene viva la corte di _0400.documenti in glisweb.
+--
+-- NOTA solo-legacy, deprecata con offerte_view ( schema canonico, punto 6, 12/11/2026 ): in latest non avra' una corte,
+-- perche' una classe di righe si filtra, non si materializza; _DO040.offerte legge documenti_view_static ristretta su
+-- id_tipologia ( KEY tipologia_data ). Si toglie quando _0400 lascia glisweb.
 --
 -- Comprende TUTTE le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ). Fino al
 -- 04/10/2026 si materializzava offerte_attive_view, cioe' le sole offerte emesse da
@@ -400,7 +404,8 @@ CREATE TABLE IF NOT EXISTS `documenti_view_static` (             --
   `timestamp_aggiornamento` int(11) DEFAULT NULL,                --
   `__label__` text,                                              --
   UNIQUE KEY `codice` (`codice`),                                --
-  KEY `data` (`data`)                                            --
+  KEY `data` (`data`),                                           --
+  KEY `tipologia_data` (`id_tipologia`,`data_archiviazione`,`data`) --
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                            --
 
 -- | 080000999020

@@ -70,6 +70,25 @@
 
         }
 
+        // statiche lette dai moduli di una classe di righe, e la KEY del filtro di classe ( Fabio, 12/11/2026: una classe
+        // di righe si filtra, non si materializza )
+        private $filtroDiClasse = array( 'documenti' => 'tipologia_data' );
+
+        // la statica di una tabella base filtrata per classe ha la KEY che comincia con la colonna di classe
+        public function staticheConKeyDiClasse( UnitTester $I ) {
+
+            $sql = file_get_contents( DIR_BASE . '_usr/_database/_patch/_080000999999.static.sql' );
+
+            foreach( $this->filtroDiClasse as $t => $key ) {
+                $I->assertMatchesRegularExpression(
+                    '/^CREATE TABLE IF NOT EXISTS `' . $t . '_view_static` \(.*?^\s*KEY `' . $key . '` \(`id_tipologia`[^\n]*\n.*?\) ENGINE/ms',
+                    $sql,
+                    $t . '_view_static senza la KEY ' . $key . ' sulla colonna di classe'
+                );
+            }
+
+        }
+
         // la statica ha le stesse colonne della sua vista, senza colonne proprie
         public function staticheUgualiAllaVista( UnitTester $I ) {
 
