@@ -58,3 +58,5 @@ CREATE OR REPLACE VIEW zone_indirizzi_view AS
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
+
+-- | FINE

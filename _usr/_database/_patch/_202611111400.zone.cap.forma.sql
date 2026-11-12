@@ -32,3 +32,5 @@ CREATE OR REPLACE VIEW zone_cap_view AS
 		concat( zone_cap.cap, ' - ', zone_path( zone_cap.id_zona ) ) AS __label__
 	FROM zone_cap
 ;
+
+-- | FINE

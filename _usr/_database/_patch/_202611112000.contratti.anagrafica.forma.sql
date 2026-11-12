@@ -80,5 +80,15 @@ CREATE OR REPLACE VIEW `contratti_anagrafica_view` AS
 
 -- ruoli_anagrafica: i ruoli usati nei contratti
 UPDATE `ruoli_anagrafica` SET `se_contratti` = 1, `se_contraente` = 1 WHERE `id` = 29 AND `nome` = 'iscritto';
+
+-- | 202611112004
+
+-- ruoli_anagrafica: i ruoli usati nei contratti ( segue )
 UPDATE `ruoli_anagrafica` SET `se_contratti` = 1 WHERE `id` = 30 AND `nome` = 'istituto';
+
+-- | 202611112005
+
+-- ruoli_anagrafica: i ruoli usati nei contratti ( segue )
 UPDATE `ruoli_anagrafica` SET `se_contratti` = 1 WHERE `id` IN ( 33, 34 ) AND `nome` IN ( 'tesserato', 'abbonato' );
+
+-- | FINE

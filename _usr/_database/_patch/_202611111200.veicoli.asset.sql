@@ -37,47 +37,71 @@ ALTER TABLE `asset`
 -- asset: produttore, modello e targa dopo la condizione
 ALTER TABLE `asset`
 	ADD COLUMN IF NOT EXISTS `id_produttore` bigint(20) DEFAULT NULL AFTER `id_condizione`;
+
+-- | 202611111202
+
+-- asset: produttore, modello e targa dopo la condizione ( segue )
 ALTER TABLE `asset`
 	ADD COLUMN IF NOT EXISTS `modello` char(255) DEFAULT NULL AFTER `id_produttore`;
+
+-- | 202611111203
+
+-- asset: produttore, modello e targa dopo la condizione ( segue )
 ALTER TABLE `asset`
 	ADD COLUMN IF NOT EXISTS `targa` char(16) DEFAULT NULL AFTER `modello`;
 
--- | 202611111202
+-- | 202611111204
 
 -- asset: archiviazione dopo le note
 ALTER TABLE `asset`
 	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `note`;
+
+-- | 202611111205
+
+-- asset: archiviazione dopo le note ( segue )
 ALTER TABLE `asset`
 	ADD COLUMN IF NOT EXISTS `note_archiviazione` text DEFAULT NULL AFTER `data_archiviazione`;
 
--- | 202611111203
+-- | 202611111206
 
 -- asset: chiavi
 ALTER TABLE `asset`
 	DROP INDEX IF EXISTS `indice`;
+
+-- | 202611111207
+
+-- asset: chiavi ( segue )
 ALTER TABLE `asset`
 	ADD UNIQUE KEY IF NOT EXISTS `targa` (`targa`),
 	ADD KEY IF NOT EXISTS `id_produttore` (`id_produttore`),
 	ADD KEY IF NOT EXISTS `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`codice`,`targa`,`data_archiviazione`);
 
--- | 202611111204
+-- | 202611111208
 
 -- asset: chiave esterna verso il produttore
 ALTER TABLE `asset`
 	ADD CONSTRAINT `asset_ibfk_04_nofollow` FOREIGN KEY IF NOT EXISTS (`id_produttore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611111205
+-- | 202611111209
 
 -- tipologie_asset: il flag di classe dei veicoli
 ALTER TABLE `tipologie_asset`
 	ADD COLUMN IF NOT EXISTS `se_veicoli` tinyint(1) DEFAULT NULL AFTER `font_awesome`;
+
+-- | 202611111210
+
+-- tipologie_asset: il flag di classe dei veicoli ( segue )
 ALTER TABLE `tipologie_asset`
 	DROP INDEX IF EXISTS `indice`;
+
+-- | 202611111211
+
+-- tipologie_asset: il flag di classe dei veicoli ( segue )
 ALTER TABLE `tipologie_asset`
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_veicoli`);
 
--- | 202611111206
+-- | 202611111212
 
 -- mastri_tipologie_asset: la tabella, vuota
 CREATE TABLE IF NOT EXISTS `mastri_tipologie_asset` (
@@ -100,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `mastri_tipologie_asset` (
   KEY `indice` (`id`,`ordine`,`id_mastro`,`id_tipologia`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- | 202611111207
+-- | 202611111213
 
 -- mastri_tipologie_asset: chiavi esterne
 ALTER TABLE `mastri_tipologie_asset`
@@ -109,7 +133,7 @@ ALTER TABLE `mastri_tipologie_asset`
 	ADD CONSTRAINT `mastri_tipologie_asset_ibfk_98_nofollow` FOREIGN KEY IF NOT EXISTS (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 	ADD CONSTRAINT `mastri_tipologie_asset_ibfk_99_nofollow` FOREIGN KEY IF NOT EXISTS (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
--- | 202611111208
+-- | 202611111214
 
 -- tipologie_asset: le tipologie di veicolo, con gli stessi id e il flag di classe; una passata per livello dell'albero,
 -- perché il genitore deve esserci prima del figlio ( FK su id_genitore ), cinque livelli bastano
@@ -120,27 +144,10 @@ INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`,
 	FROM `tipologie_veicoli` AS tv
 	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
 		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
-INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
-		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
-	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
-		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
-	FROM `tipologie_veicoli` AS tv
-	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
-		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
-INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
-		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
-	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
-		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
-	FROM `tipologie_veicoli` AS tv
-	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
-		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
-INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
-		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
-	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
-		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
-	FROM `tipologie_veicoli` AS tv
-	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
-		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
+
+-- | 202611111215
+
+-- tipologie_asset: le tipologie di veicolo, con gli stessi id e il flag di classe; una passata per livello dell'albero ( segue )
 INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
 		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
 	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
@@ -149,7 +156,40 @@ INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`,
 	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
 		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
 
--- | 202611111209
+-- | 202611111216
+
+-- tipologie_asset: le tipologie di veicolo, con gli stessi id e il flag di classe; una passata per livello dell'albero ( segue )
+INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
+		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
+	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
+		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
+	FROM `tipologie_veicoli` AS tv
+	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
+		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
+
+-- | 202611111217
+
+-- tipologie_asset: le tipologie di veicolo, con gli stessi id e il flag di classe; una passata per livello dell'albero ( segue )
+INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
+		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
+	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
+		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
+	FROM `tipologie_veicoli` AS tv
+	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
+		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
+
+-- | 202611111218
+
+-- tipologie_asset: le tipologie di veicolo, con gli stessi id e il flag di classe; una passata per livello dell'albero ( segue )
+INSERT INTO `tipologie_asset` ( `id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_veicoli`,
+		`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento` )
+	SELECT tv.id, tv.id_genitore, tv.ordine, tv.codice, tv.nome, tv.html_entity, tv.font_awesome, 1,
+		tv.id_account_inserimento, tv.timestamp_inserimento, tv.id_account_aggiornamento, tv.timestamp_aggiornamento
+	FROM `tipologie_veicoli` AS tv
+	WHERE tv.id NOT IN ( SELECT id FROM `tipologie_asset` )
+		AND ( tv.id_genitore IS NULL OR tv.id_genitore IN ( SELECT id FROM `tipologie_asset` ) );
+
+-- | 202611111219
 
 -- asset: i veicoli, con gli stessi id; quelli senza tipologia, o con una tipologia che non è passata, restano in veicoli:
 -- un asset senza tipologia non sarebbe un veicolo, e si guardano a mano al punto 12

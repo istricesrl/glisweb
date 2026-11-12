@@ -35,3 +35,5 @@ CREATE OR REPLACE VIEW zone_stati_view AS
 	FROM zone_stati
 		LEFT JOIN stati ON stati.id = zone_stati.id_stato
 ;
+
+-- | FINE

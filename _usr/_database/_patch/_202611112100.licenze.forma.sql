@@ -107,3 +107,5 @@ CREATE OR REPLACE VIEW `licenze_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 	GROUP BY licenze.id
 ;
+
+-- | FINE

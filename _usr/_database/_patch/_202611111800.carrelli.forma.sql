@@ -164,3 +164,5 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 		from_unixtime( carrelli.timestamp_aggiornamento, '%Y-%m-%d %H:%i' ) AS data_ora_aggiornamento,
 		carrelli.id AS __label__
 	FROM carrelli;
+
+-- | FINE

@@ -66,3 +66,5 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto )
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza
 ;
+
+-- | FINE

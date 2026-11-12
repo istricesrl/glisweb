@@ -34,3 +34,5 @@ CREATE OR REPLACE VIEW `test_view` AS
 		concat_ws( ' ', test.codice, test.nome ) AS __label__
 	FROM test
 ;
+
+-- | FINE
