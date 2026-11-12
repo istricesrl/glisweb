@@ -50,6 +50,11 @@
         // log
         logger( 'struttura delle pagine scritta in cache ( ' . cacheEngine() . ' )', 'speed', LOG_INFO );
 
+        // tolgo il lock della ricostruzione, se è mio ( vedi _300.pages.php )
+        if( ! empty( $cf['contents']['lock'] ) ) {
+            cacheDelete( CONTENTS_PAGES_LOCK );
+        }
+
     } else {
 
         // log

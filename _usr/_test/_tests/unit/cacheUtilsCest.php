@@ -75,6 +75,20 @@ class cacheUtilsCest
         $I->seeInSource("bool(true)\nbool(false)\nbool(false)");
     }
 
+    // cacheAdd() -> deve scrivere la chiave solo se non c'e'
+    public function cacheAdd(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_cache.utils/_cacheAdd.01.php');
+        $I->seeInSource("bool(true)\nbool(false)\nstring(5) \"PRIMO\"");
+    }
+
+    // cacheAdd() come lock -> mentre un'altra richiesta ricostruisce, chi trova la cache vecchia usa la copia e non ricostruisce
+    public function cacheAddLockPagine(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_cache.utils/_cacheAdd.02.php');
+        $I->seeInSource("bool(true)\nint(200)\nbool(true)");
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {

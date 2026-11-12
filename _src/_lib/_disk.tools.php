@@ -51,6 +51,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * diskWrite()                      | scrive un dato in cache
      * diskWriteFile()                  | scrive in modo atomico il contenuto di un file della cache
+     * diskAdd()                        | scrive un dato in cache solo se la chiave non c'è ( per i lock )
      * diskDelete()                    | cancella un dato dalla cache
      * diskFlush()                      | cancella dalla cache i dati di un sito
      *
@@ -243,6 +244,51 @@
     }
 
     /**
+     * scrive un dato in cache solo se la chiave non c'è
+     *
+     * Questa funzione scrive il dato come diskWrite(), ma apre il file con fopen( 'x' ), che è atomica: se il file c'è già
+     * non scrive niente e restituisce false; una chiave scaduta la toglie prima diskRead(). Serve per i lock ( vedi
+     * CONTENTS_PAGES_LOCK in _src/_config/_300.pages.php ), quindi non scrive la chiave _AGE.
+     *
+     * @param       string          $key        la chiave con cui scrivere il dato
+     * @param       mixed           $data       il dato da scrivere
+     * @param       int             $ttl        il tempo di vita della chiave in cache, in secondi (default: DISK_DEFAULT_TTL)
+     * @param       string|null     $site       il sito per cui scrivere il dato (opzionale, se non specificato si usa il sito corrente)
+     *
+     * @return      bool                        true se il dato è stato scritto, false se la chiave c'era già o se la scrittura non è riuscita
+     *
+     */
+    function diskAdd( $key, $data, $ttl = DISK_DEFAULT_TTL, $site = null ) {
+
+        if( diskRead( $key, $site ) !== false ) {
+            return false;
+        }
+
+        diskUniqueKey( $key, $site );
+
+        if( ! checkFolder( DIR_VAR_SPOOL_CACHE ) ) {
+            logger( 'impossibile creare la cartella della cache su disco: ' . DIR_VAR_SPOOL_CACHE, 'disk' );
+            return false;
+        }
+
+        $scadenza = ( $ttl > 0 ) ? time() + $ttl : 0;
+
+        $h = @fopen( diskKeyPath( $key ), 'x' );
+
+        if( $h === false ) {
+            return false;
+        }
+
+        $r = ( fwrite( $h, serialize( array( 'scadenza' => $scadenza, 'dati' => $data ) ) ) !== false );
+        fclose( $h );
+
+        @chmod( diskKeyPath( $key ), 0664 );
+
+        return $r;
+
+    }
+
+    /**
      * cancella un dato dalla cache
      *
      * Questa funzione cancella un dato dalla cache, insieme alla chiave _AGE che ne registra l'età.
@@ -271,11 +317,12 @@
      * memcacheFlush(), per pulire tutti i siti del deploy si chiama la funzione per ciascuno.
      *
      * @param       string|null     $site     il sito da svuotare (opzionale, se non specificato si usa il sito corrente)
+     * @param       array           $tieni    le chiavi da non cancellare, senza il seme ( p.es. il lock CONTENTS_PAGES_LOCK )
      *
      * @return      bool                      true se la cache del sito è stata svuotata, false altrimenti
      *
      */
-    function diskFlush( $site = null ) {
+    function diskFlush( $site = null, $tieni = array() ) {
 
         if( ! is_dir( DIR_VAR_SPOOL_CACHE ) ) {
             return true;
@@ -285,9 +332,18 @@
         diskUniqueKey( $prefix, $site );
         $prefix = rawurlencode( $prefix );
 
+        $salve = array();
+        foreach( $tieni as $s ) {
+            diskUniqueKey( $s, $site );
+            $salve[] = rawurlencode( $s );
+        }
+
         $r = true;
 
         foreach( glob( DIR_VAR_SPOOL_CACHE . '*' ) as $f ) {
+            if( in_array( basename( $f ), $salve ) ) {
+                continue;
+            }
             if( strpos( basename( $f ), $prefix ) === 0 && is_file( $f ) && ! @unlink( $f ) ) {
                 $r = false;
             }

@@ -29,7 +29,9 @@
      * 2. si svuota la cache del sito, come faceva memcache.clean;
      * 3. si riscrive l'albero ricostruito al punto 1, così la prima richiesta dopo la pulizia lo trova già pronto.
      *
-     * Fra il 2 e il 3 passano pochi millesimi di secondo, in cui una richiesta può ancora trovare la cache vuota.
+     * Fra il 2 e il 3 passano pochi millesimi di secondo, in cui la cache è vuota: per questo durante il 2 e il 3 l'API tiene
+     * il lock della ricostruzione ( CONTENTS_PAGES_LOCK, vedi _src/_config/_300.pages.php ), e chi arriva in quel momento
+     * aspetta l'albero invece di ricostruirlo da sé.
      *
      * report
      * ======
@@ -71,10 +73,15 @@
     // tempo della ricostruzione
     $status['tempi']['ricostruzione'] = round( microtime( true ) - $inizio, 3 );
 
-    // svuotamento della cache del sito, in tutti i motori
+    // il lock della ricostruzione ( vedi _300.pages.php ) l'ha tolto _330.pages.php alla fine del bootstrap: lo riprendo, così
+    // chi arriva mentre la cache è vuota, fra lo svuotamento e la riscrittura, aspetta invece di ricostruire da sé
+    $cf['contents']['lock'] = cacheAdd( CONTENTS_PAGES_LOCK, time(), CONTENTS_PAGES_LOCK_TTL );
+
+    // svuotamento della cache del sito, in tutti i motori, tranne il lock ( che memcacheFlush() non tocca comunque, perché
+    // non sta nell'indice )
     $status['memcache'] = memcacheFlush( $cf['memcache']['connection'], $cf['sites']['1']['domains'][ SITE_STATUS ] );
-    $status['apcu'] = ( function_exists( 'apcu_enabled' ) && apcu_enabled() ) ? apcuFlush( $cf['site']['fqdn'] ) : null;
-    $status['disk'] = diskFlush( $cf['site']['fqdn'] );
+    $status['apcu'] = ( function_exists( 'apcu_enabled' ) && apcu_enabled() ) ? apcuFlush( $cf['site']['fqdn'], array( CONTENTS_PAGES_LOCK ) ) : null;
+    $status['disk'] = diskFlush( $cf['site']['fqdn'], array( CONTENTS_PAGES_LOCK ) );
 
     // riscrittura dell'albero ricostruito, con le stesse chiavi di _330.pages.php
     $status['scrittura'] = cacheWrite( CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] )
@@ -84,6 +91,11 @@
         && cacheWrite( CONTENTS_REVERSE_KEY, $cf['contents']['reverse'] )
         && cacheWrite( CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] )
         && cacheWrite( CONTENTS_PAGES_CACHED, time() );
+
+    // tolgo il lock, se è mio
+    if( $cf['contents']['lock'] ) {
+        cacheDelete( CONTENTS_PAGES_LOCK );
+    }
 
     // tempo totale
     $status['tempi']['totale'] = round( microtime( true ) - $inizio, 3 );

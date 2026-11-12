@@ -47,6 +47,7 @@
      * cacheEngine()                    | restituisce il motore di cache della richiesta corrente
      * cacheGetKeyAge()                 | legge l'età di una chiave in cache
      * cacheWrite()                     | scrive un dato in cache
+     * cacheAdd()                       | scrive un dato in cache solo se la chiave non c'è ( per i lock )
      * cacheDelete()                    | cancella un dato dalla cache
      * cacheFlush()                     | cancella dalla cache i dati del sito corrente, in tutti i motori
      * cacheRead()                      | legge un dato dalla cache
@@ -172,6 +173,46 @@
             default:
                 return diskWrite( $key, $data, ( ( $ttl === null ) ? DISK_DEFAULT_TTL : $ttl ) );
 
+        }
+
+    }
+
+    /**
+     * scrive un dato in cache solo se la chiave non c'è
+     *
+     * Questa funzione scrive un dato con il motore della richiesta corrente, in modo atomico, solo se la chiave non c'è già:
+     * di due richieste che la chiamano insieme sulla stessa chiave, una sola riceve true. Serve per i lock, come
+     * CONTENTS_PAGES_LOCK di _src/_config/_300.pages.php. Con il motore apcu, come cacheWrite(), se l'APCU non riesce a
+     * scrivere la chiave va su disco, e una chiave che c'è già su disco conta come presente.
+     *
+     * @param       string      $key        la chiave con cui scrivere il dato, senza il seme
+     * @param       mixed       $data       il dato da scrivere
+     * @param       int         $ttl        il tempo di vita della chiave in secondi ( default quello del motore )
+     *
+     * @return      bool                    true se il dato è stato scritto, false se la chiave c'era già o se la scrittura non è riuscita
+     *
+     */
+    function cacheAdd( $key, $data, $ttl = null ) {
+
+        global $cf;
+
+        switch( cacheEngine() ) {
+            case 'memcache':
+                return memcacheAdd( $cf['memcache']['connection'], $key, $data, ( ( $ttl === null ) ? MEMCACHE_DEFAULT_TTL : $ttl ) );
+            case 'apcu':
+                if( diskRead( $key ) !== false ) {
+                    return false;
+                }
+                if( apcuAdd( $key, $data, ( ( $ttl === null ) ? APCU_DEFAULT_TTL : $ttl ) ) ) {
+                    return true;
+                }
+                if( apcuRead( $key ) !== false ) {
+                    return false;
+                }
+                logger( 'scrittura APCU fallita per la chiave ' . $key . ', scrivo su disco', 'cache', LOG_WARNING );
+                return diskAdd( $key, $data, ( ( $ttl === null ) ? DISK_DEFAULT_TTL : $ttl ) );
+            default:
+                return diskAdd( $key, $data, ( ( $ttl === null ) ? DISK_DEFAULT_TTL : $ttl ) );
         }
 
     }

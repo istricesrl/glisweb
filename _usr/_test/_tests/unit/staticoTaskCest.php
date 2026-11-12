@@ -34,6 +34,11 @@
                     $codice .= file_get_contents( dirname( $file ) . '/' . $m[3] );
                 }
 
+                // _cache.rebuild.php ha una guardia sua, il gettone controllato prima del framework ( la prova cacheRebuildCest )
+                if( basename( $file ) === '_cache.rebuild.php' && strpos( $codice, '$gettone' ) !== false ) {
+                    continue;
+                }
+
                 if( strpos( $codice, 'checkTaskPrivilege' ) === false && strpos( $codice, 'CRON_RUNNING' ) === false ) {
                     $senzaGuardia[] = str_replace( DIR_BASE, '', $file );
                 }

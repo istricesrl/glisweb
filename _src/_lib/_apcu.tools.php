@@ -41,6 +41,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * apcuWrite()                      | scrive un dato in cache
+     * apcuAdd()                        | scrive un dato in cache solo se la chiave non c'è ( per i lock )
      * apcuDelete()                     | cancella un dato dalla cache
      * apcuFlush()                      | cancella dalla cache i dati di un sito
      * 
@@ -179,6 +180,33 @@
     }
 
     /**
+     * scrive un dato in cache solo se la chiave non c'è
+     *
+     * Questa funzione scrive il dato come apcuWrite(), ma con apcu_add(), che è atomica: se la chiave c'è già non scrive
+     * niente e restituisce false. Serve per i lock ( vedi CONTENTS_PAGES_LOCK in _src/_config/_300.pages.php ), quindi non
+     * scrive la chiave _AGE.
+     *
+     * @param       string          $key        la chiave con cui scrivere il dato
+     * @param       mixed           $data       il dato da scrivere
+     * @param       int             $ttl        il tempo di vita della chiave in cache, in secondi (default: APCU_DEFAULT_TTL)
+     * @param       string|null     $site       il sito per cui scrivere il dato (opzionale, se non specificato si usa il sito corrente)
+     *
+     * @return      bool                        true se il dato è stato scritto, false se la chiave c'era già o se la scrittura non è riuscita
+     *
+     */
+    function apcuAdd( $key, $data, $ttl = APCU_DEFAULT_TTL, $site = null ) {
+
+        apcuUniqueKey( $key, $site );
+
+        if( function_exists( 'apcu_add' ) ) {
+            return apcu_add( $key, serialize( $data ), $ttl );
+        }
+
+        return false;
+
+    }
+
+    /**
      * cancella un dato dalla cache
      * 
      * Questa funzione cancella un dato dalla cache. In particolare, cancella la chiave specificata dalla cache, insieme
@@ -219,20 +247,30 @@
      * flush lanciato da cron non svuota la cache vista dalle pagine
      * 
      * @param       string|null     $site     il sito da svuotare (opzionale, se non specificato si usa il sito corrente)
+     * @param       array           $tieni    le chiavi da non cancellare, senza il seme ( p.es. il lock CONTENTS_PAGES_LOCK )
      * 
      * @return      bool                      true se le chiavi del sito sono state cancellate, false altrimenti
      *
      */
-    function apcuFlush( $site = null ) {
+    function apcuFlush( $site = null, $tieni = array() ) {
 
         if( function_exists( 'apcu_enabled' ) && apcu_enabled() && class_exists( 'APCUIterator' ) ) {
 
             $prefix = '';
             apcuUniqueKey( $prefix, $site );
 
+            $salve = array();
+            foreach( $tieni as $s ) {
+                apcuUniqueKey( $s, $site );
+                $salve[] = $s;
+            }
+
             $r = true;
 
             foreach( new APCUIterator( '/^' . preg_quote( $prefix, '/' ) . '/', APC_ITER_KEY ) as $k => $v ) {
+                if( in_array( $k, $salve ) ) {
+                    continue;
+                }
                 if( ! apcu_delete( $k ) && apcu_exists( $k ) ) {
                     $r = false;
                 }

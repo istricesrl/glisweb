@@ -90,6 +90,20 @@ class diskToolsCest
         $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
     }
 
+    // diskAdd() -> deve scrivere la chiave solo se non c'e'
+    public function diskAdd(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_disk.tools/_diskAdd.01.php');
+        $I->seeInSource("bool(true)\nbool(false)\nstring(5) \"PRIMO\"");
+    }
+
+    // diskFlush() -> deve lasciare le chiavi da tenere
+    public function diskFlushTieni(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_disk.tools/_diskFlush.02.php');
+        $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {

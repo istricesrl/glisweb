@@ -98,6 +98,12 @@
     define( 'CONTENTS_PAGES_KEY'                , 'CONTENTS_PAGES_KEY' );
     define( 'CONTENTS_SHORTCUTS_KEY'            , 'SHORTCUTS_PAGES_KEY' );
 
+    // lock della ricostruzione dell'albero delle pagine ( vedi _300.pages.php ): la chiave, quanto dura al massimo se chi
+    // ricostruisce muore a metà, e quanti secondi aspetta chi trova la cache vuota prima di ricostruire da sé
+    define( 'CONTENTS_PAGES_LOCK'               , 'CONTENTS_PAGES_LOCK' );
+    define( 'CONTENTS_PAGES_LOCK_TTL'           , 600 );
+    define( 'CONTENTS_PAGES_LOCK_WAIT'          , 60 );
+
     /**
      * sezione memcache
      * ================

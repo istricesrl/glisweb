@@ -74,6 +74,22 @@ class apcuToolsCest
         $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
     }
 
+    // apcuAdd() -> deve scrivere la chiave solo se non c'e'
+    public function apcuAdd(UnitTester $I)
+    {
+        $this->saltaSenzaApcu($I);
+        $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuAdd.01.php');
+        $I->seeInSource("bool(true)\nbool(false)\nstring(5) \"PRIMO\"");
+    }
+
+    // apcuFlush() -> deve lasciare le chiavi da tenere
+    public function apcuFlushTieni(UnitTester $I)
+    {
+        $this->saltaSenzaApcu($I);
+        $I->amOnPage('/_usr/_examples/_lib/_apcu.tools/_apcuFlush.02.php');
+        $I->seeInSource("bool(true)\nbool(true)\nbool(true)\nbool(false)\nstring(12) \"TEST CONTENT\"");
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {
