@@ -9,7 +9,8 @@
 #
 
 ## pulizia schermo
-clear
+# solo a terminale: lanciato da cron ( manutenzione-siti, _gw.upgrade.sh ) TERM non c'e' e clear sporca il log
+[ -t 1 ] && clear
 
 ## livelli per la root del sito
 # NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
