@@ -56,6 +56,13 @@
         // senza istruttore sul corso ne' in __a__ le lezioni nascono, con la presenza dell'istruttore a NULL
         public function generazioneSenzaIstruttore( BackendTester $I ) {
 
+            global $cf;
+
+            // la pagina todo.view la dichiara _todo.it-IT.php solo se c'e' anche il modulo della produzione
+            if( ! in_array( '1000.produzione', $cf['mods']['active']['array'] ) ) {
+                $I->markTestSkipped( 'todo.view esiste solo col modulo 1000.produzione' );
+            }
+
             $corso = $I->haveInDatabase( 'progetti', array(
                 'id' => 990000000000 + ( time() % 1000000 ) * 10,
                 'nome' => $I->grabTestName( 'corso' )
