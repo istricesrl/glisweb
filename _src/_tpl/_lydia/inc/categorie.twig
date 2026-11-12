@@ -4,6 +4,7 @@
 
 <!-- file {{ _self }} -->
 <div class="col-auto col-md d-flex flex-column">
+    {% if page.template.menu.categorie %}
     <nav class="navbar navbar-expand-md navbar-megamenu navbar-light mt-auto mb-auto">
         <button class="navbar-toggler me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavCat">
             <span class="navbar-toggler-icon"></span>
@@ -14,5 +15,6 @@
             </ul>
         </div>
     </nav>
+    {% endif %}
 </div>
 <!-- fine file {{ _self }} -->

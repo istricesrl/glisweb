@@ -104,4 +104,33 @@
 
         }
 
+        // la barra delle categorie si disegna solo se il menu c'e', come la navbar di _cassandra e _aurora: senza la guardia
+        // un sito senza categorie mostra una barra vuota e, su mobile, un hamburger che non apre niente ( glisweb.it, 12/11/2026 )
+        public function barraCategorieSoloColMenu( UnitTester $I ) {
+
+            $barre = (array) glob( DIR_BASE . '_src/_tpl/*/inc/categorie.twig' );
+
+            $I->assertNotEmpty( $barre, 'nessuna barra delle categorie trovata: il test non prova niente' );
+
+            $senzaGuardia = array();
+
+            foreach( $barre as $file ) {
+                if( strpos( file_get_contents( $file ), '{% if page.template.menu.categorie %}' ) === false ) {
+                    $senzaGuardia[] = str_replace( DIR_BASE, '', $file );
+                }
+            }
+
+            $I->assertEmpty( $senzaGuardia, 'barra delle categorie senza guardia sul menu: ' . implode( ', ', $senzaGuardia ) );
+
+        }
+
+        // in _lydia il margine generale di .form-control staccava il campo di ricerca dal suo pulsante nell'input-group
+        public function ricercaLydiaSenzaMargine( UnitTester $I ) {
+
+            $css = file_get_contents( DIR_BASE . '_src/_tpl/_lydia/css/main.css' );
+
+            $I->assertMatchesRegularExpression( '/div\.search-box \.form-control\s*\{\s*margin-bottom:\s*0(em)?;/', $css );
+
+        }
+
     }

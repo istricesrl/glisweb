@@ -48,8 +48,9 @@ inc/flags.twig                          | segnaposto per il selettore delle ling
 
 ## menu
 I menu si dichiarano in `template.menu` e le pagine ci entrano con la chiave `menu` della loro definizione:
-`icons` e `main` in testata, `categorie` nella barra grigia, `mega` sotto la barra ( il blocco compare solo se
-`page.template.menu.mega` è valorizzato ) e `sottomenu`. Su schermo stretto i due menu della testata si aprono
+`icons` e `main` in testata, `categorie` nella barra grigia ( senza voci la barra resta, con la sola ricerca, ma
+senza menu né pulsante ), `mega` sotto la barra ( il blocco compare solo se `page.template.menu.mega` è
+valorizzato ) e `sottomenu`. Su schermo stretto i due menu della testata si aprono
 con un solo pulsante, quello delle categorie e il menu esteso col proprio; il sottomenu resta sempre visibile.
 
 ## logo

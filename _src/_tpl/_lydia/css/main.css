@@ -138,6 +138,11 @@ div.search-box {
     padding: 0.5em;
 }
 
+/* il margine generale di .form-control dentro l'input-group stacca il campo dal pulsante */
+div.search-box .form-control {
+    margin-bottom: 0em;
+}
+
 .nav-icons a.nav-link {
     font-size: 1.25em;
 }
