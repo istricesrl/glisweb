@@ -2839,6 +2839,12 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
   `note` text DEFAULT NULL,                                       -- note sul documento
   `note_consegna` text DEFAULT NULL,                              -- note sulla consegna
   `note_cliente` text DEFAULT NULL,                               -- note per il cliente
+  `data_fine_validita` date DEFAULT NULL,                         -- data di fine validità del documento
+  `note_fine_validita` text DEFAULT NULL,                         -- note sulla validità del documento
+  `note_pagamento` text DEFAULT NULL,                             -- note sulle condizioni di pagamento
+  `note_installazione` text DEFAULT NULL,                         -- note sull'installazione e la messa in funzione
+  `note_garanzia` text DEFAULT NULL,                              -- note sulla garanzia
+  `note_fiscali` text DEFAULT NULL,                               -- note sugli oneri fiscali
   `timestamp_chiusura` int(11) DEFAULT NULL,                      -- timestamp di chiusura del documento
   `note_chiusura` text DEFAULT NULL,                              -- note di chiusura
   `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato il documento
