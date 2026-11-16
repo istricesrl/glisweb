@@ -3069,6 +3069,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_causale,
 		documenti.id_trasportatore,
 		documenti.porto,
+		documenti.numero_colli,
+		documenti.numero_pallet,
 		documenti.id_pianificazione,
 		documenti.id_progetto,
 		group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,

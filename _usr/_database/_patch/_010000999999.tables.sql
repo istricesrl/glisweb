@@ -2782,7 +2782,7 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (                  --
 --   data_consegna, token
 -- - commercio: id_coupon, id_carrello, id_carrelli_articoli
 -- - magazzino: id_mastro_provenienza, id_mastro_destinazione
--- - trasporto: id_causale, id_trasportatore, porto
+-- - trasporto: id_causale, id_trasportatore, porto, numero_colli, numero_pallet
 -- - collegamenti: id_pianificazione, id_progetto
 -- - note: note, note_consegna, note_cliente
 -- - chiusura: timestamp_chiusura, note_chiusura
@@ -2834,6 +2834,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
   `id_causale` bigint(20) DEFAULT NULL,                           -- chiave esterna per la causale del trasporto
   `id_trasportatore` bigint(20) DEFAULT NULL,                     -- chiave esterna per l'anagrafica del trasportatore
   `porto` enum('franco','assegnato','-') DEFAULT NULL,            -- porto del trasporto
+  `numero_colli` int(11) DEFAULT NULL,                            -- numero dei colli, totale dichiarato indipendente dai colli censiti
+  `numero_pallet` int(11) DEFAULT NULL,                           -- numero dei pallet, totale dichiarato indipendente dai colli censiti
   `id_pianificazione` bigint(20) DEFAULT NULL,                    -- chiave esterna per la pianificazione che ha generato il documento
   `id_progetto` bigint(20) DEFAULT NULL,                          -- chiave esterna per il progetto collegato al documento
   `note` text DEFAULT NULL,                                       -- note sul documento
