@@ -9702,6 +9702,14 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
 --
 -- NOTA: id_categoria_progetti e' la disciplina del rinnovo ( p.es. il corso a cui da' accesso un abbonamento ).
 --
+-- NOTA: id_articolo e' l'articolo venduto che ha generato il rinnovo ( corso, abbonamento, tesseramento ); per le
+-- iscrizioni fatte da backend, senza carrello ne' documento, e' l'unica traccia dell'articolo. id_periodo lega il
+-- rinnovo a un periodo ( p.es. l'anno sportivo ), e consente p.es. la reiscrizione a un corso frequentato l'anno prima.
+--
+-- NOTA: data_ritiro e' l'ultimo giorno di partecipazione quando il rinnovo viene interrotto ( ritiro, recesso ); i task
+-- di ritiro la scrivono insieme all'accorciamento di data_fine, e NULL vuol dire che il rinnovo non e' stato interrotto:
+-- con le sole date un rinnovo finito non si distingue da uno interrotto.
+--
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` bigint(20) NOT NULL,                                     -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                       -- chiave esterna per la tipologia del rinnovo
@@ -9712,8 +9720,11 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id_pianificazione` bigint(20) DEFAULT NULL,                  -- chiave esterna per la pianificazione che ha generato il rinnovo
   `id_categoria_progetti` bigint(20) DEFAULT NULL,              -- chiave esterna per la disciplina ( categoria di progetti )
   `id_licenza` bigint(20) DEFAULT NULL,                         -- chiave esterna per la licenza rinnovata
+  `id_articolo` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'articolo che ha generato il rinnovo
+  `id_periodo` bigint(20) DEFAULT NULL,                         -- chiave esterna per il periodo ( p.es. l'anno sportivo ) del rinnovo
   `data_inizio` date DEFAULT NULL,                              -- primo giorno di validita'
   `data_fine` date DEFAULT NULL,                                -- ultimo giorno di validita'
+  `data_ritiro` date DEFAULT NULL,                              -- ultimo giorno di partecipazione, se il rinnovo e' stato interrotto
   `note` text DEFAULT NULL,                                     -- note sul rinnovo
   `se_automatico` tinyint(1) DEFAULT NULL,                      -- tacito rinnovo pattuito nel contratto
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account di inserimento

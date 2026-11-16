@@ -5903,6 +5903,8 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_periodo` (`id_periodo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`id_progetto`,`id_contratto`,`id_categoria_progetti`,`id_licenza`,`data_inizio`,`data_fine`,`se_automatico`);

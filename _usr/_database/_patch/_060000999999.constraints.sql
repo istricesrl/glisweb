@@ -2157,6 +2157,8 @@ ALTER TABLE `rinnovi`
     ADD CONSTRAINT `rinnovi_ibfk_05_nofollow`                FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_ibfk_06_nofollow`                FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_ibfk_07`                         FOREIGN KEY (`id_licenza`) REFERENCES `licenze` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `rinnovi_ibfk_08_nofollow`                FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `rinnovi_ibfk_09_nofollow`                FOREIGN KEY (`id_periodo`) REFERENCES `periodi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_ibfk_98_nofollow`                FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_ibfk_99_nofollow`                FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 

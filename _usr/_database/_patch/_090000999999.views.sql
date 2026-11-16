@@ -6672,7 +6672,7 @@ CREATE OR REPLACE VIEW reparti_view AS
 
 -- rinnovi_view
 -- tipologia: tabella gestita
--- verifica: 2026-11-11 punto 6, riga 244
+-- verifica: 2026-11-16 punto 7b, caso C6
 CREATE OR REPLACE VIEW `rinnovi_view` AS
 	SELECT
 		rinnovi.id,
@@ -6691,8 +6691,13 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		rinnovi.id_licenza,
 		licenze.nome AS licenza,
 		licenze.codice AS codice_licenza,
+		rinnovi.id_articolo,
+		articoli.nome AS articolo,
+		rinnovi.id_periodo,
+		periodi.nome AS periodo,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
+		rinnovi.data_ritiro,
 		rinnovi.note,
 		rinnovi.se_automatico,
 		rinnovi.id_account_inserimento,
@@ -6713,6 +6718,8 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto )
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza
+		LEFT JOIN articoli ON articoli.id = rinnovi.id_articolo
+		LEFT JOIN periodi ON periodi.id = rinnovi.id_periodo
 ;
 
 -- | 090000031551
