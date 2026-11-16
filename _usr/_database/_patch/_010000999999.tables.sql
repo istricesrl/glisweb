@@ -9592,6 +9592,7 @@ CREATE TABLE IF NOT EXISTS `carrelli` (
   `fatturazione_id_tipologia_documento` bigint(20) DEFAULT NULL,-- chiave esterna per la tipologia del documento da emettere
   `fatturazione_sezionale` char(16) DEFAULT NULL,               -- sezionale del documento da emettere
   `fatturazione_strategia` enum('SINGOLA','MULTIPLA') DEFAULT NULL,-- strategia di fatturazione ( SINGOLA o MULTIPLA )
+  `note_fatturazione` text DEFAULT NULL,                        -- note per la fatturazione ( riportate sul documento )
   `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,             -- totale netto delle righe
   `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,             -- totale lordo delle righe
   `costo_spedizione_netto` decimal(16,5) DEFAULT NULL,          -- costo di spedizione netto

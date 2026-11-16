@@ -1496,6 +1496,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 		carrelli.fatturazione_id_tipologia_documento,
 		carrelli.fatturazione_sezionale,
 		carrelli.fatturazione_strategia,
+		carrelli.note_fatturazione,
 		carrelli.prezzo_netto_totale,
 		carrelli.prezzo_lordo_totale,
 		carrelli.costo_spedizione_netto,
