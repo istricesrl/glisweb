@@ -3245,6 +3245,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		coalesce( lotti.data_scadenza, matricole.data_scadenza ) AS data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
+		documenti_articoli.timestamp_chiusura,
+		documenti_articoli.note_chiusura,
         documenti.data_archiviazione,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,

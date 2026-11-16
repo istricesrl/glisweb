@@ -2886,6 +2886,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- - collegamenti: id_reparto, id_progetto, id_todo, id_attivita, id_pianificazione, id_immobile
 -- - testo: specifiche, note
 -- - consegna: data_consegna, note_consegna
+-- - chiusura: timestamp_chiusura, note_chiusura
 -- - audit
 --
 -- NOTA il movimento lo fa la riga: i mastri di provenienza e di destinazione della testata del documento sono solo il
@@ -2904,6 +2905,10 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- NOTA le righe figlie ( id_genitore ) sono di raggruppamento, di dettaglio o di evasione, secondo i flag se_dettaglio
 -- e se_evasione della loro tipologia; un prodotto può essere evaso da articoli di taglio diverso, convertendo peso e
 -- unità di misura ( vedi __report_evasione_righe_ordini__ )
+--
+-- NOTA la chiusura non è l'evasione: l'evasione dice cosa è arrivato, la chiusura dice che dalla riga non ci si
+-- aspetta altro, anche se è arrivato meno dell'ordinato o se lo decide un sistema esterno; serve a togliere dalle liste
+-- di lavoro le righe chiuse di un documento ancora aperto, che non si possono cancellare perché hanno righe figlie
 --
 -- NOTA id_caratteristica è un secondo livello di raggruppamento sotto id_genitore: vale per le righe figlie di una
 -- riga di raggruppamento, e dice per quale caratteristica sono alternative fra loro ( "all'interno di questo gruppo
@@ -2962,6 +2967,8 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `note` text DEFAULT NULL,                                       -- note sulla riga
   `data_consegna` date DEFAULT NULL,                              -- data di consegna
   `note_consegna` text DEFAULT NULL,                              -- note sulla consegna
+  `timestamp_chiusura` int(11) DEFAULT NULL,                      -- timestamp di chiusura della riga
+  `note_chiusura` text DEFAULT NULL,                              -- note di chiusura della riga
   `id_account_inserimento` bigint(20) DEFAULT NULL,               -- chiave esterna per l'account che ha inserito la riga
   `timestamp_inserimento` int(11) DEFAULT NULL,                   -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha aggiornato la riga
