@@ -5755,6 +5755,7 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		prezzi.provvigione_fissa,
 		prezzi.id_reparto,
 		reparti.nome AS reparto,
+		prezzi.note,
 		prezzi.id_account_inserimento,
 		prezzi.id_account_aggiornamento,
 		concat_ws(

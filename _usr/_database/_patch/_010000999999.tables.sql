@@ -5379,7 +5379,8 @@ CREATE TABLE IF NOT EXISTS `popup_pagine` (
 -- ( qta_min, qta_max ) e per periodo ( data_inizio, data_fine ): il prezzo che vale è quello della riga con l'inizio
 -- più recente e lo scaglione più alto fra quelle che comprendono data e quantità, e lo storico si tiene chiudendo le
 -- righe superate con data_fine; la chiave unica è listino, oggetto, qta_min, data_inizio; se un listino non ha il
--- prezzo vale quello del listino genitore ( specificità lungo l'albero, vedi listini )
+-- prezzo vale quello del listino genitore ( specificità lungo l'albero, vedi listini ); le note stanno sulla voce di
+-- listino e non sull'articolo, perché la stessa opzione può avere vincoli diversi in listini diversi
 --
 -- NOTA le provvigioni sono per riga di listino; provvigioni per cliente o per categoria non sono ancora previste
 --
@@ -5401,6 +5402,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (                           --
   `provvigione_percentuale` decimal(16,5) DEFAULT NULL,         -- provvigione percentuale sul prezzo
   `provvigione_fissa` decimal(16,5) DEFAULT NULL,               -- provvigione fissa, nella valuta del listino
   `id_reparto` bigint(20) DEFAULT NULL,                         -- chiave esterna per il reparto di cassa del prezzo
+  `note` text DEFAULT NULL,                                     -- note sul prezzo, p.es. vincoli o condizioni della voce di listino
   `id_account_inserimento` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha inserito il prezzo
   `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
   `id_account_aggiornamento` bigint(20) DEFAULT NULL,           -- chiave esterna per l'account che ha aggiornato il prezzo
