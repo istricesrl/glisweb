@@ -807,6 +807,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (                         --
   `ora_fine` time DEFAULT NULL,                                   -- ora di fine dell'attività
   `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,               -- latitudine al momento della fine dell'attività
   `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,              -- longitudine al momento della fine dell'attività
+  `note_fine` text DEFAULT NULL,                                  -- note sulla fine dell'attività ( distinte da note )
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,             -- timestamp dell'ultimo calcolo dei sostituti
   `id_account_archiviazione` bigint(20) DEFAULT NULL,             -- chiave esterna per l'account che ha archiviato l'attività
   `data_archiviazione` date DEFAULT NULL,                         -- data di archiviazione

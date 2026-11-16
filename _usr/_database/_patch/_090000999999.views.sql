@@ -956,6 +956,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		attivita.ora_fine,                                    --
 		attivita.latitudine_ora_fine,                         --
 		attivita.longitudine_ora_fine,                        --
+		attivita.note_fine,                                   --
 		attivita.id_anagrafica,                               --
 		coalesce(                                             --
             a1.denominazione,                                 --
