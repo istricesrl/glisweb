@@ -3138,6 +3138,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.id_tipologia AS id_tipologia_riga,
 		tipologie_documenti_articoli.nome AS tipologia_riga,
+		documenti_articoli.id_caratteristica,
+		caratteristiche.nome AS caratteristica,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
 		documenti.codice AS codice_documento,
@@ -3288,6 +3290,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
 		LEFT JOIN tipologie_documenti_articoli ON tipologie_documenti_articoli.id = documenti_articoli.id_tipologia
+		LEFT JOIN caratteristiche ON caratteristiche.id = documenti_articoli.id_caratteristica
 ;
 
 -- | 090000010051

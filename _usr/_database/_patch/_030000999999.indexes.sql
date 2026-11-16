@@ -1757,6 +1757,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_tipologia_documento` (`id_tipologia_documento`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_missione` (`id_missione`),

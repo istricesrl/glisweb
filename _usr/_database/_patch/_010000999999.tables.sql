@@ -2874,7 +2874,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- quindi ogni modifica a questa tabella va valutata dal punto di vista di tutti i moduli che la leggono
 --
 -- le colonne sono raggruppate per funzione, nell'ordine in cui compaiono:
--- - testata: id_genitore, id_tipologia, id_tipologia_documento, ordine, codice, nome
+-- - testata: id_genitore, id_tipologia, id_tipologia_documento, id_caratteristica, ordine, codice, nome
 -- - documenti: id_documento, data, id_missione, id_packing_list
 -- - anagrafiche: id_emittente, id_destinatario
 -- - articolo: id_articolo, id_prodotto, id_lotto, id_matricola, id_udm, quantita_prevista, quantita
@@ -2903,6 +2903,10 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
 -- e se_evasione della loro tipologia; un prodotto può essere evaso da articoli di taglio diverso, convertendo peso e
 -- unità di misura ( vedi __report_evasione_righe_ordini__ )
 --
+-- NOTA id_caratteristica è un secondo livello di raggruppamento sotto id_genitore: vale per le righe figlie di una
+-- riga di raggruppamento, e dice per quale caratteristica sono alternative fra loro ( "all'interno di questo gruppo
+-- le alternative per questa caratteristica sono..." )
+--
 -- NOTA la chiave esterna id_documento è ON DELETE NO ACTION ON UPDATE CASCADE: un documento si cancella solo dopo
 -- averne tolto le righe, cosa che fanno i controller ricalcolando la giacenza
 --
@@ -2911,6 +2915,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (               --
   `id_genitore` bigint(20) DEFAULT NULL,                          -- chiave esterna per la riga genitore ( raggruppamento, dettaglio o evasione )
   `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia della riga ( tipologie_documenti_articoli )
   `id_tipologia_documento` bigint(20) DEFAULT NULL,               -- chiave esterna per il tipo di documento atteso dalla riga, fino al 2026-09-15 si chiamava id_tipologia
+  `id_caratteristica` bigint(20) DEFAULT NULL,                    -- chiave esterna per la caratteristica per cui la riga è alternativa nel suo raggruppamento
   `ordine` int(11) DEFAULT NULL,                                  -- ordine di visualizzazione
   `codice` char(32) DEFAULT NULL,                                 -- codice della riga
   `nome` char(255) DEFAULT NULL,                                  -- descrizione della riga
