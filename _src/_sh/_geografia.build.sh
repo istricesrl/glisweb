@@ -54,7 +54,16 @@ if [ ! -f ./var/geografia.build.conf ]; then
 fi
 
 ## esecuzione
-php ./_src/_cli/_geografia.build.php "$@"
+#
+# da root il PHP gira come www-data, come in _codeception.run.sh: lanciato da root scriverebbe
+# file root:root che il sito poi non riscrive, e su web03 la guardia di php-cli lo ferma comunque
+if [ "$(id -u)" = "0" ]; then
+    ESEGUI="sudo -u www-data"
+else
+    ESEGUI=""
+fi
+
+$ESEGUI php ./_src/_cli/_geografia.build.php "$@"
 GEO_EXIT_CODE=$?
 
 if [ $GEO_EXIT_CODE -ne 0 ]; then
