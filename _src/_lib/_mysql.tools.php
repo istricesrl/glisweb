@@ -133,6 +133,7 @@
      * refreshStaticView()                      | aggiorna una vista statica dalla vista che la alimenta
      * cleanStaticView()                        | toglie da una vista statica le righe che non esistono piu' nella tabella
      * syncStaticView()                         | riallinea a lotti una vista statica con la tabella da cui nasce
+     * fillStaticViews()                        | popola a lotti le viste statiche vuote accanto a una tabella con righe
      * getStaticViewExtension()                 | restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
      * funzioni per le patch del database
@@ -2282,6 +2283,100 @@
         logger('riallineate ' . count($ids) . ' righe di ' . $static, 'static');
 
         return count($ids);
+    }
+
+    /**
+     * popola a lotti le viste statiche vuote accanto a una tabella con righe
+     *
+     * Il ricaricamento dei file base ( mysqlPatchReload() ) ricrea con CREATE TABLE IF NOT EXISTS le statiche che
+     * mancano, e le ricrea vuote: finche' qualcuno non lancia il task di popolazione getStaticViewExtension() fa leggere
+     * la vista, piu' lenta, e nessuno se ne accorge ( utensilerialughese, documenti_view_static, 13/11/2026 ). Questa
+     * funzione cerca le statiche vuote la cui tabella base omonima ha righe e le popola chiamando syncStaticView() in
+     * ciclo, un lotto di $l righe alla volta, finche' non resta niente da riallineare.
+     *
+     * NIENTE RICALCOLO COMPLETO: e' lo stesso lavoro a lotti dei task di popolazione, solo fatto subito. Il ciclo si
+     * ferma anche dopo tanti giri quanti ne servono per la tabella base piu' uno, perche' una vista che non
+     * restituisce tutte le righe della base lascerebbe syncStaticView() a riprenderle per sempre.
+     *
+     * Si saltano, e si dice perche', le statiche senza una tabella base omonima ( offerte_view_static nasce da
+     * documenti e vuole la sua condizione, vedi syncStaticView() ): vanno popolate col loro task.
+     *
+     * L'esito e' un array con tre chiavi:
+     *
+     * chiave       | contenuto
+     * -------------|---------------------------------------------------------------
+     * popolate     | statica => righe presenti alla fine
+     * saltate      | statica => motivo
+     * errori       | statica => righe presenti quando la rigenerazione e' fallita
+     *
+     * @param mysqli $c  connessione
+     * @param int    $l  righe per lotto
+     * @param array  $s  se dato, solo queste statiche, per nome senza suffissi ( 'documenti' )
+     *
+     * @return array     l'esito, come nella tabella qui sopra
+     */
+    function fillStaticViews($c, $l = 1000, $s = null)
+    {
+
+        // esito
+        $r = array('popolate' => array(), 'saltate' => array(), 'errori' => array());
+
+        $l = max(1, (int) $l);
+
+        // le statiche del database, con la tabella omonima se c'e'
+        $statiche = mysqlQuery(
+            $c,
+            "SELECT s.TABLE_NAME AS statica, b.TABLE_NAME AS base FROM INFORMATION_SCHEMA.TABLES s "
+                . "LEFT JOIN INFORMATION_SCHEMA.TABLES b ON b.TABLE_SCHEMA = s.TABLE_SCHEMA AND b.TABLE_TYPE = 'BASE TABLE' "
+                . "AND b.TABLE_NAME = left( s.TABLE_NAME, char_length( s.TABLE_NAME ) - 12 ) "
+                . "WHERE s.TABLE_SCHEMA = database() AND s.TABLE_TYPE = 'BASE TABLE' AND s.TABLE_NAME LIKE '%\\_view\\_static' "
+                . "ORDER BY s.TABLE_NAME"
+        );
+
+        foreach ((is_array($statiche) ? $statiche : array()) as $x) {
+
+            $t = substr($x['statica'], 0, -12);
+
+            if (is_array($s) && ! in_array($t, $s)) {
+                continue;
+            }
+
+            // la statica con righe non e' affare di questa funzione, ci pensano i task
+            if (mysqlSelectValue($c, 'SELECT count(*) FROM ( SELECT id FROM `' . $x['statica'] . '` LIMIT 1 ) AS u') > 0) {
+                continue;
+            }
+
+            if (empty($x['base'])) {
+                $r['saltate'][$x['statica']] = 'nessuna tabella ' . $t . ': si popola col suo task';
+                continue;
+            }
+
+            // righe della base, per il limite dei giri
+            $n = (int) mysqlSelectValue($c, 'SELECT count(*) FROM `' . $t . '`');
+            if ($n == 0) {
+                continue;
+            }
+
+            $giri = (int) ceil($n / $l) + 1;
+            do {
+                $k = syncStaticView($c, $t, $l);
+                $giri--;
+            } while ($k > 0 && $giri > 0);
+
+            $righe = (int) mysqlSelectValue($c, 'SELECT count(*) FROM `' . $x['statica'] . '`');
+
+            if ($k === false) {
+                $r['errori'][$x['statica']] = $righe;
+                logger('popolazione di ' . $x['statica'] . ' interrotta a ' . $righe . ' righe su ' . $n, 'static', LOG_ERR);
+            } else {
+                $r['popolate'][$x['statica']] = $righe;
+                logger('popolata ' . $x['statica'] . ' con ' . $righe . ' righe su ' . $n, 'static', LOG_INFO);
+            }
+
+        }
+
+        // restituisco l'esito
+        return $r;
     }
 
     /**

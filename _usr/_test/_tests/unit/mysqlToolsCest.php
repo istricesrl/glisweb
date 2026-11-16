@@ -26,6 +26,16 @@ class mysqlToolsCest
         $I->see('statica popolata: [_view_static]');
     }
 
+    // fillStaticViews() -> popola a lotti la statica vuota accanto a una tabella con righe, salta quella senza tabella base
+    public function fillStaticViews(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_fillStaticViews.01.php');
+        $I->see('popolata: test_e2e_statica_view_static 5 righe');
+        $I->see('saltata: test_e2e_orfana_view_static nessuna tabella test_e2e_orfana: si popola col suo task');
+        $I->see('errori: 0');
+        $I->see('secondo giro popolate: 0');
+    }
+
     // mysqlPatchCheck() -> deve accettare il livello vero e rifiutare un database pieno a zero o sotto il canone
     public function mysqlPatchCheck(UnitTester $I)
     {

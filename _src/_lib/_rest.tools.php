@@ -437,14 +437,20 @@
      * La chiamata viene fatta con restCall() con il metodo GET, senza dati e con Accept text/plain, e la risposta viene
      * restituita così com'è, senza decodifica; in caso di errore di rete la funzione restituisce false.
      *
+     * Il tempo massimo, se dato, vale per tutta la chiamata, connessione compresa ( CURLOPT_TIMEOUT ): serve a chi
+     * chiama durante una richiesta HTTP e non puo' permettersi di aspettare il default, come il controllo della
+     * versione in _030.common.php.
+     *
      * @param       string      $url            l'URL da chiamare
+     * @param       int         $timeout        il tempo massimo della chiamata in secondi (default NULL, cioe'
+     *                                          quello di restCall())
      *
      * @return      mixed                       il corpo della risposta, oppure false in caso di errore di rete
      *
      */
-    function restGetString( $url ) {
+    function restGetString( $url, $timeout = NULL ) {
 
-        $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN );
+        $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN, $status, array(), NULL, NULL, $error, NULL, CURLAUTH_BASIC, $raw, $resHeaders, $timeout );
 
         return $r;
 

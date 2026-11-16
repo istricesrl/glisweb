@@ -59,6 +59,14 @@ class restToolsCest
         \Helper\RestMock::pulisci();
     }
 
+    // restGetString() col tempo massimo -> verso un indirizzo che non risponde torna false entro il tempo dato
+    public function restGetStringTimeout(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_rest.tools/_restGetString.timeout.01.php');
+        $I->see('risposta: bool(false)');
+        $I->see('entro il tempo: si');
+    }
+
     // il finto REST aperto da Apache non fa niente
     public function fintoRestNonRispondeDaApache(UnitTester $I)
     {
