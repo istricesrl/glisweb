@@ -115,4 +115,34 @@
 
         }
 
+        // le viste del file base citano solo colonne che il CREATE TABLE del canone ha: su un database costruito da zero
+        // una colonna rimasta solo sui deploy vecchi ferma la coda con 1054 ( carrelli.id_documento, 17/11/2026 )
+        public function vistaColonneDelCanone( UnitTester $I ) {
+
+            $d = DIR_BASE . '_usr/_database/_patch/';
+
+            $colonne = array();
+            preg_match_all( '/CREATE TABLE IF NOT EXISTS `([a-z0-9_]+)` \((.*?)\n\)/s', file_get_contents( $d . '_010000999999.tables.sql' ), $t, PREG_SET_ORDER );
+            foreach( $t as $x ) {
+                preg_match_all( '/^\s*`([a-z0-9_]+)`/m', $x[2], $c );
+                $colonne[ $x[1] ] = array_flip( $c[1] );
+            }
+            $I->assertNotEmpty( $colonne, 'nessuna tabella letta: il test non prova niente' );
+
+            $mancanti = array();
+            $viste = preg_split( '/CREATE\s+OR\s+REPLACE\s+VIEW/i', preg_replace( '/--[^\n]*/', '', file_get_contents( $d . '_090000999999.views.sql' ) ) );
+            foreach( $viste as $v ) {
+                if( ! preg_match( '/^\s*`?([a-z0-9_]+)`?/', $v, $n ) ) { continue; }
+                preg_match_all( '/\b([a-z_][a-z0-9_]*)\.`?([a-z_][a-z0-9_]*)`?/i', $v, $r, PREG_SET_ORDER );
+                foreach( $r as $y ) {
+                    if( isset( $colonne[ $y[1] ] ) && ! isset( $colonne[ $y[1] ][ $y[2] ] ) ) {
+                        $mancanti[ $n[1] . ': ' . $y[1] . '.' . $y[2] ] = true;
+                    }
+                }
+            }
+
+            $I->assertEmpty( $mancanti, 'colonne che il canone non ha, 1054 su un database nuovo: ' . implode( ', ', array_keys( $mancanti ) ) );
+
+        }
+
     }

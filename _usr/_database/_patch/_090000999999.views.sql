@@ -5381,7 +5381,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.nome,
 		pagamenti.note,
 		pagamenti.note_pagamento,
-		coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento ) AS id_documento,
+		coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento ) AS id_documento,
 		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
@@ -5443,8 +5443,9 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN carrelli ON carrelli.id = pagamenti.id_carrello
+		LEFT JOIN carrelli_documenti ON carrelli_documenti.id_carrello = carrelli.id
 		LEFT JOIN documenti_articoli ON documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
-		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento )
+		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento )
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
