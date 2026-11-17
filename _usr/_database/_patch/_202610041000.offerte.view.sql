@@ -56,12 +56,8 @@ CREATE TABLE IF NOT EXISTS `offerte_view_static` (            --
 
 -- | 202610041002
 
-REPLACE INTO `offerte_view_static` ( `id`, `id_tipologia`, `tipologia`, `codice`, `numero`, `sezionale`, `data`, `nome`, `id_emittente`, `emittente`, `id_destinatario`, `destinatario`, `id_mastro_provenienza`, `mastro_provenienza`, `id_mastro_destinazione`, `mastro_destinazione`, `id_causale`, `porto`, `id_trasportatore`, `id_account_inserimento`, `id_account_aggiornamento`, `__label__`, `timestamp_inserimento`, `timestamp_aggiornamento` )
-    SELECT offerte_view.`id`, offerte_view.`id_tipologia`, offerte_view.`tipologia`, offerte_view.`codice`, offerte_view.`numero`, offerte_view.`sezionale`, offerte_view.`data`, offerte_view.`nome`, offerte_view.`id_emittente`, offerte_view.`emittente`, offerte_view.`id_destinatario`, offerte_view.`destinatario`, offerte_view.`id_mastro_provenienza`, offerte_view.`mastro_provenienza`, offerte_view.`id_mastro_destinazione`, offerte_view.`mastro_destinazione`, offerte_view.`id_causale`, offerte_view.`porto`, offerte_view.`id_trasportatore`, offerte_view.`id_account_inserimento`, offerte_view.`id_account_aggiornamento`, offerte_view.`__label__`,
-        coalesce( documenti.timestamp_inserimento, unix_timestamp() ),
-        coalesce( documenti.timestamp_aggiornamento, unix_timestamp() )
-    FROM offerte_view
-        INNER JOIN documenti ON documenti.id = offerte_view.id;
+-- vuota dal 17/11/2026: su un DB legacy offerte_view non c'e' e il REPLACE si fermava in 1146; il ripopolamento sta
+-- nel 202610041006, dietro la procedura che lo salta se la vista manca
 
 -- | 202610041003
 
@@ -70,6 +66,48 @@ DROP TABLE IF EXISTS `offerte_attive_view_static`;
 -- | 202610041004
 
 DROP VIEW IF EXISTS `offerte_attive_view`;
+
+-- | 202610041005
+
+-- la procedura che, se la tabella c'e', prova un'istruzione e, se fallisce, lo annota invece di fermare la coda: e'
+-- quella di _202611121300, creata in un blocco piu' alto di tutti quelli vecchi del file perche' la trovi anche un
+-- deploy fermo a meta' ( 17/11/2026 )
+CREATE OR REPLACE PROCEDURE `__patch_statiche_forma__`( IN tabella VARCHAR(64), IN istruzione LONGTEXT )
+BEGIN
+
+    DECLARE messaggio TEXT DEFAULT NULL;
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+        BEGIN
+            GET DIAGNOSTICS CONDITION 1 messaggio = MESSAGE_TEXT;
+        END;
+
+    IF EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = tabella ) THEN
+
+        SET @statiche_forma_sql = istruzione;
+        PREPARE prova FROM @statiche_forma_sql;
+        IF messaggio IS NULL THEN
+            EXECUTE prova;
+            DEALLOCATE PREPARE prova;
+        END IF;
+
+        IF messaggio IS NOT NULL THEN
+            SET @statiche_forma_note = CONCAT_WS( '\n', @statiche_forma_note, CONCAT( tabella, ': ', messaggio ) );
+        END IF;
+
+    END IF;
+
+END;
+
+-- | 202610041006
+
+-- offerte_view_static: il ripopolamento ( era il 202610041002 ), che si salta se offerte_view non c'e': li' la
+-- statica nasce vuota e la popola fillStaticViews() quando il ricaricamento dei file base crea la vista
+CALL `__patch_statiche_forma__`( 'offerte_view', 'REPLACE INTO `offerte_view_static` ( `id`, `id_tipologia`, `tipologia`, `codice`, `numero`, `sezionale`, `data`, `nome`, `id_emittente`, `emittente`, `id_destinatario`, `destinatario`, `id_mastro_provenienza`, `mastro_provenienza`, `id_mastro_destinazione`, `mastro_destinazione`, `id_causale`, `porto`, `id_trasportatore`, `id_account_inserimento`, `id_account_aggiornamento`, `__label__`, `timestamp_inserimento`, `timestamp_aggiornamento` )
+    SELECT offerte_view.`id`, offerte_view.`id_tipologia`, offerte_view.`tipologia`, offerte_view.`codice`, offerte_view.`numero`, offerte_view.`sezionale`, offerte_view.`data`, offerte_view.`nome`, offerte_view.`id_emittente`, offerte_view.`emittente`, offerte_view.`id_destinatario`, offerte_view.`destinatario`, offerte_view.`id_mastro_provenienza`, offerte_view.`mastro_provenienza`, offerte_view.`id_mastro_destinazione`, offerte_view.`mastro_destinazione`, offerte_view.`id_causale`, offerte_view.`porto`, offerte_view.`id_trasportatore`, offerte_view.`id_account_inserimento`, offerte_view.`id_account_aggiornamento`, offerte_view.`__label__`,
+        coalesce( documenti.timestamp_inserimento, unix_timestamp() ),
+        coalesce( documenti.timestamp_aggiornamento, unix_timestamp() )
+    FROM offerte_view
+        INNER JOIN documenti ON documenti.id = offerte_view.id' );
 
 -- | 202610041010
 

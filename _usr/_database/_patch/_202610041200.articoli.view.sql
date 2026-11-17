@@ -10,11 +10,11 @@
 -- posizione della vista, e la statica si ripopola per intero.
 --
 -- nome nella statica era char(128), ma nella vista e' prodotto + articolo e supera i 128 caratteri
--- ( polmasi prod: 8 articoli, errore 1406 sul ripopolamento ): diventa varchar(512). Per i deploy
--- gia' arrivati al 1202 lo fa _202610041203.
+-- ( polmasi prod: 8 articoli, errore 1406 sul ripopolamento ): diventa varchar(512).
 --
--- il ripopolamento della statica non sta qui ma nel blocco 1204 di _202610041203: un blocco e' una
--- query sola, e ALTER + REPLACE nello stesso blocco davano 1064 ( eurosnodi crm dev, 20/10/2026 ).
+-- dal 17/11/2026 colonne, nome e ripopolamento stanno tutti in _202610041203 ( blocchi 1205-1207 ), dietro una
+-- procedura che li salta se la statica non c'e': su un DB legacy questi blocchi si fermavano in 1146. Li' la statica
+-- la crea il ricaricamento dei file base, gia' nella forma del canone, e la popola fillStaticViews().
 --
 -- ⚠ I deploy con una articoli_view di progetto ( utensilerialughese: usr/database/patch/202609281100 ) dopo
 -- questa patch hanno la vista dello standard: va seguita da una patch di progetto che rimetta la loro.
@@ -26,13 +26,12 @@
 
 -- | 202610041201
 
-ALTER TABLE `articoli_view_static`
-	ADD COLUMN IF NOT EXISTS `tipologia_listino` char(64) DEFAULT NULL FIRST,
-	ADD COLUMN IF NOT EXISTS `pubblicazione` char(32) DEFAULT NULL FIRST,
-	ADD COLUMN IF NOT EXISTS `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL FIRST;
+-- vuota dal 17/11/2026: su un DB legacy articoli_view_static non c'e' e l'ALTER si fermava in 1146; sta nel
+-- 202610041206 di _202610041203, dietro la procedura che lo salta se la statica manca
 
 -- | 202610041202
 
-ALTER TABLE `articoli_view_static` MODIFY `nome` varchar(512) DEFAULT NULL;
+-- vuota dal 17/11/2026: su un DB legacy articoli_view_static non c'e' e l'ALTER si fermava in 1146; sta nel
+-- 202610041206 di _202610041203, dietro la procedura che lo salta se la statica manca
 
 -- | FINE
