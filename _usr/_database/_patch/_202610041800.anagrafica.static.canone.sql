@@ -61,7 +61,23 @@ CREATE TABLE `anagrafica_view_static__nuova` (
 
 -- | 202610041802
 
-INSERT INTO `anagrafica_view_static__nuova` SELECT * FROM `anagrafica_view`;
+-- le colonne si nominano: su un canone costruito da zero la vista ha gia' le cinque dei diritti ( 202611121200 ), che
+-- la statica prende piu' avanti con la 202611121243, e un SELECT * qui si fermava in 1136 ( 17/11/2026 )
+INSERT INTO `anagrafica_view_static__nuova` (
+  `id`, `id_tipologia`, `tipologia`, `codice`, `riferimento`, `nome`, `cognome`, `denominazione`, `soprannome`, `sesso`,
+  `codice_fiscale`, `partita_iva`, `id_ranking`, `ranking`, `recapiti`, `id_stato`, `id_provincia`, `se_prospect`,
+  `se_lead`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`,
+  `se_commerciale`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_notizie`, `categorie`, `telefoni`, `mail`,
+  `anno_nascita`, `mese_nascita`, `giorno_nascita`, `data_nascita`, `id_comune_nascita`, `data_archiviazione`,
+  `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `__label__`
+) SELECT
+  `id`, `id_tipologia`, `tipologia`, `codice`, `riferimento`, `nome`, `cognome`, `denominazione`, `soprannome`, `sesso`,
+  `codice_fiscale`, `partita_iva`, `id_ranking`, `ranking`, `recapiti`, `id_stato`, `id_provincia`, `se_prospect`,
+  `se_lead`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`,
+  `se_commerciale`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_notizie`, `categorie`, `telefoni`, `mail`,
+  `anno_nascita`, `mese_nascita`, `giorno_nascita`, `data_nascita`, `id_comune_nascita`, `data_archiviazione`,
+  `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `__label__`
+FROM `anagrafica_view`;
 
 -- | 202610041803
 
