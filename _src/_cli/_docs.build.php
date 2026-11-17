@@ -28,6 +28,34 @@
     // la document root e' la cartella da cui lo script wrapper ha gia' fatto cd
     define( 'DOCS_BASE', rtrim( getcwd(), '/' ) . '/' );
 
+    // scritture fallite durante il giro: le conta docsBuildFallita(), e se ce n'e' anche una sola
+    // l'uscita non e' zero, cosi' _gw.upgrade.sh e _codeception.run.sh se ne accorgono
+    $docsFallite = 0;
+
+    /**
+     * segnala una scrittura fallita
+     *
+     * Ogni mkdir, copy, file_put_contents o chmod del generatore che non va a buon fine passa di
+     * qui: il messaggio va su STDERR e il fallimento viene contato per il codice di uscita. Fino al
+     * 17/11/2026 la protezione e la pubblicazione dell'esito dei test dichiaravano il successo anche
+     * quando la scrittura falliva, e la documentazione e' fail-closed: un falso "protezione
+     * garantita" e' il messaggio peggiore da sbagliare.
+     *
+     * @param   string      $messaggio      cosa non e' stato fatto, senza il "NON" iniziale
+     *
+     * @return  bool                        sempre false, per poterla restituire direttamente
+     *
+     */
+    function docsBuildFallita( $messaggio ) {
+
+        $GLOBALS['docsFallite']++;
+
+        fwrite( STDERR, "  NON $messaggio\n" );
+
+        return false;
+
+    }
+
     /**
      * le famiglie di componenti che nel manuale stanno in un sottomenu
      *
@@ -541,8 +569,8 @@
             return false;
         }
 
-        if( ! is_dir( DOCS_BASE . $cartella ) ) {
-            mkdir( DOCS_BASE . $cartella, 0750, true );
+        if( ! is_dir( DOCS_BASE . $cartella ) && ! mkdir( DOCS_BASE . $cartella, 0750, true ) ) {
+            return docsBuildFallita( "protetta $cartella: creazione della cartella fallita, non genero niente" );
         }
 
         $file  = DOCS_BASE . $cartella . '/.htaccess';
@@ -571,16 +599,25 @@
                 $testo .= "\n" . $riga . "\n";
             }
 
-            echo "  riallineato AuthUserFile in $cartella/.htaccess\n";
-
         } else {
 
             return true;
 
         }
 
-        file_put_contents( $file, $testo );
-        chmod( $file, 0640 );
+        // si dichiara solo dopo aver scritto: con la scrittura fallita la cartella resta senza
+        // protezione, o con quella di un altro ambiente, e non ci si genera dentro niente
+        if( file_put_contents( $file, $testo ) === false ) {
+            return docsBuildFallita( "protetta $cartella: scrittura di $cartella/.htaccess fallita, non genero niente" );
+        }
+
+        if( ! chmod( $file, 0640 ) ) {
+            docsBuildFallita( "chiuso $cartella/.htaccess a 0640: chmod fallito" );
+        }
+
+        if( isset( $n ) ) {
+            echo "  riallineato AuthUserFile in $cartella/.htaccess\n";
+        }
 
         echo "  protezione garantita in $cartella/.htaccess\n";
 
@@ -625,7 +662,10 @@
                     mkdir( $dest, 0750, true );
                 }
 
-                copy( $f, $dest . '/' . basename( $f ) );
+                if( ! copy( $f, $dest . '/' . basename( $f ) ) ) {
+                    docsBuildFallita( "copiato " . basename( $f ) . " in $destinazione: copia fallita" );
+                    continue;
+                }
                 $n++;
 
             }
@@ -670,7 +710,7 @@
             } else if( unlink( $p ) ) {
                 echo "  tolto $destinazione/$k.html, non corrisponde a nessun capitolo\n";
             } else {
-                fwrite( STDERR, "  NON tolto $destinazione/$k.html: cancellazione fallita\n" );
+                docsBuildFallita( "tolto $destinazione/$k.html: cancellazione fallita" );
                 continue;
             }
 
@@ -741,7 +781,7 @@
         }
 
         if( file_put_contents( DOCS_BASE . $html, $pagina ) === false ) {
-            fwrite( STDERR, "  NON generato $html: scrittura fallita\n" );
+            docsBuildFallita( "generato $html: scrittura fallita" );
             return false;
         }
 
@@ -809,7 +849,7 @@
         exec( 'rm -rf ' . escapeshellarg( $tmp ) );
 
         if( ! file_exists( DOCS_BASE . $destinazione ) || filesize( DOCS_BASE . $destinazione ) === 0 ) {
-            fwrite( STDERR, "  NON generato $destinazione: chromium non ha prodotto il PDF ( codice $esito )\n" );
+            docsBuildFallita( "generato $destinazione: chromium non ha prodotto il PDF ( codice $esito )" );
             return false;
         }
 
@@ -1070,7 +1110,7 @@
             if( $opzioni['secco'] ) {
                 echo "  [prova] $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             } else if( file_put_contents( DOCS_BASE . $file, $pagina ) === false ) {
-                fwrite( STDERR, "  NON generato $file: scrittura fallita\n" );
+                docsBuildFallita( "generato $file: scrittura fallita" );
                 continue;
             } else {
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
@@ -1128,8 +1168,11 @@
         if( $opzioni['secco'] ) {
             echo "  [prova] $destinazione/index.html\n";
         } else {
-            file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
-            echo "  generato $destinazione/index.html\n";
+            if( file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina ) === false ) {
+                docsBuildFallita( "generato $destinazione/index.html: scrittura fallita" );
+            } else {
+                echo "  generato $destinazione/index.html\n";
+            }
         }
 
         // 'tutto' non e' un capitolo ma e' una pagina viva: senza questa riga la potatura la
@@ -1221,7 +1264,7 @@
             if( $opzioni['secco'] ) {
                 echo "  [prova] $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
             } else if( file_put_contents( DOCS_BASE . $file, $pagina ) === false ) {
-                fwrite( STDERR, "  NON generato $file: scrittura fallita\n" );
+                docsBuildFallita( "generato $file: scrittura fallita" );
                 continue;
             } else {
                 echo "  generato $file (" . number_format( strlen( $pagina ) ) . " byte)\n";
@@ -1257,7 +1300,7 @@
             if( $opzioni['secco'] ) {
                 echo "  [prova] $destinazione/index.html\n";
             } else if( file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina ) === false ) {
-                fwrite( STDERR, "  NON generato $destinazione/index.html: scrittura fallita\n" );
+                docsBuildFallita( "generato $destinazione/index.html: scrittura fallita" );
             } else {
                 echo "  generato $destinazione/index.html\n";
             }
@@ -1379,7 +1422,7 @@
         }
 
         if( file_put_contents( DOCS_BASE . $destinazione, $pagina ) === false ) {
-            fwrite( STDERR, "  NON generato $destinazione: scrittura fallita\n" );
+            docsBuildFallita( "generato $destinazione: scrittura fallita" );
             return 0;
         }
 
@@ -1462,24 +1505,46 @@
             return 0;
         }
 
-        if( ! is_dir( DOCS_BASE . $destinazione ) ) {
-            mkdir( DOCS_BASE . $destinazione, 0750, true );
+        if( ! is_dir( DOCS_BASE . $destinazione ) && ! mkdir( DOCS_BASE . $destinazione, 0750, true ) ) {
+            docsBuildFallita( "pubblicata l'esecuzione " . basename( $ultima ) . ": creazione di $destinazione/ fallita" );
+            return 0;
         }
 
+        // ogni scrittura si conta: la riga "pubblicata" esce solo se sono andate tutte
+        $prima  = $GLOBALS['docsFallite'];
+        $fatte  = 0;
+
         foreach( glob( DOCS_BASE . $destinazione . '/*.report.html' ) as $vecchio ) {
-            unlink( $vecchio );
+            if( ! unlink( $vecchio ) ) {
+                docsBuildFallita( "tolto $destinazione/" . basename( $vecchio ) . ": cancellazione fallita" );
+            }
         }
 
         foreach( $report as $r ) {
-            copy( $r, DOCS_BASE . $destinazione . '/' . basename( $r ) );
+            if( copy( $r, DOCS_BASE . $destinazione . '/' . basename( $r ) ) ) {
+                $fatte++;
+            } else {
+                docsBuildFallita( "copiato $destinazione/" . basename( $r ) . ": copia fallita" );
+            }
         }
 
-        copy( $ultima . '/esito.md', DOCS_BASE . $destinazione . '/esito.md' );
-        file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina );
+        if( copy( $ultima . '/esito.md', DOCS_BASE . $destinazione . '/esito.md' ) ) {
+            $fatte++;
+        } else {
+            docsBuildFallita( "copiato $destinazione/esito.md: copia fallita" );
+        }
 
-        echo "  pubblicata l'esecuzione " . basename( $ultima ) . " in $destinazione/ ( " . count( $report ) . " report )\n";
+        if( file_put_contents( DOCS_BASE . $destinazione . '/index.html', $pagina ) !== false ) {
+            $fatte++;
+        } else {
+            docsBuildFallita( "generato $destinazione/index.html: scrittura fallita" );
+        }
 
-        return count( $report ) + 2;
+        if( $GLOBALS['docsFallite'] === $prima ) {
+            echo "  pubblicata l'esecuzione " . basename( $ultima ) . " in $destinazione/ ( " . count( $report ) . " report )\n";
+        }
+
+        return $fatte;
 
     }
 
@@ -1611,6 +1676,16 @@
 
         docsBuildDisimpegno( '_usr/_pages/_doc.html', array( 'secco' => $secco ) );
 
+    }
+
+    // un'uscita diversa da zero fa dire "generazione della documentazione fallita" a _docs.build.sh e
+    // "ATTENZIONE" a _gw.upgrade.sh; il codice 3 la distingue dall'uso sbagliato ( 1 ) e dal percorso
+    // fuori dalla document root ( 2 ). Il caso tipico sono i permessi: le cartelle sotto usr/pages/
+    // sono di root e chiuse a 750/640 da _docs.build.sh, quindi la generazione va lanciata da root,
+    // come fanno _gw.upgrade.sh e _codeception.run.sh
+    if( $docsFallite ) {
+        fwrite( STDERR, "$docsFallite scritture fallite: se e' per i permessi, la generazione va lanciata da root\n" );
+        exit( 3 );
     }
 
     exit( 0 );

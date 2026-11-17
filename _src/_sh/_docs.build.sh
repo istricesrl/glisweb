@@ -17,6 +17,10 @@
 #   _docs.build.sh --all          tutte le precedenti
 #   _docs.build.sh --dry-run      elenca cosa genererebbe, non scrive niente
 #
+# se una scrittura fallisce il PHP lo dice ( righe "NON ..." ) ed esce con 3, e questo script esce
+# senza toccare i permessi; la causa tipica e' l'utente: le cartelle generate sono root:www-data
+# 750/640, quindi lo script va lanciato da root, come fanno _gw.upgrade.sh e il cron
+#
 # NOTA lo script NON esegue "clear": viene invocato in coda a _gw.upgrade.sh e da cron, dove
 # ripulire lo schermo cancellerebbe l'output di chi lo ha chiamato
 #
