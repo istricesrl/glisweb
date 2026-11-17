@@ -65,7 +65,7 @@
             $w = json_decode( $wsp, true );
             if( !empty( $w['sostituzioni'] ) ){
                 foreach( $w['sostituzioni'] as $k => $v ){
-                    $t = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "' . $k . '_view_static"' );
+                    $t = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME like "' . $k . '_view_static"' );
                     if( !empty( $t ) ){
                          $s[] = $k;
                     }              
