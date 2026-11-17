@@ -4,7 +4,7 @@
  * test del ricaricamento dei file base ( mysqlPatchReload...() di _src/_lib/_mysql.tools.php )
  *
  * il ricaricamento riesegue procedure, viste, statiche e report dopo le patch, saltando gli oggetti che il progetto
- * ridefinisce in usr/database/patch/; qui si provano le parti che decidono cosa eseguire e cosa saltare, senza
+ * ridefinisce in usr/database/owned/ ( o ancora in usr/database/patch/ ); qui si provano le parti che decidono cosa eseguire e cosa saltare, senza
  * toccare il database: l'ordine dei file, il nome dell'oggetto di una query e l'elenco degli oggetti del progetto,
  * questo su una document root temporanea
  *
@@ -22,6 +22,7 @@ class patchRicaricaCest
         $this->base = sys_get_temp_dir() . '/glisweb-test-ricarica-' . getmypid() . '/';
         exec( 'rm -rf ' . escapeshellarg( $this->base ) );
         mkdir( $this->base . 'usr/database/patch', 0777, true );
+        mkdir( $this->base . 'usr/database/owned', 0777, true );
     }
 
     // pulizia post test
@@ -62,6 +63,20 @@ class patchRicaricaCest
             array( 'prezzi_view' => '202611040000.prova.sql', 'mia_funzione' => '202611040100.funzione.sql' ),
             mysqlPatchReloadOwned( $this->base )
         );
+    }
+
+    // le definizioni in owned/ contano anche senza marcatori, e a parità di nome vincono su patch/
+    public function oggettiInOwned(UnitTester $I)
+    {
+        file_put_contents( $this->base . 'usr/database/owned/coupon_view.sql',
+            "CREATE OR REPLACE VIEW coupon_view AS SELECT 1;\nCREATE TABLE IF NOT EXISTS `categorie_progetti_anagrafica` ( `id` int );\n" );
+        file_put_contents( $this->base . 'usr/database/patch/202611040000.prova.sql',
+            "-- | 202611040000\nCREATE OR REPLACE VIEW coupon_view AS SELECT 0;\nCREATE OR REPLACE VIEW prezzi_view AS SELECT 1;\n-- | FINE\n" );
+        $I->assertEquals(
+            array( 'coupon_view' => 'coupon_view.sql', 'prezzi_view' => '202611040000.prova.sql', 'categorie_progetti_anagrafica' => 'coupon_view.sql' ),
+            mysqlPatchReloadOwned( $this->base )
+        );
+        $I->assertEquals( array(), array_filter( mysqlPatchFiles( $this->base ), function( $f ) { return strpos( $f, '/owned/' ) !== false; } ) );
     }
 
     // un progetto senza patch non possiede niente

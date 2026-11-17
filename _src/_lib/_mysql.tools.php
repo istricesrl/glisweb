@@ -3574,8 +3574,10 @@
     /**
      * restituisce gli oggetti che il progetto ridefinisce con le sue patch
      *
-     * Legge i file *.sql di usr/database/patch/ e raccoglie i nomi di viste, funzioni, procedure e tabelle che creano:
-     * mysqlPatchReload() li salta, perché li possiede il progetto.
+     * Legge i file *.sql di usr/database/owned/ e raccoglie i nomi di viste, funzioni, procedure e tabelle che creano:
+     * mysqlPatchReload() li salta, perché li possiede il progetto. owned/ tiene le definizioni del progetto, separate
+     * dalle migrazioni, e non la legge il patcher; si legge anche usr/database/patch/, dove le tenevano i deploy prima
+     * del 17/11/2026, e a parità di nome vince owned/.
      *
      * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
      *
@@ -3587,7 +3589,7 @@
 
         // oggetti del progetto
         $o = array();
-        foreach (glob($b . 'usr/database/patch/*.sql') ?: array() as $f) {
+        foreach (glob($b . 'usr/database/{patch,owned}/*.sql', GLOB_BRACE) ?: array() as $f) {
             $t = preg_replace('/^\s*--.*$/m', '', file_get_contents($f));
             preg_match_all('/\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:DEFINER\s*=\s*\S+\s+)?(?:VIEW|FUNCTION|PROCEDURE|TABLE)\s+(?:IF\s+NOT\s+EXISTS\s+)?`?(\w+)`?/i', $t, $m);
             foreach ($m[1] as $n) {
