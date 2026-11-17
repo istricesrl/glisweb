@@ -97,7 +97,7 @@ gesto.** Il `.add.php` non sostituisce lo standard, si carica **in più**, sempr
 `$cf['library']['files']` ): finché le funzioni restano anche nel progetto, il primo aggiornamento che porta lo
 standard nuovo manda il deploy in `Cannot redeclare` **su ogni pagina**, non su una sola. Mettere a monte e
 togliere dal progetto sono **una mossa sola**: prima si toglie dal progetto ( o lo si fa nella stessa finestra
-dell'aggiornamento ), poi si verifica con `_smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
+dell'aggiornamento ), poi si verifica con `SMOKE_BASE_URL=<sito> _smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
 del sottoscorta promosse in `_0500.mastri` e rimaste in `src/lib/mysql.utils.add.php` hanno fermato il sito
 otto minuti e mezzo, col magazzino al lavoro.
 
@@ -636,7 +636,8 @@ _src/_sh/_lamp.setup.sh
 
 Per verificare che una feature funzioni o che una fix sia andata a buon fine, oltre a leggere il codice è disponibile
 lo script `_src/_sh/_smoke.curl.sh` che fa smoke test della web app via `curl` con cookie jar persistente. Utile per
-controllare status code e pattern nell'HTML su pagine pubbliche e su area riservata.
+controllare status code e pattern nell'HTML su pagine pubbliche e su area riservata. L'URL di base va dato sempre
+( `SMOKE_BASE_URL` ), e `sorveglianza <url>` è il giro automatico con l'account `smoke.*` dello shadow.
 
 **Login flow del framework** (utile da sapere quando si scrivono test o si debuggano problemi di auth):
 

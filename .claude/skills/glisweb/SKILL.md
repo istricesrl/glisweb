@@ -309,7 +309,7 @@ Se da un progetto cliente serve correggere il framework standard, il workflow è
 4. **Ridistribuzione subito dopo il push**: `./dev/_src/_sh/_gw.upgrade.sh "$(cat update.branch.conf)"`
    dalla root di **ogni** deploy che ha `update.branch.conf` ( mai su glisweb, glisdev, glistest ). Su
    ognuno si controlla `_etc/_current.version`, che il `.diff` del file promosso nella nuova cartella
-   `disallineamenti/` sia vuoto o assente, e che `_smoke.curl.sh status /` risponda 200. Solo a quel
+   `disallineamenti/` sia vuoto o assente, e che `SMOKE_BASE_URL=https://<sito> _smoke.curl.sh status /` risponda 200 ( senza base lo script si ferma ). Solo a quel
    punto la modifica è davvero fatta.
 
 **⚠ Perché subito ( Fabio, 12/10/2026 ).** L'aggiornamento notturno **reinstalla** l'albero `_*` da
@@ -895,7 +895,8 @@ configurazione — è spool.
 | Override di una libreria standard | `src/lib/<nome>.php` (replace), `.add.php` (append) |
 | Override di un template Twig | `src/twig/<nome>.twig` |
 | Attivare un modulo standard | creare la cartella `mod/<nome>/` corrispondente a `_mod/_<nome>/` |
-| Smoke test di una pagina | `_src/_sh/_smoke.curl.sh status <url>` |
+| Smoke test di una pagina | `SMOKE_BASE_URL=https://<sito> _src/_sh/_smoke.curl.sh status <path>` |
+| Giro di sorveglianza ( login e contenuto ) | `_src/_sh/_smoke.curl.sh sorveglianza https://<sito>`, chiavi `smoke.*` |
 | Lanciare i test automatici | `_src/_sh/_codeception.run.sh <unit\|backend\|frontend\|tutte>` |
 | Aggiungere un test del progetto | `usr/test/tests/<suite>/<nome>Cest.php` (vedi `_usr/_docs/_read/180.test.md`) |
 | Aggiornare dipendenze Composer | `composer update` (dalla root del progetto) |
