@@ -1267,7 +1267,10 @@
             }
 
             // aggiungo la riga al DDT. Sta fuori dall'if perche' deve coprire anche le righe
-            // agganciate alla missione dopo la prima generazione del DDT.
+            // agganciate alla missione dopo la prima generazione del DDT. NOTA: la riga non porta
+            // id_tipologia, che dal 15/09/2026 e' la tipologia della RIGA ( tipologie_documenti_articoli )
+            // e non quella del documento: un 4 qui viola la chiave esterna, e l'INSERT IGNORE scarta
+            // la riga senza errore, lasciando il DDT vuoto e la maschera di controllo senza articoli.
             mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
@@ -1275,7 +1278,6 @@
                     'id_documento' => $idDocumento,
                     'quantita' => $riga['quantita'],
                     'id_articolo' => $riga['id_articolo'],
-                    'id_tipologia' => 4,
                     'note' => 'riga generata automaticamente da missione ' . $missione['codice'] . ' per ordine ' . $ordine['codice'],
                 ),
                 'documenti_articoli',

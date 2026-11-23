@@ -1034,16 +1034,17 @@
             return $esito;
         }
 
-        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera di
-        // prelievo riconosce una riga da evadere; id_documento valorizzato perche' senza
-        // documento la stessa maschera non la vedrebbe affatto ( INNER JOIN )
+        // le righe da prelevare: id_genitore NULL perche' e' cosi' che la maschera di prelievo
+        // riconosce una riga da evadere; id_documento valorizzato perche' senza documento la stessa
+        // maschera non la vedrebbe affatto ( INNER JOIN ). NOTA: niente id_tipologia, che dal
+        // 15/09/2026 e' la tipologia della RIGA ( tipologie_documenti_articoli ): il 7 e' quella
+        // del documento, viola la chiave esterna e l'INSERT IGNORE scarterebbe la riga in silenzio
         foreach( $righe as $riga ) {
 
             mysqlInsertRow(
                 $conn,
                 array(
                     'id_documento' => $idRichiesta,
-                    'id_tipologia' => 7,
                     'id_missione' => $esito['id'],
                     'id_articolo' => $riga['id_articolo'],
                     'nome' => $riga['articolo'],
