@@ -5433,7 +5433,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (                           --
 CREATE TABLE IF NOT EXISTS `prodotti` (                           --
   `id` bigint(20) NOT NULL,                                       -- chiave primaria
   `id_tipologia` bigint(20) DEFAULT NULL,                         -- chiave esterna per la tipologia del prodotto
-  `codice` char(32) DEFAULT NULL,                                 -- codice del prodotto
+  `codice` char(64) DEFAULT NULL,                                 -- codice del prodotto
   `nome` char(255) DEFAULT NULL,                                  -- nome del prodotto
   `id_marchio` bigint(20) DEFAULT NULL,                           -- chiave esterna per il marchio del prodotto
   `id_produttore` bigint(20) DEFAULT NULL,                        -- chiave esterna per l'anagrafica del produttore
