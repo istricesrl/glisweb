@@ -47,20 +47,10 @@ CREATE TABLE IF NOT EXISTS `zone_provincie` (
 -- | 202611121501
 
 -- zone_provincie_view
-CREATE OR REPLACE VIEW zone_provincie_view AS
-	SELECT
-		zone_provincie.id,
-		zone_provincie.ordine,
-		zone_provincie.id_zona,
-		zone_path( zone_provincie.id_zona ) AS zona,
-		zone_provincie.id_provincia,
-		provincie.nome AS provincia,
-		zone_provincie.id_account_inserimento,
-		zone_provincie.id_account_aggiornamento,
-		concat( provincie.nome, ' - ', zone_path( zone_provincie.id_zona ) ) AS __label__
-	FROM zone_provincie
-		LEFT JOIN provincie ON provincie.id = zone_provincie.id_provincia
-;
+-- spostata al ricaricamento dei file base ( 24/11 ): la vista chiama funzioni di _070000999999.procedures.sql, che su
+-- un deploy potevano non esserci ancora ( www2 di bernispa: 1305 su tipologie_campagne_path nella 1259 ); mysqlPatchReload
+-- ricarica prima le procedure e poi _090000999999.views.sql, che ha la stessa vista; un blocco di soli commenti non si
+-- applica e non si registra
 
 -- | 202611121502
 
