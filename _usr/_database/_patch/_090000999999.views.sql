@@ -906,7 +906,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
         ) AS luogo,                                           -- percorso del luogo
 		attivita.id_messaggio,                                --
 		attivita.id_asset,                                    --
-		concat( asset.id, ' ', asset.nome ) AS asset,         -- id e nome dell'asset su cui si svolge l'attività
+		concat_ws( ' ', coalesce( asset.codice, asset.id ), asset.nome ) AS asset, -- codice ( o id ) e nome dell'asset su cui si svolge l'attività
         coalesce(                                             --
             attivita.data_attivita,                           --
             attivita.data_programmazione                      --
@@ -1589,7 +1589,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 		carrelli.id_account_aggiornamento,
 		carrelli.timestamp_aggiornamento,
 		from_unixtime( carrelli.timestamp_aggiornamento, '%Y-%m-%d %H:%i' ) AS data_ora_aggiornamento,
-		carrelli.id AS __label__
+		coalesce( carrelli.codice, carrelli.id ) AS __label__
 	FROM carrelli;
 
 -- | 090000003051
@@ -1681,9 +1681,10 @@ CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
 		carrelli_consensi.timestamp_consenso,
 		carrelli_consensi.id_account_inserimento,
 		carrelli_consensi.id_account_aggiornamento,
-		concat( 'consenso ', coalesce( consensi.nome, carrelli_consensi.id_consenso ), ' carrello #', coalesce( carrelli_consensi.id_carrello, '' ) ) AS __label__
+		concat( 'consenso ', coalesce( consensi.nome, carrelli_consensi.id_consenso ), ' carrello #', coalesce( carrelli.codice, carrelli_consensi.id_carrello, '' ) ) AS __label__
 	FROM carrelli_consensi
 		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica
+		LEFT JOIN carrelli ON carrelli.id = carrelli_consensi.id_carrello
 		LEFT JOIN consensi ON consensi.id = carrelli_consensi.id_consenso;
 
 -- | 090000003071
@@ -3171,7 +3172,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		udm_riga.sigla AS udm,
 				concat_ws(
 			' ',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			'/',
 			prodotti.nome,
 			nullif( articoli.nome, prodotti.nome ),
@@ -3264,7 +3265,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
             concat(
                 coalesce( documenti_articoli.quantita, 0 ),
                 ' x ',
-                coalesce( documenti_articoli.id_articolo, '' )
+                coalesce( articoli.codice, documenti_articoli.id_articolo, '' )
             ),
 			coalesce( documenti_articoli.nome, NULL ),
             concat(
@@ -4188,7 +4189,7 @@ CREATE OR REPLACE VIEW `lotti_view` AS
 		lotti.id_articolo,
 		concat_ws(
 			' ',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			prodotti.nome,
 			articoli.nome,
 			coalesce(
@@ -4231,7 +4232,7 @@ CREATE OR REPLACE VIEW `lotti_view` AS
 			' ',
 			lotti.codice,
 			'/',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			'/',
 			prodotti.nome,
 			articoli.nome,
@@ -4659,7 +4660,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		mastri_articoli.id_mastro,
 		mastri_path( mastri_articoli.id_mastro ) AS mastro,
 		mastri_articoli.id_articolo,
-		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome ) AS articolo,
 		mastri_articoli.id_ruolo,
 		ruoli_mastri.nome AS ruolo,
 		mastri_articoli.scorta_minima,
@@ -4672,7 +4673,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		concat_ws(
 			' / ',
 			mastri_path( mastri_articoli.id_mastro ),
-			concat_ws( ' ', prodotti.nome, articoli.nome )
+			concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome )
 		) AS __label__
 	FROM mastri_articoli
 		LEFT JOIN articoli ON articoli.id = mastri_articoli.id_articolo
@@ -9265,7 +9266,7 @@ CREATE OR REPLACE VIEW `__report_evasione_righe_ordini__` AS select `ordine`.`id
 -- todo_view
 -- Le sei colonne che vengono da `istruzioni` ( id_documento .. istruzione ) erano il motivo per
 -- cui questa vista aveva 40 colonne su connor e 34 altrove: vedi 2026090105.
-CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`codice` AS `codice`,`todo`.`nome` AS `nome`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,if(`documenti_articoli`.`id` is null,NULL,concat_ws(' / ',coalesce(`documenti_articoli`.`data`,`documenti_righe`.`data`),`tipologie_documenti_articoli`.`sigla`,concat(`documenti_articoli`.`quantita`,' x ',`documenti_articoli`.`id_articolo`))) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_proprietario` AS `id_account_proprietario`,`todo`.`id_gruppo_proprietario` AS `id_gruppo_proprietario`,`todo`.`id_diritto_proprietario` AS `id_diritto_proprietario`,`todo`.`id_diritto_gruppo` AS `id_diritto_gruppo`,`todo`.`id_diritto_altri` AS `id_diritto_altri`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`timestamp_inserimento` AS `timestamp_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`todo`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(coalesce(`todo`.`nome`,`tipologie_todo`.`nome`),coalesce(concat(' per ',coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`))),''),coalesce(concat(' su ',`todo`.`id_progetto`,' ',`progetti`.`nome`),'')) AS `__label__` from (((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `documenti` `documenti_righe` on(`documenti_righe`.`id` = `documenti_articoli`.`id_documento`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = coalesce(`documenti_articoli`.`id_tipologia_documento`,`documenti_righe`.`id_tipologia`))) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) group by `todo`.`id`
+CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`codice` AS `codice`,`todo`.`nome` AS `nome`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,if(`documenti_articoli`.`id` is null,NULL,concat_ws(' / ',coalesce(`documenti_articoli`.`data`,`documenti_righe`.`data`),`tipologie_documenti_articoli`.`sigla`,concat(`documenti_articoli`.`quantita`,' x ',coalesce(`articoli`.`codice`,`documenti_articoli`.`id_articolo`)))) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_proprietario` AS `id_account_proprietario`,`todo`.`id_gruppo_proprietario` AS `id_gruppo_proprietario`,`todo`.`id_diritto_proprietario` AS `id_diritto_proprietario`,`todo`.`id_diritto_gruppo` AS `id_diritto_gruppo`,`todo`.`id_diritto_altri` AS `id_diritto_altri`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`timestamp_inserimento` AS `timestamp_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`todo`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(coalesce(`todo`.`nome`,`tipologie_todo`.`nome`),coalesce(concat(' per ',coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`))),''),coalesce(concat(' su ',coalesce(`progetti`.`codice`,`todo`.`id_progetto`),' ',`progetti`.`nome`),'')) AS `__label__` from ((((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `documenti` `documenti_righe` on(`documenti_righe`.`id` = `documenti_articoli`.`id_documento`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = coalesce(`documenti_articoli`.`id_tipologia_documento`,`documenti_righe`.`id_tipologia`))) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) group by `todo`.`id`
 ;
 
 -- | FINE FILE

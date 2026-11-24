@@ -135,7 +135,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
         rinnovi.id_pianificazione AS id_pianificazione,
         rinnovi.id_account_inserimento AS id_account_inserimento,
         rinnovi.id_account_aggiornamento AS id_account_aggiornamento,
-        concat( 'rinnovo ', rinnovi.id, ' dal ', concat_ws( '-', rinnovi.data_inizio ), ' al ', concat_ws( '-', rinnovi.data_fine ) ) AS __label__
+        concat( 'rinnovo ', coalesce( rinnovi.codice, rinnovi.id ), ' dal ', concat_ws( '-', rinnovi.data_inizio ), ' al ', concat_ws( '-', rinnovi.data_fine ) ) AS __label__
     FROM
         contratti
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
