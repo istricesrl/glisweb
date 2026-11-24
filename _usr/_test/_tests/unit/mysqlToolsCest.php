@@ -16,6 +16,18 @@ class mysqlToolsCest
         $I->see('string(12) "000000000000"');
     }
 
+    // getTable() -> il nome solo per una tabella esistente con un nome valido, false per vuota, inesistente o maligna
+    public function getTable(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_getTable.01.php');
+        $I->see("esistente: 'anagrafica'");
+        $I->see('vuota: false');
+        $I->see('assente: false');
+        $I->see('inesistente: false');
+        $I->see('maligna: false');
+        $I->see('array: false');
+    }
+
     // getStaticViewExtension() -> '_view' senza statica e con una statica vuota accanto a una tabella piena, '_view_static' altrimenti
     public function getStaticViewExtension(UnitTester $I)
     {

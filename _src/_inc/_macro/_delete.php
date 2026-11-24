@@ -36,14 +36,15 @@
 
     } else {
 
-        // ...
-        $rm = getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $_REQUEST['__delete__']['table'] );
+        // la tabella arriva dalla querystring e finisce concatenata nelle query: solo un nome valido di una tabella esistente
+        $tb = getTable( $cf['memcache']['connection'], $cf['mysql']['connection'], ( isset( $_REQUEST['__delete__']['table'] ) ) ? $_REQUEST['__delete__']['table'] : NULL );
 
         // recupero la __label__ dell'oggetto da cancellare
-        // TODO ma questo non ci espone a SQL injection?
-        // NOTA ma non è che anche nella controller c'è questo problema? $t viene mai filtrato?
-        if( ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
-            $ct['__delete__']['__label__'] = mysqlSelectLabel( $cf['mysql']['connection'], $_REQUEST['__delete__']['table'], $rm, $_REQUEST['__delete__']['id'], ' LIMIT 1' );
+        if( ! empty( $tb ) && ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
+            $rm = getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $tb );
+            $ct['__delete__']['__label__'] = mysqlSelectLabel( $cf['mysql']['connection'], $tb, $rm, ( isset( $_REQUEST['__delete__']['id'] ) ) ? $_REQUEST['__delete__']['id'] : NULL, ' LIMIT 1' );
+        } elseif( empty( $tb ) ) {
+            logger( 'cancellazione richiesta su una tabella non valida o inesistente', 'security', LOG_WARNING );
         }
 
         // timer

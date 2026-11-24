@@ -1798,6 +1798,46 @@
      */
 
     /**
+     * restituisce il nome di una tabella, se è un nome valido ed esiste nel database corrente
+     *
+     * Questa funzione serve a validare un nome di tabella che arriva da fuori ( querystring, POST ) prima di
+     * concatenarlo in una query: accetta solo [a-z0-9_] e solo una tabella o vista presente in information_schema per il
+     * database corrente, altrimenti restituisce false senza fare query col nome ricevuto. Il nome non si può passare
+     * come parametro di una prepared statement, quindi la validazione è l'unica difesa ( _src/_inc/_macro/_delete.php
+     * concatenava __delete__[table] in mysqlSelectLabel(), segnalato da polmasi il 23/11/2026 ).
+     *
+     * @param       object      $m      la connessione a memcache ( NULL per non usare la cache )
+     * @param       object      $c      la connessione mysqli
+     * @param       mixed       $t      il nome della tabella da validare
+     *
+     * @return      mixed               il nome della tabella, o false se non è valido o non esiste
+     *
+     */
+    function getTable($m, $c, $t)
+    {
+
+        // solo stringhe col nome di una tabella del framework
+        if (! is_string($t) || ! preg_match('/^[a-z0-9_]+$/', $t)) {
+            return false;
+        }
+
+        // verifico se esiste la tabella
+        $tb = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+            array(array('s' => $t))
+        );
+
+        // se esiste la tabella...
+        if (! empty($tb)) {
+            return $t;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * restituisce il nome della vista statica di una tabella, se esiste
      *
      * Questa funzione cerca in information_schema la tabella <t>_view_static, con la cache su memcache se $m non è vuoto,
