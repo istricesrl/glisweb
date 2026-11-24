@@ -355,7 +355,6 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'catalogo.articoli.form',
                                                             'catalogo.articoli.form.caratteristiche',
-                                                            'catalogo.articoli.form.distinta',
                                                             'catalogo.articoli.form.barcode',
                                                             'catalogo.articoli.form.relazioni',
                                                             'catalogo.articoli.form.archiviazione',
@@ -426,17 +425,6 @@
         'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
     );
 
-    // tools archivio produzione
-    $p['catalogo.articoli.form.distinta'] = array(
-        'sitemap'            => false,
-        'title'                => array( $l        => 'catalogo articoli form distinta' ),
-        'h1'                => array( $l        => 'distinta' ),
-        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.distinta.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.distinta.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
-    );
 
     // tools archivio produzione
     $p['catalogo.articoli.form.archiviazione'] = array(
