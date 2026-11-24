@@ -227,15 +227,34 @@
         /**
          * svuota la cache del sito
          *
-         * da usare quando il test dipende da qualcosa che il framework tiene in memcache, come l'array delle
-         * pagine; fa la stessa pulizia del task /task/memcache.clean per il sito corrente
+         * da usare quando il test dipende da qualcosa che il framework tiene in cache, come l'array delle pagine;
+         * fa la stessa pulizia del task /task/memcache.clean per il sito sotto test: scrive un gettone in
+         * DIR_VAR_SPOOL_REBUILD e chiama /task/cache.rebuild sull'URL della suite, che svuota memcache, APCU e disco
+         * e ricostruisce l'albero delle pagine
+         *
+         * La chiamata passa da Apache perche' l'APCU dei test, che girano da riga di comando, non e' quella del sito:
+         * fino al 24/11/2026 qui c'era il solo memcacheFlush(), e su un deploy senza memcache una pagina appena
+         * attivata restava sconosciuta ad amOnPageId() ( utensilerialughese, PR060.distinte ).
          *
          */
         public function clearGliswebCache() {
 
-            global $cf;
+            $gettone = bin2hex( random_bytes( 16 ) );
+            $codice = NULL;
+            $errore = NULL;
+            $report = false;
 
-            memcacheFlush( $cf['memcache']['connection'], $cf['sites']['1']['domains'][ SITE_STATUS ] );
+            if( checkFolder( DIR_VAR_SPOOL_REBUILD ) && touch( DIR_VAR_SPOOL_REBUILD . $gettone ) ) {
+                $report = restCall( rtrim( $this->getModule( 'WebDriver' )->_getConfig( 'url' ), '/' ) . '/task/cache.rebuild?t=' . $gettone, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $codice, array(), NULL, NULL, $errore, NULL, CURLAUTH_BASIC, $raw, $intestazioni, 600 );
+                // se la chiamata non e' arrivata il gettone e' ancora li'
+                @unlink( DIR_VAR_SPOOL_REBUILD . $gettone );
+            } else {
+                $errore = 'impossibile scrivere il gettone in ' . DIR_VAR_SPOOL_REBUILD;
+            }
+
+            if( $codice != 200 ) {
+                $this->fail( 'cache del sito non ricostruita ( /task/cache.rebuild, status ' . var_export( $codice, true ) . ' ): ' . $errore . ' ' . json_encode( $report ) );
+            }
 
         }
 

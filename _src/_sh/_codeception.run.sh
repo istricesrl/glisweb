@@ -420,8 +420,10 @@ SALTATI=$(awk '
 
 ## pubblicazione dell'esito
 # la fa il generatore della documentazione, che ne condivide la protezione e la pagina; se fallisce i
-# risultati restano comunque in var/spool/test/
-./_src/_sh/_docs.build.sh --test > /dev/null || echo "pubblicazione dell'esito non riuscita: lanciare _src/_sh/_docs.build.sh --test" >&2
+# risultati restano comunque in var/spool/test/; da root PHP_ROOT_OK scavalca la guardia della CLI ( vedi
+# _usr/_docs/_read/218.file.script.md ), ed e' uno scavalco sicuro perche' _docs.build.sh rimette owner e permessi
+# di quello che scrive
+PHP_ROOT_OK=1 ./_src/_sh/_docs.build.sh --test > /dev/null || echo "pubblicazione dell'esito non riuscita: lanciare _src/_sh/_docs.build.sh --test" >&2
 
 echo
 echo "risultati in $ESECUZIONE/"
