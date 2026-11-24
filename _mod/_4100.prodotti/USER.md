@@ -90,7 +90,6 @@ Le altre linguette:
 | linguetta | cosa ci sta |
 |---|---|
 | caratteristiche, relazioni | come per il prodotto |
-| distinta base | i componenti dell'articolo, ciascuno con la quantità |
 | prezzi | come per il prodotto |
 | spedizioni | le modalità di spedizione: zona, lotto, importo netto, IVA, giorni di spedizione e di consegna |
 | web, SEM/SMM, testo | come per il prodotto |
