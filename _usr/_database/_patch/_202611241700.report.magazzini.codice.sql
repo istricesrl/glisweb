@@ -69,8 +69,9 @@ CREATE TABLE IF NOT EXISTS `__report_giacenza_magazzini__` (
 
 -- | 202611241701
 
--- la procedura che toglie una vista col nome di un report, e lascia stare la tabella se e' gia' una tabella
-CREATE OR REPLACE PROCEDURE `__patch_report_vista__`( IN nome VARCHAR(64) )
+-- la procedura che toglie una vista col nome di un report, e lascia stare la tabella se e' gia' una tabella;
+-- il parametro ha la collation di information_schema, altrimenti sui DB utf8_unicode_ci il confronto da' errore 1267
+CREATE OR REPLACE PROCEDURE `__patch_report_vista__`( IN nome VARCHAR(64) CHARSET utf8 COLLATE utf8_general_ci )
 BEGIN
 
     IF EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = nome AND table_type = 'VIEW' ) THEN
