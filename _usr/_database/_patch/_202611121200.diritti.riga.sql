@@ -857,19 +857,23 @@ ALTER TABLE `risorse`
 -- | 202611121243
 
 -- anagrafica_view_static: le colonne nuove della vista, allo stesso posto
-ALTER TABLE `anagrafica_view_static`
+-- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
+-- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
+CALL `__patch_statiche_forma__`( 'anagrafica_view_static', 'ALTER TABLE `anagrafica_view_static`
 	ADD COLUMN IF NOT EXISTS `id_account_proprietario` bigint(20) DEFAULT NULL AFTER `data_archiviazione`,
 	ADD COLUMN IF NOT EXISTS `id_gruppo_proprietario` bigint(20) DEFAULT NULL AFTER `id_account_proprietario`,
 	ADD COLUMN IF NOT EXISTS `id_diritto_proprietario` bigint(20) DEFAULT NULL AFTER `id_gruppo_proprietario`,
 	ADD COLUMN IF NOT EXISTS `id_diritto_gruppo` bigint(20) DEFAULT NULL AFTER `id_diritto_proprietario`,
-	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`;
+	ADD COLUMN IF NOT EXISTS `id_diritto_altri` bigint(20) DEFAULT NULL AFTER `id_diritto_gruppo`' );
 
 -- | 202611121244
 
 -- articoli_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
-ALTER TABLE `articoli_view_static`
+-- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
+-- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
+CALL `__patch_statiche_forma__`( 'articoli_view_static', 'ALTER TABLE `articoli_view_static`
 	ADD COLUMN IF NOT EXISTS `id_tipologia_pubblicazione` bigint(20) DEFAULT NULL FIRST,
 	ADD COLUMN IF NOT EXISTS `pubblicazione` char(32) DEFAULT NULL AFTER `id_tipologia_pubblicazione`,
 	ADD COLUMN IF NOT EXISTS `tipologia_listino` char(64) DEFAULT NULL AFTER `pubblicazione`,
@@ -921,14 +925,16 @@ ALTER TABLE `articoli_view_static`
 	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
 	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
 	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`;
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
 
 -- | 202611121245
 
 -- attivita_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
-ALTER TABLE `attivita_view_static`
+-- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
+-- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
+CALL `__patch_statiche_forma__`( 'attivita_view_static', 'ALTER TABLE `attivita_view_static`
 	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
 	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
 	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
@@ -1007,14 +1013,16 @@ ALTER TABLE `attivita_view_static`
 	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
 	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
 	ADD COLUMN IF NOT EXISTS `data_archiviazione` date DEFAULT NULL AFTER `timestamp_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `data_archiviazione`;
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `data_archiviazione`' );
 
 -- | 202611121246
 
 -- documenti_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
-ALTER TABLE `documenti_view_static`
+-- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
+-- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
+CALL `__patch_statiche_forma__`( 'documenti_view_static', 'ALTER TABLE `documenti_view_static`
 	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
 	ADD COLUMN IF NOT EXISTS `tipologia` char(255) DEFAULT NULL AFTER `id_tipologia`,
 	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
@@ -1035,7 +1043,7 @@ ALTER TABLE `documenti_view_static`
 	ADD COLUMN IF NOT EXISTS `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL AFTER `destinatario_spedizione`,
 	ADD COLUMN IF NOT EXISTS `id_condizione_pagamento` bigint(20) DEFAULT NULL AFTER `id_sede_destinatario_spedizione`,
 	ADD COLUMN IF NOT EXISTS `condizione_pagamento` char(32) DEFAULT NULL AFTER `id_condizione_pagamento`,
-	ADD COLUMN IF NOT EXISTS `esigibilita` enum('I','D','S') DEFAULT NULL AFTER `condizione_pagamento`,
+	ADD COLUMN IF NOT EXISTS `esigibilita` enum(\'I\',\'D\',\'S\') DEFAULT NULL AFTER `condizione_pagamento`,
 	ADD COLUMN IF NOT EXISTS `cig` char(16) DEFAULT NULL AFTER `esigibilita`,
 	ADD COLUMN IF NOT EXISTS `cup` char(16) DEFAULT NULL AFTER `cig`,
 	ADD COLUMN IF NOT EXISTS `riferimento` char(255) DEFAULT NULL AFTER `cup`,
@@ -1055,7 +1063,7 @@ ALTER TABLE `documenti_view_static`
 	ADD COLUMN IF NOT EXISTS `mastro_destinazione` char(64) DEFAULT NULL AFTER `id_mastro_destinazione`,
 	ADD COLUMN IF NOT EXISTS `id_causale` bigint(20) DEFAULT NULL AFTER `mastro_destinazione`,
 	ADD COLUMN IF NOT EXISTS `id_trasportatore` bigint(20) DEFAULT NULL AFTER `id_causale`,
-	ADD COLUMN IF NOT EXISTS `porto` enum('franco','assegnato','-') DEFAULT NULL AFTER `id_trasportatore`,
+	ADD COLUMN IF NOT EXISTS `porto` enum(\'franco\',\'assegnato\',\'-\') DEFAULT NULL AFTER `id_trasportatore`,
 	ADD COLUMN IF NOT EXISTS `id_pianificazione` bigint(20) DEFAULT NULL AFTER `porto`,
 	ADD COLUMN IF NOT EXISTS `id_progetto` bigint(20) DEFAULT NULL AFTER `id_pianificazione`,
 	ADD COLUMN IF NOT EXISTS `documenti_antecedenti` text AFTER `id_progetto`,
@@ -1073,14 +1081,16 @@ ALTER TABLE `documenti_view_static`
 	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
 	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
 	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`;
+	ADD COLUMN IF NOT EXISTS `__label__` text AFTER `timestamp_aggiornamento`' );
 
 -- | 202611121247
 
 -- todo_view_static: le colonne nuove della vista, allo stesso posto; prima le colonne del canone che la statica
 -- potesse non avere ancora, ciascuna dopo la sua precedente, perche' il posto lo chiede REPLACE ... SELECT * ( 12/11:
 -- glistest non aveva note_archiviazione e l'AFTER si fermava ); dove ci sono gia', IF NOT EXISTS non fa niente
-ALTER TABLE `todo_view_static`
+-- la statica passa dalla procedura delle statiche ( 202610041000, 202611121300 ): dove su un deploy non c'e' si salta
+-- ( 24/11: www2 di bernispa non ha documenti_view_static e la 1246 si fermava con 1146 )
+CALL `__patch_statiche_forma__`( 'todo_view_static', 'ALTER TABLE `todo_view_static`
 	ADD COLUMN IF NOT EXISTS `id_tipologia` bigint(20) DEFAULT NULL AFTER `id`,
 	ADD COLUMN IF NOT EXISTS `tipologia` char(64) DEFAULT NULL AFTER `id_tipologia`,
 	ADD COLUMN IF NOT EXISTS `codice` char(32) DEFAULT NULL AFTER `tipologia`,
@@ -1126,7 +1136,7 @@ ALTER TABLE `todo_view_static`
 	ADD COLUMN IF NOT EXISTS `timestamp_inserimento` int(11) DEFAULT NULL AFTER `id_account_inserimento`,
 	ADD COLUMN IF NOT EXISTS `id_account_aggiornamento` bigint(20) DEFAULT NULL AFTER `timestamp_inserimento`,
 	ADD COLUMN IF NOT EXISTS `timestamp_aggiornamento` int(11) DEFAULT NULL AFTER `id_account_aggiornamento`,
-	ADD COLUMN IF NOT EXISTS `__label__` text DEFAULT NULL AFTER `timestamp_aggiornamento`;
+	ADD COLUMN IF NOT EXISTS `__label__` text DEFAULT NULL AFTER `timestamp_aggiornamento`' );
 
 -- | 202611121248
 
