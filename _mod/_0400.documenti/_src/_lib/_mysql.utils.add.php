@@ -791,6 +791,15 @@
             $r['dsi']['indirizzo_fiscale'] = $r['dsi']['tipologia'] . ' ' . $r['dsi']['indirizzo'] . ', ' . $r['dsi']['civico'];
             $r['dsi']['comune_indirizzo_fiscale'] = $r['dsi']['cap'] . ' ' . $r['dsi']['comune'] . ' ' . $r['dsi']['provincia'];
 
+        } elseif( ! empty( $cf['documenti']['destinatario']['libero'] ) && ! empty( trim( (string) $r['doc']['destinatario'] ) ) ) {
+
+            // destinatario in testo libero: una riga per riga di testo, la prima è la denominazione
+            $r['dst'] = array(
+                'righe' => array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $r['doc']['destinatario'] ) ), 'strlen' ) )
+            );
+            $r['dst']['denominazione_fiscale'] = $r['dst']['righe'][0];
+            $r['dsi'] = array();
+
         }
 
         // numero di linea di ogni riga, come lo scrive la fattura elettronica ( NumeroLinea, dalla posizione della riga )

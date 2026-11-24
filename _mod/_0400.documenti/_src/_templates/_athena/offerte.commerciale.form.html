@@ -110,7 +110,7 @@
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
 						<span class="label-top">destinatario</span>
-						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request,  etc.ordine.id_emittente, '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request,  etc.ordine.id_emittente, '',( documenti.destinatario.libero ? '' : '1' ),'','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
 					<div class="col-12 col-md-8">
@@ -119,6 +119,14 @@
 					</div>
 					{% endif %}
 				</div>
+				{% if documenti.destinatario.libero %}
+				<div class="form-group form-row">
+					<div class="col-12">
+						<span class="label-top">destinatario non in anagrafica</span>
+						{{ frm.textarea( table, '', '', 'destinatario', '', 3, request ) }}
+					</div>
+				</div>
+				{% endif %}
 
             </fieldset>
 

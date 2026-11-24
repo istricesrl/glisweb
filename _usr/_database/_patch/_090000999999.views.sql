@@ -3021,7 +3021,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_referente_emittente,
 		documenti.id_sede_emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), documenti.destinatario, '' ) AS destinatario,
 		documenti.id_sede_destinatario,
 		documenti.id_destinatario_spedizione,
 		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS destinatario_spedizione,

@@ -1913,7 +1913,8 @@
      *
      * Restituisce denominazione, indirizzo, comune, partita IVA, codice fiscale e SDI o PEC di emittente o
      * destinatario, scartando quelle vuote: i documenti senza sedi richieste hanno la sede fatta di NULL, e
-     * l'indirizzo diventa " , ".
+     * l'indirizzo diventa " , ". Il destinatario in testo libero arriva da generaContenutiDocumento() con le righe già
+     * pronte in $soggetto['righe'], e si stampa così com'è.
      *
      * @param       array       $soggetto       la riga di anagrafica ( src o dst )
      * @param       array       $sede           la sua sede ( sri o dsi )
@@ -1922,6 +1923,11 @@
      *
      */
     function documentoRigheSoggetto( $soggetto, $sede ) {
+
+        // destinatario in testo libero ( flag documenti.destinatario.libero ): le righe sono già pronte
+        if( ! empty( $soggetto['righe'] ) && empty( $soggetto['id'] ) ) {
+            return $soggetto['righe'];
+        }
 
         $righe = array(
             ( isset( $soggetto['denominazione_fiscale'] ) ) ? $soggetto['denominazione_fiscale'] : NULL,

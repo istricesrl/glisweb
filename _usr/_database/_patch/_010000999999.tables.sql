@@ -2808,6 +2808,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (                        --
   `id_referente_emittente` bigint(20) DEFAULT NULL,               -- chiave esterna per il referente dell'anagrafica emittente
   `id_sede_emittente` bigint(20) DEFAULT NULL,                    -- chiave esterna per la sede dell'anagrafica emittente
   `id_destinatario` bigint(20) DEFAULT NULL,                      -- chiave esterna per l'anagrafica destinataria
+  `destinatario` text DEFAULT NULL,                               -- destinatario in testo libero, se non è in anagrafica
   `id_sede_destinatario` bigint(20) DEFAULT NULL,                 -- chiave esterna per la sede dell'anagrafica destinataria
   `id_destinatario_spedizione` bigint(20) DEFAULT NULL,           -- chiave esterna per l'anagrafica destinataria della spedizione
   `id_sede_destinatario_spedizione` bigint(20) DEFAULT NULL,      -- chiave esterna per la sede della spedizione
