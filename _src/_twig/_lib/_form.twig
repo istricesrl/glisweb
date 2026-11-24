@@ -428,8 +428,8 @@
             {% if onchange %}onchange="{{ onchange }}"{% endif %}
             {% if not field.noempty %}empty{% endif %}>
 
-            {# opzione vuota #}
-            {% if not noempty %}<option value=""></option>{% endif %}
+            {# opzione vuota, salvo field.noempty: senza, il browser preseleziona la prima opzione #}
+            {% if not field.noempty %}<option value=""></option>{% endif %}
 
             {# opzioni della select #}
             {% for option in source.values %}
