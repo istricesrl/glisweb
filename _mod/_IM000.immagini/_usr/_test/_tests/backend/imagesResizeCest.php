@@ -105,7 +105,7 @@
 
             $I->seeInDatabase( 'immagini', array( 'id' => $id, 'token' => 'TROPPI_TENTATIVI', 'tentativi' => $cf['image']['tentativi_massimi'] ) );
 
-            // il report c'è solo sulla linea distribuita ( glisweb ), non su latest
+            // il report vuole _txt.tools.php, su latest dal 24/11/2026: la guardia resta per i deploy che non hanno il file
             if( file_exists( DIR_BASE . '_src/_api/_status/_images.resize.status.php' ) ) {
                 $I->amOnPage( '/status/images.resize.status' );
                 $I->see( 'immagini ferme per troppi tentativi (' );

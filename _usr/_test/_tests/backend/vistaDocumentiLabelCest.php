@@ -43,7 +43,11 @@
             $sql = file_get_contents( DIR_BASE . '_usr/_database/_patch/_090000999999.views.sql' );
             $blocco = substr( $sql, strpos( $sql, 'CREATE OR REPLACE VIEW `documenti_view`' ) );
             $blocco = substr( $blocco, 0, strpos( $blocco, 'AS __label__' ) );
-            $espressione = substr( $blocco, strrpos( $blocco, 'documenti.id_account_aggiornamento,' ) + strlen( 'documenti.id_account_aggiornamento,' ) );
+            // l'espressione è l'ultima colonna di primo livello: il confine è la virgola seguita da due tab e
+            // da un carattere che non è un tab, così l'estrazione non dipende dalle colonne che la precedono
+            preg_match_all( '/,\n\t\t(?=[^\t])/', $blocco, $confini, PREG_OFFSET_CAPTURE );
+            $ultimo = end( $confini[0] );
+            $espressione = substr( $blocco, $ultimo[1] + strlen( $ultimo[0] ) );
 
             return $I->grabFromDatabase(
                 'SELECT ' . $espressione . ' FROM documenti'
