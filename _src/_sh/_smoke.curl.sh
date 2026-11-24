@@ -21,7 +21,8 @@
 #
 # variabili d'ambiente:
 #   SMOKE_BASE_URL    obbligatoria ( per sorveglianza basta l'argomento ): niente default
-#   SMOKE_LOGIN_PATH  default: /login.it-IT.html
+#   SMOKE_LOGIN_PATH  default: /login.it-IT.html ( p.es. /admin.it-IT.html dove la login sta li' )
+#   SMOKE_LOGIN_MARKER regex ( grep -E ) che la pagina dopo il login deve contenere, default: name="__logout__"
 #   TEST_USER         richiesta da `login`
 #   TEST_PASS         richiesta da `login`
 #   SMOKE_VERBOSE     se "1", aggiunge -v a curl
@@ -47,6 +48,7 @@ cd $RL || exit 1
 # la base o la si dice, o lo script si ferma ( il controllo e' in ogni comando, sotto ).
 BASE_URL="${SMOKE_BASE_URL:-}"
 LOGIN_PATH="${SMOKE_LOGIN_PATH:-/login.it-IT.html}"
+LOGIN_MARKER="${SMOKE_LOGIN_MARKER:-name=\"__logout__\"}"
 JAR="var/tmp/smoke-cookies.txt"
 
 ## opzioni curl base
@@ -101,13 +103,26 @@ case "$cmd" in
     login)
         [ -n "$TEST_USER" ] || die "TEST_USER non valorizzata"
         [ -n "$TEST_PASS" ] || die "TEST_PASS non valorizzata"
-        body="$(_curl_run \
+        out="$(_curl_run --write-out '\n%{http_code}' \
             --data-urlencode "__login__[user]=$TEST_USER" \
             --data-urlencode "__login__[pasw]=$TEST_PASS" \
             "$BASE_URL$LOGIN_PATH")" || die "curl login fallito"
+        code="${out##*$'\n'}"
+        body="${out%$'\n'*}"
+        # fino al 24/11/2026 bastava l'assenza del campo password, e una login in 404 risultava riuscita
+        # ( BERNISPA ed eurosnodi ): ora servono il 200 e un marcatore della pagina autenticata
+        if [ "$code" != "200" ]; then
+            echo "smoke: login FAILED for $TEST_USER ( HTTP $code da $LOGIN_PATH: e' il percorso della login? vedi SMOKE_LOGIN_PATH )" >&2
+            exit 2
+        fi
         # se il body finale contiene ancora il campo password, il login non è andato
         if echo "$body" | grep -q 'name="__login__\[pasw\]"'; then
             echo "smoke: login FAILED for $TEST_USER" >&2
+            exit 2
+        fi
+        # niente marcatore, niente pagina autenticata
+        if ! echo "$body" | grep -qE "$LOGIN_MARKER"; then
+            echo "smoke: login FAILED for $TEST_USER ( la pagina non contiene $LOGIN_MARKER: vedi SMOKE_LOGIN_MARKER )" >&2
             exit 2
         fi
         echo "smoke: login OK for $TEST_USER"

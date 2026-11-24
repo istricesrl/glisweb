@@ -6,7 +6,9 @@
  * lo script deve fermarsi senza URL di base invece di ricadere su un sito cablato, leggere l'account
  * di prova dalla configurazione del deploy rifiutando una password in config, entrare, controllare
  * il contenuto della pagina e non stampare mai le credenziali; qui lo si prova su un deploy finto
- * temporaneo, con un sito finto servito dal server interno di PHP che accetta solo quell'account
+ * temporaneo, con un sito finto servito dal server interno di PHP che accetta solo quell'account;
+ * il comando login deve inoltre dare KO se la pagina di login non risponde 200 o se la pagina
+ * dopo il login non ha il marcatore dell'area autenticata ( fino al 24/11/2026 un 404 dava OK )
  *
  */
 
@@ -32,12 +34,19 @@ class smokeCurlCest
         $this->deploy = sys_get_temp_dir() . '/glisweb-test-smoke-curl-' . getmypid();
         exec( 'rm -rf ' . escapeshellarg( $this->deploy ) );
         $radice = realpath( __DIR__ . '/../../../..' );
-        foreach( array( '_src/_sh', 'src', 'sito' ) as $dir ) {
+        foreach( array( '_src/_sh', 'src', 'sito', 'var/tmp' ) as $dir ) {
             mkdir( $this->deploy . '/' . $dir, 0777, true );
         }
         copy( $radice . '/_src/_sh/_smoke.curl.sh', $this->deploy . '/_src/_sh/_smoke.curl.sh' );
         file_put_contents( $this->deploy . '/sito/router.php',
-            '<?php if( ( $_SERVER["PHP_AUTH_USER"] ?? "" ) === ' . var_export( self::UTENTE, true )
+            '<?php if( isset( $_POST["__login__"] ) ) {'
+            . ' if( $_SERVER["REQUEST_URI"] === "/manca.html" ) { http_response_code( 404 ); echo "pagina non trovata"; }'
+            . ' elseif( ( $_POST["__login__"]["user"] ?? "" ) !== ' . var_export( self::UTENTE, true )
+            . ' || ( $_POST["__login__"]["pasw"] ?? "" ) !== ' . var_export( self::PASSWORD, true ) . ' ) { echo "<form><input name=\"__login__[pasw]\"></form>"; }'
+            . ' elseif( $_SERVER["REQUEST_URI"] === "/nuda.html" ) { echo "<p>pagina senza logout</p>"; }'
+            . ' else { echo "<form><input type=\"hidden\" name=\"__logout__\" value=\"1\"></form>"; }'
+            . ' exit; }'
+            . ' if( ( $_SERVER["PHP_AUTH_USER"] ?? "" ) === ' . var_export( self::UTENTE, true )
             . ' && ( $_SERVER["PHP_AUTH_PW"] ?? "" ) === ' . var_export( self::PASSWORD, true ) . ' ) {'
             . ' echo "<table><tr><td>riga-dal-database</td></tr></table>"; } else {'
             . ' echo "<form><input name=\"__login__[pasw]\"></form>"; }' );
@@ -94,6 +103,48 @@ class smokeCurlCest
     private function sito()
     {
         return 'http://127.0.0.1:' . $this->porta;
+    }
+
+    // lancia il comando login sul percorso dato, restituendo exit code e output
+    private function login( $percorso, $password = self::PASSWORD )
+    {
+        $cmd = 'cd ' . escapeshellarg( $this->deploy ) . ' && env SMOKE_BASE_URL=' . escapeshellarg( $this->sito() )
+             . ' SMOKE_LOGIN_PATH=' . escapeshellarg( $percorso ) . ' TEST_USER=' . escapeshellarg( self::UTENTE )
+             . ' TEST_PASS=' . escapeshellarg( $password ) . ' bash _src/_sh/_smoke.curl.sh login 2>&1';
+        exec( $cmd, $out, $rc );
+        return array( $rc, implode( "\n", $out ) );
+    }
+
+    // login riuscita: 200 e marcatore dell'area autenticata
+    public function loginRiuscita(UnitTester $I)
+    {
+        list( $rc, $out ) = $this->login( '/login.it-IT.html' );
+        $I->assertEquals( 0, $rc, $out );
+        $I->assertStringContainsString( 'login OK', $out );
+    }
+
+    // pagina di login in 404: prima dava OK perche' il campo password mancava
+    public function login404(UnitTester $I)
+    {
+        list( $rc, $out ) = $this->login( '/manca.html' );
+        $I->assertEquals( 2, $rc, $out );
+        $I->assertStringContainsString( 'HTTP 404', $out );
+    }
+
+    // 200 ma senza marcatore: non e' l'area autenticata
+    public function loginSenzaMarcatore(UnitTester $I)
+    {
+        list( $rc, $out ) = $this->login( '/nuda.html' );
+        $I->assertEquals( 2, $rc, $out );
+        $I->assertStringContainsString( 'SMOKE_LOGIN_MARKER', $out );
+    }
+
+    // password sbagliata: torna il form di login
+    public function loginPasswordSbagliata(UnitTester $I)
+    {
+        list( $rc, $out ) = $this->login( '/login.it-IT.html', 'sbagliata' );
+        $I->assertEquals( 2, $rc, $out );
+        $I->assertStringContainsString( 'login FAILED', $out );
     }
 
     // senza URL di base si ferma, e non ricade su nessun sito cablato
