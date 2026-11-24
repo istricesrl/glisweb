@@ -236,7 +236,8 @@ Le regole che contano di più:
 5. **i marcatori sono cinque**: `[ ]` da fare e nel carico, `[=]` in attesa di un altro ( con **chi** e
    **da quando** ), `[?]` sospesa, `[v]` fatta, `[x]` scartata. Le ultime due vivono nel `DONE.md`, `[=]`
    e `[?]` non contano nel carico. La voce comincia a colonna 1 con `- `, e dopo il marcatore porta i tre
-   flag urgente/rilevante/impattante, `(!-!)`;
+   flag urgente/rilevante/impattante, `(!-!)`. Una scadenza vera va subito dopo i flag, `( scad: GG/MM/AAAA )`
+   indicativa o `( scad!: GG/MM/AAAA )` tassativa: chi la legge e cosa ne fa sta in `cinque-file.md`, *"La scadenza"*;
 6. **chiudere una voce sono tre gesti**: marcatore, trasloco nel `DONE.md` col perché, e — se il cliente
    la vede o l'aspettava — la stessa riga nel `CHAT.md` in `### Da dirgli alla prossima occasione`, il
    giorno stesso;

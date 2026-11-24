@@ -409,6 +409,26 @@ Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
 Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
 niente.
 
+#### La scadenza: `( scad: GG/MM/AAAA )` subito dopo i flag
+
+Regola approvata da Fabio il **24/11/2026**. Quando una voce ha una **data vera** entro cui va fatta, la
+data si scrive nella riga, **subito dopo i flag**:
+
+    - [ ] (!!-) ( scad: 15/12/2026 ) rinnovo del certificato del cliente ( aperta 24/11/2026 )
+    - [ ] (!!!) ( scad!: 31/12/2026 ) invio della dichiarazione, termine di legge ( aperta 24/11/2026 )
+
+- **`( scad: GG/MM/AAAA )`** è una scadenza **indicativa**: la data a cui si mira;
+- **`( scad!: GG/MM/AAAA )`** è una scadenza **tassativa**: passata quella data il danno è fatto;
+- l'anno si scrive intero, e la scadenza si mette **solo se è vera**: una data inventata per dare
+  priorità è un flag urgente travestito, e toglie valore alle scadenze vere;
+- le leggono `~/.claude/bin/todo.py -S oggi|scadute|N|tutte` ( `N` = entro N giorni, scadute comprese )
+  e `-T` ( solo le tassative ), e `~/.claude/bin/scadenze.py`, che le cerca in **tutti** i `TODO.md` del
+  server; `scadenze.py --candidati -p <progetto>` elenca le voci senza campo che parlano di scadenze, da
+  marcare se la scadenza è vera;
+- `tutto-ok.py` dà **KO** su una tassativa scaduta o in scadenza oggi e ancora aperta;
+- la data della scadenza vale anche come **data futura citata**: finché è davanti,
+  `normalizza-urgenze.py` non declassa la voce ( vedi sotto ).
+
 #### L'urgenza scade: dopo 14 giorni fermi il `!` cade da solo
 
 Regola data da Fabio l'**08/10/2026**: *"una cosa urgente che è lì da due mesi era ovvio che non
@@ -750,6 +770,9 @@ impatto, `!` se sì e `-` se no:
 **urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
 l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
 tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
+
+⚠ **La scadenza vera si scrive dopo i flag**: `( scad: GG/MM/AAAA )` indicativa, `( scad!: GG/MM/AAAA )`
+tassativa, p.es. `- [ ] (!!-) ( scad: 15/12/2026 ) testo ( aperta 24/11/2026 )` ( vedi *"La scadenza"* sopra ).
 
 ⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `/usr/local/bin/normalizza-urgenze.py`, ogni sera
 ( vedi *"L'urgenza scade"* sopra ).
