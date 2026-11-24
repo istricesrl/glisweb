@@ -406,6 +406,14 @@
                         // ...
                         require DIR_BASE . $task['task'];
 
+                        // un'iterazione più lunga del wait_timeout del server ne fa cadere la connessione ( errore 2006 ):
+                        // la ricreo, altrimenti falliscono l'iterazione successiva e l'UPDATE di chiusura, e il task resta
+                        // interrotto ( bernispa, 24/11/2026 )
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta durante il task ' . $task['id'] . ' -> ' . $task['task'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
+
                         // ...
                         $cf['cron']['task'][ $task['id'] ]['status'] = $status;
 
@@ -655,6 +663,12 @@
 
                         // ...
                         require DIR_BASE . $job['job'];
+
+                        // la connessione caduta durante l'iterazione si ricrea, come per i task
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta durante il job ' . $job['id'] . ' -> ' . $job['job'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
 
                         // ...
                         $cf['cron']['job'][ $job['id'] ]['status'] = $status;

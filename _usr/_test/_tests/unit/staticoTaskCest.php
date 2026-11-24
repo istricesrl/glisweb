@@ -49,6 +49,22 @@
 
         }
 
+        // il cron ricrea la connessione MySQL dopo ogni iterazione di un task e di un job: un'iterazione piu' lunga del
+        // wait_timeout la fa cadere, e senza riconnessione falliscono gli UPDATE di chiusura ( bernispa, 24/11/2026 )
+        public function cronRiconnessioneMysql( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_api/_cron.php' );
+
+            foreach( array( "\$task['task']", "\$job['job']" ) as $chi ) {
+                $I->assertMatchesRegularExpression(
+                    '/require DIR_BASE \. ' . preg_quote( $chi, '/' ) . ';\s*(\/\/[^\n]*\n\s*)*if\( ! mysqlPing\( \$cf\[\'mysql\'\]\[\'connection\'\] \) \) \{[^}]*require DIR_SRC_CONFIG \. \'_125\.mysql\.php\';/',
+                    $codice,
+                    'manca la riconnessione dopo il require di ' . $chi
+                );
+            }
+
+        }
+
         // il resoconto di _security.clean.php va nel log a LOG_WARNING: la produzione lo scrive ancora, e da LOG_CRIT
         // in su il controllo dei log lo contava come errore grave anche quando era solo un possibile falso positivo
         public function securityCleanResocontoWarning( UnitTester $I ) {

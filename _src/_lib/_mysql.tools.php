@@ -942,6 +942,51 @@
     }
 
     /**
+     * verifica che una connessione sia ancora viva
+     *
+     * Una connessione resta inattiva finché il codice lavora senza fare query: se l'attesa supera il wait_timeout del
+     * server, il server la chiude, e la query successiva fallisce con l'errore 2006 ( MySQL server has gone away ). Il
+     * cron la usa dopo ogni iterazione di un task o di un job, per ricreare la connessione prima di scrivere l'esito
+     * ( bernispa, 24/11/2026: un'iterazione di oltre 60 secondi su mysql03 lasciava i task interrotti ).
+     *
+     * La verifica è una SELECT 1, e non mysqli_ping(), deprecata da PHP 8.4. Gli errori non escono dalla funzione: con
+     * mysqli_report() attivo ( il default da PHP 8.1 ) la query caduta lancia un'eccezione, prima della 8.1 restituisce
+     * false con un warning, e su una connessione chiusa con mysqli_close() lancia un Error; in tutti i casi l'esito è
+     * false.
+     *
+     * @param       object      $c      la connessione mysqli
+     *
+     * @return      boolean             true se la connessione risponde, false se è vuota, chiusa o caduta
+     *
+     */
+    function mysqlPing($c)
+    {
+
+        // connessione assente
+        if (empty($c)) {
+            return false;
+        }
+
+        // query di prova
+        try {
+            $r = @mysqli_query($c, 'SELECT 1');
+        } catch (Throwable $t) {
+            return false;
+        }
+
+        // query fallita senza eccezione
+        if ($r === false) {
+            return false;
+        }
+
+        // libero il risultato
+        mysqli_free_result($r);
+
+        // la connessione risponde
+        return true;
+    }
+
+    /**
      * FUNZIONI DI SELEZIONE
      */
 

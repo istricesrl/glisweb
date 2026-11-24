@@ -48,6 +48,18 @@ class mysqlToolsCest
         $I->see('secondo giro popolate: 0');
     }
 
+    // mysqlPing() -> true sulla connessione viva, false su assente, chiusa e caduta; la connessione del framework si ricrea
+    public function mysqlPing(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_mysql.tools/_mysqlPing.01.php');
+        $I->see('viva: true');
+        $I->see('assente: false');
+        $I->see('chiusa: false');
+        $I->see('caduta: false');
+        $I->see('framework caduta: false');
+        $I->see('framework ricreata: true');
+    }
+
     // mysqlPatchCheck() -> deve accettare il livello vero e rifiutare un database pieno a zero o sotto il canone
     public function mysqlPatchCheck(UnitTester $I)
     {
