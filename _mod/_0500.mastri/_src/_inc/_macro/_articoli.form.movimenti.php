@@ -14,14 +14,15 @@
     // tabella gestita
     $ct['form']['table'] = 'articoli';
     
-    $ct['view']['table'] = '__report_mastri_articoli__';
+#    $ct['view']['table'] = '__report_mastri_articoli__';
+    $ct['view']['table'] = '__report_movimenti_magazzini__';
 
     $ct['view']['data']['__report_mode__'] = 1;
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id_riga';
+    $ct['view']['open']['field'] = 'id';
 
 
     /*
@@ -32,19 +33,24 @@
     */
     // campi della vista
 	$ct['view']['cols'] = array(
-        'mastro_scarico' => 'scarico',
-        'mastro_carico' => 'carico',
-        'data_lavorazione' => 'data',
-	    'descrizione' => 'riga',
+        'id' => '#',
+#        'mastro_scarico' => 'scarico',
+#        'mastro_carico' => 'carico',
+#        'data_lavorazione' => 'data',
+#	    'descrizione' => 'riga',
+#        'id_listino' => 'id_listino',
+#        'id_riga' => 'id_riga',
+#        'cliente' => 'cliente',
+#        'id_todo' => 'todo',
+#        'progetto' => 'progetto',
+        'data' => 'data',
+        'tipologia' => 'tipologia',
+        'numero' => 'numero',
         'id_articolo' => 'articolo',
-        'quantita' => 'quantità',
-        'id_listino' => 'id_listino',
-        'id_riga' => 'id_riga',
-        'cliente' => 'cliente',
-        'id_tipologia' => 'id_tipologia',
-        'id_todo' => 'todo',
-        'progetto' => 'progetto',
-        'matricola' => 'matricola'
+        'matricola' => 'matricola',
+        'mastro_provenienza' => 'provenienza',
+        'mastro_destinazione' => 'destinazione',
+        'quantita' => 'quantità'
 	);
 
     // stili della vista

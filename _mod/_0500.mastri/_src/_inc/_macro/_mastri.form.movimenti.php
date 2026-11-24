@@ -24,7 +24,7 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id_riga';
+    $ct['view']['open']['field'] = 'id';
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -35,7 +35,7 @@
 #        'quantita' => 'quantità',
 #        'importo' => 'importo',
 #        'id_listino' => 'id_listino',
-        'id_riga' => 'id_riga',
+#        'id_riga' => 'id_riga',
 #        'cliente' => 'cliente',
 #        'id_emittente' => 'emittente',
 #        'id_tipologia' => 'id_tipologia',
@@ -48,15 +48,18 @@
 'id_articolo' => 'codice',
 'articolo' => 'descrizione',
 'matricola' => 'matricola',
-'carico' => 'carico',
-'scarico' => 'scarico',
+#'carico' => 'carico',
+#'scarico' => 'scarico',
+'mastro_provenienza' => 'provenienza',
+'mastro_destinazione' => 'destinazione',
+'quantita_movimento' => 'quantità',
 
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
-        'id_riga' => 'd-none',
+#        'id_riga' => 'd-none',
         'data' => 'no-wrap', 
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
@@ -68,9 +71,15 @@
 #        'cliente' => 'text-left',
 #        'emittente' => 'text-left'
 'articolo' => 'text-left',
+'mastro_provenienza' => 'text-left',
+'mastro_destinazione' => 'text-left',
+'quantita_movimento' => 'text-right',
 );
 
 #    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+
+    // preset filtro mastro corrente, come in _magazzini.form.movimenti.php: l'id del report e' quello della riga
+    $ct['view']['__restrict__']['( mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) + mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) )']['GE'] = 1;
 
     } 
 
@@ -216,8 +225,10 @@
     // debug
     // var_dump( $_REQUEST['mastri']['id_tipologia'] );
 
-    // preset filtro mastro corrente
+    // preset filtro mastro corrente ( il magazzino ha il suo, sopra )
+    if( ! in_array( $_REQUEST['mastri']['id_tipologia'], array( 1 ) ) ) {
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    }
   
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['fields']['data_attivita'] = date('Y-m-d');
