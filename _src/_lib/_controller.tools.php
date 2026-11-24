@@ -643,11 +643,20 @@
                             $like = "%$tks%";
                             $equal = "$tks";
                             $cond = array();
+                            // NOTA un campo numerico si confronta solo con una parola numerica: MySQL converte una stringa
+                            // non numerica in 0, e "giacenza = 'ABC'" prendeva tutte le righe a zero ( 2026-11-24 )
                             foreach (preg_filter('/^/', "$t$rm.", $i['__fields__']) as $field) {
-                                $cond[] = $field . ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? ' =' : ' LIKE' ) . ' ?';
-                                $vs[] = array('s' => ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? $equal : $like ) );
+                                if( isFieldNumeric( $mc, $c, $t, $field) ) {
+                                    if( ! is_numeric( $tks ) ) { continue; }
+                                    $cond[] = $field . ' = ?';
+                                    $vs[] = array('s' => $equal);
+                                } else {
+                                    $cond[] = $field . ' LIKE ?';
+                                    $vs[] = array('s' => $like);
+                                }
                             }
-                            $whr[] = '(' . implode(' OR ', $cond) . ')';
+                            // se nessun campo può contenere la parola, la ricerca non trova niente
+                            $whr[] = ( empty( $cond ) ) ? '( 0 )' : '(' . implode(' OR ', $cond) . ')';
                         }
                     }
                 } elseif (isset($i['__search__']) && !empty($i['__search__'])) {

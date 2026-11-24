@@ -52,7 +52,7 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-        'id_articolo' => 'articolo',
+        'codice_articolo' => 'articolo',
         'articolo' => 'descrizione',
         'collocazione' => 'ubicazione',
         'giacenza' => 'giacenza',
@@ -78,7 +78,7 @@
     // stili della vista
     $ct['view']['class'] = array(
         'id' => 'd-none',
-        'id_articolo' => 'text-left',
+        'codice_articolo' => 'text-left',
         'articolo' => 'text-left d-none d-md-table-cell',
         'collocazione' => 'text-left',
         'giacenza' => 'text-right',
@@ -145,7 +145,7 @@
              * attributo onclick romperebbero la chiamata o l'HTML.
              */
             $chiave = rawurlencode( $row['id'] );
-            $etichetta = rawurlencode( $row['id_articolo'] . ' in ' . $row['collocazione'] );
+            $etichetta = rawurlencode( $row['codice_articolo'] . ' in ' . $row['collocazione'] );
 
             if( isset( $cf['session']['__work__']['riassortimento']['items'] ) && array_key_exists( $row['id'], $cf['session']['__work__']['riassortimento']['items'] ) ) {
 

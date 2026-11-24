@@ -163,6 +163,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
 CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   `id` varchar(56) NOT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
   `articolo` varchar(331) DEFAULT NULL,
   `id_mastro` bigint(20) DEFAULT NULL,
   `collocazione` char(64) DEFAULT NULL,
@@ -186,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_articolo` (`id_articolo`),
+  KEY `codice_articolo` (`codice_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `esito` (`esito`),
   KEY `se_allarme` (`se_allarme`),
@@ -200,6 +202,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
 CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   `id` varchar(56) NOT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
   `articolo` varchar(331) DEFAULT NULL,
   `id_mastro` bigint(20) DEFAULT NULL,
   `collocazione` char(64) DEFAULT NULL,
@@ -211,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_articolo` (`id_articolo`),
+  KEY `codice_articolo` (`codice_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
