@@ -80,6 +80,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * domainFromURL()                  | restituisce il nome host di un URL
+     * urlLocale()                      | restituisce l'URL solo se porta a una pagina dello stesso sito
      * string2url()                     | normalizza una stringa in un URL valido
      *
      * funzioni di verifica e ricerca
@@ -874,6 +875,46 @@
 
         $array = parse_url( $url );
         return $array['host'];
+
+    }
+
+    /**
+     * restituisce l'URL solo se porta a una pagina dello stesso sito
+     *
+     * Questa funzione accetta un percorso locale ( comincia con una sola barra, p.es. "/strumenti/pagina.it-IT.html?x=1" )
+     * oppure un URL http o https il cui host è $host, e restituisce NULL per tutto il resto: URL di altri siti, percorsi
+     * relativi al protocollo ( "//example.com" ), schemi come "javascript:" o "data:", barre rovesciate, che i browser
+     * leggono come barre, e caratteri di controllo. È usata dalla macro di cancellazione per gli indirizzi di ritorno
+     * __delete__[target] e __delete__[rollback], che arrivano dalla querystring: il primo finisce in un header Location,
+     * il secondo in un window.open(), e senza controllo davano un open redirect e un XSS ( 24/11/2026 ).
+     *
+     * @param       string      $url    l'indirizzo da verificare
+     * @param       string      $host   l'host del sito ( p.es. $_SERVER['HTTP_HOST'] ), NULL per accettare solo i percorsi
+     *
+     * @return      string              l'indirizzo così com'è se è locale, NULL altrimenti
+     *
+     */
+    function urlLocale( $url, $host = NULL ) {
+
+        // solo stringhe, senza barre rovesciate e caratteri di controllo
+        if( ! is_string( $url ) || $url === '' || preg_match( '/[\\\\\x00-\x1f\x7f]/', $url ) ) {
+            return NULL;
+        }
+
+        // percorso locale: una barra sola in testa
+        if( $url[0] == '/' ) {
+            return ( isset( $url[1] ) && $url[1] == '/' ) ? NULL : $url;
+        }
+
+        // URL assoluto dello stesso sito
+        $array = parse_url( $url );
+        if( ! empty( $host ) && isset( $array['scheme'] ) && in_array( strtolower( $array['scheme'] ), array( 'http', 'https' ) )
+            && isset( $array['host'] ) && strtolower( $array['host'] ) === strtolower( $host ) && ! isset( $array['user'] ) ) {
+            return $url;
+        }
+
+        // tutto il resto no
+        return NULL;
 
     }
 

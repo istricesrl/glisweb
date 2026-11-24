@@ -14,6 +14,16 @@
     $_REQUEST['__delete__']['target'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['target'] );
     $_REQUEST['__delete__']['rollback'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['rollback'] );
 
+    // gli indirizzi di ritorno arrivano dalla querystring e finiscono in un header Location e in un window.open(): solo pagine del sito
+    foreach( array( 'target', 'rollback' ) as $ritorno ) {
+        if( urlLocale( $_REQUEST['__delete__'][ $ritorno ], ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : NULL ) === NULL ) {
+            if( ! empty( $_REQUEST['__delete__'][ $ritorno ] ) ) {
+                logger( 'indirizzo di ritorno ' . $ritorno . ' non locale scartato nella cancellazione', 'security', LOG_WARNING );
+            }
+            $_REQUEST['__delete__'][ $ritorno ] = $cf['site']['root'];
+        }
+    }
+
     // richiesta o conferma
     if( isset( $_REQUEST['__delete__']['conferma'] ) && $_REQUEST['__delete__']['conferma'] == 1 ) {
 

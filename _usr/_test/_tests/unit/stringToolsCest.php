@@ -242,6 +242,17 @@ class stringToolsCest
         $I->see("true");
     }
 
+    // urlLocale() -> l'indirizzo solo se e' un percorso locale o un URL dello stesso host, NULL per tutto il resto
+    public function urlLocale(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_urlLocale.01.php');
+        $I->see("percorso: '/strumenti/pagina.it-IT.html?mail_out[id]=1'");
+        $I->see("stesso sito: 'https://www.example.com/pagina.it-IT.html'");
+        foreach( array( 'altro sito', 'protocollo relativo', 'barra rovesciata', 'javascript', 'data', 'credenziali', 'a capo', 'vuoto', 'array' ) as $caso ) {
+            $I->see($caso . ': NULL');
+        }
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {

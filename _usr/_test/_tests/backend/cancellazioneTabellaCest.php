@@ -13,10 +13,31 @@
     class cancellazioneTabellaCest {
 
         // la pagina della richiesta di cancellazione, senza conferma
-        protected function apri( BackendTester $I, $tabella, $id ) {
+        protected function apri( BackendTester $I, $tabella, $id, $target = '/', $rollback = '/' ) {
 
             $I->amLoggedInAs( 'roots' );
-            $I->amOnPageId( 'delete', array( '__delete__' => array( 'table' => $tabella, 'id' => $id, 'target' => '/', 'rollback' => '/' ) ) );
+            $I->amOnPageId( 'delete', array( '__delete__' => array( 'table' => $tabella, 'id' => $id, 'target' => $target, 'rollback' => $rollback ) ) );
+
+        }
+
+        // gli indirizzi di ritorno di un altro sito diventano la radice del sito ( open redirect su target e su rollback,
+        // fino al 24/11/2026 ); javascript: qui non si prova perche' ModSecurity lo ferma prima con un 403, e il caso
+        // sta nel test unitario di urlLocale()
+        public function ritorniNonLocali( BackendTester $I ) {
+
+            $this->apri( $I, 'anagrafica', 1, 'https://evil.example.org/', '//evil.example.org/' );
+            $I->assertEquals( '/', $I->grabAttributeFrom( 'input[name="__delete__[target]"]', 'value' ) );
+            $I->assertEquals( "window.open('\\/','_self');", $I->grabAttributeFrom( 'input[type="button"]', 'onclick' ) );
+
+        }
+
+        // un rollback locale con un apice non esce dalla stringa JavaScript dell'onclick
+        public function rollbackConApice( BackendTester $I ) {
+
+            $this->apri( $I, 'anagrafica', 1, '/', "/x');alert(1);//" );
+            $onclick = $I->grabAttributeFrom( 'input[type="button"]', 'onclick' );
+            $I->assertStringStartsWith( "window.open('", $onclick );
+            $I->assertStringNotContainsString( "');alert", $onclick );
 
         }
 
