@@ -354,6 +354,18 @@ mysql:
 automaticamente dal bootstrap confrontando l'`HTTP_HOST` della richiesta con i domini configurati in
 `$cf['sites']`. Non va impostata manualmente.
 
+## Database: il canone vince, e due trappole di MariaDB
+
+Due regole decise da Fabio il 24/11/2026:
+
+- **se codice e canone del database non tornano, si corregge il codice, mai il database.** Un database fuori
+  canone si riporta **a mano** al canone, senza patch condizionali ( `IF NOT EXISTS`, controlli su
+  `information_schema` per assecondare la variante locale ): è la stessa regola dello stare sul canone e non
+  improvvisare, applicata allo schema;
+- **MariaDB: `SELECT 1 WHERE <condizione>` senza `FROM` dà errore 1064**, e un `empty()` sul risultato fallito lo
+  legge come "nessuna riga", cioè "libero": il controllo passa in silenzio proprio quando dovrebbe fermare. Si
+  scrive `SELECT 1 FROM DUAL WHERE <condizione>`.
+
 ---
 
 ## Architettura in sintesi
