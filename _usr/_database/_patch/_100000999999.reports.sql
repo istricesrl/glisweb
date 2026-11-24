@@ -115,6 +115,7 @@ CREATE TABLE `__report_giacenza_magazzini__` (
   KEY `id_prodotto` (`id_prodotto`),
   KEY `codice_prodotto` (`codice_prodotto`),
   KEY `id_matricola` (`id_matricola`),
+  KEY `indice_articolo_mastro` (`id_articolo`,`id_mastro`,`id_matricola`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -75,6 +75,17 @@
 
         }
 
+        // l'indice composto della giacenza sta nello schema standard e nella patch che lo porta sui deploy esistenti
+        public function indiceArticoloMastro( UnitTester $I ) {
+
+            $indice = '`indice_articolo_mastro` (`id_articolo`,`id_mastro`,`id_matricola`)';
+
+            foreach( array( '_100000999999.reports.sql', '_202611241800.report.giacenza.indice.sql' ) as $file ) {
+                $I->assertStringContainsString( $indice, file_get_contents( DIR_BASE . '_usr/_database/_patch/' . $file ), 'indice_articolo_mastro assente da ' . $file );
+            }
+
+        }
+
         // i codici ci sono, accanto agli id
         public function codiciAccantoAgliId( UnitTester $I ) {
 
