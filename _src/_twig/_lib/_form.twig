@@ -462,7 +462,7 @@
     {% if controls.edit and vl %}
     {% set editor = pages[ controls.edit ].path[ localization.language.ietf ] ~ '?' ~ field.name ~ '[id]=' ~ vl ~ '&__backurl__=' ~ page.backurl[ localization.language.ietf ] %}
     <div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor|e('js') }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>
     {% endif %}
 
@@ -470,7 +470,7 @@
     {% if add %}
     {% set adder = pages[ add ].path[ localization.language.ietf ] ~ '?__backurl__=' ~ page.backurl[ localization.language.ietf ] %}
     <div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder|e('js') }}','_self')"><i class="fa fa-plus"></i></button>
     </div>
     {% endif %}
 

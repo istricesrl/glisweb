@@ -243,7 +243,7 @@
                         </div>
 
                         <div class="col-12 mt-2 cassa">
-                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina</button>
+                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id|url_encode }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina</button>
                         </div>
                     </div>
                     </div>
@@ -307,9 +307,9 @@ $( document ).ready(function() {
     function anteprima(){
        
        
-       // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
+       // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id|url_encode }}');
        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 || $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
-       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?__documenti__[id]={{ request.documenti.id }}", '_self' );
+       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?__documenti__[id]={{ request.documenti.id|url_encode }}", '_self' );
        
         } else {
            alert("devi selezionare un metodo di pagamento per poter stampare lo scontrino");

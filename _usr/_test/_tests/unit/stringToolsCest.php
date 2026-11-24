@@ -253,6 +253,18 @@ class stringToolsCest
         }
     }
 
+    // urlLocale() in un multisito -> passano gli altri siti del deploy e i loro alias, non i domini che li contengono
+    public function urlLocaleMultisito(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_urlLocale.02.php');
+        $I->see("host della richiesta: 'https://www.example.com/pagina.it-IT.html'");
+        $I->see("altro sito del deploy: 'https://www.esempio.it/pagina.it-IT.html'");
+        $I->see("alias: 'https://shop.esempio.it/pagina.it-IT.html'");
+        foreach( array( 'senza punto', 'dominio in coda', 'dominio come suffisso', 'altro sito' ) as $caso ) {
+            $I->see($caso . ': NULL');
+        }
+    }
+
     // settaggi post test
     public function _after(UnitTester $I)
     {

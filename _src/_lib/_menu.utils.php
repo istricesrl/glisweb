@@ -43,6 +43,7 @@
      * buildBreadcrumbs()               | costruisce le briciole di pane di una pagina
      * buildFlags()                     | costruisce le voci del selettore della lingua di una pagina
      * backurlRegistra()                | registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
+     * urlDelDeploy()                   | restituisce l'indirizzo solo se porta a una pagina di uno dei siti del deploy
      * 
      * funzioni per l'indice delle pagine
      * ----------------------------------
@@ -495,6 +496,48 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     // restituisco il risultato
         return $token;
+
+    }
+
+    /**
+     * restituisce l'indirizzo solo se porta a una pagina di uno dei siti del deploy
+     *
+     * È urlLocale() con l'elenco degli host del deploy: quello della richiesta, più la regola di site2regexp() di
+     * ogni sito per ogni profilo. In un deploy multisito un indirizzo di ritorno verso un altro sito dello stesso
+     * deploy è legittimo, e confrontarlo col solo host corrente lo scarterebbe ( Fabio, 24/11/2026 ); un indirizzo
+     * verso un host estraneo resta un open redirect, e si scarta.
+     *
+     * @param   string      $url        l'indirizzo da verificare
+     *
+     * @return  string                  l'indirizzo se è un percorso o un URL di un sito del deploy, altrimenti NULL
+     *
+     */
+    function urlDelDeploy( $url ) {
+
+        global $cf;
+
+    // l'host della richiesta
+        $hosts = array();
+        if( isset( $_SERVER['HTTP_HOST'] ) ) {
+            $hosts[] = $_SERVER['HTTP_HOST'];
+        }
+
+    // gli host di tutti i siti, per tutti i profili
+        if( isset( $cf['sites'] ) && is_array( $cf['sites'] ) ) {
+            foreach( $cf['sites'] as $site ) {
+                if( isset( $site['domains'] ) && is_array( $site['domains'] ) ) {
+                    foreach( array_keys( $site['domains'] ) as $status ) {
+                        $regola = site2regexp( $site, $status );
+                        if( $regola !== NULL ) {
+                            $hosts[] = $regola;
+                        }
+                    }
+                }
+            }
+        }
+
+    // restituisco il risultato
+        return urlLocale( $url, $hosts );
 
     }
 

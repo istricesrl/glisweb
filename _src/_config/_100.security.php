@@ -38,5 +38,28 @@
         }
     }
 
+    /**
+     * __backurl__ solo come token
+     * ===========================
+     * __backurl__ porta l'indirizzo della pagina a cui tornare, ma non l'indirizzo stesso: è il token md5 con cui
+     * backurlRegistra() ( _src/_lib/_menu.utils.php ) lo ha messo in $_SESSION['backurls'], e i template lo usano
+     * così, attaccandolo ai link o cercandolo in session.backurls.
+     *
+     * Fix 2026-11-24: il valore arriva dalla querystring e i template lo stampano anche dentro gli onclick, dove
+     * l'escape HTML non protegge; un valore con un apice usciva dalla stringa JavaScript ( XSS ). Un token è fatto
+     * di 32 caratteri esadecimali e non contiene nessun host, quindi il controllo non scarta i ritorni fra siti
+     * diversi di un deploy multisito: quelli li decide l'indirizzo in sessione, che il client non può impostare.
+     * Qualunque altra cosa si toglie dalla richiesta.
+     *
+     */
+
+    // tolgo il ritorno che non è un token
+    if( isset( $_REQUEST['__backurl__'] ) && ( ! is_string( $_REQUEST['__backurl__'] ) || ! preg_match( '/^[0-9a-f]{32}$/', $_REQUEST['__backurl__'] ) ) ) {
+        if( $_REQUEST['__backurl__'] !== '' ) {
+            logger( 'indirizzo di ritorno che non è un token scartato', 'security', LOG_WARNING );
+        }
+        unset( $_REQUEST['__backurl__'], $_GET['__backurl__'], $_POST['__backurl__'] );
+    }
+
     // debug
     // echo 'OUTPUT';

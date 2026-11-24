@@ -41,6 +41,16 @@
 
         }
 
+        // un __backurl__ che non e' un token di backurlRegistra() viene scartato da _100.security.php prima di arrivare
+        // ai template, dove finiva negli onclick ( fino al 24/11/2026 )
+        public function backurlNonToken( BackendTester $I ) {
+
+            $I->amLoggedInAs( 'roots' );
+            $I->amOnPageId( 'delete', array( '__delete__' => array( 'table' => 'anagrafica', 'id' => 1, 'target' => '/', 'rollback' => '/' ), '__backurl__' => "x');alert(1);//" ) );
+            $I->dontSeeInSource( "alert(1)" );
+
+        }
+
         // con una tabella vera c'e' l'etichetta, letta dalla vista o dalla statica, e non il numero della riga
         public function tabellaValida( BackendTester $I ) {
 

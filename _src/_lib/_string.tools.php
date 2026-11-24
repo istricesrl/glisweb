@@ -888,8 +888,15 @@
      * __delete__[target] e __delete__[rollback], che arrivano dalla querystring: il primo finisce in un header Location,
      * il secondo in un window.open(), e senza controllo davano un open redirect e un XSS ( 24/11/2026 ).
      *
+     * In un deploy multisito un ritorno verso un altro sito dello stesso deploy è legittimo: per questo $host può essere
+     * anche un elenco, che mescola nomi host ed espressioni regolari costruite da site2regexp(). Un'espressione deve
+     * coprire tutto l'host, e il dominio deve cominciare dopo un punto, perché la regola di site2regexp() è fatta per
+     * riconoscere l'host corrente e non è ancorata in fondo. L'elenco degli host del deploy lo dà urlDelDeploy() di
+     * _menu.utils.php, che è il modo di chiamare questa funzione da una macro.
+     *
      * @param       string      $url    l'indirizzo da verificare
-     * @param       string      $host   l'host del sito ( p.es. $_SERVER['HTTP_HOST'] ), NULL per accettare solo i percorsi
+     * @param       mixed       $host   l'host ammesso ( p.es. $_SERVER['HTTP_HOST'] ), oppure un elenco di host e di espressioni
+     *                                  di site2regexp(); NULL per accettare solo i percorsi
      *
      * @return      string              l'indirizzo così com'è se è locale, NULL altrimenti
      *
@@ -906,11 +913,30 @@
             return ( isset( $url[1] ) && $url[1] == '/' ) ? NULL : $url;
         }
 
-        // URL assoluto dello stesso sito
+        // URL assoluto http o https, senza credenziali
         $array = parse_url( $url );
-        if( ! empty( $host ) && isset( $array['scheme'] ) && in_array( strtolower( $array['scheme'] ), array( 'http', 'https' ) )
-            && isset( $array['host'] ) && strtolower( $array['host'] ) === strtolower( $host ) && ! isset( $array['user'] ) ) {
-            return $url;
+        if( empty( $host ) || ! isset( $array['scheme'] ) || ! in_array( strtolower( $array['scheme'] ), array( 'http', 'https' ) )
+            || ! isset( $array['host'] ) || isset( $array['user'] ) ) {
+            return NULL;
+        }
+
+        // l'host deve essere uno di quelli dati, per nome o per espressione regolare di site2regexp()
+        $h = strtolower( $array['host'] );
+        foreach( (array) $host as $ammesso ) {
+            if( ! is_string( $ammesso ) || $ammesso === '' ) {
+                continue;
+            } elseif( $ammesso[0] != '/' ) {
+                if( $h === strtolower( $ammesso ) ) {
+                    return $url;
+                }
+            } elseif( preg_match( $ammesso, $h, $m ) && $m[0] === $h ) {
+                // la regola deve coprire tutto l'host, e il dominio deve cominciare dopo un punto: altrimenti
+                // wwwesempio.it, che è un altro dominio, passerebbe per www.esempio.it
+                $prima = substr( $h, 0, strlen( $h ) - strlen( $m[1] ) );
+                if( $prima === '' || substr( $prima, -1 ) === '.' ) {
+                    return $url;
+                }
+            }
         }
 
         // tutto il resto no
