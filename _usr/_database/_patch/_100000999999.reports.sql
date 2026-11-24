@@ -167,7 +167,7 @@ CREATE TABLE `__report_movimenti_magazzini__` (
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- | 100000020550
+-- | 100000021002
 
 -- __report_immagini_scalate__
 CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
@@ -195,7 +195,7 @@ CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
 -- id_disciplina_progetto / disciplina_progetto usano max() perche' il LEFT JOIN su
 -- progetti_categorie produce comunque una riga per ogni categoria del progetto
 -- (anche non-disciplina): max() scarta i NULL e tiene la sola foglia-disciplina.
--- | 100000020551
+-- | 100000021003
 
 -- __report_iscrizioni_anagrafica__
 CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
@@ -247,7 +247,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
         contratti.id, contratti_anagrafica.id_anagrafica, rinnovi.id, progetti.id
 ;
 
--- | 100000020605
+-- | 100000021004
 
 -- __report_sottoscorta__
 -- tabella, non vista: la riscrive per intero il task _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php
@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- | 100000020606
+-- | 100000021005
 
 -- __report_scorte_non_valutabili__
 -- tabella, non vista: la riscrive lo stesso task di __report_sottoscorta__ con le ubicazioni la cui soglia non si puo'

@@ -145,4 +145,26 @@
 
         }
 
+        // nei file base i marcatori crescono: mysqlPatchRead() applica solo i blocchi sopra il livello, quindi su un database
+        // costruito da zero un blocco con un numero piu' basso del precedente si salta in silenzio ( attivita_asset senza
+        // AUTO_INCREMENT e quattro report mancanti, la patch 202611241600 ferma con 1146: eurosnodi, 24/11/2026 )
+        public function fileBaseInOrdineCrescente( UnitTester $I ) {
+
+            $fuori = array();
+            $file = glob( DIR_BASE . '_usr/_database/_patch/_[0-9]*999999.*.sql' );
+            $I->assertNotEmpty( $file, 'nessun file base letto: il test non prova niente' );
+
+            foreach( $file as $f ) {
+                preg_match_all( '/^-- \| (\d{12})$/m', file_get_contents( $f ), $m );
+                for( $i = 1; $i < count( $m[1] ); $i++ ) {
+                    if( strcmp( $m[1][ $i ], $m[1][ $i - 1 ] ) <= 0 ) {
+                        $fuori[] = basename( $f ) . ': ' . $m[1][ $i ] . ' dopo ' . $m[1][ $i - 1 ];
+                    }
+                }
+            }
+
+            $I->assertEmpty( $fuori, 'blocchi che su un database nuovo si saltano: ' . implode( ', ', $fuori ) );
+
+        }
+
     }

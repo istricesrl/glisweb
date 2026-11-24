@@ -463,6 +463,11 @@ ALTER TABLE `attivita_asset`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`ordine`,`id_attivita`,`id_asset`);
 
+-- | 030000001901
+
+-- attivita_asset
+ALTER TABLE `attivita_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 -- | 030000002000
 
 -- attivita_matricole
@@ -477,11 +482,6 @@ ALTER TABLE `attivita_matricole`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`ordine`,`id_attivita`,`id_matricola`,`id_ruolo`);
-
--- | 030000001901
-
--- attivita_asset
-ALTER TABLE `attivita_asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002001
 
