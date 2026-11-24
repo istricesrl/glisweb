@@ -1333,3 +1333,58 @@
 
         }
     }
+
+    /**
+     * calcola gli importi di una riga di documento a partire dal prezzo unitario
+     *
+     * Prima lo sconto percentuale, poi quello a valore. Uno sconto non puo' portare sotto zero una riga
+     * che parte da un importo positivo, ma una riga di solo sconto ( prezzo unitario negativo, senza
+     * articolo ) e' voluta: e' cosi' che si sconta il totale di un documento la cui testata non ha campi
+     * di sconto propri. Quindi si azzera solo il primo caso.
+     *
+     * La usano la duplicazione dei documenti ( _src/_api/_task/_documenti.duplica.php ), quando rimette
+     * i prezzi di listino di oggi, e i controller di progetto che ricalcolano le righe: due copie della
+     * stessa catena prima o poi danno due totali diversi per la stessa riga ( LUGHESE, 24/11/2026 ).
+     *
+     * @param $prezzoUnitario       il prezzo netto unitario
+     * @param $quantita             la quantita', 1 se NULL
+     * @param $scontoPercentuale    lo sconto percentuale, o NULL
+     * @param $scontoValore         lo sconto a valore, o NULL
+     * @param $aliquota             l'aliquota IVA, o NULL se non si conosce
+     * @return                      prezzo_netto_totale e importo_netto_totale; con l'aliquota anche
+     *                              importo_lordo_totale e importo_lordo_finale
+     */
+    if( ! function_exists( 'importiRigaDocumento' ) ) {
+        function importiRigaDocumento( $prezzoUnitario, $quantita = NULL, $scontoPercentuale = NULL, $scontoValore = NULL, $aliquota = NULL ) {
+
+            if( $quantita === NULL ) {
+                $quantita = 1;
+            }
+
+            $importi = array( 'prezzo_netto_totale' => round( $prezzoUnitario * $quantita, 2 ) );
+
+            $imponibile = $importi['prezzo_netto_totale'];
+
+            if( $scontoPercentuale !== NULL ) {
+                $imponibile = $imponibile - ( $imponibile * $scontoPercentuale / 100 );
+            }
+
+            if( $scontoValore !== NULL ) {
+                $imponibile = $imponibile - $scontoValore;
+            }
+
+            if( $imponibile < 0 && $importi['prezzo_netto_totale'] >= 0 ) {
+                logWrite( 'sconti maggiori dell\'imponibile su una riga da ' . $importi['prezzo_netto_totale'] . ': azzerato', 'controller', LOG_WARNING );
+                $imponibile = 0;
+            }
+
+            $importi['importo_netto_totale'] = round( $imponibile, 2 );
+
+            if( $aliquota !== NULL && $aliquota !== '' ) {
+                $importi['importo_lordo_totale'] = $importi['importo_lordo_finale'] = round( $importi['importo_netto_totale'] * ( ( $aliquota + 100 ) / 100 ), 2 );
+            }
+
+            return $importi;
+
+        }
+    }

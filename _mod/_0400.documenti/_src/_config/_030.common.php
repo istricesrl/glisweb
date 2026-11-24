@@ -15,3 +15,13 @@
     // dell'anagrafica quando il documento non ha un id_destinatario. Spento di default: per i documenti fiscali
     // il destinatario dev'essere un'anagrafica, e un deploy che non lo chiede non deve vedere il campo.
     $cf['documenti']['destinatario']['libero']          = false;
+
+    // cliente tenuto nella duplicazione
+    // Con true la copia di un documento tiene destinatario e sedi dell'originale; con false nasce senza,
+    // e il destinatario si sceglie sulla copia ( chi duplica un preventivo per farne uno a un altro cliente ).
+    $cf['documenti']['duplica']['destinatario']         = true;
+
+    // numerazione nella duplicazione
+    // Con true la copia di un documento prende subito sezionale dell'anno, numero successivo e data di oggi;
+    // con false nasce senza, e si numera dalla scheda come un documento nuovo.
+    $cf['documenti']['duplica']['numera']               = false;

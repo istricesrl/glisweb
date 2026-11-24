@@ -108,6 +108,13 @@ essere veloce. Se un'offerta appena creata non compare, o ne compare una cancell
 > **attenzione** — lo svuotamento lascia l'elenco vuoto finché non si ripopola. Si usa solo se le altre due non
 > bastano.
 
+Fra gli strumenti c'è anche la **duplicazione**, che crea una copia dell'offerta con tutte le sue righe, senza
+codice. Se il gestionale ha i listini, prima di duplicare si sceglie se tenere **i prezzi originali** o usare **i
+prezzi attuali** di listino, ricalcolati con le stesse quantità e gli stessi sconti; le righe il cui articolo non
+è più a listino restano senza prezzo, da completare. A seconda di come è configurato il gestionale la copia nasce
+già numerata con la data di oggi oppure da numerare, e col cliente dell'offerta di partenza oppure senza. Lo stesso
+strumento, *duplica documento*, c'è negli strumenti degli altri documenti.
+
 ## gli ordini
 <!-- @pubblico: operatore, amministratore -->
 

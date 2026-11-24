@@ -70,6 +70,31 @@ righe così come sono ). Il vincolo "almeno uno dei due" non c'è né lato clien
 sugli `<input>`, non su tendina e textarea ) né lato server. Test: `offerteDestinatarioLiberoCest`, che si adatta al
 valore del flag nel deploy.
 
+duplicazione
+------------
+
+Il task `_src/_api/_task/_documenti.duplica.php` ( `/task/0400.documenti/documenti.duplica?id=<documento>` ) copia
+testata e righe di un documento di qualunque tipologia; lo chiama la voce di duplicazione degli strumenti della
+scheda documenti e di quella delle offerte, che aprono entrambe il modal `documenti.form.tools.modal.duplica.html`.
+Della testata non si copia quello che appartiene alla vita del documento di partenza ( codice, invio, chiusura,
+archiviazione, token ); le righe si copiano prima le principali e poi le figlie, rimappando `id_genitore` sulle
+copie, e anche il loro codice si svuota, per l'indice unico.
+
+Due flag in `_src/_config/_030.common.php`, da cambiare nel `config.json` del deploy:
+
+| chiave | default | effetto |
+|---|---|---|
+| `documenti.duplica.numera` | `false` | con `true` la copia prende sezionale dell'anno, il progressivo successivo ( `generaProssimoNumeroDocumento()` ) e la data di oggi; con `false` resta senza numero e si numera dalla scheda |
+| `documenti.duplica.destinatario` | `true` | con `false` la copia nasce senza destinatario e sedi, per rifare lo stesso documento a un altro cliente |
+
+Con il modulo `_4120.listini` attivo il modal espone la scelta **usa i prezzi originali / usa i prezzi attuali**
+( parametro `prezzi`, default `originali` ): con `attuali` ogni riga con un articolo prende il prezzo di listino di
+oggi ( `prezzoListinoArticolo()`, `_4120.listini/_src/_lib/_mysql.utils.add.php` ) e ricalcola gli importi con
+quantità e sconti della riga di partenza ( `importiRigaDocumento()`, `_src/_lib/_mysql.utils.add.php` ); se il
+listino non ha più l'articolo la riga resta senza prezzo, da completare a mano. Senza il modulo listini `attuali`
+ricade su `originali`, e il task lo dice negli errori. Le scritture non passano dal controller: la vista statica
+delle offerte si riallinea nel task. Test: `documentiDuplicaCest`, che si adatta ai flag e alla presenza dei listini.
+
 fattura elettronica
 -------------------
 

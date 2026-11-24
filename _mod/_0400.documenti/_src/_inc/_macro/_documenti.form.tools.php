@@ -32,7 +32,36 @@
 	    )
 	);
 
-        // macro di default
+    /**
+     * DUPLICAZIONE DEL DOCUMENTO
+     *
+     * Il modal chiama _documenti.duplica.php e apre la scheda della copia. Col modulo listini attivo
+     * chiede anche se tenere i prezzi originali delle righe o rimettere quelli di listino di oggi.
+     */
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+
+        $ct['page']['contents']['metro']['amministrazione'][] = array(
+            'modal' => array( 'id' => 'duplica', 'include' => 'inc/documenti.form.tools.modal.duplica.html' ),
+            'icon' => NULL,
+            'fa' => 'fa-files-o',
+            'title' => 'duplica documento',
+            'text' => 'crea un nuovo documento con la testata e le righe di quello corrente'
+        );
+
+        // scheda da aprire sulla copia
+        $ct['etc']['duplica']['form'] = $cf['contents']['pages']['documenti.form']['url'][ LINGUA_CORRENTE ];
+
+        // scelta dei prezzi, solo col modulo listini
+        if( in_array( '4120.listini', $cf['mods']['active']['array'] ) ) {
+            $ct['etc']['select']['prezzi'] = array(
+                array( 'id' => 'originali', '__label__' => 'usa i prezzi originali' ),
+                array( 'id' => 'attuali', '__label__' => 'usa i prezzi attuali' )
+            );
+        }
+
+    }
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // macro per l'apertura dei modal
