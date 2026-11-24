@@ -124,7 +124,9 @@
                         ""
                     )
                 ) AS articolo,
+                articoli.codice AS codice_articolo,
                 articoli.id_prodotto AS id_prodotto,
+                prodotti.codice AS codice_prodotto,
                 prodotti.nome AS prodotto,
                 prodotti.codice_produttore,
                 group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR " | " ) AS categorie,
@@ -152,7 +154,10 @@
 
         $riga['id_articolo'] = $articolo['id'];
         $riga['articolo'] = $articolo['articolo'];
+        // i codici, che all'operatore dicono quello che l'id non dice ( 2026-11-24 )
+        $riga['codice_articolo'] = $articolo['codice_articolo'];
         $riga['id_prodotto'] = $articolo['id_prodotto'];
+        $riga['codice_prodotto'] = $articolo['codice_prodotto'];
         $riga['prodotto'] = $articolo['prodotto'];
         $riga['sigla_udm_peso'] = $articolo['sigla_udm_peso'];
     
@@ -414,7 +419,9 @@
                             ""
                         )
                     ) AS articolo,
+                    articoli.codice AS codice_articolo,
                     articoli.id_prodotto AS id_prodotto,
+                    prodotti.codice AS codice_prodotto,
                     prodotti.nome AS prodotto,
                     prodotti.codice_produttore,
                     group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR " | " ) AS categorie,
@@ -439,7 +446,10 @@
             if( ! empty( $articolo ) ) {
                 $riga['id_articolo'] = $articolo['id'];
                 $riga['articolo'] = $articolo['articolo'];
+                // i codici, che all'operatore dicono quello che l'id non dice ( 2026-11-24 )
+                $riga['codice_articolo'] = $articolo['codice_articolo'];
                 $riga['id_prodotto'] = $articolo['id_prodotto'];
+                $riga['codice_prodotto'] = $articolo['codice_prodotto'];
                 $riga['prodotto'] = $articolo['prodotto'];
                 $riga['quantita_movimento'] = $riga['quantita'] * $articolo['peso'];
                 $riga['udm_movimento'] = $articolo['sigla_udm_peso'];
