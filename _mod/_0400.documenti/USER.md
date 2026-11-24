@@ -91,6 +91,11 @@ La scheda ha quattro linguette:
 > disponibile, si scrive la quantità e si salva. Per i dettagli di una riga ( descrizione, specifiche, progetto ) si
 > apre la riga dall'elenco.
 
+Dove il deploy lo prevede, sotto il destinatario c'è anche il campo **destinatario non in anagrafica**: per
+un preventivo a chi non è ancora cliente si scrivono lì nome e indirizzo, una riga sotto l'altra, e la tendina
+del destinatario si lascia vuota. Sul PDF esce il testo così com'è, con la prima riga in grassetto; se si sceglie
+anche un destinatario dalla tendina, vince quello.
+
 L'**elenco** delle offerte non si legge direttamente dai documenti ma da una **vista statica**, una copia pensata per
 essere veloce. Se un'offerta appena creata non compare, o ne compare una cancellata, si apre *strumenti* e si usa:
 

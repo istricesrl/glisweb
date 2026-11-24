@@ -54,6 +54,22 @@ Per personalizzare la stampa in un deploy si scrive la funzione di disegno custo
 oppure la si forza con `$cnf['modello']` in un endpoint custom; il procedimento generale sta nel capitolo
 "come creare i file PDF".
 
+destinatario non in anagrafica
+------------------------------
+
+Con `$cf['documenti']['destinatario']['libero']` a `true` ( `_src/_config/_030.common.php`, spento di default; nel
+deploy si accende con `documenti.destinatario.libero` nel `config.json` ) la scheda delle offerte mostra il campo
+**destinatario non in anagrafica**, che scrive la colonna `documenti.destinatario` ( testo, patch
+`_202611241900.documenti.destinatario.sql` ), e la tendina del destinatario smette di essere obbligatoria. Serve
+per i preventivi a chi non è ancora un cliente: non si crea un'anagrafica per un'offerta che forse non avrà seguito.
+
+Il testo vale solo se `id_destinatario` è vuoto, che vince sempre: `documenti_view.destinatario` lo usa dopo
+denominazione e nome dell'anagrafica, e `generaContenutiDocumento()` ne fa il soggetto `dst` del PDF, una riga di
+stampa per riga di testo con la prima come `denominazione_fiscale` ( `documentoRigheSoggetto()` restituisce quelle
+righe così come sono ). Il vincolo "almeno uno dei due" non c'è né lato client ( `required-alternative` vale solo
+sugli `<input>`, non su tendina e textarea ) né lato server. Test: `offerteDestinatarioLiberoCest`, che si adatta al
+valore del flag nel deploy.
+
 fattura elettronica
 -------------------
 
