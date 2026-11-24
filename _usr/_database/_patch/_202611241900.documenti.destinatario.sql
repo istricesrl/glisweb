@@ -17,6 +17,8 @@
 ALTER TABLE `documenti`
 	ADD COLUMN IF NOT EXISTS `destinatario` text DEFAULT NULL AFTER `id_destinatario`;
 
+-- | 202611241901
+
 -- documenti_view
 CREATE OR REPLACE VIEW `documenti_view` AS
     SELECT
