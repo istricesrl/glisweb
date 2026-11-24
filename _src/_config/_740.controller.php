@@ -156,8 +156,17 @@
                         }
 
                         // elimino la cartella
-                        deleteDir( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
+                        // deleteDir( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
 
+                    }
+
+                    // elimino la cartella, fuori dal ramo dei file: prima una cartella programmata vuota restava in todo/ per sempre
+                    // ( segnalato da eurosnodi il 24/11/2026 ); solo se e' rimasta vuota, perche' un file non spostato non va perso
+                    $cf['import']['rimasti'] = getFileList( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
+                    if( empty( $cf['import']['rimasti'] ) ) {
+                        deleteDir( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
+                    } else {
+                        logWrite( 'cartella ' . $programmata . ' non eliminata, contiene ancora: ' . implode( ', ', $cf['import']['rimasti'] ), 'import', LOG_ERR );
                     }
 
                 }
