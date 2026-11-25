@@ -173,6 +173,8 @@
          * Senza handler, un id che non esiste in tabella non da' righe alla SELECT ... INTO p1, p1 resta
          * com'era e il WHILE non finisce piu': il 24/11/2026 su bernispa tre report sono rimasti appesi
          * una notte su mastri_path_check( 2901 ), e col loro lock hanno fermato l'aggiornamento notturno.
+         * Per lo stesso motivo serve il limite di profondita': con un ciclo nei dati ( A genitore di B, B genitore
+         * di A ) le righe ci sono sempre, e l'handler da solo non fermerebbe il WHILE.
          */
         public function funzioniRicorsiveConHandler( UnitTester $I ) {
 
@@ -182,12 +184,12 @@
             $I->assertNotEmpty( $m[0], 'nessuna funzione letta: il test non prova niente' );
 
             foreach( $m[0] as $i => $corpo ) {
-                if( strpos( $corpo, 'WHILE ( p1 IS NOT NULL )' ) !== false && strpos( $corpo, 'HANDLER FOR NOT FOUND' ) === false ) {
+                if( strpos( $corpo, 'WHILE ( p1 IS NOT NULL )' ) !== false && ( strpos( $corpo, 'HANDLER FOR NOT FOUND' ) === false || strpos( $corpo, 'profondita > 100' ) === false ) ) {
                     $senza[] = $m[1][ $i ];
                 }
             }
 
-            $I->assertEmpty( $senza, 'funzioni ricorsive che con un id inesistente non finiscono: ' . implode( ', ', $senza ) );
+            $I->assertEmpty( $senza, 'funzioni ricorsive che con un id inesistente o un ciclo nei dati non finiscono: ' . implode( ', ', $senza ) );
 
         }
 

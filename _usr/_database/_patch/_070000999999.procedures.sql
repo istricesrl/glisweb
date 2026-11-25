@@ -34,11 +34,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				campagne.id_genitore,
@@ -85,11 +94,20 @@ CREATE
 		-- TEST
 		-- SELECT campagne_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -134,11 +152,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				campagne.id_genitore,
@@ -182,11 +209,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				caratteristiche.id_genitore,
@@ -233,11 +269,20 @@ CREATE
 		-- TEST
 		-- SELECT caratteristiche_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -282,11 +327,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				caratteristiche.id_genitore,
@@ -330,11 +384,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_anagrafica.id_genitore,
@@ -382,11 +445,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_anagrafica_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -431,11 +503,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_anagrafica.id_genitore,
@@ -479,11 +560,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_annunci.id_genitore,
@@ -530,11 +620,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_annunci_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -579,11 +678,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_annunci.id_genitore,
@@ -628,11 +736,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_conversazioni.id_genitore,
@@ -680,11 +797,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_conversazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -730,11 +856,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_conversazioni.id_genitore,
@@ -779,11 +914,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_marchi.id_genitore,
@@ -831,11 +975,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_marchi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -881,11 +1034,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_marchi.id_genitore,
@@ -930,11 +1092,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_notizie.id_genitore,
@@ -982,11 +1153,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_notizie_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1032,11 +1212,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_notizie.id_genitore,
@@ -1080,11 +1269,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_prodotti.id_genitore,
@@ -1131,11 +1329,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_prodotti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1180,11 +1387,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_prodotti.id_genitore,
@@ -1228,11 +1444,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_progetti.id_genitore,
@@ -1279,11 +1504,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_progetti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1328,11 +1562,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_progetti.id_genitore,
@@ -1377,11 +1620,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				categorie_risorse.id_genitore,
@@ -1429,11 +1681,20 @@ CREATE
 		-- TEST
 		-- SELECT categorie_risorse_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1479,11 +1740,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				categorie_risorse.id_genitore,
@@ -1528,11 +1798,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				colori.id_genitore,
@@ -1580,11 +1859,20 @@ CREATE
 		-- TEST
 		-- SELECT colori_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1630,11 +1918,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				colori.id_genitore,
@@ -1678,11 +1975,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				edifici.id_genitore,
@@ -1729,11 +2035,20 @@ CREATE
 		-- TEST
 		-- SELECT edifici_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1778,11 +2093,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				edifici.id_genitore,
@@ -1827,11 +2151,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				gruppi.id_genitore,
@@ -1879,11 +2212,20 @@ CREATE
 		-- TEST
 		-- SELECT gruppi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -1929,11 +2271,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				gruppi.id_genitore,
@@ -1977,11 +2328,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				luoghi.id_genitore,
@@ -2028,11 +2388,20 @@ CREATE
 		-- TEST
 		-- SELECT luoghi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2077,11 +2446,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				luoghi.id_genitore,
@@ -2126,11 +2504,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				mastri.id_genitore,
@@ -2178,11 +2565,20 @@ CREATE
 		-- TEST
 		-- SELECT mastri_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2228,11 +2624,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				mastri.id_genitore,
@@ -2276,11 +2681,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				organizzazioni.id_genitore,
@@ -2333,11 +2747,20 @@ CREATE
 		-- TEST
 		-- SELECT organizzazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2382,11 +2805,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				organizzazioni.id_genitore,
@@ -2430,11 +2862,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				pagine.id_genitore,
@@ -2481,11 +2922,20 @@ CREATE
 		-- TEST
 		-- SELECT pagine_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2530,11 +2980,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				pagine.id_genitore,
@@ -2578,11 +3037,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				pianificazioni.id_genitore,
@@ -2629,11 +3097,20 @@ CREATE
 		-- TEST
 		-- SELECT pianificazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2678,11 +3155,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				pianificazioni.id_genitore,
@@ -2726,11 +3212,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_anagrafica.id_genitore,
@@ -2777,11 +3272,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_anagrafica_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2826,11 +3330,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_anagrafica.id_genitore,
@@ -2875,11 +3388,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_articoli.id_genitore,
@@ -2927,11 +3449,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_articoli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -2977,11 +3508,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_articoli.id_genitore,
@@ -3025,11 +3565,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_audio.id_genitore,
@@ -3076,11 +3625,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_audio_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3125,11 +3683,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_audio.id_genitore,
@@ -3174,11 +3741,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_categorie_progetti.id_genitore,
@@ -3226,11 +3802,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_categorie_progetti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3276,11 +3861,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_categorie_progetti.id_genitore,
@@ -3324,11 +3918,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_certificazioni.id_genitore,
@@ -3375,11 +3978,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_certificazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3424,11 +4036,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_certificazioni.id_genitore,
@@ -3472,11 +4093,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_conversazioni.id_genitore,
@@ -3523,11 +4153,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_conversazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3572,11 +4211,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_conversazioni.id_genitore,
@@ -3620,11 +4268,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_documenti.id_genitore,
@@ -3671,11 +4328,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_documenti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3720,11 +4386,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_documenti.id_genitore,
@@ -3768,11 +4443,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_file.id_genitore,
@@ -3819,11 +4503,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_file_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -3868,11 +4561,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_file.id_genitore,
@@ -3916,11 +4618,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_immagini.id_genitore,
@@ -3967,11 +4678,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_immagini_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4016,11 +4736,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_immagini.id_genitore,
@@ -4064,11 +4793,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_indirizzi.id_genitore,
@@ -4115,11 +4853,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_indirizzi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4164,11 +4911,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_indirizzi.id_genitore,
@@ -4213,11 +4969,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_mastri.id_genitore,
@@ -4265,11 +5030,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_mastri_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4315,11 +5089,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_mastri.id_genitore,
@@ -4364,11 +5147,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_matricole.id_genitore,
@@ -4416,11 +5208,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_matricole_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4466,11 +5267,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_matricole.id_genitore,
@@ -4514,11 +5324,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_pagamenti.id_genitore,
@@ -4565,11 +5384,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_pagamenti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4614,11 +5442,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_pagamenti.id_genitore,
@@ -4663,11 +5500,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_prodotti.id_genitore,
@@ -4715,11 +5561,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_prodotti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4765,11 +5620,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_prodotti.id_genitore,
@@ -4813,11 +5677,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_risorse.id_genitore,
@@ -4864,11 +5737,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_risorse_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -4913,11 +5795,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_risorse.id_genitore,
@@ -4961,11 +5852,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_software.id_genitore,
@@ -5012,11 +5912,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_software_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5061,11 +5970,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_software.id_genitore,
@@ -5109,11 +6027,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_step.id_genitore,
@@ -5160,11 +6087,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_step_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5209,11 +6145,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_step.id_genitore,
@@ -5257,11 +6202,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_video.id_genitore,
@@ -5308,11 +6262,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_video_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5357,11 +6320,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_video.id_genitore,
@@ -5405,11 +6377,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				settori.id_genitore,
@@ -5456,11 +6437,20 @@ CREATE
 		-- TEST
 		-- SELECT settori_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5505,11 +6495,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				settori.id_genitore,
@@ -5553,11 +6552,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				software.id_genitore,
@@ -5604,11 +6612,20 @@ CREATE
 		-- TEST
 		-- SELECT software_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5653,11 +6670,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				software.id_genitore,
@@ -5701,11 +6727,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
@@ -5755,11 +6790,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
@@ -5806,11 +6850,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_anagrafica_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -5855,11 +6908,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
@@ -5903,11 +6965,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_asset.id_genitore,
@@ -5954,11 +7025,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_asset_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6003,11 +7083,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_asset.id_genitore,
@@ -6051,11 +7140,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_attivita.id_genitore,
@@ -6102,11 +7200,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_attivita_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6151,11 +7258,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_attivita.id_genitore,
@@ -6200,11 +7316,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_banner.id_genitore,
@@ -6252,11 +7377,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_banner_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6302,11 +7436,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_banner.id_genitore,
@@ -6350,11 +7493,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_campagne.id_genitore,
@@ -6401,11 +7553,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_campagne_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6450,11 +7611,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_campagne.id_genitore,
@@ -6499,11 +7669,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_chiavi.id_genitore,
@@ -6551,11 +7730,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_chiavi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6600,11 +7788,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_chiavi.id_genitore,
@@ -6648,11 +7845,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_colli.id_genitore,
@@ -6699,11 +7905,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_colli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6748,11 +7963,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_colli.id_genitore,
@@ -6796,11 +8020,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_contatti.id_genitore,
@@ -6847,11 +8080,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_contatti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -6896,11 +8138,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_contatti.id_genitore,
@@ -6944,11 +8195,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_corrispondenza.id_genitore,
@@ -6995,11 +8255,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_corrispondenza_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7044,11 +8313,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_corrispondenza.id_genitore,
@@ -7093,11 +8371,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_documenti.id_genitore,
@@ -7145,11 +8432,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_documenti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7195,11 +8491,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_documenti.id_genitore,
@@ -7243,11 +8548,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_documenti_articoli.id_genitore,
@@ -7294,11 +8608,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_documenti_articoli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7343,11 +8666,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_documenti_articoli.id_genitore,
@@ -7392,11 +8724,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_edifici.id_genitore,
@@ -7444,11 +8785,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_edifici_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7494,11 +8844,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_edifici.id_genitore,
@@ -7543,11 +8902,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_immobili.id_genitore,
@@ -7595,11 +8963,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_immobili_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7645,11 +9022,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_immobili.id_genitore,
@@ -7693,11 +9079,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_indirizzi.id_genitore,
@@ -7744,11 +9139,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_indirizzi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7793,11 +9197,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_indirizzi.id_genitore,
@@ -7842,11 +9255,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_licenze.id_genitore,
@@ -7894,11 +9316,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_licenze_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -7944,11 +9375,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_licenze.id_genitore,
@@ -7993,11 +9433,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_luoghi.id_genitore,
@@ -8045,11 +9494,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_luoghi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8095,11 +9553,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_luoghi.id_genitore,
@@ -8144,11 +9611,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_mastri.id_genitore,
@@ -8196,11 +9672,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_mastri_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8246,11 +9731,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_mastri.id_genitore,
@@ -8294,11 +9788,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_listini.id_genitore,
@@ -8345,11 +9848,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_listini_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8394,11 +9906,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_listini.id_genitore,
@@ -8443,11 +9964,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_notizie.id_genitore,
@@ -8495,11 +10025,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_notizie_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8545,11 +10084,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_notizie.id_genitore,
@@ -8594,11 +10142,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_periodi.id_genitore,
@@ -8646,11 +10203,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_periodi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8696,11 +10262,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_periodi.id_genitore,
@@ -8745,11 +10320,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_popup.id_genitore,
@@ -8797,11 +10381,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_popup_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8847,11 +10440,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_popup.id_genitore,
@@ -8895,11 +10497,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_prodotti.id_genitore,
@@ -8946,11 +10557,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_prodotti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -8995,11 +10615,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_prodotti.id_genitore,
@@ -9043,11 +10672,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_progetti.id_genitore,
@@ -9094,11 +10732,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_progetti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9143,11 +10790,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_progetti.id_genitore,
@@ -9191,11 +10847,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_pubblicazioni.id_genitore,
@@ -9242,11 +10907,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_pubblicazioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9291,11 +10965,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_pubblicazioni.id_genitore,
@@ -9340,11 +11023,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_risorse.id_genitore,
@@ -9392,11 +11084,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_risorse_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9442,11 +11143,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_risorse.id_genitore,
@@ -9491,11 +11201,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_spedizioni.id_genitore,
@@ -9543,11 +11262,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_spedizioni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9593,11 +11321,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_spedizioni.id_genitore,
@@ -9641,11 +11378,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_telefoni.id_genitore,
@@ -9692,11 +11438,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_telefoni_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9741,11 +11496,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_telefoni.id_genitore,
@@ -9789,11 +11553,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_url.id_genitore,
@@ -9840,11 +11613,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_url_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -9889,11 +11671,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_url.id_genitore,
@@ -9937,11 +11728,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_vani.id_genitore,
@@ -9988,11 +11788,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_vani_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10037,11 +11846,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_vani.id_genitore,
@@ -10085,11 +11903,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_veicoli.id_genitore,
@@ -10136,11 +11963,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_veicoli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10185,11 +12021,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_veicoli.id_genitore,
@@ -10234,11 +12079,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_zone.id_genitore,
@@ -10286,11 +12140,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_zone_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10336,11 +12199,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_zone.id_genitore,
@@ -10384,11 +12256,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				attivita.id_genitore,
@@ -10435,11 +12316,20 @@ CREATE
 		-- TEST
 		-- SELECT attivita_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10484,11 +12374,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				attivita.id_genitore,
@@ -10532,11 +12431,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				listini.id_genitore,
@@ -10583,11 +12491,20 @@ CREATE
 		-- TEST
 		-- SELECT listini_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10632,11 +12549,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				listini.id_genitore,
@@ -10680,11 +12606,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_mail.id_genitore,
@@ -10731,11 +12666,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_mail_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10780,11 +12724,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_mail.id_genitore,
@@ -10828,11 +12781,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				asset.id_genitore,
@@ -10879,11 +12841,20 @@ CREATE
 		-- TEST
 		-- SELECT asset_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -10928,11 +12899,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				asset.id_genitore,
@@ -10979,11 +12959,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				caratteristiche_prodotti.id_genitore,
@@ -11030,11 +13019,20 @@ CREATE
 		-- TEST
 		-- SELECT caratteristiche_prodotti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11079,11 +13077,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				caratteristiche_prodotti.id_genitore,
@@ -11127,11 +13134,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				colli.id_genitore,
@@ -11178,11 +13194,20 @@ CREATE
 		-- TEST
 		-- SELECT colli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11227,11 +13252,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				colli.id_genitore,
@@ -11275,11 +13309,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				documenti_articoli.id_genitore,
@@ -11326,11 +13369,20 @@ CREATE
 		-- TEST
 		-- SELECT documenti_articoli_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11375,11 +13427,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				documenti_articoli.id_genitore,
@@ -11424,11 +13485,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				periodi.id_genitore,
@@ -11476,11 +13546,20 @@ CREATE
 		-- TEST
 		-- SELECT periodi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11526,11 +13605,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				periodi.id_genitore,
@@ -11575,11 +13663,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				ruoli_progetti.id_genitore,
@@ -11627,11 +13724,20 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_progetti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11677,11 +13783,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				ruoli_progetti.id_genitore,
@@ -11726,11 +13841,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_annunci.id_genitore,
@@ -11778,11 +13902,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_annunci_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11828,11 +13961,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_annunci.id_genitore,
@@ -11877,11 +14019,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_attivita_inps.id_genitore,
@@ -11929,11 +14080,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_attivita_inps_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -11979,11 +14139,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_attivita_inps.id_genitore,
@@ -12028,11 +14197,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_badge.id_genitore,
@@ -12080,11 +14258,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_badge_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12130,11 +14317,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_badge.id_genitore,
@@ -12178,11 +14374,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_contratti.id_genitore,
@@ -12229,11 +14434,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_contratti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12278,11 +14492,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_contratti.id_genitore,
@@ -12326,11 +14549,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_pagamenti.id_genitore,
@@ -12377,11 +14609,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_pagamenti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12426,11 +14667,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_pagamenti.id_genitore,
@@ -12474,11 +14724,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_rinnovi.id_genitore,
@@ -12525,11 +14784,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_rinnovi_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12574,11 +14842,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_rinnovi.id_genitore,
@@ -12623,11 +14900,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_sconti.id_genitore,
@@ -12675,11 +14961,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_sconti_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12725,11 +15020,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_sconti.id_genitore,
@@ -12773,11 +15077,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				tipologie_todo.id_genitore,
@@ -12824,11 +15137,20 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_todo_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -12873,11 +15195,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				tipologie_todo.id_genitore,
@@ -12922,11 +15253,20 @@ CREATE
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL, step = '';
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN '';
+			END IF;
 
 			SELECT
 				zone.id_genitore,
@@ -12974,11 +15314,20 @@ CREATE
 		-- TEST
 		-- SELECT zone_path_check( <id1>, <id2> ) AS check
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN 0;
+			END IF;
 
 			IF( p1 = p2 ) THEN
 				RETURN 1;
@@ -13024,11 +15373,20 @@ CREATE
 
 		DECLARE p2 bigint( 20 ) DEFAULT NULL;
 
+		-- quanti passi si sono fatti risalendo id_genitore: oltre cento c'e' un ciclo nei dati ( A genitore di B,
+		-- B genitore di A ), e senza limite il WHILE non finirebbe piu'
+		DECLARE profondita int DEFAULT 0;
+
 		-- un id che non esiste in tabella non da' righe, e senza handler la SELECT ... INTO lascerebbe p1 com'era:
 		-- il ciclo non finirebbe piu' ( bernispa, 24/11/2026 )
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET p1 = NULL;
 
 		WHILE ( p1 IS NOT NULL ) DO
+
+			SET profondita = profondita + 1;
+			IF( profondita > 100 ) THEN
+				RETURN NULL;
+			END IF;
 
 			SELECT
 				zone.id_genitore,
