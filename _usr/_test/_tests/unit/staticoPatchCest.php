@@ -167,4 +167,28 @@
 
         }
 
+        /**
+         * ogni funzione che risale id_genitore ha l'handler NOT FOUND
+         *
+         * Senza handler, un id che non esiste in tabella non da' righe alla SELECT ... INTO p1, p1 resta
+         * com'era e il WHILE non finisce piu': il 24/11/2026 su bernispa tre report sono rimasti appesi
+         * una notte su mastri_path_check( 2901 ), e col loro lock hanno fermato l'aggiornamento notturno.
+         */
+        public function funzioniRicorsiveConHandler( UnitTester $I ) {
+
+            $senza = array();
+            $f = DIR_BASE . '_usr/_database/_patch/_070000999999.procedures.sql';
+            preg_match_all( '/^\s*FUNCTION `(\w+)`.*?^END;/ms', file_get_contents( $f ), $m );
+            $I->assertNotEmpty( $m[0], 'nessuna funzione letta: il test non prova niente' );
+
+            foreach( $m[0] as $i => $corpo ) {
+                if( strpos( $corpo, 'WHILE ( p1 IS NOT NULL )' ) !== false && strpos( $corpo, 'HANDLER FOR NOT FOUND' ) === false ) {
+                    $senza[] = $m[1][ $i ];
+                }
+            }
+
+            $I->assertEmpty( $senza, 'funzioni ricorsive che con un id inesistente non finiscono: ' . implode( ', ', $senza ) );
+
+        }
+
     }
