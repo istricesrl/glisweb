@@ -201,7 +201,10 @@
             mkdir( dirname( $t ), 0750, true );
         }
 
-        file_put_contents( $t, $d );
+        if( @file_put_contents( $t, $d ) === false ) {
+            echo 'impossibile scrivere ' . $t . "\n";
+            return false;
+        }
 
         $xls = \PhpOffice\PhpSpreadsheet\IOFactory::load( $t );
         $arr = $xls->getActiveSheet()->toArray();
@@ -389,7 +392,10 @@
             mkdir( dirname( $t ), 0750, true );
         }
 
-        file_put_contents( $t, $d );
+        if( @file_put_contents( $t, $d ) === false ) {
+            echo 'impossibile scrivere ' . $t . "\n";
+            return false;
+        }
 
         // il nome del .csv dentro lo zip cambia con le edizioni: si prende quello che c'e'
         $csv = false;
@@ -656,7 +662,14 @@
      */
     function geoCsvScrivi( $c, $f, $tabella, $cols, $where = NULL ) {
 
-        $h = fopen( $f, 'w' );
+        $h = @fopen( $f, 'w' );
+
+        // un CSV non scritto deve fermare il giro: altrimenti resta pubblicato quello vecchio e
+        // l'export dice di aver finito ( e' successo fino al 25/11/2026 )
+        if( $h === false ) {
+            fwrite( STDERR, 'impossibile scrivere ' . $f . "\n" );
+            exit( 1 );
+        }
 
         fwrite( $h, str_replace( ',', ';', $cols ) . "\n" );
 
@@ -754,7 +767,10 @@
                     mkdir( dirname( $f ), 0750, true );
                 }
 
-                file_put_contents( $f, implode( "\n", $e['sql'] ) . "\n" );
+                if( @file_put_contents( $f, implode( "\n", $e['sql'] ) . "\n" ) === false ) {
+                    fwrite( STDERR, 'impossibile scrivere ' . $f . "\n" );
+                    exit( 1 );
+                }
 
                 printf( "  prova: %d query scritte in %s, nessuna eseguita\n", count( $e['sql'] ), $f );
 
@@ -763,7 +779,10 @@
                 // niente da fare: si aggiorna comunque il marcatore, perche' il giro E' andato a
                 // buon fine. E' la differenza fra "non c'era niente da cambiare" e "non ha girato
                 // nessuno", che senza marcatore non si distinguono
-                file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" );
+                if( @file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" ) === false ) {
+                    fwrite( STDERR, 'impossibile scrivere ' . GEO_BASE . GEO_MARCATORE . "\n" );
+                    exit( 1 );
+                }
                 echo "  niente da allineare\n";
 
             } elseif( count( $e['sql'] ) > GEO_SOGLIA_AUTOMATICA && ! $forza ) {
@@ -776,7 +795,10 @@
 
             } elseif( geoIstatApplica( $c, $e['sql'] ) ) {
 
-                file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" );
+                if( @file_put_contents( GEO_BASE . GEO_MARCATORE, date( 'Y-m-d H:i:s' ) . "\n" ) === false ) {
+                    fwrite( STDERR, 'impossibile scrivere ' . GEO_BASE . GEO_MARCATORE . "\n" );
+                    exit( 1 );
+                }
                 printf( "  applicate: %d aggiornati, %d inseriti\n", $e['aggiornati'], $e['inseriti'] );
 
             } else {
@@ -844,7 +866,10 @@
                     mkdir( dirname( $f ), 0750, true );
                 }
 
-                file_put_contents( $f, implode( "\n", $e['sql'] ) . "\n" );
+                if( @file_put_contents( $f, implode( "\n", $e['sql'] ) . "\n" ) === false ) {
+                    fwrite( STDERR, 'impossibile scrivere ' . $f . "\n" );
+                    exit( 1 );
+                }
 
                 if( ! $colonne ) {
                     echo "  la tabella comuni non ha ancora le colonne dell'archiviazione\n";

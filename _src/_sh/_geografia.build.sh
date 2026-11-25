@@ -63,25 +63,41 @@ else
     ESEGUI=""
 fi
 
+## permessi di scrittura per il PHP
+#
+# a riposo le cartelle sono root:www-data 750 e i file 640, quindi www-data li legge ma non li
+# riscrive: senza aprire la scrittura al gruppo per la durata del giro l'export non scrive niente
+# ( fino al 25/11/2026 lo faceva in silenzio, con i soli warning di PHP e il codice di uscita 0 )
+if [ -n "$ESEGUI" ]; then
+    for i in ./usr/pages/geografia ./var/geografia; do
+        if [ -d "$i" ]; then
+            chown -R root:www-data "$i" 2>/dev/null
+            find "$i" -type d -exec chmod 2770 {} + 2>/dev/null
+            find "$i" -type f -exec chmod 660 {} + 2>/dev/null
+        fi
+    done
+fi
+
 $ESEGUI php ./_src/_cli/_geografia.build.php "$@"
 GEO_EXIT_CODE=$?
+
+## permessi sui file generati
+#
+# i file nascono con l'umask di chi li scrive, e Apache non li leggerebbe: senza questo blocco la
+# pubblicazione risponderebbe 403 invece di servire il CSV. Gira anche se il PHP e' fallito, per
+# non lasciare aperta la scrittura al gruppo
+for i in ./usr/pages/geografia ./var/geografia; do
+    if [ -d "$i" ]; then
+        chown -R root:www-data "$i" 2>/dev/null
+        find "$i" -type d -exec chmod 2750 {} + 2>/dev/null
+        find "$i" -type f -exec chmod 640 {} + 2>/dev/null
+    fi
+done
 
 if [ $GEO_EXIT_CODE -ne 0 ]; then
     echo "generazione dei dati geografici fallita (codice $GEO_EXIT_CODE)" >&2
     exit $GEO_EXIT_CODE
 fi
-
-## permessi sui file generati
-#
-# i file nascono con l'umask di root, e Apache non li leggerebbe: senza questo blocco la
-# pubblicazione risponderebbe 403 invece di servire il CSV
-for i in ./usr/pages/geografia ./var/geografia; do
-    if [ -d "$i" ]; then
-        chown -R root:www-data "$i" 2>/dev/null
-        find "$i" -type d -exec chmod 750 {} + 2>/dev/null
-        find "$i" -type f -exec chmod 640 {} + 2>/dev/null
-    fi
-done
 
 ## codice di uscita
 exit 0
