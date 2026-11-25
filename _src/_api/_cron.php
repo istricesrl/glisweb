@@ -403,16 +403,16 @@
                         // ...
                         $status = array();
 
+                        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta prima della iterazione #' . $iter . ' del task ' . $task['id'] . ' -> ' . $task['task'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
+
                         // ...
                         require DIR_BASE . $task['task'];
 
-                        // un'iterazione più lunga del wait_timeout del server ne fa cadere la connessione ( errore 2006 ):
-                        // la ricreo, altrimenti falliscono l'iterazione successiva e l'UPDATE di chiusura, e il task resta
-                        // interrotto ( bernispa, 24/11/2026 )
-                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
-                            logger( 'connessione MySQL caduta durante il task ' . $task['id'] . ' -> ' . $task['task'] . ', la ricreo', 'cron', LOG_WARNING );
-                            require DIR_SRC_CONFIG . '_125.mysql.php';
-                        }
 
                         // ...
                         $cf['cron']['task'][ $task['id'] ]['status'] = $status;
@@ -424,6 +424,13 @@
                         // un file al giorno per task, in append: un file per iterazione faceva decine di migliaia di file al giorno
                         loggerLatest( microtime( true ) . ' ' . print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . date( 'Ymd' ) . '.log' );
 
+                    }
+
+                    // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                    // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                    if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                        logger( 'connessione MySQL caduta prima della chiusura del task ' . $task['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                        require DIR_SRC_CONFIG . '_125.mysql.php';
                     }
 
                     // aggiorno la tabella di pianificazione
@@ -661,14 +668,16 @@
                         // ...
                         $status = array();
 
+                        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta prima della iterazione #' . $iter . ' del job ' . $job['id'] . ' -> ' . $job['job'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
+
                         // ...
                         require DIR_BASE . $job['job'];
 
-                        // la connessione caduta durante l'iterazione si ricrea, come per i task
-                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
-                            logger( 'connessione MySQL caduta durante il job ' . $job['id'] . ' -> ' . $job['job'] . ', la ricreo', 'cron', LOG_WARNING );
-                            require DIR_SRC_CONFIG . '_125.mysql.php';
-                        }
 
                         // ...
                         $cf['cron']['job'][ $job['id'] ]['status'] = $status;
@@ -684,6 +693,13 @@
                     // il job ha avanzato: non e' in stallo, azzero il contatore
                     if( isset( $job['corrente'] ) && $job['corrente'] > $avanzamentoIniziale ) {
                         unset( $job['workspace']['__stalli__'] );
+                    }
+
+                    // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                    // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                    if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                        logger( 'connessione MySQL caduta prima della chiusura del job ' . $job['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                        require DIR_SRC_CONFIG . '_125.mysql.php';
                     }
 
                     // aggiorno la tabella di avanzamento lavori
@@ -836,6 +852,13 @@
             // ...
             $cf['cron']['pianificazioni'][ $pianificazione['id'] ]['status'] = $status;
 
+            // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+            // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+            if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                logger( 'connessione MySQL caduta prima del rilascio della pianificazione ' . $pianificazione['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                require DIR_SRC_CONFIG . '_125.mysql.php';
+            }
+
             // rilascio il lock
             mysqlQuery(
                 $cf['mysql']['connection'],
@@ -852,6 +875,13 @@
             // log
             loggerLatest( print_r( $pianificazione, true ), DIR_VAR_LOG_PIANIFICAZIONI . $pianificazione['id'] . '.log' );
 
+        }
+
+        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+            logger( 'connessione MySQL caduta prima del rilascio delle pianificazioni del run ' . $cf['cron']['token'] . ', la ricreo', 'cron', LOG_WARNING );
+            require DIR_SRC_CONFIG . '_125.mysql.php';
         }
 
         // rilascio il lock delle pianificazioni rimaste indietro per la durata massima del run

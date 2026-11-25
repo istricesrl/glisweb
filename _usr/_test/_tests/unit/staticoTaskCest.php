@@ -49,18 +49,26 @@
 
         }
 
-        // il cron ricrea la connessione MySQL dopo ogni iterazione di un task e di un job: un'iterazione piu' lunga del
-        // wait_timeout la fa cadere, e senza riconnessione falliscono gli UPDATE di chiusura ( bernispa, 24/11/2026 )
+        // il cron verifica la connessione MySQL prima di ogni iterazione di un task e di un job e prima di ogni UPDATE di
+        // chiusura: un'iterazione, o anche solo il suo log, piu' lunga del wait_timeout la fa cadere, e il break per durata
+        // massima porta alla chiusura senza passare dall'iterazione ( bernispa, 24 e 25/11/2026 )
         public function cronRiconnessioneMysql( UnitTester $I ) {
 
             $codice = file_get_contents( DIR_BASE . '_src/_api/_cron.php' );
 
-            foreach( array( "\$task['task']", "\$job['job']" ) as $chi ) {
-                $I->assertMatchesRegularExpression(
-                    '/require DIR_BASE \. ' . preg_quote( $chi, '/' ) . ';\s*(\/\/[^\n]*\n\s*)*if\( ! mysqlPing\( \$cf\[\'mysql\'\]\[\'connection\'\] \) \) \{[^}]*require DIR_SRC_CONFIG \. \'_125\.mysql\.php\';/',
-                    $codice,
-                    'manca la riconnessione dopo il require di ' . $chi
-                );
+            $ping = 'if\( ! mysqlPing\( \$cf\[\'mysql\'\]\[\'connection\'\] \) \) \{[^}]*require DIR_SRC_CONFIG \. \'_125\.mysql\.php\';\s*\}\s*(\/\/[^\n]*\n\s*)*';
+
+            foreach( array( "require DIR_BASE . \$task['task'];", "require DIR_BASE . \$job['job'];" ) as $uso ) {
+                $I->assertMatchesRegularExpression( '/' . $ping . preg_quote( $uso, '/' ) . '/', $codice, 'manca la riconnessione prima di ' . $uso );
+            }
+
+            foreach( array(
+                "'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?'",
+                "'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?'",
+                "'UPDATE pianificazioni SET timestamp_elaborazione = ?, token = NULL WHERE id = ?'",
+                "'UPDATE pianificazioni SET token = NULL WHERE token = ?'"
+            ) as $uso ) {
+                $I->assertMatchesRegularExpression( '/' . $ping . 'mysqlQuery\(\s*\$cf\[\'mysql\'\]\[\'connection\'\],\s*' . preg_quote( $uso, '/' ) . '/', $codice, 'manca la riconnessione prima di ' . $uso );
             }
 
         }
