@@ -47,7 +47,12 @@ if [ $# -eq 0 ]; then
 fi
 
 ## generazione
-php ./_src/_cli/_docs.build.php "$@"
+# NOTA da root PHP_ROOT_OK scavalca la guardia della CLI ( vedi _usr/_docs/_read/218.file.script.md ), che
+# altrimenti fermerebbe il generatore con un FERMO e lo script uscirebbe con 1; lo scavalco e' sicuro perche'
+# il ciclo dei permessi qui sotto rimette owner e permessi di quello che si scrive, ed e' messo qui e non nei
+# chiamanti perche' copra tutti ( _gw.upgrade.sh, il cron, il lancio a mano; stesso precedente in
+# _codeception.run.sh, pubblicazione dell'esito )
+PHP_ROOT_OK=1 php ./_src/_cli/_docs.build.php "$@"
 DOCS_EXIT_CODE=$?
 
 if [ $DOCS_EXIT_CODE -ne 0 ]; then
