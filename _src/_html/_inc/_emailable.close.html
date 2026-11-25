@@ -78,16 +78,32 @@ function setupEmailableValidation(campoId, formId) {
 
     let emailValida = null;
 
-    function setStato(stato) {
+    // scritta sotto il campo: senza, il campo rosso non dice niente e chi compila pensa che il form sia rotto
+    let messaggio = null;
+
+    function setStato(stato, ris) {
         switch (stato) {
             case 'errore':
                 campo.style.backgroundColor = '#f8d7da';
                 campo.style.borderColor     = '#dc3545';
+                if (!messaggio) {
+                    messaggio = document.createElement('div');
+                    messaggio.className = 'emailable-messaggio small text-danger mt-1';
+                    messaggio.setAttribute('role', 'alert');
+                    campo.insertAdjacentElement('afterend', messaggio);
+                }
+                // senza ris ( submit bloccato ) resta il testo dell'ultima verifica
+                if (ris) {
+                    messaggio.textContent = 'Questo indirizzo e-mail risulta inesistente: controlla di averlo scritto correttamente.'
+                        + ( ris.suggerimento ? ' Forse intendevi ' + ris.suggerimento + '?' : '' );
+                }
+                messaggio.style.display = '';
                 break;
             case 'ok':
             default:
                 campo.style.backgroundColor = '';
                 campo.style.borderColor     = '';
+                if (messaggio) { messaggio.style.display = 'none'; }
         }
     }
 
@@ -108,7 +124,7 @@ function setupEmailableValidation(campoId, formId) {
             setStato('ok');
         } else {
             emailValida = false;
-            setStato('errore');
+            setStato('errore', ris);
             logEmailableScartata(campo.value.trim(), formId, ris);
         }
     }

@@ -45,7 +45,8 @@
 'data' => 'data',
 'tipologia' => 'tipologia',
 'numero' => 'numero',
-'id_articolo' => 'codice',
+'id_articolo' => 'id articolo',
+'codice_articolo' => 'codice',
 'articolo' => 'descrizione',
 'matricola' => 'matricola',
 #'carico' => 'carico',
@@ -66,7 +67,7 @@
 #        'id_emittente' => 'd-none',
 #        'data_lavorazione' => 'text-left',
 #	    'descrizione' => 'text-left',
-#        'id_articolo' => 'text-left',
+'id_articolo' => 'd-none',
 #        'importo' => 'text-right',
 #        'cliente' => 'text-left',
 #        'emittente' => 'text-left'

@@ -27,8 +27,10 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'listino' => 'listino',
-        'id_prodotto' => 'prodotto',
-        'id_articolo' => 'articolo',
+        'id_prodotto' => 'id prodotto',
+        'codice_prodotto' => 'prodotto',
+        'id_articolo' => 'id articolo',
+        'codice_articolo' => 'articolo',
         'articolo' => 'descrizione',
         'prezzo' => 'prezzo',
         'valuta_utf8' => 'valuta',
@@ -41,6 +43,8 @@
 	$ct['view']['class'] = array(
 	    '__label__' => 'text-left',
         'id' => 'd-none',
+        'id_prodotto' => 'd-none',
+        'id_articolo' => 'd-none',
         'valuta_utf8' => 'd-none', 
         'prezzo' => 'text-right',
         'articolo' => 'text-left',

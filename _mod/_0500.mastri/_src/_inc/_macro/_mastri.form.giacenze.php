@@ -36,7 +36,8 @@
         // campi della vista
         $ct['view']['cols'] = array(
             'id' => '#',
-            'id_articolo' => 'codice',
+            'id_articolo' => 'id articolo',
+            'codice_articolo' => 'codice',
             'articolo' => 'descrizione',
             'matricola' => 'matricola',
             'carico' => 'carico',
@@ -47,6 +48,7 @@
         // stili della vista
         $ct['view']['class'] = array(
             'id' => 'd-none d-md-table-cell',
+            'id_articolo' => 'd-none',
             'articolo' => 'text-left',
             'carico' => 'text-right',
             'scarico' => 'text-right',
