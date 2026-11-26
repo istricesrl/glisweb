@@ -25,6 +25,11 @@
      * POST /giacenze           | solo del finto: imposta le giacenze, { "codice": quantita', … }
      * POST /evasioni           | solo del finto: fissa l'evaso per RIG_HOSTINF, { "hostinf": quantita', … }, e la
      *                          | riga torna I se l'evaso e' minore del richiesto
+     *                          |
+     * Gli ordini di inventario ( ORD_TIPOOP I ) chiedono RIG_QTAR "-1,000", tutta la giacenza, come sul WMS vero
+     * ( prova del 26/11/2026 ): all'export la riga riporta in RIG_QTAR la giacenza impostata con /giacenze ( 0 se
+     * manca ) e in RIG_QTAE il contato, cioe' l'evaso fissato con /evasioni anche oltre la giacenza, altrimenti la
+     * giacenza stessa; la riga e' C se i due coincidono, I se no.
      * POST /reset              | solo del finto: cancella ordini, anagrafica, giacenze, evasioni e pacchetti
      *
      * Tutto tranne /token vuole Basic ( modula / fake ) oppure il Bearer emesso, altrimenti 401 come il WMS.
@@ -244,6 +249,12 @@
 
         // righe per ordine
         $righe = array();
+        $tipi = array();
+        foreach( $dati['IMP_ORDINI'] as $ordine ) {
+            if( isset( $ordine['ORD_ORDINE'], $ordine['ORD_TIPOOP'] ) ) {
+                $tipi[ $ordine['ORD_ORDINE'] ] = $ordine['ORD_TIPOOP'];
+            }
+        }
         foreach( $dati['IMP_ORDINI_RIGHE'] as $i => $riga ) {
             if( empty( $riga['RIG_ORDINE'] ) ) {
                 rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_ORDINE mancante' );
@@ -251,7 +262,9 @@
             if( empty( $riga['RIG_ARTICOLO'] ) ) {
                 rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_ARTICOLO mancante' );
             }
-            if( ! isset( $riga['RIG_QTAR'] ) || ! is_string( $riga['RIG_QTAR'] ) || ! preg_match( '/^\d+,\d{3}$/', $riga['RIG_QTAR'] ) ) {
+            // le righe d'inventario chiedono -1, cioe' tutta la giacenza ( prova sul WMS del 26/11/2026 )
+            $formato = ( isset( $riga['RIG_ORDINE'], $tipi[ $riga['RIG_ORDINE'] ] ) && $tipi[ $riga['RIG_ORDINE'] ] == 'I' ) ? '/^(-1|\d+),\d{3}$/' : '/^\d+,\d{3}$/';
+            if( ! isset( $riga['RIG_QTAR'] ) || ! is_string( $riga['RIG_QTAR'] ) || ! preg_match( $formato, $riga['RIG_QTAR'] ) ) {
                 rispondi( 400, 'IMP_ORDINI_RIGHE[' . $i . ']: RIG_QTAR non valida, atteso testo come "1,000"' );
             }
             $righe[ $riga['RIG_ORDINE'] ][] = $riga;
@@ -262,7 +275,7 @@
             if( empty( $ordine['ORD_ORDINE'] ) ) {
                 rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_ORDINE mancante' );
             }
-            if( ! isset( $ordine['ORD_TIPOOP'] ) || ! in_array( $ordine['ORD_TIPOOP'], array( 'P', 'V' ), true ) ) {
+            if( ! isset( $ordine['ORD_TIPOOP'] ) || ! in_array( $ordine['ORD_TIPOOP'], array( 'P', 'V', 'I' ), true ) ) {
                 rispondi( 400, 'IMP_ORDINI[' . $i . ']: ORD_TIPOOP non valido' );
             }
 
@@ -347,7 +360,13 @@
                     $testata = 'COMPL';
                     foreach( $ordine['righe'] as &$riga ) {
                         $richiesta = (float) str_replace( ',', '.', $riga['RIG_QTAR'] );
-                        if( $riga['RIG_ARTICOLO'] == 'ATTESA' ) {
+                        if( isset( $ordine['ordine']['ORD_TIPOOP'] ) && $ordine['ordine']['ORD_TIPOOP'] == 'I' ) {
+                            // inventario: il WMS riporta in RIG_QTAR la sua giacenza e in RIG_QTAE il contato
+                            $richiesta = ( isset( $stato['giacenze'][ $riga['RIG_ARTICOLO'] ] ) ) ? (float) $stato['giacenze'][ $riga['RIG_ARTICOLO'] ] : 0;
+                            $riga['RIG_QTAR'] = number_format( $richiesta, 3, ',', '' );
+                            $evasa = ( isset( $riga['RIG_HOSTINF'], $stato['evasioni'][ $riga['RIG_HOSTINF'] ] ) ) ? (float) $stato['evasioni'][ $riga['RIG_HOSTINF'] ] : $richiesta;
+                            $riga['RIG_STARIORD'] = ( $evasa != $richiesta ) ? 'I' : 'C';
+                        } elseif( $riga['RIG_ARTICOLO'] == 'ATTESA' ) {
                             $testata = 'WAIT'; $riga['RIG_STARIORD'] = 'W'; $evasa = 0;
                         } elseif( $riga['RIG_ARTICOLO'] == 'LANCIATO' ) {
                             $testata = 'EXE'; $riga['RIG_STARIORD'] = 'E'; $evasa = 0;
