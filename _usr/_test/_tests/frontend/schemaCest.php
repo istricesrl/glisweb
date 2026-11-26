@@ -26,6 +26,26 @@
 
         }
 
+        // uno schema che esiste solo nella versione custom del template viene forzato anche lui: la prima correzione
+        // del 26/11/2026 cercava il file solo nel template standard, e gli schemi di prova dei progetti sparivano
+        public function schemaCustomForzato( FrontendTester $I ) {
+
+            $cartella = DIR_BASE . path2custom( '_src/_tpl/_athena/' );
+            $creata = ! is_dir( $cartella );
+            if( $creata ) { mkdir( $cartella, 0755, true ); }
+            $schema = $cartella . 'zz.test.schema.twig';
+            file_put_contents( $schema, '<!-- schema custom di prova -->' );
+
+            try {
+                $I->assertEquals( 200, $this->scarica( '/?t=athena&s=zz.test.schema', $raw ) );
+                $I->assertStringContainsString( '<!-- schema custom di prova -->', $raw, 'lo schema custom non e\' stato forzato' );
+            } finally {
+                unlink( $schema );
+                if( $creata ) { rmdir( $cartella ); }
+            }
+
+        }
+
         // uno schema inesistente viene ignorato e la pagina resta sullo schema di default
         public function schemaInesistenteIgnorato( FrontendTester $I ) {
 

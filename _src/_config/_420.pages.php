@@ -124,11 +124,12 @@
             );
         }
 
-        // forzatura dello schema corrente per one-char parameter debug
+        // forzatura dello schema corrente per one-char parameter debug ( lo schema puo' stare nel template standard
+        // o nella sua versione custom, che il loader di Twig in _src/_api/_pages.php aggiunge ai percorsi )
         if( isset( $_REQUEST['s'] ) ) {
-            if( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.twig' ) ) {
+            if( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.twig' ) || file_exists( DIR_BASE . path2custom( $ct['page']['template']['path'] ) . $_REQUEST['s'] . '.twig' ) ) {
                 $ct['page']['template']['schema'] = $_REQUEST['s'] . '.twig';
-            } elseif( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.html' ) ) {
+            } elseif( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.html' ) || file_exists( DIR_BASE . path2custom( $ct['page']['template']['path'] ) . $_REQUEST['s'] . '.html' ) ) {
                 $ct['page']['template']['schema'] = $_REQUEST['s'] . '.html';
             }
         }
