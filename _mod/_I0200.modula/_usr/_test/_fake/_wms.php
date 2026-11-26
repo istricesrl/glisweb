@@ -18,7 +18,8 @@
      * GET  /api/jobs/{job}     | export: col job delle giacenze le quantita' impostate con /giacenze, con
      *                          | gli altri lo stato di al massimo due ordini, come CFG-EXP-ORDRIG-STATO; alla
      *                          | lettura gli ordini si eseguono: righe C per intero, tranne gli articoli MANCA
-     *                          | ( I a zero ), PARZIALE ( I a meta' ), ATTESA ( W ) e LANCIATO ( E ); finche'
+     *                          | ( I a zero ), PARZIALE ( I a meta' ), ATTESA ( W ), LANCIATO ( E ) e le righe
+     *                          | fissate con /esecuzione ( I con la testata EXE ); finche'
      *                          | non arriva l'ack ripete lo stesso pacchetto; senza dati risponde 204
      * POST /api/jobs/{job}/ack | conferma il pacchetto del job col suo GUID, e gli ordini COMPL spariscono;
      *                          | GUID sbagliato 400
@@ -30,6 +31,8 @@
      * ( prova del 26/11/2026 ): all'export la riga riporta in RIG_QTAR la giacenza impostata con /giacenze ( 0 se
      * manca ) e in RIG_QTAE il contato, cioe' l'evaso fissato con /evasioni anche oltre la giacenza, altrimenti la
      * giacenza stessa; la riga e' C se i due coincidono, I se no.
+     * POST /esecuzione         | solo del finto: { "hostinf": quantita', … }, la riga esce I con quell'evaso e la
+     *                          | testata EXE, come sul WMS mentre l'operatore la lavora ( VER-1500000652, 26/11/2026 )
      * POST /reset              | solo del finto: cancella ordini, anagrafica, giacenze, evasioni e pacchetti
      *
      * Tutto tranne /token vuole Basic ( modula / fake ) oppure il Bearer emesso, altrimenti 401 come il WMS.
@@ -154,7 +157,7 @@
 
     // reset
     if( $metodo == 'POST' && $percorso == '/reset' ) {
-        $stato = array( 'ordini' => array(), 'articoli' => array(), 'giacenze' => array(), 'evasioni' => array(), 'pacchetti' => array(), 'token' => $stato['token'] );
+        $stato = array( 'ordini' => array(), 'articoli' => array(), 'giacenze' => array(), 'evasioni' => array(), 'esecuzione' => array(), 'pacchetti' => array(), 'token' => $stato['token'] );
         rispondi( 200 );
     }
 
@@ -162,6 +165,13 @@
     if( $metodo == 'POST' && $percorso == '/evasioni' ) {
         $dati = json_decode( $corpo, true );
         $stato['evasioni'] = ( is_array( $dati ) ) ? $dati : array();
+        rispondi( 200 );
+    }
+
+    // righe in esecuzione del finto, impostate dal test: RIG_HOSTINF => quantita' evasa finora
+    if( $metodo == 'POST' && $percorso == '/esecuzione' ) {
+        $dati = json_decode( $corpo, true );
+        $stato['esecuzione'] = ( is_array( $dati ) ) ? $dati : array();
         rispondi( 200 );
     }
 
@@ -366,6 +376,8 @@
                             $riga['RIG_QTAR'] = number_format( $richiesta, 3, ',', '' );
                             $evasa = ( isset( $riga['RIG_HOSTINF'], $stato['evasioni'][ $riga['RIG_HOSTINF'] ] ) ) ? (float) $stato['evasioni'][ $riga['RIG_HOSTINF'] ] : $richiesta;
                             $riga['RIG_STARIORD'] = ( $evasa != $richiesta ) ? 'I' : 'C';
+                        } elseif( isset( $riga['RIG_HOSTINF'], $stato['esecuzione'][ $riga['RIG_HOSTINF'] ] ) ) {
+                            $testata = 'EXE'; $riga['RIG_STARIORD'] = 'I'; $evasa = (float) $stato['esecuzione'][ $riga['RIG_HOSTINF'] ];
                         } elseif( $riga['RIG_ARTICOLO'] == 'ATTESA' ) {
                             $testata = 'WAIT'; $riga['RIG_STARIORD'] = 'W'; $evasa = 0;
                         } elseif( $riga['RIG_ARTICOLO'] == 'LANCIATO' ) {
