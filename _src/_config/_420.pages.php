@@ -126,7 +126,7 @@
 
         // forzatura dello schema corrente per one-char parameter debug
         if( isset( $_REQUEST['s'] ) ) {
-            if( DIR_BASE . file_exists( $ct['page']['template']['path'] . $_REQUEST['s'] . '.twig' ) ) {
+            if( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.twig' ) ) {
                 $ct['page']['template']['schema'] = $_REQUEST['s'] . '.twig';
             } elseif( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.html' ) ) {
                 $ct['page']['template']['schema'] = $_REQUEST['s'] . '.html';
