@@ -1,10 +1,14 @@
 <?php
 
     /**
-     * modifica la data di fine contratto e crea una riga di attività di proroga
+     * proroga un contratto aggiungendogli un rinnovo e crea una riga di attività di proroga
      * riceve in ingresso:
      * - id: l'id del contratto
      * - data: la nuova data di fine contratto
+     * - id_tipologia: la tipologia della riga di attività
+     *
+     * le date del contratto stanno su rinnovi ( contratti non ha data_fine né proroghe, canone punto 8,
+     * 26/11/2026 ): il rinnovo nuovo parte il giorno dopo la fine dell'ultimo e finisce alla data passata
      * 
      *
      *
@@ -33,10 +37,10 @@
         $status['data'] = $_REQUEST['data'];
         $status['id_tipologia'] = $_REQUEST['id_tipologia'];
 
-        // estraggo le informazioni complete del contratto
+        // estraggo l'ultimo rinnovo del contratto
         $c = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT * FROM contratti WHERE id = ?',
+            'SELECT * FROM rinnovi WHERE id_contratto = ? ORDER BY data_fine DESC LIMIT 1',
             array( array( 's' => $_REQUEST['id'] ) )
         );
 
@@ -59,20 +63,21 @@
 
         $status['info'][] = 'inserita riga di attivita ' . $at;
 
-        $proroghe = empty( $c['proroghe'] ) ? 1 : $c['proroghe']+1;
+        // data di inizio del rinnovo: il giorno dopo la fine dell'ultimo, o oggi se il contratto non ne ha
+        $inizio = empty( $c['data_fine'] ) ? date('Y-m-d') : date( 'Y-m-d', strtotime( $c['data_fine'] . ' +1 day' ) );
 
-        // aggiorno la data di fine contratto e il numero di proroghe
-        $upd = mysqlQuery(
+        // inserisco il rinnovo che proroga il contratto
+        $rn = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE contratti SET data_fine = ?, proroghe = ? WHERE id = ?',
+            'INSERT INTO rinnovi ( id_contratto, data_inizio, data_fine ) VALUES ( ?, ?, ? )',
             array(
-                array( 's' => $_REQUEST['data'] ),
-                array( 's' => $proroghe ),
-                array( 's' => $_REQUEST['id'] )
+                array( 's' => $_REQUEST['id'] ),
+                array( 's' => $inizio ),
+                array( 's' => $_REQUEST['data'] )
             )
         );
 
-        $status['info'][] = 'aggiornata ' . $upd . ' riga di contratto';
+        $status['info'][] = 'inserito rinnovo ' . $rn;
 
 
     } else {

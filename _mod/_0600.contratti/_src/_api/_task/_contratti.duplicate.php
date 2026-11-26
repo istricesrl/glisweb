@@ -42,7 +42,7 @@
 
 
         // duplico la riga di contratto e ottengo l'id della nuova riga creata
-        $newCnId = mysqlDuplicateRow( $cf['mysql']['connection'], 'contratti', $oldCnId, NULL, array( 'data_inizio' => NULL, 'data_fine' => NULL, 'data_fine_rapporto' => NULL ) );
+        $newCnId = mysqlDuplicateRow( $cf['mysql']['connection'], 'contratti', $oldCnId );
 
         // se la duplicazione ha avuto successo... 
         if ( is_int( $newCnId ) ) {
