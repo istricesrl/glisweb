@@ -83,7 +83,9 @@ condivisione.
 - Per ripristinare solo i permessi: `_src/_sh/_lamp.permissions.secure.sh` (produzione) o
   `_src/_sh/_lamp.permissions.open.sh` (sviluppo).
 
-Per personalizzare un file standard, creare il corrispondente senza underscore iniziale:
+Per personalizzare un file standard, creare il corrispondente togliendo **tutti** gli underscore dal percorso.
+L'underscore e' **riservato** alla distinzione standard/custom ( scelta di design ): nessun nome lo usa come
+separatore, si usano punto e trattino. I template: skill `glisweb`, "Personalizzare un template".
 
 | File standard | File custom (sostituisce) | File custom (aggiunge dopo) |
 |---|---|---|

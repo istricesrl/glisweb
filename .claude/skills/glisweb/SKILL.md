@@ -347,6 +347,17 @@ Se il check dice **CLIENTE**, applica questa regola in modo assoluto: nessuna mo
 nessun motivo. Se dice **UPSTREAM**, vedi sezione "Modalità B — Operatività" e il manuale framework per
 le specificità della valutazione disallineamenti e del rispetto degli hard link fra glisweb e glisdev.
 
+## L'underscore e' riservato a standard e custom
+
+**Scelta di design, non trappola** ( Fabio, 26/11/2026 ): nei percorsi del framework il carattere `_` serve
+**solo** a distinguere lo standard dal custom. La controparte custom di un file si ricava togliendo
+**tutti** gli underscore dal percorso, cartelle e nome del file compresi ( `path2custom()`,
+`_src/_config.php` ); `glob2custom()` li rende facoltativi ( `{,_}` ) quando servono tutte e due le
+versioni. Quindi: lo standard porta l'underscore davanti a ogni componente ( `_src/_tpl/_lydia/`,
+`_inc/_page.head.twig` ), e **nessun nome, standard o custom, usa l'underscore come separatore** — si
+usano punto e trattino. Un nome nuovo con un `_` in mezzo va rifiutato in revisione, come una violazione
+del canone. Il capitolo di riferimento e' `_usr/_docs/_read/030.cartelle.md`.
+
 ## La mappa delle cartelle: tre famiglie, non due
 
 Le cartelle di primo livello della document root si dividono in **tre** famiglie. La distinzione fra
@@ -883,6 +894,30 @@ altre `DIR_VAR_SPOOL_*` in `_src/_config.php`, non con un `define()` inline nel 
 **Euristica**: se per scrivere quel valore hai dovuto interrogare il database di quell'ambiente, non è
 configurazione — è spool.
 
+## Personalizzare un template
+
+Un deploy non tocca un template standard: lo personalizza nella cartella custom con lo stesso percorso
+al netto degli underscore, `src/tpl/<nome>/` per `_src/_tpl/_<nome>/` e `src/templates/<nome>/` per
+`_src/_templates/_<nome>/`. **Prima** si guarda quale template usa la pagina ( colonna `template` di
+`pagine`, o la definizione nel file della pagina ) e che Bootstrap carica ( il suo `css.external` ).
+Dentro la cartella custom i file hanno lo stesso percorso relativo di quelli standard:
+
+| cosa si cambia | file custom | effetto |
+|---|---|---|
+| colori, font, spaziature | CSS con lo stesso percorso di uno di `css.template` ( `css/main.css` ) | **si aggiunge** dopo l'originale ( `page.css.custom` ): solo la differenza |
+| una direttiva in piu' ( font, JS esterni ) | `etc/template.add.yaml` / `.add.conf` | si fonde con la configurazione standard |
+| la configurazione intera | `etc/template.yaml` / `.conf` | **sostituisce**: da evitare, si preferisce l'`.add` |
+| schema, base, include del template | `home.twig`, `ext/main.twig`, `inc/header.twig` | **sostituisce** ( `prependPath`, `_src/_api/_pages.php` ) |
+| snippet del core ( `_src/_twig/` ) | `src/twig/` senza underscore | solo dove lo standard lo include con la lista `[ 'inc/x.twig', '_inc/_x.twig' ]` |
+| variante per sito o pagina | tema ( `metadati.theme`, `template.theme` ) | CSS in piu' da `css/` o `css/themes/` |
+
+Si copia il meno possibile: un `.twig` o un `template.yaml` copiati non ricevono piu' gli aggiornamenti
+dello standard. Si prova fuori produzione con `?t=` `?s=` `?c=` ( `_src/_config/_420.pages.php` ). In
+`PROD` Twig compila in `var/cache/twig/` senza ricontrollare i file: dopo un `.twig` cambiato serve
+`/task/twig.cache.clean`; `/task/memcache.clean` ( con `?deploy=1` se multisito ) solo se cambia quale
+template o schema usa la pagina. Il capitolo completo: `_usr/_docs/_read/155.template.md`,
+*personalizzare un template*.
+
 ## 5. Mappa rapida task → file
 
 | Cosa vuoi fare | Dove agire |
@@ -893,7 +928,8 @@ configurazione — è spool.
 | Valore che cambia da ambiente ad ambiente | ramo `profiles.<DEV\|TEST\|PROD>` in `config.yaml`/`config.json`, letto da `$cf['<ns>']['profile']` |
 | Valore di lavoro (soglia, cutoff, cursore, ultimo id) | `var/spool/<qualcosa>/`, **mai** nei file di configurazione |
 | Override di una libreria standard | `src/lib/<nome>.php` (replace), `.add.php` (append) |
-| Override di un template Twig | `src/twig/<nome>.twig` |
+| Personalizzare un template ( colori, schemi, configurazione ) | `src/tpl/<nome>/` o `src/templates/<nome>/`, vedi "Personalizzare un template" |
+| Snippet o macro Twig del progetto | `src/twig/` ( sostituisce uno snippet del core solo dove lo standard lo include con la lista dei due nomi ) |
 | Attivare un modulo standard | creare la cartella `mod/<nome>/` corrispondente a `_mod/_<nome>/` |
 | Smoke test di una pagina | `SMOKE_BASE_URL=https://<sito> _src/_sh/_smoke.curl.sh status <path>` |
 | Giro di sorveglianza ( login e contenuto ) | `_src/_sh/_smoke.curl.sh sorveglianza https://<sito>`, chiavi `smoke.*` |
