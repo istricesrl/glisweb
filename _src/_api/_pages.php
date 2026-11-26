@@ -344,15 +344,28 @@
 
     // aggiunta del tema ai CSS da caricare
     if( isset( $ct['page']['template']['theme'] ) ) {
+
+        // se i CSS del template sono divisi per media il tema va sotto all, altrimenti in coda all'elenco piatto
+        $tMedia = ( is_array( $ct['page']['css']['template'] ) && is_array( reset( $ct['page']['css']['template'] ) ) );
+
         foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
             $tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
             $tcFile = path2custom( $tFile );
             if( file_exists( DIR_BASE . $tcFile ) ) {
-                $ct['page']['css']['custom'][] = $tcFile;
+                if( $tMedia ) {
+                    $ct['page']['css']['custom']['all'][] = $tcFile;
+                } else {
+                    $ct['page']['css']['custom'][] = $tcFile;
+                }
             } elseif( file_exists( DIR_BASE . $tFile ) ) {
-                $ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+                if( $tMedia ) {
+                    $ct['page']['css']['template']['all'][] = $tDir . $ct['page']['template']['theme'];
+                } else {
+                    $ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+                }
             }
         }
+
     }
 
     // debug
