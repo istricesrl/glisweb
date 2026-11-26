@@ -1,0 +1,79 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import '_lib/_translation.twig' as trn %}
+
+{# SCHEMA ESTESO #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+{% set table = '__account__' %}
+<form action="" method="post" id="formAccount">
+    <fieldset>
+        <legend>{{ trn.trw({ 'w': 'i_tuoi_dati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'i tuoi dati' }) }}</legend>
+        <div class="form-row row">
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'nome', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'nome' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'nome' }, 'request': request, 'page': page } ) }}
+            </div>
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'cognome', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'cognome' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'cognome' }, 'request': request, 'page': page } ) }}
+            </div>
+        </div>
+        <div class="form-row row">
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'email', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'e-mail' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'mail' }, 'request': request, 'page': page } ) }}
+            </div>
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'telefono', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'telefono' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'telefono' }, 'request': request, 'page': page } ) }}
+            </div>
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'cellulare', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'cellulare' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'cellulare' }, 'request': request, 'page': page } ) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>{{ trn.trw({ 'w': 'cambio_password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'cambio password' }) }} {{ session.account.username }}</legend>
+        <div class="form-row row">
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'password_corrente', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'password corrente' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password0', 'type': 'password' }, 'page': page, 'extras': 'also-required="__account___password1,__account___password2"' } ) }}
+            </div>
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'nuova_password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'nuova password' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password1', 'type': 'password', 'disabled': 1 }, 'page': page, 'extras': 'required-equals="__account___password1,__account___password2"' } ) }}
+            </div>
+            <div class="col-12 col-md form-col">
+                <span class="label-top">{{ trn.trw({ 'w': 'ripeti_nuova_password', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'nuova password (ripetere)' }) }}</span>
+                {{ frm.input( { 'form': { 'table': table }, 'field': { 'name': 'password2', 'type': 'password', 'disabled': 1 }, 'page': page, 'extras': 'required-equals="__account___password1,__account___password2"' } ) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-row row">
+            <div class="col">
+                {{ cms.formButton( { 'field': { 'text': trn.trw({ 'w': 'modifica_dati', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'modifica dati' }) }, 'form': { 'id': 'formAccount', 'table': '__account__' }, 'recaptcha': google.profile.recaptcha } ) }}
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% if session.account.username %}
+<form action="{{ page.path[ localization.language.ietf ] }}" method="post" class="mt-4" id="formLogout">
+    <input type="hidden" name="__logout__" value="1">
+    <fieldset>
+        <div class="form-row row">
+            <div class="col">
+                <button type="submit" class="btn btn-sm btn-secondary w-100">{{ trn.trw({ 'w': 'logout', 'l': localization.language.ietf, 'v': tr.generic, 'd': 'logout' }) }}</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endif %}
+<!-- fine blocco {{ _self }}::main -->
+{% endblock %}

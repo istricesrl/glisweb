@@ -14,7 +14,7 @@
 	    'h1'		    => array( $l => 'le mie iscrizioni' ),
 	    'template'		=> array( 'path' => '_src/_tpl/_minerva/', 'schema' => 'app.twig' ),
 	    'parent'		=> array( 'id' => NULL ),
-	    'macro'		    => array( $m . '_src/_inc/_macro/_account.php' ),
+	    'macro'		    => array( '_src/_inc/_macro/_account.php' ),
 	    'auth'		    => array( 'groups' => array( 'roots', 'staff', 'users' ) ),
 		'menu'			=> array( 'main'	=> array(	'' => 	array(	'label'		=> array( $l => 'iscrizioni' ),
 																				'priority'	=> '020' ) ) )

@@ -6,8 +6,8 @@ utente e password e si trova una barra in alto e, sotto, delle **piastrelle** gr
 È lontano dal gestionale per scelta: poche cose per pagina, bersagli grandi, niente tabelle da
 scrivania.
 
-> **nota** — nello standard le pagine di Minerva sono quasi vuote: la home dell'app e la pagina
-> dell'account mostrano il titolo e le piastrelle, e nient'altro. Le maschere vere — ricezione,
+> **nota** — nello standard le pagine di Minerva sono poche: la home dell'app, che mostra il titolo e le
+> piastrelle, e la pagina dell'account ( vedi sotto ). Le maschere vere — ricezione,
 > smistamento, trasferimenti, iscrizioni — le aggiunge il progetto o un modulo, e hanno la loro
 > documentazione. Questo capitolo descrive quello che hanno in comune.
 
@@ -69,9 +69,16 @@ possono essere più larghe dello schermo. Quando la maschera è fatta bene **sco
 lato, e il resto della pagina sta fermo; se invece scorre di lato **tutta la pagina**, barra
 compresa, è un difetto di quella maschera e va segnalato.
 
+## il tuo account
+
+L'omino in alto a destra apre la pagina **il tuo account**. Nella prima parte ci sono i propri dati —
+**nome**, **cognome**, **e-mail**, **telefono** e **cellulare** — già compilati con quelli dell'anagrafica
+collegata all'account; nella seconda si cambia la password: si scrive quella **corrente**, e solo allora
+si aprono i due campi della **nuova password**, che devono essere uguali. **Modifica dati** salva tutto
+insieme. In fondo, il pulsante **logout** chiude la sessione.
+
 ## quello che questo capitolo non dice ancora
 
-- cosa c'è nella pagina **account** di un'installazione reale, che nello standard è vuota;
 - come si presentano il **carrello** e la sua conferma, che stanno nei moduli;
 - le figure: sarebbero utili lo scatto della pagina di accesso e quello di una home con le
   piastrelle, a larghezza di tablet in verticale ( 768 punti ) e di telefono.
