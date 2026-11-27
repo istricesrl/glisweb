@@ -21,6 +21,13 @@
             '__report_movimenti_magazzini__' => 'updateReportMovimentiMagazzini'
         );
 
+        // i popolatori stanno nel modulo legacy _0500.mastri, che la linea di glisdev non ha
+        public function _before( UnitTester $I ) {
+            if( ! is_file( DIR_BASE . '_mod/_0500.mastri/_src/_lib/_mysql.utils.add.php' ) ) {
+                $I->markTestSkipped( 'il deploy non ha il modulo _0500.mastri' );
+            }
+        }
+
         // le colonne del CREATE di una tabella in un file SQL
         private function colonne( $file, $tabella ) {
 
