@@ -305,7 +305,14 @@ else
         # qualcuno non applica la patch
         #
         # va PRIMA dei permessi, perche' quello che scrive ( log, dump ) nasca gia' coi permessi giusti
-        if [ -x ./_src/_sh/_mysql.upgrade.sh ]; then
+        #
+        # NODB al posto del profilo aggiorna solo codice e vendor: niente gradino e niente patch, per un
+        # database che non si deve toccare ( p.es. sotto il canone, in attesa di una decisione; 27/11/2026 )
+        if [ "$STATO" = "NODB" ]; then
+
+            echo "NODB: database non toccato, niente gradino e niente patch"
+
+        elif [ -x ./_src/_sh/_mysql.upgrade.sh ]; then
 
             # un database rimasto alla linea di release precedente passa prima dal suo ultimo rilascio:
             # se il gradino non riesce, _mysql.upgrade.sh qui sotto lo rifiuta e lo dice

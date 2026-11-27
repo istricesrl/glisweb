@@ -69,4 +69,19 @@
 
         }
 
+        // NODB al posto del profilo salta sia il gradino sia le patch: il controllo sta prima di tutt'e due
+        public function upgradeNodbNonToccaIlDatabase( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_sh/_gw.upgrade.sh' );
+
+            $nodb    = strpos( $codice, 'if [ "$STATO" = "NODB" ]; then' );
+            $gradino = strpos( $codice, 'gw-gradino $STATO' );
+            $patch   = strpos( $codice, '_mysql.upgrade.sh $STATO --si' );
+            $I->assertNotFalse( $nodb, '_gw.upgrade.sh non riconosce NODB' );
+            $I->assertLessThan( $gradino, $nodb, 'il controllo di NODB viene dopo gw-gradino' );
+            $I->assertLessThan( $patch, $nodb, 'il controllo di NODB viene dopo _mysql.upgrade.sh' );
+            $I->assertMatchesRegularExpression( '/if \[ "\$STATO" = "NODB" \]; then.*?\n\s*elif \[ -x \.\/_src\/_sh\/_mysql\.upgrade\.sh \]; then/s', $codice, 'gradino e patch non stanno nel ramo alternativo a NODB' );
+
+        }
+
     }
