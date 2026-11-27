@@ -54,7 +54,9 @@
             }
 
             // destinatario tenuto o tolto per intero, secondo documenti.duplica.destinatario
-            $I->assertContains( $I->grabFromDatabase( 'SELECT id_destinatario FROM documenti WHERE id = ?', array( $copia ) ), array( NULL, $this->dati['destinatario'] ) );
+            // mysqlSelectValue() da' una stringa senza parametri e un intero coi parametri: il confronto e' stretto, si allineano i tipi
+            $destinatario = $I->grabFromDatabase( 'SELECT id_destinatario FROM documenti WHERE id = ?', array( $copia ) );
+            $I->assertContains( ( $destinatario === NULL ) ? NULL : (int) $destinatario, array( NULL, (int) $this->dati['destinatario'] ) );
 
             // due righe senza codice, la figlia sotto la copia della madre, prezzi invariati
             $I->assertEquals( 2, $I->grabFromDatabase( 'SELECT count(*) FROM documenti_articoli WHERE id_documento = ? AND codice IS NULL', array( $copia ) ) );

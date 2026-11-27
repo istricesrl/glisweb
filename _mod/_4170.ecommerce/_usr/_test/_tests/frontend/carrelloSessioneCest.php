@@ -16,6 +16,12 @@
         // pulizia prima del test
         public function _before( FrontendTester $I ) {
 
+            global $cf;
+            // il deploy puo' togliere il carrello pubblico ( p.es. glisweb.istricesrl.it, che non vende )
+            if( empty( $cf['contents']['pages']['carrello'] ) ) {
+                $I->markTestSkipped( 'il deploy non ha la pagina carrello' );
+            }
+
             $I->deleteTestRecords( 'carrelli', 'intestazione_nome' );
 
         }

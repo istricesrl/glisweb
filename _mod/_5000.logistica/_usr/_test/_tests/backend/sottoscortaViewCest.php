@@ -16,6 +16,11 @@
 
         // pulizia prima del test, per i resti di un giro interrotto
         public function _before( BackendTester $I ) {
+            global $cf;
+            // la vista la dichiara _logistica.it-IT.php solo se il deploy attiva l'automazione del sottoscorta
+            if( empty( $cf['contents']['pages']['logistica.sottoscorta.view'] ) ) {
+                $I->markTestSkipped( 'il deploy non attiva l\'automazione del sottoscorta' );
+            }
             $I->deleteTestRecords( '__report_sottoscorta__', 'id' );
         }
 

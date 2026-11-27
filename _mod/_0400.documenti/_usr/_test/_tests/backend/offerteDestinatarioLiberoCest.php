@@ -37,14 +37,15 @@
             $I->amOnPageId( 'offerte.commerciale.form' );
             $I->seeElement( '#form-documenti' );
 
-            // flag spento: niente campo, e il cliente resta obbligatorio
+            // flag spento: niente campo, e il cliente resta obbligatorio; il selectBox e' un campo nascosto piu' la casella
+            // visibile, ed e' la casella a portare required
             if( ! $I->executeJS( 'return $( "textarea#documenti_destinatario" ).length;' ) ) {
-                $I->seeElementInDOM( 'select#documenti_id_destinatario[required]' );
+                $I->seeElementInDOM( '#documenti_id_destinatario_inputbox[required]' );
                 return;
             }
 
             // flag acceso: il cliente non è più obbligatorio
-            $I->dontSeeElementInDOM( 'select#documenti_id_destinatario[required]' );
+            $I->dontSeeElementInDOM( '#documenti_id_destinatario_inputbox[required]' );
 
             $I->executeJS( '$( "#documenti_destinatario" ).val( ' . json_encode( $testo ) . ' );'
                          . '$( "#documenti_nome" ).val( ' . json_encode( $nome ) . ' );'
