@@ -144,4 +144,71 @@
 
         }
 
+        // nessuna variabile si chiama come un alias di import dello stesso file ( CVE-2026-133771 )
+        //
+        // fino a Twig 3.31.0 l'escaper considera sicuri x.attributo, x['chiave'] e x.metodo() se in un punto qualsiasi del
+        // file c'e' {% import ... as x %}, e cosi' stampa senza escape una variabile qualunque che si chiami x: un ciclo, un
+        // set, l'argomento di una macro o una variabile del contesto che arriva da fuori; il ramo 2.x di Twig, che gira sui
+        // deploy a PHP 7, la correzione non la avra' mai, quindi la regola la fa rispettare il framework: un alias si usa
+        // solo per chiamare macro ( alias.macro( ... ) ) e il suo nome non si assegna mai; il test passa i template dello
+        // standard, dei moduli e del custom del deploy, perche' e' nei template di progetto che la collisione puo' nascere
+        public function aliasDiImportNonUsatiComeVariabili( UnitTester $I ) {
+
+            $controllati = 0;
+            $trovati = array();
+
+            foreach( array( '_src', '_mod', 'src', 'mod' ) as $radice ) {
+
+                if( ! is_dir( DIR_BASE . $radice ) ) {
+                    continue;
+                }
+
+                $file = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( DIR_BASE . $radice, FilesystemIterator::SKIP_DOTS ) );
+
+                foreach( $file as $f ) {
+
+                    // le librerie esterne ( Composer ) non sono template del framework
+                    if( ! preg_match( '/\.(twig|html)$/', $f->getFilename() ) || strpos( $f->getPathname(), DIR_BASE . '_src/_lib/' ) === 0 ) {
+                        continue;
+                    }
+
+                    // i commenti Twig si svuotano tenendo gli a capo, cosi' i numeri di riga restano quelli del file
+                    $codice = preg_replace_callback( '/\{#.*?#\}/s', function( $c ) { return preg_replace( '/[^\n]/', ' ', $c[0] ); }, file_get_contents( $f->getPathname() ) );
+
+                    if( ! preg_match_all( '/\{%-?\s*import\s+.+?\s+as\s+(\w+)\s*-?%\}/s', $codice, $import ) ) {
+                        continue;
+                    }
+
+                    $controllati++;
+                    $alias = implode( '|', array_unique( $import[1] ) );
+                    $nome = str_replace( DIR_BASE, '', $f->getPathname() );
+
+                    // l'alias usato come variabile: assegnato, variabile di ciclo, argomento di macro, chiave di with,
+                    // oppure letto come attributo o come chiave senza chiamare una macro
+                    $usi = array(
+                        '/\{%-?\s*set\s+(?:\w+\s*,\s*)*(' . $alias . ')\b/',
+                        '/\{%-?\s*for\s+(?:\w+\s*,\s*)?(' . $alias . ')\s*(?:,|\bin\b)/',
+                        '/\{%-?\s*macro\s+\w+\s*\([^)]*(?<![\w.])(' . $alias . ')\b/',
+                        '/\bwith\s*\{[^}]*(?<![\w.])[\'"]?(' . $alias . ')[\'"]?\s*:/',
+                        '/(?<![\w.$])(' . $alias . ')(?:\s*\[|\.\w+(?!\s*\(|\w))/'
+                    );
+
+                    foreach( explode( "\n", $codice ) as $n => $riga ) {
+                        foreach( $usi as $uso ) {
+                            if( preg_match( $uso, $riga, $m ) ) {
+                                $trovati[] = $nome . ':' . ( $n + 1 ) . ' ( ' . trim( $m[0] ) . ' )';
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+            $I->assertGreaterThan( 0, $controllati, 'nessun template con import trovato: il test non prova niente' );
+
+            $I->assertEmpty( $trovati, 'nomi di alias di import usati come variabili, stampati senza escape ( CVE-2026-133771 ): ' . implode( ', ', $trovati ) );
+
+        }
+
     }
