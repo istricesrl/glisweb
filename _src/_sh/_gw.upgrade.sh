@@ -109,6 +109,20 @@ else
                 ;;
         esac
 
+        # composer si cerca QUI, prima del backup e del `rm -rf ./_*`
+        #
+        # lanciato da cron il PATH e' spesso solo /usr/bin:/bin, e dove composer sta in
+        # /usr/local/bin ( CloudPanel, installazione dal sito di composer ) non lo si trovava:
+        # l'aggiornamento proseguiva col vendor vecchio, che non va bene col composer.json nuovo.
+        # Senza composer non si aggiorna niente, come per il repository sbagliato.
+        # Osservato il 27/11/2026 aggiornando un deploy CloudPanel alla 2.0.2.
+        COMPOSER=$( PATH="$PATH:/usr/local/bin:/usr/bin:/bin" command -v composer )
+        if [ -z "$COMPOSER" ]; then
+            echo "ERRORE: composer non trovato ( PATH, /usr/local/bin, /usr/bin, /bin ), il framework NON viene toccato"
+            exit 1
+        fi
+        echo "uso composer: $COMPOSER"
+
         cartellaDisallineamenti="../$DISALLINEAMENTI_SUBDIR/$( date '+%Y%m%d%H%M%S' )/"
 
         echo "inizio il backup"
@@ -267,7 +281,7 @@ else
         # aggiorno composer (Composer 2); se fallisce mantengo il vendor precedente
         # gia' ripristinato sopra, cosi' il sito non resta mai senza dipendenze
         export COMPOSER_ALLOW_SUPERUSER=1
-        if composer update -n; then
+        if "$COMPOSER" update -n; then
             echo "composer update ok"
         else
             echo "ATTENZIONE: composer update fallito, mantengo il vendor precedente"

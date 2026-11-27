@@ -7,10 +7,10 @@
     "require": {
         "php": ">=7.3",
         "phpoffice/phpword": "*",
-        "phpoffice/phpspreadsheet": "^1.25",
+        "phpoffice/phpspreadsheet": "^1.25 || ^2 || ^3 || ^4 || ^5",
         "phpoffice/phppresentation": "^1.2",
         "html2text/html2text": "*",
-        "phpmailer/phpmailer": "6.*",
+        "phpmailer/phpmailer": "6.* || 7.*",
         "tecnickcom/tcpdf": "^6.11",
         "twig/twig": "^2.16 || ^3.31.1",
         "predis/predis": "*",

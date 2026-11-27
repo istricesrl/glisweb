@@ -43,4 +43,30 @@
 
         }
 
+        // su CloudPanel php-fpm gira come l'utente del sito: proprietario e gruppo sono i suoi, non root:www-data
+        public function cloudPanelUtenteDelSito( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_sh/_lamp.permissions.secure.sh' );
+
+            $I->assertMatchesRegularExpression( '/\/home\/\(\[\^\/\]\+\)\/htdocs\//', $codice, 'manca il riconoscimento del deploy CloudPanel' );
+            $I->assertDoesNotMatchRegularExpression( '/^chown\s.*(root|www-data):(root|www-data)\s/m', $codice, 'chown con proprietario fisso: su CloudPanel il pool non legge piu\' il deploy' );
+            $I->assertDoesNotMatchRegularExpression( '/-exec chmod (2550|640|550) /', $codice, 'modi fissi nei find: su CloudPanel il proprietario deve scrivere' );
+
+        }
+
+        // composer si cerca anche in /usr/local/bin, e senza composer l'aggiornamento si ferma PRIMA del backup e del rm
+        public function upgradeTrovaComposer( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_sh/_gw.upgrade.sh' );
+
+            $I->assertStringContainsString( '/usr/local/bin', $codice, '_gw.upgrade.sh non cerca composer in /usr/local/bin' );
+            $I->assertDoesNotMatchRegularExpression( '/^\s*(if\s+)?composer\s/m', $codice, '_gw.upgrade.sh chiama composer dal PATH invece che da $COMPOSER' );
+
+            $cerca  = strpos( $codice, 'command -v composer' );
+            $backup = strpos( $codice, 'inizio il backup' );
+            $I->assertNotFalse( $cerca, '_gw.upgrade.sh non cerca composer' );
+            $I->assertLessThan( $backup, $cerca, '_gw.upgrade.sh cerca composer dopo il backup' );
+
+        }
+
     }

@@ -34,16 +34,47 @@ cd $RP
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## proprietario, gruppo e modi
+# Di norma il codice e' di root e il server web lo legge dal gruppo www-data, senza poterlo
+# scrivere ( cartelle 2550, file 640, script 550 ).
+#
+# Su CloudPanel no: il deploy sta in /home/<utente>/htdocs/ e php-fpm gira come l'utente del
+# sito ( il pool ha user = <utente> ), che non e' nel gruppo www-data. Con root:www-data il
+# pool non legge piu' niente e il sito risponde "File not found"; e con le cartelle 2550
+# nemmeno il proprietario scrive, quindi composer, che li' gira come l'utente del sito, si
+# ferma. Su CloudPanel proprietario e gruppo sono quelli dell'utente del sito, e il
+# proprietario scrive ( cartelle 2750, script 750 ).
+# Osservato il 27/11/2026 aggiornando un deploy CloudPanel alla 2.0.2.
+OWNER="root"
+GROUP="www-data"
+WEBUSER="www-data"
+GITOWNER="root:root"
+DMODE="2550"
+FMODE="640"
+XMODE="550"
+DEPLOY="$( pwd )/$SUB"
+if [ -d /home/clp ] || command -v clpctl >/dev/null 2>&1; then
+    if [[ "$DEPLOY" =~ ^/home/([^/]+)/htdocs/ ]] && id "${BASH_REMATCH[1]}" >/dev/null 2>&1; then
+        OWNER="${BASH_REMATCH[1]}"
+        GROUP=$( id -gn "$OWNER" )
+        WEBUSER="$OWNER"
+        GITOWNER="$OWNER:$GROUP"
+        DMODE="2750"
+        XMODE="750"
+        echo "CloudPanel: proprietario $OWNER:$GROUP"
+    fi
+fi
+
 ## utente FTP
 if [ -f "ftpuser.conf" ]; then
     FTPUSER=$( cat ftpuser.conf | tr -d '[:space:]' )
     echo "utente FTP rilevato: $FTPUSER"
 else
-    FTPUSER="www-data"
+    FTPUSER="$WEBUSER"
 fi
 
 ## cambio proprietario
-chown -R root:www-data ./$SUB/
+chown -R $OWNER:$GROUP ./$SUB/
 #find ./$SUB/src/templates                                                           -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/src/tpl                                                                 -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/tmp                                                                     -exec chown -R www-data:www-data {} \;
@@ -51,17 +82,17 @@ chown -R root:www-data ./$SUB/
 #find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
 
 # src/templates, src/tpl e tmp non ci sono su tutti i deploy: l'errore sulla cartella che manca e' rumore nel log di cron
-chown -R $FTPUSER:www-data ./$SUB/src/templates 2>/dev/null
-chown -R $FTPUSER:www-data ./$SUB/src/tpl 2>/dev/null
-chown -R www-data:www-data ./$SUB/tmp 2>/dev/null
-chown -R $FTPUSER:www-data ./$SUB/var
+chown -R $FTPUSER:$GROUP ./$SUB/src/templates 2>/dev/null
+chown -R $FTPUSER:$GROUP ./$SUB/src/tpl 2>/dev/null
+chown -R $WEBUSER:$GROUP ./$SUB/tmp 2>/dev/null
+chown -R $FTPUSER:$GROUP ./$SUB/var
 # Il chown sopra cambia owner anche ai file in var/log/ creati da www-data
 # (umask 0022 → mode 644). Da quel momento www-data resta solo nel gruppo e
 # non può più appendere ai log esistenti (mode 644 = no write per gruppo),
 # causando warning ricorrenti "fopen ... Permesso negato" su loggerLatest().
 # Forziamo 660 sui file di log per ripristinare la scrivibilità di gruppo.
 find ./$SUB/var/log -type f -exec chmod 660 {} +
-chown -R www-data:www-data ./$SUB/var/cache
+chown -R $WEBUSER:$GROUP ./$SUB/var/cache
 
 ## cartella .git
 # NB: il test va fatto sul percorso completo. Qui siamo nella cartella SUPERIORE al deploy
@@ -71,12 +102,12 @@ chown -R www-data:www-data ./$SUB/var/cache
 # faceva quello che dice, e il prune dei find piu' sotto da' per scontato che questo chown
 # sia avvenuto.
 if [ -d "./$SUB/.git" ]; then
-    chown -R root:root ./$SUB/.git
+    chown -R $GITOWNER ./$SUB/.git
 fi
 
 ## cartella .github
 if [ -d "./$SUB/.github" ]; then
-    chown -R root:root ./$SUB/.github
+    chown -R $GITOWNER ./$SUB/.github
 fi
 
 ## informazioni
@@ -129,9 +160,9 @@ echo "impostati proprietari e gruppi, modifico i permessi"
 # a una DIRECTORY ( a differenza dei file ). Quindi basta impostarlo qui una volta.
 
 # permessi base sull'intero deploy (escludendo .git e var/log)
-find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d                                  -exec chmod 2550 {} +
-find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f                                  -exec chmod 640 {} +
-find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh'                             -exec chmod 550 {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type d                                  -exec chmod $DMODE {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -type f                                  -exec chmod $FMODE {} +
+find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log" \) -prune  -o -name '*.sh'                             -exec chmod $XMODE {} +
 
 # permessi aggiuntivi per le cartelle scrivibili dal framework
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
