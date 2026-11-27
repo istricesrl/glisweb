@@ -43,6 +43,23 @@
      * buildBreadcrumbs()               | costruisce le briciole di pane di una pagina
      * buildFlags()                     | costruisce le voci del selettore della lingua di una pagina
      * backurlRegistra()                | registra l'indirizzo di ritorno di questa pagina, e ci attacca quello da cui si arriva
+     * urlDelDeploy()                   | restituisce l'indirizzo solo se porta a una pagina di uno dei siti del deploy
+     * 
+     * funzioni per l'indice delle pagine
+     * ----------------------------------
+     * Le funzioni in questo gruppo servono per costruire l'indice dei percorsi usato dal rewrite.
+     *
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pagesIndexAdd()                  | aggiunge una pagina fra le candidate di un percorso dell'indice
+     *
+     * funzioni di controllo
+     * ---------------------
+     * Le funzioni in questo gruppo servono per trovare gli errori nella struttura delle pagine.
+     * 
+     * funzione                         | descrizione
+     * ---------------------------------|---------------------------------------------------------------
+     * pagesCheck()                     | controlla la struttura delle pagine e restituisce i problemi trovati
      * 
      * dipendenze
      * ==========
@@ -52,6 +69,7 @@
      * funzione                         | libreria di appartenenza
      * ---------------------------------|---------------------------------------------------------------
      * logWrite()                       | _src/_lib/_log.utils.php
+     * string2rewrite()                 | _src/_lib/_rewrite.tools.php
      * 
      * changelog
      * =========
@@ -60,6 +78,8 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2026-09-24       | Fabio Mosti          | documentazione
+     * 2026-10-30       | Fabio Mosti          | pagesCheck()
+     * 2026-11-02       | Fabio Mosti          | pagesIndexAdd()
      * 
      * licenza
      * =======
@@ -476,5 +496,170 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 
     // restituisco il risultato
         return $token;
+
+    }
+
+    /**
+     * restituisce l'indirizzo solo se porta a una pagina di uno dei siti del deploy
+     *
+     * È urlLocale() con l'elenco degli host del deploy: quello della richiesta, più la regola di site2regexp() di
+     * ogni sito per ogni profilo. In un deploy multisito un indirizzo di ritorno verso un altro sito dello stesso
+     * deploy è legittimo, e confrontarlo col solo host corrente lo scarterebbe ( Fabio, 24/11/2026 ); un indirizzo
+     * verso un host estraneo resta un open redirect, e si scarta.
+     *
+     * @param   string      $url        l'indirizzo da verificare
+     *
+     * @return  string                  l'indirizzo se è un percorso o un URL di un sito del deploy, altrimenti NULL
+     *
+     */
+    function urlDelDeploy( $url ) {
+
+        global $cf;
+
+    // l'host della richiesta
+        $hosts = array();
+        if( isset( $_SERVER['HTTP_HOST'] ) ) {
+            $hosts[] = $_SERVER['HTTP_HOST'];
+        }
+
+    // gli host di tutti i siti, per tutti i profili
+        if( isset( $cf['sites'] ) && is_array( $cf['sites'] ) ) {
+            foreach( $cf['sites'] as $site ) {
+                if( isset( $site['domains'] ) && is_array( $site['domains'] ) ) {
+                    foreach( array_keys( $site['domains'] ) as $status ) {
+                        $regola = site2regexp( $site, $status );
+                        if( $regola !== NULL ) {
+                            $hosts[] = $regola;
+                        }
+                    }
+                }
+            }
+        }
+
+    // restituisco il risultato
+        return urlLocale( $url, $hosts );
+
+    }
+
+    /**
+     * FUNZIONI PER L'INDICE DELLE PAGINE
+     */
+
+    /**
+     * aggiunge una pagina fra le candidate di un percorso dell'indice
+     *
+     * L'indice $cf['contents']['index'] associa a ogni percorso, per lingua, le pagine che ci corrispondono, e
+     * _src/_config/_400.rewrite.php fra quelle col genitore giusto tiene l'ultima. Una pagina il cui genitore non
+     * esiste viene resa radice da _src/_config/_320.pages.php, e così entra in concorrenza con le radici vere: se
+     * finisse in coda vincerebbe lei, e p.es. la scheda di un modulo coi genitori spenti prenderebbe il posto della
+     * dashboard che ha lo stesso nome. Per questo l'orfana va in testa: a parità di percorso vince sempre la pagina
+     * che sta al suo posto, e l'orfana resta raggiungibile solo se è l'unica con quel nome.
+     *
+     * @param   array       $index      l'indice di una lingua, p.es. $cf['contents']['index']['it-IT']
+     * @param   string      $rewrited   il percorso della pagina
+     * @param   string      $page       l'id della pagina
+     * @param   boolean     $orphan     true se la pagina ha un genitore dichiarato che non esiste
+     *
+     * @return  void
+     *
+     */
+    function pagesIndexAdd( &$index, $rewrited, $page, $orphan = false ) {
+
+    // candidate del percorso
+        if( ! isset( $index[ $rewrited ] ) ) {
+            $index[ $rewrited ] = array();
+        }
+
+    // l'orfana in testa, le altre in coda
+        if( $orphan ) {
+            array_unshift( $index[ $rewrited ], $page );
+        } else {
+            $index[ $rewrited ][] = $page;
+        }
+
+    }
+
+    /**
+     * FUNZIONI DI CONTROLLO
+     */
+
+    /**
+     * controlla la struttura delle pagine e restituisce i problemi trovati
+     *
+     * La costruzione dell'albero in _src/_config/_320.pages.php non si ferma davanti a una struttura rotta, la
+     * aggiusta in silenzio: una pagina figlia di una pagina che non esiste diventa una radice, e di due pagine con lo
+     * stesso percorso se ne raggiunge una sola. Succede soprattutto quando un modulo dichiara pagine che dipendono da
+     * un altro modulo non attivo, e il risultato si vede solo come una linguetta che dà "Unable to find template" o
+     * una pagina che non si apre. Questa funzione dice dove la struttura è rotta, così il runlevel lo può scrivere
+     * nel log; non corregge niente.
+     *
+     * Si controlla che:
+     *
+     *  - il genitore dichiarato in parent.id esista;
+     *  - le pagine elencate in etc.tabs esistano;
+     *  - due pagine con lo stesso genitore non abbiano, nella stessa lingua, lo stesso rewrited, cioè lo stesso
+     *    percorso; le pagine con forced o senza title in una lingua lì un percorso non ce l'hanno e non contano.
+     *
+     * Il rewrited si calcola come in _320.pages.php, perché la funzione lavora sulle pagine come sono dichiarate,
+     * prima che il runlevel azzeri i genitori che non esistono.
+     *
+     * @param   array       $pages      le pagine, come in $cf['contents']['pages'] prima della costruzione dell'albero
+     * @param   array       $languages  le lingue attive, p.es. array( 'it-IT', 'en-GB' )
+     *
+     * @return  array                   i problemi trovati, un messaggio per ciascuno; vuoto se la struttura è sana
+     *
+     */
+    function pagesCheck( $pages, $languages ) {
+
+    // problemi trovati
+        $problemi = array();
+
+    // percorsi già visti, per genitore e lingua
+        $percorsi = array();
+
+    // per ogni pagina
+        foreach( $pages as $k => $v ) {
+
+        // genitore inesistente
+            if( isset( $v['parent']['id'] ) && ! isset( $pages[ $v['parent']['id'] ] ) ) {
+                $problemi[] = 'la pagina ' . $k . ' è figlia di ' . $v['parent']['id'] . ', che non esiste';
+            }
+
+        // linguette inesistenti
+            if( isset( $v['etc']['tabs'] ) && is_array( $v['etc']['tabs'] ) ) {
+                foreach( $v['etc']['tabs'] as $tab ) {
+                    if( ! isset( $pages[ $tab ] ) ) {
+                        $problemi[] = 'la pagina ' . $k . ' ha la linguetta ' . $tab . ', che non esiste';
+                    }
+                }
+            }
+
+        // percorsi duplicati
+            $genitore = ( isset( $v['parent']['id'] ) ) ? $v['parent']['id'] : '';
+            foreach( $languages as $lk ) {
+
+            // le pagine senza percorso in questa lingua non contano
+                if( isset( $v['forced'][ $lk ] ) || empty( $v['title'][ $lk ] ) ) {
+                    continue;
+                }
+
+            // rewrited della pagina, come in _320.pages.php
+                $rewrited = ( isset( $v['rewrited'] ) && is_array( $v['rewrited'] ) && array_key_exists( $lk, $v['rewrited'] ) )
+                    ? $v['rewrited'][ $lk ]
+                    : string2rewrite( ( ! empty( $v['custom'][ $lk ] ) ) ? $v['custom'][ $lk ] : $v['title'][ $lk ] );
+
+            // confronto con le pagine già viste
+                if( isset( $percorsi[ $genitore ][ $lk ][ $rewrited ] ) ) {
+                    $problemi[] = 'la pagina ' . $k . ' ha lo stesso percorso di ' . $percorsi[ $genitore ][ $lk ][ $rewrited ] . ' in ' . $lk . ' ( ' . $rewrited . ' )';
+                } else {
+                    $percorsi[ $genitore ][ $lk ][ $rewrited ] = $k;
+                }
+
+            }
+
+        }
+
+    // restituisco il risultato
+        return $problemi;
 
     }

@@ -6,9 +6,14 @@
      * 
      * 
      * 
-     * TODO salvare i redirect in cache farebbe risparmiare tempo
+     * Questo runlevel manda prima al dominio principale le richieste arrivate su un dominio secondario, poi indicizza i
+     * redirect letti dal runlevel 130 ( file etc/redirect.csv e tabella redirect ) per sito e sorgente, e se il percorso
+     * della richiesta corrisponde a una sorgente risponde col codice di stato HTTP del redirect e termina l'esecuzione.
+     * Si cercano prima i redirect del sito corrente, poi quelli senza sito ( id_sito NULL ), che valgono per tutti i
+     * siti. La configurazione può aggiungere redirect scrivendo direttamente nell'indice, sotto la chiave
+     * redirect.index.<id_sito>.<sorgente> ( la chiave vuota per tutti i siti ).
      * 
-     * TODO documentare
+     * TODO salvare i redirect in cache farebbe risparmiare tempo
      * 
      * 
      */
@@ -92,11 +97,16 @@
     // var_dump( $cf['uri']['base'] );
     // var_dump( $cf['redirect']['index'][ SITE_CURRENT ] );
 
-    // esecuzione
-    if( isset( $cf['redirect']['index'][ SITE_CURRENT ] ) && array_key_exists( $cf['uri']['base'], $cf['redirect']['index'][ SITE_CURRENT ] ) ) {
+    // ricerca del redirect: prima fra quelli del sito corrente, poi fra quelli senza sito ( id_sito NULL, indicizzati
+    // sotto la chiave vuota ), che valgono per tutti i siti
+    foreach( array( SITE_CURRENT, '' ) as $redirectSito ) {
+        if( ! isset( $cf['redirect']['found'] ) && isset( $cf['redirect']['index'][ $redirectSito ] ) && array_key_exists( $cf['uri']['base'], $cf['redirect']['index'][ $redirectSito ] ) ) {
+            $cf['redirect']['found'] = $cf['redirect']['index'][ $redirectSito ][ $cf['uri']['base'] ];
+        }
+    }
 
-        // oggetto redirect
-        $cf['redirect']['found'] = $cf['redirect']['index'][ SITE_CURRENT ][ $cf['uri']['base'] ];
+    // esecuzione
+    if( isset( $cf['redirect']['found'] ) ) {
 
         // se devo portarmi dietro la query string
         if( isset( $cf['redirect']['found']['se_query_string'] ) && $cf['redirect']['found']['se_query_string'] == 1 ) {

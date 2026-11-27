@@ -3,5 +3,7 @@
 {% import '_lib/_default.twig' as cms %}
 
 <!-- file {{ _self }} -->
-<div class="col d-flex"></div>
+{% if page.url|length > 1 %}
+{{ nav.flags( page, localization.language.ietf, site ) }}
+{% endif %}
 <!-- fine file {{ _self }} -->

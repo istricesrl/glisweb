@@ -66,6 +66,10 @@
      * senza intervalli, liste né passi, e giorno_della_settimana va da 1 ( lunedì ) a 7 ( domenica ) perché si
      * confronta con date( 'N' ). La domenica è 7 e non 0 come in crontab: un task con 0 non parte mai. È lo stesso
      * range della tendina del form dei task ( _mod/_0030.strumenti/_src/_inc/_macro/_task.form.php ).
+     *
+     * Un task che sta in un modulo ( `_mod/_<modulo>/` o `mod/<modulo>/` ) gira solo se il modulo è fra quelli attivi
+     * ( $cf['mods']['active']['array'] ): altrimenti il run lo salta, scrive l'errore nel suo esito e una riga
+     * LOG_WARNING nel log `cron`, e ne rilascia il lock. Dal 2026-10-30; prima girava anche a modulo spento.
      * 
      * test dei task
      * -------------
@@ -90,7 +94,7 @@
      * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
      * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
      * log dei task pianificati sono /var/log/task/TASKID.AAAAMM.log (che contiene informazioni generali sull'esecuzione del
-     * task) e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica
+     * task) e /var/log/task/TASKID/AAAAMMGG.log (che contiene, una dopo l'altra, informazioni più dettagliate relative a ogni specifica
      * esecuzione del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e
      * suddiviso in piccole parti ognuna relativa a una data esecuzione.
      *
@@ -171,6 +175,16 @@
     $cf['cron']['token'] = getToken( __FILE__ );
 
     /**
+     * Fix 2026-10-26: il dettaglio del run solo a chi ha GESTIONE_SISTEMA.
+     *
+     * L'API non chiede login, perche' la chiama il cron di sistema con un curl anonimo, e non ne ha
+     * bisogno: il lock e la pianificazione per minuto la rendono idempotente. Ma la risposta era
+     * l'intero $cf['cron'], cioe' percorsi dei task, esiti, errori e stato dei job, e la riceveva
+     * chiunque: adesso chi non ha il privilegio riceve solo l'esito e gli orari del run.
+     */
+    $dettaglio = getPrivilege( 'GESTIONE_SISTEMA' );
+
+    /**
      * Fix 2026-07-24: durata massima di un run, in secondi.
      *
      * Il cron di sistema chiama questa API ogni minuto: il tetto sta sotto al minuto così ogni run
@@ -232,9 +246,9 @@
         $cf['cron']['status']['saltato'] = date( 'Y-m-d H:i:s' );
         $cf['cron']['info'][] = 'run precedente ancora in esecuzione, esecuzione saltata';
 
-        // output
+        // output, completo solo per chi ha il privilegio
         buildJson(
-            $cf['cron'],
+            ( $dettaglio ) ? $cf['cron'] : array( 'esito' => 'saltato', 'status' => $cf['cron']['status'] ),
             ENCODING_UTF8,
             array(
                 'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
@@ -321,8 +335,30 @@
         // ciclo sui task
         foreach( $cf['cron']['task'] as $task ) {
 
+            // modulo del task, se il task sta in un modulo ( _mod/_<modulo>/ o mod/<modulo>/ )
+            // NOTA un task di un modulo spento non gira: fino al 2026-10-30 il cron lo eseguiva lo stesso, e la riga 1
+            // di task, spostata sul task di scalamento del modulo IM000, avrebbe girato anche dove il modulo non c'è
+            $task['modulo'] = ( preg_match( '#^_?mod/_?([^/]+)/#', $task['task'], $cronModulo ) ) ? $cronModulo[1] : NULL;
+            $task['spento'] = ( ! empty( $task['modulo'] ) && ! in_array( $task['modulo'], $cf['mods']['active']['array'] ) );
+
+            // controllo che il modulo del task sia attivo
+            if( $task['spento'] ) {
+
+                // status
+                $cf['cron']['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo';
+
+                // log, warning solo al primo scarto del giorno e debug gli altri
+                // NOTA il task resta in pianificazione e il cron lo ripesca a ogni passata: fino al 2026-11-05 il warning
+                // usciva ogni volta, 1440 righe al giorno per deploy con un task di ogni minuto; timestamp_esecuzione è
+                // quello della passata precedente, perché il lock scrive solo il token
+                logger(
+                    'il task ' . $task['id'] . ' -> ' . $task['task'] . ' è del modulo ' . $task['modulo'] . ', che non è attivo: non lo eseguo',
+                    'cron',
+                    ( empty( $task['timestamp_esecuzione'] ) || date( 'Ymd', $task['timestamp_esecuzione'] ) != date( 'Ymd', $cf['cron']['time'] ) ) ? LOG_WARNING : LOG_DEBUG
+                );
+
             // controllo che il file del task esista
-            if( file_exists( DIR_BASE . $task['task'] ) ) {
+            } elseif( file_exists( DIR_BASE . $task['task'] ) ) {
 
                 // log
                 logger( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
@@ -367,8 +403,16 @@
                         // ...
                         $status = array();
 
+                        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta prima della iterazione #' . $iter . ' del task ' . $task['id'] . ' -> ' . $task['task'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
+
                         // ...
                         require DIR_BASE . $task['task'];
+
 
                         // ...
                         $cf['cron']['task'][ $task['id'] ]['status'] = $status;
@@ -377,8 +421,16 @@
                         logger( 'fine iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
                         // ...
-                        loggerLatest( print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
+                        // un file al giorno per task, in append: un file per iterazione faceva decine di migliaia di file al giorno
+                        loggerLatest( microtime( true ) . ' ' . print_r( $status, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . date( 'Ymd' ) . '.log' );
 
+                    }
+
+                    // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                    // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                    if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                        logger( 'connessione MySQL caduta prima della chiusura del task ' . $task['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                        require DIR_SRC_CONFIG . '_125.mysql.php';
                     }
 
                     // aggiorno la tabella di pianificazione
@@ -412,6 +464,20 @@
                 // log
                 logger( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 
+            }
+
+            // un task che non e' girato ( modulo spento, file mancante, iterazioni nulle ) rilascia comunque il lock: se
+            // non era mai girato timestamp_esecuzione e' NULL, il recupero dei task fermi ( "< ?" ) non lo
+            // vede, e il task resterebbe bloccato per sempre anche dopo che il file e' arrivato
+            if( $task['spento'] || ! file_exists( DIR_BASE . $task['task'] ) || empty( $task['iterazioni'] ) ) {
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+                    array(
+                        array( 's' => $cf['cron']['time'] ),
+                        array( 's' => $task['id'] )
+                    )
+                );
             }
 
             // log
@@ -602,8 +668,16 @@
                         // ...
                         $status = array();
 
+                        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                            logger( 'connessione MySQL caduta prima della iterazione #' . $iter . ' del job ' . $job['id'] . ' -> ' . $job['job'] . ', la ricreo', 'cron', LOG_WARNING );
+                            require DIR_SRC_CONFIG . '_125.mysql.php';
+                        }
+
                         // ...
                         require DIR_BASE . $job['job'];
+
 
                         // ...
                         $cf['cron']['job'][ $job['id'] ]['status'] = $status;
@@ -619,6 +693,13 @@
                     // il job ha avanzato: non e' in stallo, azzero il contatore
                     if( isset( $job['corrente'] ) && $job['corrente'] > $avanzamentoIniziale ) {
                         unset( $job['workspace']['__stalli__'] );
+                    }
+
+                    // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+                    // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+                    if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                        logger( 'connessione MySQL caduta prima della chiusura del job ' . $job['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                        require DIR_SRC_CONFIG . '_125.mysql.php';
                     }
 
                     // aggiorno la tabella di avanzamento lavori
@@ -771,6 +852,13 @@
             // ...
             $cf['cron']['pianificazioni'][ $pianificazione['id'] ]['status'] = $status;
 
+            // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+            // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+            if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+                logger( 'connessione MySQL caduta prima del rilascio della pianificazione ' . $pianificazione['id'] . ', la ricreo', 'cron', LOG_WARNING );
+                require DIR_SRC_CONFIG . '_125.mysql.php';
+            }
+
             // rilascio il lock
             mysqlQuery(
                 $cf['mysql']['connection'],
@@ -787,6 +875,13 @@
             // log
             loggerLatest( print_r( $pianificazione, true ), DIR_VAR_LOG_PIANIFICAZIONI . $pianificazione['id'] . '.log' );
 
+        }
+
+        // la connessione si verifica prima di usarla: un'iterazione, o anche solo il suo log, può durare più del
+        // wait_timeout del server ( 60 s su mysql03 ) e farla cadere ( bernispa, 24 e 25/11/2026 )
+        if( ! mysqlPing( $cf['mysql']['connection'] ) ) {
+            logger( 'connessione MySQL caduta prima del rilascio delle pianificazioni del run ' . $cf['cron']['token'] . ', la ricreo', 'cron', LOG_WARNING );
+            require DIR_SRC_CONFIG . '_125.mysql.php';
         }
 
         // rilascio il lock delle pianificazioni rimaste indietro per la durata massima del run
@@ -817,9 +912,9 @@
     // log
     loggerLatest( print_r( $cf['cron'], true ), FILE_LATEST_CRON );
 
-    // output
+    // output, completo solo per chi ha il privilegio
     buildJson(
-        $cf['cron'], 
+        ( $dettaglio ) ? $cf['cron'] : array( 'esito' => 'eseguito', 'status' => $cf['cron']['status'] ),
         ENCODING_UTF8,
         array(
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',

@@ -116,45 +116,11 @@
             // echo $status . '->' . $domain . PHP_EOL;
             // echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 
+            // espressione regolare dello stato, la stessa che copia uptimeRegexp() di glisweb-check-24x7
+            $regex = site2regexp( $site, $status );
+
             // se c'è un dominio per questo status
-            if( ! empty( $domain ) ) {
-
-                // inizializzazioni
-                $hosts = $domains = array();
-
-                // per lo stato corrente, verifico se c'è un host specificato
-                if( isset( $site['hosts'][ $status ] ) ) {
-                    $hosts[] = $site['hosts'][ $status ];
-                }
-
-                // per lo stato corrente, verifico se ci sono degli alias di host
-                if( isset( $site['alias']['hosts'][ $status ] ) ) {
-                    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ] );
-                }
-
-                // per lo stato corrente, aggiungo il domain
-                $domains[] = $site['domains'][ $status ];
-
-                // per lo stato corrente, verifico se ci sono degli alias di domain
-                if( isset( $site['alias']['domains'][ $status ] ) ) {
-                    $domains = array_merge( $domains, $site['alias']['domains'][ $status ] );
-                }
-
-                // numeratore host in base a www
-                if( in_array( 'www', $hosts ) ) {
-                    $numerator = '{0,1}';
-                } else {
-                    $numerator = '{1}';
-                }
-
-                // regola di match per i domini
-                $drule = str_replace( '.', '\.', implode( '|', $domains ) );
-
-                // regola di match per gli host
-                $hrule = implode( '|', $hosts );
-
-                // composizione dell'espressione regolare
-                $regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/';
+            if( $regex !== NULL ) {
 
                 // debug
                 // echo $regex .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
@@ -183,7 +149,12 @@
             $cnfSpec = 'nessun file di configurazione trovato';
         }
 
-        die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare la configurazione (' . $cnfSpec . ')' );
+        // i dettagli vanno solo nel log: host, percorsi e file di configurazione non si mostrano a chi chiama
+        logger( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare la configurazione (' . $cnfSpec . ')', 'site', LOG_ERR );
+
+        // risposta generica
+        http_response_code( 404 );
+        die( 'sito non trovato' );
 
     }
 

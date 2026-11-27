@@ -138,12 +138,32 @@ div.search-box {
     padding: 0.5em;
 }
 
+/* il margine generale di .form-control dentro l'input-group stacca il campo dal pulsante */
+div.search-box .form-control {
+    margin-bottom: 0em;
+}
+
 .nav-icons a.nav-link {
     font-size: 1.25em;
 }
 
 a.nav-link {
     padding: 0.5em 0em;
+}
+
+/* le bandiere del cambio lingua ( inc/flags.twig ) stanno nella riga delle icone */
+li.flags-item a.flags-link {
+    display: block;
+    padding: 0.5em 0em 0.5em 0.75em;
+    opacity: 0.5;
+}
+
+li.flags-item.active a.flags-link, li.flags-item a.flags-link:hover {
+    opacity: 1;
+}
+
+li.flags-item img {
+    height: 1em;
 }
 
 a.nav-link, a.nav-link:visited {

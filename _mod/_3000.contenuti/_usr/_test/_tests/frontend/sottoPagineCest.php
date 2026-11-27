@@ -49,6 +49,7 @@
             $idModello = $I->grabFromDatabase( 'SELECT id FROM pagine WHERE id_sito = ? ORDER BY id LIMIT 1', array( SITE_CURRENT ) );
             $base = array_filter( array(
                 'id_sito' => SITE_CURRENT,
+                'timestamp_aggiornamento' => time(),
                 'template' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT template FROM pagine WHERE id = ?', array( $idModello ) ) : NULL,
                 'schema_html' => ( $idModello ) ? $I->grabFromDatabase( 'SELECT schema_html FROM pagine WHERE id = ?', array( $idModello ) ) : NULL
             ) );
@@ -65,16 +66,20 @@
 
             // pubblicate la madre e una sola figlia
             foreach( array( $idMadre, $idPubblicata ) as $id ) {
-                $I->haveInDatabase( 'pubblicazioni', array( 'id_pagina' => $id, 'id_tipologia' => 2, 'note' => $I->grabTestName( 'pubblicazione' ) ) );
+                $I->haveInDatabase( 'pubblicazioni', array( 'id_pagina' => $id, 'id_tipologia' => 2, 'note' => $I->grabTestName( 'pubblicazione' ), 'timestamp_aggiornamento' => time() ) );
             }
 
-            // l'array delle pagine sta in memcache
+            // l'array delle pagine sta in cache, e da CLI lo svuotamento arriva solo a memcache: dove il sito usa l'APCU
+            // ( in DEV senza memcache ) il framework lo rigenera da solo perche' le righe hanno un timestamp_aggiornamento
+            // piu' recente della cache, ma la richiesta che se ne accorge ( 310, scritto dal 330 ) serve ancora la struttura
+            // vecchia: per questo prima si apre la home
             $I->clearGliswebCache();
+            $I->amOnPage( '/' );
 
             $I->amOnPage( '/?p=' . $idMadre );
 
             // il 420 salta la figlia non pubblicata e lo scrive nel log
-            $log = DIR_VAR_LOG . 'pagine.debug.' . date( 'Ym' ) . '.log';
+            $log = DIR_VAR_LOG . 'test/pagine.debug.' . date( 'Ym' ) . '.log';
             $saltata = false;
             for( $i = 0; $i < 10 && $saltata === false; $i++ ) {
                 if( file_exists( $log ) && strpos( file_get_contents( $log ), 'sotto pagina ' . $idBozza . ' della pagina ' . $idMadre . ' ' ) !== false ) {

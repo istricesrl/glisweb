@@ -78,3 +78,12 @@ elenchi e **tabelle vere** (`<table class="table ...">`), non solo form. Verific
 Regola pratica per Minerva: **ogni `<table>` di dati va avvolta in `<div class="table-responsive">`**.
 È un accorgimento di markup (non CSS), quindi va messo nel template dove sta la tabella; non c'è modo
 pulito di farlo lato CSS su una `<table>` nuda senza rompere il layout della tabella.
+
+## la pagina account ( `app.account` )
+
+Dal 27/11/2026 la pagina `app.account` ( `_src/_inc/_pages/_app.it-IT.php` ) usa lo schema `account.twig` di questo
+template e la macro `_src/_inc/_macro/_account.php` del core. Prima puntava alla macro del modulo legacy `0010` e a
+uno schema che minerva non aveva, quindi su un deploy senza quel modulo non si apriva. La macro dichiara la tabella
+virtuale `__account__` ( `$cf['fields']['account']`: `mail` su `mail.indirizzo`, `telefono` e `cellulare` su
+`telefoni` di tipologia 1 e 2 ) e precompila il form dai dati di `$_SESSION['account']`. I campi stanno in colonne
+`form-col` con l'etichetta `label-top`, come nelle altre maschere del template. Test: `_usr/_test/_tests/backend/accountCest.php`.

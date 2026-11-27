@@ -32,9 +32,9 @@
     // reparto della riga resta nella tendina anche se archiviato, segnato, perché salvando il form non vada perso
     $ct['etc']['select']['reparti'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT reparti_view.id, concat( reparti_view.__label__, if( iva.timestamp_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
+        'SELECT reparti_view.id, concat( reparti_view.__label__, if( iva.data_archiviazione IS NULL, "", " ( aliquota archiviata )" ) ) AS __label__ '.
         'FROM reparti_view LEFT JOIN iva ON iva.id = reparti_view.id_iva '.
-        'WHERE iva.timestamp_archiviazione IS NULL OR reparti_view.id = ? '.
+        'WHERE iva.data_archiviazione IS NULL OR reparti_view.id = ? '.
         'ORDER BY __label__ ASC',
         array( array( 's' => ( isset( $_REQUEST[ $ct['form']['table'] ]['id_reparto'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_reparto'] : NULL ) )
     );

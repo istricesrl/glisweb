@@ -54,8 +54,13 @@
         // ciclo sui template trovati e li inserisco in $cf['sms']['tpl']
         foreach( $tpls as $tpl ) {
 
+            // NOTA fino al 2026-11-05 il codice del template si chiamava ruolo ( _202611051200.template.codice.sql ): la lettura
+            // del nome vecchio tiene in piedi i database dove la patch non è ancora passata, e si toglie al punto 12 dello
+            // schema canonico, quando la patch è su tutti
+            $tpl['codice'] = $tpl['codice'] ?? $tpl['ruolo'];
+
             // inizializzo l'oggetto
-            $cf['sms']['tpl'][ $tpl['ruolo'] ] = array(
+            $cf['sms']['tpl'][ $tpl['codice'] ] = array(
                 'type' => $tpl['tipo'],
                 'nome' => $tpl['nome']
             );
@@ -75,7 +80,7 @@
             // i testi salvati nella linguetta contenuti dei template SMS non arrivavano a queueSmsFromTemplate(); il tipo del
             // template sta al primo livello, come per le mail in _350.mail.php, e non dentro la lingua
             foreach( $cnts as $cnt ) {
-                $cf['sms']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
+                $cf['sms']['tpl'][ $tpl['codice'] ][ $cnt['ietf'] ] = array(
                     'from' => array( $cnt['mittente_nome'] ?? '' => $cnt['mittente_numero'] ?? '' ),
                     'to' => $cnt['destinatari_numero'] ?? '',
                     'testo' => $cnt['testo']

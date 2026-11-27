@@ -56,6 +56,8 @@
 
         <main>
             <div class="container">
+                {# BLOCCO TITOLO #}
+                {% block title %}
                 <div class="row mb-3">
                     <div class="col">
                         {% if page.parent.id %}
@@ -65,6 +67,7 @@
                         {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ]|default('') ) | raw ) }}</h2>{% endif %}
                     </div>
                 </div>
+                {% endblock title %}
                 <div class="row">
                     <div class="col">
                         {% block main %}{% endblock %}

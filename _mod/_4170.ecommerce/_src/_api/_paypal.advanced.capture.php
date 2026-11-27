@@ -65,6 +65,38 @@
         // nome del file di ricevuta
         $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
+        /**
+         * Si cattura solo quello che si registrerà.
+         * =========================================
+         *
+         * Fix 2026-11-05, stesso principio della cattura dei pagamenti in sospeso ( _mod/_F030.pagamenti ). I post-hook
+         * qui sotto emettono le ricevute dalle righe del carrello nel database, mentre PayPal incassa la cifra
+         * dell'ordine: se fra l'ordine e la cattura il carrello è cambiato ( una riga entrata o cancellata fuori
+         * sessione, uno sconto ricalcolato ), si incassa una cifra e se ne registra un'altra. Su polmasi dal 01/09/2026
+         * circa 30 catture con differenza, rimesse a posto a mano.
+         *
+         * Qui il carrello deve valere ancora quello che l'API dell'ordine ha mandato a PayPal; se no la cattura non
+         * parte, l'ordine resta approvato e non catturato e scade da solo, e chi paga rifà il pagamento sul carrello
+         * di adesso.
+         */
+        $verifica = verificaImportoOrdineCarrello( $cf['mysql']['connection'], $idCarrello, $_REQUEST['id'] );
+
+        if( ! $verifica['ok'] ) {
+
+            // log
+            logWrite( 'cattura rifiutata: ordine ' . $_REQUEST['id'] . ' da ' . var_export( $verifica['atteso'], true ) . ' EUR, carrello ' . $idCarrello . ' per ' . var_export( $verifica['trovato'], true ) . ' EUR', 'paypal', LOG_ERR );
+
+            // log
+            appendToFile( 'cattura rifiutata: ordine ' . $_REQUEST['id'] . ' da ' . var_export( $verifica['atteso'], true ) . ' EUR, carrello per ' . var_export( $verifica['trovato'], true ) . ' EUR', $fileRicevuta );
+
+            // esito
+            buildJson( array( 'error' => 'importo dell\'ordine ' . $_REQUEST['id'] . ' diverso dal carrello da registrare' ) );
+
+            // fine script
+            exit;
+
+        }
+
         // chiamata
         $result = restCall(
             $cf['ecommerce']['profile']['provider']['paypal-advanced']['order_api'].'/'.$_REQUEST['id'].'/capture',  // TODO leggere dalla configurazione

@@ -56,4 +56,17 @@
 
         }
 
+        // C-098 i flag della registrazione arrivati dalla richiesta non finiscono nella pagina
+        public function flagDaRichiesta( FrontendTester $I ) {
+
+            $I->amOnPageId( 'registrazione', array( '__signup__' => array(
+                '__tk_ok__'     => array( 'testo' => array( 'it-IT' => '<i>TEST-E2E-flag</i>' ) ),
+                '__tk_sent__'   => array( 'testo' => array( 'it-IT' => '<i>TEST-E2E-flag</i>' ) ),
+                '__ts_check__'  => array( 'testo' => array( 'it-IT' => '<i>TEST-E2E-flag</i>' ) )
+            ) ) );
+
+            $I->dontSeeInSource( '<i>TEST-E2E-flag</i>' );
+
+        }
+
     }

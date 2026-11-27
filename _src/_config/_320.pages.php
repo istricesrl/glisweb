@@ -80,6 +80,16 @@
         // inizializzo l'array di risoluzione inversa
         // $cf['contents']['reverse']          = array();
 
+        // controllo della struttura: genitori e linguette che non esistono, percorsi duplicati
+        // NOTA si fa qui, prima che il ciclo qui sotto trasformi in radici le pagine col genitore che non esiste, e
+        // solo quando la struttura si ricostruisce e finisce in cache, così il log non si ripete a ogni richiesta;
+        // senza memcache la struttura si ricostruisce sempre, e il controllo non si fa
+        if( ! empty( $cf['memcache']['connection'] ) ) {
+            foreach( pagesCheck( $cf['contents']['pages'], array_keys( $cf['localization']['languages'] ) ) as $problema ) {
+                logger( $problema, 'pages', LOG_WARNING );
+            }
+        }
+
         // preparo le pagine
         foreach( $cf['contents']['pages'] as $k => &$v ) {
 
@@ -97,7 +107,10 @@
                 // echo $v['id'].PHP_EOL;
 
                 // controllo parent
-                if( ! isset( $cf['contents']['pages'][ $v['parent']['id'] ] ) ) { $v['parent']['id'] = NULL; }
+                // NOTA la pagina che ha un genitore dichiarato ma inesistente diventa radice, e se ne tiene traccia
+                // perché nell'indice non deve scavalcare le radici vere che hanno il suo stesso nome
+                $orfana = false;
+                if( ! isset( $cf['contents']['pages'][ $v['parent']['id'] ] ) ) { $orfana = isset( $v['parent']['id'] ); $v['parent']['id'] = NULL; }
 
                 // imposto l'array dell'albero locale
                 $v['tree'] = array( $k => array() );
@@ -146,7 +159,8 @@
                     }
 
                     // inserisco la pagina corrente nell'indice
-                    $cf['contents']['index'][ $lk ][ $v['rewrited'][ $lk ] ][] = $k;
+                    // NOTA l'orfana va in testa alle candidate, vedi pagesIndexAdd()
+                    pagesIndexAdd( $cf['contents']['index'][ $lk ], $v['rewrited'][ $lk ], $k, $orfana );
 
                     // debug
                     // echo $v['rewrited'][ $lk ] . PHP_EOL;

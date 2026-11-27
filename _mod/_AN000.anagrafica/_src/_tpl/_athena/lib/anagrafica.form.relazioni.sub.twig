@@ -16,21 +16,18 @@
         {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         <div class="form-group form-row row">
             <div class="col-12 col-md form-col">
-            <span class="label-top">anagrafica principale</span>
-            {{ frm.select({ 'field': { 'name': 'id_anagrafica', 'disabled': disabled, 'default': request[ table ].id }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            <span class="label-top">anagrafica</span>
+            {{ frm.select({ 'field': { 'name': 'id_anagrafica', 'disabled': disabled, 'required': 1, 'default': request[ table ].id }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto form-col">
-            <span class="label-top">relazione</span>
-            {{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled }, 'source': { 'values': etc.select.ruoli }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            <span class="label-top">è il/la</span>
+            {{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled, 'required': 1 }, 'source': { 'values': etc.select.ruoli }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-12 col-md form-col">
-            <span class="label-top">anagrafica collegato</span>
-            {{ frm.select({ 'field': { 'name': 'id_anagrafica_collegata', 'disabled': disabled }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            <span class="label-top">di</span>
+            {{ frm.select({ 'field': { 'name': 'id_anagrafica_collegata', 'disabled': disabled, 'required': 1 }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             {% if r.id %}
-            <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.mail.form'].url[ lang ] }}?mail[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
-            </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
             </div>

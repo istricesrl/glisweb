@@ -108,7 +108,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM documenti_view WHERE id_documento = ? ', 
+            'SELECT id, __label__ FROM documenti_view WHERE id = ? ', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_documento'] )
             )

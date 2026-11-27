@@ -167,6 +167,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS           --
 CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	SELECT
 		anagrafica_certificazioni.id,
+		anagrafica_certificazioni.ordine,
 		anagrafica_certificazioni.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		anagrafica_certificazioni.id_certificazione,
@@ -177,13 +178,12 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		anagrafica_certificazioni.codice,
 		anagrafica_certificazioni.data_emissione,
 		anagrafica_certificazioni.data_scadenza,
+		anagrafica_certificazioni.note,
 		from_unixtime( anagrafica_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			certificazioni.nome,
-			' - ',
-			anagrafica_certificazioni.codice
+			concat_ws( ' - ', certificazioni.nome, anagrafica_certificazioni.codice )
 		) AS __label__
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
@@ -392,8 +392,19 @@ CREATE OR REPLACE VIEW anagrafica_progetti_view AS
 -- | 090000000961
 
 -- attesa_view
--- le righe di anagrafica_progetti in lista di attesa ( se_attesa ), per il modulo _0635.attesa;
--- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026
+-- vista virtuale: la lista di attesa sono le righe di anagrafica_progetti con se_attesa ( canone, punto 6 ); il modulo
+-- _0635.attesa legge da qui e scrive su anagrafica_progetti. Oltre alle colonne della relazione espone quelle che
+-- servono all'elenco e al suo export, che rilegge le colonne dalla vista: la disciplina del corso, le note, le mail e
+-- i telefoni dell'anagrafica
+--
+-- NOTA disciplina e' la radice dell'albero delle categorie_progetti con se_disciplina, raggiunta risalendo
+-- id_genitore per quattro livelli e non con categorie_progetti_path_find_ancestor(), che costa ~25 ms a chiamata
+-- ( su 297 righe la vista passava da 0,02 a 9 secondi ); un quinto livello comparirebbe come nome intermedio
+-- NOTA mail e telefoni sono tutti quelli dell'anagrafica separati da " | ", come in anagrafica_view
+-- NOTA data_lezione e ora_lezione vengono dalla todo di anagrafica_progetti.id_todo, che oggi nessun modulo valorizza
+--
+-- ripristinata il 2026-09-30 dalla versione di prima del 02/03/2026; il 2026-11-12 ( schema canonico, punto 6 )
+-- ha preso la forma della patch di polmasi del 28/09/2026, che ne era un sovrainsieme
 CREATE OR REPLACE VIEW attesa_view AS
 	SELECT
 		anagrafica_progetti.id,
@@ -415,7 +426,28 @@ CREATE OR REPLACE VIEW attesa_view AS
 			progetti.nome,
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
 			ruoli_progetti.nome
-		) AS __label__
+		) AS __label__,
+		anagrafica_progetti.note,
+		(
+			SELECT group_concat( DISTINCT coalesce( g4.nome, g3.nome, g2.nome, g1.nome, categorie_progetti.nome ) SEPARATOR ', ' )
+			FROM progetti_categorie
+				INNER JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1
+				LEFT JOIN categorie_progetti AS g1 ON g1.id = categorie_progetti.id_genitore
+				LEFT JOIN categorie_progetti AS g2 ON g2.id = g1.id_genitore
+				LEFT JOIN categorie_progetti AS g3 ON g3.id = g2.id_genitore
+				LEFT JOIN categorie_progetti AS g4 ON g4.id = g3.id_genitore
+			WHERE progetti_categorie.id_progetto = anagrafica_progetti.id_progetto
+		) AS disciplina,
+		(
+			SELECT group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' )
+			FROM mail
+			WHERE mail.id_anagrafica = anagrafica_progetti.id_anagrafica
+		) AS mail,
+		(
+			SELECT group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' )
+			FROM telefoni
+			WHERE telefoni.id_anagrafica = anagrafica_progetti.id_anagrafica
+		) AS telefoni
 	FROM anagrafica_progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
 		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
@@ -471,6 +503,11 @@ CREATE OR REPLACE VIEW `anagrafica_view` AS
 		concat_ws('-',`anagrafica`.`anno_nascita`,lpad(`anagrafica`.`mese_nascita`,2,'0'),lpad(`anagrafica`.`giorno_nascita`,2,'0')) AS `data_nascita`,
 		`anagrafica`.`id_comune_nascita` AS `id_comune_nascita`,
 		`anagrafica`.`data_archiviazione` AS `data_archiviazione`,
+		`anagrafica`.`id_account_proprietario` AS `id_account_proprietario`,
+		`anagrafica`.`id_gruppo_proprietario` AS `id_gruppo_proprietario`,
+		`anagrafica`.`id_diritto_proprietario` AS `id_diritto_proprietario`,
+		`anagrafica`.`id_diritto_gruppo` AS `id_diritto_gruppo`,
+		`anagrafica`.`id_diritto_altri` AS `id_diritto_altri`,
 		`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,
 		`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,
 		`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,
@@ -505,14 +542,14 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			concat_ws( ' ', settori.ateco, settori.nome )
+			concat_ws( ' ', settori.ateco, coalesce( settori.soprannome, settori.nome ) )
 		) AS __label__
 	FROM anagrafica_settori
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_settori.id_anagrafica
 		LEFT JOIN settori ON settori.id = anagrafica_settori.id_settore
 ;
 
--- il settore si etichetta con codice ATECO e nome, come in settori_view; il percorso completo ( settori_path ) è
+-- il settore si etichetta con codice ATECO e soprannome ( o nome ), come in settori_view; il percorso completo ( settori_path ) è
 -- troppo lungo per un'etichetta
 
 -- | 090000001251
@@ -527,6 +564,11 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 		-- tipologie_annunci.nome AS tipologia, ...
 		annunci.nome,
 		group_concat( categorie_annunci.nome SEPARATOR '|' ) AS categorie,
+		annunci.id_account_proprietario,
+		annunci.id_gruppo_proprietario,
+		annunci.id_diritto_proprietario,
+		annunci.id_diritto_gruppo,
+		annunci.id_diritto_altri,
 		annunci.id_account_inserimento,
 		annunci.id_account_aggiornamento,
 		annunci.nome AS __label__
@@ -543,8 +585,16 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 --
 -- vista di compatibilita': fino al 01/10/2026 caratteristiche_prodotti era la tabella dell'albero dei prodotti, ora
 -- l'albero sta in caratteristiche e questa vista lo espone con i nomi di colonna di allora, cosi' il codice dei
--- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare. Sta qui e
--- non accanto a caratteristiche_view perche' articoli_view, subito sotto, la usa
+-- progetti che la legge o ci scrive ( anche con INSERT ... ON DUPLICATE KEY UPDATE ) continua a funzionare
+--
+-- NOTA solo-legacy ( canone, punto 6, 12/11/2026 ): la usano il modulo _4100.prodotti di glisweb e il codice custom dei
+-- progetti che lo hanno; latest non la legge da nessuna parte ( articoli_view legge caratteristiche ). E' deprecata e
+-- si toglie, con caratteristiche_prodotti_view e il trio caratteristiche_prodotti_path*, quando _4100 lascia glisweb e
+-- il custom dei progetti e' passato a caratteristiche
+--
+-- ci si scrive solo finche' ogni colonna e' una colonna di caratteristiche: una sola colonna derivata ( c'era NULL AS
+-- se_categoria, uscita il 06/11/2026 ) la rende non inseribile, ogni INSERT prende l'errore 1471, e su
+-- utensilerialughese l'import delle macchine ha svuotato le caratteristiche di 135 schede
 CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
 	SELECT
 		caratteristiche.id,
@@ -552,7 +602,6 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti` AS
 		caratteristiche.nome,
 		caratteristiche.font_awesome,
 		caratteristiche.html_entity,
-		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
@@ -596,14 +645,15 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		-- prima erano due LEFT JOIN su pubblicazioni ( dell'articolo e del prodotto ): un articolo con
 		-- piu' pubblicazioni usciva una volta per pubblicazione, e su glisweb la vista dava 7.920 righe
 		-- per 132 articoli. La statica, che ha id come chiave primaria, non si riusciva piu' a
-		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto.
+		-- riempire. Si prende la prima pubblicazione dell'articolo, se no la prima del prodotto; la prima e' quella
+		-- che viene prima nell'ordine ( punto 6e ), su qualunque sito.
 		coalesce(
-			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
-			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+			( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
+			( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
 		) AS id_tipologia_pubblicazione,
 		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = coalesce(
-				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.id LIMIT 1 ),
-				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.id LIMIT 1 )
+				( SELECT pa.id_tipologia FROM pubblicazioni AS pa WHERE pa.id_articolo = articoli.id ORDER BY pa.ordine IS NULL, pa.ordine, pa.id LIMIT 1 ),
+				( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = articoli.id_prodotto ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 )
 			) ) AS pubblicazione,
 		-- TIPOLOGIA DI VOCE A LISTINO: SOTTOQUERY, NON JOIN
 		--
@@ -614,8 +664,8 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		-- a cinque. La sottoquery scalare da' lo stesso valore e non tocca la cardinalita'
 		( SELECT tipo_voce.nome
 			FROM articoli_caratteristiche AS ac_tipo
-			INNER JOIN caratteristiche_prodotti AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
-			INNER JOIN caratteristiche_prodotti AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
+			INNER JOIN caratteristiche AS tipo_voce ON tipo_voce.id = ac_tipo.id_caratteristica
+			INNER JOIN caratteristiche AS radice_tipo ON radice_tipo.id = tipo_voce.id_genitore
 			WHERE ac_tipo.id_articolo = articoli.id
 			AND radice_tipo.nome = 'TIPO DI VOCE A LISTINO'
 			LIMIT 1
@@ -711,6 +761,11 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		), '' ) AS prezzi,
 		coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
 		articoli.note_archiviazione,
+		articoli.id_account_proprietario,                     --
+		articoli.id_gruppo_proprietario,                      --
+		articoli.id_diritto_proprietario,                     --
+		articoli.id_diritto_gruppo,                           --
+		articoli.id_diritto_altri,                            --
 		articoli.id_account_inserimento,                      --
 		articoli.timestamp_inserimento,                       --
 		articoli.id_account_aggiornamento,                    --
@@ -793,14 +848,25 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		asset.id_genitore,
 		asset.id_tipologia,
 		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
-		asset.id_condizione,
-		condizioni.nome AS condizione,
 		asset.codice,
 		asset.nome,
+		asset.id_condizione,
+		condizioni.nome AS condizione,
+		asset.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		asset.modello,
+		asset.targa,
 		asset.hostname,
 		asset.ip_address,
 		asset.cespite,
 		asset.note,
+		asset.data_archiviazione,
+		asset.note_archiviazione,
+		asset.id_account_proprietario,
+		asset.id_gruppo_proprietario,
+		asset.id_diritto_proprietario,
+		asset.id_diritto_gruppo,
+		asset.id_diritto_altri,
 		asset.id_account_inserimento,
 		asset.timestamp_inserimento,
 		asset.id_account_aggiornamento,
@@ -808,6 +874,7 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		concat_ws( ' ', concat( '#', asset.codice ), asset_path( asset.id ) ) AS __label__
 	FROM asset
 		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
+		LEFT JOIN anagrafica AS a1 ON a1.id = asset.id_produttore
 ;
 
 -- | 090000001800
@@ -839,7 +906,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
         ) AS luogo,                                           -- percorso del luogo
 		attivita.id_messaggio,                                --
 		attivita.id_asset,                                    --
-		concat( asset.id, ' ', asset.nome ) AS asset,         -- id e nome dell'asset su cui si svolge l'attività
+		concat_ws( ' ', coalesce( asset.codice, asset.id ), asset.nome ) AS asset, -- codice ( o id ) e nome dell'asset su cui si svolge l'attività
         coalesce(                                             --
             attivita.data_attivita,                           --
             attivita.data_programmazione                      --
@@ -889,6 +956,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		attivita.ora_fine,                                    --
 		attivita.latitudine_ora_fine,                         --
 		attivita.longitudine_ora_fine,                        --
+		attivita.note_fine,                                   --
 		attivita.id_anagrafica,                               --
 		coalesce(                                             --
             a1.denominazione,                                 --
@@ -970,6 +1038,11 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		m2.nome AS mastro_destinazione,                       --
 		attivita.codice_archivium,                            --
 		attivita.token,                                       --
+		attivita.id_account_proprietario,                     --
+		attivita.id_gruppo_proprietario,                      --
+		attivita.id_diritto_proprietario,                     --
+		attivita.id_diritto_gruppo,                           --
+		attivita.id_diritto_altri,                            --
 		attivita.id_account_inserimento,                      --
 		attivita.timestamp_inserimento,                       --
 		attivita.id_account_aggiornamento,                    --
@@ -1064,6 +1137,34 @@ CREATE OR REPLACE VIEW `attivita_asset_view` AS
 		LEFT JOIN attivita ON attivita.id = attivita_asset.id_attivita
 ;
 
+-- | 090000002000
+
+-- attivita_matricole_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW attivita_matricole_view AS
+	SELECT
+		attivita_matricole.id,
+		attivita_matricole.ordine,
+		attivita_matricole.id_attivita,
+		attivita.nome AS attivita,
+		attivita_matricole.id_matricola,
+		matricole.matricola AS matricola,
+		attivita_matricole.id_ruolo,
+		ruoli_matricole_path( attivita_matricole.id_ruolo ) AS ruolo,
+		attivita_matricole.note,
+		attivita_matricole.id_account_inserimento,
+		attivita_matricole.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			attivita.nome,
+			matricole.matricola,
+			ruoli_matricole_path( attivita_matricole.id_ruolo )
+		) AS __label__
+	FROM attivita_matricole
+		LEFT JOIN attivita ON attivita.id = attivita_matricole.id_attivita
+		LEFT JOIN matricole ON matricole.id = attivita_matricole.id_matricola
+;
+
 -- | 090000002100
 
 -- audio_view
@@ -1146,6 +1247,11 @@ CREATE OR REPLACE VIEW `badge_view` AS
 		contratti.nome AS contratto,
 		badge.rfid,
 		badge.note,
+		badge.id_account_proprietario,
+		badge.id_gruppo_proprietario,
+		badge.id_diritto_proprietario,
+		badge.id_diritto_gruppo,
+		badge.id_diritto_altri,
 		badge.id_account_inserimento,
 		badge.id_account_aggiornamento,
 		concat_ws(
@@ -1297,6 +1403,11 @@ CREATE OR REPLACE VIEW `campagne_view` AS
 		campagne.data_fine,
 		( SELECT count( contatti.id ) FROM contatti WHERE contatti.id_campagna = campagne.id ) AS n_contatti,
 		( SELECT count( carrelli.id ) FROM carrelli WHERE carrelli.id_campagna = campagne.id ) AS n_carrelli,
+		campagne.id_account_proprietario,
+		campagne.id_gruppo_proprietario,
+		campagne.id_diritto_proprietario,
+		campagne.id_diritto_gruppo,
+		campagne.id_diritto_altri,
 		campagne.id_account_inserimento,
 		campagne.id_account_aggiornamento,
 		campagne_path( campagne.id ) AS __label__
@@ -1322,6 +1433,7 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.se_edifici,
 		caratteristiche.se_indirizzi,
 		caratteristiche.se_vani,
+		caratteristiche.se_valutazioni,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -1337,6 +1449,10 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 -- l'albero delle caratteristiche con i nomi di colonna di caratteristiche_prodotti; l'etichetta e' il PERCORSO, come
 -- per tutte le viste ad albero: senza il gruppo davanti, in un elenco "Attacco mandrino" compare quattro volte
 -- identico e non si sa quale scegliere
+--
+-- NOTA solo-legacy come caratteristiche_prodotti ( vedi sopra ): la legge il REST /api/caratteristiche_prodotti per la
+-- tendina del form delle caratteristiche di _4100.prodotti; NULL AS se_categoria e' uscita il 12/11/2026, la colonna
+-- non esiste piu' da nessuna parte
 CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 	SELECT
 		caratteristiche.id,
@@ -1344,7 +1460,6 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
-		NULL AS se_categoria,
 		caratteristiche.se_prodotti AS se_prodotto,
 		caratteristiche.se_articoli AS se_articolo,
 		caratteristiche.id_account_inserimento,
@@ -1359,110 +1474,123 @@ CREATE OR REPLACE VIEW `caratteristiche_prodotti_view` AS
 
 -- carrelli_view
 -- tipologia: tabella gestita
--- verifica: 2022-07-12 14:45 Chiara GDL
+-- verifica: 2026-11-11 punto 6, riga 243
 CREATE OR REPLACE VIEW `carrelli_view` AS
 	SELECT
-	carrelli.id,
-	carrelli.session,
-	carrelli.id_sito,
-	coalesce( carrelli.intestazione_nome, carrelli.destinatario_nome ) AS cliente_nome,
-	coalesce( carrelli.intestazione_cognome, carrelli.destinatario_cognome ) AS cliente_cognome,
-	coalesce( carrelli.intestazione_denominazione, carrelli.destinatario_denominazione ) AS cliente_denominazione,
-    coalesce( carrelli.intestazione_mail, carrelli.destinatario_mail ) AS cliente_mail,
-    coalesce( carrelli.intestazione_mobile, carrelli.destinatario_mobile ) AS cliente_mobile,
-	carrelli.destinatario_nome,
-	carrelli.destinatario_cognome,
-	carrelli.destinatario_denominazione,
-    carrelli.destinatario_id_tipologia_anagrafica,
-	carrelli.destinatario_id_anagrafica,
-	carrelli.destinatario_id_account,
-	carrelli.destinatario_indirizzo,
-	carrelli.destinatario_cap,
-	carrelli.destinatario_citta,
-	carrelli.destinatario_id_comune,
-	carrelli.destinatario_id_provincia,
-	carrelli.destinatario_id_stato,
-	carrelli.destinatario_id_comune_nascita,
-	carrelli.destinatario_giorno_nascita,
-	carrelli.destinatario_mese_nascita,
-	carrelli.destinatario_anno_nascita,
-	carrelli.destinatario_id_provincia_nascita,
-	carrelli.destinatario_id_stato_nascita,
-	carrelli.destinatario_telefono,
-	carrelli.destinatario_mobile,
-	carrelli.destinatario_fax,
-	carrelli.destinatario_mail,
-	carrelli.destinatario_codice_fiscale,
-	carrelli.destinatario_partita_iva,
-	coalesce( concat( carrelli.destinatario_nome, ' ', carrelli.destinatario_cognome ), carrelli.destinatario_denominazione ) AS destinatario,
-	carrelli.intestazione_nome,
-	carrelli.intestazione_cognome,
-	carrelli.intestazione_denominazione,
-    carrelli.intestazione_id_tipologia_anagrafica,
-	carrelli.intestazione_id_anagrafica,
-	carrelli.intestazione_id_account,
-	carrelli.intestazione_indirizzo,
-	carrelli.intestazione_cap,
-	carrelli.intestazione_citta,
-	carrelli.intestazione_id_provincia,
-	carrelli.intestazione_id_stato,
-	carrelli.intestazione_id_comune_nascita,
-	carrelli.intestazione_giorno_nascita,
-	carrelli.intestazione_mese_nascita,
-	carrelli.intestazione_anno_nascita,
-	carrelli.intestazione_id_provincia_nascita,
-	carrelli.intestazione_id_stato_nascita,
-	carrelli.intestazione_telefono,
-	carrelli.intestazione_mobile,
-	carrelli.intestazione_fax,
-	carrelli.intestazione_mail,
-	carrelli.intestazione_codice_fiscale,
-	carrelli.intestazione_partita_iva,
-	carrelli.intestazione_sdi,
-	carrelli.intestazione_pec,
-	coalesce( concat( carrelli.intestazione_nome, ' ', carrelli.intestazione_cognome ), carrelli.intestazione_denominazione ) AS intestazione,
-	carrelli.id_listino,
-    carrelli.fatturazione_id_tipologia_documento,
-    carrelli.fatturazione_sezionale,
-    carrelli.fatturazione_strategia,
-	carrelli.prezzo_netto_totale,
-	carrelli.prezzo_lordo_totale,
-	carrelli.sconto_percentuale,
-	carrelli.sconto_valore,
-	carrelli.prezzo_netto_finale,
-	carrelli.prezzo_lordo_finale,
-	from_unixtime( carrelli.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
-	carrelli.provider_checkout,
-	carrelli.timestamp_checkout,
-	from_unixtime( carrelli.timestamp_checkout, '%Y-%m-%d %H:%i' ) AS data_ora_checkout,
-	carrelli.provider_pagamento,
-	carrelli.timestamp_pagamento,
-	from_unixtime( carrelli.timestamp_pagamento, '%Y-%m-%d %H:%i' ) AS data_ora_pagamento,
-	carrelli.codice_pagamento,
-    carrelli.ordine_pagamento,
-	carrelli.status_pagamento,
-	carrelli.importo_pagamento,
-	from_unixtime( carrelli.timestamp_evasione, '%Y-%m-%d %H:%i' ) AS data_ora_evasione,
-    carrelli.utm_id,
-    carrelli.utm_source,
-    carrelli.utm_medium,
-    carrelli.utm_campaign,
-    carrelli.utm_term,
-    carrelli.utm_content,
-	carrelli.id_campagna,
-	carrelli.spam_score,
-	carrelli.spam_check,
-    carrelli.id_reseller,
-    carrelli.id_affiliato,
-	carrelli.id_affiliazione,
-	carrelli.id_account_evasione,
-	carrelli.timestamp_evasione,
-	carrelli.id_account_inserimento,
-	carrelli.timestamp_inserimento,
-	carrelli.id_account_aggiornamento,
-	carrelli.timestamp_aggiornamento,
-	carrelli.id AS __label__
-FROM carrelli;
+		carrelli.id,
+		carrelli.codice,
+		carrelli.nome,
+		carrelli.id_sito,
+		coalesce( carrelli.intestazione_nome, carrelli.destinatario_nome ) AS cliente_nome,
+		coalesce( carrelli.intestazione_cognome, carrelli.destinatario_cognome ) AS cliente_cognome,
+		coalesce( carrelli.intestazione_denominazione, carrelli.destinatario_denominazione ) AS cliente_denominazione,
+		coalesce( carrelli.intestazione_mail, carrelli.destinatario_mail ) AS cliente_mail,
+		coalesce( carrelli.intestazione_mobile, carrelli.destinatario_mobile ) AS cliente_mobile,
+		carrelli.id_listino,
+		carrelli.id_zona,
+		carrelli.id_campagna,
+		carrelli.id_reseller,
+		carrelli.id_affiliato,
+		carrelli.id_affiliazione,
+		carrelli.session,
+		carrelli.fatturazione_id_tipologia_documento,
+		carrelli.fatturazione_sezionale,
+		carrelli.fatturazione_strategia,
+		carrelli.note_fatturazione,
+		carrelli.prezzo_netto_totale,
+		carrelli.prezzo_lordo_totale,
+		carrelli.costo_spedizione_netto,
+		carrelli.costo_spedizione_lordo,
+		carrelli.sconto_percentuale,
+		carrelli.sconto_valore,
+		carrelli.id_coupon,
+		carrelli.codice_coupon,
+		carrelli.sconto_percentuale_coupon,
+		carrelli.sconto_valore_coupon,
+		carrelli.prezzo_netto_finale,
+		carrelli.prezzo_lordo_finale,
+		carrelli.provider_checkout,
+		carrelli.timestamp_checkout,
+		from_unixtime( carrelli.timestamp_checkout, '%Y-%m-%d %H:%i' ) AS data_ora_checkout,
+		carrelli.provider_pagamento,
+		carrelli.timestamp_pagamento,
+		from_unixtime( carrelli.timestamp_pagamento, '%Y-%m-%d %H:%i' ) AS data_ora_pagamento,
+		carrelli.codice_pagamento,
+		carrelli.ordine_pagamento,
+		carrelli.status_pagamento,
+		carrelli.importo_pagamento,
+		carrelli.utm_id,
+		carrelli.utm_source,
+		carrelli.utm_medium,
+		carrelli.utm_campaign,
+		carrelli.utm_term,
+		carrelli.utm_content,
+		carrelli.spam_score,
+		carrelli.spam_check,
+		carrelli.destinatario_nome,
+		carrelli.destinatario_cognome,
+		carrelli.destinatario_denominazione,
+		carrelli.destinatario_id_tipologia_anagrafica,
+		carrelli.destinatario_id_anagrafica,
+		carrelli.destinatario_id_account,
+		carrelli.destinatario_indirizzo,
+		carrelli.destinatario_cap,
+		carrelli.destinatario_citta,
+		carrelli.destinatario_id_comune,
+		carrelli.destinatario_id_provincia,
+		carrelli.destinatario_id_stato,
+		carrelli.destinatario_telefono,
+		carrelli.destinatario_mobile,
+		carrelli.destinatario_fax,
+		carrelli.destinatario_mail,
+		carrelli.destinatario_codice_fiscale,
+		carrelli.destinatario_partita_iva,
+		carrelli.destinatario_id_comune_nascita,
+		carrelli.destinatario_id_provincia_nascita,
+		carrelli.destinatario_id_stato_nascita,
+		carrelli.destinatario_giorno_nascita,
+		carrelli.destinatario_mese_nascita,
+		carrelli.destinatario_anno_nascita,
+		coalesce( concat( carrelli.destinatario_nome, ' ', carrelli.destinatario_cognome ), carrelli.destinatario_denominazione ) AS destinatario,
+		carrelli.intestazione_nome,
+		carrelli.intestazione_cognome,
+		carrelli.intestazione_denominazione,
+		carrelli.intestazione_id_tipologia_anagrafica,
+		carrelli.intestazione_id_anagrafica,
+		carrelli.intestazione_id_account,
+		carrelli.intestazione_indirizzo,
+		carrelli.intestazione_cap,
+		carrelli.intestazione_citta,
+		carrelli.intestazione_id_comune,
+		carrelli.intestazione_id_provincia,
+		carrelli.intestazione_id_stato,
+		carrelli.intestazione_telefono,
+		carrelli.intestazione_mobile,
+		carrelli.intestazione_fax,
+		carrelli.intestazione_mail,
+		carrelli.intestazione_codice_fiscale,
+		carrelli.intestazione_partita_iva,
+		carrelli.intestazione_sdi,
+		carrelli.intestazione_pec,
+		carrelli.intestazione_id_comune_nascita,
+		carrelli.intestazione_id_provincia_nascita,
+		carrelli.intestazione_id_stato_nascita,
+		carrelli.intestazione_giorno_nascita,
+		carrelli.intestazione_mese_nascita,
+		carrelli.intestazione_anno_nascita,
+		coalesce( concat( carrelli.intestazione_nome, ' ', carrelli.intestazione_cognome ), carrelli.intestazione_denominazione ) AS intestazione,
+		carrelli.id_account_evasione,
+		carrelli.timestamp_evasione,
+		from_unixtime( carrelli.timestamp_evasione, '%Y-%m-%d %H:%i' ) AS data_ora_evasione,
+		carrelli.note_evasione,
+		carrelli.id_account_inserimento,
+		carrelli.timestamp_inserimento,
+		from_unixtime( carrelli.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
+		carrelli.id_account_aggiornamento,
+		carrelli.timestamp_aggiornamento,
+		from_unixtime( carrelli.timestamp_aggiornamento, '%Y-%m-%d %H:%i' ) AS data_ora_aggiornamento,
+		coalesce( carrelli.codice, carrelli.id ) AS __label__
+	FROM carrelli;
 
 -- | 090000003051
 
@@ -1553,9 +1681,10 @@ CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
 		carrelli_consensi.timestamp_consenso,
 		carrelli_consensi.id_account_inserimento,
 		carrelli_consensi.id_account_aggiornamento,
-		concat( 'consenso ', coalesce( consensi.nome, carrelli_consensi.id_consenso ), ' carrello #', coalesce( carrelli_consensi.id_carrello, '' ) ) AS __label__
+		concat( 'consenso ', coalesce( consensi.nome, carrelli_consensi.id_consenso ), ' carrello #', coalesce( carrelli.codice, carrelli_consensi.id_carrello, '' ) ) AS __label__
 	FROM carrelli_consensi
 		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica
+		LEFT JOIN carrelli ON carrelli.id = carrelli_consensi.id_carrello
 		LEFT JOIN consensi ON consensi.id = carrelli_consensi.id_consenso;
 
 -- | 090000003071
@@ -1884,6 +2013,11 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
 		chiavi.seriale,
+		chiavi.id_account_proprietario,
+		chiavi.id_gruppo_proprietario,
+		chiavi.id_diritto_proprietario,
+		chiavi.id_diritto_gruppo,
+		chiavi.id_diritto_altri,
 		chiavi.id_account_inserimento,
 		chiavi.id_account_aggiornamento,
 		chiavi.nome AS __label__
@@ -1909,11 +2043,13 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 -- | 090000005101
 
 -- colori_view
-CREATE OR REPLACE VIEW colori_view AS
+-- tipologia: tabella assistita
+CREATE OR REPLACE VIEW `colori_view` AS
 	SELECT
 		colori.id,
 		colori.id_genitore,
 		colori.nome,
+		colori.codice_css,
 		colori.hex,
 		colori.r,
 		colori.g,
@@ -1925,6 +2061,8 @@ CREATE OR REPLACE VIEW colori_view AS
 		colori.y,
 		colori.k,
 		colori.css,
+		colori.id_account_inserimento,
+		colori.id_account_aggiornamento,
 		colori_path( colori.id ) AS __label__
 	FROM colori
 ;
@@ -2086,6 +2224,11 @@ CREATE OR REPLACE VIEW contatti_view AS
 		from_unixtime( contatti.timestamp_contatto, '%Y-%m-%d %H:%i' ) AS data_ora_contatto,
 		contatti.id_account_archiviazione,
 		contatti.data_archiviazione,
+		contatti.id_account_proprietario,
+		contatti.id_gruppo_proprietario,
+		contatti.id_diritto_proprietario,
+		contatti.id_diritto_gruppo,
+		contatti.id_diritto_altri,
 		contatti.id_account_inserimento,
 		contatti.id_account_aggiornamento,
 		concat(
@@ -2205,6 +2348,11 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		progetti.nome AS progetto,
 		contratti.id_account_archiviazione,
 		contratti.data_archiviazione,
+		contratti.id_account_proprietario,
+		contratti.id_gruppo_proprietario,
+		contratti.id_diritto_proprietario,
+		contratti.id_diritto_gruppo,
+		contratti.id_diritto_altri,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
         coalesce( min(rinnovi.data_inizio), '-' ) AS data_inizio,
@@ -2257,35 +2405,42 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 
 -- contratti_anagrafica_view
 -- tipologia: tabella gestita
--- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW contratti_anagrafica_view AS 
-	SELECT 
+-- verifica: 2026-11-11 punto 6, riga 245
+CREATE OR REPLACE VIEW `contratti_anagrafica_view` AS
+	SELECT
 		contratti_anagrafica.id,
+		contratti_anagrafica.ordine,
 		contratti_anagrafica.id_contratto,
 		contratti.codice,
+		contratti.nome,
 		contratti_anagrafica.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		contratti_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome AS ruolo,
-		contratti_anagrafica.ordine,
-		contratti_anagrafica.id_account_inserimento ,
-		contratti_anagrafica.id_account_aggiornamento ,
+		ruoli_anagrafica.se_proponente,
+		ruoli_anagrafica.se_contraente,
+		contratti_anagrafica.note,
+		tipologie_contratti.id AS id_tipologia,
+		tipologie_contratti.nome AS tipologia,
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
 		tipologie_contratti.se_tesseramento,
 		tipologie_contratti.se_immobili,
 		tipologie_contratti.se_acquisto,
 		tipologie_contratti.se_locazione,
-		ruoli_anagrafica.se_proponente,
-		ruoli_anagrafica.se_contraente,
-		tipologie_contratti.id AS id_tipologia,
-		tipologie_contratti.nome AS tipologia,
-		contratti.nome,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
-		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+		contratti_anagrafica.id_account_inserimento,
+		contratti_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			'contratto',
+			coalesce( nullif( contratti.codice, '' ), nullif( contratti.nome, '' ), contratti.id ),
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			ruoli_anagrafica.nome
+		) AS __label__
 	FROM contratti_anagrafica
 		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
@@ -2351,6 +2506,11 @@ CREATE OR REPLACE VIEW conversazioni_view AS
 		conversazioni.note,
 		conversazioni.timestamp_apertura,
 		conversazioni.timestamp_chiusura,
+		conversazioni.id_account_proprietario,
+		conversazioni.id_gruppo_proprietario,
+		conversazioni.id_diritto_proprietario,
+		conversazioni.id_diritto_gruppo,
+		conversazioni.id_diritto_altri,
 		conversazioni.id_account_inserimento,
 		conversazioni.timestamp_inserimento,
 		conversazioni.id_account_aggiornamento,
@@ -2414,7 +2574,6 @@ CREATE OR REPLACE VIEW `corrispondenza_view` AS
 		corrispondenza.id,
 		corrispondenza.id_tipologia,
 		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
-		tipologie_corrispondenza.se_pesata,
 		corrispondenza.codice,
 		corrispondenza.nome,
 		corrispondenza.id_mittente,
@@ -2442,6 +2601,11 @@ CREATE OR REPLACE VIEW `corrispondenza_view` AS
 		corrispondenza.timestamp_consegna,
 		corrispondenza.timestamp_elaborazione,
 		corrispondenza.timestamp_gestione,
+		corrispondenza.id_account_proprietario,
+		corrispondenza.id_gruppo_proprietario,
+		corrispondenza.id_diritto_proprietario,
+		corrispondenza.id_diritto_gruppo,
+		corrispondenza.id_diritto_altri,
 		corrispondenza.id_account_inserimento,
 		corrispondenza.timestamp_inserimento,
 		corrispondenza.id_account_aggiornamento,
@@ -2676,6 +2840,11 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 		crediti.quantita,
 		crediti.note,
 		crediti.data,
+		crediti.id_account_proprietario,
+		crediti.id_gruppo_proprietario,
+		crediti.id_diritto_proprietario,
+		crediti.id_diritto_gruppo,
+		crediti.id_diritto_altri,
 		crediti.id_account_inserimento,
 		crediti.id_account_aggiornamento,
 		concat(
@@ -2723,6 +2892,19 @@ CREATE OR REPLACE VIEW `dichiarazioni_intento_view` AS
 		concat_ws( ' ', dichiarazioni_intento.protocollo, 'del', dichiarazioni_intento.data_protocollo ) AS __label__
 	FROM dichiarazioni_intento
 		LEFT JOIN anagrafica AS a1 ON a1.id = dichiarazioni_intento.id_anagrafica
+;
+
+-- | 090000008970
+
+-- diritti_view
+-- tipologia: tabella standard
+-- funzione: espone la scala dei diritti di riga, che il codice integra per nome in $cf['auth']['rights']
+CREATE OR REPLACE VIEW `diritti_view` AS
+	SELECT
+		diritti.id,
+		diritti.nome,
+		diritti.nome AS __label__
+	FROM diritti
 ;
 
 -- | 090000009001
@@ -2839,7 +3021,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_referente_emittente,
 		documenti.id_sede_emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), documenti.destinatario, '' ) AS destinatario,
 		documenti.id_sede_destinatario,
 		documenti.id_destinatario_spedizione,
 		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS destinatario_spedizione,
@@ -2890,6 +3072,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_causale,
 		documenti.id_trasportatore,
 		documenti.porto,
+		documenti.numero_colli,
+		documenti.numero_pallet,
 		documenti.id_pianificazione,
 		documenti.id_progetto,
 		group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
@@ -2898,27 +3082,35 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		documenti.id_account_archiviazione,
 		documenti.data_archiviazione,
+		documenti.id_account_proprietario,
+		documenti.id_gruppo_proprietario,
+		documenti.id_diritto_proprietario,
+		documenti.id_diritto_gruppo,
+		documenti.id_diritto_altri,
 		documenti.id_account_inserimento,
+		documenti.timestamp_inserimento,
 		documenti.id_account_aggiornamento,
-		concat(
-			tipologie_documenti.sigla,
+		documenti.timestamp_aggiornamento,
+		concat_ws(
 			' ',
+			tipologie_documenti.sigla,
 			concat_ws(
 				'/',
 				documenti.numero,
 				documenti.sezionale
 			),
-			' del ',
-			documenti.data,
-			' per ',
-			coalesce(
-				a2.denominazione,
-				concat(
-					a2.cognome,
-					' ',
-					a2.nome
-				),
-				''
+			concat( 'del ', documenti.data ),
+			concat(
+				'per ',
+				coalesce(
+					a2.denominazione,
+					concat(
+						a2.cognome,
+						' ',
+						a2.nome
+					),
+					''
+				)
 			)
 		) AS __label__
     FROM
@@ -2951,6 +3143,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.id_tipologia AS id_tipologia_riga,
 		tipologie_documenti_articoli.nome AS tipologia_riga,
+		documenti_articoli.id_caratteristica,
+		caratteristiche.nome AS caratteristica,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
 		documenti.codice AS codice_documento,
@@ -2978,7 +3172,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		udm_riga.sigla AS udm,
 				concat_ws(
 			' ',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			'/',
 			prodotti.nome,
 			nullif( articoli.nome, prodotti.nome ),
@@ -3054,6 +3248,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		coalesce( lotti.data_scadenza, matricole.data_scadenza ) AS data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
+		documenti_articoli.timestamp_chiusura,
+		documenti_articoli.note_chiusura,
         documenti.data_archiviazione,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
@@ -3069,7 +3265,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
             concat(
                 coalesce( documenti_articoli.quantita, 0 ),
                 ' x ',
-                coalesce( documenti_articoli.id_articolo, '' )
+                coalesce( articoli.codice, documenti_articoli.id_articolo, '' )
             ),
 			coalesce( documenti_articoli.nome, NULL ),
             concat(
@@ -3101,6 +3297,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
 		LEFT JOIN tipologie_documenti_articoli ON tipologie_documenti_articoli.id = documenti_articoli.id_tipologia
+		LEFT JOIN caratteristiche ON caratteristiche.id = documenti_articoli.id_caratteristica
 ;
 
 -- | 090000010051
@@ -3139,13 +3336,13 @@ CREATE OR REPLACE VIEW documenti_ritenute_view AS
 		documenti_ritenute.ordine,
 		documenti_ritenute.id_documento,
 		documenti_ritenute.id_ritenuta,
-		ritenute.codice AS ritenuta,
+		ritenute.codice_sdi AS ritenuta,
 		documenti_ritenute.aliquota,
 		documenti_ritenute.causale_pagamento,
 		documenti_ritenute.importo,
 		documenti_ritenute.id_account_inserimento,
 		documenti_ritenute.id_account_aggiornamento,
-		concat_ws( ' ', ritenute.codice, concat( documenti_ritenute.aliquota, '%' ), documenti_ritenute.causale_pagamento ) AS __label__
+		concat_ws( ' ', ritenute.codice_sdi, concat( documenti_ritenute.aliquota, '%' ), documenti_ritenute.causale_pagamento ) AS __label__
 	FROM documenti_ritenute
 		LEFT JOIN ritenute ON ritenute.id = documenti_ritenute.id_ritenuta
 ;
@@ -3175,6 +3372,11 @@ CREATE OR REPLACE VIEW edifici_view AS
 			provincie.sigla
 		) AS indirizzo,
 		edifici.piani,
+		edifici.id_account_proprietario,
+		edifici.id_gruppo_proprietario,
+		edifici.id_diritto_proprietario,
+		edifici.id_diritto_gruppo,
+		edifici.id_diritto_altri,
 		edifici.id_account_inserimento,
 		edifici.id_account_aggiornamento,
 		concat_ws(
@@ -3345,6 +3547,29 @@ CREATE OR REPLACE VIEW `formati_tipologie_corrispondenza_view` AS
 	FROM formati_tipologie_corrispondenza
 ;
 
+-- | 090000015121
+
+-- funnel_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW funnel_view AS
+	SELECT
+		funnel.id,
+		funnel.nome,
+		funnel.id_campagna,
+		campagne.nome AS campagna,
+		funnel.note,
+		funnel.id_account_proprietario,
+		funnel.id_gruppo_proprietario,
+		funnel.id_diritto_proprietario,
+		funnel.id_diritto_gruppo,
+		funnel.id_diritto_altri,
+		funnel.id_account_inserimento,
+		funnel.id_account_aggiornamento,
+		funnel.nome AS __label__
+	FROM funnel
+		LEFT JOIN campagne ON campagne.id = funnel.id_campagna
+;
+
 -- | 090000015150
 
 -- giorni_view
@@ -3506,6 +3731,11 @@ CREATE OR REPLACE VIEW immobili_view AS
 			FROM zone_indirizzi
 			WHERE zone_indirizzi.id_indirizzo = indirizzi.id
 		) AS zone,
+		immobili.id_account_proprietario,
+		immobili.id_gruppo_proprietario,
+		immobili.id_diritto_proprietario,
+		immobili.id_diritto_gruppo,
+		immobili.id_diritto_altri,
 		immobili.id_account_inserimento,
 		immobili.id_account_aggiornamento,
 		concat_ws(
@@ -3612,6 +3842,11 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 		indirizzi.token,
 		indirizzi.timestamp_geolocalizzazione,
 		indirizzi.id_zona,
+		indirizzi.id_account_proprietario,
+		indirizzi.id_gruppo_proprietario,
+		indirizzi.id_diritto_proprietario,
+		indirizzi.id_diritto_gruppo,
+		indirizzi.id_diritto_altri,
 		indirizzi.id_account_inserimento,
 		indirizzi.id_account_aggiornamento,
 		concat_ws(
@@ -3710,36 +3945,39 @@ CREATE OR REPLACE VIEW job_view AS
 
 -- licenze_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-15 12:44 Chiara GDL
--- TODO i dati sul contratto vanno recuperati in maniera più precisa
--- NOTA il campo id_anagrafica nelle licenze è lì perché la licenza potrebbe avere un intestatario diverso dal contratto
-CREATE OR REPLACE VIEW licenze_view AS
+-- verifica: 2026-11-11 punto 6, riga 246
+CREATE OR REPLACE VIEW `licenze_view` AS
 	SELECT
-		licenze.id,                         
-    	licenze.id_tipologia,                
-		tipologie_licenze.nome AS tipologia,               
-		licenze.id_anagrafica,
-		group_concat( DISTINCT coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS anagrafica,
-		licenze.id_rivenditore,              
-		group_concat( DISTINCT coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) ) AS rivenditore,
-		licenze.codice,                      
-		licenze.postazioni,                  
-		licenze.nome,                        
-		licenze.note,                        
-		licenze.testo,                       
-		licenze.giorni_validita,             
-		licenze.giorni_rinnovo,
+		licenze.id,
+		licenze.id_tipologia,
+		tipologie_licenze.nome AS tipologia,
+		tipologie_licenze.giorni_validita,
+		tipologie_licenze.giorni_rinnovo,
+		licenze.codice,
+		licenze.nome,
+		coalesce( licenze.id_anagrafica, min( contratti_anagrafica.id_anagrafica ) ) AS id_anagrafica,
+		group_concat( DISTINCT coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) SEPARATOR ', ' ) AS anagrafica,
+		licenze.id_rivenditore,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,
+		licenze.postazioni,
+		licenze.testo,
+		licenze.note,
+		licenze.timestamp_distribuzione,
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
 		group_concat( DISTINCT tipologie_contratti.nome SEPARATOR ', ' ) AS tipologia_contratto,
 		group_concat( DISTINCT concat_ws( '§', software.codice, software.nome ) SEPARATOR ' | ' ) AS software,
-		licenze.timestamp_distribuzione,     
-		licenze.timestamp_inizio,            
-		licenze.timestamp_fine,              
-		licenze.id_account_inserimento,      
-		licenze.id_account_aggiornamento,    
-		licenze.nome AS __label__
+		licenze.id_account_proprietario,
+		licenze.id_gruppo_proprietario,
+		licenze.id_diritto_proprietario,
+		licenze.id_diritto_gruppo,
+		licenze.id_diritto_altri,
+		licenze.id_account_inserimento,
+		licenze.timestamp_inserimento,
+		licenze.id_account_aggiornamento,
+		licenze.timestamp_aggiornamento,
+		concat_ws( ' ', coalesce( nullif( licenze.codice, '' ), nullif( licenze.nome, '' ), licenze.id ), tipologie_licenze.nome ) AS __label__
 	FROM licenze
 		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
 		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
@@ -3747,7 +3985,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN software ON software.id = licenze_software.id_software
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-		LEFT JOIN contratti_anagrafica ON ( contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo IN ( 32 ) )
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+			AND contratti_anagrafica.id_ruolo IN ( SELECT id FROM ruoli_anagrafica WHERE se_contraente = 1 )
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( licenze.id_anagrafica, contratti_anagrafica.id_anagrafica )
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 	GROUP BY licenze.id
@@ -3802,6 +4041,11 @@ CREATE OR REPLACE VIEW liste_view AS                          --
     liste.codice,                                             --
     liste.nome,                                               --
     liste.note,                                               --
+    liste.id_account_proprietario,                            --
+    liste.id_gruppo_proprietario,                             --
+    liste.id_diritto_proprietario,                            --
+    liste.id_diritto_gruppo,                                  --
+    liste.id_diritto_altri,                                   --
     liste.nome AS __label__                                   -- etichetta per le tendine e le liste
   FROM liste                                                  --
   ;                                                           --
@@ -3945,7 +4189,7 @@ CREATE OR REPLACE VIEW `lotti_view` AS
 		lotti.id_articolo,
 		concat_ws(
 			' ',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			prodotti.nome,
 			articoli.nome,
 			coalesce(
@@ -3977,13 +4221,18 @@ CREATE OR REPLACE VIEW `lotti_view` AS
 		lotti.note,
 		lotti.data_produzione,
 		lotti.data_scadenza,
+		lotti.id_account_proprietario,
+		lotti.id_gruppo_proprietario,
+		lotti.id_diritto_proprietario,
+		lotti.id_diritto_gruppo,
+		lotti.id_diritto_altri,
 		lotti.id_account_inserimento,
 		lotti.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			lotti.codice,
 			'/',
-			articoli.id,
+			coalesce( articoli.codice, articoli.id ),
 			'/',
 			prodotti.nome,
 			articoli.nome,
@@ -4027,6 +4276,11 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 		luoghi.id_immobile,
 		luoghi.id_vano,
 		luoghi.url,
+		luoghi.id_account_proprietario,
+		luoghi.id_gruppo_proprietario,
+		luoghi.id_diritto_proprietario,
+		luoghi.id_diritto_gruppo,
+		luoghi.id_diritto_altri,
 		luoghi.id_account_inserimento,
 		luoghi.id_account_aggiornamento,
 		luoghi_path( luoghi.id ) AS __label__
@@ -4213,6 +4467,11 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 		mailing.note,
 		mailing.timestamp_invio,
 		from_unixtime( mailing.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
+		mailing.id_account_proprietario,
+		mailing.id_gruppo_proprietario,
+		mailing.id_diritto_proprietario,
+		mailing.id_diritto_gruppo,
+		mailing.id_diritto_altri,
 		mailing.id_account_inserimento,
 		mailing.id_account_aggiornamento,
 		mailing.nome AS __label__
@@ -4294,6 +4553,11 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 		marchi.id_sito,
 		marchi.id_pagina,
 		marchi.data_archiviazione,
+		marchi.id_account_proprietario,
+		marchi.id_gruppo_proprietario,
+		marchi.id_diritto_proprietario,
+		marchi.id_diritto_gruppo,
+		marchi.id_diritto_altri,
 		marchi.id_account_inserimento,
 		marchi.id_account_aggiornamento,
 		marchi.nome AS __label__
@@ -4364,6 +4628,11 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		tipologie_mastri.se_registro,
 		tipologie_mastri.se_credito,
 		mastri.data_archiviazione,
+		mastri.id_account_proprietario,
+		mastri.id_gruppo_proprietario,
+		mastri.id_diritto_proprietario,
+		mastri.id_diritto_gruppo,
+		mastri.id_diritto_altri,
 		mastri.id_account_inserimento,
 		mastri.id_account_aggiornamento,
 		concat_ws( ' ', mastri.codice, mastri_path( mastri.id ) ) AS __label__
@@ -4391,7 +4660,7 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		mastri_articoli.id_mastro,
 		mastri_path( mastri_articoli.id_mastro ) AS mastro,
 		mastri_articoli.id_articolo,
-		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome ) AS articolo,
 		mastri_articoli.id_ruolo,
 		ruoli_mastri.nome AS ruolo,
 		mastri_articoli.scorta_minima,
@@ -4404,13 +4673,51 @@ CREATE OR REPLACE VIEW `mastri_articoli_view` AS
 		concat_ws(
 			' / ',
 			mastri_path( mastri_articoli.id_mastro ),
-			concat_ws( ' ', prodotti.nome, articoli.nome )
+			concat_ws( ' ', coalesce( articoli.codice, articoli.id ), prodotti.nome, articoli.nome )
 		) AS __label__
 	FROM mastri_articoli
 		LEFT JOIN articoli ON articoli.id = mastri_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 		LEFT JOIN ruoli_mastri ON ruoli_mastri.id = mastri_articoli.id_ruolo
 		LEFT JOIN udm ON udm.id = mastri_articoli.id_udm
+;
+
+-- | 090000020750
+
+-- mastri_tipologie_asset_view
+-- la colonna `tipologie` porta su OGNI riga l'elenco completo delle tipologie associate a quel
+-- mastro, separate da virgola: serve agli elenchi, dove interessa sapere con che mezzi si arriva
+-- a una collocazione senza doverne leggere le righe una per una. La grana della vista resta
+-- quella della tabella ( una riga per associazione, GROUP BY sulla chiave primaria ) perche' il
+-- controller standard fa SELECT * FROM <tabella>_view WHERE id = ? per caricare il record
+CREATE OR REPLACE VIEW `mastri_tipologie_asset_view` AS
+    SELECT
+        mastri_tipologie_asset.id,
+        mastri_tipologie_asset.ordine,
+        mastri_tipologie_asset.id_mastro,
+        mastri_path( mastri_tipologie_asset.id_mastro ) AS mastro,
+        mastri_tipologie_asset.id_tipologia,
+        tipologie_asset_path( mastri_tipologie_asset.id_tipologia ) AS tipologia,
+        group_concat(
+            DISTINCT tipologie_asset_path( altre.id_tipologia )
+            ORDER BY tipologie_asset_path( altre.id_tipologia )
+            SEPARATOR ', '
+        ) AS tipologie,
+        mastri_tipologie_asset.note,
+        mastri_tipologie_asset.id_account_inserimento,
+        mastri_tipologie_asset.id_account_aggiornamento,
+        concat_ws(
+            ' / ',
+            mastri_path( mastri_tipologie_asset.id_mastro ),
+            group_concat(
+                DISTINCT tipologie_asset_path( altre.id_tipologia )
+                ORDER BY tipologie_asset_path( altre.id_tipologia )
+                SEPARATOR ', '
+            )
+        ) AS __label__
+    FROM mastri_tipologie_asset
+    LEFT JOIN mastri_tipologie_asset AS altre ON altre.id_mastro = mastri_tipologie_asset.id_mastro
+    GROUP BY mastri_tipologie_asset.id
 ;
 
 -- | 090000020800
@@ -4504,6 +4811,11 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		condizioni.nome AS condizione,
 		matricole.note,
 		matricole.data_scadenza,
+		matricole.id_account_proprietario,
+		matricole.id_gruppo_proprietario,
+		matricole.id_diritto_proprietario,
+		matricole.id_diritto_gruppo,
+		matricole.id_diritto_altri,
 		matricole.id_account_inserimento,
 		matricole.id_account_aggiornamento,
 		concat_ws(
@@ -4828,6 +5140,11 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 		notizie.id_sito,
 		notizie.id_pagina,
 		notizie.data_archiviazione,
+		notizie.id_account_proprietario,
+		notizie.id_gruppo_proprietario,
+		notizie.id_diritto_proprietario,
+		notizie.id_diritto_gruppo,
+		notizie.id_diritto_altri,
 		notizie.id_account_inserimento,
 		notizie.id_account_aggiornamento,
 		notizie.nome AS __label__
@@ -4896,6 +5213,11 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 -- tutte le offerte, emesse e ricevute ( decisione di Fabio, 03/10/2026 ); ricavata il 2026-10-04 dalla vecchia
 -- offerte_attive_view ( tolta dal canone in d975b4a15 ) togliendo il filtro sull'emittente gestito, che adesso
 -- applica l'elenco ( _offerte.commerciale.view.php ); materializzata in offerte_view_static
+--
+-- NOTA solo-legacy, deprecata ( schema canonico, punto 6, 12/11/2026 ): la leggono soltanto _0400.documenti di glisweb
+-- e la sua statica; in latest le offerte sono una classe di righe di documenti, e _DO040.offerte le prende da
+-- documenti_view_static restringendo su id_tipologia. Una classe di righe si filtra, non si materializza ( Fabio,
+-- 12/11/2026 ): vista e statica si tolgono quando _0400 lascia glisweb
 CREATE OR REPLACE VIEW `offerte_view` AS
     SELECT
 		documenti.id,
@@ -4918,7 +5240,9 @@ CREATE OR REPLACE VIEW `offerte_view` AS
 		documenti.porto,
 		documenti.id_trasportatore,
 		documenti.id_account_inserimento,
+		documenti.timestamp_inserimento,
 		documenti.id_account_aggiornamento,
+		documenti.timestamp_aggiornamento,
 		concat(
 			documenti.nome,
 			' ',
@@ -5031,6 +5355,11 @@ CREATE OR REPLACE VIEW `organizzazioni_view` AS
 		organizzazioni.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		organizzazioni.note,
+		organizzazioni.id_account_proprietario,
+		organizzazioni.id_gruppo_proprietario,
+		organizzazioni.id_diritto_proprietario,
+		organizzazioni.id_diritto_gruppo,
+		organizzazioni.id_diritto_altri,
 		organizzazioni.id_account_inserimento,
 		organizzazioni.id_account_aggiornamento,
 		organizzazioni_path( organizzazioni.id ) AS __label__
@@ -5053,7 +5382,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.nome,
 		pagamenti.note,
 		pagamenti.note_pagamento,
-		coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento ) AS id_documento,
+		coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento ) AS id_documento,
 		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
@@ -5099,6 +5428,11 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		day( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as giorno_pagamento,
 		month( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as mese_pagamento,
 		year( from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) ) as anno_pagamento,
+		pagamenti.id_account_proprietario,
+		pagamenti.id_gruppo_proprietario,
+		pagamenti.id_diritto_proprietario,
+		pagamenti.id_diritto_gruppo,
+		pagamenti.id_diritto_altri,
 		pagamenti.id_account_inserimento,
 		pagamenti.id_account_aggiornamento,
 		pagamenti.nome AS __label__
@@ -5110,8 +5444,9 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN carrelli ON carrelli.id = pagamenti.id_carrello
+		LEFT JOIN carrelli_documenti ON carrelli_documenti.id_carrello = carrelli.id
 		LEFT JOIN documenti_articoli ON documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
-		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento )
+		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli_documenti.id_documento, documenti_articoli.id_documento )
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
@@ -5161,6 +5496,11 @@ CREATE OR REPLACE VIEW pagine_view AS
 		pagine.id_sito,
 		pagine.data_archiviazione,
 		count( p1.id ) AS figli,
+		pagine.id_account_proprietario,
+		pagine.id_gruppo_proprietario,
+		pagine.id_diritto_proprietario,
+		pagine.id_diritto_gruppo,
+		pagine.id_diritto_altri,
 		pagine.id_account_inserimento,
 		pagine.id_account_aggiornamento,
 		pagine_path( pagine.id ) AS __label__
@@ -5321,6 +5661,11 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.iterazioni,
 		pianificazioni.delay,
 		pianificazioni.token,
+		pianificazioni.id_account_proprietario,
+		pianificazioni.id_gruppo_proprietario,
+		pianificazioni.id_diritto_proprietario,
+		pianificazioni.id_diritto_gruppo,
+		pianificazioni.id_diritto_altri,
 		pianificazioni.id_account_inserimento,
 		pianificazioni.id_account_aggiornamento,
 		concat_ws(
@@ -5342,23 +5687,21 @@ CREATE OR REPLACE VIEW `popup_view` AS
 	SELECT
 		popup.id,
 		popup.id_tipologia,
-		tipologie_popup.nome AS tipologia,
-		popup.id_sito,
+		tipologie_popup_path( popup.id_tipologia ) AS tipologia,
 		popup.nome,
 		popup.html_id,
-		popup.html_class,
-		popup.html_class_attivazione,
-		popup.n_scroll,
 		popup.n_secondi,
+		popup.n_scroll,
+		popup.note,
 		popup.template,
 		popup.schema_html,
+		popup.id_sito,
 		popup.se_ovunque,
 		popup.id_account_inserimento,
 		popup.id_account_aggiornamento,
 		popup.nome AS __label__
 	FROM popup
-		LEFT JOIN tipologie_popup ON tipologie_popup.id = popup.id_tipologia
-;
+	;
 
 -- | 090000024201
 
@@ -5387,31 +5730,36 @@ CREATE OR REPLACE VIEW `popup_pagine_view` AS
 -- | 090000025000
 
 -- prezzi_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-22 punto 6, riga 130
 CREATE OR REPLACE VIEW `prezzi_view` AS
 	SELECT
 		prezzi.id,
+		prezzi.id_listino,
+		listini.nome AS listino,
+		valute.utf8 AS valuta,
 		prezzi.id_prodotto,
+		prodotti.codice AS codice_prodotto,
 		prodotti.nome AS prodotto,
 		prezzi.id_articolo,
+		articoli.codice AS codice_articolo,
 		articoli.nome AS articolo,
-		prezzi.fascia,
 		prezzi.qta_min,
 		prezzi.qta_max,
-		prezzi.sconto_articoli,
+		prezzi.data_inizio,
+		prezzi.data_fine,
+		prezzi.fascia,
 		prezzi.prefisso,
 		prezzi.prezzo,
 		prezzi.suffisso,
+		prezzi.id_iva,
+		iva.nome AS iva,
+		prezzi.sconto_articoli,
 		prezzi.provvigione_percentuale,
 		prezzi.provvigione_fissa,
 		prezzi.id_reparto,
 		reparti.nome AS reparto,
-		prezzi.id_listino,
-		listini.nome AS listino,
-		valute.utf8 AS valuta,
-		prezzi.id_iva,
-		iva.nome AS iva,
-        prezzi.data_inizio,
-        prezzi.data_fine,
+		prezzi.note,
 		prezzi.id_account_inserimento,
 		prezzi.id_account_aggiornamento,
 		concat_ws(
@@ -5425,13 +5773,12 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 			iva.nome
 		) AS __label__
 	FROM prezzi
-		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
-		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
-		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 		LEFT JOIN listini ON listini.id = prezzi.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN prodotti ON prodotti.id = prezzi.id_prodotto
+		LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
-	GROUP BY prezzi.id
+		LEFT JOIN reparti ON reparti.id = prezzi.id_reparto
 ;															  --
 
 -- | 090000025501
@@ -5463,20 +5810,29 @@ CREATE OR REPLACE VIEW `istruzioni_view` AS
 -- prodotti_view
 CREATE OR REPLACE VIEW `prodotti_view` AS
 	SELECT
-		pubblicazioni.id_tipologia AS id_tipologia_pubblicazione,
-		tipologie_pubblicazioni.nome AS pubblicazione,
+		-- PUBBLICAZIONE: SOTTOQUERY, NON JOIN ( 22/10/2026 )
+		--
+		-- prima era una LEFT JOIN su pubblicazioni: un prodotto con piu' pubblicazioni usciva una volta per
+		-- pubblicazione ( su utensilerialughese cinque righe doppie ). Si prende la prima pubblicazione del
+		-- prodotto, come in articoli_view, la prima nell'ordine.
+		( SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1 ) AS id_tipologia_pubblicazione,
+		( SELECT tp.nome FROM tipologie_pubblicazioni AS tp WHERE tp.id = (
+				SELECT pp.id_tipologia FROM pubblicazioni AS pp WHERE pp.id_prodotto = prodotti.id ORDER BY pp.ordine IS NULL, pp.ordine, pp.id LIMIT 1
+			) ) AS pubblicazione,
 		prodotti.id,
-		prodotti.codice,
 		prodotti.id_tipologia,
 		tipologie_prodotti.nome AS tipologia,
 		tipologie_prodotti.se_prodotto,
 		tipologie_prodotti.se_servizio,
+		prodotti.codice,
 		prodotti.nome,
 		prodotti.id_marchio,
 		marchi.nome AS marchio,
 		prodotti.id_produttore,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
+		prodotti.note,
+		prodotti.note_codifica,
 		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view. Misurato
 		-- l'08/09/2026: SELECT * ... WHERE id = ? da 0,81 secondi a 0,011, un elenco di venti
 		-- righe da 0,74 a 0,017.
@@ -5484,13 +5840,19 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 			FROM prodotti_categorie AS pc
 		   WHERE pc.id_prodotto = prodotti.id
 		), '' ) AS categorie,
-		prodotti.id_sito,
 		prodotti.template,
 		prodotti.schema_html,
 		prodotti.tema_css,
 		prodotti.se_sitemap,
 		prodotti.se_cacheable,
-        prodotti.data_archiviazione,
+		prodotti.id_sito,
+		prodotti.id_pagina,
+		prodotti.data_archiviazione,
+		prodotti.id_account_proprietario,
+		prodotti.id_gruppo_proprietario,
+		prodotti.id_diritto_proprietario,
+		prodotti.id_diritto_gruppo,
+		prodotti.id_diritto_altri,
 		prodotti.id_account_inserimento,
 		prodotti.id_account_aggiornamento,
 		concat_ws(
@@ -5502,9 +5864,6 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
 		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
 		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
-		LEFT JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id
-		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
-
 ;
 
 -- | 090000026201
@@ -5539,23 +5898,19 @@ CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 	SELECT
 		prodotti_categorie.id,
+		prodotti_categorie.ordine,
 		prodotti_categorie.id_prodotto,
 		prodotti.nome AS prodotto,
 		prodotti_categorie.id_categoria,
 		categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria,
-		prodotti_categorie.id_ruolo,
-		ruoli_prodotti.nome AS ruolo,
-		prodotti_categorie.ordine,
 		prodotti_categorie.id_account_inserimento,
 		prodotti_categorie.id_account_aggiornamento,
-		concat_ws(
-			' ',
-			prodotti_categorie.id_prodotto,
-			ruoli_prodotti.nome,
+		concat(
+			prodotti.nome,
+			' / ',
 			categorie_prodotti_path( prodotti_categorie.id_categoria )
 		) AS __label__
 	FROM prodotti_categorie
-		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
 		LEFT JOIN prodotti ON prodotti.id = prodotti_categorie.id_prodotto
 ;
 
@@ -5565,38 +5920,51 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 CREATE OR REPLACE VIEW `progetti_view` AS
 	SELECT
 		progetti.id,
-		progetti.codice,
 		progetti.id_tipologia,
 		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
-		progetti.id_pianificazione,
+		progetti.codice,
+		progetti.nome,
+		a1.id_ranking,
+		ranking.nome AS ranking,
+		progetti.id_prodotto,
+		progetti.id_articolo,
+		progetti.id_periodo,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
-		progetti.id_ranking,
-		ranking.nome AS ranking,
-		progetti.id_articolo,
-		progetti.id_prodotto,
-		progetti.id_periodo,
-		progetti.nome,
+		progetti.id_pianificazione,
+		progetti.note,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.uscite_previste,
+		progetti.id_periodicita_prevista,
+		progetti.data_accettazione,
+		progetti.entrate_accettazione,
+		progetti.id_periodicita_accettazione,
+		progetti.data_apertura,
 		progetti.data_consegna,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.ore_totali,
+		progetti.uscite_totali,
+		-- SOTTOQUERY E NON JOIN PIU' GROUP BY: vedi la nota in articoli_view ( 22/10/2026, come prodotti_view )
+		coalesce( ( SELECT group_concat( DISTINCT categorie_progetti_path( pc.id_categoria ) SEPARATOR ' | ' )
+			FROM progetti_categorie AS pc
+		   WHERE pc.id_progetto = progetti.id
+		), '' ) AS categorie,
 		progetti.template,
 		progetti.schema_html,
 		progetti.tema_css,
 		progetti.se_sitemap,
 		progetti.se_cacheable,
-        progetti.id_sito,
-        progetti.id_pagina,
-		progetti.data_apertura,
-		progetti.entrate_previste,
-		progetti.ore_previste,
-		progetti.costi_previsti,
-		progetti.entrate_accettazione,
-		progetti.data_accettazione,
-		progetti.data_chiusura,
-		progetti.entrate_totali,
-		progetti.uscite_totali,
+		progetti.id_sito,
+		progetti.id_pagina,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		progetti.id_account_proprietario,
+		progetti.id_gruppo_proprietario,
+		progetti.id_diritto_proprietario,
+		progetti.id_diritto_gruppo,
+		progetti.id_diritto_altri,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -5606,11 +5974,9 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
 	FROM progetti
-		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
-		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
-	GROUP BY progetti.id
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN ranking ON ranking.id = a1.id_ranking
 ;
 
 -- | 090000027201
@@ -5621,13 +5987,14 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 CREATE OR REPLACE VIEW progetti_anagrafica_view AS
 	SELECT
 		progetti_anagrafica.id,
+		progetti_anagrafica.ordine,
 		progetti_anagrafica.id_progetto,
 		progetti.nome AS progetto,
 		progetti_anagrafica.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		progetti_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome as ruolo,
-		progetti_anagrafica.ordine,
+		progetti_anagrafica.note,
 		progetti_anagrafica.se_sostituto,
 		progetti_anagrafica.id_account_inserimento,
 		progetti_anagrafica.id_account_aggiornamento,
@@ -5679,16 +6046,16 @@ CREATE OR REPLACE VIEW `progetti_articoli_view` AS
 CREATE OR REPLACE VIEW progetti_categorie_view AS
 	SELECT
 		progetti_categorie.id,
+		progetti_categorie.ordine,
 		progetti_categorie.id_progetto,
 		progetti.nome AS progetto,
 		progetti_categorie.id_categoria,
 		categorie_progetti_path( progetti_categorie.id_categoria ) AS categoria,
-		progetti_categorie.ordine,
 		progetti_categorie.id_account_inserimento,
 		progetti_categorie.id_account_aggiornamento,
- 		concat_ws(
-			' ',
+		concat(
 			progetti.nome,
+			' / ',
 			categorie_progetti_path( progetti_categorie.id_categoria )
 		) AS __label__
 	FROM progetti_categorie
@@ -5703,11 +6070,14 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 	SELECT
 		progetti_certificazioni.id,
+		progetti_certificazioni.ordine,
 		progetti_certificazioni.id_progetto,
 		progetti.nome AS progetto,
 		progetti_certificazioni.id_certificazione,
 		certificazioni.nome AS certificazione,
-		progetti_certificazioni.ordine,
+		progetti_certificazioni.id_ruolo,
+		ruoli_certificazioni.nome AS ruolo,
+		progetti_certificazioni.note,
 		progetti_certificazioni.nome,
 		progetti_certificazioni.se_richiesta,
 		progetti_certificazioni.id_account_inserimento,
@@ -5716,11 +6086,13 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 			' ',
 			progetti.nome,
 			'/',
-			certificazioni.nome 
+			certificazioni.nome,
+			ruoli_certificazioni.nome
 		) AS __label__
 	FROM progetti_certificazioni
 		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
 		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
+		LEFT JOIN ruoli_certificazioni ON ruoli_certificazioni.id = progetti_certificazioni.id_ruolo
 ;
 
 -- | 090000027801
@@ -5731,19 +6103,21 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 CREATE OR REPLACE VIEW progetti_matricole_view AS
 	SELECT
 		progetti_matricole.id,
+		progetti_matricole.ordine,
 		progetti_matricole.id_progetto,
 		progetti.nome AS progetto,
 		progetti_matricole.id_matricola,
 		matricole.matricola AS matricola,
 		progetti_matricole.id_ruolo,
 		ruoli_matricole_path( progetti_matricole.id_ruolo ) AS ruolo,
-		progetti_matricole.ordine,
+		progetti_matricole.note,
 		progetti_matricole.id_account_inserimento,
 		progetti_matricole.id_account_aggiornamento,
  		concat_ws(
 			' ',
 			progetti.nome,
-			matricole.matricola
+			matricole.matricola,
+			ruoli_matricole_path( progetti_matricole.id_ruolo )
 		) AS __label__
 	FROM progetti_matricole
 		LEFT JOIN progetti ON progetti.id = progetti_matricole.id_progetto
@@ -5781,39 +6155,72 @@ CREATE OR REPLACE VIEW provincie_view AS                      --
 -- | 090000028400
 
 -- pubblicazioni_view
-CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
-    SELECT                                                      --
-		pubblicazioni.id,                                       --
-		pubblicazioni.id_tipologia,                             --
-		tp.nome AS tipologia,                                   --
-		pubblicazioni.ordine,                                   --
-		pubblicazioni.id_prodotto,                              --
-		pubblicazioni.id_articolo,                              --
-		pubblicazioni.id_categoria_prodotti,                    --
-		pubblicazioni.id_notizia,                               --
-		pubblicazioni.id_categoria_notizie,                     --
-		pubblicazioni.id_categoria_annunci,                     --
-		pubblicazioni.id_pagina,                                --
-		pubblicazioni.id_popup,                                 --
-		pubblicazioni.id_risorsa,                               --
-		pubblicazioni.id_categoria_risorse,                     --
-		pubblicazioni.id_progetto,                              --
-		pubblicazioni.id_categoria_progetti,                    --
-		pubblicazioni.id_banner,                                --
-		pubblicazioni.id_marchio,                               --
-		pubblicazioni.id_categoria_marchi,                      --
-		pubblicazioni.timestamp_inizio,                         --
-		pubblicazioni.timestamp_fine,                           --
-		concat_ws(                                              --
-			' ',                                                --
-			tp.nome,                                            --
-			pubblicazioni.timestamp_inizio,                     --
-			pubblicazioni.timestamp_fine                        --
-		) AS __label__                                          -- etichetta per le tendine e le liste
-    FROM pubblicazioni                                          --
-		LEFT JOIN tipologie_pubblicazioni AS tp                 --
-            ON tp.id = pubblicazioni.id_tipologia               --
-;                                                               --
+CREATE OR REPLACE VIEW `pubblicazioni_view` AS
+	SELECT
+		pubblicazioni.id,
+		pubblicazioni.id_tipologia,
+		tipologie_pubblicazioni_path( pubblicazioni.id_tipologia ) AS tipologia,
+		pubblicazioni.ordine,
+		pubblicazioni.id_pagina,
+		pubblicazioni.id_popup,
+		pubblicazioni.id_banner,
+		pubblicazioni.spazio,
+		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
+		pubblicazioni.id_categoria_prodotti,
+		pubblicazioni.id_marchio,
+		pubblicazioni.id_categoria_marchi,
+		pubblicazioni.id_notizia,
+		pubblicazioni.id_categoria_notizie,
+		pubblicazioni.id_annuncio,
+		pubblicazioni.id_categoria_annunci,
+		pubblicazioni.id_risorsa,
+		pubblicazioni.id_categoria_risorse,
+		pubblicazioni.id_progetto,
+		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.note,
+		pubblicazioni.id_sito,
+		pubblicazioni.template,
+		pubblicazioni.schema_html,
+		pubblicazioni.tema_css,
+		pubblicazioni.se_sitemap,
+		pubblicazioni.se_cacheable,
+		pubblicazioni.timestamp_inizio,
+		from_unixtime( pubblicazioni.timestamp_inizio, '%Y-%m-%d %H:%i' ) AS data_ora_inizio,
+		pubblicazioni.timestamp_fine,
+		from_unixtime( pubblicazioni.timestamp_fine, '%Y-%m-%d %H:%i' ) AS data_ora_fine,
+		pubblicazioni.id_account_inserimento,
+		pubblicazioni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_pubblicazioni_path( pubblicazioni.id_tipologia ),
+			from_unixtime( pubblicazioni.timestamp_inizio, '%Y-%m-%d %H:%i' ),
+			from_unixtime( pubblicazioni.timestamp_fine, '%Y-%m-%d %H:%i' )
+		) AS __label__
+	FROM pubblicazioni
+;
+
+-- | 090000028500
+
+-- pubblicazioni_gruppi_view
+-- tipologia: tabella gestita
+-- verifica: 2026-11-12 punto 6, righe 248-250
+CREATE OR REPLACE VIEW `pubblicazioni_gruppi_view` AS
+	SELECT
+		pubblicazioni_gruppi.id,
+		pubblicazioni_gruppi.ordine,
+		pubblicazioni_gruppi.id_pubblicazione,
+		pubblicazioni_gruppi.id_gruppo,
+		gruppi_path( pubblicazioni_gruppi.id_gruppo ) AS gruppo,
+		pubblicazioni_gruppi.id_account_inserimento,
+		pubblicazioni_gruppi.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			pubblicazioni_gruppi.id_pubblicazione,
+			gruppi_path( pubblicazioni_gruppi.id_gruppo )
+		) AS __label__
+	FROM pubblicazioni_gruppi
+;
 
 -- | 090000028600
 
@@ -5821,11 +6228,14 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS                  --
 CREATE OR REPLACE VIEW `ranking_view` AS
     SELECT
 		ranking.id,
-		ranking.nome,
 		ranking.ordine,
-		ranking.se_fornitore,
+		ranking.nome,
 		ranking.se_cliente,
-		ranking.se_progetti,
+		ranking.se_fornitore,
+		ranking.se_produttore,
+		ranking.se_corriere,
+		ranking.se_collaboratore,
+		ranking.se_partner,
 		ranking.id_account_inserimento,
 		ranking.id_account_aggiornamento,
 		ranking.nome AS __label__
@@ -5837,16 +6247,27 @@ CREATE OR REPLACE VIEW `ranking_view` AS
 CREATE OR REPLACE VIEW `recensioni_view` AS
     SELECT
 		recensioni.id,
-		recensioni.id_lingua,
+		recensioni.id_account,
+		recensioni.id_annuncio,
 		recensioni.id_prodotto,
 		recensioni.id_articolo,
-		recensioni.id_risorsa,
+		recensioni.id_lingua,
+		recensioni.id_progetto,
 		recensioni.id_pagina,
-		recensioni.data,
+		recensioni.id_categoria_prodotti,
+		recensioni.id_marchio,
+		recensioni.id_categoria_marchi,
+		recensioni.id_risorsa,
+		recensioni.id_categoria_risorse,
+		recensioni.id_notizia,
+		recensioni.id_categoria_notizie,
+		recensioni.id_categoria_annunci,
+		recensioni.id_categoria_progetti,
 		recensioni.autore,
 		recensioni.valutazione,
 		recensioni.titolo,
 		recensioni.se_approvata,
+		recensioni.data,
 		recensioni.id_account_inserimento,
 		recensioni.id_account_aggiornamento,
 		concat_ws(
@@ -5903,23 +6324,21 @@ CREATE OR REPLACE VIEW `redirect_azioni_view` AS
 -- | 090000029800
 
 -- regimi_view
-CREATE OR REPLACE VIEW regimi_view AS
+-- tipologia: tabella standard
+-- funzione: espone i regimi fiscali con l'etichetta codice SdI - nome per le tendine
+CREATE OR REPLACE VIEW `regimi_view` AS
 	SELECT
 		regimi.id,
 		regimi.nome,
-		regimi.codice,
-		concat_ws(
-			' ',
-			regimi.nome,
-			regimi.codice
-		) AS __label__
+		regimi.codice_sdi,
+		concat_ws( ' - ', regimi.codice_sdi, regimi.nome ) AS __label__
 	FROM regimi
 ;
 
 -- | 090000030201
 
 -- regioni_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 15:40 Fabio Mosti
 CREATE OR REPLACE VIEW regioni_view AS
 	SELECT
@@ -5936,71 +6355,119 @@ CREATE OR REPLACE VIEW regioni_view AS
 			stati.nome
 		) AS __label__
 	FROM regioni
-		LEFT JOIN stati ON stati.id = regioni.id_stato
+		INNER JOIN stati ON stati.id = regioni.id_stato
 ;
 
 -- | 090000030300
 
 -- relazioni_anagrafica_view
-CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
+CREATE OR REPLACE VIEW `relazioni_anagrafica_view` AS
 	SELECT
-	relazioni_anagrafica.id,
-	relazioni_anagrafica.id_ruolo,
-	relazioni_anagrafica.id_anagrafica,
-	relazioni_anagrafica.id_anagrafica_collegata,
-	concat( 
-        relazioni_anagrafica.id_anagrafica,
-        ' - ',
-        relazioni_anagrafica.id_anagrafica_collegata
-    ) AS __label__
+		relazioni_anagrafica.id,
+		relazioni_anagrafica.ordine,
+		relazioni_anagrafica.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		relazioni_anagrafica.id_anagrafica_collegata,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS anagrafica_collegata,
+		relazioni_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		relazioni_anagrafica.note,
+		relazioni_anagrafica.id_account_inserimento,
+		relazioni_anagrafica.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_anagrafica.nome,
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS __label__
 	FROM relazioni_anagrafica
+		LEFT JOIN anagrafica AS a1 ON a1.id = relazioni_anagrafica.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = relazioni_anagrafica.id_anagrafica_collegata
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = relazioni_anagrafica.id_ruolo
 ;
 
 -- | 090000030321
 
 -- relazioni_articoli_view
 CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
-	SELECT 
+	SELECT
 		relazioni_articoli.id,
+		relazioni_articoli.ordine,
 		relazioni_articoli.id_articolo,
-		relazioni_articoli.id_ruolo,
-		relazioni_articoli.id_prodotto_collegato,
+		coalesce( a1.nome, a1.codice, a1.id ) AS articolo,
 		relazioni_articoli.id_articolo_collegato,
-		concat_ws( ' - ', coalesce( a1.codice, a1.id ), coalesce( a2.codice, p2.codice, a2.id, p2.id ) ) AS __label__
+		coalesce( a2.nome, a2.codice, a2.id ) AS articolo_collegato,
+		relazioni_articoli.id_prodotto_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS prodotto_collegato,
+		relazioni_articoli.id_ruolo,
+		ruoli_articoli.nome AS ruolo,
+		relazioni_articoli.note,
+		relazioni_articoli.id_account_inserimento,
+		relazioni_articoli.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( a1.nome, a1.codice, a1.id ),
+			ruoli_articoli.nome,
+			coalesce( a2.nome, a2.codice, a2.id, p2.nome, p2.codice, p2.id )
+		) AS __label__
 	FROM relazioni_articoli
 		LEFT JOIN articoli AS a1 ON a1.id = relazioni_articoli.id_articolo
 		LEFT JOIN articoli AS a2 ON a2.id = relazioni_articoli.id_articolo_collegato
 		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_articoli.id_prodotto_collegato
+		LEFT JOIN ruoli_articoli ON ruoli_articoli.id = relazioni_articoli.id_ruolo
 ;
 
 -- | 090000030351
 
 -- relazioni_categorie_progetti_view
--- tipologia: tabella gestita
--- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS
+CREATE OR REPLACE VIEW `relazioni_categorie_progetti_view` AS
 	SELECT
-	relazioni_categorie_progetti.id,
-	relazioni_categorie_progetti.ordine,
-	relazioni_categorie_progetti.id_ruolo,
-	relazioni_categorie_progetti.id_categoria,
-	relazioni_categorie_progetti.id_categoria_collegata,
-	concat( relazioni_categorie_progetti.id_categoria,' - ', relazioni_categorie_progetti.id_categoria_collegata ) AS __label__
+		relazioni_categorie_progetti.id,
+		relazioni_categorie_progetti.ordine,
+		relazioni_categorie_progetti.id_categoria,
+		coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria ), '' ) AS categoria,
+		relazioni_categorie_progetti.id_categoria_collegata,
+		coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria_collegata ), '' ) AS categoria_collegata,
+		relazioni_categorie_progetti.id_ruolo,
+		ruoli_categorie_progetti.nome AS ruolo,
+		relazioni_categorie_progetti.note,
+		relazioni_categorie_progetti.id_account_inserimento,
+		relazioni_categorie_progetti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria ), '' ),
+			ruoli_categorie_progetti.nome,
+			coalesce( categorie_progetti_path( relazioni_categorie_progetti.id_categoria_collegata ), '' )
+		) AS __label__
 	FROM relazioni_categorie_progetti
+		LEFT JOIN ruoli_categorie_progetti ON ruoli_categorie_progetti.id = relazioni_categorie_progetti.id_ruolo
 ;
 
 -- | 090000030400
 
 -- relazioni_documenti_view
-CREATE OR REPLACE VIEW relazioni_documenti_view AS
+CREATE OR REPLACE VIEW `relazioni_documenti_view` AS
 	SELECT
 		relazioni_documenti.id,
+		relazioni_documenti.ordine,
 		relazioni_documenti.id_documento,
+		coalesce( d1.codice, d1.id ) AS documento,
 		relazioni_documenti.id_documento_collegato,
+		coalesce( d2.codice, d2.id ) AS documento_collegato,
 		relazioni_documenti.id_ruolo,
 		ruoli_documenti.nome AS ruolo,
-		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+		relazioni_documenti.note,
+		relazioni_documenti.id_account_inserimento,
+		relazioni_documenti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( d1.codice, d1.id ),
+			ruoli_documenti.nome,
+			coalesce( d2.codice, d2.id )
+		) AS __label__
 	FROM relazioni_documenti
+		LEFT JOIN documenti AS d1 ON d1.id = relazioni_documenti.id_documento
+		LEFT JOIN documenti AS d2 ON d2.id = relazioni_documenti.id_documento_collegato
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
@@ -6009,15 +6476,28 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 -- relazioni_documenti_articoli_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
+CREATE OR REPLACE VIEW `relazioni_documenti_articoli_view` AS
 	SELECT
 		relazioni_documenti_articoli.id,
+		relazioni_documenti_articoli.ordine,
 		relazioni_documenti_articoli.id_documenti_articolo,
+		coalesce( r1.nome, r1.codice, r1.id ) AS documenti_articolo,
 		relazioni_documenti_articoli.id_documenti_articolo_collegato,
+		coalesce( r2.nome, r2.codice, r2.id ) AS documenti_articolo_collegato,
 		relazioni_documenti_articoli.id_ruolo,
 		ruoli_documenti.nome AS ruolo,
-		concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+		relazioni_documenti_articoli.note,
+		relazioni_documenti_articoli.id_account_inserimento,
+		relazioni_documenti_articoli.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( r1.nome, r1.codice, r1.id ),
+			ruoli_documenti.nome,
+			coalesce( r2.nome, r2.codice, r2.id )
+		) AS __label__
 	FROM relazioni_documenti_articoli
+		LEFT JOIN documenti_articoli AS r1 ON r1.id = relazioni_documenti_articoli.id_documenti_articolo
+		LEFT JOIN documenti_articoli AS r2 ON r2.id = relazioni_documenti_articoli.id_documenti_articolo_collegato
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti_articoli.id_ruolo
 ;
 
@@ -6026,30 +6506,60 @@ CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 -- relazioni_pagamenti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
+CREATE OR REPLACE VIEW `relazioni_pagamenti_view` AS
 	SELECT
-	relazioni_pagamenti.id,
-	relazioni_pagamenti.id_pagamento,
-	relazioni_pagamenti.id_pagamento_collegato,
-	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
+		relazioni_pagamenti.id,
+		relazioni_pagamenti.ordine,
+		relazioni_pagamenti.id_pagamento,
+		coalesce( p1.nome, p1.codice, p1.id ) AS pagamento,
+		relazioni_pagamenti.id_pagamento_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS pagamento_collegato,
+		relazioni_pagamenti.id_ruolo,
+		ruoli_pagamenti.nome AS ruolo,
+		relazioni_pagamenti.note,
+		relazioni_pagamenti.id_account_inserimento,
+		relazioni_pagamenti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.codice, p1.id ),
+			ruoli_pagamenti.nome,
+			coalesce( p2.nome, p2.codice, p2.id )
+		) AS __label__
 	FROM relazioni_pagamenti
+		LEFT JOIN pagamenti AS p1 ON p1.id = relazioni_pagamenti.id_pagamento
+		LEFT JOIN pagamenti AS p2 ON p2.id = relazioni_pagamenti.id_pagamento_collegato
+		LEFT JOIN ruoli_pagamenti ON ruoli_pagamenti.id = relazioni_pagamenti.id_ruolo
 ;
 
 -- | 090000030470
 
 -- relazioni_prodotti_view
 CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
-	SELECT 
+	SELECT
 		relazioni_prodotti.id,
+		relazioni_prodotti.ordine,
 		relazioni_prodotti.id_prodotto,
-		relazioni_prodotti.id_ruolo,
+		coalesce( p1.nome, p1.codice, p1.id ) AS prodotto,
 		relazioni_prodotti.id_prodotto_collegato,
+		coalesce( p2.nome, p2.codice, p2.id ) AS prodotto_collegato,
 		relazioni_prodotti.id_articolo_collegato,
-		concat_ws( ' - ', coalesce( p1.codice, p1.id ), coalesce( p2.codice, a2.codice, p2.id, a2.id ) ) AS __label__
+		coalesce( a2.nome, a2.codice, a2.id ) AS articolo_collegato,
+		relazioni_prodotti.id_ruolo,
+		ruoli_prodotti.nome AS ruolo,
+		relazioni_prodotti.note,
+		relazioni_prodotti.id_account_inserimento,
+		relazioni_prodotti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.codice, p1.id ),
+			ruoli_prodotti.nome,
+			coalesce( p2.nome, p2.codice, p2.id, a2.nome, a2.codice, a2.id )
+		) AS __label__
 	FROM relazioni_prodotti
 		LEFT JOIN prodotti AS p1 ON p1.id = relazioni_prodotti.id_prodotto
 		LEFT JOIN prodotti AS p2 ON p2.id = relazioni_prodotti.id_prodotto_collegato
 		LEFT JOIN articoli AS a2 ON a2.id = relazioni_prodotti.id_articolo_collegato
+		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = relazioni_prodotti.id_ruolo
 ;
 
 -- | 090000030491
@@ -6057,16 +6567,29 @@ CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
 -- relazioni_progetti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_progetti_view AS
+CREATE OR REPLACE VIEW `relazioni_progetti_view` AS
 	SELECT
-	relazioni_progetti.id,
-	relazioni_progetti.id_progetto,
-	relazioni_progetti.id_progetto_collegato,
-	relazioni_progetti.id_ruolo,
-	ruoli_progetti.nome AS ruolo,
-	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
+		relazioni_progetti.id,
+		relazioni_progetti.ordine,
+		relazioni_progetti.id_progetto,
+		coalesce( p1.nome, p1.id ) AS progetto,
+		relazioni_progetti.id_progetto_collegato,
+		coalesce( p2.nome, p2.id ) AS progetto_collegato,
+		relazioni_progetti.id_ruolo,
+		ruoli_progetti.nome AS ruolo,
+		relazioni_progetti.note,
+		relazioni_progetti.id_account_inserimento,
+		relazioni_progetti.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( p1.nome, p1.id ),
+			ruoli_progetti.nome,
+			coalesce( p2.nome, p2.id )
+		) AS __label__
 	FROM relazioni_progetti
-	LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
+		LEFT JOIN progetti AS p1 ON p1.id = relazioni_progetti.id_progetto
+		LEFT JOIN progetti AS p2 ON p2.id = relazioni_progetti.id_progetto_collegato
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 ;
 
 -- | 090000030501
@@ -6074,26 +6597,74 @@ CREATE OR REPLACE VIEW relazioni_progetti_view AS
 -- relazioni_software_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_software_view AS
+CREATE OR REPLACE VIEW `relazioni_software_view` AS
 	SELECT
-	relazioni_software.id,
-	relazioni_software.id_software,
-	relazioni_software.id_software_collegato,
-	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
+		relazioni_software.id,
+		relazioni_software.ordine,
+		relazioni_software.id_software,
+		coalesce( s1.nome, s1.codice, s1.id ) AS software,
+		relazioni_software.id_software_collegato,
+		coalesce( s2.nome, s2.codice, s2.id ) AS software_collegato,
+		relazioni_software.id_ruolo,
+		ruoli_software.nome AS ruolo,
+		relazioni_software.note,
+		relazioni_software.id_account_inserimento,
+		relazioni_software.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			coalesce( s1.nome, s1.codice, s1.id ),
+			ruoli_software.nome,
+			coalesce( s2.nome, s2.codice, s2.id )
+		) AS __label__
 	FROM relazioni_software
+		LEFT JOIN software AS s1 ON s1.id = relazioni_software.id_software
+		LEFT JOIN software AS s2 ON s2.id = relazioni_software.id_software_collegato
+		LEFT JOIN ruoli_software ON ruoli_software.id = relazioni_software.id_ruolo
+;
+
+-- | 090000030601
+
+-- relazioni_step_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `relazioni_step_view` AS
+	SELECT
+		relazioni_step.id,
+		relazioni_step.ordine,
+		relazioni_step.id_step,
+		s1.nome AS step,
+		relazioni_step.id_step_collegato,
+		s2.nome AS step_collegato,
+		relazioni_step.id_ruolo,
+		ruoli_step.nome AS ruolo,
+		relazioni_step.note,
+		relazioni_step.id_account_inserimento,
+		relazioni_step.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			concat_ws( ' > ', f1.nome, s1.nome ),
+			ruoli_step.nome,
+			concat_ws( ' > ', f2.nome, s2.nome )
+		) AS __label__
+	FROM relazioni_step
+		LEFT JOIN step AS s1 ON s1.id = relazioni_step.id_step
+		LEFT JOIN funnel AS f1 ON f1.id = s1.id_funnel
+		LEFT JOIN step AS s2 ON s2.id = relazioni_step.id_step_collegato
+		LEFT JOIN funnel AS f2 ON f2.id = s2.id_funnel
+		LEFT JOIN ruoli_step ON ruoli_step.id = relazioni_step.id_ruolo
 ;
 
 -- | 090000030800
 
 -- reparti_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW reparti_view AS
 	SELECT
 		reparti.id,
+		reparti.nome,
 		reparti.id_iva,
 		iva.aliquota AS iva,
 		reparti.id_settore,
 		settori_path( reparti.id_settore ) AS settore,
-		reparti.nome,
 		reparti.id_account_inserimento,
 		reparti.id_account_aggiornamento,
 		reparti.nome AS __label__
@@ -6105,50 +6676,55 @@ CREATE OR REPLACE VIEW reparti_view AS
 
 -- rinnovi_view
 -- tipologia: tabella gestita
--- verifica: 2022-02-21 12:59 Chiara GDL
+-- verifica: 2026-11-16 punto 7b, caso C6
 CREATE OR REPLACE VIEW `rinnovi_view` AS
 	SELECT
 		rinnovi.id,
 		rinnovi.id_tipologia,
 		tipologie_rinnovi.nome AS tipologia,
+		rinnovi.codice,
+		rinnovi.id_periodicita,
+		periodicita.nome AS periodicita,
+		rinnovi.id_progetto,
+		progetti.nome AS progetto,
 		rinnovi.id_contratto,
 		contratti.nome AS contratto,
+		rinnovi.id_pianificazione,
+		rinnovi.id_categoria_progetti,
+		categorie_progetti_path( rinnovi.id_categoria_progetti ) AS categoria_progetti,
 		rinnovi.id_licenza,
 		licenze.nome AS licenza,
 		licenze.codice AS codice_licenza,
-		rinnovi.id_progetto,
-		progetti.nome AS progetto,
-		rinnovi.id_categoria_progetti,
-		categorie_progetti_path( rinnovi.id_categoria_progetti ) AS categoria_progetti,
+		rinnovi.id_articolo,
+		articoli.nome AS articolo,
+		rinnovi.id_periodo,
+		periodi.nome AS periodo,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
-		rinnovi.codice,
-		rinnovi.id_pianificazione,
+		rinnovi.data_ritiro,
+		rinnovi.note,
+		rinnovi.se_automatico,
 		rinnovi.id_account_inserimento,
 		rinnovi.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			'rinnovo',
 			rinnovi.id,
-			progetti.nome,
+			coalesce( contratti.nome, progetti.nome, licenze.nome ),
 			'dal',
 			rinnovi.data_inizio,
 			'al',
-			rinnovi.data_fine,
-			coalesce( 
-				anagrafica.denominazione,
-				concat( anagrafica.cognome, ' ', anagrafica.nome )
-			)
+			rinnovi.data_fine
 		) AS __label__
 	FROM rinnovi
 		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
-		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
-		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 29
-		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
-		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
+		LEFT JOIN periodicita ON periodicita.id = rinnovi.id_periodicita
+		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto )
-	GROUP BY rinnovi.id
-	;
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza
+		LEFT JOIN articoli ON articoli.id = rinnovi.id_articolo
+		LEFT JOIN periodi ON periodi.id = rinnovi.id_periodo
+;
 
 -- | 090000031551
 
@@ -6166,29 +6742,35 @@ CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
 -- | 090000032001
 
 -- risorse_view
--- tipologia: tabella gestita
--- verifica: 2021-10-09 16:02 Fabio Mosti
 CREATE OR REPLACE VIEW `risorse_view` AS
 	SELECT
-		risorse.id, 
+		risorse.id,
 		risorse.id_tipologia,
 		tipologie_risorse.nome AS tipologia,
-		risorse.codice, 
+		risorse.codice,
 		risorse.nome,
+		risorse.id_prodotto,
+		risorse.id_articolo,
+		risorse.id_testata,
+		testate.nome AS testata,
+		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
+		risorse.note,
+		risorse.giorno_pubblicazione,
+		risorse.mese_pubblicazione,
+		risorse.anno_pubblicazione,
 		risorse.template,
 		risorse.schema_html,
 		risorse.tema_css,
 		risorse.se_sitemap,
 		risorse.se_cacheable,
 		risorse.id_sito,
-		risorse.id_testata, 
-		testate.nome AS testata,
-		risorse.id_articolo,
-		risorse.id_prodotto,
-		risorse.giorno_pubblicazione,
-		risorse.mese_pubblicazione,
-		risorse.anno_pubblicazione,
-		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
+		risorse.id_pagina,
+		risorse.data_archiviazione,
+		risorse.id_account_proprietario,
+		risorse.id_gruppo_proprietario,
+		risorse.id_diritto_proprietario,
+		risorse.id_diritto_gruppo,
+		risorse.id_diritto_altri,
 		risorse.id_account_inserimento,
 		risorse.id_account_aggiornamento,
 		concat_ws(
@@ -6206,21 +6788,26 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 
 -- | 090000032101
 
--- risorse_account
--- tipologia: tabella di supporto
--- verifica: 2022-08-02 12:07 Chiara GDL
+-- risorse_account_view
 CREATE OR REPLACE VIEW `risorse_account_view` AS
 	SELECT
 		risorse_account.id,
+		risorse_account.ordine,
 		risorse_account.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_account.id_account,
-		risorse_account.ordine,
+		account.username AS account,
+		risorse_account.id_carrelli_articoli,
 		risorse_account.id_account_inserimento,
 		risorse_account.id_account_aggiornamento,
-		risorse.nome AS __label__
+		concat_ws(
+			' ',
+			risorse.nome,
+			account.username
+		) AS __label__
 	FROM risorse_account
 		LEFT JOIN risorse ON risorse.id = risorse_account.id_risorsa
+		LEFT JOIN account ON account.id = risorse_account.id_account
 ;
 
 -- | 090000032201
@@ -6231,13 +6818,14 @@ CREATE OR REPLACE VIEW `risorse_account_view` AS
 CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 	SELECT
 		risorse_anagrafica.id,
+		risorse_anagrafica.ordine,
 		risorse_anagrafica.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_anagrafica.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		risorse_anagrafica.id_ruolo,
 		ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ) AS ruolo,
-		risorse_anagrafica.ordine,
+		risorse_anagrafica.note,
 		risorse_anagrafica.id_account_inserimento,
 		risorse_anagrafica.id_account_aggiornamento,
 		concat_ws(
@@ -6254,7 +6842,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 -- | 090000032401
 
 -- risorse_categorie_view
--- tipologia: tabella di supporto
+-- tipologia: tabella gestita
 -- verifica: 2021-10-09 18:03 Fabio Mosti
 CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 	SELECT
@@ -6263,41 +6851,69 @@ CREATE OR REPLACE VIEW `risorse_categorie_view` AS
 		risorse_categorie.id_risorsa,
 		risorse.nome AS risorsa,
 		risorse_categorie.id_categoria,
-		categorie_risorse_path( risorse_categorie.id_categoria ),
+		categorie_risorse_path( risorse_categorie.id_categoria ) AS categoria,
 		risorse_categorie.id_account_inserimento,
 		risorse_categorie.id_account_aggiornamento,
-		concat_ws(
-			' ',
+		concat(
 			risorse.nome,
+			' / ',
 			categorie_risorse_path( risorse_categorie.id_categoria )
 		) AS __label__
 	FROM risorse_categorie
 		LEFT JOIN risorse ON risorse.id = risorse_categorie.id_risorsa
 ;
 
+-- | 090000032501
+
+-- risorse_organizzazioni_view
+CREATE OR REPLACE VIEW `risorse_organizzazioni_view` AS
+	SELECT
+		risorse_organizzazioni.id,
+		risorse_organizzazioni.ordine,
+		risorse_organizzazioni.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_organizzazioni.id_organizzazione,
+		organizzazioni_path( risorse_organizzazioni.id_organizzazione ) AS organizzazione,
+		risorse_organizzazioni.id_ruolo,
+		ruoli_risorse_path( risorse_organizzazioni.id_ruolo ) AS ruolo,
+		risorse_organizzazioni.note,
+		risorse_organizzazioni.id_account_inserimento,
+		risorse_organizzazioni.id_account_aggiornamento,
+		concat_ws(
+			' / ',
+			organizzazioni_path( risorse_organizzazioni.id_organizzazione ),
+			risorse.nome,
+			ruoli_risorse_path( risorse_organizzazioni.id_ruolo )
+		) AS __label__
+	FROM risorse_organizzazioni
+		LEFT JOIN risorse ON risorse.id = risorse_organizzazioni.id_risorsa
+;
+
 -- | 090000033001
 
 -- ritenute_view
 -- tipologia: tabella standard
-CREATE OR REPLACE VIEW ritenute_view AS
+-- funzione: espone i tipi di ritenuta con l'etichetta codice SdI - nome per le tendine dei dati fiscali
+CREATE OR REPLACE VIEW `ritenute_view` AS
 	SELECT
 		ritenute.id,
-		ritenute.codice,
 		ritenute.nome,
-		concat( ritenute.codice, ' - ', ritenute.nome ) AS __label__
+		ritenute.codice_sdi,
+		concat( ritenute.codice_sdi, ' - ', ritenute.nome ) AS __label__
 	FROM ritenute
 ;
 
 -- | 090000034001
 
 -- ruoli_anagrafica_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 	SELECT
 		ruoli_anagrafica.id,
 		ruoli_anagrafica.id_genitore,
 		ruoli_anagrafica.nome,
-		ruoli_anagrafica.se_produzione,
-		ruoli_anagrafica.se_didattica,
+		ruoli_anagrafica.html_entity,
+		ruoli_anagrafica.font_awesome,
 		ruoli_anagrafica.se_organizzazioni,
 		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_notizie,
@@ -6305,8 +6921,11 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_progetti,
 		ruoli_anagrafica.se_immobili,
 		ruoli_anagrafica.se_contratti,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		ruoli_anagrafica.se_sostituto,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;
@@ -6314,8 +6933,7 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 -- | 090000034101
 
 -- ruoli_articoli_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-09 18:17 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_articoli_view AS
 	SELECT
 		ruoli_articoli.id,
@@ -6323,10 +6941,7 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 		ruoli_articoli.nome,
 		ruoli_articoli.html_entity,
 		ruoli_articoli.font_awesome,
-		ruoli_articoli.se_progetti,
-		ruoli_articoli.se_risorse,
-		ruoli_articoli.se_acquisto,
-        ruoli_articoli.se_rinnovo,
+		ruoli_articoli.se_relazioni,
 	 	ruoli_articoli_path( ruoli_articoli.id ) AS __label__
 	FROM ruoli_articoli
 ;
@@ -6334,6 +6949,7 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 -- | 090000034200
 
 -- ruoli_audio_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_audio_view AS
 	SELECT
 		ruoli_audio.id,
@@ -6342,22 +6958,28 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.html_entity,
 		ruoli_audio.font_awesome,
 		ruoli_audio.se_anagrafica,
-		ruoli_audio.se_pagine,
+		ruoli_audio.se_annunci,
 		ruoli_audio.se_prodotti,
 		ruoli_audio.se_articoli,
+		ruoli_audio.se_indirizzi,
+		ruoli_audio.se_progetti,
+		ruoli_audio.se_immobili,
+		ruoli_audio.se_pagine,
+		ruoli_audio.se_file,
 		ruoli_audio.se_categorie_prodotti,
 		ruoli_audio.se_marchi,
 		ruoli_audio.se_categorie_marchi,
-		ruoli_audio.se_notizie,
-		ruoli_audio.se_categorie_notizie,
-		ruoli_audio.se_annunci,
-		ruoli_audio.se_categorie_annunci,
 		ruoli_audio.se_risorse,
 		ruoli_audio.se_categorie_risorse,
-		ruoli_audio.se_immobili,
-		ruoli_audio.se_file,
-		ruoli_audio.se_immagini,
+		ruoli_audio.se_notizie,
+		ruoli_audio.se_categorie_notizie,
+		ruoli_audio.se_categorie_annunci,
+		ruoli_audio.se_categorie_progetti,
+		ruoli_audio.se_edifici,
+		ruoli_audio.se_valutazioni,
 		ruoli_audio.se_video,
+		ruoli_audio.se_immagini,
+		ruoli_audio.se_vani,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;
@@ -6365,8 +6987,7 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 -- | 090000034251
 
 -- ruoli_categorie_progetti_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-09 18:41 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 	SELECT
 		ruoli_categorie_progetti.id,
@@ -6374,9 +6995,25 @@ CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
 		ruoli_categorie_progetti.nome,
 		ruoli_categorie_progetti.html_entity,
 		ruoli_categorie_progetti.font_awesome,
+		ruoli_categorie_progetti.se_relazioni,
 		ruoli_categorie_progetti.se_recuperi,
 	 	ruoli_categorie_progetti_path( ruoli_categorie_progetti.id ) AS __label__
 	FROM ruoli_categorie_progetti
+;
+
+-- | 090000034273
+
+-- ruoli_certificazioni_view
+-- tipologia: tabella di supporto
+CREATE OR REPLACE VIEW ruoli_certificazioni_view AS
+	SELECT
+		ruoli_certificazioni.id,
+		ruoli_certificazioni.id_genitore,
+		ruoli_certificazioni.nome,
+		ruoli_certificazioni.html_entity,
+		ruoli_certificazioni.font_awesome,
+	 	ruoli_certificazioni_path( ruoli_certificazioni.id ) AS __label__
+	FROM ruoli_certificazioni
 ;
 
 -- | 090000034281
@@ -6397,6 +7034,7 @@ CREATE OR REPLACE VIEW ruoli_conversazioni_view AS
 -- | 090000034300
 
 -- ruoli_documenti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_documenti_view AS
 	SELECT
 		ruoli_documenti.id,
@@ -6405,12 +7043,8 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 		ruoli_documenti.html_entity,
 		ruoli_documenti.font_awesome,
 		ruoli_documenti.se_xml,
-		ruoli_documenti.se_documenti,
 		ruoli_documenti.se_documenti_articoli,
 		ruoli_documenti.se_relazioni,
-		ruoli_documenti.se_conferma,
-		ruoli_documenti.se_consuntivo,
-		ruoli_documenti.se_evasione,
 	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
 	FROM ruoli_documenti
 ;
@@ -6418,6 +7052,7 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 -- | 090000034401
 
 -- ruoli_file_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_file_view AS
 	SELECT
 		ruoli_file.id,
@@ -6426,22 +7061,39 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.html_entity,
 		ruoli_file.font_awesome,
 		ruoli_file.se_anagrafica,
-		ruoli_file.se_pagine,
+		ruoli_file.se_annunci,
 		ruoli_file.se_prodotti,
 		ruoli_file.se_articoli,
+		ruoli_file.se_indirizzi,
+		ruoli_file.se_progetti,
+		ruoli_file.se_contratti,
+		ruoli_file.se_todo,
+		ruoli_file.se_immobili,
+		ruoli_file.se_mailing,
+		ruoli_file.se_documenti,
+		ruoli_file.se_pagine,
 		ruoli_file.se_categorie_prodotti,
 		ruoli_file.se_marchi,
 		ruoli_file.se_categorie_marchi,
-		ruoli_file.se_notizie,
-		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_notizie,
+		ruoli_file.se_categorie_notizie,
+		ruoli_file.se_categorie_annunci,
+		ruoli_file.se_categorie_progetti,
+		ruoli_file.se_edifici,
+		ruoli_file.se_valutazioni,
+		ruoli_file.se_licenze,
+		ruoli_file.se_anagrafica_certificazioni,
+		ruoli_file.se_template,
+		ruoli_file.se_rinnovi,
+		ruoli_file.se_valutazioni_certificazioni,
 		ruoli_file.se_mail,
-		ruoli_file.se_immobili,
-		ruoli_file.se_documenti,
+		ruoli_file.se_attivita,
 		ruoli_file.se_audio,
-		ruoli_file.se_immagini,
 		ruoli_file.se_video,
+		ruoli_file.se_immagini,
+		ruoli_file.se_vani,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -6449,87 +7101,96 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 -- | 090000034600
 
 -- ruoli_immagini_view
--- tipologia: tabella di supporto
-CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
-	SELECT                                                      --
-		ruoli_immagini.id,                                      --
-		ruoli_immagini.id_genitore,                             --
-		ruoli_immagini.ordine_scalamento,                       --
-		ruoli_immagini.nome,                                    --
-		ruoli_immagini.html_entity,                             --
-		ruoli_immagini.font_awesome,                            --
-		ruoli_immagini.se_anagrafica,                           --
-		ruoli_immagini.se_pagine,                               --
-		ruoli_immagini.se_prodotti,                             --
-		ruoli_immagini.se_articoli,                             --
-		ruoli_immagini.se_categorie_prodotti,                   --
-		ruoli_immagini.se_marchi,                   --
-		ruoli_immagini.se_categorie_marchi,                   --
-		ruoli_immagini.se_notizie,                              --
-		ruoli_immagini.se_categorie_notizie,                    --
-		ruoli_immagini.se_risorse,                              --
-		ruoli_immagini.se_categorie_risorse,                    --
-		ruoli_immagini.se_immobili,                             --
-		ruoli_immagini.se_audio,                                --
-		ruoli_immagini.se_file,                                 --
-		ruoli_immagini.se_video,                             --
-	 	ruoli_immagini_path(                                    --
-            ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
-	FROM ruoli_immagini                                         --
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_immagini_view AS
+	SELECT
+		ruoli_immagini.id,
+		ruoli_immagini.id_genitore,
+		ruoli_immagini.nome,
+		ruoli_immagini.html_entity,
+		ruoli_immagini.font_awesome,
+		ruoli_immagini.se_anagrafica,
+		ruoli_immagini.se_annunci,
+		ruoli_immagini.se_prodotti,
+		ruoli_immagini.se_articoli,
+		ruoli_immagini.se_contatti,
+		ruoli_immagini.se_indirizzi,
+		ruoli_immagini.se_progetti,
+		ruoli_immagini.se_contratti,
+		ruoli_immagini.se_immobili,
+		ruoli_immagini.se_pagine,
+		ruoli_immagini.se_file,
+		ruoli_immagini.se_categorie_prodotti,
+		ruoli_immagini.se_marchi,
+		ruoli_immagini.se_categorie_marchi,
+		ruoli_immagini.se_risorse,
+		ruoli_immagini.se_categorie_risorse,
+		ruoli_immagini.se_notizie,
+		ruoli_immagini.se_categorie_notizie,
+		ruoli_immagini.se_categorie_annunci,
+		ruoli_immagini.se_categorie_progetti,
+		ruoli_immagini.se_edifici,
+		ruoli_immagini.se_valutazioni,
+		ruoli_immagini.se_rinnovi,
+		ruoli_immagini.se_banner,
+		ruoli_immagini.se_audio,
+		ruoli_immagini.se_video,
+		ruoli_immagini.se_vani,
+	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
+	FROM ruoli_immagini
 ;
 
 -- | 090000034800
 
 -- ruoli_indirizzi_view
-CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
-	SELECT													  --
-		ruoli_indirizzi.id,					  				  --
-		ruoli_indirizzi.id_genitore,			  			  --
-		ruoli_indirizzi.nome,							  	  --
-    	ruoli_indirizzi.html_entity,				  		  --
-    	ruoli_indirizzi.font_awesome,		  		  		  --
-    	ruoli_indirizzi.se_sede_legale,	  		  			  --
-    	ruoli_indirizzi.se_sede_operativa,	  		  		  --
-    	ruoli_indirizzi.se_residenza,	  		  			  --
-    	ruoli_indirizzi.se_domicilio,			  		  	  --
-	 	ruoli_indirizzi_path(								  --
-			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
-	FROM ruoli_indirizzi									  --
-;                                                             --
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
+	SELECT
+		ruoli_indirizzi.id,
+		ruoli_indirizzi.id_genitore,
+		ruoli_indirizzi.nome,
+		ruoli_indirizzi.html_entity,
+		ruoli_indirizzi.font_awesome,
+		ruoli_indirizzi.se_sede_legale,
+		ruoli_indirizzi.se_sede_operativa,
+		ruoli_indirizzi.se_residenza,
+		ruoli_indirizzi.se_domicilio,
+	 	ruoli_indirizzi_path( ruoli_indirizzi.id ) AS __label__
+	FROM ruoli_indirizzi
+;
 
 -- | 090000034801
 
 -- ruoli_mail_view
-CREATE OR REPLACE VIEW `ruoli_mail_view` AS
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_mail_view AS
 	SELECT
 		ruoli_mail.id,
 		ruoli_mail.id_genitore,
 		ruoli_mail.nome,
 		ruoli_mail.html_entity,
 		ruoli_mail.font_awesome,
-		ruoli_mail.se_xml,
 		ruoli_mail.se_commerciale,
 		ruoli_mail.se_produzione,
 		ruoli_mail.se_amministrazione,
 		ruoli_mail.se_acquisti,
 		ruoli_mail.se_ordini,
 		ruoli_mail.se_helpdesk,
-		ruoli_mail_path( ruoli_mail.id ) AS __label__
+	 	ruoli_mail_path( ruoli_mail.id ) AS __label__
 	FROM ruoli_mail
 ;
 
 -- | 090000034871
 
 -- ruoli_mastri_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-12 11:23 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_mastri_view AS
 	SELECT
 		ruoli_mastri.id,
 		ruoli_mastri.id_genitore,
 		ruoli_mastri.nome,
-    	ruoli_mastri.html_entity,
-    	ruoli_mastri.font_awesome,
+		ruoli_mastri.html_entity,
+		ruoli_mastri.font_awesome,
 	 	ruoli_mastri_path( ruoli_mastri.id ) AS __label__
 	FROM ruoli_mastri
 ;
@@ -6537,53 +7198,124 @@ CREATE OR REPLACE VIEW ruoli_mastri_view AS
 -- | 090000034901
 
 -- ruoli_matricole_view
--- tipologia: tabella di supporto
--- verifica: 2021-10-12 11:23 Fabio Mosti
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_matricole_view AS
 	SELECT
 		ruoli_matricole.id,
 		ruoli_matricole.id_genitore,
 		ruoli_matricole.nome,
-    	ruoli_matricole.html_entity,
-    	ruoli_matricole.font_awesome,
+		ruoli_matricole.html_entity,
+		ruoli_matricole.font_awesome,
+		ruoli_matricole.se_attivita,
+		ruoli_matricole.se_progetti,
+		ruoli_matricole.se_todo,
 	 	ruoli_matricole_path( ruoli_matricole.id ) AS __label__
 	FROM ruoli_matricole
+;
+
+-- | 090000034950
+
+-- ruoli_pagamenti_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_pagamenti_view AS
+	SELECT
+		ruoli_pagamenti.id,
+		ruoli_pagamenti.id_genitore,
+		ruoli_pagamenti.nome,
+		ruoli_pagamenti.html_entity,
+		ruoli_pagamenti.font_awesome,
+		ruoli_pagamenti.se_relazioni,
+	 	ruoli_pagamenti_path( ruoli_pagamenti.id ) AS __label__
+	FROM ruoli_pagamenti
 ;
 
 -- | 090000035000
 
 -- ruoli_prodotti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 	SELECT
 		ruoli_prodotti.id,
 		ruoli_prodotti.id_genitore,
 		ruoli_prodotti.nome,
-	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
+		ruoli_prodotti.html_entity,
+		ruoli_prodotti.font_awesome,
+		ruoli_prodotti.se_relazioni,
+		ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
 	FROM ruoli_prodotti
 ;
 
 -- | 090000035101
 
--- ruoli_progetti
--- tipologia: tabella di supporto
--- verifica: 2022-04-20 10:45 chiara GDL
+-- ruoli_progetti_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_progetti_view AS
 	SELECT
 		ruoli_progetti.id,
+		ruoli_progetti.id_genitore,
 		ruoli_progetti.nome,
 		ruoli_progetti.html_entity,
 		ruoli_progetti.font_awesome,
 		ruoli_progetti.se_sottoprogetto,
 		ruoli_progetti.se_proseguimento,
-		ruoli_progetti.se_sostituto,
 		ruoli_progetti.se_attesa,
-	 	ruoli_progetti.nome AS __label__
+		ruoli_progetti.se_relazioni,
+		ruoli_progetti_path( ruoli_progetti.id ) AS __label__
 	FROM ruoli_progetti
+;
+
+-- | 090000035120
+
+-- ruoli_risorse_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_risorse_view AS
+	SELECT
+		ruoli_risorse.id,
+		ruoli_risorse.id_genitore,
+		ruoli_risorse.nome,
+		ruoli_risorse.html_entity,
+		ruoli_risorse.font_awesome,
+		ruoli_risorse.se_organizzazioni,
+	 	ruoli_risorse_path( ruoli_risorse.id ) AS __label__
+	FROM ruoli_risorse
+;
+
+-- | 090000035150
+
+-- ruoli_software_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_software_view AS
+	SELECT
+		ruoli_software.id,
+		ruoli_software.id_genitore,
+		ruoli_software.nome,
+		ruoli_software.html_entity,
+		ruoli_software.font_awesome,
+		ruoli_software.se_relazioni,
+	 	ruoli_software_path( ruoli_software.id ) AS __label__
+	FROM ruoli_software
+;
+
+-- | 090000035170
+
+-- ruoli_step_view
+-- tipologia: tabella standard
+CREATE OR REPLACE VIEW ruoli_step_view AS
+	SELECT
+		ruoli_step.id,
+		ruoli_step.id_genitore,
+		ruoli_step.nome,
+		ruoli_step.html_entity,
+		ruoli_step.font_awesome,
+		ruoli_step.se_relazioni,
+	 	ruoli_step_path( ruoli_step.id ) AS __label__
+	FROM ruoli_step
 ;
 
 -- | 090000035200
 
 -- ruoli_video_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW ruoli_video_view AS
 	SELECT
 		ruoli_video.id,
@@ -6593,77 +7325,174 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.font_awesome,
 		ruoli_video.se_anagrafica,
 		ruoli_video.se_pagine,
+		ruoli_video.se_file,
 		ruoli_video.se_prodotti,
 		ruoli_video.se_articoli,
 		ruoli_video.se_categorie_prodotti,
 		ruoli_video.se_marchi,
 		ruoli_video.se_categorie_marchi,
-		ruoli_video.se_notizie,
-		ruoli_video.se_categorie_notizie,
-		ruoli_video.se_annunci,
-		ruoli_video.se_categorie_annunci,
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
+		ruoli_video.se_notizie,
+		ruoli_video.se_annunci,
+		ruoli_video.se_categorie_notizie,
+		ruoli_video.se_categorie_annunci,
+		ruoli_video.se_progetti,
+		ruoli_video.se_categorie_progetti,
+		ruoli_video.se_indirizzi,
+		ruoli_video.se_edifici,
 		ruoli_video.se_immobili,
+		ruoli_video.se_valutazioni,
 		ruoli_video.se_audio,
-		ruoli_video.se_file,
 		ruoli_video.se_immagini,
-	 	ruoli_video_path( ruoli_video.id ) AS __label__
+		ruoli_video.se_vani,
+		ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
 
 -- | 090000036001
 
 -- sconti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_view` AS
 	SELECT
-	sconti.id,
-	sconti.nome,
-	sconti.timestamp_inizio,
-	from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
-	sconti.timestamp_fine,
-	from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
-	concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
+		sconti.id,
+		sconti.id_tipologia,
+		tipologie_sconti.nome AS tipologia,
+		sconti.nome,
+		sconti.id_valuta,
+		valute.iso4217 AS valuta,
+		sconti.sconto_percentuale,
+		sconti.sconto_fisso,
+		sconti.qta_min,
+		sconti.note,
+		sconti.timestamp_inizio,
+		from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+		sconti.timestamp_fine,
+		from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+		sconti.id_account_inserimento,
+		sconti.timestamp_inserimento,
+		sconti.id_account_aggiornamento,
+		sconti.timestamp_aggiornamento,
+		concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
 	FROM sconti
+		LEFT JOIN tipologie_sconti ON tipologie_sconti.id = sconti.id_tipologia
+		LEFT JOIN valute ON valute.id = sconti.id_valuta
 ;
 
 -- | 090000036201
 
 -- sconti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_articoli_view` AS
 	SELECT
 		sconti_articoli.id,
+		sconti_articoli.ordine,
 		sconti_articoli.id_sconto,
 		sconti.nome AS sconto,
 		sconti_articoli.id_articolo,
 		articoli.id_prodotto,
 		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
-		concat_ws( ' ', sconti.nome, coalesce( articoli.codice, articoli.id ) ) AS __label__
+		sconti_articoli.id_account_inserimento,
+		sconti_articoli.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, coalesce( articoli.codice, articoli.id ) ) AS __label__
 	FROM sconti_articoli
 		LEFT JOIN sconti ON sconti.id = sconti_articoli.id_sconto
 		LEFT JOIN articoli ON articoli.id = sconti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
+-- | 090000036301
+
+-- sconti_categorie_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_categorie_prodotti_view` AS
+	SELECT
+		sconti_categorie_prodotti.id,
+		sconti_categorie_prodotti.ordine,
+		sconti_categorie_prodotti.id_sconto,
+		sconti.nome AS sconto,
+		sconti_categorie_prodotti.id_categoria,
+		categorie_prodotti.nome AS categoria,
+		sconti_categorie_prodotti.id_account_inserimento,
+		sconti_categorie_prodotti.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, categorie_prodotti.nome ) AS __label__
+	FROM sconti_categorie_prodotti
+		LEFT JOIN sconti ON sconti.id = sconti_categorie_prodotti.id_sconto
+		LEFT JOIN categorie_prodotti ON categorie_prodotti.id = sconti_categorie_prodotti.id_categoria
+;
+
 -- | 090000036401
 
 -- sconti_listini_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
 CREATE OR REPLACE VIEW `sconti_listini_view` AS
 	SELECT
 		sconti_listini.id,
+		sconti_listini.ordine,
 		sconti_listini.id_sconto,
 		sconti.nome AS sconto,
 		sconti_listini.id_listino,
-		listini.nome AS listino,	
-		concat_ws( ' ', sconti.nome, listini.nome ) AS __label__
+		listini.nome AS listino,
+		sconti_listini.id_account_inserimento,
+		sconti_listini.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, listini.nome ) AS __label__
 	FROM sconti_listini
 		LEFT JOIN sconti ON sconti.id = sconti_listini.id_sconto
 		LEFT JOIN listini ON listini.id = sconti_listini.id_listino
 ;
 
+-- | 090000036501
+
+-- sconti_marchi_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_marchi_view` AS
+	SELECT
+		sconti_marchi.id,
+		sconti_marchi.ordine,
+		sconti_marchi.id_sconto,
+		sconti.nome AS sconto,
+		sconti_marchi.id_marchio,
+		marchi.nome AS marchio,
+		sconti_marchi.id_account_inserimento,
+		sconti_marchi.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, marchi.nome ) AS __label__
+	FROM sconti_marchi
+		LEFT JOIN sconti ON sconti.id = sconti_marchi.id_sconto
+		LEFT JOIN marchi ON marchi.id = sconti_marchi.id_marchio
+;
+
+-- | 090000036601
+
+-- sconti_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2026-10-29 punto 6, righe 177-179
+CREATE OR REPLACE VIEW `sconti_prodotti_view` AS
+	SELECT
+		sconti_prodotti.id,
+		sconti_prodotti.ordine,
+		sconti_prodotti.id_sconto,
+		sconti.nome AS sconto,
+		sconti_prodotti.id_prodotto,
+		prodotti.nome AS prodotto,
+		sconti_prodotti.id_account_inserimento,
+		sconti_prodotti.id_account_aggiornamento,
+		concat_ws( ' / ', sconti.nome, prodotti.nome ) AS __label__
+	FROM sconti_prodotti
+		LEFT JOIN sconti ON sconti.id = sconti_prodotti.id_sconto
+		LEFT JOIN prodotti ON prodotti.id = sconti_prodotti.id_prodotto
+;
+
 -- | 090000037000
 
 -- settori_view
+-- tipologia: tabella standard
+-- funzione: espone i settori ATECO con l'etichetta codice e soprannome, o nome se il soprannome manca
 CREATE OR REPLACE VIEW settori_view AS
 	SELECT
 		settori.id,
@@ -6671,7 +7500,7 @@ CREATE OR REPLACE VIEW settori_view AS
 		settori.nome,
 		settori.soprannome,
 		settori.ateco,
-	 	concat( settori.ateco, ' ', settori.nome ) AS __label__
+		concat( settori.ateco, ' ', coalesce( settori.soprannome, settori.nome ) ) AS __label__
 	FROM settori
 ;
 
@@ -6681,21 +7510,17 @@ CREATE OR REPLACE VIEW settori_view AS
 CREATE OR REPLACE VIEW `sms_out_view` AS
 	SELECT
 		sms_out.id,
-		sms_out.id_telefono,
 		sms_out.ordine,
-		sms_out.timestamp_composizione,
 		sms_out.mittente,
 		sms_out.destinatari,
 		sms_out.corpo,
 		sms_out.server,
-		sms_out.host,
-		sms_out.port,
-		sms_out.user,
-		sms_out.password,
-		sms_out.token,
 		sms_out.tentativi,
+		sms_out.token,
+		sms_out.timestamp_elaborazione,
+		sms_out.timestamp_composizione,
 		sms_out.timestamp_invio,
-		from_unixtime( sms_out.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		from_unixtime( sms_out.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
 		sms_out.id_account_inserimento,
 		sms_out.id_account_aggiornamento,
 		concat(
@@ -6713,21 +7538,17 @@ CREATE OR REPLACE VIEW `sms_out_view` AS
 CREATE OR REPLACE VIEW `sms_sent_view` AS
 	SELECT
 		sms_sent.id,
-		sms_sent.id_telefono,
 		sms_sent.ordine,
-		sms_sent.timestamp_composizione,
 		sms_sent.mittente,
 		sms_sent.destinatari,
 		sms_sent.corpo,
 		sms_sent.server,
-		sms_sent.host,
-		sms_sent.port,
-		sms_sent.user,
-		sms_sent.password,
-		sms_sent.token,
 		sms_sent.tentativi,
+		sms_sent.token,
+		sms_sent.timestamp_elaborazione,
+		sms_sent.timestamp_composizione,
 		sms_sent.timestamp_invio,
-		from_unixtime( sms_sent.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		from_unixtime( sms_sent.timestamp_invio, '%Y-%m-%d %H:%i' ) AS data_ora_invio,
 		sms_sent.id_account_inserimento,
 		sms_sent.id_account_aggiornamento,
 		concat(
@@ -6741,29 +7562,40 @@ CREATE OR REPLACE VIEW `sms_sent_view` AS
 -- | 090000041401
 
 -- software_view
--- tipologia: tabella gestita
--- verifica: 2021-11-16 10:39 Chiara GDL 
-CREATE OR REPLACE VIEW software_view AS
-    SELECT
-		software.id,
-		software.id_genitore,
-		software.id_articolo,
-		software.codice,
-		concat(prodotti.nome, ' - ',articoli.nome) AS articolo,
-		software.json,
-		software.nome,
-		software.note,
-		software.id_account_inserimento,
-		software.id_account_aggiornamento,
-	 	software_path( software.id ) AS __label__
-	FROM software
-		LEFT JOIN articoli ON software.id_articolo = articoli.id
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-;
+CREATE OR REPLACE VIEW software_view AS                                                  --
+  SELECT                                                                                 --
+    software.id,                                                                         --
+    software.id_genitore,                                                                --
+    software.codice,                                                                     --
+    software.nome,                                                                       --
+    software.id_prodotto,                                                                --
+    prodotti.nome AS prodotto,                                                           -- nome del prodotto
+    software.id_articolo,                                                                --
+    concat_ws( ' - ', p2.nome, articoli.nome ) AS articolo,                              -- prodotto e articolo
+    software.json,                                                                       --
+    software.note,                                                                       --
+    software.id_account_proprietario,                                                    --
+    software.id_gruppo_proprietario,                                                     --
+    software.id_diritto_proprietario,                                                    --
+    software.id_diritto_gruppo,                                                          --
+    software.id_diritto_altri,                                                           --
+    software.id_account_inserimento,                                                     --
+    software.id_account_aggiornamento,                                                   --
+    concat_ws(                                                                           --
+      ' ',                                                                               --
+      software.codice,                                                                   --
+      software_path( software.id )                                                       --
+    ) AS __label__                                                                       -- etichetta per le tendine e le liste
+  FROM software                                                                          --
+    LEFT JOIN prodotti ON prodotti.id = software.id_prodotto                             --
+    LEFT JOIN articoli ON articoli.id = software.id_articolo                             --
+    LEFT JOIN prodotti AS p2 ON p2.id = articoli.id_prodotto                             --
+;                                                                                        --
 
 -- | 090000042000
 
 -- stati_view
+-- tipologia: tabella standard
 CREATE OR REPLACE VIEW stati_view AS                          --
     SELECT                                                    --
 		stati.id,                                             --
@@ -6781,50 +7613,55 @@ CREATE OR REPLACE VIEW stati_view AS                          --
 			stati.nome                                        --
 		) AS __label__                                        -- etichetta per le tendine e le liste
     FROM stati                                                --
-    	LEFT JOIN continenti                                  --
+    	INNER JOIN continenti                                 --
             ON continenti.id = stati.id_continente            --
 ;                                                             --
 
 -- | 090000042201
 
 -- stati_lingue_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:33 Fabio Mosti
 CREATE OR REPLACE VIEW stati_lingue_view AS
     SELECT
 		stati_lingue.id,
+		stati_lingue.ordine,
 		stati_lingue.id_stato,
 		stati.nome AS stato,
 		stati_lingue.id_lingua,
 		lingue.nome AS lingua,
-		stati_lingue.ordine,
 		concat_ws(
 			' ',
 			stati.nome,
 			lingue.nome
 		) AS __label__
     FROM stati_lingue
-    	LEFT JOIN stati ON stati.id = stati_lingue.id_stato
-    	LEFT JOIN lingue ON lingue.id = stati_lingue.id_lingua
+    	INNER JOIN stati ON stati.id = stati_lingue.id_stato
+    	INNER JOIN lingue ON lingue.id = stati_lingue.id_lingua
 ;
 
 -- | 090000042501
 
 -- step_view
+-- tipologia: tabella gestita
 CREATE OR REPLACE VIEW step_view AS
 	SELECT
 		step.id,
 		step.id_funnel,
+		funnel.nome AS funnel,
 		step.ordine,
 		step.nome,
+		step.note,
 		step.id_account_inserimento,
 		step.id_account_aggiornamento,
 		concat_ws(
-			' / ',
+			' > ',
+			funnel.nome,
 			step.nome
 		) AS __label__
 	FROM step
-	ORDER BY step.id_funnel, step.ordine
+		INNER JOIN funnel ON funnel.id = step.id_funnel
+	ORDER BY step.id_funnel, step.ordine IS NULL, step.ordine, step.id
 ;
 
 -- | 090000043001
@@ -6842,6 +7679,8 @@ CREATE OR REPLACE VIEW task_view AS
 		task.giorno_della_settimana,
 		task.settimana,
 		task.task,
+		task.data_archiviazione,
+		task.note_archiviazione,
 		task.iterazioni,
 		task.delay,
 		task.token,
@@ -6850,7 +7689,6 @@ CREATE OR REPLACE VIEW task_view AS
 		task.id_account_inserimento,
 		task.id_account_aggiornamento,
 		CONCAT(
-			' / ',
 			coalesce( task.minuto, '*' ),
 			' / ',
 			coalesce( task.ora, '*' ),
@@ -6871,39 +7709,41 @@ CREATE OR REPLACE VIEW task_view AS
 -- | 090000043600
 
 -- telefoni_view
-CREATE OR REPLACE VIEW telefoni_view AS                       --
-	SELECT                                                    --
-		telefoni.id,                                          --
-		telefoni.id_anagrafica,                               --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat(                                           --
-                a1.cognome, ' ', a1.nome                      --
-            ),                                                --
-            ''                                                --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		telefoni.id_tipologia,                                --
-		t1.nome AS tipologia,                                 -- nome della tipologia
-		telefoni.numero,                                      --
-		telefoni.se_notifiche,                                --
-		telefoni.id_account_inserimento,                      --
-		telefoni.id_account_aggiornamento,                    --
-		concat_ws(                                            --
-			' ',                                              --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ),           --
-                ''                                            --
-            ),                                                --
-			t1.nome,                                          --
-			telefoni.numero                                   --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM telefoni                                             --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = telefoni.id_anagrafica                 --
-		LEFT JOIN tipologie_telefoni AS t1                    --
-            ON t1.id = telefoni.id_tipologia                  --
-;                                                             --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `telefoni_view` AS
+	SELECT
+		telefoni.id,
+		telefoni.id_tipologia,
+		tipologie_telefoni.nome AS tipologia,
+		telefoni.ordine,
+		telefoni.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		telefoni.id_organizzazione,
+		organizzazioni.nome AS organizzazione,
+		telefoni.numero,
+		telefoni.note,
+		telefoni.se_notifiche,
+		telefoni.id_account_inserimento,
+		telefoni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				),
+				organizzazioni.nome
+			),
+			tipologie_telefoni.nome,
+			telefoni.numero
+		) AS __label__
+	FROM telefoni
+		LEFT JOIN tipologie_telefoni ON tipologie_telefoni.id = telefoni.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = telefoni.id_anagrafica
+		LEFT JOIN organizzazioni ON organizzazioni.id = telefoni.id_organizzazione
+;
 
 -- | 090000044001
 
@@ -6911,28 +7751,27 @@ CREATE OR REPLACE VIEW telefoni_view AS                       --
 CREATE OR REPLACE VIEW `template_view` AS
 	SELECT
 		template.id,
-		template.ruolo,
+		template.codice,
 		template.nome,
 		template.tipo,
 		template.note,
-		template.latenza_invio,
 		template.se_mail,
 		template.se_sms,
 		template.id_account_inserimento,
 		template.id_account_aggiornamento,
-		template.ruolo AS __label__
+		template.codice AS __label__
 	FROM template
 ;
 
 -- | 090000045001
 
 -- testate_view
--- tipologia: tabella gestita
--- verifica: 2021-09-10 16:54 Fabio Mosti
 CREATE OR REPLACE VIEW `testate_view` AS
 	SELECT
 		testate.id,
 		testate.nome,
+		testate.id_account_inserimento,
+		testate.id_account_aggiornamento,
 		testate.nome AS __label__
 	FROM testate
 ;
@@ -6940,24 +7779,26 @@ CREATE OR REPLACE VIEW `testate_view` AS
 -- | 090000050000
 
 -- tipologie_anagrafica_view
-CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS         --
-	SELECT                                                    --
-		tipologie_anagrafica.id,                              --
-		tipologie_anagrafica.id_genitore,                     --
-		tipologie_anagrafica.ordine,                          --
-		tipologie_anagrafica.nome,                            --
-		tipologie_anagrafica.html_entity,                     --
-		tipologie_anagrafica.font_awesome,                    --
-		tipologie_anagrafica.se_persona_fisica,               --
-        tipologie_anagrafica.se_persona_giuridica,            --
-        tipologie_anagrafica.se_pubblica_amministrazione,     --
-        tipologie_anagrafica.se_ecommerce,                    --
-		tipologie_anagrafica.id_account_inserimento,          --
-		tipologie_anagrafica.id_account_aggiornamento,        --
-		tipologie_anagrafica_path(                            --
-            tipologie_anagrafica.id ) AS __label__            -- etichetta per le tendine e le liste
-	FROM tipologie_anagrafica                                 --
-;                                                             --
+CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
+	SELECT
+		tipologie_anagrafica.id,
+		tipologie_anagrafica.id_genitore,
+		tipologie_anagrafica.ordine,
+		tipologie_anagrafica.codice,
+		tipologie_anagrafica.nome,
+		tipologie_anagrafica.html_entity,
+		tipologie_anagrafica.font_awesome,
+		tipologie_anagrafica.sigla,
+		radici.se_persona_fisica,
+		radici.se_persona_giuridica,
+		radici.se_pubblica_amministrazione,
+		tipologie_anagrafica.id_account_inserimento,
+		tipologie_anagrafica.id_account_aggiornamento,
+		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
+	FROM tipologie_anagrafica
+		-- i flag della natura sono quelli della radice, anche per le forme di cortesia aggiunte dall'utente
+		LEFT JOIN tipologie_anagrafica AS radici ON radici.id = tipologie_anagrafica_path_find_ancestor( tipologie_anagrafica.id )
+;
 
 -- | 090000050001
 
@@ -6967,8 +7808,8 @@ CREATE OR REPLACE VIEW `tipologie_annunci_view` AS
 		tipologie_annunci.id,
 		tipologie_annunci.id_genitore,
 		tipologie_annunci.ordine,
+		tipologie_annunci.codice,
 		tipologie_annunci.nome,
-		tipologie_annunci.sigla,
 		tipologie_annunci.html_entity,
 		tipologie_annunci.font_awesome,
 		tipologie_annunci_path( tipologie_annunci.id ) AS __label__
@@ -6983,68 +7824,71 @@ CREATE OR REPLACE VIEW `tipologie_asset_view` AS                --
 		tipologie_asset.id,                                     --
 		tipologie_asset.id_genitore,                            --
 		tipologie_asset.ordine,                                 --
+		tipologie_asset.codice,                                 --
 		tipologie_asset.nome,                                   --
 		tipologie_asset.html_entity,                            --
 		tipologie_asset.font_awesome,                           --
+		radici.se_veicoli,                                      -- flag di classe, quello della radice
 		tipologie_asset.id_account_inserimento,                 --
 		tipologie_asset.id_account_aggiornamento,               --
 		tipologie_asset_path( tipologie_asset.id ) AS __label__   -- etichetta per le tendine e le liste
 	FROM tipologie_asset                                        --
+		-- i flag di classe sono quelli della radice, anche per le tipologie aggiunte sotto dall'utente
+		LEFT JOIN tipologie_asset AS radici ON radici.id = tipologie_asset_path_find_ancestor( tipologie_asset.id )
 ;                                                             --
 
 -- | 090000050400
 
 -- tipologie_attivita_view
-CREATE OR REPLACE VIEW `tipologie_attivita_view` AS           --
-	SELECT                                                    --
-		tipologie_attivita.id,                                --
-		tipologie_attivita.id_genitore,                       --
-		tipologie_attivita.ordine,                            --
-		tipologie_attivita.codice,                            --
-		tipologie_attivita.nome,                              --
-		tipologie_attivita.html_entity,                       --
-		tipologie_attivita.font_awesome,                      --
-		tipologie_attivita.se_anagrafica,                     --
-		tipologie_attivita.se_agenda,                         --
-		tipologie_attivita.se_sistema,                        --
-		tipologie_attivita.se_stampa,                         --
-		tipologie_attivita.se_cartellini,                     --
-		tipologie_attivita.se_corsi,                          --
-		tipologie_attivita.se_accesso,                        --
-		tipologie_attivita.id_account_inserimento,            --
-		tipologie_attivita.id_account_aggiornamento,          --
-		tipologie_attivita_path(                              --
-            tipologie_attivita.id ) AS __label__              -- etichetta per le tendine e le liste
-	FROM tipologie_attivita                                   --
-;                                                             --
+CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
+	SELECT
+		tipologie_attivita.id,
+		tipologie_attivita.id_genitore,
+		tipologie_attivita.ordine,
+		tipologie_attivita.codice,
+		tipologie_attivita.nome,
+		tipologie_attivita.html_entity,
+		tipologie_attivita.font_awesome,
+		tipologie_attivita.se_anagrafica,
+		tipologie_attivita.se_agenda,
+		tipologie_attivita.se_sistema,
+		tipologie_attivita.se_stampa,
+		tipologie_attivita.se_corsi,
+		tipologie_attivita.id_account_inserimento,
+		tipologie_attivita.id_account_aggiornamento,
+		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
+	FROM tipologie_attivita
+;
 
 -- | 090000050431
 
 -- tipologie_attivita_inps_view
--- ripristinata il 2026-09-30 dallo schema del 2021 ( _usr/_database/mysql.schema.sql, 0e99bca51 )
 CREATE OR REPLACE VIEW `tipologie_attivita_inps_view` AS
 	SELECT
 		tipologie_attivita_inps.id,
 		tipologie_attivita_inps.id_genitore,
-		tipologie_attivita_inps.nome,
+		tipologie_attivita_inps.ordine,
 		tipologie_attivita_inps.codice,
+		tipologie_attivita_inps.nome,
+		tipologie_attivita_inps.html_entity,
+		tipologie_attivita_inps.font_awesome,
+		tipologie_attivita_inps.codice_inps,
 		tipologie_attivita_inps.se_quadratura,
-		concat(
-			if( tipologie_attivita_inps.codice IS NOT NULL, concat( tipologie_attivita_inps.codice, ' - ' ), '' ),
-			tipologie_attivita_inps.nome
-		) AS __label__
+		tipologie_attivita_inps.id_account_inserimento,
+		tipologie_attivita_inps.id_account_aggiornamento,
+		tipologie_attivita_inps_path( tipologie_attivita_inps.id ) AS __label__
 	FROM tipologie_attivita_inps
 ;
 
 -- | 090000050451
 
 -- tipologie_badge_view
--- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `tipologie_badge_view` AS
 	SELECT
 		tipologie_badge.id,
 		tipologie_badge.id_genitore,
 		tipologie_badge.ordine,
+		tipologie_badge.codice,
 		tipologie_badge.nome,
 		tipologie_badge.html_entity,
 		tipologie_badge.font_awesome,
@@ -7057,13 +7901,12 @@ CREATE OR REPLACE VIEW `tipologie_badge_view` AS
 -- | 090000050501
 
 -- tipologie_banner_view
--- tipologia: tabella assistita
--- verifica: 2022-07-20 17:22 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 	SELECT
 		tipologie_banner.id,
 		tipologie_banner.id_genitore,
 		tipologie_banner.ordine,
+		tipologie_banner.codice,
 		tipologie_banner.nome,
 		tipologie_banner.html_entity,
 		tipologie_banner.font_awesome,
@@ -7076,12 +7919,12 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 -- | 090000050551
 
 -- tipologie_campagne_view
--- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
 	SELECT
 		tipologie_campagne.id,
 		tipologie_campagne.id_genitore,
 		tipologie_campagne.ordine,
+		tipologie_campagne.codice,
 		tipologie_campagne.nome,
 		tipologie_campagne.html_entity,
 		tipologie_campagne.font_awesome,
@@ -7094,13 +7937,12 @@ CREATE OR REPLACE VIEW `tipologie_campagne_view` AS
 -- | 090000050601
 
 -- tipologie_chiavi_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
 	SELECT
 		tipologie_chiavi.id,
 		tipologie_chiavi.id_genitore,
 		tipologie_chiavi.ordine,
+		tipologie_chiavi.codice,
 		tipologie_chiavi.nome,
 		tipologie_chiavi.html_entity,
 		tipologie_chiavi.font_awesome,
@@ -7118,13 +7960,24 @@ CREATE OR REPLACE VIEW `tipologie_colli_view` AS
 		tipologie_colli.id,
 		tipologie_colli.id_genitore,
 		tipologie_colli.ordine,
+		tipologie_colli.codice,
 		tipologie_colli.nome,
+		tipologie_colli.larghezza,
+		tipologie_colli.lunghezza,
+		tipologie_colli.altezza,
+		tipologie_colli.id_udm_dimensioni,
+		udm_dimensioni.sigla AS udm_dimensioni,
+		tipologie_colli.peso,
+		tipologie_colli.id_udm_peso,
+		udm_peso.sigla AS udm_peso,
 		tipologie_colli.html_entity,
 		tipologie_colli.font_awesome,
 		tipologie_colli.id_account_inserimento,
 		tipologie_colli.id_account_aggiornamento,
 		tipologie_colli_path( tipologie_colli.id ) AS __label__
 	FROM tipologie_colli
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = tipologie_colli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = tipologie_colli.id_udm_peso
 ;
 
 -- | 090000050800
@@ -7135,6 +7988,7 @@ CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
 		tipologie_contatti.id,
 		tipologie_contatti.id_genitore,
 		tipologie_contatti.ordine,
+		tipologie_contatti.codice,
 		tipologie_contatti.nome,
 		tipologie_contatti.html_entity,
 		tipologie_contatti.font_awesome,
@@ -7147,34 +8001,34 @@ CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
 -- | 090000050901
 
 -- tipologie_contratti_view
--- tipologia: tabella gestita
--- verifica: 2022-02-21 11:47 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 	SELECT
 		tipologie_contratti.id,
 		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
+		tipologie_contratti.codice,
 		tipologie_contratti.nome,
 		tipologie_contratti.id_prodotto,
-		tipologie_contratti.id_progetto,
-		tipologie_contratti.id_categoria_progetti,
+		tipologie_contratti.id_articolo,
 		tipologie_contratti.html_entity,
 		tipologie_contratti.font_awesome,
-		tipologie_contratti.se_abbonamento,
-		tipologie_contratti.se_iscrizione,
-		tipologie_contratti.se_tesseramento,
-		tipologie_contratti.se_immobili,
-		tipologie_contratti.se_acquisto,
-		tipologie_contratti.se_locazione,
+		radici.se_tesseramento,
+		radici.se_abbonamento,
+		radici.se_iscrizione,
+		radici.se_affiliazione,
+		radici.se_acquisto,
+		radici.se_locazione,
 		tipologie_contratti.se_libero,
 		tipologie_contratti.se_prenotazione,
 		tipologie_contratti.se_scalare,
-		tipologie_contratti.se_affiliazione,
+		tipologie_contratti.se_immobili,
 		tipologie_contratti.se_online,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
 	FROM tipologie_contratti
+		-- i flag di classe sono quelli della radice, anche per le tipologie aggiunte dall'utente
+		LEFT JOIN tipologie_contratti AS radici ON radici.id = tipologie_contratti_path_find_ancestor( tipologie_contratti.id )
 ;
 
 -- | 090000051001
@@ -7184,10 +8038,13 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 	SELECT
 		tipologie_corrispondenza.id,
 		tipologie_corrispondenza.id_genitore,
+		tipologie_corrispondenza.ordine,
+		tipologie_corrispondenza.codice,
 		tipologie_corrispondenza.nome,
+		tipologie_corrispondenza.html_entity,
+		tipologie_corrispondenza.font_awesome,
 		tipologie_corrispondenza.se_massivo,
 		tipologie_corrispondenza.se_corrispondenza,
-		tipologie_corrispondenza.se_pesata,
 		tipologie_corrispondenza.se_atto,
 		tipologie_corrispondenza.se_ricevuta_ritorno,
 		tipologie_corrispondenza.id_account_inserimento,
@@ -7205,25 +8062,27 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.id_genitore,
 		tipologie_documenti.ordine,
 		tipologie_documenti.codice,
-		tipologie_documenti.numerazione,
+		tipologie_documenti.codice_sdi,
 		tipologie_documenti.nome,
 		tipologie_documenti.sigla,
 		tipologie_documenti.html_entity,
 		tipologie_documenti.font_awesome,
-		tipologie_documenti.se_fattura,
-		tipologie_documenti.se_nota_credito,
-		tipologie_documenti.se_nota_debito,
+		radici.se_fattura,
+		radici.se_nota_credito,
+		radici.se_nota_debito,
+		radici.se_pro_forma,
+		radici.se_offerta,
+		radici.se_ordine,
+		radici.se_missione,
+		radici.se_ricevuta,
 		tipologie_documenti.se_trasporto,
-		tipologie_documenti.se_pro_forma,
-		tipologie_documenti.se_offerta,
-		tipologie_documenti.se_ordine,
-		tipologie_documenti.se_missione,
-		tipologie_documenti.se_ricevuta,
 		tipologie_documenti.se_ecommerce,
-		tipologie_documenti.id_account_inserimento,
-		tipologie_documenti.id_account_aggiornamento,
+		tipologie_documenti.numerazione,
+		tipologie_documenti.stampa_pdf,
 		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
 	FROM tipologie_documenti
+		-- i flag di classe sono quelli della radice
+		LEFT JOIN tipologie_documenti AS radici ON radici.id = tipologie_documenti_path_find_ancestor( tipologie_documenti.id )
 ;
 
 -- | 090000052700
@@ -7234,6 +8093,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 		tipologie_documenti_articoli.id,
 		tipologie_documenti_articoli.id_genitore,
 		tipologie_documenti_articoli.ordine,
+		tipologie_documenti_articoli.codice,
 		tipologie_documenti_articoli.nome,
 		tipologie_documenti_articoli.sigla,
 		tipologie_documenti_articoli.html_entity,
@@ -7252,13 +8112,12 @@ CREATE OR REPLACE VIEW `tipologie_documenti_articoli_view` AS
 -- | 090000052801
 
 -- tipologie_edifici_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-27 17:00 Chiara GDL
 CREATE OR REPLACE VIEW tipologie_edifici_view AS
 	SELECT
 	tipologie_edifici.id,
 	tipologie_edifici.id_genitore,
 	tipologie_edifici.ordine,
+	tipologie_edifici.codice,
 	tipologie_edifici.nome,
 	tipologie_edifici.html_entity,
 	tipologie_edifici.font_awesome,
@@ -7271,23 +8130,22 @@ CREATE OR REPLACE VIEW tipologie_edifici_view AS
 -- | 090000052901
 
 -- tipologie_immobili_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-27 17:00 Chiara GDL
-CREATE OR REPLACE VIEW tipologie_immobili_view AS
+CREATE OR REPLACE VIEW `tipologie_immobili_view` AS
 	SELECT
-	tipologie_immobili.id,
-	tipologie_immobili.id_genitore,
-	tipologie_immobili.ordine,
-	tipologie_immobili.nome,
-	tipologie_immobili.html_entity,
-	tipologie_immobili.font_awesome,
-	tipologie_immobili.se_residenziale ,
-	tipologie_immobili.se_industriale ,
-	tipologie_immobili.id_account_inserimento,
-	tipologie_immobili.id_account_aggiornamento,
-	tipologie_immobili_path( tipologie_immobili.id )  AS __label__
+		tipologie_immobili.id,
+		tipologie_immobili.id_genitore,
+		tipologie_immobili.ordine,
+		tipologie_immobili.codice,
+		tipologie_immobili.nome,
+		tipologie_immobili.html_entity,
+		tipologie_immobili.font_awesome,
+		tipologie_immobili.se_residenziale,
+		tipologie_immobili.se_commerciale,
+		tipologie_immobili.id_account_inserimento,
+		tipologie_immobili.id_account_aggiornamento,
+		tipologie_immobili_path( tipologie_immobili.id ) AS __label__
 	FROM tipologie_immobili
-	;
+;
 
 -- | 090000053000
 
@@ -7297,6 +8155,7 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 		tipologie_indirizzi.id,                               --
 		tipologie_indirizzi.id_genitore,                      --
 		tipologie_indirizzi.ordine,                           --
+		tipologie_indirizzi.codice,                           --
 		tipologie_indirizzi.nome,                             --
 		tipologie_indirizzi.html_entity,                      --
 		tipologie_indirizzi.font_awesome,                     --
@@ -7309,14 +8168,15 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
 -- | 090000053201
 
 -- tipologie_licenze_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 	SELECT
 		tipologie_licenze.id,
 		tipologie_licenze.id_genitore,
 		tipologie_licenze.ordine,
+		tipologie_licenze.codice,
 		tipologie_licenze.nome,
+		tipologie_licenze.giorni_validita,
+		tipologie_licenze.giorni_rinnovo,
 		tipologie_licenze.html_entity,
 		tipologie_licenze.font_awesome,
 		tipologie_licenze.id_account_inserimento,
@@ -7328,13 +8188,12 @@ CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 -- | 090000053301
 
 -- tipologie_luoghi_view
--- tipologia: tabella gestita
--- verifica: 2022-02-21 15:30 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
 	SELECT
 		tipologie_luoghi.id,
 		tipologie_luoghi.id_genitore,
 		tipologie_luoghi.ordine,
+		tipologie_luoghi.codice,
 		tipologie_luoghi.nome,
 		tipologie_luoghi.html_entity,
 		tipologie_luoghi.font_awesome,
@@ -7353,8 +8212,8 @@ CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
 		tipologie_mail_status.ordine,
 		tipologie_mail_status.codice,
 		tipologie_mail_status.nome,
+		tipologie_mail_status.note,
 		tipologie_mail_status.se_recapitabile,
-		tipologie_mail_status.se_sistema,
 		tipologie_mail_status.nome AS __label__
 	FROM tipologie_mail_status
 ;
@@ -7362,13 +8221,12 @@ CREATE OR REPLACE VIEW `tipologie_mail_status_view` AS
 -- | 090000053401
 
 -- tipologie_mastri_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 	SELECT
 		tipologie_mastri.id,
 		tipologie_mastri.id_genitore,
 		tipologie_mastri.ordine,
+		tipologie_mastri.codice,
 		tipologie_mastri.nome,
 		tipologie_mastri.html_entity,
 		tipologie_mastri.font_awesome,
@@ -7390,6 +8248,7 @@ CREATE OR REPLACE VIEW `tipologie_listini_view` AS
 		tipologie_listini.id,
 		tipologie_listini.id_genitore,
 		tipologie_listini.ordine,
+		tipologie_listini.codice,
 		tipologie_listini.nome,
 		tipologie_listini.html_entity,
 		tipologie_listini.font_awesome,
@@ -7407,6 +8266,7 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 		tipologie_notizie.id,
 		tipologie_notizie.id_genitore,
 		tipologie_notizie.ordine,
+		tipologie_notizie.codice,
 		tipologie_notizie.nome,
 		tipologie_notizie.html_entity,
 		tipologie_notizie.font_awesome,
@@ -7419,13 +8279,12 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 -- | 090000054001
 
 -- tipologie_pagamenti_view
--- tipologia: tabella assistita
--- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 	SELECT
 		tipologie_pagamenti.id,
 		tipologie_pagamenti.id_genitore,
 		tipologie_pagamenti.ordine,
+		tipologie_pagamenti.codice,
 		tipologie_pagamenti.nome,
 		tipologie_pagamenti.html_entity,
 		tipologie_pagamenti.font_awesome,
@@ -7438,8 +8297,6 @@ CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 -- | 090000054101
 
 -- tipologie_periodi_view
--- tipologia: tabella gestita
--- verifica: 2022-05-24 11:00 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 	SELECT
 		tipologie_periodi.id,
@@ -7461,13 +8318,12 @@ CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 -- | 090000054201
 
 -- tipologie_popup_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_popup_view` AS
 	SELECT
 		tipologie_popup.id,
 		tipologie_popup.id_genitore,
 		tipologie_popup.ordine,
+		tipologie_popup.codice,
 		tipologie_popup.nome,
 		tipologie_popup.html_entity,
 		tipologie_popup.font_awesome,
@@ -7485,20 +8341,21 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.id,
 		tipologie_prodotti.id_genitore,
 		tipologie_prodotti.ordine,
+		tipologie_prodotti.codice,
 		tipologie_prodotti.nome,
 		tipologie_prodotti.html_entity,
 		tipologie_prodotti.font_awesome,
 		tipologie_prodotti.se_colori,
 		tipologie_prodotti.se_taglie,
+		tipologie_prodotti.se_periodicita,
+		tipologie_prodotti.se_tipologia_rinnovo,
 		tipologie_prodotti.se_dimensioni,
-		tipologie_prodotti.se_imballo,
-		tipologie_prodotti.se_spedizione,
-		tipologie_prodotti.se_trasporto,
-		tipologie_prodotti.se_prodotto,
-		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
 		tipologie_prodotti.se_peso,
+		tipologie_prodotti.se_imballo,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -7513,6 +8370,7 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 		tipologie_progetti.id,
 		tipologie_progetti.id_genitore,
 		tipologie_progetti.ordine,
+		tipologie_progetti.codice,
 		tipologie_progetti.nome,
 		tipologie_progetti.html_entity,
 		tipologie_progetti.font_awesome,
@@ -7532,39 +8390,41 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 -- | 090000055400
 
 -- tipologie_pubblicazioni_view
-CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS        --
-	SELECT                                                      --
-		tipologie_pubblicazioni.id,                             --
-		tipologie_pubblicazioni.id_genitore,                    --
-		tipologie_pubblicazioni.ordine,                         --
-		tipologie_pubblicazioni.nome,                           --
-		tipologie_pubblicazioni.html_entity,                    --
-		tipologie_pubblicazioni.font_awesome,                   --
-		tipologie_pubblicazioni.id_account_inserimento,         --
-		tipologie_pubblicazioni.id_account_aggiornamento,       --
-		tipologie_pubblicazioni_path(                           --
-            tipologie_pubblicazioni.id                          --
-        ) AS __label__                                          -- etichetta per le tendine e le liste
-	FROM tipologie_pubblicazioni                                --
-;                                                               --
+CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS
+	SELECT
+		tipologie_pubblicazioni.id,
+		tipologie_pubblicazioni.id_genitore,
+		tipologie_pubblicazioni.ordine,
+		tipologie_pubblicazioni.codice,
+		tipologie_pubblicazioni.nome,
+		tipologie_pubblicazioni.html_entity,
+		tipologie_pubblicazioni.font_awesome,
+		tipologie_pubblicazioni.se_bozza,
+		tipologie_pubblicazioni.se_pubblicato,
+		tipologie_pubblicazioni.se_evidenza,
+		tipologie_pubblicazioni.se_anteprima,
+		tipologie_pubblicazioni.id_account_inserimento,
+		tipologie_pubblicazioni.id_account_aggiornamento,
+		tipologie_pubblicazioni_path( tipologie_pubblicazioni.id ) AS __label__
+	FROM tipologie_pubblicazioni
+;
 
 -- | 090000055701
 
 -- tipologie_rinnovi_view
--- tipologia: tabella di supporto
--- verifica: 2022-04-29 17:45 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 	SELECT
 		tipologie_rinnovi.id,
 		tipologie_rinnovi.id_genitore,
 		tipologie_rinnovi.ordine,
+		tipologie_rinnovi.codice,
 		tipologie_rinnovi.nome,
 		tipologie_rinnovi.html_entity,
 		tipologie_rinnovi.font_awesome,
-		tipologie_rinnovi.se_tesseramenti, 
-		tipologie_rinnovi.se_iscrizioni, 
+		tipologie_rinnovi.se_tesseramenti,
+		tipologie_rinnovi.se_iscrizioni,
 		tipologie_rinnovi.se_abbonamenti,
-		tipologie_rinnovi.se_licenze, 
+		tipologie_rinnovi.se_licenze,
 		tipologie_rinnovi.se_contratti,
 		tipologie_rinnovi.se_progetti,
 		tipologie_rinnovi.id_account_inserimento,
@@ -7576,13 +8436,12 @@ CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 -- | 090000055801
 
 -- tipologie_risorse_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:11 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 	SELECT
 		tipologie_risorse.id,
 		tipologie_risorse.id_genitore,
 		tipologie_risorse.ordine,
+		tipologie_risorse.codice,
 		tipologie_risorse.nome,
 		tipologie_risorse.html_entity,
 		tipologie_risorse.font_awesome,
@@ -7598,8 +8457,15 @@ CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 CREATE OR REPLACE VIEW `tipologie_sconti_view` AS
 	SELECT
 		tipologie_sconti.id,
+		tipologie_sconti.id_genitore,
+		tipologie_sconti.ordine,
+		tipologie_sconti.codice,
 		tipologie_sconti.nome,
-		tipologie_sconti.nome AS __label__
+		tipologie_sconti.html_entity,
+		tipologie_sconti.font_awesome,
+		tipologie_sconti.id_account_inserimento,
+		tipologie_sconti.id_account_aggiornamento,
+		tipologie_sconti_path( tipologie_sconti.id ) AS __label__
 	FROM tipologie_sconti
 ;
 
@@ -7611,6 +8477,7 @@ CREATE OR REPLACE VIEW `tipologie_spedizioni_view` AS
 		tipologie_spedizioni.id,
 		tipologie_spedizioni.id_genitore,
 		tipologie_spedizioni.ordine,
+		tipologie_spedizioni.codice,
 		tipologie_spedizioni.nome,
 		tipologie_spedizioni.html_entity,
 		tipologie_spedizioni.font_awesome,
@@ -7626,6 +8493,7 @@ CREATE OR REPLACE VIEW `tipologie_telefoni_view` AS           --
 		tipologie_telefoni.id,                                --
 		tipologie_telefoni.id_genitore,                       --
 		tipologie_telefoni.ordine,                            --
+		tipologie_telefoni.codice,                            --
 		tipologie_telefoni.nome,                              --
 		tipologie_telefoni.html_entity,                       --
 		tipologie_telefoni.font_awesome,                      --
@@ -7639,21 +8507,25 @@ CREATE OR REPLACE VIEW `tipologie_telefoni_view` AS           --
 -- | 090000056601
 
 -- tipologie_todo_view
--- tipologia: tabella assistita
--- verifica: 2021-10-19 13:12 Fabio Mosti
 CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 	SELECT
 		tipologie_todo.id,
 		tipologie_todo.id_genitore,
 		tipologie_todo.ordine,
+		tipologie_todo.codice,
 		tipologie_todo.nome,
 		tipologie_todo.html_entity,
 		tipologie_todo.font_awesome,
 		tipologie_todo.se_agenda,
 		tipologie_todo.se_ticket,
+		tipologie_todo.se_ordinaria,
+		tipologie_todo.se_straordinaria,
 		tipologie_todo.se_commerciale,
 		tipologie_todo.se_produzione,
 		tipologie_todo.se_amministrazione,
+		tipologie_todo.se_risorse_umane,
+		tipologie_todo.se_logistica,
+		tipologie_todo.se_corsi,
 		tipologie_todo.id_account_inserimento,
 		tipologie_todo.id_account_aggiornamento,
 		tipologie_todo_path( tipologie_todo.id ) AS __label__
@@ -7668,6 +8540,7 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 		tipologie_url.id,                                     --
 		tipologie_url.id_genitore,                            --
 		tipologie_url.ordine,                                 --
+		tipologie_url.codice,                                 --
 		tipologie_url.nome,                                   --
 		tipologie_url.html_entity,                            --
 		tipologie_url.font_awesome,                           --
@@ -7685,6 +8558,7 @@ CREATE OR REPLACE VIEW `tipologie_vani_view` AS                --
 		tipologie_vani.id,                                     --
 		tipologie_vani.id_genitore,                            --
 		tipologie_vani.ordine,                                 --
+		tipologie_vani.codice,                                 --
 		tipologie_vani.nome,                                   --
 		tipologie_vani.html_entity,                            --
 		tipologie_vani.font_awesome,                           --
@@ -7702,6 +8576,7 @@ CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
 		tipologie_veicoli.id,                                     --
 		tipologie_veicoli.id_genitore,                            --
 		tipologie_veicoli.ordine,                                 --
+		tipologie_veicoli.codice,                                 --
 		tipologie_veicoli.nome,                                   --
 		tipologie_veicoli.html_entity,                            --
 		tipologie_veicoli.font_awesome,                           --
@@ -7713,17 +8588,21 @@ CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
 
 -- | 090000056951
 
--- tipologie_zone
--- tipologia: tabella gestita
--- verifica: 2022-06-16 16:40 Chiara GDL
+-- tipologie_zone_view
 CREATE OR REPLACE VIEW `tipologie_zone_view` AS
 	SELECT
 		tipologie_zone.id,
 		tipologie_zone.id_genitore,
 		tipologie_zone.ordine,
+		tipologie_zone.codice,
 		tipologie_zone.nome,
 		tipologie_zone.html_entity,
 		tipologie_zone.font_awesome,
+		tipologie_zone.se_ecommerce,
+		tipologie_zone.se_commerciale,
+		tipologie_zone.se_immobiliare,
+		tipologie_zone.id_account_inserimento,
+		tipologie_zone.id_account_aggiornamento,
 		tipologie_zone_path( tipologie_zone.id ) AS __label__
 	FROM tipologie_zone
 ;
@@ -7732,23 +8611,24 @@ CREATE OR REPLACE VIEW `tipologie_zone_view` AS
 
 -- todo_matricole_view
 -- tipologia: tabella gestita
--- verifica: 2022-04-27 15:07 Chiara GDL
 CREATE OR REPLACE VIEW todo_matricole_view AS
 	SELECT
 		todo_matricole.id,
+		todo_matricole.ordine,
 		todo_matricole.id_todo,
 		todo.nome AS todo,
 		todo_matricole.id_matricola,
 		matricole.matricola AS matricola,
 		todo_matricole.id_ruolo,
 		ruoli_matricole_path( todo_matricole.id_ruolo ) AS ruolo,
-		todo_matricole.ordine,
+		todo_matricole.note,
 		todo_matricole.id_account_inserimento,
 		todo_matricole.id_account_aggiornamento,
  		concat_ws(
 			' ',
 			todo.nome,
-			matricole.matricola
+			matricole.matricola,
+			ruoli_matricole_path( todo_matricole.id_ruolo )
 		) AS __label__
 	FROM todo_matricole
 		LEFT JOIN todo ON todo.id = todo_matricole.id_todo
@@ -7758,19 +8638,24 @@ CREATE OR REPLACE VIEW todo_matricole_view AS
 -- | 090000062000
 
 -- udm_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW udm_view AS
 	SELECT
 		udm.id,
 		coalesce( udm.id_base, udm.id ) AS id_base,
-		coalesce( udm.conversione, 1 ) AS conversione,
 		udm.nome,
 		udm.sigla,
+		coalesce( udm.conversione, 1 ) AS conversione,
 		udm.se_lunghezza,
 		udm.se_volume,
 		udm.se_peso,
 		udm.se_tempo,
 		udm.se_quantita,
 		udm.se_area,
+		udm.url_riferimento,
+		udm.note,
+		udm.id_account_inserimento,
+		udm.id_account_aggiornamento,
 		udm.sigla AS __label__
 	FROM udm
 ;
@@ -7778,121 +8663,120 @@ CREATE OR REPLACE VIEW udm_view AS
 -- | 090000062600
 
 -- url_view
-CREATE OR REPLACE VIEW url_view AS                            --
-	SELECT                                                    --
-		url.id,                                               --
-		url.id_tipologia,                                     --
-		tipologie_url.nome AS tipologia,                      -- nome della tipologia
-		url.id_anagrafica,                                    --
-		coalesce(                                             --
-            a1.denominazione,                                 --
-            concat( a1.cognome, ' ', a1.nome ),               --
-            ''                                                --
-        ) AS anagrafica,                                      -- denominazione o cognome e nome dell'anagrafica
-		url.url,                                              --
-		url.nome,                                             --
-		url.username,                                         --
-		url.password,                                         --
-		url.id_account_inserimento,                           --
-		url.id_account_aggiornamento,                         --
-		concat_ws(                                            --
-			' ',                                              --
-			url.url,                                          --
-			tipologie_url.nome,                               --
-			coalesce(                                         --
-                a1.denominazione,                             --
-                concat( a1.cognome, ' ', a1.nome ),           --
-                ''                                            --
-            )                                                 --
-		) AS __label__                                        -- etichetta per le tendine e le liste
-	FROM url                                                  --
-		LEFT JOIN anagrafica AS a1                            --
-            ON a1.id = url.id_anagrafica                      --
-		LEFT JOIN tipologie_url                               --
-            ON tipologie_url.id = url.id_tipologia            --
-;                                                             --
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `url_view` AS
+	SELECT
+		url.id,
+		url.id_tipologia,
+		tipologie_url.nome AS tipologia,
+		url.ordine,
+		url.nome,
+		url.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		url.id_organizzazione,
+		organizzazioni.nome AS organizzazione,
+		url.url,
+		url.note,
+		url.id_account_inserimento,
+		url.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			url.url,
+			tipologie_url.nome,
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				),
+				organizzazioni.nome
+			)
+		) AS __label__
+	FROM url
+		LEFT JOIN tipologie_url ON tipologie_url.id = url.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = url.id_anagrafica
+		LEFT JOIN organizzazioni ON organizzazioni.id = url.id_organizzazione
+;
 
 -- | 090000062901
 
 -- valutazioni_view
 -- tipologia: tabella gestita
 -- verifica: 2022-04-28 Chiara GDL
-CREATE OR REPLACE VIEW valutazioni_view AS
+CREATE OR REPLACE VIEW `valutazioni_view` AS
 	SELECT
 		valutazioni.id,
-		valutazioni.id_anagrafica,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
-		valutazioni.id_matricola,
-		matricole.matricola AS matricola,
 		valutazioni.id_immobile,
 		concat_ws(
 			' ',
-			tipologie_immobili.nome, 
-			coalesce(
-			concat('scala ', immobili.scala), 
-			''
-			), 
-			coalesce(
-			concat('piano ', immobili.piano), 
-			''
-			), 
-			coalesce(
-			concat('int. ', immobili.interno), 
-			''
-			),
+			tipologie_immobili.nome,
+			concat( 'scala ', immobili.scala ),
+			concat( 'piano ', immobili.piano ),
+			concat( 'int. ', immobili.interno ),
 			tipologie_edifici.nome,
 			edifici.nome,
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
 			comuni.nome,
 			provincie.sigla
 		) AS immobile,
-		valutazioni.mq_commerciali,
-		valutazioni.mq_calpestabili,
+		valutazioni.id_matricola,
+		matricole.matricola AS matricola,
+		valutazioni.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		valutazioni.id_valutatore,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS valutatore,
 		valutazioni.id_condizione,
 		condizioni.nome AS condizione,
 		valutazioni.id_disponibilita,
 		disponibilita.nome AS disponibilita,
 		valutazioni.id_classe_energetica,
 		classi_energetiche.nome AS classe_energetica,
+		valutazioni.id_valuta,
+		valute.iso4217 AS valuta,
+		valutazioni.importo,
+		valutazioni.mq_commerciali,
+		valutazioni.mq_calpestabili,
+		valutazioni.note,
 		valutazioni.timestamp_valutazione,
+		valutazioni.id_account_proprietario,
+		valutazioni.id_gruppo_proprietario,
+		valutazioni.id_diritto_proprietario,
+		valutazioni.id_diritto_gruppo,
+		valutazioni.id_diritto_altri,
 		valutazioni.id_account_inserimento,
 		valutazioni.id_account_aggiornamento,
-		concat('valutazione ', 	concat_ws(
+		concat_ws(
 			' ',
-			tipologie_immobili.nome, 
+			'valutazione',
 			coalesce(
-			concat('scala ', immobili.scala), 
-			''
-			), 
-			coalesce(
-			concat('piano ', immobili.piano), 
-			''
-			), 
-			coalesce(
-			concat('int. ', immobili.interno), 
-			''
+				nullif( concat_ws(
+					' ',
+					tipologie_immobili.nome,
+					concat( 'scala ', immobili.scala ),
+					concat( 'piano ', immobili.piano ),
+					concat( 'int. ', immobili.interno ),
+					tipologie_edifici.nome,
+					edifici.nome,
+					tipologie_indirizzi.nome,
+					indirizzi.indirizzo,
+					indirizzi.civico,
+					indirizzi.cap,
+					indirizzi.localita,
+					comuni.nome,
+					provincie.sigla
+				), '' ),
+				matricole.matricola,
+				nullif( coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ), '' )
 			),
-			tipologie_edifici.nome,
-			edifici.nome,
-			tipologie_indirizzi.nome,
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) ) AS __label__
+			from_unixtime( valutazioni.timestamp_valutazione, '%Y-%m-%d' )
+		) AS __label__
 	FROM valutazioni
-		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
-		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
 		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
-		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
-		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
-		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica
 		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
 		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
 		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
@@ -7900,8 +8784,39 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN regioni ON regioni.id = provincie.id_regione
-		LEFT JOIN stati ON stati.id = regioni.id_stato;
+		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
+		LEFT JOIN anagrafica AS a1 ON a1.id = valutazioni.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = valutazioni.id_valutatore
+		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
+		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica
+		LEFT JOIN valute ON valute.id = valutazioni.id_valuta
+;
+
+-- | 090000062926
+
+-- valutazioni_caratteristiche_view
+CREATE OR REPLACE VIEW `valutazioni_caratteristiche_view` AS
+	SELECT
+		valutazioni_caratteristiche.id,
+		valutazioni_caratteristiche.ordine,
+		valutazioni_caratteristiche.id_valutazione,
+		valutazioni_caratteristiche.id_caratteristica,
+		valutazioni_caratteristiche.id_lingua,
+		caratteristiche.nome AS caratteristica,
+		valutazioni_caratteristiche.valore,
+		valutazioni_caratteristiche.note,
+		valutazioni_caratteristiche.se_assente,
+		valutazioni_caratteristiche.id_account_inserimento,
+		valutazioni_caratteristiche.id_account_aggiornamento,
+		concat(
+			valutazioni_caratteristiche.id_valutazione,
+			' / ',
+			caratteristiche.nome
+		) AS __label__
+	FROM valutazioni_caratteristiche
+		LEFT JOIN caratteristiche ON caratteristiche.id = valutazioni_caratteristiche.id_caratteristica
+;
 
 -- | 090000062951
 
@@ -7911,6 +8826,7 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 	SELECT
 		valutazioni_certificazioni.id,
+		valutazioni_certificazioni.ordine,
 		valutazioni_certificazioni.id_valutazione,
 		valutazioni_certificazioni.id_certificazione,
 		certificazioni.nome AS certificazione,
@@ -7920,15 +8836,16 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 		valutazioni_certificazioni.codice,
 		valutazioni_certificazioni.data_emissione,
 		valutazioni_certificazioni.data_scadenza,
+		valutazioni_certificazioni.note,
+		from_unixtime( valutazioni_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
-			valutazioni_certificazioni.id_valutazione, ' ',
-			certificazioni.nome,
-			' - ',
-			valutazioni_certificazioni.codice
+			'valutazione ', valutazioni_certificazioni.id_valutazione,
+			' / ',
+			concat_ws( ' - ', certificazioni.nome, valutazioni_certificazioni.codice )
 		) AS __label__
 	FROM valutazioni_certificazioni
 		LEFT JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
-		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
+		LEFT JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione
 ;
 
 -- | 090000063000
@@ -7937,7 +8854,9 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 CREATE OR REPLACE VIEW `valute_view` AS
 	SELECT
 		valute.id,
+		valute.nome,
 		valute.iso4217,
+		valute.decimali,
 		valute.html_entity,
 		valute.utf8,
 		valute.iso4217 AS __label__
@@ -7968,6 +8887,11 @@ CREATE OR REPLACE VIEW vani_view AS
 			edifici.nome
 		) AS immobile,
 		vani.superficie,
+		vani.id_account_proprietario,
+		vani.id_gruppo_proprietario,
+		vani.id_diritto_proprietario,
+		vani.id_diritto_gruppo,
+		vani.id_diritto_altri,
 		vani.id_account_inserimento,
 		vani.id_account_aggiornamento,
 		concat_ws(
@@ -8041,11 +8965,27 @@ CREATE OR REPLACE VIEW `vani_caratteristiche_view` AS
 -- | 090000063500
 
 -- taglie_view
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW `taglie_view` AS
 	SELECT
 		taglie.id,
+		taglie.nome,
+		taglie.id_tipologia_prodotti,
+		tipologie_prodotti.nome AS tipologia,
+		taglie.sesso,
+		taglie.taglia_internazionale,
+		taglie.taglia_it,
+		taglie.taglia_eu,
+		taglie.taglia_fr,
+		taglie.taglia_uk,
+		taglie.taglia_us,
+		taglie.misura_min,
+		taglie.misura_max,
+		taglie.id_account_inserimento,
+		taglie.id_account_aggiornamento,
 		taglie.nome AS __label__
 	FROM taglie
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = taglie.id_tipologia_prodotti
 ;
 
 -- | 090000063600
@@ -8066,27 +9006,43 @@ CREATE OR REPLACE VIEW `periodicita_view` AS
 -- | 090000064000
 
 -- veicoli_view
-CREATE OR REPLACE VIEW veicoli_view AS
-    SELECT
-        veicoli.id,
-        veicoli.id_tipologia,
-        tipologie_veicoli_path( veicoli.id_tipologia ) AS tipologia,
-        veicoli.id_costruttore,
-        coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
-        veicoli.modello,
-        veicoli.targa,
-        veicoli.data_archiviazione,
-        veicoli.id_account_inserimento,
-        veicoli.id_account_aggiornamento,
-        concat_ws(
-            ' - ',
-            coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ),
-            veicoli.nome,
-            veicoli.modello,
-            veicoli.targa
-        ) AS __label__
-    FROM veicoli
-        LEFT JOIN anagrafica AS a1 ON a1.id = veicoli.id_costruttore
+-- vista virtuale: i veicoli sono gli asset la cui tipologia sta in un ramo con se_veicoli sulla radice ( canone, riga
+-- 236 ); il modulo VE000.veicoli legge da qui e scrive su asset. Non espone hostname e ip_address, che sono degli
+-- asset informatici
+CREATE OR REPLACE VIEW `veicoli_view` AS
+	SELECT
+		asset.id,
+		asset.id_genitore,
+		asset.id_tipologia,
+		tipologie_asset_path( asset.id_tipologia ) AS tipologia,
+		asset.codice,
+		asset.nome,
+		asset.id_condizione,
+		condizioni.nome AS condizione,
+		asset.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		asset.modello,
+		asset.targa,
+		asset.cespite,
+		asset.note,
+		asset.data_archiviazione,
+		asset.note_archiviazione,
+		asset.id_account_inserimento,
+		asset.timestamp_inserimento,
+		asset.id_account_aggiornamento,
+		asset.timestamp_aggiornamento,
+		concat_ws(
+			' - ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ),
+			asset.nome,
+			asset.modello,
+			asset.targa
+		) AS __label__
+	FROM asset
+		INNER JOIN tipologie_asset AS radici ON radici.id = tipologie_asset_path_find_ancestor( asset.id_tipologia )
+		LEFT JOIN condizioni ON condizioni.id = asset.id_condizione
+		LEFT JOIN anagrafica AS a1 ON a1.id = asset.id_produttore
+	WHERE radici.se_veicoli = 1
 ;
 
 -- | 090000065000
@@ -8095,35 +9051,35 @@ CREATE OR REPLACE VIEW veicoli_view AS
 CREATE OR REPLACE VIEW `video_view` AS
 	SELECT
 		video.id,
+		video.ordine,
+		video.nome,
 		video.id_anagrafica,
-		video.id_pagina,
-		video.id_file,
+		video.id_annuncio,
 		video.id_prodotto,
 		video.id_articolo,
+		video.id_lingua,
+		lingue.nome AS lingua,
+		video.id_indirizzo,
+		video.id_progetto,
+		video.id_immobile,
+		video.id_vano,
+		video.id_pagina,
+		video.id_file,
 		video.id_categoria_prodotti,
 		video.id_marchio,
 		video.id_categoria_marchi,
 		video.id_risorsa,
 		video.id_categoria_risorse,
 		video.id_notizia,
-		video.id_annuncio,
 		video.id_categoria_notizie,
 		video.id_categoria_annunci,
-		video.id_lingua,
-		lingue.nome AS lingua,
-		video.id_ruolo,
-		video.id_progetto,
 		video.id_categoria_progetti,
-		video.id_indirizzo,
 		video.id_edificio,
-		video.id_immobile,
-		video.id_vano,
-        video.id_valutazione,
+		video.id_valutazione,
 		video.id_audio,
 		video.id_immagine,
+		video.id_ruolo,
 		ruoli_video.nome AS ruolo,
-		video.ordine,
-		video.nome,
 		video.path,
 		video.embed,
 		video.codice_embed,
@@ -8149,15 +9105,19 @@ CREATE OR REPLACE VIEW `video_view` AS
 -- | 090000100001
 
 -- zone_view
--- tipologia: tabella gestita
--- verifica: 2022-06-16 13:16 Chiara GDL
+-- tipologia: tabella assistita
 CREATE OR REPLACE VIEW zone_view AS
 	SELECT
 		zone.id,
 		zone.id_genitore,
 		zone.id_tipologia,
 		tipologie_zone.nome AS tipologia,
+		tipologie_zone.se_ecommerce,
+		tipologie_zone.se_commerciale,
+		tipologie_zone.se_immobiliare,
+		zone.codice,
 		zone.nome,
+		zone.note,
 		zone.id_account_inserimento,
 		zone.id_account_aggiornamento,
 		zone_path( zone.id ) AS __label__
@@ -8173,12 +9133,13 @@ CREATE OR REPLACE VIEW zone_view AS
 CREATE OR REPLACE VIEW zone_cap_view AS
 	SELECT
 		zone_cap.id,
-		zone_cap.cap,
-		zone_cap.id_zona,
 		zone_cap.ordine,
+		zone_cap.id_zona,
+		zone_path( zone_cap.id_zona ) AS zona,
+		zone_cap.cap,
 		zone_cap.id_account_inserimento,
 		zone_cap.id_account_aggiornamento,
-		concat(zone_cap.cap, ' - ', zone_cap.id_zona) AS __label__
+		concat( zone_cap.cap, ' - ', zone_path( zone_cap.id_zona ) ) AS __label__
 	FROM zone_cap
 ;
 
@@ -8190,14 +9151,62 @@ CREATE OR REPLACE VIEW zone_cap_view AS
 CREATE OR REPLACE VIEW zone_indirizzi_view AS
 	SELECT
 		zone_indirizzi.id,
-		zone_indirizzi.id_indirizzo,
-		zone_indirizzi.id_zona,
 		zone_indirizzi.ordine,
+		zone_indirizzi.id_zona,
+		zone_path( zone_indirizzi.id_zona ) AS zona,
+		zone_indirizzi.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzi.indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
 		zone_indirizzi.id_account_inserimento,
 		zone_indirizzi.id_account_aggiornamento,
-		concat(zone_indirizzi.id_indirizzo, ' - ', zone_indirizzi.id_zona) AS __label__
+		concat_ws(
+			' - ',
+			concat_ws(
+				' ',
+				tipologie_indirizzi.nome,
+				indirizzi.indirizzo,
+				indirizzi.civico,
+				indirizzi.cap,
+				indirizzi.localita,
+				comuni.nome,
+				provincie.sigla
+			),
+			zone_path( zone_indirizzi.id_zona )
+		) AS __label__
 	FROM zone_indirizzi
-; 
+		LEFT JOIN indirizzi ON indirizzi.id = zone_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
+-- | 090000100301
+
+-- zone_provincie_view
+-- tipologia: tabella gestita
+-- verifica: 2026-11-12 punto 7b
+CREATE OR REPLACE VIEW zone_provincie_view AS
+	SELECT
+		zone_provincie.id,
+		zone_provincie.ordine,
+		zone_provincie.id_zona,
+		zone_path( zone_provincie.id_zona ) AS zona,
+		zone_provincie.id_provincia,
+		provincie.nome AS provincia,
+		zone_provincie.id_account_inserimento,
+		zone_provincie.id_account_aggiornamento,
+		concat( provincie.nome, ' - ', zone_path( zone_provincie.id_zona ) ) AS __label__
+	FROM zone_provincie
+		LEFT JOIN provincie ON provincie.id = zone_provincie.id_provincia
+;
 
 -- | 090000100401
 
@@ -8207,34 +9216,31 @@ CREATE OR REPLACE VIEW zone_indirizzi_view AS
 CREATE OR REPLACE VIEW zone_stati_view AS
 	SELECT
 		zone_stati.id,
+		zone_stati.ordine,
+		zone_stati.id_zona,
+		zone_path( zone_stati.id_zona ) AS zona,
 		zone_stati.id_stato,
 		stati.nome AS stato,
-		zone_stati.id_zona,
-		zone.nome AS zona,
-		zone_stati.ordine,
 		zone_stati.id_account_inserimento,
 		zone_stati.id_account_aggiornamento,
-		concat(zone_stati.id_stato, ' - ', zone_stati.id_zona) AS __label__
+		concat( stati.nome, ' - ', zone_path( zone_stati.id_zona ) ) AS __label__
 	FROM zone_stati
 		LEFT JOIN stati ON stati.id = zone_stati.id_stato
-		LEFT JOIN zone ON zone.id = zone_stati.id_zona
 ;
 
 -- | 090000999000
 
 -- test_view
-CREATE OR REPLACE VIEW test_view AS                           --
-  SELECT                                                      --
-    test.id,                                                  --
-    test.codice,                                              --
-    test.nome,                                                --
-    concat_ws(                                                --
-      ' ',                                                    --
-      test.codice,                                            --
-      test.nome                                               --
-    ) AS __label__                                            -- etichetta per le tendine e le liste
-  FROM test                                                   --
-;                                                             --
+CREATE OR REPLACE VIEW `test_view` AS
+	SELECT
+		test.id,
+		test.codice,
+		test.nome,
+		test.id_account_inserimento,
+		test.id_account_aggiornamento,
+		concat_ws( ' ', test.codice, test.nome ) AS __label__
+	FROM test
+;
 
 -- | 090000999200
 
@@ -8260,7 +9266,7 @@ CREATE OR REPLACE VIEW `__report_evasione_righe_ordini__` AS select `ordine`.`id
 -- todo_view
 -- Le sei colonne che vengono da `istruzioni` ( id_documento .. istruzione ) erano il motivo per
 -- cui questa vista aveva 40 colonne su connor e 34 altrove: vedi 2026090105.
-CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`todo`.`codice` AS `codice`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`nome` AS `nome`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,concat(`documenti_articoli`.`data`,' / ',`tipologie_documenti`.`sigla`,' / ',`documenti_articoli`.`quantita`,' x ',`documenti_articoli`.`id_articolo`) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,concat(`todo`.`nome`,coalesce(concat(' per ',`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`)),''),coalesce(concat(' su ',`todo`.`id_progetto`,' ',`progetti`.`nome`),'')) AS `__label__` from ((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = `documenti_articoli`.`id_tipologia_documento`)) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) group by `todo`.`id`
+CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`codice` AS `codice`,`todo`.`nome` AS `nome`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,if(`documenti_articoli`.`id` is null,NULL,concat_ws(' / ',coalesce(`documenti_articoli`.`data`,`documenti_righe`.`data`),`tipologie_documenti_articoli`.`sigla`,concat(`documenti_articoli`.`quantita`,' x ',coalesce(`articoli`.`codice`,`documenti_articoli`.`id_articolo`)))) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_proprietario` AS `id_account_proprietario`,`todo`.`id_gruppo_proprietario` AS `id_gruppo_proprietario`,`todo`.`id_diritto_proprietario` AS `id_diritto_proprietario`,`todo`.`id_diritto_gruppo` AS `id_diritto_gruppo`,`todo`.`id_diritto_altri` AS `id_diritto_altri`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`timestamp_inserimento` AS `timestamp_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`todo`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(coalesce(`todo`.`nome`,`tipologie_todo`.`nome`),coalesce(concat(' per ',coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`))),''),coalesce(concat(' su ',coalesce(`progetti`.`codice`,`todo`.`id_progetto`),' ',`progetti`.`nome`),'')) AS `__label__` from ((((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `documenti` `documenti_righe` on(`documenti_righe`.`id` = `documenti_articoli`.`id_documento`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = coalesce(`documenti_articoli`.`id_tipologia_documento`,`documenti_righe`.`id_tipologia`))) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) group by `todo`.`id`
 ;
 
 -- | FINE FILE

@@ -165,8 +165,13 @@
         // ciclo sui template trovati e li inserisco in $cf['mail']['tpl']
         foreach( $tpls as $tpl ) {
 
+            // NOTA fino al 2026-11-05 il codice del template si chiamava ruolo ( _202611051200.template.codice.sql ): la lettura
+            // del nome vecchio tiene in piedi i database dove la patch non è ancora passata, e si toglie al punto 12 dello
+            // schema canonico, quando la patch è su tutti
+            $tpl['codice'] = $tpl['codice'] ?? $tpl['ruolo'];
+
             // inizializzo l'oggetto
-            $cf['mail']['tpl'][ $tpl['ruolo'] ] = array(
+            $cf['mail']['tpl'][ $tpl['codice'] ] = array(
                 'type' => $tpl['tipo'],
                 'nome' => $tpl['nome']
             );
@@ -185,7 +190,7 @@
 
             // ciclo sui contenuti
             foreach( $cnts as $cnt ) {
-                $cf['mail']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
+                $cf['mail']['tpl'][ $tpl['codice'] ][ $cnt['ietf'] ] = array(
                     'from' => safe_unserialize( $cnt['mittente_mail'] ?? '' ),
                     'to' => safe_unserialize( $cnt['destinatari_mail'] ?? '' ),
                     'to_cc' => safe_unserialize( $cnt['destinatari_cc_mail'] ?? '' ),
@@ -207,7 +212,7 @@
 
             // ciclo sugli allegati
             foreach( $files as $file ) {
-                $cf['mail']['tpl'][ $tpl['ruolo'] ][ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = DIR_BASE . $file['path'];
+                $cf['mail']['tpl'][ $tpl['codice'] ][ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = DIR_BASE . $file['path'];
             }
 
         }

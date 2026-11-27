@@ -5,7 +5,62 @@
 nessuno sa più cosa c'è dentro. Scritto il 12/10/2026 dopo la prima pulizia completa di polmasi
 ( 1272 righe, circa 400 voci aperte ), per volontà di Fabio: "è importante tenere pulite le liste e
 tutti i claude che lavorano su glisweb dovrebbero saperlo fare in maniera efficiente". Le regole dei
-marcatori, dei flag e del lock stanno in `cinque-file.md`: qui non si ripetono.*
+marcatori, dei flag e del lock stanno in `cinque-file.md`: qui non si ripetono. Il 05/11/2026,
+dopo un'analisi del `TODO.md` di polmasi ( 221 voci aperte ), si sono aggiunti la diagnosi che
+precede il triage e i quattro difetti di forma che il triage per voce non vede.*
+
+## Prima del triage: la diagnosi, in tre chiamate
+
+Il triage è una sessione a sé, che dura ore. Prima di cominciarlo, oppure quando l'utente chiede
+soltanto "come sono messe le todo?", si fa la **diagnosi**: costa tre chiamate e dice se il triage
+serve e da dove partire.
+
+```bash
+todo.py -c                                  # voci per area: si guarda se le "aree" sono aree davvero
+todo.py | grep -oE '\] [-!]{3}' | sort | uniq -c                      # distribuzione delle terne
+grep -E '^- \[ \]' TODO.md | grep -c 'declassata'                     # urgenze già scadute e ancora aperte
+grep -E '^- \[ \]' TODO.md | grep -oE '\b[0-9]{2}/[0-9]{2}\b' | cut -d/ -f2 | sort | uniq -c  # età, per mese
+```
+
+L'output di `todo.py` va in un file della scratchpad e si legge **a pezzi**: con duecento voci
+supera il limite di una sola lettura.
+
+Quello che si guarda, in quest'ordine:
+
+1. **le urgenze vere**, cioè le due o tre voci con il `!` in testa, si **verificano subito**: si
+   controlla soltanto che il problema ci sia ancora, senza lavorarci sopra. Un triage che dura
+   ore non può far aspettare un'urgenza. Su polmasi, il 05/11, la prima voce era "il DB di
+   produzione non ha dump" e lo era ancora dopo due giorni, con fusioni di anagrafiche in corso
+   ( la causa era il cron dei backup, che cicla solo su `dev/` ). Se una di queste voci è ancora
+   vera, la si dice all'utente prima del resto;
+2. **la quota di `(---)`**: oltre la metà vuol dire che il file si è riempito di cose che nessuno
+   aspetta, e che il triage chiuderà molto ( su polmasi era il 64% );
+3. **le voci con `declassata`** ancora aperte, e quelle che citano solo date di uno o due mesi fa:
+   è da lì che il primo giro conviene partire, perché sono le più probabilmente chiuse o superate;
+4. **i difetti di forma** della sezione qui sotto, che vanno contati a parte, perché falsano i
+   conteggi prima ancora delle singole voci.
+
+La diagnosi si presenta come dice la skill `todo-elenco` ( tabelle per terna ), seguita da poche
+righe numerate con quello che dalle tabelle non si vede. **Non si chiude né si sposta niente**:
+la diagnosi propone il triage, non lo fa.
+
+## Quattro difetti di forma, che il triage per voce non vede
+
+Un agente che legge una voce per volta non si accorge che quella voce è nel posto sbagliato, che
+non è una voce oppure che dentro ha una password. Questi difetti si cercano sul file intero, e
+nel report vanno in una sezione loro.
+
+| difetto | come si riconosce | cosa si fa |
+|---|---|---|
+| **sezione contenitore** | un'intestazione `##` che non è un'area: una data, un evento o un canale ( *«⚠ Arrivato dal giro WhatsApp del 06/10»*, *«DA CHIUDERE OGGI, 01/10»*, *«2026-10-13 06:30 DOCUMENTAZIONE»* ), oppure *«da classificare»* | ogni voce va nella sua area, e l'intestazione vuota si toglie: le aree restano, i contenitori no. Finché ci sono, `todo.py -c` **mente** ( su polmasi 60 voci su 221 stavano in contenitori, 46 in uno solo ) |
+| **nota promossa a voce** | una `- [ ]` che **descrive o diagnostica** invece di chiedere un gesto, quasi sempre subito sotto la voce madre e spesso in maiuscolo: *«LA CAUSA VERA, trovata da…»*, *«IL RIMEDIO HA DUE TEMPI»*, *«ZERILLO ANNA — si scrive con una R sola»* | si riattacca alla madre come riga `--`: non si chiude e non si scarta, perché è un pezzo della diagnosi di una voce viva. Se non ha più una madre aperta, va nel `DONE.md` col capitolo della madre |
+| **comunicazione travestita** | il gesto è dire qualcosa a qualcuno: *«RISPONDERLE»*, *«mai risposto»*, *«da far provare a lei»*, *«da far guardare sul suo telefono»* | va nel `CHAT.md`, in *Da dirgli* o *Da chiedergli* della persona giusta. La voce si scarta con la nota che lo dice, oppure resta, se dopo la risposta c'è del lavoro da fare |
+| **segreto in chiaro** | una password, un token, un `utente : password` scritto per una prova | va nel §2 del `READ.md`, e nella voce resta *«account di prova nel READ §2»*. È l'unico difetto che si corregge **subito**, senza aspettare il via sul report |
+
+⚠ **Il difetto di forma si trova a colpo d'occhio, ma la correzione va verificata come una
+chiusura.** Una nota ha l'aria di essere orfana e invece la madre sta tre righe più su. Una
+"comunicazione" a volte è anche lavoro. Per questo i primi tre difetti finiscono nel report insieme
+agli altri esiti, e si applicano solo dopo il via.
 
 ## Perché serve, e perché si sbaglia
 
@@ -43,7 +98,11 @@ qualcun altro ha scritto nel frattempo.
 
 **2. Primo giro, a blocchi, con agenti.** Le voci si dividono in blocchi da 80-100 e ogni blocco va a
 un agente **`model: "sonnet"`, in sola lettura**, che scrive un **TSV** nella scratchpad
-( `riga \t esito \t prova o motivo` ) e restituisce solo i conteggi. Gli agenti leggono la voce con
+( `riga \t esito \t prova o motivo` ) e restituisce solo i conteggi. Fra gli esiti possibili ci
+sono anche i tre difetti di forma ( `contenitore → <area>`, `nota di <riga madre>`,
+`comunicazione → <persona>` ): l'agente vede la riga sopra e l'intestazione della sezione, e li
+riconosce se il prompt gli dice di cercarli. Conviene dividere i blocchi **per sezione**, non per
+numero di riga, così un agente vede un contenitore intero. Gli agenti leggono la voce con
 `todo.py -v N`, cercano nel `DONE.md` e nel `CHAT.md` con `grep`, guardano codice e dati quando serve.
 Nel prompt: le credenziali del DB stanno in `dev/src/shadow.json`, niente query pesanti in produzione,
 niente scritture, nel dubbio l'esito è "resta aperta".
@@ -65,6 +124,12 @@ Ogni gruppo si confronta voce per voce e prende uno di tre verdetti:
 - `DIVERSI` — si somigliano solo nelle parole: non si toccano.
 
 Su polmasi, di diciannove gruppi segnalati dal primo giro, solo sette erano `STESSO`.
+
+I doppioni si cercano soprattutto **fra un contenitore e l'area a cui appartiene**, perché la
+stessa segnalazione viene riscritta quando arriva dalla posta o da WhatsApp, e **fra una voce
+declassata e la sua riscrittura successiva**, perché chi ritrova il problema settimane dopo apre
+una voce nuova invece di riprendere quella vecchia ( polmasi, 05/11: "manca il dump di prod"
+c'era due volte, a cinque settimane di distanza ).
 
 **5. Le domande.** Per le voci "serve una domanda":
 
@@ -103,12 +168,22 @@ fare prima il passo che **aggiunge** note ( travasi, `[=]`, note delle domande )
 **toglie** voci ( chiusure, scarti, doppioni ), così le superstiti hanno già i fatti travasati quando
 la gemella sparisce.
 
+⚠ **Lo script non sposta**: le sue azioni sono `chiudi`, `scarta`, `attesa` e `nota`. Lo smistamento
+dei contenitori e il riattacco delle note alla madre sono quindi un **terzo passo**, che si fa
+**per ultimo**, con Edit ancorati al testo ( non ai numeri di riga ), una sezione per volta, dopo
+aver riletto la sezione. Prima di questo passo e dopo ogni sezione si controlla con `todo.py | wc -l`
+che il numero di voci non sia cambiato: uno spostamento non ne aggiunge e non ne toglie. Fa
+eccezione la nota riattaccata, che smette di essere una voce, e va contata a parte.
+
 **8. La chiusura.** Se fra le chiuse c'è qualcosa che il cliente aspettava, il terzo gesto
 ( `### Da dirgli alla prossima occasione` ) vale anche qui. In conversazione restano i **conteggi**:
 quante chiuse, quante scartate, quante in attesa, quante domande scritte, quanti doppioni uniti, quante
 rimaste aperte. Non l'elenco: l'elenco sta nel report.
 
 ## Quello che la pulizia non è
+
+- **Non è la diagnosi.** La diagnosi ( sopra ) si fa in tre chiamate dentro qualunque sessione e non
+  tocca il file. Il triage si fa in una sessione sua, e solo dopo che l'utente l'ha chiesto.
 
 - **Non è il momento di fare le voci "chiudibili in autonomia".** La pulizia dice cosa c'è da fare; il
   lavoro si fa dopo, in sessioni sue. Mettersi a sistemare una voce durante il triage è il modo sicuro

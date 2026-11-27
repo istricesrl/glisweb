@@ -7,16 +7,18 @@ actor: BackendTester
 modules:
     enabled:
         - \Helper\Glisweb:
-            # users serve ai test dell'autenticazione, per verificare che un gruppo non staff non apra la dashboard
-            gruppi: [ roots, users ]
+            # roots e users li crea comunque l'helper, d'ufficio: qui restano per chiarezza; staff serve ad aclTestateCest
+            gruppi: [ roots, users, staff ]
         - WebDriver:
             url: '%GLISWEB_TEST_URL%'
             browser: chrome
-            port: 9515
+            port: '%GLISWEB_CHROMEDRIVER_PORT%'
             path: ''
             window_size: 1366x900
+            # --ignore-certificate-errors: i deploy DEV/TEST con un host locale ( /etc/hosts ) hanno il certificato autofirmato
+            # della macchina, e senza Chromium mostra una pagina vuota; non tocca la produzione, dove _bootstrap.php non fa partire i test
             capabilities:
                 goog:chromeOptions:
-                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage' ]
+                    args: [ '--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--ignore-certificate-errors', '--user-agent=%GLISWEB_TEST_USER_AGENT%' ]
         - Asserts
     step_decorators: ~

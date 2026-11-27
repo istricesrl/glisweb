@@ -16,7 +16,11 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-	$ct['view']['table'] = 'anagrafica_archiviati';
+    // anagrafica_archiviati non esiste piu' in nessuno schema ( canone punto 8, 24/11/2026 ): come in _AN000
+    // ( _anagrafica.view.archiviate.php ) si filtrano le anagrafiche con data_archiviazione valorizzata
+	// $ct['view']['table'] = 'anagrafica_archiviati';
+	$ct['view']['table'] = 'anagrafica_view_static';
+	$ct['view']['__restrict__']['data_archiviazione']['NN'] = true;
 
     // tabella per l'apertura
 	$ct['view']['open']['table'] = 'anagrafica';
@@ -44,10 +48,11 @@
 
     // colonne custom
 	if( isset( $_SESSION['account']['se_commerciale'] ) && ! empty( $_SESSION['account']['se_commerciale'] ) ) {
-	    arrayInsertAssoc( '__label__', $ct['view']['cols'], array( 'provincia' => 'provincia' ) );
-	    arrayInsertAssoc( '__label__', $ct['view']['class'], array( 'provincia' => 'text-left' ) );
-	    $ct['view']['cols']['agente'] = 'agente';
-	    $ct['view']['class']['agente'] = 'text-left';
+	    // provincia e agente non sono in anagrafica_view_static ( canone punto 8, 24/11/2026 )
+	    // arrayInsertAssoc( '__label__', $ct['view']['cols'], array( 'provincia' => 'provincia' ) );
+	    // arrayInsertAssoc( '__label__', $ct['view']['class'], array( 'provincia' => 'text-left' ) );
+	    // $ct['view']['cols']['agente'] = 'agente';
+	    // $ct['view']['class']['agente'] = 'text-left';
 	}
 
     // template filtri custom

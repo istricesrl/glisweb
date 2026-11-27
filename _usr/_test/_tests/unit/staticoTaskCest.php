@@ -1,0 +1,87 @@
+<?php
+
+    /**
+     * test statico dei task del nucleo e dei moduli
+     *
+     * ogni file di _src/_api/_task/ ( e dei corrispondenti nei moduli ) e' raggiungibile da HTTP come /task/<nome>,
+     * quindi deve avere una guardia: checkTaskPrivilege() per chi arriva dal browser, oppure il controllo di
+     * CRON_RUNNING per i task che girano solo da cron ( S-010 )
+     *
+     * il test legge i sorgenti e non li esegue; un task senza guardia e' un test rosso che indica il file da correggere
+     *
+     */
+
+    class staticoTaskCest {
+
+        // S-010 task: ogni task richiama checkTaskPrivilege() o controlla CRON_RUNNING
+        public function taskConGuardia( UnitTester $I ) {
+
+            $task = array_merge(
+                (array) glob( DIR_BASE . '_src/_api/_task/*.php' ),
+                (array) glob( DIR_BASE . '_mod/*/_src/_api/_task/*.php' )
+            );
+
+            $I->assertNotEmpty( $task, 'nessun task trovato: il test non prova niente' );
+
+            $senzaGuardia = array();
+
+            foreach( $task as $file ) {
+
+                $codice = file_get_contents( $file );
+
+                // un task che rimanda a un altro task ( require __DIR__ . '/_altro.php' ) eredita la guardia di quello
+                if( preg_match( '/require(_once)?\s+(__DIR__\s*\.\s*[\'"]\/|[\'"])([^\'"\/]+\.php)[\'"]/', $codice, $m ) && is_file( dirname( $file ) . '/' . $m[3] ) ) {
+                    $codice .= file_get_contents( dirname( $file ) . '/' . $m[3] );
+                }
+
+                // _cache.rebuild.php ha una guardia sua, il gettone controllato prima del framework ( la prova cacheRebuildCest )
+                if( basename( $file ) === '_cache.rebuild.php' && strpos( $codice, '$gettone' ) !== false ) {
+                    continue;
+                }
+
+                if( strpos( $codice, 'checkTaskPrivilege' ) === false && strpos( $codice, 'CRON_RUNNING' ) === false ) {
+                    $senzaGuardia[] = str_replace( DIR_BASE, '', $file );
+                }
+
+            }
+
+            $I->assertEmpty( $senzaGuardia, 'task senza guardia: ' . implode( ', ', $senzaGuardia ) );
+
+        }
+
+        // il cron verifica la connessione MySQL prima di ogni iterazione di un task e di un job e prima di ogni UPDATE di
+        // chiusura: un'iterazione, o anche solo il suo log, piu' lunga del wait_timeout la fa cadere, e il break per durata
+        // massima porta alla chiusura senza passare dall'iterazione ( bernispa, 24 e 25/11/2026 )
+        public function cronRiconnessioneMysql( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_api/_cron.php' );
+
+            $ping = 'if\( ! mysqlPing\( \$cf\[\'mysql\'\]\[\'connection\'\] \) \) \{[^}]*require DIR_SRC_CONFIG \. \'_125\.mysql\.php\';\s*\}\s*(\/\/[^\n]*\n\s*)*';
+
+            foreach( array( "require DIR_BASE . \$task['task'];", "require DIR_BASE . \$job['job'];" ) as $uso ) {
+                $I->assertMatchesRegularExpression( '/' . $ping . preg_quote( $uso, '/' ) . '/', $codice, 'manca la riconnessione prima di ' . $uso );
+            }
+
+            foreach( array(
+                "'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?'",
+                "'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?'",
+                "'UPDATE pianificazioni SET timestamp_elaborazione = ?, token = NULL WHERE id = ?'",
+                "'UPDATE pianificazioni SET token = NULL WHERE token = ?'"
+            ) as $uso ) {
+                $I->assertMatchesRegularExpression( '/' . $ping . 'mysqlQuery\(\s*\$cf\[\'mysql\'\]\[\'connection\'\],\s*' . preg_quote( $uso, '/' ) . '/', $codice, 'manca la riconnessione prima di ' . $uso );
+            }
+
+        }
+
+        // il resoconto di _security.clean.php va nel log a LOG_WARNING: la produzione lo scrive ancora, e da LOG_CRIT
+        // in su il controllo dei log lo contava come errore grave anche quando era solo un possibile falso positivo
+        public function securityCleanResocontoWarning( UnitTester $I ) {
+
+            $codice = file_get_contents( DIR_BASE . '_src/_api/_task/_security.clean.php' );
+
+            $I->assertStringContainsString( "logWrite( \$resoconto, 'security', LOG_WARNING )", $codice );
+            $I->assertDoesNotMatchRegularExpression( "/logWrite\(\s*\\\$resoconto[^;]*LOG_(CRIT|ALERT|EMERG)/", $codice );
+
+        }
+
+    }

@@ -70,6 +70,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 
+    // verifica dei privilegi
+    checkTaskPrivilege( 'GESTIONE_DOCUMENTI' );
+
     // inizializzo l'array del risultato
 	$status = array();
     $status['info'] = array();
@@ -202,6 +205,7 @@
                 'SELECT soglie.id_articolo,
                         soglie.id_mastro,
                         soglie.collocazione,
+                        soglie.codice_articolo,
                         soglie.articolo,
                         soglie.giacenza,
                         soglie.scorta_minima_dichiarata,
@@ -214,6 +218,7 @@
                         SELECT mastri_articoli.id_articolo,
                                mastri_articoli.id_mastro,
                                mastri.codice AS collocazione,
+                               articoli.codice AS codice_articolo,
                                articoli.nome AS articolo,
                                mastri_articoli.scorta_minima AS scorta_minima_dichiarata,
                                mastri_articoli.scorta_massima AS scorta_massima_dichiarata,
@@ -483,6 +488,7 @@
             'SELECT mastri_articoli.id_mastro,
                     mastri.codice AS collocazione,
                     mastri_articoli.id_articolo,
+                    articoli.codice AS codice_articolo,
                     articoli.nome AS articolo,
                     mastri_articoli.scorta_minima,
                     mastri_articoli.scorta_massima,
@@ -522,6 +528,7 @@
                     array(
                         'id' => $nv['id_mastro'] . '|' . $nv['id_articolo'],
                         'id_articolo' => $nv['id_articolo'],
+                        'codice_articolo' => $nv['codice_articolo'],
                         'articolo' => $nv['articolo'],
                         'id_mastro' => $nv['id_mastro'],
                         'collocazione' => $nv['collocazione'],
@@ -530,7 +537,7 @@
                         'udm' => $nv['udm'],
                         'motivo' => $motivo,
                         'timestamp_aggiornamento' => time(),
-                        '__label__' => $nv['id_articolo'] . ' in ' . $nv['collocazione'],
+                        '__label__' => $nv['codice_articolo'] . ' in ' . $nv['collocazione'],
                     ),
                     '__report_scorte_non_valutabili__',
                     false,
@@ -538,7 +545,7 @@
                 );
 
                 logWrite(
-                    'sottoscorta: soglia di ' . $nv['scorta_minima'] . ' "' . $nv['udm'] . '" non convertibile per l\'articolo ' . $nv['id_articolo'] . ' in ' . $nv['collocazione'] . ': manca um_movimentazione o conf_qta, riga non valutata',
+                    'sottoscorta: soglia di ' . $nv['scorta_minima'] . ' "' . $nv['udm'] . '" non convertibile per l\'articolo ' . $nv['codice_articolo'] . ' in ' . $nv['collocazione'] . ': manca um_movimentazione o conf_qta, riga non valutata',
                     'sottoscorta',
                     LOG_WARNING
                 );
@@ -559,6 +566,7 @@
                 array(
                     'id' => $chiave,
                     'id_articolo' => $segnalazione['id_articolo'],
+                    'codice_articolo' => $segnalazione['codice_articolo'],
                     'articolo' => $segnalazione['articolo'],
                     'id_mastro' => $segnalazione['id_mastro'],
                     'collocazione' => $segnalazione['collocazione'],
@@ -583,7 +591,7 @@
                     'motivo' => $segnalazione['motivo'],
                     'se_allarme' => 1,
                     'timestamp_aggiornamento' => time(),
-                    '__label__' => $segnalazione['id_articolo'] . ' in ' . $segnalazione['collocazione'],
+                    '__label__' => $segnalazione['codice_articolo'] . ' in ' . $segnalazione['collocazione'],
                 ),
                 '__report_sottoscorta__',
                 false,
@@ -593,7 +601,7 @@
             // il canale di log dedicato: serve a poter ricostruire a posteriori cosa il task ha
             // visto a ogni giro, che il report da solo non dice ( viene riscritto ogni volta )
             logger(
-                $segnalazione['id_articolo'] . ' in ' . $segnalazione['collocazione'] . ': giacenza ' . $segnalazione['giacenza'] . ' sotto la scorta minima ' . $segnalazione['scorta_minima'] . ' -> ' . $segnalazione['esito'] . ( ! empty( $segnalazione['motivo'] ) ? ' ( ' . $segnalazione['motivo'] . ' )' : '' ),
+                $segnalazione['codice_articolo'] . ' in ' . $segnalazione['collocazione'] . ': giacenza ' . $segnalazione['giacenza'] . ' sotto la scorta minima ' . $segnalazione['scorta_minima'] . ' -> ' . $segnalazione['esito'] . ( ! empty( $segnalazione['motivo'] ) ? ' ( ' . $segnalazione['motivo'] . ' )' : '' ),
                 'sottoscorta',
                 LOG_INFO
             );
@@ -615,6 +623,7 @@
                 array(
                     'id' => $chiave,
                     'id_articolo' => $sorvegliata['id_articolo'],
+                    'codice_articolo' => $sorvegliata['codice_articolo'],
                     'articolo' => $sorvegliata['articolo'],
                     'id_mastro' => $sorvegliata['id_mastro'],
                     'collocazione' => $sorvegliata['collocazione'],
@@ -627,7 +636,7 @@
                     'esito' => 'a posto',
                     'se_allarme' => 0,
                     'timestamp_aggiornamento' => time(),
-                    '__label__' => $sorvegliata['id_articolo'] . ' in ' . $sorvegliata['collocazione'],
+                    '__label__' => $sorvegliata['codice_articolo'] . ' in ' . $sorvegliata['collocazione'],
                 ),
                 '__report_sottoscorta__',
                 false,
@@ -648,7 +657,7 @@
 
             $corpo = array();
             foreach( $segnalazioni as $segnalazione ) {
-                $corpo[] = $segnalazione['id_articolo'] . ' ' . $segnalazione['articolo']
+                $corpo[] = $segnalazione['codice_articolo'] . ' ' . $segnalazione['articolo']
                     . ' in ' . $segnalazione['collocazione']
                     . ': giacenza ' . $segnalazione['giacenza'] . ', scorta minima ' . $segnalazione['scorta_minima']
                     . ' -> ' . $segnalazione['esito']

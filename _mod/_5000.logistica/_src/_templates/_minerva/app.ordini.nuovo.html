@@ -20,7 +20,12 @@
 {% if request[ table ].id %}
     {% set method = 'update' %}
     {% set activity = 'aggiornamento' %}
+    {% if request[ table ][ 'timestamp_aggiornamento' ] %}
     {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% else %}
+    {# senza data |date stamperebbe l'ora corrente #}
+    {% set legend = 'data di aggiornamento non registrata' %}
+    {% endif %}
 {% else %}
     {% set method = 'post' %}
     {% set activity = 'inserimento' %}
@@ -111,7 +116,7 @@
                 <button type="button" class="btn-lg btn btn-secondary btn-sqr btn-block" data-toggle="modal" data-target="#chiudi_ordine" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-check" aria-hidden="true"></i> conferma ordine</button>
             </div>
             <div class="col-6 col-md-6">
-                <button type="button" class="btn-lg btn  btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash " aria-hidden="true"></i> elimina</button>
+                <button type="button" class="btn-lg btn  btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id|url_encode }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash " aria-hidden="true"></i> elimina</button>
             </div>
         </div>
     </div>

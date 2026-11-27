@@ -115,5 +115,26 @@
         2048 => 2048
     );
 
+    /**
+     * CODA DI SCALAMENTO
+     * ==================
+     * Il task di scalamento ( `_mod/_IM000.immagini/_src/_api/_task/_images.resize.php` ) marca con il proprio token
+     * l'immagine che sta lavorando; se il processo muore prima di togliere il token ( un'immagine troppo grande per la
+     * memoria, un timeout ) la riga resterebbe fuori dalla coda per sempre, quindi all'inizio di ogni giro il task sblocca
+     * le righe marcate da più di `minuti_sblocco` minuti e conta il tentativo in `immagini.tentativi`. Arrivata a
+     * `tentativi_massimi` la riga non si riprova più: resta col token `TROPPI_TENTATIVI`, e la fa ripartire, con i
+     * tentativi azzerati, lo scalamento forzato dalla scheda dell'immagine ( `id=<id>` ). Con 0 il limite non c'è. I
+     * valori si cambiano da `src/config.json` o `src/config.yaml` ( chiavi `image.minuti_sblocco` e
+     * `image.tentativi_massimi` ); `minuti_sblocco` va tenuto più lungo dello scalamento più lento, altrimenti
+     * un'immagine ancora in lavorazione torna in coda.
+     *
+     */
+
+    // minuti dopo i quali un'immagine marcata e mai rilasciata torna in coda
+    $cf['image']['minuti_sblocco'] = 60;
+
+    // giri abbandonati dopo i quali un'immagine non si riprova più
+    $cf['image']['tentativi_massimi'] = 3;
+
     // debug
     // echo 'OUTPUT';

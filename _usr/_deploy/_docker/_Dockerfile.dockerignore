@@ -1,0 +1,14 @@
+.git/
+.github/
+.claude/
+_src/_lib/_ext/
+_usr/_docs/_html/
+_usr/_docs/_pdf/
+_usr/_test/_tests/_output/
+etc/
+mod/
+src/
+tmp/
+usr/
+var/
+*.log

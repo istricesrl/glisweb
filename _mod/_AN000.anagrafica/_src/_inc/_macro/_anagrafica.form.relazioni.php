@@ -31,12 +31,12 @@
      * 
      */
 
-    // tendina ruoli
+    // tendina ruoli ( solo quelli proponibili in una relazione fra anagrafiche )
     $ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_anagrafica_view ORDER BY __label__'
+        'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_relazioni = 1 ORDER BY __label__'
     );
 
     /**

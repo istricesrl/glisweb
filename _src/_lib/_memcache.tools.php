@@ -48,6 +48,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * memcacheWrite()                  | scrive un dato in cache
+     * memcacheAdd()                    | scrive un dato in cache solo se la chiave non c'è ( per i lock )
      * memcacheDelete()                 | cancella un dato dalla cache
      * memcacheFlush()                  | cancella tutti i dati dalla cache
      * memcacheDeleteByPrefix()         | cancella le chiavi che cominciano con un prefisso, anche fuori dall'indice
@@ -161,7 +162,7 @@
      * questa non esiste restituisce false. I chiamanti ( i runlevel _310.pages.php dei moduli dei contenuti ) confrontano
      * il timestamp di aggiornamento di una pagina con questo valore, e la rigenerano se è più recente.
      *
-     * Se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_memcache.clean.php ) la funzione
+     * Se è definita la costante MEMCACHE_REFRESH ( la definisce _src/_api/_task/_cache.rebuild.php ) la funzione
      * restituisce false, così che il refresh forzato rigeneri tutte le pagine anche quando una chiave è sfuggita al flush
      * perché mancava dall'indice CACHE_INDEX; senza questo accorgimento la pagina resterebbe quella in cache ( 2026-09-24 ).
      *
@@ -291,6 +292,42 @@
 
             return $r;
         }
+    }
+
+    /**
+     * scrive un dato in cache solo se la chiave non c'è
+     *
+     * Questa funzione scrive il dato come memcacheWrite(), ma con Memcached::add(), che è atomica: se la chiave c'è già non
+     * scrive niente e restituisce false. Serve per i lock ( vedi CONTENTS_PAGES_LOCK in _src/_config/_300.pages.php ): per
+     * questo, come la chiave _AGE, la chiave non entra nell'indice CACHE_INDEX, e memcacheFlush() non la cancella.
+     *
+     * @param       object      $conn   la connessione a Memcached
+     * @param       string      $key    la chiave con cui scrivere il dato, senza il seme
+     * @param       mixed       $data   il dato da scrivere
+     * @param       int         $ttl    il tempo di vita della chiave in secondi ( default MEMCACHE_DEFAULT_TTL )
+     *
+     * @return      bool                true se il dato è stato scritto, false se la chiave c'era già o se la scrittura non è riuscita
+     *
+     */
+    function memcacheAdd($conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL)
+    {
+
+        memcacheUniqueKey($key);
+
+        if (empty($conn) || ! is_object($conn)) {
+
+            logger('connessione al server assente per scrivere la chiave: ' . $key, 'memcache');
+
+            return false;
+        }
+
+        $r = $conn->add($key, serialize($data), $ttl);
+
+        if ($r === false && $conn->getResultCode() !== Memcached::RES_NOTSTORED) {
+            logger('impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR);
+        }
+
+        return $r;
     }
 
     /**

@@ -10,8 +10,8 @@
 
 ## Interlocutore e conversazione
 <!--
-chi e' il referente del cliente, su che canale si parla, come va trattato ( es. "non e' una persona
-tecnica: domande secche, niente nomi di tabelle" ).
+solo come va trattato il referente ( es. "non e' una persona tecnica: domande secche, niente nomi di
+tabelle" ). Chi e', ruolo, contatti e canale preferito stanno nel READ.md, voce 10 Persone.
 Lo stato aggiornato della conversazione sta in CHAT.md, nella root del deploy: si legge PRIMA di
 scrivergli, ogni volta. Le telefonate si trascrivono li' il giorno stesso.
 -->
@@ -21,5 +21,4 @@ scrivergli, ogni volta. Le telefonate si trascrivono li' il giorno stesso.
 - credenziali aggiuntive di servizi esterni (oltre a quelle in src/shadow.yaml)
 - integrazioni con piattaforme terze (CMS, fornitori dati, ecc.)
 - procedure di deploy specifiche del progetto
-- contatti referenti (tecnico, business)
 -->

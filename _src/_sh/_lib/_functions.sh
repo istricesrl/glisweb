@@ -215,12 +215,15 @@ function deploy-invalidate-caches() {
 
         local CACHE_URL="$DST_URL/task/memcache.clean?deploy=1"
 
+        # dal 12/11/2026 il task ricostruisce la cache di ogni sito prima di rispondere ( _cache.rebuild.php ),
+        # e su un deploy con tanti siti grandi un minuto non basta
+
         echo "svuoto la cache dei contenuti: $CACHE_URL"
 
         if [ -n "$VIA" ]; then
-            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | $VIA "curl -s -f -o /dev/null --max-time 60 -K - '$CACHE_URL'"
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | $VIA "curl -s -f -o /dev/null --max-time 600 -K - '$CACHE_URL'"
         else
-            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 60 -K - "$CACHE_URL"
+            printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 600 -K - "$CACHE_URL"
         fi
 
         if [ $? -eq 0 ]; then
@@ -470,7 +473,7 @@ function disallineamenti-raccogli() {
 # Qui si fa una copia per hard link ( rsync --link-dest ): costa quasi niente in spazio e in tempo,
 # e resta intatta anche dopo il deploy, perche' rsync non scrive i file sul posto ma li sostituisce.
 # Si escludono le stesse cose del deploy ( $3 ), cosi' il rollback non tocca var/ e gli altri dati
-# che il deploy non porta. La copia sta in <progetto>/var/<data>-deploy-<stadio>/, fuori dalla
+# che il deploy non porta. La copia sta in <progetto>/var/<data>-deploy-<stadio>-<ora>/, fuori dalla
 # document root, e se ne tengono le ultime tre per stadio.
 #
 # $1 percorso della document root di destinazione
@@ -484,12 +487,12 @@ function deploy-snapshot() {
     local DST="$1"
     local VIA="$2"
     local EXC="$3"
-    local SNAP="$( dirname "$DST" )/var/$( date '+%Y%m%d%H%M%S' )-deploy-$( basename "$DST" )"
+    local SNAP="$( dirname "$DST" )/var/$( date '+%Y%m%d' )-deploy-$( basename "$DST" )-$( date '+%H%M%S' )"
 
     local SCRIPT='
         mkdir -p "$2" || exit 1
         rsync -a '"$EXC"' --link-dest="$1/" "$1/" "$2/" || exit 1
-        ls -d "$( dirname "$2" )"/*-deploy-"$( basename "$1" )" | sort | head -n -3 | xargs -r rm -rf
+        ls -d "$( dirname "$2" )"/*-deploy-"$( basename "$1" )"-[0-9]* | sort | head -n -3 | xargs -r rm -rf
     '
 
     if [ -n "$VIA" ]; then
@@ -610,5 +613,172 @@ function deploy-check() {
         5??|000) return 1 ;;
         *) return 0 ;;
     esac
+
+}
+
+#
+# Porta al canone del framework appena installato un database rimasto alla linea di release precedente.
+#
+# A ogni release minore o maggiore le patch datate della linea vecchia vengono assorbite nei file base
+# e tolte ( capitolo 300 ): un database che non le aveva applicate tutte resta sotto il livello del
+# canone, e mysqlPatchCheck() rifiuta di aggiornarlo. Le patch che gli mancano esistono ancora, nella
+# release da cui la linea nuova e' partita: la seconda riga di _etc/_current.schema dice quale tag.
+#
+# Questa funzione legge il livello del database ( dalla prova a vuoto di _mysql.upgrade.sh ), e finche'
+# sta sotto il canone risale la catena: scarica lo zip del tag di passaggio, ne legge il canone, e se
+# serve passa al tag precedente ( al massimo cinque gradini ). Poi applica le patch partendo dal tag
+# piu' vecchio, ciascuno col proprio _mysql.upgrade.sh e con la configurazione del deploy copiata
+# accanto, e lascia al chiamante le patch della linea nuova. Le patch di progetto ( usr/database/patch/ )
+# non viaggiano coi tag e si applicano dopo, con quelle della linea nuova.
+#
+# Lavora in <progetto>/var/<data>-gradino/: i tag scaricati si tolgono alla fine, i dump che
+# _mysql.upgrade.sh fa prima di ogni gradino restano in <progetto>/var/<data>-gradino/backups/.
+#
+# Va lanciata dalla document root del deploy appena aggiornato.
+#
+# $1 profilo del database ( DEV, TEST, PROD )
+# $2 repository da cui scaricare i tag ( glisweb, glisdev )
+# $3 --prova per fermarsi alle prove a vuoto, senza applicare niente
+#
+# restituisce 0 se non serviva o se e' andato a buon fine, 1 se il gradino non si e' potuto fare
+#
+function gw-gradino() {
+
+    local STATO="$1"
+    local REPO="$2"
+    local PROVA="$3"
+    local LIVELLO CANONE TAG ZIP CARTELLA FILE
+    local LAVORO="$( dirname "$( pwd )" )/var/$( date '+%Y%m%d%H%M%S' )-gradino"
+    local CATENA=()
+    local CANONI="./_etc/_current.schema"
+
+    # livello del database, dalla prova a vuoto: senza livello leggibile ci pensa _mysql.upgrade.sh a dirlo
+    LIVELLO=$( ./_src/_sh/_mysql.upgrade.sh $STATO 2>/dev/null | sed -n 's/.*livello di patch attuale: \([0-9]\{12\}\).*/\1/p' | head -1 )
+    if [ -z "$LIVELLO" -o "$LIVELLO" = "000000000000" ]; then
+        return 0
+    fi
+
+    # risalgo la catena dei canoni finche' il database non ci sta sopra
+    while [ -f "$CANONI" ]; do
+
+        CANONE=$( sed -n 1p "$CANONI" | tr -d '[:space:]' )
+        if [ -z "$CANONE" ] || [[ ! "$LIVELLO" < "$CANONE" ]]; then
+            break
+        fi
+
+        TAG=$( sed -n 2p "$CANONI" | tr -d '[:space:]' )
+        if [ -z "$TAG" ]; then
+            echo "ERRORE: il database e' al livello $LIVELLO, sotto il canone $CANONE, e il canone non dice da che release passare: va ricostruito"
+            return 1
+        fi
+
+        if [ ${#CATENA[@]} -ge 5 ]; then
+            echo "ERRORE: piu' di cinque gradini per arrivare al canone, il database va ricostruito"
+            return 1
+        fi
+
+        echo "gradino: il database e' al livello $LIVELLO, sotto il canone $CANONE, passa prima dalla release $TAG"
+
+        # scarico e scompatto il tag, con gli stessi controlli dell'aggiornamento
+        mkdir -p "$LAVORO" || return 1
+        ZIP="$LAVORO/$TAG.zip"
+        if ! wget -q -O "$ZIP" "https://github.com/istricesrl/$REPO/archive/refs/tags/$TAG.zip" || [ ! -s "$ZIP" ]; then
+            echo "ERRORE: scaricamento della release $TAG fallito"
+            return 1
+        fi
+        if ! unzip -qq -o "$ZIP" -d "$LAVORO" || [ ! -f "$LAVORO/$REPO-$TAG/_src/_config.php" ]; then
+            echo "ERRORE: la release $TAG scaricata non sembra una distribuzione del framework"
+            return 1
+        fi
+        rm -f "$ZIP"
+
+        CARTELLA="$LAVORO/$REPO-$TAG"
+        CATENA=( "$CARTELLA" "${CATENA[@]}" )
+        CANONI="$CARTELLA/_etc/_current.schema"
+
+    done
+
+    # niente da fare
+    if [ ${#CATENA[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    # un gradino alla volta, dal piu' vecchio, con la configurazione del deploy
+    for CARTELLA in "${CATENA[@]}"; do
+
+        mkdir -p "$CARTELLA/src"
+        for FILE in config.json shadow.json config.yaml shadow.yaml; do
+            [ -f "./src/$FILE" ] && cp -a "./src/$FILE" "$CARTELLA/src/$FILE"
+        done
+        chmod +x "$CARTELLA"/_src/_sh/*.sh
+
+        echo "gradino: patch della release $( basename "$CARTELLA" )"
+        if [ "$PROVA" = "--prova" ]; then
+            "$CARTELLA/_src/_sh/_mysql.upgrade.sh" $STATO
+        elif ! "$CARTELLA/_src/_sh/_mysql.upgrade.sh" $STATO --si; then
+            echo "ERRORE: gradino $( basename "$CARTELLA" ) non riuscito, il dump e' in $LAVORO/backups/"
+            return 1
+        fi
+
+    done
+
+    # tolgo i tag scaricati, che contengono anche la configurazione copiata; i dump restano
+    for CARTELLA in "${CATENA[@]}"; do
+        rm -rf "$CARTELLA"
+    done
+    rmdir "$LAVORO" 2> /dev/null
+
+    echo "gradino completato, il database e' pronto per le patch della linea nuova"
+    return 0
+
+}
+
+#
+# Chiama un task del framework sul sito di destinazione di un deploy, via HTTP.
+#
+# Serve dove sulla destinazione non c'e' una shell, cioe' nei deploy via FTP: le patch del database
+# le applica il task /task/mysql.patch del sito stesso, con le stesse regole di _mysql.upgrade.sh
+# ( stesse funzioni mysqlPatch...() ), e la cache dei contenuti la svuota /task/memcache.clean.
+# L'autenticazione e' quella di deploy-invalidate-caches(): HTTP Basic con DST_AUTH_USER e
+# DST_AUTH_PASS del file properties, passate a curl dallo standard input. L'account deve avere il
+# privilegio del task ( GESTIONE_MYSQL per le patch, GESTIONE_CACHE per la cache ).
+#
+# $1 il task, con l'eventuale query string ( es. "mysql.patch", "memcache.clean?deploy=1" )
+#
+# restituisce 0 se il task ha risposto 2xx, 1 se ha risposto con un errore, 2 se mancano DST_URL
+# o le credenziali e la chiamata non si e' fatta
+#
+function deploy-task-http() {
+
+    local TASK="$1"
+
+    if [ -z "$DST_URL" ] || [ -z "$DST_AUTH_USER" ] || [ -z "$DST_AUTH_PASS" ]; then
+        echo "ATTENZIONE: DST_URL, DST_AUTH_USER o DST_AUTH_PASS non indicati, /task/$TASK NON chiamato"
+        return 2
+    fi
+
+    echo "chiamo $DST_URL/task/$TASK"
+
+    if printf 'user = "%s:%s"\n' "$DST_AUTH_USER" "$DST_AUTH_PASS" | curl -s -f -o /dev/null --max-time 600 -K - "$DST_URL/task/$TASK"; then
+        return 0
+    fi
+
+    echo "ERRORE: /task/$TASK ha risposto con un errore ( un 403 vuol dire che a DST_AUTH_USER manca il privilegio )"
+    return 1
+
+}
+
+#
+# Esegue dei comandi lftp sulla destinazione FTP di un deploy.
+#
+# La password arriva a lftp dalla variabile LFTP_PASSWORD ( --env-password ) e non dalla riga di
+# comando, dove finirebbe nella lista dei processi. I comandi si fermano al primo errore
+# ( cmd:fail-exit ), cosi' l'esito di lftp e' quello dell'ultimo comando eseguito.
+#
+# $1 i comandi lftp, separati da punto e virgola
+#
+function deploy-lftp() {
+
+    LFTP_PASSWORD="$FTP_PASSWORD" lftp --env-password -u "$FTP_USER" -e "set cmd:fail-exit yes; $1; quit" "$DST_HOST"
 
 }

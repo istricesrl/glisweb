@@ -24,15 +24,18 @@
         case METHOD_PUT:
         case METHOD_REPLACE:
         case METHOD_UPDATE:
-
-            // scrivo la riga
-            updateReportCorsi( $d['id_progetto'] );
-
-        break;
         case METHOD_DELETE:
 
-            // scrivo la riga
-            updateReportCorsi( $d['id_progetto'] );
+            // corsi toccati dalla scrittura: su DELETE $d non porta id_progetto, lo si prende dalla riga com'era prima
+            $idCorsi = array_unique( array_filter( array(
+                ( isset( $befores['id_progetto'] ) ) ? $befores['id_progetto'] : NULL,
+                ( isset( $d['id_progetto'] ) ) ? $d['id_progetto'] : NULL
+            ) ) );
+
+            // scrivo la riga, solo per un corso noto: con l'id vuoto l'INSERT su __report_corsi__ dava 1048
+            foreach( $idCorsi as $idCorso ) {
+                updateReportCorsi( $idCorso );
+            }
 
         break;
 

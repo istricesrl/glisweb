@@ -28,7 +28,7 @@
         'table' => 'veicoli',
         'open' => array(
             'page' => 'logistica.veicoli.form',
-            'table' => 'veicoli'
+            'table' => 'asset'
         ),
         'cols' => array(
             'id' => '#',

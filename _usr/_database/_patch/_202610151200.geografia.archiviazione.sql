@@ -69,37 +69,7 @@ ALTER TABLE `comuni` ADD CONSTRAINT `comuni_ibfk_02_nofollow` FOREIGN KEY IF NOT
 
 -- | 202610151208
 
--- comuni_view, come in _090000999999.views.sql
-CREATE OR REPLACE VIEW `comuni_view` AS
-	SELECT
-		comuni.id,
-		comuni.id_provincia,
-		provincie.nome AS provincia,
-		provincie.sigla AS sigla_provincia,
-		provincie.id_regione,
-		regioni.nome AS regione,
-		regioni.id_stato,
-		stati.nome AS stato,
-		comuni.nome,
-		comuni.codice_istat,
-		comuni.codice_catasto,
-		comuni.data_archiviazione,
-		comuni.id_successore,
-		concat(
-			comuni.nome, ' ',
-			coalesce(
-				concat( '(', provincie.sigla, ') '),
-				' '
-			),
-			stati.nome
-		) AS __label__
-	FROM comuni
-		INNER JOIN provincie
-			ON provincie.id = comuni.id_provincia
-		INNER JOIN regioni
-			ON regioni.id = provincie.id_regione
-		INNER JOIN stati
-			ON stati.id = regioni.id_stato
-;
+-- vuota dal 26/10/2026: ricreava una vista copiandola dal base, e la copia restava indietro quando il canone andava
+-- avanti; le viste vivono solo nei file base e ai deploy arrivano con le migrazioni del canone ( 300.database.md )
 
 -- | FINE

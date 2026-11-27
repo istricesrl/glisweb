@@ -28,6 +28,10 @@
                         {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_veicoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">codice</span>
+                        {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-2 form-col">
                         <span class="label-top">targa</span>
                         {{ frm.input({ 'field': { 'name': 'targa', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
@@ -40,12 +44,12 @@
             </fieldset>
 
             <fieldset>
-                <legend>costruttore e modello</legend>
+                <legend>produttore e modello</legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md form-col">
-                        <span class="label-top">costruttore</span>
-                        {{ frm.select({ 'field': { 'name': 'id_costruttore' }, 'source': { 'values': etc.select.produttori }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        <span class="label-top">produttore</span>
+                        {{ frm.select({ 'field': { 'name': 'id_produttore' }, 'source': { 'values': etc.select.produttori }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     <div class="col-12 col-md form-col">
                         <span class="label-top">modello</span>
@@ -56,12 +60,12 @@
             </fieldset>
 
             <fieldset>
-                <legend>descrizione</legend>
+                <legend>note</legend>
 
                 <div class="form-group row">
                     <div class="col-12 form-col">
-                        <span class="label-top">descrizione</span>
-                        {{ frm.textarea({ 'field': { 'name': 'descrizione', 'rows': 5 }, 'request': request, 'form': form, 'page': page }) }}
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 5 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                 </div>
 

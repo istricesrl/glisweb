@@ -24,28 +24,29 @@
 #   riempirle a caso sarebbe peggio che lasciarle vuote.
 
 STANDARD = frozenset( (
-    'colori', 'comuni', 'condizioni_pagamento', 'continenti', 'iva', 'lingue',
+    'comuni', 'condizioni_pagamento', 'continenti', 'iva', 'lingue',
     'modalita_pagamento', 'periodicita', 'provincie', 'regimi', 'regioni',
     'ruoli_anagrafica', 'ruoli_articoli', 'ruoli_audio', 'ruoli_file', 'ruoli_immagini',
     'ruoli_indirizzi', 'ruoli_mail', 'ruoli_matricole', 'ruoli_prodotti', 'ruoli_video',
-    'settori', 'stati', 'stati_lingue', 'udm', 'valute',
+    'settori', 'stati', 'stati_lingue', 'valute',
 ) )
 
 ASSISTITE = frozenset( (
-    'categorie_anagrafica', 'certificazioni', 'listini', 'ranking', 'reparti', 'task',
+    'categorie_anagrafica', 'certificazioni', 'colori', 'listini', 'ranking', 'reparti', 'task',
     'tipologie_anagrafica', 'tipologie_attivita', 'tipologie_chiavi', 'tipologie_contatti',
     'tipologie_contratti', 'tipologie_documenti', 'tipologie_documenti_articoli',
     'tipologie_indirizzi', 'tipologie_licenze', 'tipologie_luoghi', 'tipologie_mastri',
     'tipologie_notizie', 'tipologie_pagamenti', 'tipologie_popup', 'tipologie_prodotti',
-    'tipologie_progetti', 'tipologie_pubblicazioni', 'tipologie_risorse',
-    'tipologie_telefoni', 'tipologie_todo', 'tipologie_url',
+    'taglie', 'tipologie_progetti', 'tipologie_pubblicazioni', 'tipologie_risorse',
+    'tipologie_telefoni', 'tipologie_todo', 'tipologie_url', 'udm',
 ) )
 
 GESTITE = frozenset( (
     'account', 'account_gruppi', 'account_gruppi_attribuzione', 'anagrafica',
     'anagrafica_categorie', 'anagrafica_certificazioni', 'anagrafica_cittadinanze',
     'anagrafica_consensi', 'anagrafica_indirizzi', 'anagrafica_settori', 'articoli',
-    'articoli_caratteristiche', 'attivita', 'audio', 'banner', 'banner_azioni',
+    'articoli_caratteristiche', 'attivita', 'attivita_matricole', 'audio', 'banner',
+    'banner_azioni',
     'banner_pagine', 'banner_zone', 'caratteristiche', 'carrelli', 'carrelli_articoli',
     'carrelli_consensi', 'carrelli_documenti', 'categorie_notizie', 'categorie_prodotti',
     'categorie_progetti', 'categorie_risorse', 'causali', 'chiavi', 'colli', 'consensi',
@@ -62,7 +63,9 @@ GESTITE = frozenset( (
     'pubblicazioni', 'redirect', 'relazioni_anagrafica', 'relazioni_documenti',
     'relazioni_documenti_articoli', 'relazioni_pagamenti', 'relazioni_progetti',
     'relazioni_software', 'rinnovi', 'rinnovi_documenti_articoli', 'risorse',
-    'risorse_account', 'risorse_anagrafica', 'risorse_categorie', 'sms_out', 'sms_sent',
+    'risorse_account', 'risorse_anagrafica', 'risorse_categorie', 'sconti',
+    'sconti_articoli', 'sconti_categorie_prodotti', 'sconti_listini', 'sconti_marchi',
+    'sconti_prodotti', 'sms_out', 'sms_sent',
     'software', 'telefoni', 'template', 'testate', 'todo', 'todo_matricole', 'url',
     'video',
 ) )

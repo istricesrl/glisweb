@@ -80,6 +80,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * domainFromURL()                  | restituisce il nome host di un URL
+     * urlLocale()                      | restituisce l'URL solo se porta a una pagina dello stesso sito
      * string2url()                     | normalizza una stringa in un URL valido
      *
      * funzioni di verifica e ricerca
@@ -90,6 +91,7 @@
      * ---------------------------------|---------------------------------------------------------------
      * str_starts_with_array()          | verifica se una stringa comincia con uno dei prefissi dati
      * inRegexpArray()                  | verifica se una stringa corrisponde ad almeno una delle espressioni regolari date
+     * site2regexp()                    | costruisce l'espressione regolare degli host di un sito per uno stato
      * isBinaryString()                 | verifica se una stringa non è testo UTF-8 valido
      *
      * funzioni di compatibilità
@@ -877,6 +879,72 @@
     }
 
     /**
+     * restituisce l'URL solo se porta a una pagina dello stesso sito
+     *
+     * Questa funzione accetta un percorso locale ( comincia con una sola barra, p.es. "/strumenti/pagina.it-IT.html?x=1" )
+     * oppure un URL http o https il cui host è $host, e restituisce NULL per tutto il resto: URL di altri siti, percorsi
+     * relativi al protocollo ( "//example.com" ), schemi come "javascript:" o "data:", barre rovesciate, che i browser
+     * leggono come barre, e caratteri di controllo. È usata dalla macro di cancellazione per gli indirizzi di ritorno
+     * __delete__[target] e __delete__[rollback], che arrivano dalla querystring: il primo finisce in un header Location,
+     * il secondo in un window.open(), e senza controllo davano un open redirect e un XSS ( 24/11/2026 ).
+     *
+     * In un deploy multisito un ritorno verso un altro sito dello stesso deploy è legittimo: per questo $host può essere
+     * anche un elenco, che mescola nomi host ed espressioni regolari costruite da site2regexp(). Un'espressione deve
+     * coprire tutto l'host, e il dominio deve cominciare dopo un punto, perché la regola di site2regexp() è fatta per
+     * riconoscere l'host corrente e non è ancorata in fondo. L'elenco degli host del deploy lo dà urlDelDeploy() di
+     * _menu.utils.php, che è il modo di chiamare questa funzione da una macro.
+     *
+     * @param       string      $url    l'indirizzo da verificare
+     * @param       mixed       $host   l'host ammesso ( p.es. $_SERVER['HTTP_HOST'] ), oppure un elenco di host e di espressioni
+     *                                  di site2regexp(); NULL per accettare solo i percorsi
+     *
+     * @return      string              l'indirizzo così com'è se è locale, NULL altrimenti
+     *
+     */
+    function urlLocale( $url, $host = NULL ) {
+
+        // solo stringhe, senza barre rovesciate e caratteri di controllo
+        if( ! is_string( $url ) || $url === '' || preg_match( '/[\\\\\x00-\x1f\x7f]/', $url ) ) {
+            return NULL;
+        }
+
+        // percorso locale: una barra sola in testa
+        if( $url[0] == '/' ) {
+            return ( isset( $url[1] ) && $url[1] == '/' ) ? NULL : $url;
+        }
+
+        // URL assoluto http o https, senza credenziali
+        $array = parse_url( $url );
+        if( empty( $host ) || ! isset( $array['scheme'] ) || ! in_array( strtolower( $array['scheme'] ), array( 'http', 'https' ) )
+            || ! isset( $array['host'] ) || isset( $array['user'] ) ) {
+            return NULL;
+        }
+
+        // l'host deve essere uno di quelli dati, per nome o per espressione regolare di site2regexp()
+        $h = strtolower( $array['host'] );
+        foreach( (array) $host as $ammesso ) {
+            if( ! is_string( $ammesso ) || $ammesso === '' ) {
+                continue;
+            } elseif( $ammesso[0] != '/' ) {
+                if( $h === strtolower( $ammesso ) ) {
+                    return $url;
+                }
+            } elseif( preg_match( $ammesso, $h, $m ) && $m[0] === $h ) {
+                // la regola deve coprire tutto l'host, e il dominio deve cominciare dopo un punto: altrimenti
+                // wwwesempio.it, che è un altro dominio, passerebbe per www.esempio.it
+                $prima = substr( $h, 0, strlen( $h ) - strlen( $m[1] ) );
+                if( $prima === '' || substr( $prima, -1 ) === '.' ) {
+                    return $url;
+                }
+            }
+        }
+
+        // tutto il resto no
+        return NULL;
+
+    }
+
+    /**
      * verifica se una stringa corrisponde ad almeno una delle espressioni regolari date
      *
      * Questa funzione confronta la stringa con ciascuna delle espressioni regolari contenute nell'array e restituisce true
@@ -905,6 +973,47 @@
         }
 
         return $match;
+
+    }
+
+    /**
+     * costruisce l'espressione regolare degli host di un sito per uno stato
+     *
+     * È la regola con cui _src/_config/_015.site.php riconosce il sito corrente e il suo stato dall'HTTP_HOST, e sta
+     * qui, in una libreria che non dipende da $cf. Il controllo di uptime ( glisweb-check-24x7, fuori dal framework )
+     * ne ha una copia, uptimeRegexp(), con cui dà il profilo agli host: se la regola cambia, va cambiata anche là.
+     * Mette insieme host e domini dello stato con i loro alias; se fra gli host c'è www, l'host è facoltativo. Il
+     * confronto non distingue maiuscole e minuscole, come fa Apache sull'Host.
+     *
+     * @param       array       $site       un sito della configurazione ( domains, hosts, alias )
+     * @param       string      $status     lo stato ( DEV, TEST, PROD... )
+     *
+     * @return      string|null             l'espressione regolare, NULL se il sito non ha un dominio per quello stato
+     *
+     */
+    function site2regexp( $site, $status ) {
+
+        // senza dominio lo stato non risponde a nessun host
+        if( empty( $site['domains'][ $status ] ) ) {
+            return NULL;
+        }
+
+        // host dello stato e loro alias
+        $hosts = isset( $site['hosts'][ $status ] ) ? array( $site['hosts'][ $status ] ) : array();
+        if( isset( $site['alias']['hosts'][ $status ] ) ) {
+            $hosts = array_merge( $hosts, (array) $site['alias']['hosts'][ $status ] );
+        }
+
+        // dominio dello stato e suoi alias
+        $domains = array( $site['domains'][ $status ] );
+        if( isset( $site['alias']['domains'][ $status ] ) ) {
+            $domains = array_merge( $domains, (array) $site['alias']['domains'][ $status ] );
+        }
+
+        // numeratore host in base a www
+        $numerator = ( in_array( 'www', $hosts ) ) ? '{0,1}' : '{1}';
+
+        return '/^(?:' . implode( '|', $hosts ) . ')' . $numerator . '(?:\.)*(' . str_replace( '.', '\.', implode( '|', $domains ) ) . '){1}/i';
 
     }
 

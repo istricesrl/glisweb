@@ -667,7 +667,7 @@ def genera_catalogo( contesto, quantita ):
     id_lingua = contesto.per_nome( 'lingue', 'it-IT', 'ietf' ) or contesto.per_nome( 'lingue', 'italiano' )
     id_reparto = contesto.identificativi( 'reparti', limite = 1 )
     id_reparto = id_reparto[ 0 ] if id_reparto else None
-    id_udm = contesto.primo_per_nome( 'udm', ( 'pezzo', 'unità', 'numero' ) )
+    id_udm = contesto.primo_per_nome( 'udm', ( 'pezzi', 'unità', 'numero' ) )
 
     aliquota = contesto.mysql.valore(
         'SELECT aliquota FROM iva WHERE id = %s' % ( id_iva if id_iva else 0 ) ) or 22
@@ -1066,7 +1066,7 @@ def genera_documenti( contesto, quantita ):
     condizioni = contesto.identificativi( 'condizioni_pagamento' )
     modalita = contesto.identificativi( 'modalita_pagamento' )
     tipologie_pagamento = contesto.identificativi( 'tipologie_pagamenti' )
-    id_udm = contesto.primo_per_nome( 'udm', ( 'pezzo', 'unità', 'numero' ) )
+    id_udm = contesto.primo_per_nome( 'udm', ( 'pezzi', 'unità', 'numero' ) )
 
     progressivo = contesto.conta( 'documenti' )
 
@@ -1211,7 +1211,7 @@ def genera_progetti( contesto, quantita ):
             'data_apertura': apertura,
             'entrate_previste': entrate,
             'ore_previste': casuali.decimale( 4, 400, 1 ),
-            'costi_previsti': round( entrate * casuali.decimale( 0.3, 0.7, 2 ), 2 ),
+            'uscite_previste': round( entrate * casuali.decimale( 0.3, 0.7, 2 ), 2 ),
             'se_sitemap': 0,
             'se_cacheable': 1,
         }

@@ -15,16 +15,16 @@
 	{# frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) #}
 	<div class="form-group form-row">
 	    <div class="col-12 col-md">
-		<span class="label-top">anagrafica principale</span>
-		{{ frm.selectBox( table, subtable, i, 'id_anagrafica', '', '', request, request[ table ].id, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, 'anagrafica', disabled ) }}
+		<span class="label-top">anagrafica</span>
+		{{ frm.selectBox( table, subtable, i, 'id_anagrafica', '', '', request, request[ table ].id, '', 1, '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, 'anagrafica', disabled ) }}
 		</div>
 	    <div class="col-auto">
-		<span class="label-top">relazione</span>
-		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli, request, '', '', '', 1, '', disabled ) }}
+		<span class="label-top">è il/la</span>
+		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli, request, '', '', 1, 1, '', disabled ) }}
 		</div>
 		<div class="col-12 col-md">
-		<span class="label-top">anagrafica collegata</span>
-		{{ frm.selectBox( table, subtable, i, 'id_anagrafica_collegata', '', '', request, '', '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica_collegata', page, pages, lang, 'anagrafica', disabled ) }}
+		<span class="label-top">di</span>
+		{{ frm.selectBox( table, subtable, i, 'id_anagrafica_collegata', '', '', request, '', '', 1, '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica_collegata', page, pages, lang, 'anagrafica', disabled ) }}
 		</div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

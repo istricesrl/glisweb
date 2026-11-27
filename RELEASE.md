@@ -1,6 +1,8 @@
 # note e cronologia di release
 La release corrente del framework non si scrive qui: sta nel file [`_etc/_current.release`](https://github.com/istricesrl/glisweb/blob/develop/_etc/_current.release), nella forma
-`major.minor.bugfix`, e si cambia a mano quando si crea una nuova release branch. Accanto c'è
+`major.minor.bugfix`. Dalla 2.0.1 ( 21/10/2026 ) le release seguono gitflow, con un tag `X.Y.z` su `master` per ogni
+release: il livello patch lo fa `_src/_sh/_gw.release.sh` dopo un giro di test verde su `develop`, le minori e maggiori
+si fanno a mano con una release branch. Accanto c'è
 [`_etc/_current.version`](https://github.com/istricesrl/glisweb/blob/develop/_etc/_current.version), il timestamp che i
 git hook di sviluppo riscrivono a ogni commit. Le due numerazioni e le loro regole sono spiegate nel capitolo
 [file di `_etc/`](https://github.com/istricesrl/glisweb/blob/develop/_usr/_docs/_read/211.file.etc.md) del manuale

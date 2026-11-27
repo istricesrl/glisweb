@@ -160,6 +160,10 @@
     // nascosti che contano; un punto dopo la barra da solo no, perché un'immagine senza nome è un asset rotto
     define( 'SECURITY_PROBE_PATHS'                      , '/(\.(php\d?|phtml|asp|aspx|jsp|cgi|pl|env|git|svn|sql|bak|old|ini|ya?ml|swp)$)|\/\.(env|git|svn|hg|aws|ssh|htaccess|htpasswd|DS_Store|vscode|idea)(\/|$)/i' );
 
+    // source map delle librerie esterne in cache: le chiede da solo il browser con gli strumenti per sviluppatori aperti,
+    // e il FilesMatch del .htaccess le nega con un 403 che non deve dare punti ( segreteria di polmasi bandita, 27/10/2026 )
+    define( 'SECURITY_SOURCEMAP_PATHS'                  , '~/var/cache/(js|css)/.+\.map$~i' );
+
     // percorsi della pagina di sblocco, che l'IP bandito deve poter raggiungere ( gli stessi sono nel .htaccess )
     define( 'SECURITY_UNBAN_PATHS'                      , '/^\/(sblocco-accesso\.it-IT|unlock-access\.en-GB)\.html$/' );
 

@@ -5,7 +5,8 @@
 #
 
 ## pulizia schermo
-clear
+# solo a terminale: lanciato da cron ( manutenzione-siti, _gw.upgrade.sh ) TERM non c'e' e clear sporca il log
+[ -t 1 ] && clear
 
 ## livelli per la root del sito
 # NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
@@ -49,9 +50,10 @@ chown -R root:www-data ./$SUB/
 #find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
 
-chown -R $FTPUSER:www-data ./$SUB/src/templates
-chown -R $FTPUSER:www-data ./$SUB/src/tpl
-chown -R www-data:www-data ./$SUB/tmp
+# src/templates, src/tpl e tmp non ci sono su tutti i deploy: l'errore sulla cartella che manca e' rumore nel log di cron
+chown -R $FTPUSER:www-data ./$SUB/src/templates 2>/dev/null
+chown -R $FTPUSER:www-data ./$SUB/src/tpl 2>/dev/null
+chown -R www-data:www-data ./$SUB/tmp 2>/dev/null
 chown -R $FTPUSER:www-data ./$SUB/var
 # Il chown sopra cambia owner anche ai file in var/log/ creati da www-data
 # (umask 0022 → mode 644). Da quel momento www-data resta solo nel gruppo e
@@ -138,17 +140,17 @@ find ./$SUB/.githooks           -type f                                         
 # gli script delle skill ( .claude/skills/<skill>/bin/ ) non finiscono in .sh e il chmod 640 qui sopra toglie loro
 # il bit di esecuzione, che git registra nell'indice: senza questa riga il deploy li vede modificati
 find ./$SUB/.claude/skills/*/bin -type f                                                                                                -exec chmod ug+x {} + 2>/dev/null
-find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 2770 {} +
-find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 2770 {} +
+find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
+find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
 find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
-find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 2770 {} +
+find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 2770 {} + 2>/dev/null
 find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type d                                  -exec chmod 2770 {} +
 
-find ./$SUB/src/tpl             -type f                                                                                                 -exec chmod 660 {} +
-find ./$SUB/src/templates       -type f                                                                                                 -exec chmod 660 {} +
-find ./$SUB/mod/*/src/tpl       -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/src/tpl             -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
+find ./$SUB/src/templates       -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
+find ./$SUB/mod/*/src/tpl       -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
 find ./$SUB/mod/*/src/templates -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
-find ./$SUB/tmp                 -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/tmp                 -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
 find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type f                                  -exec chmod 660 {} +
 
 # var/log è pruned dai find sopra per non resettare i ~90% dei file del deploy

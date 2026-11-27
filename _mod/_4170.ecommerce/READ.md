@@ -20,6 +20,25 @@
   specializzata. Questa controller, implementata nel file _mod/_4170.ecommerce/_src/_config/_750.controller.php, viene attivata dalla chiave
   __carrello__ e si occupa di gestire sia la testata che le righe del carrello.
 
+  Prima di leggere __carrello__ la controller ripulisce la sessione da ciò che nel database non c'è più ( step 0, 0.1 e 0.2 ):
+  il carrello già chiuso o cancellato ( dall'elenco dei carrelli o dalla pulizia di quelli abbandonati ) viene staccato
+  dalla sessione, e le righe il cui rinnovo è stato cancellato vengono tolte dalla sessione e dal database, perché lo step 5
+  le riscrive a ogni richiesta e fallirebbe sulle foreign key. Le righe con un pagamento incassato o documentato, o con un
+  documento emesso, restano e perdono solo l'id_rinnovo. Le righe tolte sono elencate in $ct['etc']['rinnovi_cancellati']
+  ( id_rinnovo e descrizione ), che il template può usare per avvisare l'operatore; ogni intervento finisce nel log cart
+  a LOG_WARNING.
+
+  Dallo step 2 allo step 9 la controller tiene un lock MySQL per sessione ( GET_LOCK, rilasciato dopo la copia di
+  sicurezza dello step 9 ): con le sessioni su Redis PHP non serializza le richieste della stessa sessione, e due
+  richieste identiche nello stesso secondo creavano o cancellavano il carrello a vicenda ( 1452 su carrelli_articoli ).
+  Se il lock non arriva entro dieci secondi la richiesta prosegue lo stesso, con un LOG_WARNING nel log cart. Preso il
+  lock, la controller riguarda se il carrello della sessione esiste ancora ( step 1.2 ): la sessione è quella letta
+  all'inizio della richiesta, e nell'attesa una richiesta sorella può averlo cancellato; in quel caso lo stacca come lo
+  step 0.1, tenendo intestazione, zona, listino e sito della richiesta. Se invece la sessione non ha un carrello ma a
+  database ce n'è uno aperto con la sua session, l'ha creato una richiesta sorella arrivata prima al lock: la controller
+  lo adotta ( step 1.3, caricato come il recupero dei carrelli abbandonati in _710.session.php ) e prosegue allo step 3,
+  invece di cancellarlo e crearne uno nuovo; coi tocchi ripetuti dall'app i carrelli non si rincorrono più.
+
   il flusso di acquisto
   =====================
   Il caso più comune di flusso di acquisto è quello che prevede l'aggiunta di prodotti al carrello, la conferma dei dati, la chiusura del carrello;
@@ -372,6 +391,15 @@ if( carrelloForm.checkValidity() ) {
                                                                                                   |      +-------------------------+
                                                                                                   +----> |   API esito pagamento   |
                                                                                                          +-------------------------+
+
+  Importo dell'ordine e verifica alla cattura ( dal 05/11/2026 ). L'API dell'ordine ( _src/_api/_paypal.advanced.order.php ) manda a
+  PayPal quello che il carrello vale nel database, cioè importoOrdineCarrello() ( _src/_lib/_mysql.tools.add.php ): somma delle righe di
+  carrelli_articoli, meno il coupon, più la spedizione d'ordine; non più la testata in sessione. La cifra va in carrelli.importo_pagamento
+  insieme a ordine_pagamento. L'API di cattura ( _src/_api/_paypal.advanced.capture.php ), prima di chiamare PayPal, rifà il conto con
+  verificaImportoOrdineCarrello(): se il carrello non vale più l'importo dell'ordine ( una riga entrata o cancellata fuori sessione, uno
+  sconto ricalcolato ), o se l'ordine non è quello del carrello, non cattura e risponde con un errore; l'ordine resta approvato e scade, e
+  chi paga lo rifà sul carrello di adesso. Così PayPal incassa sempre quello che i post-hook registrano dalle righe. Il test è
+  _usr/_test/_tests/backend/paypalOrdineImportoRigheCest.php del modulo.
 
   pagamento tramite Nexi
   ----------------------

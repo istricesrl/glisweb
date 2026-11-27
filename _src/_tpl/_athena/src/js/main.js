@@ -169,6 +169,24 @@
         
 // fine SDF
 
+        // il campo ordine della riga nuova parte dal multiplo di dieci dopo il più alto fra le righe presenti,
+        // con gli zeri davanti se le righe li hanno ( 0010 ); la stessa regola lato server è getNextOrder() ( 2026-11-04 )
+        var ordine = $( base ).find( 'input[name$="[ordine]"]' ).not( '.protect-value-on-duplicate' );
+        if( ordine.length ) {
+            var massimo = 0;
+            var cifre = 0;
+            parent.find( 'input[name$="[ordine]"]' ).not( ':disabled' ).each( function( i, obj ) {
+                var v = $( obj ).val();
+                if( /^[0-9]+$/.test( v ) ) {
+                    massimo = Math.max( massimo, parseInt( v, 10 ) );
+                    if( v.length > 1 && v.charAt( 0 ) == '0' ) { cifre = Math.max( cifre, v.length ); }
+                }
+            });
+            var prossimo = String( ( Math.floor( massimo / 10 ) + 1 ) * 10 );
+            while( prossimo.length < cifre ) { prossimo = '0' + prossimo; }
+            ordine.val( prossimo );
+        }
+
         old.before( base );
 
         }

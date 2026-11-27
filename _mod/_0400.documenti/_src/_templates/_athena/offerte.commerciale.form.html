@@ -21,7 +21,12 @@
 {% if request[ table ].id %}
 {% set method = 'update' %}
 {% set activity = 'aggiornamento' %}
+{% if request[ table ][ 'timestamp_aggiornamento' ] %}
 {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+{# senza data |date stamperebbe l'ora corrente #}
+{% set legend = 'data di aggiornamento non registrata' %}
+{% endif %}
 {% else %}
 {% set method = 'post' %}
 {% set activity = 'inserimento' %}
@@ -105,7 +110,7 @@
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
 						<span class="label-top">destinatario</span>
-						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request,  etc.ordine.id_emittente, '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request,  etc.ordine.id_emittente, '',( documenti.destinatario.libero ? '' : '1' ),'','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
 					<div class="col-12 col-md-8">
@@ -114,6 +119,14 @@
 					</div>
 					{% endif %}
 				</div>
+				{% if documenti.destinatario.libero %}
+				<div class="form-group form-row">
+					<div class="col-12">
+						<span class="label-top">destinatario non in anagrafica</span>
+						{{ frm.textarea( table, '', '', 'destinatario', '', 3, request ) }}
+					</div>
+				</div>
+				{% endif %}
 
             </fieldset>
 

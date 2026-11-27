@@ -124,7 +124,9 @@
                         ""
                     )
                 ) AS articolo,
+                articoli.codice AS codice_articolo,
                 articoli.id_prodotto AS id_prodotto,
+                prodotti.codice AS codice_prodotto,
                 prodotti.nome AS prodotto,
                 prodotti.codice_produttore,
                 group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR " | " ) AS categorie,
@@ -152,7 +154,10 @@
 
         $riga['id_articolo'] = $articolo['id'];
         $riga['articolo'] = $articolo['articolo'];
+        // i codici, che all'operatore dicono quello che l'id non dice ( 2026-11-24 )
+        $riga['codice_articolo'] = $articolo['codice_articolo'];
         $riga['id_prodotto'] = $articolo['id_prodotto'];
+        $riga['codice_prodotto'] = $articolo['codice_prodotto'];
         $riga['prodotto'] = $articolo['prodotto'];
         $riga['sigla_udm_peso'] = $articolo['sigla_udm_peso'];
     
@@ -414,7 +419,9 @@
                             ""
                         )
                     ) AS articolo,
+                    articoli.codice AS codice_articolo,
                     articoli.id_prodotto AS id_prodotto,
+                    prodotti.codice AS codice_prodotto,
                     prodotti.nome AS prodotto,
                     prodotti.codice_produttore,
                     group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR " | " ) AS categorie,
@@ -439,7 +446,10 @@
             if( ! empty( $articolo ) ) {
                 $riga['id_articolo'] = $articolo['id'];
                 $riga['articolo'] = $articolo['articolo'];
+                // i codici, che all'operatore dicono quello che l'id non dice ( 2026-11-24 )
+                $riga['codice_articolo'] = $articolo['codice_articolo'];
                 $riga['id_prodotto'] = $articolo['id_prodotto'];
+                $riga['codice_prodotto'] = $articolo['codice_prodotto'];
                 $riga['prodotto'] = $articolo['prodotto'];
                 $riga['quantita_movimento'] = $riga['quantita'] * $articolo['peso'];
                 $riga['udm_movimento'] = $articolo['sigla_udm_peso'];
@@ -1034,16 +1044,17 @@
             return $esito;
         }
 
-        // le righe da prelevare: tipologia 7 e id_genitore NULL perche' e' cosi' che la maschera di
-        // prelievo riconosce una riga da evadere; id_documento valorizzato perche' senza
-        // documento la stessa maschera non la vedrebbe affatto ( INNER JOIN )
+        // le righe da prelevare: id_genitore NULL perche' e' cosi' che la maschera di prelievo
+        // riconosce una riga da evadere; id_documento valorizzato perche' senza documento la stessa
+        // maschera non la vedrebbe affatto ( INNER JOIN ). NOTA: niente id_tipologia, che dal
+        // 15/09/2026 e' la tipologia della RIGA ( tipologie_documenti_articoli ): il 7 e' quella
+        // del documento, viola la chiave esterna e l'INSERT IGNORE scarterebbe la riga in silenzio
         foreach( $righe as $riga ) {
 
             mysqlInsertRow(
                 $conn,
                 array(
                     'id_documento' => $idRichiesta,
-                    'id_tipologia' => 7,
                     'id_missione' => $esito['id'],
                     'id_articolo' => $riga['id_articolo'],
                     'nome' => $riga['articolo'],

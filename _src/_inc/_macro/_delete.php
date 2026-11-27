@@ -14,6 +14,17 @@
     $_REQUEST['__delete__']['target'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['target'] );
     $_REQUEST['__delete__']['rollback'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['rollback'] );
 
+    // gli indirizzi di ritorno arrivano dalla querystring e finiscono in un header Location e in un window.open(): solo pagine
+    // dei siti del deploy, che in un multisito possono essere anche un sito diverso da quello corrente
+    foreach( array( 'target', 'rollback' ) as $ritorno ) {
+        if( urlDelDeploy( $_REQUEST['__delete__'][ $ritorno ] ) === NULL ) {
+            if( ! empty( $_REQUEST['__delete__'][ $ritorno ] ) ) {
+                logger( 'indirizzo di ritorno ' . $ritorno . ' non locale scartato nella cancellazione', 'security', LOG_WARNING );
+            }
+            $_REQUEST['__delete__'][ $ritorno ] = $cf['site']['root'];
+        }
+    }
+
     // richiesta o conferma
     if( isset( $_REQUEST['__delete__']['conferma'] ) && $_REQUEST['__delete__']['conferma'] == 1 ) {
 
@@ -36,14 +47,15 @@
 
     } else {
 
-        // ...
-        $rm = getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $_REQUEST['__delete__']['table'] );
+        // la tabella arriva dalla querystring e finisce concatenata nelle query: solo un nome valido di una tabella esistente
+        $tb = getTable( $cf['memcache']['connection'], $cf['mysql']['connection'], ( isset( $_REQUEST['__delete__']['table'] ) ) ? $_REQUEST['__delete__']['table'] : NULL );
 
         // recupero la __label__ dell'oggetto da cancellare
-        // TODO ma questo non ci espone a SQL injection?
-        // NOTA ma non è che anche nella controller c'è questo problema? $t viene mai filtrato?
-        if( ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
-            $ct['__delete__']['__label__'] = mysqlSelectLabel( $cf['mysql']['connection'], $_REQUEST['__delete__']['table'], $rm, $_REQUEST['__delete__']['id'], ' LIMIT 1' );
+        if( ! empty( $tb ) && ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
+            $rm = getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $tb );
+            $ct['__delete__']['__label__'] = mysqlSelectLabel( $cf['mysql']['connection'], $tb, $rm, ( isset( $_REQUEST['__delete__']['id'] ) ) ? $_REQUEST['__delete__']['id'] : NULL, ' LIMIT 1' );
+        } elseif( empty( $tb ) ) {
+            logger( 'cancellazione richiesta su una tabella non valida o inesistente', 'security', LOG_WARNING );
         }
 
         // timer

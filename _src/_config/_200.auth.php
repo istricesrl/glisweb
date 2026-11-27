@@ -136,6 +136,13 @@
         'anteprima' => array(
             'id' => NULL,
             'nome' => 'anteprima'
+        ),
+        // chiunque, anche senza login: i suoi privilegi li ha ogni richiesta ( vedi getPrivilege() ); nello standard
+        // nessuno, il progetto li assegna in configurazione ( auth.groups.guests.privilegi ) per aprire un task agli anonimi
+        'guests' => array(
+            'id' => NULL,
+            'nome' => 'guests',
+            'privilegi' => array()
         )
     );
 

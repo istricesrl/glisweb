@@ -209,7 +209,7 @@ Prossimi passi suggeriti:
   4. In produzione, imposta i permessi sicuri:
        sudo _src/_sh/_lamp.permissions.secure.sh
   5. Verifica che tutto funzioni con uno smoke test:
-       _src/_sh/_smoke.curl.sh init && _src/_sh/_smoke.curl.sh status /
+       export SMOKE_BASE_URL=https://<sito> && _src/_sh/_smoke.curl.sh init && _src/_sh/_smoke.curl.sh status /
 
 Manuale operativo completo: _etc/_claude/_claude.framework.md
 EOF

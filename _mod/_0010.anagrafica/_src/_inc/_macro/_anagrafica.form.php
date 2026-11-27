@@ -158,16 +158,20 @@
 	$ct['etc']['select']['id_settore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM settori_view' );
 
     // tendina orientamenti sessuali
-	$ct['etc']['select']['id_orientamento'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM orientamenti_sessuali_view' );
+    // disattivata ( canone punto 8, 24/11/2026 ): orientamenti_sessuali_view non esiste in nessuno schema, nemmeno nel canone,
+    // e la query dava un errore SQL a ogni apertura del form
+	// $ct['etc']['select']['id_orientamento'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM orientamenti_sessuali_view' );
 
     // tendina stati
 	$ct['etc']['select']['id_stato'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM stati_view' );
 
     // tendina diritti
-	$ct['etc']['select']['id_diritto'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view WHERE id_genitore IS NULL' );
+    // disattivate ( canone punto 8, 24/11/2026 ): categorie_diritto_view non esiste in nessuno schema, nemmeno nel canone,
+    // e le due query davano un errore SQL a ogni apertura del form
+	// $ct['etc']['select']['id_diritto'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view WHERE id_genitore IS NULL' );
 
     // tendina diritti
-	$ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
+	// $ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
 
     // tendina agenti
 	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_commerciale = 1' );

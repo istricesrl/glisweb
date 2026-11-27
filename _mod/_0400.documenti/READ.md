@@ -54,6 +54,47 @@ Per personalizzare la stampa in un deploy si scrive la funzione di disegno custo
 oppure la si forza con `$cnf['modello']` in un endpoint custom; il procedimento generale sta nel capitolo
 "come creare i file PDF".
 
+destinatario non in anagrafica
+------------------------------
+
+Con `$cf['documenti']['destinatario']['libero']` a `true` ( `_src/_config/_030.common.php`, spento di default; nel
+deploy si accende con `documenti.destinatario.libero` nel `config.json` ) la scheda delle offerte mostra il campo
+**destinatario non in anagrafica**, che scrive la colonna `documenti.destinatario` ( testo, patch
+`_202611241900.documenti.destinatario.sql` ), e la tendina del destinatario smette di essere obbligatoria. Serve
+per i preventivi a chi non è ancora un cliente: non si crea un'anagrafica per un'offerta che forse non avrà seguito.
+
+Il testo vale solo se `id_destinatario` è vuoto, che vince sempre: `documenti_view.destinatario` lo usa dopo
+denominazione e nome dell'anagrafica, e `generaContenutiDocumento()` ne fa il soggetto `dst` del PDF, una riga di
+stampa per riga di testo con la prima come `denominazione_fiscale` ( `documentoRigheSoggetto()` restituisce quelle
+righe così come sono ). Il vincolo "almeno uno dei due" non c'è né lato client ( `required-alternative` vale solo
+sugli `<input>`, non su tendina e textarea ) né lato server. Test: `offerteDestinatarioLiberoCest`, che si adatta al
+valore del flag nel deploy.
+
+duplicazione
+------------
+
+Il task `_src/_api/_task/_documenti.duplica.php` ( `/task/0400.documenti/documenti.duplica?id=<documento>` ) copia
+testata e righe di un documento di qualunque tipologia; lo chiama la voce di duplicazione degli strumenti della
+scheda documenti e di quella delle offerte, che aprono entrambe il modal `documenti.form.tools.modal.duplica.html`.
+Della testata non si copia quello che appartiene alla vita del documento di partenza ( codice, invio, chiusura,
+archiviazione, token ); le righe si copiano prima le principali e poi le figlie, rimappando `id_genitore` sulle
+copie, e anche il loro codice si svuota, per l'indice unico.
+
+Due flag in `_src/_config/_030.common.php`, da cambiare nel `config.json` del deploy:
+
+| chiave | default | effetto |
+|---|---|---|
+| `documenti.duplica.numera` | `false` | con `true` la copia prende sezionale dell'anno, il progressivo successivo ( `generaProssimoNumeroDocumento()` ) e la data di oggi; con `false` resta senza numero e si numera dalla scheda |
+| `documenti.duplica.destinatario` | `true` | con `false` la copia nasce senza destinatario e sedi, per rifare lo stesso documento a un altro cliente |
+
+Con il modulo `_4120.listini` attivo il modal espone la scelta **usa i prezzi originali / usa i prezzi attuali**
+( parametro `prezzi`, default `originali` ): con `attuali` ogni riga con un articolo prende il prezzo di listino di
+oggi ( `prezzoListinoArticolo()`, `_4120.listini/_src/_lib/_mysql.utils.add.php` ) e ricalcola gli importi con
+quantità e sconti della riga di partenza ( `importiRigaDocumento()`, `_src/_lib/_mysql.utils.add.php` ); se il
+listino non ha più l'articolo la riga resta senza prezzo, da completare a mano. Senza il modulo listini `attuali`
+ricade su `originali`, e il task lo dice negli errori. Le scritture non passano dal controller: la vista statica
+delle offerte si riallinea nel task. Test: `documentiDuplicaCest`, che si adatta ai flag e alla presenza dei listini.
+
 fattura elettronica
 -------------------
 
@@ -109,7 +150,7 @@ sotto moduli di `bin/documenti.form.dati.fiscali.sub.html` ), e la casella *sogg
 nelle schede delle righe di fatture, note di credito e documenti.
 
 Le aliquote 35 ( art. 71 con `N3.6` invece di `N3.3` ), 57 e 58 ( natura generica `N6` ) dal
-2026-09-30 sono **archiviate** ( `iva.timestamp_archiviazione` ): restano per i documenti già emessi,
+2026-09-30 sono **archiviate** ( `iva.data_archiviazione` ): restano per i documenti già emessi,
 ma le tendine dei reparti e delle aliquote dei documenti non le propongono più, e una fattura che le
 usa ancora si vede e si scarica ma non si invia. Al loro posto ci sono la 60 ( `N3.3`, cessioni verso
 San Marino ) e le 61 - 69 ( `N6.1` - `N6.9` ).

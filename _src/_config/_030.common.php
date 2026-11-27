@@ -225,31 +225,39 @@
      * verifica versione e release
      * ===========================
      * 
+     * Il controllo gira durante una richiesta HTTP, quindi deve costare poco anche quando glisweb.istricesrl.it non
+     * risponde: la chiamata ha un tempo massimo di due secondi, si salta se il file non si puo' scrivere ( altrimenti
+     * si rifarebbe a ogni richiesta ), e se fallisce si tocca il file vecchio, cosi' il tentativo successivo arriva
+     * dopo il periodo e non alla richiesta dopo ( eco-italia, 16/11/2026: trenta secondi persi a ogni pagina ).
      * 
      */
 
     // controllo aggiornamento release
-    if( ! checkFileConsistency( FILE_LATEST_RELEASE, '-1 week' ) ) {
+    if( ! checkFileConsistency( FILE_LATEST_RELEASE, '-1 week' ) && is_writable( file_exists( FILE_LATEST_RELEASE ) ? FILE_LATEST_RELEASE : dirname( FILE_LATEST_RELEASE ) ) ) {
 
         // recupero l'ultima release da glisweb.istricesrl.it
-        $latestRelease = restGetString( 'https://glisweb.istricesrl.it/current.release' );
+        $latestRelease = restGetString( 'https://glisweb.istricesrl.it/current.release', 2 );
 
         // scrivo l'ultima release su file
         if( preg_match( '/^\d+\.\d+\.\d+$/', $latestRelease ) ) {
             writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+        } elseif( file_exists( FILE_LATEST_RELEASE ) ) {
+            touch( FILE_LATEST_RELEASE );
         }
 
     }
 
     // controllo aggiornamento versione
-    if( ! checkFileConsistency( FILE_LATEST_VERSION ) ) {
+    if( ! checkFileConsistency( FILE_LATEST_VERSION ) && is_writable( file_exists( FILE_LATEST_VERSION ) ? FILE_LATEST_VERSION : dirname( FILE_LATEST_VERSION ) ) ) {
 
         // recupero l'ultima versione da glisweb.istricesrl.it
-        $latestVersion = restGetString( 'https://glisweb.istricesrl.it/current.version' );
+        $latestVersion = restGetString( 'https://glisweb.istricesrl.it/current.version', 2 );
 
         // scrivo l'ultima versione su file
         if( preg_match( '/^\d{14}$/', $latestVersion ) ) {
             writeToFile( $latestVersion, FILE_LATEST_VERSION );
+        } elseif( file_exists( FILE_LATEST_VERSION ) ) {
+            touch( FILE_LATEST_VERSION );
         }
 
     }
@@ -277,6 +285,20 @@
 
     // costante per la release aggiornata del framework
     define( 'RELEASE_LATEST', $cf['common']['release']['latest'] );
+
+    /**
+     * cestino dei file
+     * ================
+     * I file cancellati con trashFile() finiscono in tmp/.garbage/AAAAMMGG/ e ci restano per il numero di giorni indicato
+     * qui; li toglie il task _src/_api/_task/_garbage.clean.php, che va pianificato. Si cambia da src/config.json con la
+     * chiave common.garbage.giorni. Nel cestino finiscono anche dati personali, per esempio i certificati medici di
+     * _mod/_6700.certificazioni: il termine va rispettato in tutt'e due i sensi, quindi nessuno svuota tmp/.garbage/
+     * prima ( _tmp.clean.php lo salta ) e il task che lo svuota dopo deve girare davvero.
+     *
+     */
+
+    // giorni di permanenza dei file nel cestino
+    $cf['common']['garbage']['giorni'] = 30;
 
     /**
      * debug del runlevel

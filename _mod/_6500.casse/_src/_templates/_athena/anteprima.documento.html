@@ -124,12 +124,12 @@
     {% else %}
     <div class="col-6 mt-3 cassa">
         {% set pagina = "documenti.form.stampe" %}
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages[ pagina ].url[  ietf ] }}?documenti[id]={{ request.__documenti__.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages[ pagina ].url[  ietf ] }}?documenti[id]={{ request.__documenti__.id|url_encode }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
     </div>
     {% endif %}
 </div>  
 <div class="row"  id="chiudi-scontrino" hidden>
-    <button  type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?__close__={{ request.__documenti__.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">chiudi scontrino</button>
+    <button  type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?__close__={{ request.__documenti__.id|url_encode }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">chiudi scontrino</button>
 </div> 
 <div class="row" id="response" hidden>
     <div class="col-auto"style=" background-color: #999999; color: white; padding-top: 1%;  padding-right: 1%; padding-bottom: 1%; padding-left: 1%; margin-bottom: 1%;">

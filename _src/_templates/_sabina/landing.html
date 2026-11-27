@@ -76,7 +76,7 @@
     <div class="container">
         <div class="row d-flex flex-row justify-content-around">
             {% for v in page.metadati.lp_offerta %}
-            {% for art in page.contents.articoli if art.id == v.articolo %}
+            {% for art in page.contents.articoli|filter(art => art.id == v.articolo) %}
             <div class="col-12 col-md-4">
                 <div class="card h-100">
                     <div class="card-header">

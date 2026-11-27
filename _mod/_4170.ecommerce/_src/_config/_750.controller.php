@@ -42,6 +42,89 @@
 
     }
 
+    // STEP 0.1 - se il carrello della sessione non esiste più nel database, lo stacco dalla sessione
+    // NOTA un carrello cancellato dall'elenco o dalla pulizia dei carrelli abbandonati mentre è ancora in una
+    // sessione faceva fallire sulla FK id_carrello ogni riga riscritta allo STEP 5 ( 1452 ), senza che nessuno lo vedesse
+    if( ! empty( $_SESSION['carrello']['id'] ) ) {
+        $carrelloEsiste = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM carrelli WHERE id = ?',
+            array( array( 's' => $_SESSION['carrello']['id'] ) )
+        );
+        if( empty( $carrelloEsiste ) ) {
+            logWrite( 'il carrello #' . $_SESSION['carrello']['id'] . ' della sessione non esiste più, staccato dalla sessione', 'cart', LOG_WARNING );
+            $_SESSION['carrello'] = array();
+        }
+    }
+
+    // STEP 0.2 - tolgo le righe di sessione il cui rinnovo non esiste più
+    // NOTA lo STEP 5 riscrive ogni riga con l'id_rinnovo che ha in sessione: se il rinnovo è stato cancellato nel
+    // frattempo ( un altro operatore, un'altra scheda ) la FK ha già messo a NULL id_rinnovo nel database ma la
+    // sessione no, la riscrittura fallisce con un 1452 e la riga resta nel carrello a far pagare una quota che non
+    // esiste più; la salvaguardia è quella della cancellazione dello STEP 5: con denaro incassato o documento
+    // emesso la riga resta, e le si toglie solo l'id_rinnovo ( polmasi, 27/10/2026 )
+    if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
+        foreach( $_SESSION['carrello']['articoli'] as $rowKey => $riga ) {
+
+            // solo le righe legate a un rinnovo che non esiste più
+            if( ! is_array( $riga ) || empty( $riga['id_rinnovo'] ) ) {
+                continue;
+            }
+            if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM rinnovi WHERE id = ?', array( array( 's' => $riga['id_rinnovo'] ) ) ) ) {
+                continue;
+            }
+
+            // riga nel database con denaro incassato o documento emesso
+            $protetta = ( empty( $riga['id'] ) ) ? NULL : mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT carrelli_articoli.id
+                   FROM carrelli_articoli
+                  WHERE carrelli_articoli.id = ?
+                    AND ( EXISTS (
+                              SELECT 1 FROM pagamenti
+                               WHERE pagamenti.id_carrelli_articoli = carrelli_articoli.id
+                                 AND ( pagamenti.timestamp_pagamento IS NOT NULL
+                                       OR pagamenti.id_documento IS NOT NULL )
+                          )
+                          OR EXISTS (
+                              SELECT 1 FROM documenti_articoli
+                               WHERE documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
+                                 AND documenti_articoli.id_documento IS NOT NULL
+                          )
+                        )',
+                array( array( 's' => $riga['id'] ) )
+            );
+
+            if( ! empty( $protetta ) ) {
+
+                // la riga resta, senza il rinnovo
+                $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'] = NULL;
+                logWrite( 'rinnovo ' . $riga['id_rinnovo'] . ' cancellato, la riga #' . $riga['id'] . ' resta perché ha pagamenti incassati o documenti emessi', 'cart', LOG_WARNING );
+
+            } else {
+
+                // tolgo la riga dal database e dalla sessione
+                if( ! empty( $riga['id'] ) && ! empty( $_SESSION['carrello']['id'] ) ) {
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE FROM carrelli_articoli WHERE id = ? AND id_carrello = ?',
+                        array( array( 's' => $riga['id'] ), array( 's' => $_SESSION['carrello']['id'] ) )
+                    );
+                }
+                unset( $_SESSION['carrello']['articoli'][ $rowKey ] );
+
+                // avviso per il template
+                $ct['etc']['rinnovi_cancellati'][] = array(
+                    'id_rinnovo' => $riga['id_rinnovo'],
+                    'descrizione' => ( isset( $riga['descrizione'] ) ) ? $riga['descrizione'] : $rowKey
+                );
+                logWrite( 'rinnovo ' . $riga['id_rinnovo'] . ' cancellato, tolta la riga #' . ( empty( $riga['id'] ) ? '?' : $riga['id'] ) . ' dal carrello #' . ( isset( $_SESSION['carrello']['id'] ) ? $_SESSION['carrello']['id'] : 'nuovo' ), 'cart', LOG_WARNING );
+
+            }
+
+        }
+    }
+
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
     // verifico se è presente una richiesta per il modulo ecommerce
@@ -52,6 +135,53 @@
 
         // listino, sconti e coupon di riga solo dagli operatori ( vedi filtraRichiestaCarrello() )
         filtraRichiestaCarrello( $_REQUEST['__carrello__'] );
+
+        // STEP 1.0 - scarto gli articoli della richiesta il cui rinnovo non esiste più
+        // NOTA lo STEP 0.2 toglie dalla sessione le righe del rinnovo cancellato, ma gira prima di questo: un link di
+        // cassa vecchio ( dalla cronologia, da una scheda rimasta aperta ) che ripresenta quell'id_rinnovo lo
+        // rimetterebbe in sessione, e lo STEP 5 fallirebbe con un 1452 lasciando a carrello una quota che non esiste
+        // più; l'articolo si toglie dalla richiesta e il template lo dice con lo stesso avviso dello STEP 0.2 ( polmasi,
+        // 28/10/2026 )
+        $rinnoviRichiesti = array();
+        if( isset( $_REQUEST['__carrello__']['__articolo__'] ) && is_array( $_REQUEST['__carrello__']['__articolo__'] ) && ! empty( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) {
+            $rinnoviRichiesti[] = array( 'chiave' => NULL, 'articolo' => $_REQUEST['__carrello__']['__articolo__'] );
+        }
+        if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+            foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => $item ) {
+                if( is_array( $item ) && ! empty( $item['id_rinnovo'] ) ) {
+                    $rinnoviRichiesti[] = array( 'chiave' => $key, 'articolo' => $item );
+                }
+            }
+        }
+        foreach( $rinnoviRichiesti as $richiesto ) {
+
+            // solo i rinnovi che non esistono più
+            if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM rinnovi WHERE id = ?', array( array( 's' => $richiesto['articolo']['id_rinnovo'] ) ) ) ) {
+                continue;
+            }
+
+            // tolgo l'articolo dalla richiesta
+            if( $richiesto['chiave'] === NULL ) {
+                unset( $_REQUEST['__carrello__']['__articolo__'] );
+            } else {
+                unset( $_REQUEST['__carrello__']['__articoli__'][ $richiesto['chiave'] ] );
+            }
+
+            // destinatario della quota, per l'avviso
+            $destinatario = ( empty( $richiesto['articolo']['destinatario_id_anagrafica'] ) ) ? NULL : mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT concat_ws( " ", nome, cognome, denominazione ) FROM anagrafica WHERE id = ?',
+                array( array( 's' => $richiesto['articolo']['destinatario_id_anagrafica'] ) )
+            );
+
+            // avviso per il template
+            $ct['etc']['rinnovi_cancellati'][] = array(
+                'id_rinnovo' => $richiesto['articolo']['id_rinnovo'],
+                'descrizione' => ( empty( $destinatario ) ) ? 'quota' : $destinatario
+            );
+            logWrite( 'rinnovo ' . $richiesto['articolo']['id_rinnovo'] . ' inesistente, scartato dalla richiesta per il carrello #' . ( isset( $_SESSION['carrello']['id'] ) ? $_SESSION['carrello']['id'] : 'nuovo' ), 'cart', LOG_WARNING );
+
+        }
 
         // debug
         // die( print_r( $_REQUEST['__carrello__'], true ) );
@@ -137,6 +267,101 @@
             // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
             // die();
 
+            // lock del carrello della sessione
+            // NOTA con le sessioni su Redis PHP non serializza le richieste della stessa sessione: due richieste identiche
+            // alla cassa nello stesso secondo entravano insieme qui sotto, e la seconda cancellava il carrello appena
+            // creato dalla prima, che falliva scrivendone le righe ( 1452 carrelli_articoli_ibfk_01, polmasi 2026-10-30,
+            // 5 doppie su 2118 a ottobre ); il lock copre dallo STEP 2 allo STEP 9, così la seconda richiesta parte dal
+            // carrello già scritto dalla prima; il nome passa da md5() perché GET_LOCK non accetta più di 64 caratteri,
+            // e porta dentro database() perché i lock sono visibili a tutta l'istanza ( vedi _src/_api/_cron.php ); se
+            // non si prende entro dieci secondi si prosegue lo stesso, come la cassa ( vedi _0400.documenti )
+            $lockCarrello = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT GET_LOCK( concat( "carrello.", md5( concat( database(), ".carrello.", ? ) ) ), 10 )',
+                array( array( 's' => $_SESSION['id'] ) )
+            );
+
+            if( empty( $lockCarrello ) ) {
+                logWrite( 'lock del carrello della sessione ' . $_SESSION['id'] . ' non acquisito entro 10 secondi, procedo comunque', 'cart', LOG_WARNING );
+            }
+
+            // STEP 1.2 - il carrello della sessione può essere sparito mentre si aspettava il lock
+            // NOTA lo STEP 0.1 guarda il carrello prima del lock, e $_SESSION è quella letta all'inizio della richiesta:
+            // con quattro richieste dall'app in due secondi una richiesta passava lo STEP 0.1 col carrello di una sorella,
+            // un'altra sorella partita senza carrello in sessione lo cancellava allo STEP 2 come carrello vecchio, e la
+            // prima, preso il lock, ci scriveva le righe ( 1452 carrelli_articoli_ibfk_01, polmasi 2026-11-02 09:42:35,
+            // carrello 11036 ); si stacca come allo STEP 0.1, tenendo le impostazioni dello STEP 1.1 di questa richiesta
+            if( ! empty( $_SESSION['carrello']['id'] ) ) {
+                $carrelloEsiste = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM carrelli WHERE id = ?',
+                    array( array( 's' => $_SESSION['carrello']['id'] ) )
+                );
+                if( empty( $carrelloEsiste ) ) {
+                    logWrite( 'il carrello #' . $_SESSION['carrello']['id'] . ' della sessione è stato cancellato mentre si aspettava il lock, staccato dalla sessione', 'cart', LOG_WARNING );
+                    $_SESSION['carrello'] = array_intersect_key(
+                        $_SESSION['carrello'],
+                        array_flip( array( 'intestazione_id_anagrafica', 'id_zona', 'id_listino', 'id_sito' ) )
+                    );
+                }
+            }
+
+            // STEP 1.3 - se la sessione non ha un carrello ma ce n'è uno aperto della stessa sessione, lo adotto
+            // NOTA il carrello aperto con la session di questa richiesta l'ha creato una richiesta sorella partita con la
+            // stessa sessione e arrivata prima al lock, la cui $_SESSION non è quella letta da questa; lo STEP 2 lo
+            // cancellava come carrello vecchio e ne creava uno nuovo, e con i tocchi ripetuti dall'app i carrelli si
+            // rincorrevano ( polmasi 2026-11-02, 11035 -> 11036 -> 11037 -> 11038 ); lo si carica come fa il recupero dei
+            // carrelli abbandonati in _710.session.php, tenendo le impostazioni dello STEP 1.1 di questa richiesta, e si
+            // prosegue allo STEP 3 come se la sessione l'avesse già avuto
+            if( empty( $_SESSION['carrello']['id'] ) ) {
+
+                $carrelloSorella = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM carrelli WHERE session = ? AND timestamp_checkout IS NULL',
+                    array( array( 's' => $_SESSION['id'] ) )
+                );
+
+                if( ! empty( $carrelloSorella ) ) {
+
+                    $_SESSION['carrello'] = array_replace(
+                        $carrelloSorella,
+                        array_intersect_key(
+                            (array) $_SESSION['carrello'],
+                            array_flip( array( 'intestazione_id_anagrafica', 'id_zona', 'id_listino', 'id_sito' ) )
+                        )
+                    );
+
+                    $_SESSION['carrello']['metadati'] = array();
+                    foreach( (array) mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM metadati WHERE id_carrello = ?',
+                        array( array( 's' => $_SESSION['carrello']['id'] ) )
+                    ) as $meta ) {
+                        $_SESSION['carrello']['metadati'][ $meta['nome'] ] = $meta['testo'];
+                    }
+
+                    $_SESSION['carrello']['articoli'] = array();
+                    foreach( (array) mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
+                        array( array( 's' => $_SESSION['carrello']['id'] ) )
+                    ) as $articolo ) {
+                        $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] . $articolo['destinatario_id_anagrafica'] ] = $articolo;
+                    }
+
+                    $_SESSION['carrello']['valuta_utf8'] = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT utf8 FROM valute INNER JOIN listini ON valute.id = listini.id_valuta WHERE listini.id = ?',
+                        array( array( 's' => $_SESSION['carrello']['id_listino'] ) )
+                    );
+
+                    logWrite( 'adottato il carrello ' . $_SESSION['carrello']['id'] . ' della sessione ' . $_SESSION['id'] . ', creato da una richiesta parallela', 'cart', LOG_WARNING );
+
+                }
+
+            }
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 
@@ -158,6 +383,8 @@
 
                 }
                 // se lo trovo aperto, lo resetto
+                // NOTA un carrello aperto della sessione lo adotta lo STEP 1.3: qui si arriva solo se è comparso dopo,
+                // cioè quando il lock non si è preso entro dieci secondi
                 elseif( !empty( $carrelloEsistente ) ){
 
                     logWrite( 'presente a database il carrello ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', procedo con il reset' , 'cart' );
@@ -1284,6 +1511,13 @@
             // STEP 9 - salvataggio copia di sicurezza del carrello
             $f = DIR_VAR_SPOOL_CART . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
             writeToFile( print_r( $_SESSION['carrello'], true ), $f );
+
+            // rilascio del lock del carrello della sessione
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT RELEASE_LOCK( concat( "carrello.", md5( concat( database(), ".carrello.", ? ) ) ) )',
+                array( array( 's' => $_SESSION['id'] ) )
+            );
 
             // debug
             // echo $f;

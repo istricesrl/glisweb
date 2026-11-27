@@ -52,8 +52,8 @@
         // debug
         // die( print_r( $ct['lezione'], true ) );
 
-        // verifico la disponibilità di posti
-        if( $ct['lezione']['numero_alunni'] < $ct['lezione']['numero_posti'] ) {
+        // verifico la disponibilità di posti: numero_posti NULL vuol dire senza limite
+        if( ! isset( $ct['lezione']['numero_posti'] ) || $ct['lezione']['numero_alunni'] < $ct['lezione']['numero_posti'] ) {
             $idTipologia = 15;
         } else {
             $idTipologia = 40;

@@ -2,19 +2,19 @@
 {% import '_lib/_default.twig' as cms %}
 
 {# CAROSELLO DELLE IMMAGINI DI TESTATA
-    Le immagini col ruolo carousel scorrono da sole ogni 3,5 secondi ( carousel di Bootstrap 4 ); le frecce e gli
+    Le immagini col ruolo carousel scorrono da sole ogni 3,5 secondi ( carousel di Bootstrap 5 ); le frecce e gli
     indicatori compaiono solo se le immagini sono più di una. Titolo, sottotitolo e cappello dell'immagine diventano la
     didascalia; se l'immagine ha il metadato link diventa un collegamento. La libreria _default.twig non ha una macro
     per il carosello, quindi il markup è qui e le singole immagini le disegna cms.image(). #}
 <!-- file {{ _self }} -->
 {% if page.contents.images.carousel|length > 0 %}
-<div id="carousel-main" class="carousel slide carousel-main" data-ride="carousel" data-interval="3500">
+<div id="carousel-main" class="carousel slide carousel-main" data-bs-ride="carousel" data-bs-interval="3500">
     {% if page.contents.images.carousel|length > 1 %}
-    <ol class="carousel-indicators">
+    <div class="carousel-indicators">
         {% for ordine, img in page.contents.images.carousel %}
-        <li data-target="#carousel-main" data-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active"{% endif %}></li>
+        <button type="button" data-bs-target="#carousel-main" data-bs-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active" aria-current="true"{% endif %} aria-label="{{ loop.index }}"></button>
         {% endfor %}
-    </ol>
+    </div>
     {% endif %}
     <div class="carousel-inner">
         {% for ordine, img in page.contents.images.carousel %}
@@ -33,14 +33,14 @@
         {% endfor %}
     </div>
     {% if page.contents.images.carousel|length > 1 %}
-    <a class="carousel-control-prev" href="#carousel-main" role="button" data-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-main" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">precedente</span>
-    </a>
-    <a class="carousel-control-next" href="#carousel-main" role="button" data-slide="next">
+        <span class="visually-hidden">precedente</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel-main" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">successiva</span>
-    </a>
+        <span class="visually-hidden">successiva</span>
+    </button>
     {% endif %}
 </div>
 {% endif %}

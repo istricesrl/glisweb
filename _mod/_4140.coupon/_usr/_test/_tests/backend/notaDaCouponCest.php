@@ -42,6 +42,11 @@
         // dopo la nota di credito il coupon non ha piu' residuo
         public function rimborsoConsumaCoupon( BackendTester $I ) {
 
+            // la nota di credito la emette l'azienda gestita: senza, il task si ferma con un errore ( vedi sotto )
+            if( ! trovaIdAziendaGestita() ) {
+                $I->markTestSkipped( 'il deploy non ha un\'azienda gestita ( anagrafica in categoria 5 )' );
+            }
+
             $codice = substr( $I->grabTestName( 'cpn' ), 0, 32 );
 
             $anagrafica = $I->haveInDatabase( 'anagrafica', array(
@@ -63,6 +68,35 @@
 
             $residuo = $I->grabFromDatabase( 'SELECT coupon.sconto_fisso - coalesce( ( SELECT sum( coupon_valore ) FROM pagamenti WHERE id_coupon = coupon.id AND id_documento IS NOT NULL ), 0 ) FROM coupon WHERE coupon.id = ?', array( $coupon ) );
             $I->assertEquals( 0, (float) $residuo, 'coupon rimborsato con nota di credito ancora spendibile' );
+
+        }
+
+        // senza azienda gestita il task dice perche' si ferma e non scrive niente ( gimbe, 03/11/2026: rispondeva senza errori )
+        public function senzaAziendaGestita( BackendTester $I ) {
+
+            if( trovaIdAziendaGestita() ) {
+                $I->markTestSkipped( 'il deploy ha un\'azienda gestita' );
+            }
+
+            $codice = substr( $I->grabTestName( 'cpn' ), 0, 32 );
+
+            $anagrafica = $I->haveInDatabase( 'anagrafica', array(
+                'nome' => $I->grabTestName( 'socio' ),
+                'cognome' => 'rimborso coupon'
+            ) );
+
+            $coupon = $I->haveInDatabase( 'coupon', array(
+                'codice' => $codice,
+                'nome' => $codice,
+                'id_anagrafica' => $anagrafica,
+                'sconto_fisso' => 50
+            ) );
+
+            $I->amLoggedInAs( 'roots' );
+            $I->amOnPage( '/task/4140.coupon/nota.da.coupon?coupon=' . $coupon );
+
+            $I->see( 'Nessuna azienda gestita' );
+            $I->dontSeeInDatabase( 'pagamenti', array( 'id_coupon' => $coupon ) );
 
         }
 

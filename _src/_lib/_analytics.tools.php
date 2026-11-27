@@ -226,7 +226,7 @@ $ua = '';
 	// $url = 'https://www.google-analytics.com/debug/mp/collect?api_secret=fake&measurement_id=fake';
 
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? '');
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 	curl_setopt($ch, CURLOPT_POST, true);

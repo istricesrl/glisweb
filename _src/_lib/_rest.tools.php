@@ -18,6 +18,10 @@
      * costante REST_SSL_VERIFY, definita a false, disattiva la verifica del certificato del server, che è attiva per
      * default: serve solo ai deploy di sviluppo con un certificato self-signed.
      * 
+     * Durante i test automatici le chiamate verso i servizi elencati in configurazione non escono dalla macchina:
+     * _src/_config/_595.rest.php definisce le costanti REST_MOCK_URL e REST_MOCK_HOSTS, e restCall() manda quelle
+     * chiamate al finto REST avviato da _src/_sh/_codeception.run.sh ( vedi restMockUrl() e _usr/_test/_rest.mock.php ).
+     * 
      * costanti
      * ========
      * Le costanti definite e utilizzate dalla libreria sono elencate nella seguente tabella; ognuna viene definita
@@ -229,6 +233,11 @@
         curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $connectTimeout );
         curl_setopt( $curl, CURLOPT_TIMEOUT, $responseTimeout );
 
+        // dal processo dei test le richieste portano il marcatore, e il sito ne scrive i log a parte ( _020.debug.php )
+        if( defined( 'GLISWEB_TEST' ) && getenv( 'GLISWEB_TEST_USER_AGENT' ) ) {
+            curl_setopt( $curl, CURLOPT_USERAGENT, getenv( 'GLISWEB_TEST_USER_AGENT' ) );
+        }
+
         // autenticazione
         if( $user !== NULL && $pasw !== NULL ) {
 
@@ -297,6 +306,16 @@
 
             }
 
+        }
+
+        // finto REST dei test
+        //
+        // Durante i test automatici _595.rest.php definisce REST_MOCK_URL e REST_MOCK_HOSTS, e la chiamata verso uno di
+        // quegli host va al finto REST avviato da _codeception.run.sh invece che al servizio vero: i test non devono
+        // scrivere su un gestionale o un servizio di pagamento che non ha un ambiente di prova. Lo si fa qui, prima del
+        // log, cosi' il log rest dice dove e' andata davvero la chiamata.
+        if( defined( 'REST_MOCK_URL' ) && defined( 'REST_MOCK_HOSTS' ) ) {
+            $url = restMockUrl( $url, REST_MOCK_URL, REST_MOCK_HOSTS );
         }
 
         // log
@@ -418,14 +437,20 @@
      * La chiamata viene fatta con restCall() con il metodo GET, senza dati e con Accept text/plain, e la risposta viene
      * restituita così com'è, senza decodifica; in caso di errore di rete la funzione restituisce false.
      *
+     * Il tempo massimo, se dato, vale per tutta la chiamata, connessione compresa ( CURLOPT_TIMEOUT ): serve a chi
+     * chiama durante una richiesta HTTP e non puo' permettersi di aspettare il default, come il controllo della
+     * versione in _030.common.php.
+     *
      * @param       string      $url            l'URL da chiamare
+     * @param       int         $timeout        il tempo massimo della chiamata in secondi (default NULL, cioe'
+     *                                          quello di restCall())
      *
      * @return      mixed                       il corpo della risposta, oppure false in caso di errore di rete
      *
      */
-    function restGetString( $url ) {
+    function restGetString( $url, $timeout = NULL ) {
 
-        $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN );
+        $r = restCall( $url, METHOD_GET, NULL, MIME_TEXT_PLAIN, MIME_TEXT_PLAIN, $status, array(), NULL, NULL, $error, NULL, CURLAUTH_BASIC, $raw, $resHeaders, $timeout );
 
         return $r;
 
@@ -500,5 +525,38 @@
         }, $data );
 
         return $data;
+
+    }
+
+    /**
+     * devia un URL verso il finto REST dei test
+     *
+     * Se l'host dell'URL è fra quelli elencati, la funzione restituisce l'URL del finto REST seguito dall'host e dal
+     * percorso originali, così il finto servizio sa a chi era diretta la chiamata: con il finto REST su
+     * http://127.0.0.1:8790, https://api.esempio.test/v1/ordini?id=7 diventa
+     * http://127.0.0.1:8790/api.esempio.test/v1/ordini?id=7. Gli altri URL tornano invariati, e così anche quelli
+     * che parse_url() non riesce a leggere. L'host si confronta senza distinzione fra maiuscole e minuscole.
+     *
+     * La chiama restCall() quando sono definite le costanti REST_MOCK_URL e REST_MOCK_HOSTS ( vedi
+     * _src/_config/_595.rest.php ); è separata da restCall() perché si possa verificare senza fare chiamate.
+     *
+     * @param       string      $url            l'URL della chiamata
+     * @param       string      $mock           l'URL del finto REST, senza barra finale
+     * @param       array       $hosts          gli host da deviare
+     *
+     * @return      string                      l'URL da chiamare
+     *
+     */
+    function restMockUrl( $url, $mock, $hosts ) {
+
+        $parti = parse_url( $url );
+
+        if( empty( $parti['host'] ) || ! in_array( strtolower( $parti['host'] ), array_map( 'strtolower', $hosts ) ) ) {
+            return $url;
+        }
+
+        return $mock . '/' . strtolower( $parti['host'] )
+            . ( ( isset( $parti['path'] ) ) ? $parti['path'] : '/' )
+            . ( ( isset( $parti['query'] ) ) ? '?' . $parti['query'] : '' );
 
     }

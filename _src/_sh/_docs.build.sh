@@ -17,6 +17,10 @@
 #   _docs.build.sh --all          tutte le precedenti
 #   _docs.build.sh --dry-run      elenca cosa genererebbe, non scrive niente
 #
+# se una scrittura fallisce il PHP lo dice ( righe "NON ..." ) ed esce con 3, e questo script esce
+# senza toccare i permessi; la causa tipica e' l'utente: le cartelle generate sono root:www-data
+# 750/640, quindi lo script va lanciato da root, come fanno _gw.upgrade.sh e il cron
+#
 # NOTA lo script NON esegue "clear": viene invocato in coda a _gw.upgrade.sh e da cron, dove
 # ripulire lo schermo cancellerebbe l'output di chi lo ha chiamato
 #
@@ -43,7 +47,12 @@ if [ $# -eq 0 ]; then
 fi
 
 ## generazione
-php ./_src/_cli/_docs.build.php "$@"
+# NOTA da root PHP_ROOT_OK scavalca la guardia della CLI ( vedi _usr/_docs/_read/218.file.script.md ), che
+# altrimenti fermerebbe il generatore con un FERMO e lo script uscirebbe con 1; lo scavalco e' sicuro perche'
+# il ciclo dei permessi qui sotto rimette owner e permessi di quello che si scrive, ed e' messo qui e non nei
+# chiamanti perche' copra tutti ( _gw.upgrade.sh, il cron, il lancio a mano; stesso precedente in
+# _codeception.run.sh, pubblicazione dell'esito )
+PHP_ROOT_OK=1 php ./_src/_cli/_docs.build.php "$@"
 DOCS_EXIT_CODE=$?
 
 if [ $DOCS_EXIT_CODE -ne 0 ]; then

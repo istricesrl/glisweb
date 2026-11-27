@@ -41,8 +41,9 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * apcuWrite()                      | scrive un dato in cache
+     * apcuAdd()                        | scrive un dato in cache solo se la chiave non c'è ( per i lock )
      * apcuDelete()                     | cancella un dato dalla cache
-     * apcuFlush()                      | cancella tutti i dati dalla cache
+     * apcuFlush()                      | cancella dalla cache i dati di un sito
      * 
      * funzioni per la lettura dei dati
      * --------------------------------
@@ -69,6 +70,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2024-02-05       | Fabio Mosti          | refactoring completo della libreria
+     * 2026-11-05       | Fabio Mosti          | apcuFlush() per sito: l'APCU di mod_php è una sola per tutti i deploy del server
      * 
      * licenza
      * =======
@@ -96,8 +98,8 @@
 
         $prefix = ( isset( $site ) && !empty( $site ) ) ? strtoupper( str_replace( '.', '_', $site ) ) . '_' : APCU_UNIQUE_SEED;
 
-        if( strpos( $k, APCU_UNIQUE_SEED ) === false ) {
-            $k = APCU_UNIQUE_SEED . $k;
+        if( strpos( $k, $prefix ) !== 0 ) {
+            $k = $prefix . $k;
         }
 
         return $k;
@@ -131,14 +133,15 @@
      * Questa funzione legge l'età di una chiave in cache. In particolare, legge il valore associato alla chiave con il suffisso
      * _AGE, che è stato generato con la funzione apcuAddKeyAgeSuffix().
      * 
-     * @param       string      $key      la chiave di cui leggere l'età
+     * @param       string          $key      la chiave di cui leggere l'età
+     * @param       string|null     $site     il sito della chiave (opzionale, se non specificato si usa il sito corrente)
      * 
-     * @return      mixed                 il valore associato alla chiave, oppure false se la chiave non esiste
+     * @return      mixed                     il valore associato alla chiave, oppure false se la chiave non esiste
      *
      */
-    function apcuGetKeyAge( $key ) {
+    function apcuGetKeyAge( $key, $site = null ) {
 
-        return apcuRead( apcuAddKeyAgeSuffix( $key ) );
+        return apcuRead( apcuAddKeyAgeSuffix( $key ), $site );
 
     }
 
@@ -177,20 +180,51 @@
     }
 
     /**
-     * cancella un dato dalla cache
-     * 
-     * Questa funzione cancella un dato dalla cache. In particolare, cancella la chiave specificata dalla cache.
-     * 
-     * @param       string      $key      la chiave da cancellare
-     * 
-     * @return      bool                  true se la chiave è stata cancellata, false altrimenti
+     * scrive un dato in cache solo se la chiave non c'è
+     *
+     * Questa funzione scrive il dato come apcuWrite(), ma con apcu_add(), che è atomica: se la chiave c'è già non scrive
+     * niente e restituisce false. Serve per i lock ( vedi CONTENTS_PAGES_LOCK in _src/_config/_300.pages.php ), quindi non
+     * scrive la chiave _AGE.
+     *
+     * @param       string          $key        la chiave con cui scrivere il dato
+     * @param       mixed           $data       il dato da scrivere
+     * @param       int             $ttl        il tempo di vita della chiave in cache, in secondi (default: APCU_DEFAULT_TTL)
+     * @param       string|null     $site       il sito per cui scrivere il dato (opzionale, se non specificato si usa il sito corrente)
+     *
+     * @return      bool                        true se il dato è stato scritto, false se la chiave c'era già o se la scrittura non è riuscita
      *
      */
-    function apcuDelete( $key ) {
+    function apcuAdd( $key, $data, $ttl = APCU_DEFAULT_TTL, $site = null ) {
 
-        apcuUniqueKey( $key );
+        apcuUniqueKey( $key, $site );
+
+        if( function_exists( 'apcu_add' ) ) {
+            return apcu_add( $key, serialize( $data ), $ttl );
+        }
+
+        return false;
+
+    }
+
+    /**
+     * cancella un dato dalla cache
+     * 
+     * Questa funzione cancella un dato dalla cache. In particolare, cancella la chiave specificata dalla cache, insieme
+     * alla chiave che ne memorizza l'età.
+     * 
+     * @param       string          $key      la chiave da cancellare
+     * @param       string|null     $site     il sito della chiave (opzionale, se non specificato si usa il sito corrente)
+     * 
+     * @return      bool                      true se la chiave è stata cancellata, false altrimenti
+     *
+     */
+    function apcuDelete( $key, $site = null ) {
+
+        apcuUniqueKey( $key, $site );
 
         if( function_exists( 'apcu_delete' ) ) {
+
+            apcu_delete( apcuAddKeyAgeSuffix( $key ) );
 
             return apcu_delete( $key );
 
@@ -201,18 +235,48 @@
     }
 
     /**
-     * cancella tutti i dati dalla cache
+     * cancella dalla cache i dati di un sito
      * 
-     * Questa funzione cancella tutti i dati dalla cache (flush).
+     * Questa funzione cancella dalla cache le chiavi che cominciano con il seme del sito indicato, o del sito corrente se
+     * non se ne indica uno. Non usa apcu_clear_cache(): con PHP in mod_php l'APCU è una sola per tutto il server, e svuotarla
+     * vorrebbe dire svuotare la cache di tutti i deploy, non solo di questo ( fino al 2026-11-05 faceva così ). Come per
+     * memcacheFlush(), per pulire tutti i siti del deploy si chiama la funzione per ciascuno ( vedi
+     * _src/_api/_task/_memcache.clean.php ).
      * 
-     * @return      bool                  true se la cache è stata svuotata, false altrimenti
+     * NOTA da riga di comando l'APCU è un'altra da quella di Apache ( e con apc.enable_cli a Off non c'è proprio ): un
+     * flush lanciato da cron non svuota la cache vista dalle pagine
+     * 
+     * @param       string|null     $site     il sito da svuotare (opzionale, se non specificato si usa il sito corrente)
+     * @param       array           $tieni    le chiavi da non cancellare, senza il seme ( p.es. il lock CONTENTS_PAGES_LOCK )
+     * 
+     * @return      bool                      true se le chiavi del sito sono state cancellate, false altrimenti
      *
      */
-    function apcuFlush() {
+    function apcuFlush( $site = null, $tieni = array() ) {
 
-        if( function_exists( 'apcu_clear_cache' ) ) {
+        if( function_exists( 'apcu_enabled' ) && apcu_enabled() && class_exists( 'APCUIterator' ) ) {
 
-            return apcu_clear_cache();
+            $prefix = '';
+            apcuUniqueKey( $prefix, $site );
+
+            $salve = array();
+            foreach( $tieni as $s ) {
+                apcuUniqueKey( $s, $site );
+                $salve[] = $s;
+            }
+
+            $r = true;
+
+            foreach( new APCUIterator( '/^' . preg_quote( $prefix, '/' ) . '/', APC_ITER_KEY ) as $k => $v ) {
+                if( in_array( $k, $salve ) ) {
+                    continue;
+                }
+                if( ! apcu_delete( $k ) && apcu_exists( $k ) ) {
+                    $r = false;
+                }
+            }
+
+            return $r;
 
         }
 

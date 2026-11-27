@@ -1,0 +1,50 @@
+# guardia dei test, lato GitHub
+#
+# regola di Fabio del 28/10/2026: un commit che tocca il codice porta i suoi test, o dichiara perche' non
+# li porta con una riga "Senza-test: <motivo>" nel messaggio. In locale lo controllano l'hook
+# .githooks/commit-msg e bin/chiusura.py della skill glisweb; questo workflow e' il controllo che non si
+# aggira da locale ( --no-verify, hook non installato, clone nuovo ): ripassa ogni commit arrivato con un
+# push o con una pull request e, se uno e' fuori regola, il run fallisce e lo nomina
+#
+# la logica e' una sola, quella di _src/_sh/_test.guardia.sh: qui si sceglie solo quali commit guardare
+#
+
+name: guardia dei test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  guardia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: commit che toccano il codice senza test
+        env:
+          PRIMA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          DOPO: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          # branch nuovo o storia riscritta: il commit di partenza non c'e', si guarda solo l'ultimo
+          if [ -z "$PRIMA" ] || [ "$PRIMA" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$PRIMA^{commit}" 2> /dev/null; then
+            ELENCO="$DOPO"
+          else
+            ELENCO="$( git rev-list --no-merges "$PRIMA..$DOPO" )"
+          fi
+
+          FUORI=0
+          for h in $ELENCO; do
+            if ! TOCCATI="$( bash _src/_sh/_test.guardia.sh --commit "$h" )"; then
+              FUORI=$(( FUORI + 1 ))
+              echo "::error title=commit senza test::$( git log -1 --format='%h %s' "$h" ) — tocca $( echo $TOCCATI )"
+            fi
+          done
+
+          echo "commit guardati: $( echo $ELENCO | wc -w ), fuori regola: $FUORI"
+          if [ $FUORI -gt 0 ]; then
+            echo "aggiungi i test o dichiara 'Senza-test: <motivo>' nel messaggio, con la voce nel TODO.md ( _usr/_docs/_read/180.test.md )"
+            exit 1
+          fi

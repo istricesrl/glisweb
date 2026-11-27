@@ -128,6 +128,48 @@
 
         }
 
+        // la source map di una libreria in cache la chiede il browser da solo, senza referer: il 403 non da' punti
+        // ( il 27/10/2026 una decina di queste in un minuto hanno bandito la segreteria di polmasi )
+        public function punti403SourceMap( FrontendTester $I ) {
+
+            $_SERVER['REMOTE_ADDR'] = self::RETE . '9';
+            $_SERVER['REDIRECT_STATUS'] = '403';
+            $_SERVER['HTTP_HOST'] = 'example.com';
+            $_SERVER['REQUEST_URI'] = '/var/cache/js/cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js.map';
+            http_response_code( 403 );
+
+            for( $i = 0; $i < SECURITY_SCORE_LIMIT; $i++ ) {
+                securityOutcome();
+            }
+            $I->assertFileDoesNotExist( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'] );
+
+            // un .map fuori dalla cache resta un 403 qualsiasi
+            $_SERVER['REQUEST_URI'] = '/mapserver/mappa.map';
+            for( $i = 0; $i < SECURITY_SCORE_LIMIT; $i++ ) {
+                securityOutcome();
+            }
+            $I->assertFileExists( DIR_VAR_SPOOL_SECURITY_BAN . $_SERVER['REMOTE_ADDR'] );
+
+            unset( $_SERVER['REDIRECT_STATUS'], $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'] );
+            http_response_code( 200 );
+
+        }
+
+        // alla lista globale si segnalano solo gli IP pubblici: i privati, i riservati e le reti di documentazione dei
+        // test il dataserver li rifiuta con 400 ( 27/10/2026, quattro segnalazioni da una suite su glisdev )
+        public function segnalazioneSoloIpPubblici( FrontendTester $I ) {
+
+            $I->assertTrue( securityPublicIp( '8.8.8.8' ) );
+            $I->assertTrue( securityPublicIp( '2001:4860:4860::8888' ) );
+            $I->assertFalse( securityPublicIp( '127.0.0.1' ) );
+            $I->assertFalse( securityPublicIp( '10.132.0.7' ) );
+            $I->assertFalse( securityPublicIp( '192.168.1.1' ) );
+            $I->assertFalse( securityPublicIp( self::RETE . '9' ) );
+            $I->assertFalse( securityPublicIp( '198.51.100.1' ) );
+            $I->assertFalse( securityPublicIp( 'non un ip' ) );
+
+        }
+
         // l'IP della lista globale e' bandito finche' la riga non scade, o finche' non si sblocca
         public function listaGlobale( FrontendTester $I ) {
 

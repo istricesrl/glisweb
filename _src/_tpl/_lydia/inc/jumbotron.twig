@@ -1,13 +1,15 @@
 {# IMMAGINE FISSA DI TESTATA
-    La prima immagine col ruolo jumbotron fa da sfondo a un jumbotron di Bootstrap 4, con sopra i testi presi dai
+    La prima immagine col ruolo jumbotron fa da sfondo al riquadro di testata, con sopra i testi presi dai
     metadati della pagina: jt_h3, jt_h1 ( collegamento se c'è jt_h1_href ), jt_h2, jt_content e il pulsante jt_action
     che porta a jt_href. La libreria _default.twig non ha una macro per il jumbotron, quindi il markup è qui; è la
-    parte a tutta larghezza della vecchia macro jumbotron() di _src/_html/_bin/_default.html. #}
+    parte a tutta larghezza della vecchia macro jumbotron() di _src/_html/_bin/_default.html. Bootstrap 5 non ha più
+    il componente jumbotron: la classe resta come aggancio per css/main.css, e il riquadro di Bootstrap 4 ( spaziatura,
+    margine sotto, angoli arrotondati ) lo rifanno le utility py-5 px-4 mb-4 rounded-3. #}
 <!-- file {{ _self }} -->
 {% if page.contents.images.jumbotron|length > 0 %}
 {% set jt = page.contents.images.jumbotron|first %}
 {% set lang = localization.language.ietf %}
-<div id="jumbotronId" class="jumbotron" style="background-image: url('{{ site.root }}{% if jt.path is iterable %}{{ jt.path[ lang ] }}{% else %}{{ jt.path }}{% endif %}'); background-size: cover; background-position: center;">
+<div id="jumbotronId" class="jumbotron py-5 px-4 mb-4 rounded-3" style="background-image: url('{{ site.root }}{% if jt.path is iterable %}{{ jt.path[ lang ] }}{% else %}{{ jt.path }}{% endif %}'); background-size: cover; background-position: center;">
     <div class="container">
         <div class="row">
             <div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">

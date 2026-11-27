@@ -46,6 +46,8 @@ else
     fi
 
     ## elimino i file temporanei
+    # tmp/* non prende i nomi che cominciano col punto, quindi il cestino tmp/.garbage/ resta: i suoi
+    # file hanno un termine ( common.garbage.giorni ) e li toglie solo il task garbage.clean
     if [ -d ./tmp ]; then
         rm -rf ./tmp/*
     fi

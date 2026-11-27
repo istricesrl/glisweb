@@ -16,12 +16,12 @@ Il modulo non ha una voce di menu propria: aggiunge la linguetta **template** al
 <!-- @pubblico: amministratore -->
 <!-- @pagina: mail.template.view -->
 
-L'elenco mostra una riga per template, ordinata per ruolo:
+L'elenco mostra una riga per template, ordinata per codice:
 
 | colonna | contenuto |
 |---|---|
 | nome | il nome descrittivo del template |
-| ruolo | il nome con cui l'applicazione lo cerca quando deve mandare quel messaggio |
+| codice | il nome con cui l'applicazione lo cerca quando deve mandare quel messaggio |
 
 Un clic su una riga apre la scheda, il più ne apre una nuova.
 
@@ -34,13 +34,13 @@ La linguetta *gestione* tiene i **dati generali**:
 | campo | contenuto |
 |---|---|
 | nome | il nome descrittivo, per chi legge l'elenco |
-| ruolo | il nome con cui l'applicazione cerca il template: deve essere **esattamente** quello che il modulo che manda il messaggio si aspetta |
+| codice | il nome con cui l'applicazione cerca il template: deve essere **esattamente** quello che il modulo che manda il messaggio si aspetta |
 | tipo | il motore che riempie i segnaposto; nello standard c'è solo *template manager Twig* |
 | note | annotazioni libere |
 
-> **attenzione** — il **ruolo** è il collegamento fra il template e il messaggio: cambiarlo, o
+> **attenzione** — il **codice** è il collegamento fra il template e il messaggio: cambiarlo, o
 > scriverlo con una lettera diversa, vuol dire che l'applicazione non trova più il template e manda
-> quello predefinito, o nessuno. Un template con lo stesso ruolo di uno predefinito **prende il suo
+> quello predefinito, o nessuno. Un template con lo stesso codice di uno predefinito **prende il suo
 > posto**, ed è il modo in cui si personalizza un messaggio standard.
 
 Le altre linguette compaiono se ci sono i moduli che le gestiscono:
@@ -66,8 +66,8 @@ quelli delle mail. Un clic su una riga apre la scheda, il più ne apre una nuova
 <!-- @pubblico: amministratore -->
 <!-- @pagina: sms.template.form -->
 
-La linguetta *gestione* è uguale a quella dei template mail: **nome**, **ruolo**, **tipo** e
-**note**, con la stessa attenzione al ruolo. Un template salvato da qui è un template SMS.
+La linguetta *gestione* è uguale a quella dei template mail: **nome**, **codice**, **tipo** e
+**note**, con la stessa attenzione al codice. Un template salvato da qui è un template SMS.
 
 Le altre linguette sono:
 
@@ -77,13 +77,12 @@ Le altre linguette sono:
 | azioni | le operazioni sul template; nello standard la pagina prepara i gruppi ma non ci mette riquadri |
 
 > **nota** — i testi scritti nella linguetta *contenuti* di un template SMS **non vengono ancora
-> usati** per comporre i messaggi: l'applicazione riconosce il template dal ruolo, ma il testo lo
+> usati** per comporre i messaggi: l'applicazione riconosce il template dal codice, ma il testo lo
 > prende solo dai template predefiniti.
 
 ## quello che questo capitolo non dice ancora
 
-- l'**elenco dei ruoli** che i moduli standard cercano, cioè quali messaggi si possono
+- l'**elenco dei codici** che i moduli standard cercano, cioè quali messaggi si possono
   personalizzare e con quale nome;
 - i **segnaposto** che si possono usare nel testo e nell'oggetto, messaggio per messaggio;
-- la **latenza di invio** di un template, che la base dati prevede ma la scheda non mostra;
 - cosa succede quando manca la versione nella **lingua** del destinatario.

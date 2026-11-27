@@ -100,6 +100,19 @@
         }
 	}
 
+    // in una sub view, in assenza di altri criteri, si ordina per ordine se la vista interrogata ce l'ha ( 2026-11-04 )
+    if( isset( $ct['form']['table'] )
+        && ! isset( $ct['view']['data']['__filesystem_mode__'] )
+        && empty( array_filter( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ?? array() ) )
+        && isFieldPresent(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            $ct['view']['table'] . ( empty( $ct['view']['data']['__report_mode__'] ) ? getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['view']['table'] ) : '' ),
+            'ordine'
+        ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['ordine'] = 'ASC';
+    }
+
 	// paginazione presettata
 	if( isset( $ct['view']['__pager__'] ) ) {
 		if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__'] ) ) {

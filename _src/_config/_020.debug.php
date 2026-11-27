@@ -72,6 +72,44 @@
     define( 'LOG_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['log']['lvl'] );
 
     /**
+     * sorgente dei log remoti per i test
+     * ==================================
+     * Per la durata dei test _src/_sh/_codeception.run.sh scrive in var/test/log.remoti un segreto casuale, e qui
+     * si aggiunge a debug.log.remoti.sorgenti la sorgente test-e2e con quel segreto, cosi' i test di /api/log e di
+     * /api/aggiornamenti girano anche sui deploy che non hanno sorgenti. Come per var/test/recaptcha.off
+     * ( _115.google.php ) non vale in produzione e scade dopo un'ora.
+     *
+     */
+
+    // sorgente di prova durante i test
+    if( substr( SITE_STATUS, 0, strlen( PRODUCTION ) ) != PRODUCTION && file_exists( DIR_VAR . 'test/log.remoti' ) && filemtime( DIR_VAR . 'test/log.remoti' ) > time() - 3600 ) {
+        $cf['debug']['log']['remoti']['sorgenti']['test-e2e'] = array( 'segreto' => trim( file_get_contents( DIR_VAR . 'test/log.remoti' ) ) );
+    }
+
+    /**
+     * log dei test in una cartella a parte
+     * ====================================
+     * Gli errori che i test provocano apposta ( login sbagliati, query su tabelle di prova, SMS senza server ) non devono
+     * finire nei log del deploy, dove i controlli quotidiani li scambiano per guasti veri. Le richieste dei test portano
+     * nello User-Agent il marcatore LOG_TEST_USER_AGENT, derivato dal segreto del giro in var/test/log.remoti ( un hash,
+     * non il segreto, che vale anche per /api/log ): Chromium dall'argomento --user-agent dei .suite.yml, PhpBrowser
+     * dall'intestazione della suite unit, restCall() dal processo dei test. Per quelle richieste, e per il processo di
+     * Codeception stesso ( GLISWEB_TEST, _usr/_test/_bootstrap.php ), LOG_TEST vale true e logger() scrive in
+     * var/log/test/. Si separa per richiesta e non per finestra di tempo, perché il traffico vero che arriva durante un
+     * giro deve restare nei log del deploy. Come la sorgente di prova non vale in produzione e scade dopo un'ora; i log
+     * scritti prima di questo runlevel restano nei file soliti.
+     *
+     */
+
+    // marcatore delle richieste dei test
+    if( isset( $cf['debug']['log']['remoti']['sorgenti']['test-e2e']['segreto'] ) ) {
+        define( 'LOG_TEST_USER_AGENT', 'glisweb-test/' . substr( hash( 'sha256', 'user-agent' . $cf['debug']['log']['remoti']['sorgenti']['test-e2e']['segreto'] ), 0, 16 ) );
+    }
+
+    // log dei test a parte
+    define( 'LOG_TEST', defined( 'LOG_TEST_USER_AGENT' ) && ( defined( 'GLISWEB_TEST' ) || strpos( $_SERVER['HTTP_USER_AGENT'] ?? '', LOG_TEST_USER_AGENT ) !== false ) );
+
+    /**
      * debug del runlevel
      * ==================
      * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.

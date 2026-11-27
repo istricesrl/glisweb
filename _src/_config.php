@@ -612,8 +612,9 @@
             }
         }
 
-        // segnalazione alla lista globale dei bandi, a risposta già scritta
-        register_shutdown_function( 'securityReport', $m, $d );
+        // segnalazione alla lista globale dei bandi, a risposta già scritta; l'IP si prende adesso, perché alla
+        // chiusura REMOTE_ADDR può non essere più quello del bando ( i test lo cambiano a ogni caso )
+        register_shutdown_function( 'securityReport', $m, $d, $_SERVER['REMOTE_ADDR'] );
 
         return 'bandito per ' . $d . ' secondi';
 
@@ -628,13 +629,25 @@
      * chiamata ha un timeout di SECURITY_DATASERVER_TIMEOUT secondi e il suo esito non cambia niente per la richiesta in
      * corso: securityBan() la registra come funzione di shutdown, e un fallimento finisce solo nel registro dell'IP.
      *
+     * Non segnala gli IP che non sono pubblici ( securityPublicIp() ): il dataserver li rifiuta con 400, e vengono
+     * dai test o da un client dietro un proxy, non da un attacco da condividere. Su un 5xx, o senza risposta, ritenta
+     * una volta dopo mezzo secondo: il 27/10/2026 il dataserver ha risposto 500 a un gruppo di segnalazioni
+     * contemporanee ( SQLite bloccato ), e senza un secondo tentativo quelle segnalazioni erano perse.
+     *
      * @param   string  $m          il motivo del bando
      * @param   int     $d          la durata del bando in secondi
+     * @param   string  $ip         l'IP bandito
      *
      * @return  void
      *
      */
-    function securityReport( $m, $d ) {
+    function securityReport( $m, $d, $ip = NULL ) {
+
+        // IP bandito
+        $ip = ( $ip === NULL ) ? $_SERVER['REMOTE_ADDR'] : $ip;
+        if( ! securityPublicIp( $ip ) ) {
+            return;
+        }
 
         // token del deploy
         $t = ( file_exists( FILE_SECURITY_DATASERVER_TOKEN ) ) ? trim( (string) @file_get_contents( FILE_SECURITY_DATASERVER_TOKEN ) ) : '';
@@ -642,29 +655,63 @@
             return;
         }
 
-        // segnalazione
-        $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
-        curl_setopt_array( $c, array(
-            CURLOPT_POST            => true,
-            CURLOPT_POSTFIELDS      => json_encode( array(
-                'ip'        => $_SERVER['REMOTE_ADDR'],
-                'regola'    => $m,
-                'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
-                'durata'    => (int) $d
-            ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
-            CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
-            CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
-        ) );
-        $r = curl_exec( $c );
-        $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
-        curl_close( $c );
+        // segnalazione, con un secondo tentativo sugli errori del dataserver
+        for( $tentativo = 1; $tentativo <= 2; $tentativo++ ) {
+
+            if( $tentativo > 1 ) {
+                usleep( 500000 );
+            }
+
+            $c = curl_init( SECURITY_DATASERVER . 'segnala.php' );
+            curl_setopt_array( $c, array(
+                CURLOPT_POST            => true,
+                CURLOPT_POSTFIELDS      => json_encode( array(
+                    'ip'        => $ip,
+                    'regola'    => $m,
+                    'url'       => ( ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '' ) . ( ( isset( $_SERVER['REQUEST_URI'] ) ) ? $_SERVER['REQUEST_URI'] : '' ),
+                    'durata'    => (int) $d
+                ), JSON_PARTIAL_OUTPUT_ON_ERROR ),
+                CURLOPT_HTTPHEADER      => array( 'Content-Type: application/json', 'X-Glisweb-Token: ' . $t ),
+                CURLOPT_RETURNTRANSFER  => true,
+                CURLOPT_CONNECTTIMEOUT  => SECURITY_DATASERVER_TIMEOUT,
+                CURLOPT_TIMEOUT         => SECURITY_DATASERVER_TIMEOUT
+            ) );
+            $r = curl_exec( $c );
+            $s = curl_getinfo( $c, CURLINFO_HTTP_CODE );
+            curl_close( $c );
+
+            // un 4xx non cambia ritentando
+            if( $s == 200 || ( $s >= 400 && $s < 500 ) ) {
+                break;
+            }
+
+        }
 
         // il fallimento si annota e basta
         if( $s != 200 ) {
             securityLog( 'segnalazione del bando al dataserver non riuscita, HTTP ' . $s . ' ' . substr( trim( (string) $r ), 0, 200 ) );
         }
+
+    }
+
+    /**
+     * questa funzione dice se un IP è pubblico, cioè se ha senso segnalarlo alla lista globale dei bandi
+     *
+     * Esclude le reti private e riservate, che filter_var() conosce, e le tre reti di documentazione ( RFC 5737 ) che
+     * PHP 7.3 non esclude: sono quelle che usano i test del firewall.
+     *
+     * @param   string  $ip         l'IP da verificare
+     *
+     * @return  bool                true se l'IP è pubblico
+     *
+     */
+    function securityPublicIp( $ip ) {
+
+        if( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
+            return false;
+        }
+
+        return ! preg_match( '/^(192\.0\.2|198\.51\.100|203\.0\.113)\./', $ip );
 
     }
 
@@ -745,7 +792,8 @@
      *
      * Conta anche il 403 che Apache dà prima di PHP ( ModSecurity, i blocchi del .htaccess ), che arriva qui
      * dall'ErrorDocument 403 con REDIRECT_STATUS: un punto, tre se il percorso è da scanner, niente col referer interno,
-     * perché ModSecurity ha falsi positivi noti sui salvataggi dei CMS e un redattore non deve finire bandito.
+     * perché ModSecurity ha falsi positivi noti sui salvataggi dei CMS e un redattore non deve finire bandito. Niente
+     * nemmeno per le source map delle librerie in cache ( SECURITY_SOURCEMAP_PATHS ), che il browser chiede da solo.
      *
      * @return  void
      *
@@ -755,13 +803,14 @@
         // un referer dello stesso sito è un collegamento rotto o un utente al lavoro, non uno scanner
         $interno = ( ! empty( $_SERVER['HTTP_REFERER'] ) && ! empty( $_SERVER['HTTP_HOST'] ) && strcasecmp( (string) parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ), $_SERVER['HTTP_HOST'] ) == 0 );
         $probe = ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( SECURITY_PROBE_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) );
+        $mappa = ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( SECURITY_SOURCEMAP_PATHS, urldecode( strtok( $_SERVER['REQUEST_URI'], '?' ) ) ) );
 
         if( http_response_code() == 404 && ! $interno && $probe ) {
             $e = securityBan( 3, '404 su percorsi da scanner' );
             if( ! empty( $e ) ) {
                 securityLog( '404 su percorsi da scanner, ' . $e );
             }
-        } elseif( http_response_code() == 403 && isset( $_SERVER['REDIRECT_STATUS'] ) && $_SERVER['REDIRECT_STATUS'] == '403' && ! $interno ) {
+        } elseif( http_response_code() == 403 && isset( $_SERVER['REDIRECT_STATUS'] ) && $_SERVER['REDIRECT_STATUS'] == '403' && ! $interno && ! $mappa ) {
             $m = ( $probe ) ? '403 su percorsi da scanner' : '403 di Apache';
             $e = securityBan( ( $probe ) ? 3 : 1, $m );
             if( ! empty( $e ) ) {
@@ -798,6 +847,9 @@
      * 
      * @param       string      $m      il messaggio da scrivere
      * @param       string      $f      il percorso e il nome (senza estensione) del file di log da scrivere rispetto alla cartella dei log
+     * Le richieste dei test automatici ( LOG_TEST, vedi _src/_config/_020.debug.php ) scrivono in DIR_VAR_LOG . 'test/'
+     * invece che in DIR_VAR_LOG, così gli errori voluti dai test non finiscono nei controlli dei log del deploy.
+     * 
      * @param       int         $l      il livello di gravità del messaggio
      * 
      * @return      void
@@ -805,9 +857,10 @@
      */
     function logger( $m, $f = 'core', $l = LOG_DEBUG ) {
         if( ! defined( 'LOG_CURRENT_LEVEL' ) || $l <= LOG_CURRENT_LEVEL ) {
-            checkPath( dirname( DIR_VAR_LOG . $f ) );
+            $d = ( defined( 'LOG_TEST' ) && LOG_TEST ) ? DIR_VAR_LOG . 'test/' : DIR_VAR_LOG;
+            checkPath( dirname( $d . $f ) );
             $lvl = array( 0 => 'emerg', 1 => 'alert', 2 => 'crit', 3 => 'err', 4 => 'warning', 5 => 'notice', 6 => 'info', 7 => 'debug' );
-            $h = fopen( DIR_VAR_LOG . $f . '.' . $lvl[ $l ] . '.' . date( 'Ym' ) . '.log', 'a+' );
+            $h = fopen( $d . $f . '.' . $lvl[ $l ] . '.' . date( 'Ym' ) . '.log', 'a+' );
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' (' . $l . ') ' . str_replace( '§', PHP_EOL . "\t\t\t\t\t--> ", $m ) . PHP_EOL );
             fclose( $h );
         }
@@ -1006,6 +1059,7 @@
     define( 'DIR_USR_DOCS_BUILD'                        , DIR_BASE . '_usr/_docs/' );
     define( 'DIR_USR_DOCS_BUILD_HTML'                   , DIR_BASE . '_usr/_docs/_html/' );
     define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/_pdf/' );
+    define( 'DIR_USR_DOCS_CVE'                          , DIR_BASE . '_usr/_docs/_cve/' );
     define( 'DIR_USR_DOCS_ETC'                          , DIR_BASE . '_usr/_docs/_etc/' );
     define( 'DIR_USR_DOCS_IMG'                          , DIR_BASE . '_usr/_docs/_img/' );
     // DIR_USR_DOCS_MD puntava a _usr/_docs/_md/, che non e' mai esistita e che non usava
@@ -1020,6 +1074,9 @@
 
     // la directory tmp/ contiene i file temporanei ed è solo custom
     define( 'DIR_TMP'                                   , DIR_BASE . 'tmp/' );
+
+    // il cestino dei file: ci li sposta trashFile(), li toglie emptyTrash()
+    define( 'DIR_TMP_GARBAGE'                           , DIR_BASE . 'tmp/.garbage/' );
 
     // la directory var/ e le sue sottocartelle contengono tutti i dati che cambiano nel tempo (log, upload utente, ecc.); è solo custom
     define( 'DIR_VAR'                                   , DIR_BASE . 'var/' );
@@ -1041,6 +1098,7 @@
     define( 'DIR_VAR_SITEMAP'                           , DIR_BASE . 'var/sitemap/' );
     define( 'DIR_VAR_SPOOL'                             , DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_AUTOMAZIONI'                 , DIR_BASE . 'var/spool/automazioni/' );
+    define( 'DIR_VAR_SPOOL_CACHE'                       , DIR_BASE . 'var/spool/cache/' );
     define( 'DIR_VAR_SPOOL_CART'                        , DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'                        , DIR_BASE . 'var/spool/docs/' );
     define( 'DIR_VAR_SPOOL_EXPORT'                      , DIR_BASE . 'var/spool/export/' );
@@ -1050,6 +1108,7 @@
     define( 'DIR_VAR_SPOOL_MAIL'                        , DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
+    define( 'DIR_VAR_SPOOL_REBUILD'                     , DIR_BASE . 'var/spool/rebuild/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
     define( 'DIR_VAR_SPOOL_SECURITY_BAN'                , DIR_BASE . 'var/spool/security/ban/' );
     define( 'DIR_VAR_SPOOL_SECURITY_GLOBAL'             , DIR_BASE . 'var/spool/security/globale/' );
@@ -1073,6 +1132,9 @@
     define( 'FILE_SECURITY_DATASERVER_TOKEN'            , DIR_BASE . 'etc/secret/dataserver.token' );
     define( 'FILE_SECURITY_GLOBAL_BANS'                 , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.txt' );
     define( 'FILE_SECURITY_GLOBAL_BANS_LOCK'            , DIR_VAR_SPOOL_SECURITY_GLOBAL . 'bandi.lock' );
+
+    // lock dell'importazione dallo spool, che un giro del cron tiene da _740.controller.php a _750.controller.php
+    define( 'FILE_IMPORT_LOCK'                          , DIR_VAR_SPOOL_IMPORT . 'import.lock' );
 
     // file che contengono la release e la versione corrente del framework
     define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
@@ -1438,7 +1500,7 @@
      */
 
     // inizializzazione motore numeri casuali
-    mt_srand( ( double ) microtime() * 1000000 );
+    mt_srand( (int) ( microtime( true ) * 1000000 ) );
 
     // timer
     timerCheck( $cf['speed'], 'fine inizializzazione motore numeri casuali' );

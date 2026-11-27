@@ -167,7 +167,9 @@
                     $cn = new Predis\Client([
                         'scheme' => 'tcp',
                         'host'   => $cf['redis']['servers'][ $server ]['address'],
-                        'port'   => $cf['redis']['servers'][ $server ]['port']
+                        'port'   => $cf['redis']['servers'][ $server ]['port'],
+                        // database opzionale, come mysql.servers.<n>.db: senza, si resta sul db0
+                        'database' => ( ( isset( $cf['redis']['servers'][ $server ]['db'] ) ) ? (int) $cf['redis']['servers'][ $server ]['db'] : 0 )
                     ]);
 
                     $cn->connect();
@@ -218,6 +220,9 @@
 
     // costante per il default TTL
     define( 'APCU_DEFAULT_TTL'        , ( ( isset( $cf['apcu']['ttl'] ) ) ? $cf['apcu']['ttl'] : 0 ) );
+
+    // costante per il default TTL della cache chiave-valore su disco ( _disk.tools.php )
+    define( 'DISK_DEFAULT_TTL'        , ( ( isset( $cf['disk']['ttl'] ) ) ? $cf['disk']['ttl'] : 0 ) );
 
     /**
      * sezione cache su disco

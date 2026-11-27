@@ -56,15 +56,23 @@
 		// Stesso difetto nei due blocchi commentati sopra e sotto (righe 28 e 75): se si riattivano,
 		// va aggiunto lì lo stesso cast.
 		// NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`.
+		// Fix 2026-10-26 ( polmasi ): il cast deve dire anche il charset, `character set utf8`. Il framework
+		// si connette in utf8mb4, e un cast nudo produce una stringa utf8mb4 che non si confronta con la PK
+		// utf8 del report senza convertirla: di nuovo niente PRIMARY, e al primo giro di cron la SELECT e'
+		// rimasta appesa 3-4 minuti in prod; da CLI, in utf8, non si vedeva. Con il charset: eq_ref, 0,05 s.
+		// Fix 2026-10-26 ( Fabio, come polmasi nel suo custom ): solo le lezioni da oggi in avanti. Il task gira ogni
+		// minuto e, quando non c'e' niente da rifare, scorreva tutte le lezioni ( 5 s su 124.722 a polmasi ); le passate
+		// le rifanno i controller quando cambiano ( _todo.finally, _attivita.finally ).
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
 			'SELECT todo.id FROM todo
 			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
-			LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = cast( todo.id as char )
+			LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = cast( todo.id as char character set utf8 )
 			WHERE (
 				coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento
 				OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
 			) AND todo.id_progetto IS NOT NULL
+			AND todo.data_programmazione >= curdate()
 			ORDER BY todo.id DESC
 			LIMIT 1'
 		);
@@ -119,10 +127,6 @@
 	if( ! empty( $status['aggiornare']['id'] ) ) {
 		updateReportLezioniCorsi(
 			$status['aggiornare']['id']
-		);
-		mysqlQuery(
-			$cf['mysql']['connection'],
-			'UPDATE todo SET timestamp_aggiornamento_report_corsi = unix_timestamp(now()) WHERE id = ' . intval( $status['aggiornare']['id'] )
 		);
 	}
 

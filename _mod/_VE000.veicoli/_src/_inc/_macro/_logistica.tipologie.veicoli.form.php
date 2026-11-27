@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'tipologie_veicoli';
+    $ct['form']['table'] = 'tipologie_asset';
 
     // tendina tipologie veicoli
     $ct['etc']['select']['tipologie_veicoli'] = tendinaTipologieVeicoli();

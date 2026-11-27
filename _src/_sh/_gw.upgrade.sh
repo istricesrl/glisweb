@@ -293,6 +293,13 @@ else
         # va PRIMA dei permessi, perche' quello che scrive ( log, dump ) nasca gia' coi permessi giusti
         if [ -x ./_src/_sh/_mysql.upgrade.sh ]; then
 
+            # un database rimasto alla linea di release precedente passa prima dal suo ultimo rilascio:
+            # se il gradino non riesce, _mysql.upgrade.sh qui sotto lo rifiuta e lo dice
+            # ( la funzione si carica all'avvio, dal framework di prima: al primo giro puo' non esserci )
+            if type gw-gradino > /dev/null 2>&1; then
+                gw-gradino $STATO $REPO
+            fi
+
             if ./_src/_sh/_mysql.upgrade.sh $STATO --si; then
                 echo "patch del database applicate"
             else
@@ -427,9 +434,24 @@ else
 
                 fi
 
+                # esito del diff
+                # NOTA diff esce con 0 se i file sono uguali e con 1 se sono diversi, cioè sempre
+                # per un disallineamento ( e sempre nel ramo /dev/null ): non è un errore. Solo il
+                # 2 lo è, e va detto qui, perché altrimenti si perde
+                esitoDiff=$?
+                if [ "$esitoDiff" -gt 1 ]; then
+                    echo "  ATTENZIONE: diff fallito ( codice $esitoDiff ) per $disallineamento"
+                fi
+
             done < <( find "$cartellaDisallineamenti" -type f ! -name '*.diff' -print0 )
 
         fi
+
+        # uscita
+        # NOTA esplicita: senza, il codice d'uscita dello script sarebbe quello dell'ultimo diff
+        # del ciclo qui sopra, cioè 1, e manutenzione-siti leggerebbe come fallito un
+        # aggiornamento riuscito ( successo il 25/11/2026 per gimbe, bernispa e utensilerialughese )
+        exit 0
 
     else
 

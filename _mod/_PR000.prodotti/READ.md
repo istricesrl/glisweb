@@ -35,23 +35,15 @@ articoli_caratteristiche ( macro caratteristiche di lib/catalogo.articoli.form.s
 controller() segue la chiave articoli_caratteristiche_ibfk_01; la tendina legge caratteristiche_view filtrata su
 se_articoli, perché la chiave esterna di id_caratteristica punta alla tabella caratteristiche.
 
-### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
-Questa è la macro della scheda distinta base del modulo di gestione degli articoli. Il sotto-elenco delle righe di
-distinta ( macro distinta di lib/catalogo.articoli.form.sub.twig, sul modello di quella delle relazioni ) arriva con la
-scheda perché controller() segue la chiave distinta_ibfk_01 ( id_articolo, l'articolo composto ); ogni riga ha il
-componente, scelto con la ricerca degli articoli ( source api articoli, come l'articolo collegato delle relazioni ), e
-la quantità. La chiave di id_componente è distinta_ibfk_02_nofollow, quindi la scheda del componente non carica le
-distinte in cui compare; la macro non prepara tendine.
-
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
 Questa è la macro del modulo di gestione degli articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
 Questa è la macro della scheda relazioni del modulo di gestione articoli: prepara la tendina dei ruoli ( ruoli_articoli_view )
-per il sotto-elenco delle righe di relazioni_articoli ( macro relazioni di lib/catalogo.articoli.form.sub.twig, sul
-modello di /_mod/_AN000.anagrafica/_src/_tpl/_athena/lib/anagrafica.form.relazioni.sub.twig ). Siccome controller()
-segue sia relazioni_articoli_ibfk_01 sia _ibfk_02, nel sotto-elenco compaiono anche le relazioni in cui l'articolo è
-quello collegato: per questo la riga mostra anche l'articolo principale.
+per il sotto-elenco delle righe di relazioni_articoli ( macro relazioni di lib/catalogo.articoli.form.sub.twig,
+sul modello di /_mod/_AN000.anagrafica/_src/_tpl/_athena/lib/anagrafica.form.relazioni.sub.twig ). Il collegato, un articolo
+oppure un prodotto, è il <ruolo> dell'articolo ( il bundle, il modello, l'accessorio ); controller() segue solo
+relazioni_articoli_ibfk_01, quindi il sotto-elenco mostra le relazioni in cui l'articolo è quello principale.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione articoli.

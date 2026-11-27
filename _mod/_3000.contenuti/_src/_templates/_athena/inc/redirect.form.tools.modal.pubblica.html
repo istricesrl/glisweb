@@ -10,8 +10,29 @@
 	
 		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_redirect.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
 
-		getws( call,'', function() {
-			$('#btnpubblica').html('<i class="fa fa-check"></i>');
+		$('#esito-row').addClass('d-none');
+		$('#esito-pubblicazione').empty();
+
+		// la spunta compare solo se il task risponde OK: fino al 09/11/2026 compariva sempre, e una
+		// pubblicazione fallita ( target irraggiungibile ) si presentava come riuscita
+		getws( call,'', function( data ) {
+			if( typeof data === 'string' ) {
+				try { data = JSON.parse( data ); } catch( e ) { data = { esito: 'KO', err: [ data ] }; }
+			}
+			console.log( data );
+			if( data.esito == 'OK' ) {
+				$('#btnpubblica').html('<i class="fa fa-check"></i>');
+			} else {
+				$.each( data.err || [ 'risposta inattesa dal server' ], function( i, err ) {
+					$('#esito-pubblicazione').append( $('<p>').text( err ) );
+				});
+				$('#esito-row').removeClass('d-none');
+				$('#btnpubblica').html('conferma');
+			}
+		}, function() {
+			$('#esito-pubblicazione').append( $('<p>').text( 'errore di comunicazione col server, il redirect non è stato pubblicato' ) );
+			$('#esito-row').removeClass('d-none');
+			$('#btnpubblica').html('conferma');
 		});
 
 	}
@@ -37,6 +58,11 @@
                     <p>questa operazione pubblicherà il redirect corrente;</p>
 					<p>ATTENZIONE i dati preesistenti verranno sovrascritti</p>
                 </div>
+            </div>
+			<div class="form-row d-none" id="esito-row">
+                <div class="col-12">
+					<div class="alert alert-danger mb-0" id="esito-pubblicazione"></div>
+				</div>
             </div>
 	    </div>
 	    </div>

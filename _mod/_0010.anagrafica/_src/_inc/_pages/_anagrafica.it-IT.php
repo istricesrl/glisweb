@@ -147,7 +147,8 @@
 	}
 
 	// RELAZIONI CON IL MODULO TODO
-	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+	// NOTA la linguetta todo esiste solo con 1000.produzione, che dichiara todo.form ( vedi _1200.todo )
+	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) && in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.todo' );
 	}
 

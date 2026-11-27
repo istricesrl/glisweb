@@ -23,7 +23,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_veicoli_view ORDER BY __label__'
+            'SELECT id, __label__ FROM tipologie_asset_view WHERE se_veicoli = 1 ORDER BY __label__'
         );
 
     }

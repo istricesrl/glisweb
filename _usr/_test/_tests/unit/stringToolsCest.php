@@ -201,6 +201,20 @@ class stringToolsCest
         $I->see('bool(false)');
     }
 
+    // site2regexp() -> l'espressione regolare degli host di un sito: www facoltativo, alias, niente dominio niente regola
+    public function site2regexp(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_site2regexp.01.php');
+        $I->see('www.esempio.it PROD: true');
+        $I->see('esempio.it PROD: true');
+        $I->see('WWW.ESEMPIO.IT PROD: true');
+        $I->see('www.esempio.com PROD: true');
+        $I->see('shop.esempio.it PROD: true');
+        $I->see('esempio.istricesrl.it DEV: true');
+        $I->see('istricesrl.it DEV: false');
+        $I->see('TEST: NULL');
+    }
+
     // clean_string() -> deve restituire una stringa pulita
     public function clean_string(UnitTester $I)
     {
@@ -226,6 +240,29 @@ class stringToolsCest
         $I->see("20231025123000");
         $I->see("false");
         $I->see("true");
+    }
+
+    // urlLocale() -> l'indirizzo solo se e' un percorso locale o un URL dello stesso host, NULL per tutto il resto
+    public function urlLocale(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_urlLocale.01.php');
+        $I->see("percorso: '/strumenti/pagina.it-IT.html?mail_out[id]=1'");
+        $I->see("stesso sito: 'https://www.example.com/pagina.it-IT.html'");
+        foreach( array( 'altro sito', 'protocollo relativo', 'barra rovesciata', 'javascript', 'data', 'credenziali', 'a capo', 'vuoto', 'array' ) as $caso ) {
+            $I->see($caso . ': NULL');
+        }
+    }
+
+    // urlLocale() in un multisito -> passano gli altri siti del deploy e i loro alias, non i domini che li contengono
+    public function urlLocaleMultisito(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_string.tools/_urlLocale.02.php');
+        $I->see("host della richiesta: 'https://www.example.com/pagina.it-IT.html'");
+        $I->see("altro sito del deploy: 'https://www.esempio.it/pagina.it-IT.html'");
+        $I->see("alias: 'https://shop.esempio.it/pagina.it-IT.html'");
+        foreach( array( 'senza punto', 'dominio in coda', 'dominio come suffisso', 'altro sito' ) as $caso ) {
+            $I->see($caso . ': NULL');
+        }
     }
 
     // settaggi post test

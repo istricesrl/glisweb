@@ -8,12 +8,17 @@
      * ---------------------
      * Questo file contiene i redirect da effettuare. Il formato è CSV con le seguenti colonne:
      * 
-     * colonna              | significat                                                | esempio
+     * colonna              | significato                                               | esempio
      * ---------------------|-----------------------------------------------------------|------------------------
-     * id_sito              | l'ID del sito a cui appartiene il redirect                | 1
+     * id_sito              | l'ID del sito del redirect, vuoto per tutti i siti        | 1
      * codice_stato_http    | il codice HTTP da lanciare assieme al reindirizzamento    | 301
-     * sorgente             | la pagina da cui parte il reindirizzamento                | /vecchia/pagina.html
+     * sorgente             | il percorso da cui parte il reindirizzamento              | /vecchia/pagina.html
      * destinazione         | la pagina verso cui si effettua il reindirizzamento       | http://host.domain.bogus/nuova/pagina.html
+     * se_query_string      | 1 per riportare la query string sulla destinazione        | 0
+     *
+     * Le colonne sono quelle della tabella redirect, e i redirect del file si sommano a quelli del database; la colonna
+     * se_query_string si può omettere. La sorgente è il percorso della richiesta al netto della query string, con la
+     * barra iniziale e senza dominio, e il confronto è esatto.
      *
      * NOTA il file dei redirect (etc/redirect.csv) deve contenere anche le intestazioni, ad esempio:
      * 

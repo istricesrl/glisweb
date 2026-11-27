@@ -643,11 +643,20 @@
                             $like = "%$tks%";
                             $equal = "$tks";
                             $cond = array();
+                            // NOTA un campo numerico si confronta solo con una parola numerica: MySQL converte una stringa
+                            // non numerica in 0, e "giacenza = 'ABC'" prendeva tutte le righe a zero ( 2026-11-24 )
                             foreach (preg_filter('/^/', "$t$rm.", $i['__fields__']) as $field) {
-                                $cond[] = $field . ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? ' =' : ' LIKE' ) . ' ?';
-                                $vs[] = array('s' => ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? $equal : $like ) );
+                                if( isFieldNumeric( $mc, $c, $t, $field) ) {
+                                    if( ! is_numeric( $tks ) ) { continue; }
+                                    $cond[] = $field . ' = ?';
+                                    $vs[] = array('s' => $equal);
+                                } else {
+                                    $cond[] = $field . ' LIKE ?';
+                                    $vs[] = array('s' => $like);
+                                }
                             }
-                            $whr[] = '(' . implode(' OR ', $cond) . ')';
+                            // se nessun campo può contenere la parola, la ricerca non trova niente
+                            $whr[] = ( empty( $cond ) ) ? '( 0 )' : '(' . implode(' OR ', $cond) . ')';
                         }
                     }
                 } elseif (isset($i['__search__']) && !empty($i['__search__'])) {
@@ -1184,7 +1193,8 @@
                  *
                  * - in scrittura (POST, PUT, REPLACE, UPDATE) ogni riga di ogni sottomodulo presente nel blocco dati
                  *   viene passata alla controller() con lo stesso metodo, con l'entità pari al nome del sottomodulo e
-                 *   con l'id della riga corrente come id padre, da usare con il valore speciale __parent_id__;
+                 *   con l'id della riga corrente come id padre, da usare con il valore speciale __parent_id__; se l'id
+                 *   manca, perché la scrittura del padre è fallita, le sottoform non vengono elaborate;
                  * - in lettura (GET con id nei campi) la controller() cerca in information_schema le tabelle che hanno
                  *   una chiave esterna verso l'entità corrente, escluse quelle il cui vincolo termina in _nofollow,
                  *   legge gli id delle righe collegate (ordinate secondo l'eventuale indice SORTING) e chiama sé stessa
@@ -1212,6 +1222,12 @@
                         case METHOD_PUT:
                         case METHOD_REPLACE:
                         case METHOD_UPDATE:
+                            // se la scrittura del padre e' fallita ( 1062 o 1054 su un POST ) l'id manca, e le sottoform
+                            // resterebbero con id_<padre> NULL: 30 righe di account_gruppi orfane su polmasi fino al 29/10/2026
+                            if (empty($d['id'])) {
+                                logWrite("sottomoduli di $t non elaborati: manca l'id del padre, stato " . ($i['__status__'] ?? ''), 'controller', LOG_WARNING);
+                                break;
+                            }
                             foreach ($d as $k => $v) {
                                 if (is_array($v)) {
                                     foreach ($v as $x => $y) {
@@ -1279,6 +1295,10 @@
                                      * per non aggiungere mai nessun ORDER BY.
                                      */
                                     $idx = array_column(mysqlCachedQuery($mc, $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"', false, 3600), 'Column_name');
+                                    // senza l'indice SORTING le righe dei sotto moduli seguono il campo ordine, se c'è ( 2026-11-04 )
+                                    if (!count($idx) && isFieldPresent($mc, $c, $ref['TABLE_NAME'], 'ordine')) {
+                                        $idx = array('ordine', 'id');
+                                    }
                                     $q = "SELECT id FROM " . $ref['TABLE_NAME'] . " WHERE " . implode(' OR ', $refCols) . ((count($idx)) ? ' ORDER BY ' . implode(', ', $idx) : NULL);
                                     $rows = mysqlQuery($c, $q);
                                     logWrite("cerco le referenze a " . $ref['TABLE_NAME'] . " dove " . implode($ref['COLUMN_NAME']) . " è " . $d['id'] . ", " . count($rows) . " referenze trovate", 'controller');
@@ -1600,6 +1620,83 @@
         } else {
             return false;
         }
+
+    }
+
+    /**
+     * verifica se una tabella o una vista ha un certo campo
+     *
+     * Serve a decidere se un oggetto si può ordinare per `ordine` ( le righe dei sotto moduli, le sub view ) e a
+     * validare il nome di un campo che arriva dalla richiesta prima di usarlo in una query. Lo schema si legge da
+     * INFORMATION_SCHEMA.COLUMNS, che contiene anche le viste, con una query in cache per un'ora: è schema e non
+     * dato, cambia con le migrazioni e non con i salvataggi, e il TTL esplicito evita che dove MEMCACHE_DEFAULT_TTL
+     * vale 0 resti in cache per sempre.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       mysqli      $c      la connessione al database
+     * @param       string      $table  il nome della tabella o della vista
+     * @param       string      $field  il nome del campo
+     *
+     * @return      bool                true se il campo esiste, false altrimenti
+     *
+     */
+    function isFieldPresent( $m, $c, $table, $field ) {
+
+        $n = mysqlSelectCachedValue( $m, $c,
+            'SELECT count( * )
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array(
+                array( 's' => $table ),
+                array( 's' => $field )
+            ),
+            3600
+        );
+
+        return ( intval( $n ) > 0 );
+
+    }
+
+    /**
+     * calcola l'ordine di default di un nuovo oggetto figlio
+     *
+     * Quando si aggiunge un oggetto a un genitore ( p.es. dal pulsante + di una sub view ) il campo `ordine` parte
+     * dal multiplo di dieci successivo al più alto fra i fratelli: 10, 20, 30… lasciano spazio per inserire un
+     * oggetto in mezzo senza rinumerare gli altri. Se il campo `ordine` non è numerico il valore si completa con gli
+     * zeri a sinistra ( 0010 ), perché un ordine testuale senza zeri metterebbe 100 prima di 20. La stessa regola,
+     * lato client, la applica duplicate() di main.js alle righe nuove dei sotto moduli.
+     *
+     * Il campo del genitore arriva di solito dalla richiesta ( __preset__ ), quindi lo si accetta solo se il nome
+     * è quello di una chiave esterna e se la tabella ce l'ha davvero.
+     *
+     * @param       object      $m      la connessione a memcache
+     * @param       mysqli      $c      la connessione al database
+     * @param       string      $table  la tabella dell'oggetto figlio
+     * @param       string      $field  il campo che punta al genitore ( id_... )
+     * @param       string      $value  l'id del genitore
+     *
+     * @return      string|null         l'ordine di default, o null se la tabella non ha `ordine` o il campo non è valido
+     *
+     */
+    function getNextOrder( $m, $c, $table, $field, $value ) {
+
+        if( ! preg_match( '/^id_[a-z0-9_]+$/', $field ) || ! isFieldPresent( $m, $c, $table, 'ordine' ) || ! isFieldPresent( $m, $c, $table, $field ) ) {
+            return NULL;
+        }
+
+        $max = mysqlSelectValue( $c,
+            'SELECT max( ordine ) FROM ' . $table . ' WHERE ' . $field . ' = ?',
+            array( array( 's' => $value ) )
+        );
+
+        $next = ( floor( intval( $max ) / 10 ) + 1 ) * 10;
+
+        if( ! isFieldNumeric( $m, $c, $table, 'ordine' ) ) {
+            $next = str_pad( $next, max( 4, strlen( $max ?? '' ) ), '0', STR_PAD_LEFT );
+        }
+
+        return (string) $next;
 
     }
 

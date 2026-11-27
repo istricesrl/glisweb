@@ -19,7 +19,8 @@
      * auth         | 'bearer' ( token chiesto a /token con utente e password ) oppure 'basic'
      * username     | utente del servizio
      * password     | password del servizio: va SOLO in src/shadow.json, mai in config.json
-     * jobs         | nomi dei job configurati sul WMS, per funzione ( import ed export degli ordini )
+     * jobs         | nomi dei job configurati sul WMS, per funzione: import ed export degli ordini, import
+     *              | dell'anagrafica articoli, export delle giacenze
      * timeout      | attesa massima della risposta, in secondi
      *
      */
@@ -34,7 +35,9 @@
         'password'  => NULL,
         'jobs'      => array(
             'import'    => 'CFG-IMP-ORDINI',
-            'export'    => 'CFG-EXP-ORDINI'
+            'export'    => 'CFG-EXP-ORDINI',
+            'articoli'  => 'CFG-IMP-ARTICOLI',
+            'giacenze'  => 'CFG-EXP-GIACENZE'
         ),
         'timeout'   => 30
     );

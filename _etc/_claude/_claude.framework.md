@@ -83,7 +83,9 @@ condivisione.
 - Per ripristinare solo i permessi: `_src/_sh/_lamp.permissions.secure.sh` (produzione) o
   `_src/_sh/_lamp.permissions.open.sh` (sviluppo).
 
-Per personalizzare un file standard, creare il corrispondente senza underscore iniziale:
+Per personalizzare un file standard, creare il corrispondente togliendo **tutti** gli underscore dal percorso.
+L'underscore e' **riservato** alla distinzione standard/custom ( scelta di design ): nessun nome lo usa come
+separatore, si usano punto e trattino. I template: skill `glisweb`, "Personalizzare un template".
 
 | File standard | File custom (sostituisce) | File custom (aggiunge dopo) |
 |---|---|---|
@@ -97,7 +99,7 @@ gesto.** Il `.add.php` non sostituisce lo standard, si carica **in più**, sempr
 `$cf['library']['files']` ): finché le funzioni restano anche nel progetto, il primo aggiornamento che porta lo
 standard nuovo manda il deploy in `Cannot redeclare` **su ogni pagina**, non su una sola. Mettere a monte e
 togliere dal progetto sono **una mossa sola**: prima si toglie dal progetto ( o lo si fa nella stessa finestra
-dell'aggiornamento ), poi si verifica con `_smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
+dell'aggiornamento ), poi si verifica con `SMOKE_BASE_URL=<sito> _smoke.curl.sh status /`. Il 17/09/2026 su bernispa cinque funzioni
 del sottoscorta promosse in `_0500.mastri` e rimaste in `src/lib/mysql.utils.add.php` hanno fermato il sito
 otto minuti e mezzo, col magazzino al lavoro.
 
@@ -196,6 +198,18 @@ regole per esteso, con le misure che le motivano, stanno nella skill `glisweb`
 
 Niente di tutto questo giustifica lavorare peggio: **lo stesso lavoro, impacchettato meglio**.
 
+## Comandi da lanciare con `!`
+
+⚠ **TASSATIVO, vale per ogni livello ( generale, capitani, soldati )** — detto da Fabio il 26/10/2026: un comando da
+far lanciare a Fabio con `!` sta **su una riga sola**. Il copia-incolla di più righe gli fa fare i salti mortali con gli
+a capo, e un comando spezzato fallisce.
+
+- prima si verifica che non lo si possa lanciare da soli: se si può, si lancia;
+- **un comando lungo, o più di un comando, si raccoglie in uno script** ( in `.claude/bin/` se serve ancora, nella
+  scratchpad se è usa e getta ) e a Fabio si dà **una riga sola**, corta ( sotto i ~100 caratteri, che non vada a capo
+  nel terminale ): `! bash /percorso/script.sh`;
+- mai heredoc, `python3 -c` lunghi, `&&` a catena che vanno a capo, né due blocchi da incollare uno dopo l'altro.
+
 ## I cinque file di un progetto: `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`
 
 Vivono nella **root del deploy** ( il livello che contiene `dev/` ), più il `burndown.md` che è generato.
@@ -207,7 +221,7 @@ e va letto prima di scrivere in uno di questi file** se non lo si è già fatto 
 | file | risponde a | come si scrive |
 |---|---|---|
 | `CLAUDE.md` | **come ci si deve comportare qui**: regole e trappole | stabile, **snello** ( vedi sopra ) |
-| `READ.md` | **cosa serve sapere per metterci le mani**: nove voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure, **documentazione** e **test automatici** ( i link a un clic ) | il fatto e il rimando; la trattazione in `var/` |
+| `READ.md` | **cosa serve sapere per metterci le mani**: dieci voci — descrizione, credenziali, architettura e deploy, **mappa delle personalizzazioni**, FAQ, problemi frequenti, procedure, **documentazione** e **test automatici** ( i link a un clic ), **persone** ( chi è, come la si raggiunge ) | il fatto e il rimando; la trattazione in `var/` |
 | `TODO.md` | **cosa c'è da fare** | per **aree**, una riga per compito, tre flag; si pota |
 | `DONE.md` | **cosa è successo e perché** | un capitolo per giornata, in append; si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | una sezione per destinatario, `## lock` in fondo; si riscrive per sezione, mai intero |
@@ -224,13 +238,23 @@ Le regole che contano di più:
 5. **i marcatori sono cinque**: `[ ]` da fare e nel carico, `[=]` in attesa di un altro ( con **chi** e
    **da quando** ), `[?]` sospesa, `[v]` fatta, `[x]` scartata. Le ultime due vivono nel `DONE.md`, `[=]`
    e `[?]` non contano nel carico. La voce comincia a colonna 1 con `- `, e dopo il marcatore porta i tre
-   flag urgente/rilevante/impattante, `(!-!)`;
+   flag urgente/rilevante/impattante, `(!-!)`. Una scadenza vera va subito dopo i flag, `( scad: GG/MM/AAAA )`
+   indicativa o `( scad!: GG/MM/AAAA )` tassativa: chi la legge e cosa ne fa sta in `cinque-file.md`, *"La scadenza"*;
 6. **chiudere una voce sono tre gesti**: marcatore, trasloco nel `DONE.md` col perché, e — se il cliente
    la vede o l'aspettava — la stessa riga nel `CHAT.md` in `### Da dirgli alla prossima occasione`, il
    giorno stesso;
 7. **una domanda per il cliente si scrive quando nasce**: nello stesso turno, nel `CHAT.md` in
    `### Da chiedergli alla prossima occasione`, con data e voce di origine. Non resta in conversazione,
-   dove muore col `/clear`.
+   dove muore col `/clear`;
+8. **appendere non vuol dire riscrivere**: per aggiungere in fondo si usa `open( f, 'a' )` o `>>`, **mai**
+   una lettura e una scrittura dello stesso file nella stessa istruzione — `open( f, 'w' ).write( open( f
+   ).read() + x )` tronca **prima** di leggere, e così vale per `cat F … > F` e `sed … F > F`. Prima di
+   **riscrivere** un file di stato ( i cinque, `var/chat/registro.jsonl` ) lo si legge tutto in una
+   variabile, si costruisce il testo nuovo e si controlla che non sia più corto del vecchio, a meno che
+   accorciarlo sia proprio lo scopo. Il 26/10/2026 il `DONE.md` di gimbe ( ~490 KB ) è rimasto col solo
+   ultimo blocco così. La rete è `~/.claude/bin/storico-file-progetto.py`: un cron orario copia ogni
+   versione in `<progetto>/var/storico-file-progetto/AAAAMMGG-HH/`, e l'hook `storico-file-progetto.dopo.py`
+   avvisa se un file è sceso di oltre il 20% — se lo dice, **si ripristina da lì prima di ogni altra cosa**.
 
 La **pulizia** di un `TODO.md` ( voci già chiuse, doppioni, domande da fare ) ha una procedura sua:
 `.claude/skills/glisweb/riferimenti/pulizia-todo.md`, coi verdetti applicati da `bin/applica-triage.py`.
@@ -256,8 +280,13 @@ sezione "TASSATIVO: applicazione e documentazione sempre allineati".
 | il **deploy** | `_usr/_docs/READ.md` e `USER.md` | `usr/docs/READ.md` e `USER.md` |
 | un **componente** | `_mod/_4000.catalogo/READ.md` e `USER.md` | `mod/4000.catalogo/READ.md` e `USER.md` |
 | le **quickstart** | `_usr/_docs/_quickstart/*.md` | `usr/docs/quickstart/*.md` |
+| le **vulnerabilità** | `_usr/_docs/_cve/CVE-AAAA-NNNNN.md` ( o `GHSA-…` ) | `usr/docs/cve/CVE-AAAA-NNNNN.md` |
 
 - `READ.md` è il manuale **sviluppatore**, `USER.md` quello **utente**;
+- **ogni CVE che tocca il framework o il suo stack ha la sua scheda**, aperta il giorno in cui la si
+  valuta — compresi gli alert di Dependabot sulle librerie Composer, una scheda per advisory:
+  riferimenti ufficiali, effetti, come si sfrutta, esposizione del framework, come ci si è protetti.
+  Struttura e regole nel capitolo `_usr/_docs/_read/165.sicurezza.md`;
 - la documentazione di progetto è **solo correttiva, sostitutiva o additiva**: un capitolo entra nel
   manuale di progetto solo se esiste il suo sorgente custom, e un deploy senza personalizzazioni
   documentate non ha manuale di progetto. Quella dello standard è pubblica ( `/_manual/` ), quella di
@@ -327,6 +356,18 @@ mysql:
 automaticamente dal bootstrap confrontando l'`HTTP_HOST` della richiesta con i domini configurati in
 `$cf['sites']`. Non va impostata manualmente.
 
+## Database: il canone vince, e due trappole di MariaDB
+
+Due regole decise da Fabio il 24/11/2026:
+
+- **se codice e canone del database non tornano, si corregge il codice, mai il database.** Un database fuori
+  canone si riporta **a mano** al canone, senza patch condizionali ( `IF NOT EXISTS`, controlli su
+  `information_schema` per assecondare la variante locale ): è la stessa regola dello stare sul canone e non
+  improvvisare, applicata allo schema;
+- **MariaDB: `SELECT 1 WHERE <condizione>` senza `FROM` dà errore 1064**, e un `empty()` sul risultato fallito lo
+  legge come "nessuna riga", cioè "libero": il controllo passa in silenzio proprio quando dovrebbe fermare. Si
+  scrive `SELECT 1 FROM DUAL WHERE <condizione>`.
+
 ---
 
 ## Architettura in sintesi
@@ -378,9 +419,11 @@ I file dei moduli vengono caricati dopo quelli base ad ogni passata di runlevel.
 ### Le definizioni delle pagine stanno in cache, e modificarle non basta
 
 L'array delle pagine — quello che nasce dai file `_src/_inc/_pages/*.php`, dai loro corrispettivi custom
-e dal database — **non viene ricostruito a ogni richiesta**: `_src/_config/_300.pages.php` lo legge da
-memcache (`CONTENTS_PAGES_KEY`, insieme ad albero, indice, reverse e shortcut) e lo rigenera solo se la
-cache manca o se `CONTENTS_PAGES_UPDATED` è più recente di `CONTENTS_PAGES_CACHED`.
+e dal database — **non viene ricostruito a ogni richiesta**: `_src/_config/_300.pages.php` lo legge dalla
+cache (`CONTENTS_PAGES_KEY`, insieme ad albero, indice, reverse e shortcut) e lo rigenera solo se la
+cache manca o se `CONTENTS_PAGES_UPDATED` è più recente di `CONTENTS_PAGES_CACHED`. Dal 05/11/2026 la cache
+è memcache se c'è, altrimenti APCu o `var/spool/cache/` ( `_src/_lib/_cache.utils.php` ): la trappola qui sotto
+vale **anche sui deploy senza memcache**, che prima ricostruivano a ogni richiesta.
 
 La conseguenza pratica è che **si modifica un file di definizione pagine e non cambia niente**: nessun
 errore, nessun avviso, la pagina continua a rispondere con la definizione vecchia. Non è opcache — quella
@@ -389,7 +432,8 @@ altra modifica al framework (il CSS di un template, uno snippet Twig, una librer
 solo questa no. Il 2026-09-15 ha nascosto per una decina di minuti una correzione di una riga.
 
 Per farli rileggere: `/task/memcache.clean` (vuole il privilegio `GESTIONE_CACHE`), con `?deploy=1` se
-il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente.
+il deploy ospita più siti — le chiavi sono seedate per sito e il default svuota solo quello corrente. Il task svuota anche APCu e disco, e
+prima di rispondere ricostruisce l'albero di ogni sito ( `/task/cache.rebuild` ): la prima richiesta lo trova pronto.
 Vale per tutto ciò che finisce nell'array delle pagine: `menu`, `auth.groups`, `template`, `macro`.
 
 ### Librerie (`_src/_lib/`)
@@ -410,7 +454,7 @@ Le librerie esterne (Composer) si trovano in `_src/_lib/_ext/`, non in `vendor/`
 
 La versione di Bootstrap la dichiara **ogni template** ( `etc/template.yaml`/`template.conf` ), non è
 globale: **guardarla prima di toccare classi Bootstrap**, perché convertire un template ancora su BS4 lo
-rompe. Su BS5: `_src/_tpl/_athena`, `_cassandra`, `_minerva` e `_src/_templates/_minerva`; gli altri sono
+rompe. Su BS5: `_src/_tpl/_athena`, `_cassandra`, `_lydia`, `_minerva` e `_src/_templates/_minerva`; gli altri sono
 ancora BS4. Il livello condiviso ( `_src/_twig/`, `_src/_html/`, template di modulo ) è **congelato**
 finché esiste una pagina BS4. Due trappole: `form-row` **non si tocca**, e `order-*` in BS5 si ferma a
 5 ( un `order-12` rimasto non dà errore, smette solo di ordinare ). La linea latest non ha
@@ -451,21 +495,30 @@ non fanno un reload forzato.
 
 ### Caching locale di CSS e JS esterni
 
-Le risorse remote dichiarate in `page.css.external` e `page.js.external` (file `etc/template.yaml` o
-`etc/template.conf` del template) vengono cachate automaticamente su filesystem dal framework durante il
-rendering della pagina (`_src/_api/_pages.php`):
+Le risorse remote dichiarate in `page.css.external`, `page.css.preload` e `page.js.external` (file
+`etc/template.yaml` o `etc/template.conf` del template, annidate per media o piatte) vengono cachate
+automaticamente su filesystem dal framework durante il rendering della pagina (`_src/_api/_pages.php`).
+Dal 27/10/2026 anche il preload e gli elenchi piatti dei template legacy: prima restavano sulla CDN, e
+quando `stackpath.bootstrapcdn.com` non rispondeva i siti su `_arianna` perdevano tutta la grafica:
 
 - Path locale: `var/cache/css/<host>/<path>` e `var/cache/js/<host>/<path>` (creati on-demand alla prima
   richiesta della pagina, con permessi `www-data:www-data` se la dir esiste già; per i CSS vengono cachate
   anche le risorse riferite via `url(...)` — font, immagini).
-- Lo URL cachato viene spostato in `page.css.cached` (multilivello per media) o `page.js.cached` (flat) e
-  rimosso da `external`. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
+- Lo URL cachato viene spostato in `page.css.cached` (multilivello per media; gli elenchi piatti vanno sotto
+  `screen`) o `page.js.cached` (flat) e rimosso da `external`/`preload`: un CSS in preload diventa un foglio
+  normale, non più asincrono. Un download fallito non scrive niente e si riprova alla richiesta dopo; i
+  `url(...)` con query o frammento (`font.woff2?v=4.7.0`) si copiano senza, byte per byte. La risorsa
+  principale con query ( `fonts.googleapis.com/css2?family=…` ) si salva come `css2.<md5 della query>.css`:
+  fino al 29/10/2026 il `?` restava nel nome e nel link, e il browser prendeva un 404. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
   `<link>` / `<script defer>` puntando alla copia locale (`{{ site.root }}{{ ... }}`).
 - Le URL contenenti marker Twig (`{{`, `{%`, `{#`) non vengono cachate (per i JS sono pre-renderizzate
   runtime via `include(template_from_string(...))`, p.es. recaptcha con site key dinamica) e restano in
   `external`.
 - **Nessun TTL o refresh automatico**: per aggiornare/invalidare una risorsa si cancella manualmente il
   file in `var/cache/css/` o `var/cache/js/`, oppure si usa una URL versionata (`bootstrap@5.3.2/...`).
+- **La copia locale perde il commento `sourceMappingURL`**: la source map non si copia, e il browser che la
+  chiedesse in `var/cache/` prenderebbe un 403 dal `FilesMatch`. Quei 403 sui `.map` non danno punti al
+  firewall ( `SECURITY_SOURCEMAP_PATHS` ).
 
 ### Moduli (`_mod/` e `mod/`)
 
@@ -523,6 +576,12 @@ la toccano; ogni correzione porta il test che avrebbe preso il bug. Codice e tes
 prima di chiudere si fanno girare. Un test che non si può scrivere si dichiara e finisce nel `TODO.md`, area
 `test automatici`. Dettaglio nella skill `glisweb`, sezione "TASSATIVO: applicazione e test sempre allineati".
 
+**⚠⚠ Dal 28/10/2026 la lista dei test da scrivere si deve ACCORCIARE, mai allungare** ( Fabio ): nessuno
+sviluppo aggiunge debito, "lo scrivo dopo" non esiste. Lo fanno rispettare `_src/_sh/_test.guardia.sh`,
+l'hook `.githooks/commit-msg` che **rifiuta** il commit con codice e senza test, e `bin/chiusura.py` che
+segnala come bloccanti i commit del giorno fuori regola. L'unica deroga è la riga `Senza-test: <motivo>`
+nel messaggio, più la voce nel `TODO.md`; `--no-verify` e i test finti non si usano.
+
 I test girano con Codeception in tre suite: **`unit`** ( le librerie, via gli esempi di `_usr/_examples/` ),
 **`backend`** e **`frontend`** ( funzionali, in Chromium headless: aprono le pagine, compilano i form e
 verificano il risultato nel database ). Si lanciano con `_src/_sh/_codeception.run.sh <suite|tutte>`, e un
@@ -549,7 +608,8 @@ I modelli da copiare: `_usr/_test/_tests/backend/loginCest.php`,
 
 ## Log e debug
 
-I file di log si trovano in `var/log/`. Per il debug rapido i più utili sono i "latest":
+I file di log si trovano in `var/log/`; quelli delle richieste dei test automatici in `var/log/test/` ( marcatore
+nello User-Agent, vedi `_usr/_docs/_read/180.test.md` ). Per il debug rapido i più utili sono i "latest":
 
 | File | Contenuto |
 |---|---|
@@ -591,7 +651,8 @@ _src/_sh/_lamp.setup.sh
 
 Per verificare che una feature funzioni o che una fix sia andata a buon fine, oltre a leggere il codice è disponibile
 lo script `_src/_sh/_smoke.curl.sh` che fa smoke test della web app via `curl` con cookie jar persistente. Utile per
-controllare status code e pattern nell'HTML su pagine pubbliche e su area riservata.
+controllare status code e pattern nell'HTML su pagine pubbliche e su area riservata. L'URL di base va dato sempre
+( `SMOKE_BASE_URL` ), e `sorveglianza <url>` è il giro automatico con l'account `smoke.*` dello shadow.
 
 **Login flow del framework** (utile da sapere quando si scrivono test o si debuggano problemi di auth):
 

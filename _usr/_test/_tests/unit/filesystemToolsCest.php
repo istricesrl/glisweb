@@ -222,10 +222,42 @@ class filesystemToolsCest
         $I->dontSee('bool(false)');
     }
 
+    // trashFile() -> deve spostare un file nella cartella del giorno del cestino, con il suo percorso
+    public function trashFile(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_trashFile.01.php');
+        $I->see('bool(true)');
+        $I->dontSee('bool(false)');
+    }
+
+    // trashFile() -> lo stesso percorso cestinato due volte nello stesso giorno non deve sovrascrivere il primo
+    public function trashFileDueVolte(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_trashFile.02.php');
+        $I->see('bool(true)');
+        $I->dontSee('bool(false)');
+    }
+
+    // emptyTrash() -> deve cancellare solo le cartelle del giorno oltre il termine, e niente in anteprima
+    public function emptyTrash(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_emptyTrash.01.php');
+        $I->see('bool(true)');
+        $I->dontSee('bool(false)');
+    }
+
     // recursiveDelete() -> deve eliminare una cartella e tutto il suo contenuto
     public function recursiveDelete(UnitTester $I)
     {
         $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_recursiveDelete.01.php');
+        $I->see('bool(true)');
+        $I->dontSee('bool(false)');
+    }
+
+    // recursiveDelete() -> deve svuotare una cartella risparmiando i nomi esclusi, come il cestino in tmp/
+    public function recursiveDeleteConEsclusi(UnitTester $I)
+    {
+        $I->amOnPage('/_usr/_examples/_lib/_filesystem.tools/_recursiveDelete.02.php');
         $I->see('bool(true)');
         $I->dontSee('bool(false)');
     }

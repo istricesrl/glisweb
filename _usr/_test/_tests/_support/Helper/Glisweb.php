@@ -11,9 +11,11 @@
      *
      * account di test
      * ---------------
-     * All'inizio di ogni suite l'helper crea un account per ognuno dei gruppi elencati nella configurazione
-     * gruppi ( di default roots ), chiamato test-<gruppo> e con una password casuale diversa a ogni giro, e alla
-     * fine della suite li cancella. Gli account test-* rimasti da un giro interrotto vengono tolti anche
+     * All'inizio di ogni suite l'helper crea un account per ognuno dei gruppi d'ufficio ( roots e users, che
+     * servono ai test dello standard ) e di quelli elencati nella configurazione gruppi, chiamato test-<gruppo> e
+     * con una password casuale diversa a ogni giro, e alla fine della suite li cancella. I gruppi d'ufficio non
+     * stanno nella configurazione perche' un .suite.yml di progetto sostituisce per intero quello standard, e
+     * altrimenti i test dello standard resterebbero senza i loro account. Gli account test-* rimasti da un giro interrotto vengono tolti anche
      * all'inizio, prima di crearne di nuovi. Nei test ci si entra con $I->amLoggedInAs( '<gruppo>' ).
      *
      * Il login non passa dal form, perche' il reCAPTCHA v3 da' punteggio zero al browser headless: si usa il
@@ -56,7 +58,8 @@
      *
      * configurazione
      * --------------
-     * - gruppi: i gruppi per cui creare un account di test, p.es. [ roots, staff ]; [] per non crearne
+     * - gruppi: i gruppi per cui creare un account di test oltre a quelli d'ufficio, p.es. [ staff ]; [] per non
+     *   crearne altri
      * - recaptcha: true per lasciare attivo il reCAPTCHA durante la suite, di default false
      * - anagrafica: true per collegare a ogni account di test un'anagrafica dell'operatore, di default false
      * - login: la pagina di login, di default /admin.it-IT.html, la dashboard, che a chi non e' loggato mostra il form;
@@ -80,10 +83,15 @@
         const RECORD_PREFIX = 'TEST-E2E-';
 
         /**
+         * gruppi per cui l'account di test si crea sempre, perche' servono ai test dello standard
+         */
+        const GRUPPI_UFFICIO = array( 'roots', 'users' );
+
+        /**
          * configurazione di default
          */
         protected $config = array(
-            'gruppi'    => array( 'roots' ),
+            'gruppi'    => array(),
             'recaptcha' => false,
             'anagrafica'    => false,
             'login'     => '/admin.it-IT.html'
@@ -106,7 +114,7 @@
 
             $this->rimuoviAccountTest();
 
-            foreach( $this->config['gruppi'] as $gruppo ) {
+            foreach( array_unique( array_merge( self::GRUPPI_UFFICIO, $this->config['gruppi'] ) ) as $gruppo ) {
                 $this->creaAccountTest( $gruppo );
             }
 
@@ -143,6 +151,10 @@
 
             if( ! isset( $this->accounts[ $gruppo ] ) ) {
                 $this->fail( 'nessun account di test per il gruppo ' . $gruppo . ', va aggiunto alla configurazione gruppi della suite' );
+            }
+
+            if( empty( $this->accounts[ $gruppo ]['jwt'] ) ) {
+                $this->fail( 'per il login dei test serve auth.jwt.secret nello shadow del deploy ( src/shadow.json o src/shadow.yaml )' );
             }
 
             $browser = $this->getModule( 'WebDriver' );
@@ -215,15 +227,34 @@
         /**
          * svuota la cache del sito
          *
-         * da usare quando il test dipende da qualcosa che il framework tiene in memcache, come l'array delle
-         * pagine; fa la stessa pulizia del task /task/memcache.clean per il sito corrente
+         * da usare quando il test dipende da qualcosa che il framework tiene in cache, come l'array delle pagine;
+         * fa la stessa pulizia del task /task/memcache.clean per il sito sotto test: scrive un gettone in
+         * DIR_VAR_SPOOL_REBUILD e chiama /task/cache.rebuild sull'URL della suite, che svuota memcache, APCU e disco
+         * e ricostruisce l'albero delle pagine
+         *
+         * La chiamata passa da Apache perche' l'APCU dei test, che girano da riga di comando, non e' quella del sito:
+         * fino al 24/11/2026 qui c'era il solo memcacheFlush(), e su un deploy senza memcache una pagina appena
+         * attivata restava sconosciuta ad amOnPageId() ( utensilerialughese, PR060.distinte ).
          *
          */
         public function clearGliswebCache() {
 
-            global $cf;
+            $gettone = bin2hex( random_bytes( 16 ) );
+            $codice = NULL;
+            $errore = NULL;
+            $report = false;
 
-            memcacheFlush( $cf['memcache']['connection'], $cf['sites']['1']['domains'][ SITE_STATUS ] );
+            if( checkFolder( DIR_VAR_SPOOL_REBUILD ) && touch( DIR_VAR_SPOOL_REBUILD . $gettone ) ) {
+                $report = restCall( rtrim( $this->getModule( 'WebDriver' )->_getConfig( 'url' ), '/' ) . '/task/cache.rebuild?t=' . $gettone, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $codice, array(), NULL, NULL, $errore, NULL, CURLAUTH_BASIC, $raw, $intestazioni, 600 );
+                // se la chiamata non e' arrivata il gettone e' ancora li'
+                @unlink( DIR_VAR_SPOOL_REBUILD . $gettone );
+            } else {
+                $errore = 'impossibile scrivere il gettone in ' . DIR_VAR_SPOOL_REBUILD;
+            }
+
+            if( $codice != 200 ) {
+                $this->fail( 'cache del sito non ricostruita ( /task/cache.rebuild, status ' . var_export( $codice, true ) . ' ): ' . $errore . ' ' . json_encode( $report ) );
+            }
 
         }
 
@@ -295,7 +326,7 @@
             $id = mysqlInsertRow( $cf['mysql']['connection'], $riga, $tabella, false );
 
             if( empty( $id ) ) {
-                $this->fail( 'riga non scritta in ' . $tabella . ' per ' . json_encode( $riga ) . ', vedi var/log/mysql.err' );
+                $this->fail( 'riga non scritta in ' . $tabella . ' per ' . json_encode( $riga ) . ', vedi var/log/test/mysql.err' );
             }
 
             return $id;
@@ -349,7 +380,7 @@
             global $cf;
 
             if( ! refreshStaticView( $cf['mysql']['connection'], $tabella, $id ) ) {
-                $this->fail( 'statica di ' . $tabella . ' non riallineata per l\'id ' . $id . ', vedi var/log/mysql.err' );
+                $this->fail( 'statica di ' . $tabella . ' non riallineata per l\'id ' . $id . ', vedi var/log/test/mysql.err' );
             }
 
         }
@@ -438,12 +469,15 @@
         /**
          * conta le righe di una tabella che soddisfano la condizione
          *
+         * Il confronto è null-safe ( `<=>` ): un valore NULL nelle condizioni cerca le righe col campo NULL, che con `=`
+         * non si trovavano mai ( 2026-10-30 ).
+         *
          */
         protected function contaRighe( $tabella, $condizioni ) {
 
             $where = array();
             foreach( array_keys( $condizioni ) as $campo ) {
-                $where[] = $campo . ' = ?';
+                $where[] = $campo . ' <=> ?';
             }
 
             return (int) $this->grabFromDatabase(
@@ -475,10 +509,6 @@
         protected function creaAccountTest( $gruppo ) {
 
             global $cf;
-
-            if( empty( $cf['auth']['jwt']['secret'] ) ) {
-                $this->fail( 'per il login dei test serve auth.jwt.secret nello shadow del deploy ( src/shadow.json o src/shadow.yaml )' );
-            }
 
             $idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
 
@@ -531,8 +561,9 @@
                 'account_gruppi'
             );
 
-            // token JWT per il login
-            $account['jwt'] = getJwt(
+            // token JWT per il login; senza il segreto l'account si crea lo stesso, perche' i gruppi d'ufficio ci
+            // sono anche nelle suite che non fanno login, e il controllo si sposta su amLoggedInAs()
+            $account['jwt'] = ( empty( $cf['auth']['jwt']['secret'] ) ) ? NULL : getJwt(
                 array(
                     'id' => $idAccount,
                     'user' => $account['username']

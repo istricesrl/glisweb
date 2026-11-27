@@ -1,0 +1,63 @@
+{% import '_bin/_form.html' as frm %}
+
+{#
+    modal di duplicazione di un documento
+
+    Chiama il task _documenti.duplica.php e, se la copia riesce, ne apre la scheda ( etc.duplica.form, impostato
+    dalla macro dei tools ). La scelta fra prezzi originali e attuali c'e' solo se la macro ha preparato
+    etc.select.prezzi, cioe' se il modulo listini e' attivo.
+#}
+
+<script>
+    function duplica() {
+		$('#btnduplica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+		var call = '{{ site.url }}task/0400.documenti/documenti.duplica?id={{ request[ form.table ].id }}';
+		if( $('#_prezzi').length ) {
+			call += '&prezzi=' + $('#_prezzi').val();
+		}
+
+		getws( call, '', function( data ) {
+			if( data.new && data.new.id ) {
+				$('#btnduplica').html('<i class="fa fa-check"></i>');
+				window.open( '{{ etc.duplica.form }}?{{ form.table }}[id]=' + data.new.id, '_self' );
+			} else {
+				$('#btnduplica').html('conferma');
+				alert( data.err );
+			}
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="duplica">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">duplica il documento corrente</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			{% if etc.select.prezzi %}
+			<div class="form-row">
+				<div class="col">
+					<span class="label-top">prezzi delle righe</span>
+					{{ frm.selectRequired( '', '', '', 'prezzi', '', etc.select.prezzi, request ) }}
+				</div>
+			</div>
+			{% endif %}
+			<div class="form-row">
+				<div class="col-12">
+					questa operazione creerà un nuovo documento con la testata e le righe di quello corrente
+				</div>
+			</div>
+		</div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btnduplica" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

@@ -133,6 +133,7 @@
      * refreshStaticView()                      | aggiorna una vista statica dalla vista che la alimenta
      * cleanStaticView()                        | toglie da una vista statica le righe che non esistono piu' nella tabella
      * syncStaticView()                         | riallinea a lotti una vista statica con la tabella da cui nasce
+     * fillStaticViews()                        | popola a lotti le viste statiche vuote accanto a una tabella con righe
      * getStaticViewExtension()                 | restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
      * funzioni per le patch del database
@@ -147,7 +148,7 @@
      * -----------------------------------------|---------------------------------------------------------------
      * mysqlPatchFiles()                        | restituisce i file di patch, standard e custom, nell'ordine di applicazione
      * mysqlPatchLevel()                        | restituisce il livello di patch del database
-     * mysqlPatchCanon()                        | restituisce il livello del canone
+     * mysqlPatchCurrentSchema()                | restituisce il livello del canone
      * mysqlPatchCheck()                        | verifica che al database si possano applicare le patch
      * mysqlPatchRead()                         | legge dai file le patch da applicare sopra un livello
      * mysqlPatchApply()                        | applica le patch e le registra in __patch__, fermandosi al primo errore
@@ -938,6 +939,51 @@
 
         // restituisco il risultato
         return $arRs;
+    }
+
+    /**
+     * verifica che una connessione sia ancora viva
+     *
+     * Una connessione resta inattiva finché il codice lavora senza fare query: se l'attesa supera il wait_timeout del
+     * server, il server la chiude, e la query successiva fallisce con l'errore 2006 ( MySQL server has gone away ). Il
+     * cron la usa dopo ogni iterazione di un task o di un job, per ricreare la connessione prima di scrivere l'esito
+     * ( bernispa, 24/11/2026: un'iterazione di oltre 60 secondi su mysql03 lasciava i task interrotti ).
+     *
+     * La verifica è una SELECT 1, e non mysqli_ping(), deprecata da PHP 8.4. Gli errori non escono dalla funzione: con
+     * mysqli_report() attivo ( il default da PHP 8.1 ) la query caduta lancia un'eccezione, prima della 8.1 restituisce
+     * false con un warning, e su una connessione chiusa con mysqli_close() lancia un Error; in tutti i casi l'esito è
+     * false.
+     *
+     * @param       object      $c      la connessione mysqli
+     *
+     * @return      boolean             true se la connessione risponde, false se è vuota, chiusa o caduta
+     *
+     */
+    function mysqlPing($c)
+    {
+
+        // connessione assente
+        if (empty($c)) {
+            return false;
+        }
+
+        // query di prova
+        try {
+            $r = @mysqli_query($c, 'SELECT 1');
+        } catch (Throwable $t) {
+            return false;
+        }
+
+        // query fallita senza eccezione
+        if ($r === false) {
+            return false;
+        }
+
+        // libero il risultato
+        mysqli_free_result($r);
+
+        // la connessione risponde
+        return true;
     }
 
     /**
@@ -1797,6 +1843,46 @@
      */
 
     /**
+     * restituisce il nome di una tabella, se è un nome valido ed esiste nel database corrente
+     *
+     * Questa funzione serve a validare un nome di tabella che arriva da fuori ( querystring, POST ) prima di
+     * concatenarlo in una query: accetta solo [a-z0-9_] e solo una tabella o vista presente in information_schema per il
+     * database corrente, altrimenti restituisce false senza fare query col nome ricevuto. Il nome non si può passare
+     * come parametro di una prepared statement, quindi la validazione è l'unica difesa ( _src/_inc/_macro/_delete.php
+     * concatenava __delete__[table] in mysqlSelectLabel(), segnalato da polmasi il 23/11/2026 ).
+     *
+     * @param       object      $m      la connessione a memcache ( NULL per non usare la cache )
+     * @param       object      $c      la connessione mysqli
+     * @param       mixed       $t      il nome della tabella da validare
+     *
+     * @return      mixed               il nome della tabella, o false se non è valido o non esiste
+     *
+     */
+    function getTable($m, $c, $t)
+    {
+
+        // solo stringhe col nome di una tabella del framework
+        if (! is_string($t) || ! preg_match('/^[a-z0-9_]+$/', $t)) {
+            return false;
+        }
+
+        // verifico se esiste la tabella
+        $tb = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+            array(array('s' => $t))
+        );
+
+        // se esiste la tabella...
+        if (! empty($tb)) {
+            return $t;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * restituisce il nome della vista statica di una tabella, se esiste
      *
      * Questa funzione cerca in information_schema la tabella <t>_view_static, con la cache su memcache se $m non è vuoto,
@@ -2107,8 +2193,8 @@
      * se_offerta IS NOT NULL )' ): senza condizione, le righe della base che la vista non restituisce
      * risulterebbero mancanti a ogni giro. La stessa coppia va passata a cleanStaticView().
      *
-     * Una statica senza le colonne dei timestamp ( todo_view_static, a oggi ) viene riallineata solo
-     * per le righe mancanti, e lo si scrive nel log.
+     * Una statica senza le colonne dei timestamp ( todo_view_static fino al 12/11/2026, quando le ha
+     * prese da todo_view ) viene riallineata solo per le righe mancanti, e lo si scrive nel log.
      *
      * @param mysqli $c  connessione
      * @param string $t  nome della vista senza suffissi ( 'anagrafica', non 'anagrafica_view_static' )
@@ -2285,11 +2371,112 @@
     }
 
     /**
+     * popola a lotti le viste statiche vuote accanto a una tabella con righe
+     *
+     * Il ricaricamento dei file base ( mysqlPatchReload() ) ricrea con CREATE TABLE IF NOT EXISTS le statiche che
+     * mancano, e le ricrea vuote: finche' qualcuno non lancia il task di popolazione getStaticViewExtension() fa leggere
+     * la vista, piu' lenta, e nessuno se ne accorge ( utensilerialughese, documenti_view_static, 13/11/2026 ). Questa
+     * funzione cerca le statiche vuote la cui tabella base omonima ha righe e le popola chiamando syncStaticView() in
+     * ciclo, un lotto di $l righe alla volta, finche' non resta niente da riallineare.
+     *
+     * NIENTE RICALCOLO COMPLETO: e' lo stesso lavoro a lotti dei task di popolazione, solo fatto subito. Il ciclo si
+     * ferma anche dopo tanti giri quanti ne servono per la tabella base piu' uno, perche' una vista che non
+     * restituisce tutte le righe della base lascerebbe syncStaticView() a riprenderle per sempre.
+     *
+     * Si saltano, e si dice perche', le statiche senza una tabella base omonima ( offerte_view_static nasce da
+     * documenti e vuole la sua condizione, vedi syncStaticView() ): vanno popolate col loro task.
+     *
+     * L'esito e' un array con tre chiavi:
+     *
+     * chiave       | contenuto
+     * -------------|---------------------------------------------------------------
+     * popolate     | statica => righe presenti alla fine
+     * saltate      | statica => motivo
+     * errori       | statica => righe presenti quando la rigenerazione e' fallita
+     *
+     * @param mysqli $c  connessione
+     * @param int    $l  righe per lotto
+     * @param array  $s  se dato, solo queste statiche, per nome senza suffissi ( 'documenti' )
+     *
+     * @return array     l'esito, come nella tabella qui sopra
+     */
+    function fillStaticViews($c, $l = 1000, $s = null)
+    {
+
+        // esito
+        $r = array('popolate' => array(), 'saltate' => array(), 'errori' => array());
+
+        $l = max(1, (int) $l);
+
+        // le statiche del database, con la tabella omonima se c'e'
+        $statiche = mysqlQuery(
+            $c,
+            "SELECT s.TABLE_NAME AS statica, b.TABLE_NAME AS base FROM INFORMATION_SCHEMA.TABLES s "
+                . "LEFT JOIN INFORMATION_SCHEMA.TABLES b ON b.TABLE_SCHEMA = s.TABLE_SCHEMA AND b.TABLE_TYPE = 'BASE TABLE' "
+                . "AND b.TABLE_NAME = left( s.TABLE_NAME, char_length( s.TABLE_NAME ) - 12 ) "
+                . "WHERE s.TABLE_SCHEMA = database() AND s.TABLE_TYPE = 'BASE TABLE' AND s.TABLE_NAME LIKE '%\\_view\\_static' "
+                . "ORDER BY s.TABLE_NAME"
+        );
+
+        foreach ((is_array($statiche) ? $statiche : array()) as $x) {
+
+            $t = substr($x['statica'], 0, -12);
+
+            if (is_array($s) && ! in_array($t, $s)) {
+                continue;
+            }
+
+            // la statica con righe non e' affare di questa funzione, ci pensano i task
+            if (mysqlSelectValue($c, 'SELECT count(*) FROM ( SELECT id FROM `' . $x['statica'] . '` LIMIT 1 ) AS u') > 0) {
+                continue;
+            }
+
+            if (empty($x['base'])) {
+                $r['saltate'][$x['statica']] = 'nessuna tabella ' . $t . ': si popola col suo task';
+                continue;
+            }
+
+            // righe della base, per il limite dei giri
+            $n = (int) mysqlSelectValue($c, 'SELECT count(*) FROM `' . $t . '`');
+            if ($n == 0) {
+                continue;
+            }
+
+            $giri = (int) ceil($n / $l) + 1;
+            do {
+                $k = syncStaticView($c, $t, $l);
+                $giri--;
+            } while ($k > 0 && $giri > 0);
+
+            $righe = (int) mysqlSelectValue($c, 'SELECT count(*) FROM `' . $x['statica'] . '`');
+
+            if ($k === false) {
+                $r['errori'][$x['statica']] = $righe;
+                logger('popolazione di ' . $x['statica'] . ' interrotta a ' . $righe . ' righe su ' . $n, 'static', LOG_ERR);
+            } else {
+                $r['popolate'][$x['statica']] = $righe;
+                logger('popolata ' . $x['statica'] . ' con ' . $righe . ' righe su ' . $n, 'static', LOG_INFO);
+            }
+
+        }
+
+        // restituisco l'esito
+        return $r;
+    }
+
+    /**
      * restituisce il suffisso da usare per leggere una tabella dalla sua vista
      *
      * Questa funzione fa la stessa ricerca di getStaticView() e restituisce '_view_static' se la tabella ha una vista
      * statica, '_view' altrimenti; il chiamante la accoda al nome della tabella per ottenere l'oggetto da cui leggere
      * ( es. in controller() e nel titolo delle schede tramite mysqlSelectLabel() ).
+     *
+     * UNA STATICA VUOTA NON SI LEGGE ( 2026-11-12 ): se la statica esiste ma e' vuota e la tabella omonima ha righe,
+     * la statica non e' ancora stata popolata e la funzione restituisce '_view'. Il ricaricamento dei file base crea le
+     * statiche vuote sui deploy, e prima di questo controllo gli elenchi che le leggevano restavano vuoti senza errori
+     * finche' qualcuno non le popolava ( documenti_view_static su polmasi PROD, 11/11/2026 ). Le due letture sono una
+     * riga ciascuna e passano dalla cache come quella di information_schema; le statiche che non hanno una tabella
+     * omonima ( offerte_view_static nasce da documenti ) non hanno il controllo.
      *
      * @param       object      $m      la connessione a memcache
      * @param       object      $c      la connessione mysqli
@@ -2311,6 +2498,23 @@
 
         // se esiste la vista statica...
         if (! empty($stv)) {
+
+            // ...ma e' vuota mentre la tabella ha righe, non e' ancora popolata: si legge la vista
+            if (preg_match('/^[a-z0-9_]+$/', $t)) {
+                $base = mysqlSelectCachedValue(
+                    $m,
+                    $c,
+                    'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ?',
+                    array(array('s' => $t))
+                );
+                if (! empty($base)
+                    && empty(mysqlSelectCachedValue($m, $c, 'SELECT id FROM `' . $t . '_view_static` LIMIT 1'))
+                    && ! empty(mysqlSelectCachedValue($m, $c, 'SELECT id FROM `' . $t . '` LIMIT 1'))) {
+                    logger('la vista statica ' . $t . '_view_static e\' vuota: si legge ' . $t . '_view finche\' non e\' popolata', 'mysql', LOG_WARNING);
+                    return '_view';
+                }
+            }
+
             return '_view_static';
         } else {
             return '_view';
@@ -2398,21 +2602,23 @@
     /**
      * restituisce il livello del canone
      *
-     * Questa funzione legge da _etc/_current.canon il livello del canone, cioè l'id dell'ultima patch assorbita nei file
+     * Questa funzione legge da _etc/_current.schema il livello del canone, cioè l'id dell'ultima patch assorbita nei file
      * base _0N0000999999.*.sql all'ultimo rilascio maggiore o minore, quando la coda delle patch datate è stata svuotata.
      * Un database con un livello più basso è anteriore al canone: le patch che lo ci avrebbero portato non ci sono più.
-     * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'.
+     * Se il file non c'è il framework non dichiara un canone e la funzione restituisce '000000000000'. Il livello sta
+     * nella prima riga; la seconda, se c'è, è il tag della release da cui un database più vecchio deve passare prima
+     * ( il gradino di _src/_sh/_gw.upgrade.sh ), e qui non si legge.
      *
      * @param       string      $b      la cartella base del deploy, con la barra finale
      *
      * @return      string              il livello del canone, '000000000000' se non è dichiarato
      *
      */
-    function mysqlPatchCanon($b)
+    function mysqlPatchCurrentSchema($b)
     {
 
         // leggo il livello dal file
-        $k = (file_exists($b . '_etc/_current.canon')) ? trim(file_get_contents($b . '_etc/_current.canon')) : '';
+        $k = (file_exists($b . '_etc/_current.schema')) ? trim(strtok(file_get_contents($b . '_etc/_current.schema'), "\n")) : '';
 
         // un livello vale solo se è di dodici cifre
         return (preg_match('/^[0-9]{12}$/', $k)) ? $k : '000000000000';
@@ -2436,7 +2642,7 @@
      *
      * @param       object      $c      la connessione mysqli
      * @param       string      $l      il livello di patch del database, di mysqlPatchLevel()
-     * @param       string      $k      il livello del canone, di mysqlPatchCanon()
+     * @param       string      $k      il livello del canone, di mysqlPatchCurrentSchema()
      * @param       array       $f      i file di patch, di mysqlPatchFiles()
      * @param       string      $e      la variabile in cui scrivere il motivo del rifiuto, modificata sul posto
      *
@@ -2816,9 +3022,9 @@
      * traduce per MySQL un ALTER TABLE scritto per MariaDB, per mysqlPatchTranslate()
      *
      * Le clausole condizionali ( ADD COLUMN / KEY / UNIQUE KEY / PRIMARY KEY / CONSTRAINT FOREIGN KEY IF NOT EXISTS, DROP
-     * FOREIGN KEY / INDEX / KEY IF EXISTS ), che MySQL non conosce, si risolvono leggendo lo schema: la clausola si toglie
-     * se l'oggetto c'è già ( o non c'è, per le DROP ), altrimenti si toglie solo l'IF. Poi due casi che su MySQL fallirebbero
-     * anche con la sintassi giusta:
+     * FOREIGN KEY / INDEX / KEY / COLUMN IF EXISTS, MODIFY / CHANGE COLUMN IF EXISTS ), che MySQL non conosce, si
+     * risolvono leggendo lo schema: la clausola si toglie se l'oggetto c'è già ( o non c'è, per le DROP, MODIFY e CHANGE ),
+     * altrimenti si toglie solo l'IF. Poi due casi che su MySQL fallirebbero anche con la sintassi giusta:
      *
      * - una chiave esterna fra colonne di tipo diverso ( 3780 ): sui deploy vecchi gli id sono int e le colonne nuove delle
      *   patch nascono bigint, su MariaDB passa e su MySQL no; la colonna che fa riferimento prende il tipo della colonna
@@ -2886,6 +3092,12 @@
                     continue;
                 }
                 $x = 'DROP COLUMN `' . $y[1] . '`';
+            } elseif (preg_match('/^(MODIFY|CHANGE)\s+(COLUMN\s+)?IF\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                if (! mysqlPatchSchemaHas($c, 'colonna', $t, $y[3])) {
+                    $n[] = $t . '.' . $y[3] . ' non c\'è';
+                    continue;
+                }
+                $x = strtoupper($y[1]) . ' COLUMN `' . $y[3] . '`' . $y[4];
             } elseif (preg_match('/^ADD\s+PRIMARY\s+KEY\s+IF\s+NOT\s+EXISTS\s*(.*)$/is', $x, $y)) {
                 if (mysqlPatchSchemaHas($c, 'indice', $t, 'PRIMARY') && ! mysqlPatchSchemaHas($c, 'pk_invisibile', $t)) {
                     $n[] = $t . ' chiave primaria c\'è già';
@@ -3007,6 +3219,8 @@
                     $o[] = 'IF EXISTS( ' . $w('indice', $t, $y[2]) . ' ) THEN ALTER TABLE `' . $t . '` DROP INDEX `' . $y[2] . '`; END IF;';
                 } elseif (preg_match('/^DROP\s+COLUMN\s+IF\s+EXISTS\s+`?([a-z0-9_]+)`?\s*$/is', $x, $y)) {
                     $o[] = 'IF EXISTS( ' . $w('colonna', $t, $y[1]) . ' ) THEN ALTER TABLE `' . $t . '` DROP COLUMN `' . $y[1] . '`; END IF;';
+                } elseif (preg_match('/^(MODIFY|CHANGE)\s+(COLUMN\s+)?IF\s+EXISTS\s+`?([a-z0-9_]+)`?(.*)$/is', $x, $y)) {
+                    $o[] = 'IF EXISTS( ' . $w('colonna', $t, $y[3]) . ' ) THEN ALTER TABLE `' . $t . '` ' . strtoupper($y[1]) . ' COLUMN `' . $y[3] . '`' . $y[4] . '; END IF;';
                 } else {
                     $o[] = 'ALTER TABLE `' . $t . '` ' . $x . ';';
                 }
@@ -3368,4 +3582,250 @@
 
         // restituisco le patch applicate
         return $r;
+    }
+
+    /**
+     * FUNZIONI PER IL RICARICAMENTO DEI FILE BASE
+     *
+     * Le patch datate portano ai database già installati le modifiche di tabelle, indici e vincoli, ma non quelle di
+     * procedure, viste, statiche e report: dal 26/10/2026 una patch non crea viste ( la copia in una patch resta indietro
+     * quando il canone va avanti ), e i file base, i cui marcatori stanno sotto il livello di qualunque database
+     * installato, non arrivano mai. Il 04/11/2026 sui database creati prima del canone del 04/10 le viste erano rimaste
+     * quelle di un mese prima ( su utensilerialughese 169 diverse e 28 assenti su 279 ). Fabio ha deciso lo stesso
+     * giorno, come deroga voluta al principio "ai deploy arrivano solo le patch", che _mysql.upgrade.sh dopo le patch
+     * riesegua i file base di procedure, viste, statiche e report quando sono cambiati ( 300.database.md, *il
+     * ricaricamento dei file base* ).
+     *
+     * Le viste, le funzioni e le tabelle che il progetto ridefinisce con le sue patch ( usr/database/patch/ ) si
+     * SALTANO, non si riapplicano dopo: la patch di progetto che le ridefinisce è stata applicata una volta e
+     * registrata, e può contenere altro ( ALTER, INSERT, UPDATE ) che rieseguito farebbe danni; saltarle lascia
+     * l'oggetto esattamente come l'ha lasciato il progetto. Il prezzo è che se lo standard cambia una vista che il
+     * progetto ha ridefinito, il progetto non lo vede: è lo stesso di oggi, ed è il progetto a doverla riallineare.
+     *
+     */
+
+    /**
+     * restituisce i file base da ricaricare, nell'ordine
+     *
+     * L'ordine conta: le viste chiamano le funzioni di _070000999999.procedures.sql, le statiche seguono le viste di
+     * _090000999999.views.sql, e i report leggono le une e le altre.
+     *
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               i percorsi dei file che esistono, nell'ordine di ricaricamento
+     *
+     */
+    function mysqlPatchReloadFiles($b)
+    {
+
+        // file base da ricaricare, nell'ordine
+        $f = array();
+        foreach (array('_070000999999.procedures.sql', '_090000999999.views.sql', '_080000999999.static.sql', '_100000999999.reports.sql') as $n) {
+            if (is_file($b . '_usr/_database/_patch/' . $n)) {
+                $f[] = $b . '_usr/_database/_patch/' . $n;
+            }
+        }
+
+        // restituisco l'elenco
+        return $f;
+    }
+
+    /**
+     * restituisce il nome dell'oggetto che una query crea o cancella
+     *
+     * Riconosce CREATE [ OR REPLACE ] VIEW, CREATE [ DEFINER = ... ] FUNCTION / PROCEDURE, CREATE TABLE [ IF NOT EXISTS ]
+     * e i DROP corrispondenti, con o senza backtick; i commenti a inizio riga si ignorano.
+     *
+     * @param       string      $q      la query
+     *
+     * @return      mixed               il nome dell'oggetto in minuscolo, false se la query non crea né cancella niente
+     *
+     */
+    function mysqlPatchReloadObject($q)
+    {
+
+        // tolgo i commenti a inizio riga
+        $q = preg_replace('/^\s*--.*$/m', '', $q);
+
+        // cerco il primo oggetto creato o cancellato
+        if (preg_match('/\b(?:CREATE|DROP)\b[\s\S]*?\b(?:VIEW|FUNCTION|PROCEDURE|TABLE)\s+(?:IF\s+(?:NOT\s+)?EXISTS\s+)?`?(\w+)`?/i', $q, $m)) {
+            return strtolower($m[1]);
+        }
+
+        // la query non crea niente
+        return false;
+    }
+
+    /**
+     * restituisce gli oggetti che il progetto ridefinisce con le sue patch
+     *
+     * Legge i file *.sql di usr/database/owned/ e raccoglie i nomi di viste, funzioni, procedure e tabelle che creano:
+     * mysqlPatchReload() li salta, perché li possiede il progetto. owned/ tiene le definizioni del progetto, separate
+     * dalle migrazioni, e non la legge il patcher; si legge anche usr/database/patch/, dove le tenevano i deploy prima
+     * del 17/11/2026, e a parità di nome vince owned/.
+     *
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               i nomi, in minuscolo, come chiavi, con il file che li definisce come valore
+     *
+     */
+    function mysqlPatchReloadOwned($b)
+    {
+
+        // oggetti del progetto
+        $o = array();
+        foreach (glob($b . 'usr/database/{patch,owned}/*.sql', GLOB_BRACE) ?: array() as $f) {
+            $t = preg_replace('/^\s*--.*$/m', '', file_get_contents($f));
+            preg_match_all('/\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:DEFINER\s*=\s*\S+\s+)?(?:VIEW|FUNCTION|PROCEDURE|TABLE)\s+(?:IF\s+NOT\s+EXISTS\s+)?`?(\w+)`?/i', $t, $m);
+            foreach ($m[1] as $n) {
+                $o[strtolower($n)] = basename($f);
+            }
+        }
+
+        // restituisco l'elenco
+        return $o;
+    }
+
+    /**
+     * dice quali file base sono cambiati dall'ultimo ricaricamento
+     *
+     * Confronta l'md5 di ogni file di mysqlPatchReloadFiles() con quello registrato in __canone__ all'ultimo
+     * ricaricamento riuscito. La tabella __canone__ la crea mysqlPatchReload(), come mysqlPatchApply() crea __patch__:
+     * un database che non ce l'ha non è mai stato ricaricato, e i file risultano tutti cambiati.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      mixed               i file cambiati, eventualmente vuoto, o false se __canone__ non si legge
+     *
+     */
+    function mysqlPatchReloadChanged($c, $b)
+    {
+
+        // impronte registrate
+        $r = array();
+        // 1146 vuol dire che la tabella non c'è: il database non è mai stato ricaricato
+        try {
+            $x = mysqli_query($c, 'SELECT `file`, `md5` FROM `__canone__`');
+            $n = mysqli_errno($c);
+        } catch (mysqli_sql_exception $e) {
+            $x = false;
+            $n = $e->getCode();
+        }
+        if ($x instanceof mysqli_result) {
+            while ($w = mysqli_fetch_row($x)) {
+                $r[$w[0]] = $w[1];
+            }
+            mysqli_free_result($x);
+        } elseif ($n != 1146) {
+            return false;
+        }
+
+        // file cambiati
+        $f = array();
+        foreach (mysqlPatchReloadFiles($b) as $p) {
+            if (($r[basename($p)] ?? '') !== md5_file($p)) {
+                $f[] = $p;
+            }
+        }
+
+        // restituisco l'elenco
+        return $f;
+    }
+
+    /**
+     * riesegue i file base di procedure, viste, statiche e report
+     *
+     * Ogni blocco dei file di mysqlPatchReloadFiles() passa da mysqlPatchApply() con id NULL, quindi con la stessa
+     * traduzione per MySQL e la stessa collation delle patch, ma senza registrarsi in __patch__. Si saltano i blocchi
+     * il cui oggetto è ridefinito dal progetto ( mysqlPatchReloadOwned() ). Un blocco che fallisce non ferma gli altri,
+     * a differenza delle patch: qui non c'è un livello da far avanzare, e una vista che non si crea non deve lasciare
+     * indietro tutte quelle dopo. Poi si aggiungono alle statiche <t>_view_static le colonne della loro <t>_view che
+     * non hanno ( si riempiono per nome, refreshStaticView() ). Le impronte in __canone__ si scrivono solo se non c'è
+     * stato nessun errore: altrimenti il ricaricamento si ripete al giro dopo.
+     *
+     * @param       object      $c      la connessione mysqli
+     * @param       string      $b      la document root, con la barra finale ( nel framework DIR_BASE )
+     *
+     * @return      array               'eseguiti' ( numero ), 'saltati' ( oggetto => file del progetto ), 'colonne'
+     *                                  ( statica.colonna aggiunte ), 'errori' ( array con file, oggetto, errno, error )
+     *
+     */
+    function mysqlPatchReload($c, $b)
+    {
+
+        // esito
+        $s = array('eseguiti' => 0, 'saltati' => array(), 'colonne' => array(), 'errori' => array());
+
+        // oggetti del progetto
+        $o = mysqlPatchReloadOwned($b);
+
+        // un file alla volta, un blocco alla volta
+        foreach (mysqlPatchReloadFiles($b) as $f) {
+            $w = array();
+            foreach (mysqlPatchRead(array($f), '000000000000', $w) as $p) {
+                $n = mysqlPatchReloadObject($p['query']);
+                if ($n !== false && isset($o[$n])) {
+                    $s['saltati'][$n] = $o[$n];
+                    continue;
+                }
+                $e = array();
+                mysqlPatchApply($c, array(array('file' => $f, 'id' => NULL, 'query' => $p['query'])), $e);
+                if (empty($e)) {
+                    $s['eseguiti']++;
+                } else {
+                    $s['errori'][] = array('file' => basename($f), 'oggetto' => $n, 'errno' => $e['errno'], 'error' => $e['error']);
+                }
+            }
+        }
+
+        // colonne delle viste che mancano alle statiche
+        $x = mysqli_query($c, "SELECT v.table_name, v.column_name, v.column_type FROM information_schema.columns v
+            JOIN information_schema.tables t ON t.table_schema = v.table_schema AND t.table_name = concat( v.table_name, '_static' )
+            LEFT JOIN information_schema.columns s ON s.table_schema = v.table_schema AND s.table_name = t.table_name AND s.column_name = v.column_name
+            WHERE v.table_schema = database() AND v.table_name LIKE '%\\_view' AND s.column_name IS NULL
+            ORDER BY v.table_name, v.ordinal_position");
+        $a = array();
+        while ($x instanceof mysqli_result && $r = mysqli_fetch_row($x)) {
+            if (! isset($o[strtolower($r[0] . '_static')])) {
+                $a[$r[0] . '_static'][] = array($r[1], $r[2]);
+            }
+        }
+        foreach ($a as $t => $l) {
+            $q = 'ALTER TABLE `' . $t . '` ' . implode(', ', array_map(function ($k) {
+                return 'ADD COLUMN IF NOT EXISTS `' . $k[0] . '` ' . $k[1] . ' DEFAULT NULL';
+            }, $l));
+            $e = array();
+            mysqlPatchApply($c, array(array('file' => NULL, 'id' => NULL, 'query' => $q)), $e);
+            if (empty($e)) {
+                foreach ($l as $k) {
+                    $s['colonne'][] = $t . '.' . $k[0];
+                }
+            } else {
+                $s['errori'][] = array('file' => NULL, 'oggetto' => $t, 'errno' => $e['errno'], 'error' => $e['error']);
+            }
+        }
+
+        // impronte, solo se è andato tutto bene
+        if (empty($s['errori'])) {
+            mysqli_query($c, 'CREATE TABLE IF NOT EXISTS `__canone__` (
+                `file` char(64) NOT NULL PRIMARY KEY,
+                `md5` char(32) NOT NULL,
+                `timestamp_esecuzione` int(11) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci');
+            foreach (mysqlPatchReloadFiles($b) as $f) {
+                $y = mysqli_prepare($c, 'REPLACE INTO `__canone__` ( `file`, `md5`, `timestamp_esecuzione` ) VALUES ( ?, ?, ? )');
+                if ($y) {
+                    $n = basename($f);
+                    $m = md5_file($f);
+                    $t = time();
+                    mysqli_stmt_bind_param($y, 'ssi', $n, $m, $t);
+                    mysqli_stmt_execute($y);
+                    mysqli_stmt_close($y);
+                }
+            }
+        }
+
+        // restituisco l'esito
+        return $s;
     }

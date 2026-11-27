@@ -3,6 +3,39 @@
 -- questo file contiene le query per la creazione dei report
 --
 
+-- | 100000007801
+
+-- __report_corsi__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P81 ): tabella, non vista,
+-- un corso per riga come lo mostrano il catalogo e l'archivio del modulo 0920.corsi; la popolano il task e il job
+-- report.corsi.popolazione del modulo con updateReportCorsi() ( _mod/_0920.corsi/_src/_lib/_mysql.utils.add.php ), e
+-- la legge anche il modulo 0400.documenti; dopo una costruzione da zero resta vuota finché non ci sono corsi
+CREATE TABLE IF NOT EXISTS `__report_corsi__` (
+  `id` char(255) NOT NULL,
+  `id_periodo` bigint(20) DEFAULT NULL,
+  `periodo` char(255) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `fasce` char(255) DEFAULT NULL,
+  `discipline` char(255) DEFAULT NULL,
+  `livelli` char(255) DEFAULT NULL,
+  `giorni_orari_luoghi` text DEFAULT NULL,
+  `dettagli` text DEFAULT NULL,
+  `posti_disponibili` char(255) DEFAULT NULL,
+  `lista_attesa` char(255) DEFAULT NULL,
+  `stato` char(255) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
+  `prezzi` char(255) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_inserimento` (`timestamp_inserimento`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 100000008005
 
 -- __report_utilizzi_coupon__
@@ -40,7 +73,101 @@ CREATE OR REPLACE VIEW `__report_utilizzi_coupon__` AS
         INNER JOIN documenti ON documenti.id = pagamenti.id_documento
 ;
 
--- | 100000020550
+-- | 100000020000
+-- __report_giacenza_magazzini__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_giacenza_magazzini__`;
+
+-- | 100000020001
+-- __report_giacenza_magazzini__
+-- tipologia: report
+CREATE TABLE `__report_giacenza_magazzini__` (
+  `id` varchar(56) NOT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
+  `codice` text DEFAULT NULL,
+  `nome` text DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
+  `articolo` varchar(331) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `codice_prodotto` char(64) DEFAULT NULL,
+  `prodotto` char(128) DEFAULT NULL,
+  `codice_produttore` char(64) DEFAULT NULL,
+  `categorie` text DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `matricola` char(128) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `carico` decimal(21,2) DEFAULT NULL,
+  `scarico` decimal(21,2) DEFAULT NULL,
+  `totale_proprio` decimal(21,2) DEFAULT NULL,
+  `totale_figli` decimal(21,2) DEFAULT NULL,
+  `totale` decimal(21,2) DEFAULT NULL,
+  `peso` decimal(21,2) DEFAULT NULL,
+  `sigla_udm_peso` char(8) DEFAULT NULL,
+  `se_foglia` int(1) DEFAULT NULL,
+  `note_aggiornamento` text NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` mediumtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`(1024)),
+  KEY `id_articolo` (`id_articolo`),
+  KEY `codice_articolo` (`codice_articolo`),
+  KEY `id_prodotto` (`id_prodotto`),
+  KEY `codice_prodotto` (`codice_prodotto`),
+  KEY `id_matricola` (`id_matricola`),
+  KEY `indice_articolo_mastro` (`id_articolo`,`id_mastro`,`id_matricola`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000021000
+-- __report_movimenti_magazzini__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_movimenti_magazzini__`;
+
+-- | 100000021001
+-- __report_movimenti_magazzini__
+-- tipologia: report
+CREATE TABLE `__report_movimenti_magazzini__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` mediumint(9) DEFAULT NULL,
+  `categorie` mediumtext DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `codice_prodotto` char(64) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
+  `codice_produttore` char(128) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
+  `articolo` char(255) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `matricola` char(128) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(128) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `documento` char(255) DEFAULT NULL,
+  `numero` char(32) DEFAULT NULL,
+  `sezionale` char(32) DEFAULT NULL,
+  `emittente` char(255) DEFAULT NULL,
+  `destinatario` char(255) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `codice_mastro_provenienza` char(255) DEFAULT NULL,
+  `mastro_provenienza` char(255) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `codice_mastro_destinazione` char(255) DEFAULT NULL,
+  `mastro_destinazione` char(255) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `quantita_movimento` decimal(16,2) DEFAULT NULL,
+  `udm_movimento` char(32) DEFAULT NULL,
+  `note_aggiornamento` text DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `codice_articolo` (`codice_articolo`),
+  KEY `codice_prodotto` (`codice_prodotto`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- | 100000021002
 
 -- __report_immagini_scalate__
 CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
@@ -68,7 +195,7 @@ CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
 -- id_disciplina_progetto / disciplina_progetto usano max() perche' il LEFT JOIN su
 -- progetti_categorie produce comunque una riga per ogni categoria del progetto
 -- (anche non-disciplina): max() scarta i NULL e tiene la sola foglia-disciplina.
--- | 100000020551
+-- | 100000021003
 
 -- __report_iscrizioni_anagrafica__
 CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
@@ -102,7 +229,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
         rinnovi.id_pianificazione AS id_pianificazione,
         rinnovi.id_account_inserimento AS id_account_inserimento,
         rinnovi.id_account_aggiornamento AS id_account_aggiornamento,
-        concat( 'rinnovo ', rinnovi.id, ' dal ', concat_ws( '-', rinnovi.data_inizio ), ' al ', concat_ws( '-', rinnovi.data_fine ) ) AS __label__
+        concat( 'rinnovo ', coalesce( rinnovi.codice, rinnovi.id ), ' dal ', concat_ws( '-', rinnovi.data_inizio ), ' al ', concat_ws( '-', rinnovi.data_fine ) ) AS __label__
     FROM
         contratti
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
@@ -120,7 +247,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
         contratti.id, contratti_anagrafica.id_anagrafica, rinnovi.id, progetti.id
 ;
 
--- | 100000020605
+-- | 100000021004
 
 -- __report_sottoscorta__
 -- tabella, non vista: la riscrive per intero il task _mod/_0500.mastri/_src/_api/_task/_rifornimenti.da.sottoscorta.php
@@ -130,6 +257,7 @@ CREATE OR REPLACE VIEW __report_iscrizioni_anagrafica__ AS
 CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   `id` varchar(56) NOT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
   `articolo` varchar(331) DEFAULT NULL,
   `id_mastro` bigint(20) DEFAULT NULL,
   `collocazione` char(64) DEFAULT NULL,
@@ -153,13 +281,14 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_articolo` (`id_articolo`),
+  KEY `codice_articolo` (`codice_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `esito` (`esito`),
   KEY `se_allarme` (`se_allarme`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- | 100000020606
+-- | 100000021005
 
 -- __report_scorte_non_valutabili__
 -- tabella, non vista: la riscrive lo stesso task di __report_sottoscorta__ con le ubicazioni la cui soglia non si puo'
@@ -167,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `__report_sottoscorta__` (
 CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   `id` varchar(56) NOT NULL,
   `id_articolo` bigint(20) DEFAULT NULL,
+  `codice_articolo` char(32) DEFAULT NULL,
   `articolo` varchar(331) DEFAULT NULL,
   `id_mastro` bigint(20) DEFAULT NULL,
   `collocazione` char(64) DEFAULT NULL,
@@ -178,8 +308,181 @@ CREATE TABLE IF NOT EXISTS `__report_scorte_non_valutabili__` (
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_articolo` (`id_articolo`),
+  KEY `codice_articolo` (`codice_articolo`),
   KEY `id_mastro` (`id_mastro`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000056613
+
+-- __report_sprint_todo__
+-- ripristinato il 2026-10-27 dalla versione di prima del 02/03/2026 ( persa nel riallineamento d975b4a15 ): vista, non
+-- tabella, delle attivita' di produzione aperte e programmate fino alla settimana corrente; la leggono lo sprint del
+-- modulo 1200.todo ( _produzione.sprint.php, _progetti.produzione.form.sprint.php ) e i permessi di _250.auth.php.
+-- Unica modifica rispetto all'originale: indirizzi.indirizzo qualificato
+CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzi.indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+    tipologie_progetti.id AS id_tipologia_progetto,
+    tipologie_progetti.nome AS tipologia_progetto,
+    tipologie_progetti.se_pacchetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+    LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+  WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
+    AND (
+      (
+        date_format( todo.data_programmazione, '%Y' ) = date_format( now(), '%Y' )
+        AND
+        date_format( todo.data_programmazione, '%u' ) <= date_format( now(), '%u' )
+      )
+      OR
+      (
+        date_format( todo.data_programmazione, '%Y' ) < date_format( now(), '%Y' )
+      )
+      OR
+      (
+        todo.anno_programmazione = date_format( now(), '%Y' )
+        AND
+        todo.settimana_programmazione <= date_format( now(), '%u' )
+      )
+      OR
+      (
+        todo.anno_programmazione < date_format( now(), '%Y' )
+      )
+    )
+    AND tipologie_todo.se_produzione IS NOT NULL
+;
+
+
+-- | 100000060300
+
+-- __report_lezioni_corsi__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P83 ): tabella, non vista,
+-- una lezione per riga; la popolano il task e il job report.lezioni.corsi.popolazione del modulo 0920.corsi, la
+-- leggono le lezioni di 0630.iscrizioni e 0640.abbonamenti
+CREATE TABLE IF NOT EXISTS `__report_lezioni_corsi__` (
+  `id` char(255) NOT NULL,
+  `id_tipologia` bigint(20) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `codice` char(255) DEFAULT NULL,
+  `se_agenda` int(1) DEFAULT NULL,
+  `id_anagrafica` bigint(20) DEFAULT NULL,
+  `anagrafica` char(255) DEFAULT NULL,
+  `id_cliente` bigint(20) DEFAULT NULL,
+  `cliente` char(255) DEFAULT NULL,
+  `id_indirizzo` bigint(20) DEFAULT NULL,
+  `indirizzo` char(255) DEFAULT NULL,
+  `id_luogo` bigint(20) DEFAULT NULL,
+  `luogo` char(255) DEFAULT NULL,
+  `docenti` char(255) DEFAULT NULL,
+  `numero_alunni` int(11) DEFAULT NULL,
+  `numero_posti` int(11) DEFAULT NULL,
+  `numero_alunni_in_attesa` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `data_scadenza` char(255) DEFAULT NULL,
+  `ora_scadenza` char(255) DEFAULT NULL,
+  `data_programmazione` char(255) DEFAULT NULL,
+  `id_giorno_programmazione` bigint(20) DEFAULT NULL,
+  `ora_inizio_programmazione` char(255) DEFAULT NULL,
+  `ora_fine_programmazione` char(255) DEFAULT NULL,
+  `anno_programmazione` char(255) DEFAULT NULL,
+  `settimana_programmazione` char(255) DEFAULT NULL,
+  `ore_programmazione` char(255) DEFAULT NULL,
+  `note_programmazione` text DEFAULT NULL,
+  `data_chiusura` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `posti_disponibili` char(32) DEFAULT NULL,
+  `se_prova` int(1) DEFAULT NULL,
+  `se_prenotabile_online` int(1) DEFAULT NULL,
+  `posti_prova` int(11) DEFAULT NULL,
+  `id_contatto` bigint(20) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `corso` char(255) DEFAULT NULL,
+  `discipline` char(255) DEFAULT NULL,
+  `id_disciplina` bigint(20) DEFAULT NULL,
+  `tipologie_abbonamenti` char(255) DEFAULT NULL,
+  `id_pianificazione` bigint(20) DEFAULT NULL,
+  `id_immobile` bigint(20) DEFAULT NULL,
+  `data_archiviazione` char(255) DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000060320
+
+-- __report_lezioni_tipologie_abbonamenti__
+-- ripristinato il 2026-10-26 dalla versione di prima del 02/03/2026 ( revisione del canone, P84 ): per ogni lezione
+-- ( id_todo ) le tipologie di abbonamento compatibili; la popola il task report.lezioni.tipologie.abbonamenti.popolazione
+-- del modulo 0920.corsi, la legge la scheda presenze della lezione
+CREATE TABLE IF NOT EXISTS `__report_lezioni_tipologie_abbonamenti__` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_todo` bigint(20) DEFAULT NULL,
+  `id_tipologia_contratti` bigint(20) DEFAULT NULL,
+  `se_compatibile` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` bigint(20) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` bigint(20) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unica` (`id_todo`,`id_tipologia_contratti`),
+  KEY `indice` (`id`,`id_todo`,`id_tipologia_contratti`,`se_compatibile`,`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE

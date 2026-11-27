@@ -26,8 +26,10 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-        'id_articolo' => 'codice articolo',
-        'id_prodotto' => 'codice prodotto',
+        'id_articolo' => 'id articolo',
+        'codice_articolo' => 'codice articolo',
+        'id_prodotto' => 'id prodotto',
+        'codice_prodotto' => 'codice prodotto',
         'prodotto' => 'prodotto',
         'codice_produttore' => 'cod. produttore',
         'articolo' => 'descrizione',
@@ -57,9 +59,10 @@
     $ct['view']['class'] = array(
         'id' => 'd-none',
         'id_prodotto' => 'd-none',
+        'codice_prodotto' => 'd-none',
         'prodotto' => 'd-none',
         'codice_produttore' => 'd-none',
-        // 'id_articolo' => 'd-none',
+        'id_articolo' => 'd-none',
         'articolo' => 'text-left',
         'totale_figli' => 'text-right',
         'totale' => 'text-right',

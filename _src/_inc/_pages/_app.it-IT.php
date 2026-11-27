@@ -31,7 +31,7 @@
         'cacheable'        => false,
         'title'            => array( $l => 'account' ),
         'h1'            => array( $l => 'il tuo account' ),
-        'template'        => array( 'path' => '_src/_tpl/_minerva/', 'schema' => 'app.twig' ),
+        'template'        => array( 'path' => '_src/_tpl/_minerva/', 'schema' => 'account.twig' ),
         'parent'        => array( 'id' => NULL ),
         'macro'            => array( '_src/_inc/_macro/_account.php' ),
         'auth'            => array( 'groups' => array( 'roots', 'staff', 'users' ) ),

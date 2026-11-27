@@ -32,7 +32,10 @@
      * dichiarazione dei permessi
      * ==========================
      * 
-     * 
+     * NOTA CONTROL_FILTERED vuol dire "filtrato dalle ACL di riga": se esiste __acl_<tabella>__ ( _040000999999.acl.sql )
+     * getAclRightsTable() la unisce e l'account vede e apre solo le righe con una ACL dei suoi gruppi o inserite da lui,
+     * altrimenti equivale a CONTROL_FULL. Dal 2026-11-05 le entità pubblicate hanno la loro __acl_<entità>__, vuota, e lo
+     * staff, che su quelle tabelle era FILTERED, ha perso tutte le righe: per questo lì ha CONTROL_FULL ( 2026-11-11 )
      * 
      */
 
@@ -101,6 +104,7 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        // vista virtuale degli asset di classe veicolo ( VE000.veicoli ): le scritture vanno su asset
         'veicoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
@@ -214,6 +218,18 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'funnel' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'step' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'relazioni_step' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'pagine' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -241,12 +257,10 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'notizie' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_notizie' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'notizie_categorie' => array(
             CONTROL_FULL => array('roots'),
@@ -273,12 +287,10 @@
             CONTROL_FILTERED => array('staff')
         ),
         'annunci' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_annunci' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'annunci_categorie' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -313,20 +325,21 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'risorse' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'categorie_risorse' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'risorse_categorie' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-        'categorie_prodotti' => array(
+        'testate' => array(
             CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'categorie_prodotti' => array(
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'categorie_prodotti_caratteristiche' => array(
@@ -354,13 +367,11 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'prodotti' => array(
-            CONTROL_FULL => array( 'roots' ),              
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'articoli' => array(
-            CONTROL_FULL => array( 'roots' ),              
-            CONTROL_FILTERED => array( 'staff' ),
+            CONTROL_FULL => array( 'roots', 'staff' ),
             METHOD_GET => array( 'users' )
         ),
         'prezzi' => array(
@@ -381,11 +392,23 @@
         'relazioni_articoli' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'colori' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff' )
+        ),
+        'taglie' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff' )
+        ),
         'tipologie_prodotti' => array(
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff' )
         ),
         'udm' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff' )
+        ),
+        'valute' => array(
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff' )
         ),
@@ -417,6 +440,18 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'sconti_categorie_prodotti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_marchi' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_prodotti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
         'tipologie_sconti' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
@@ -433,7 +468,15 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'attivita_matricole' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'progetti_matricole' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'todo_matricole' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
@@ -613,9 +656,6 @@
         'menu' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-        'valutazioni' => array(
-            CONTROL_FULL => array( 'roots' )
-        ),
         'licenze' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
@@ -751,9 +791,8 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
-        'valutazioni_certificazioni' => array(
-            CONTROL_FULL => array('roots'),
-            CONTROL_FILTERED => array('staff')
+        'valutazioni_caratteristiche' => array(
+            CONTROL_FULL => array( 'roots' )
         ),
         'luoghi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
@@ -768,8 +807,7 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'progetti' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'progetti_archivio' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -830,7 +868,23 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'ruoli_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'ruoli_conversazioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'ruoli_pagamenti' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'ruoli_software' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'ruoli_step' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
@@ -976,7 +1030,8 @@
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'zone_indirizzi' => array(
-            CONTROL_FULL => array( 'roots', 'staff' )
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         ),
         'tipologie_attivita' => array(
             CONTROL_FULL => array( 'roots' ),
@@ -1014,6 +1069,10 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'zone_stati' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'zone_cap' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
@@ -1204,7 +1263,13 @@
         'tipologie_veicoli' => array(
             CONTROL_FULL => array( 'roots','staff' )
         ),
+        'tipologie_asset' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'mastri_tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'mastri_tipologie_asset' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
         'mastri_articoli' => array(

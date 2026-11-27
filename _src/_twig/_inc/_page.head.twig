@@ -41,6 +41,17 @@
     <!-- nessun link canonico trovato in page.canonical -->
     {% endif %}
 
+    {# LINK ALLE VERSIONI DELLA PAGINA NELLE ALTRE LINGUE
+        puntano alla canonica, come chiede Google, e si emettono solo se il sito ha più di una lingua;
+        vedi https://developers.google.com/search/docs/specialty/international/localized-versions?hl=it #}
+    {% set alternate = page.canonical ? pages[ page.canonical ].url : page.url %}
+    {% if alternate|length > 1 %}
+    {% for l,u in alternate %}<link rel="alternate" hreflang="{{ l }}" href="{{ u }}">
+    {% endfor %}
+    {% else %}
+    <!-- nessuna versione in altre lingue trovata in page.url -->
+    {% endif %}
+
     {# TAG TITLE #}
     <title>{{ page.title[ localization.language.ietf ] }}</title>
 

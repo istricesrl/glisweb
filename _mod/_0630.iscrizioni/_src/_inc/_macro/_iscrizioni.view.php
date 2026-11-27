@@ -52,9 +52,12 @@
 
     // rielaborazione dati tabella
     if( ! empty( $ct['view']['data'] ) ){
+		// le date AAAA-MM-GG le ha gia' convertite in GG/MM/AAAA _default.view.php ( dal 2026-09-22 ), e
+		// ripassarle da strtotime() leggeva GG/MM come MM/GG ( 01/01/1970 o giorno e mese scambiati ): si
+		// riconverte solo quello che e' ancora AAAA-MM-GG, come un datetime che il default lascia com'e'
 		foreach ( $ct['view']['data'] as &$row ){
             if( ! empty( $row['data_inizio'] ) ) {
-                $row['data_inizio'] = date('d/m/Y', strtotime( $row['data_inizio'] ) );
+                $row['data_inizio'] = ( preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}/', $row['data_inizio'] ) ? date('d/m/Y', strtotime($row['data_inizio'])) : $row['data_inizio'] );
             }
         }
 	}

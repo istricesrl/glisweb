@@ -1,12 +1,12 @@
 {% if privacy.persone.titolare %}
-<h2>informativa resa ai sensi degli artt. 13 e 14 del GDPR 2016/679</h2>
+<h2>informativa resa ai sensi degli artt. 13 e 14 del Regolamento (UE) 2016/679 ( GDPR )</h2>
 
-<p>In questa pagina vengono descritte le modalità e le finalità di gestione dei dati personali di coloro
-che consultano questo sito, accessibile all'indirizzo <a href="{{ site.url }}">{{ site.fqdn }}</a> (d'ora in poi per brevità anche semplicemente "il sito"); questa informativa
-è resa ai sensi dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/1311248#articolo13" target="_blank">art. 13 del D.Lg. n. 196/2003</a>
-(codice in materia di protezione dei dati personali) e dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/6264597" target="_blank">art. 13
-del Regolamento UE n. 2016/679</a> (GDPR 2016/679). La presente informativa si applica soltanto alla navigazione e all'interazione col sito, e non a siti di terze parti
-eventualmente raggiunti dall'utente navigando verso di essi tramite link esterni presenti sul sito stesso.</p>
+<p>In questa pagina vengono descritte le modalità e le finalità del trattamento dei dati personali di coloro che consultano questo sito, accessibile
+all'indirizzo <a href="{{ site.url }}">{{ site.fqdn }}</a> ( d'ora in poi per brevità anche semplicemente "il sito" ). Questa informativa è resa ai sensi
+degli <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank">artt. 13 e 14 del Regolamento (UE) 2016/679</a> ( Regolamento generale sulla
+protezione dei dati, GDPR ) e del Codice in materia di protezione dei dati personali ( D.Lgs. 30 giugno 2003, n. 196, come modificato dal D.Lgs. 10 agosto
+2018, n. 101 ). Si applica soltanto alla navigazione e all'interazione col sito, e non ai siti di terze parti eventualmente raggiunti dall'utente tramite
+link esterni presenti sul sito stesso.</p>
 
 <h3>titolare del trattamento dei dati</h3>
 
@@ -18,16 +18,16 @@ al numero <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ priva
 all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
 
 {% if privacy.dpo %}
-<h3>data protection officer</h3>
-<p>Il Data Protection Officer (DPO), sig. <strong>{{ privacy.dpo.denominazione }}</strong>, può essere contattato via posta presso la sua sede in <strong>{{ privacy.dpo.citta }} ({{ privacy.dpo.provincia }})</strong>,
-<strong>{{ privacy.dpo.indirizzo }}</strong> oppure telefonicamente al numero <strong><a href="tel:{{ privacy.dpo.telefono }}">{{ privacy.dpo.telefono }}</a></strong>
-oppure via mail all'indirizzo <strong><a href="mailto:{{ privacy.dpo.mail }}">{{ privacy.dpo.mail }}</a></strong>.</p>
+<h3>responsabile della protezione dei dati</h3>
+<p>Il responsabile della protezione dei dati ( Data Protection Officer, DPO ), <strong>{{ privacy.dpo.denominazione }}</strong>, può essere contattato via posta presso
+<strong>{{ privacy.dpo.indirizzo }}</strong>, <strong>{{ privacy.dpo.citta }} ({{ privacy.dpo.provincia }})</strong>, telefonicamente al numero
+<strong><a href="tel:{{ privacy.dpo.telefono }}">{{ privacy.dpo.telefono }}</a></strong> oppure via mail all'indirizzo <strong><a href="mailto:{{ privacy.dpo.mail }}">{{ privacy.dpo.mail }}</a></strong>.</p>
 {% endif %}
 
 {% if privacy.responsabili %}
 <h3>responsabili del trattamento dei dati</h3>
 
-<p>Il titolare, ai sensi dell'art. 29 comma 1 del D.Lg. 196/2003, ha designato i seguenti soggetti responsabili del trattamento dei dati:</p>
+<p>Il titolare, ai sensi dell'art. 28 del GDPR, ha designato i seguenti responsabili del trattamento dei dati:</p>
 <ul>
     {% for responsabile in privacy.responsabili %}
     <li>
@@ -38,24 +38,28 @@ oppure via mail all'indirizzo <strong><a href="mailto:{{ privacy.dpo.mail }}">{{
     </li>
     {% endfor %}
 </ul>
-<p>Un elenco dettagliato degli incaricati del trattamento dei dati può essere richiesto via mail all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
+<p>L'elenco dettagliato delle persone autorizzate al trattamento dei dati può essere richiesto via mail all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
 {% endif %}
 
 <h3>base giuridica del trattamento</h3>
 
-<p>I dati personali indicati in questa pagina sono trattati in base al consenso espresso dagli interessati, nell'ambito dell'erogazione dei servizi richiesti.
+<p>I dati personali indicati in questa pagina sono trattati sulla base del consenso espresso dagli interessati ( art. 6, par. 1, lett. a del GDPR ) e, quando
+servono a erogare un servizio richiesto dall'utente o a dare seguito a una sua richiesta, dell'esecuzione di tale richiesta ( art. 6, par. 1, lett. b del GDPR ).
+I dati di navigazione sono trattati sulla base del legittimo interesse del titolare alla sicurezza e al corretto funzionamento del sito ( art. 6, par. 1, lett. f
+del GDPR ). Quando il trattamento si basa sul consenso, il consenso può essere revocato in qualsiasi momento, senza pregiudicare la liceità del trattamento
+effettuato prima della revoca.</p>
 
 <h3>tipologie di dati trattati e finalità del trattamento</h3>
-<p>Di seguito vengono illsutrate le tipologie di dati trattati in questo sito e le relative modalità e finalità del trattamento.</p>
+<p>Di seguito vengono illustrate le tipologie di dati trattati in questo sito e le relative modalità e finalità del trattamento.</p>
 
 <h4>dati di navigazione</h4>
 <p>I sistemi informatici preposti al funzionamento del sito acquisiscono nel corso del loro normale esercizio alcuni dati personali
 la cui trasmissione è implicita nell'utilizzo dei protocolli di comunicazione di Internet. Tali dati non vengono raccolti per essere associati a
-specifici interessati ma per la loro stessa natura potrebbero attraverso elaborazioni ed associazioni con dati detenuti da terzi condurre
+specifici interessati ma per la loro stessa natura potrebbero, attraverso elaborazioni ed associazioni con dati detenuti da terzi, condurre
 all'identificazione degli utenti.</p>
-<p>Questi dati (indirizzi IP o nomi a dominio dei computer utilizzati per connettersi al sito, gli indirizzi
-URI delle risorse richieste, la data e l'ora delle richieste, il contenuto e l'esito delle risposte date dal sito, e simili) vengono utilizzati
-al solo fine di ricavarne informazioni statistiche e vengono eliminati periodicamente nel corso delle normali attività di manutenzione.</p>
+<p>Questi dati ( indirizzi IP o nomi a dominio dei computer utilizzati per connettersi al sito, indirizzi URI delle risorse richieste, data e ora delle
+richieste, contenuto ed esito delle risposte date dal sito, e simili ) vengono utilizzati al solo fine di ricavarne informazioni statistiche e di controllare
+il corretto funzionamento del sito, e vengono eliminati periodicamente nel corso delle normali attività di manutenzione.</p>
 <p>Questi dati potrebbero essere utilizzati per l'accertamento di responsabilità in caso di reati informatici ai danni del sito; in questo caso
 potrebbero essere conservati per un periodo più lungo e comunicati alle autorità competenti.</p>
 
@@ -101,68 +105,71 @@ essere prestato separatamente:</p>
 sezione precedente per richiedere l'invio di newsletter, di materiale informativo o di altre comunicazioni; l'utente è avvisato e consapevole che il mancato
 conferimento di tali dati può comportare l'impossibilità di ottenere quanto richiesto.</p>
 
-<h3>modalità del trattamento dei dati</h3>
+<h3>modalità del trattamento e conservazione dei dati</h3>
 
-<p>I dati trattati vengono elaborati manualmente e tramite strumenti automatici, su supporto digitale e cartaceo, per il solo tempo
-necessario a perseguire le finalità dichiarate nalla presente informativa e comunque non superiore a quanto previsto dalla normativa vigente.</p>
-<p>Specifiche misure di sicurezza sono messe in opera al fine di prevenire la perdita, la manomissione, la sottrazione o comunque l'uso illecito
+<p>I dati trattati vengono elaborati manualmente e tramite strumenti automatici, su supporto digitale e cartaceo, per il solo tempo necessario a perseguire
+le finalità dichiarate nella presente informativa e comunque non oltre quanto previsto dalla normativa vigente; al termine di tale periodo vengono cancellati
+o resi anonimi.</p>
+<p>Sono adottate misure di sicurezza tecniche e organizzative adeguate a prevenire la perdita, la modifica, la sottrazione o comunque l'uso illecito
 dei dati trattati.</p>
 
 <h3>finalità del trattamento dei dati</h3>
 
-<p>Tutte le attività di raccolta e successivo trattamento dei dati sono finalizzate, se non diversamente specificato, sono finalizzate alla gestione e all'evasione delle
+<p>Tutte le attività di raccolta e successivo trattamento dei dati sono finalizzate, se non diversamente specificato, alla gestione e all'evasione delle
 richieste dei clienti, e i dati raccolti vengono conservati esclusivamente per il tempo necessario allo svolgimento di tale attività.</p>
 <p>In nessun caso il titolare del trattamento utilizza i dati forniti per finalità diverse da quelle elencate. Informative dettagliate
 vengono fornite contestualmente alla richiesta del consenso nei moduli del sito eventualmente predisposti per la raccolta di dati degli interessati.</p>
 
 <h3>diritti degli interessati</h3>
 
-<p>I soggetti cui si riferiscono i dati personali trattati dal sito, o in generale gli utenti del sito, hanno in qualunque momento il diritto di:</p>
+<p>I soggetti cui si riferiscono i dati personali trattati dal sito, o in generale gli utenti del sito, hanno in qualunque momento il diritto, ai sensi degli artt. da 15 a 22 del GDPR, di:</p>
 <ul>
-    <li>ottenere la conferma dell'esistenza o meno di dati che li riguardino</li>
-    <li>conoscerne il contenuto e l'origine</li>
-    <li>verificarne l'esattezza e la completezza</li>
-    <li>chiederne l'integrazione, l'aggiornamento o la rettificazione</li>
-    <li>chiederne la cancellazione, la trasformazione in forma anonima, il blocco dei dati trattati in violazione di legge</li>
-    <li>opporsi in ogni caso, per motivi legittimi, al loro trattamento</li>
+    <li>ottenere la conferma che sia o meno in corso un trattamento di dati che li riguardano, e accedere a tali dati e alle informazioni sul loro trattamento ( art. 15 )</li>
+    <li>ottenere la rettifica dei dati inesatti e l'integrazione dei dati incompleti ( art. 16 )</li>
+    <li>ottenere la cancellazione dei dati, nei casi previsti dal GDPR ( art. 17 )</li>
+    <li>ottenere la limitazione del trattamento ( art. 18 )</li>
+    <li>ricevere i dati forniti in un formato strutturato, di uso comune e leggibile da dispositivo automatico, e trasmetterli a un altro titolare ( art. 20 )</li>
+    <li>opporsi in qualsiasi momento, per motivi connessi alla propria situazione particolare, al trattamento basato sul legittimo interesse ( art. 21 )</li>
+    <li>revocare in qualsiasi momento il consenso, quando il trattamento si basa sul consenso ( art. 7, par. 3 )</li>
 </ul>
-<p>Le richieste di esercizio dei diritti sopra indicati vanno rivolte senza particolari formalità, ai seguenti recapiti:</p>
+<p>Le richieste di esercizio dei diritti sopra indicati vanno rivolte senza particolari formalità ai seguenti recapiti:</p>
 <ul>
     {% if privacy.persone.titolare.mail %}<li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong></li>{% endif %}
     {% if privacy.persone.titolare.telefono %}<li>telefonicamente al numero <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ privacy.persone.titolare.telefono }}</a></strong></li>{% endif %}
     <li>tramite posta ordinaria scrivendo a <strong>{{ privacy.persone.titolare.denominazione }}, {{ privacy.persone.titolare.indirizzo }}, {{ privacy.persone.titolare.cap }} {{ privacy.persone.titolare.citta }} ({{ privacy.persone.titolare.provincia }})</strong></li>
 </ul>
+<p>Gli interessati che ritengono che il trattamento dei dati che li riguardano violi il GDPR hanno inoltre il diritto di proporre reclamo a un'autorità di controllo
+( art. 77 del GDPR ), che in Italia è il <a href="https://www.garanteprivacy.it" target="_blank">Garante per la protezione dei dati personali</a>.</p>
 
-<h2>cookie e altri sistemi di tracciamento</h2>
+<h2>cookie e altri strumenti di tracciamento</h2>
 
 <p>I cookie sono piccoli file di testo che vengono salvati dal browser dell'utente su richiesta dei siti che esso visita. Esistono diversi utilizzi
 possibili dei cookie in base ai quali si distinguono altrettante categorie di cookie, identici tecnicamente ma differenti sul piano funzionale.</p>
 
 <p>Dal punto di vista funzionale, si distinguono i cookie tecnici, il cui scopo è garantire il funzionamento del sito e dei servizi da esso offerti, da
 quelli di profilazione, il cui scopo non è correlato al funzionamento del sito ma all'analisi dei profili e delle preferenze dei suoi visitatori; si collocano
-in una zona intermedia i cookie analitici, che possono essere assimilati ai cookie tecnici o a quelli di profilazione a seconda se i dati raccolti sono
-riconducibili o meno a una persona specifica (profilazione). I cookie analitici pertanto si dividono ulteriormente in cookie analitici anonimi,
-ovvero che non raccolgono informazioni identificative dell'utente, da quelli identificativi che invece consentono di risalire all'utente collegato
-ai dati raccolti.</p>
+in una zona intermedia i cookie analitici, che possono essere assimilati ai cookie tecnici o a quelli di profilazione a seconda che i dati raccolti siano
+riconducibili o meno a una persona specifica. I cookie analitici pertanto si dividono ulteriormente in cookie analitici anonimi, che non raccolgono
+informazioni identificative dell'utente, e cookie analitici identificativi, che invece consentono di risalire all'utente collegato ai dati raccolti.</p>
 
-<p>I cookie analitici anonimi non raccolgono né contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
-dell'utente, in quanto sono state adottate le necessarie misure tecniche di anonimizzazione dei dati, la normativa vigente non richiede
-l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
+<p>I cookie analitici anonimi non raccolgono né contengono informazioni identificative; poiché, grazie alle misure tecniche di anonimizzazione adottate, non possono
+condurre all'identificazione dell'utente, la normativa vigente ( Linee guida cookie e altri strumenti di tracciamento del Garante per la protezione dei dati personali,
+10 giugno 2021 ) non richiede il consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
 rispettive informative per ulteriori dettagli.</p>
 
-<p>I cookie analitici identificativi possono invece contenere informazioni in grado di condurre all'identificazione
-dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Anche in questo caso, poiché questi cookie
-sono gestiti direttamente dai soggetti terzi, si rimanda alle loro rispettive informative per ulteriori dettagli.</p>
+<p>I cookie analitici identificativi possono invece contenere informazioni in grado di condurre all'identificazione dell'utente, e dunque la normativa vigente
+richiede il preventivo consenso dell'utente per il loro utilizzo. Anche in questo caso, poiché questi cookie sono gestiti direttamente dai soggetti terzi,
+si rimanda alle loro rispettive informative per ulteriori dettagli.</p>
 
-<p>Per l'utilizzo di cookie di profilazione e di altri sistemi di tracciamento dei profili, delle preferenze, e in generale dei dati personali degli
-utenti, è sempre richiesto l'esplicito consenso dell'interessato.</p>
+<p>Per l'utilizzo di cookie di profilazione e di altri strumenti di tracciamento dei profili, delle preferenze, e in generale dei dati personali degli
+utenti, è sempre richiesto il preventivo consenso dell'interessato.</p>
 
-<p>Dal punto di vista della provenienza, si distinguono i cookie propri del sito, riferibili direttamente al Titolare del trattamento indicato sopra,
+<p>Dal punto di vista della provenienza, si distinguono i cookie propri del sito, riferibili direttamente al titolare del trattamento indicato sopra,
 da quelli inviati da terze parti, riferibili a soggetti esterni e inclusi nel sito per aggiungere ad esso funzionalità e servizi ulteriori.</p>
 
-<p>Dal punto di vista della durata della permanenza del cookie sul computer dell'untente, si distinguono i cookie permanenti, che non hanno una scadenza
-propria ma possono essere cancellati direttamente dal sito o dall'utente, quelli persistenti, che hanno una propria durata predeterminata nel tempo, e quelli
-temporanei che vengono automaticamente distrutti al termine della sessione di lavoro o alla chiusura del browser.</p>
+<p>Dal punto di vista della durata della permanenza sul dispositivo dell'utente, si distinguono i cookie di sessione, che vengono eliminati automaticamente
+al termine della sessione di navigazione o alla chiusura del browser, dai cookie persistenti, che restano memorizzati fino alla loro scadenza o fino a quando
+vengono cancellati dal sito o dall'utente.</p>
 
 <h3>cookie tecnici propri</h3>
 {% if privacy.cookie.propri.tecnici %}
@@ -170,8 +177,7 @@ temporanei che vengono automaticamente distrutti al termine della sessione di la
 confortevole e sicuro. L'uso di questi cookie è limitato alla trasmissione di identificativi di sessione generati casualmente e non implica
 la comunicazione al sito di dati personali dell'utente. In nessun caso i cookie tecnici utilizzati da questo sito comportano l'acquisizione
 di dati personali identificativi dell'utente, né pregiudicano la riservatezza della sua navigazione. L'utilizzo di cookie tecnici non richiede
-il consenso esplicito dell'utente secondo la normativa vigente, ma solo la comunicazione informativa del loro utilizzo. Il sito utilizza i
-seguenti cookie tecnici propri:</p>
+il consenso dell'utente secondo la normativa vigente, ma solo l'informazione sul loro utilizzo. Il sito utilizza i seguenti cookie tecnici propri:</p>
 <ul>
     {% for cookie, dettagli in privacy.cookie.propri.tecnici %}
     <li>
@@ -197,7 +203,7 @@ seguenti cookie tecnici propri:</p>
 
 <h3>cookie tecnici di terze parti</h3>
 {% if privacy.cookie.terzi.tecnici %}
-<p>Questo sito integra servizi di terze parti che fanno uso di cookie tecnici per i quali non è richiesto un esplicito consenso in quanto non contengono
+<p>Questo sito integra servizi di terze parti che fanno uso di cookie tecnici per i quali non è richiesto il consenso in quanto non contengono
 informazioni che possono condurre all'identificazione dell'utente né raccolgono dati o altre informazioni personali su di esso; in particolare il sito
 utilizza i seguenti servizi:</p>
 <ul>

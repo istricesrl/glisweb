@@ -16,6 +16,8 @@ non è ordine estetico, è la condizione perché restino leggibili.
 | `TODO.md` | **cosa c'è da fare**: solo `[ ]` e `[?]` | si **pota** quando una voce chiude |
 | `DONE.md` | **cosa è successo, e perché si è deciso così**: `[v]`, `[x]` e le cronache | append, non si rilegge: si consulta con `grep` |
 | `CHAT.md` | **come siamo messi col cliente** | si **riscrive**: non è un diario, è una fotografia di adesso |
+| `DEPLOY.md` | **cosa è andato su test e su prod, e quando** | lo appende `_deploy.run.sh`; a mano una riga sola |
+| `DOWNTIME.md` | **quando il sito è stato giù, e per quanto** | lo genera il controllo di uptime; a mano mai |
 
 Il confine fra i primi due: il `CLAUDE.md` dice **come comportarsi** (le regole, cosa non fare, le
 convenzioni), il `READ.md` dice **i fatti** (dove sta la roba, come ci si entra, quali comandi). Se
@@ -24,13 +26,14 @@ una riga comincia con "non fare mai" va nel CLAUDE; se comincia con "il database
 ⚠ **Nel `READ.md` di progetto non va la documentazione del framework.** Snippet e tecniche che
 valgono su qualunque deploy glisweb non sono informazioni di *questo* progetto: vanno nella
 documentazione del framework (questo file, `dev/READ.md`, o la skill). Il READ di progetto tiene
-nove cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
+dieci cose, e solo quelle: **1)** descrizione generale — cos'è, a cosa serve, per chi; **2)** tutte le
 credenziali utili, o il posto preciso dove trovarle; **3)** architettura e risorse — macchine,
 database, servizi esterni, domini; **4)** mappa delle personalizzazioni — cosa in questo deploy è
 diverso dallo standard, e perché; **5)** FAQ di progetto; **6)** soluzioni ai problemi frequenti —
 il sintomo, e cosa si fa; **7)** procedure proprie del progetto; **8)** documentazione — i link ai manuali, standard e custom, e
 come si genera, si aggiorna e si verifica quella custom ( vedi sotto ); **9)** test automatici — i link
-all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ).
+all'esito dell'ultima esecuzione, standard e custom, e come si lanciano ( vedi sotto ); **10)** persone —
+una scheda per ogni persona coinvolta nel progetto, chi è e come la si raggiunge ( vedi sotto ).
 
 Vale anche per il READ il limite di lunghezza del TODO: **tiene il fatto e il riferimento, non la
 trattazione.** Una procedura lunga sta in un file suo sotto `var/`, il READ ci rimanda.
@@ -84,8 +87,6 @@ Tre vincoli:
 Il verso è uno solo: **il `READ.md` linka la documentazione, la documentazione non cita il `READ.md`**,
 che resta fuori dalla generazione ( vedi `documentazione.md` ).
 
-### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
-
 ### ⚠ La voce 9, test automatici: l'esito a un clic, come la documentazione
 
 Regola di Fabio del **13/10/2026**, stessa logica della voce 8. Ogni esecuzione dei test
@@ -108,12 +109,54 @@ nelle stesse due sottosezioni:
 Anche qui un link si scrive solo dopo averlo aperto, e la sezione si aggiorna nel giro di ogni
 modifica: **codice → test → report dei test → documentazione → file di progetto**.
 
+### ⚠ La voce 10, persone: chi è, e come la si raggiunge
+
+Regola di Fabio del **28/10/2026**. La sezione **Persone** del `READ.md` tiene **una scheda per ogni
+persona coinvolta nel progetto**: lato cliente, nostra o di terzi ( fornitori, consulenti, l'agenzia
+che fa il sito accanto ). Il formato è fisso e uguale per tutti, così si legge e si cerca con `grep`:
+
+```markdown
+### <Nome Cognome>
+
+- **azienda**: <ragione sociale, o "Istrice">
+- **ruolo**: <decide | referente tecnico | referente business | utente | fornitore | consulente>
+  — <una riga su cosa fa nel progetto>
+- **contatti**: mail <indirizzo>; telefono <numero>; WhatsApp <numero, o "stesso">
+- **canale preferito**: <mail | WhatsApp | telefono>, <quando: orari, giorni>
+- **note**: <come va trattata, cosa sa e cosa no, chi sostituisce o da chi è sostituita>
+```
+
+Un campo che non si conosce si scrive `?`, non si toglie: il buco si vede e qualcuno lo riempie.
+Il ruolo dice **cosa può fare quella persona nel progetto**, non il suo titolo in azienda: chi
+decide, chi si sente per le cose tecniche, chi per quelle di business, chi usa e basta.
+
+Il confine con gli altri file:
+
+- **il `READ.md` dice chi è la persona e come la si raggiunge**, e niente dello stato della
+  conversazione;
+- **il `CHAT.md` resta lo stato della conversazione**: le sue sezioni `## <Nome Cognome> — <ruolo>`
+  rimandano alla scheda del READ e **non ne ripetono** mail, telefoni e note;
+- **il `CLAUDE.md`** di progetto tiene solo l'indicazione di comportamento verso il referente
+  ( *"non è una persona tecnica: domande secche"* ) e rimanda alla voce 10.
+
+⚠ **Mail e telefoni stanno nel `READ.md` perché il `READ.md` non esce dalla macchina.** Il `READ.md`
+di progetto vive nella **root del deploy**, che non è versionata di proposito ( verificato il
+28/10/2026: nessuno dei `READ.md` nelle root di `/var/www` è sotto git; i soli `dev/READ.md`
+versionati sono la documentazione del framework, e il repository `istricesrl/glisweb` è **pubblico** ).
+Ne discende la regola: **i contatti delle persone stanno solo nel `READ.md` della root del deploy**, e
+non si copiano in niente che sia versionato o che esca dalla macchina — non sotto `dev/` ( né nei
+`READ.md`/`USER.md` della documentazione, né nei commenti o nei test ), non nei commit, non nel
+`CHAT.md` e nel suo registro, non nei messaggi fra i claude né su Discord. Lì la persona si nomina e
+basta; chi ha bisogno del numero lo legge nel READ.
+
+### ⚠ Il READ si legge prima di chiedere, e si scrive quando si scopre
+
 Detto da Fabio il 23/09/2026: *"mi fanno domande riguardo a cose che dovrebbero essere descritte
 dal READ.md"*. Una domanda del tipo *"su che macchina sta questo?"*, *"dove sta il database?"*,
 *"qual è il deploy di produzione?"*, *"come si fa il rilascio qui?"* **è un buco nel READ**, non è
 una domanda. Prima di farla:
 
-1. **si cerca nel READ** — le nove voci, non solo quella che sembra;
+1. **si cerca nel READ** — le dieci voci, non solo quella che sembra;
 2. se non c'è, **si guarda**: la macchina risponde. `ssh`, `src/config.json`, `/etc/cron.d`,
    `git remote -v`, `update.branch.conf`, il vhost;
 3. **si scrive nel READ**, nella voce che le compete, **nello stesso turno in cui si è scoperta** —
@@ -132,6 +175,86 @@ La regola che tiene insieme i tre file di stato: **una cosa sta in un file solo.
 dal `TODO.md` e entra nel `DONE.md`; quando una domanda al cliente ha risposta esce dal `CHAT.md` e
 la decisione entra nel `DONE.md`. Se la stessa riga sta in due file, il prossimo che legge non sa
 quale delle due è vera.
+
+### `DEPLOY.md`: il diario dei deploy ( dal 26/10/2026 )
+
+È il sesto file canonico: risponde a **"cosa è andato su test e su prod, e quando"**. Lo scrive
+`_deploy.run.sh` a ogni deploy `dev -> test` o `dev -> prod`, con un blocco per deploy:
+
+```
+2026-10-26 10:40 DEPLOY TRAMITE SCRIPT ( stable )
+==================================================
+...il comando, in un blocco di codice...
+file trasferiti: 12 — elenco completo in var/deploy/20261026-1040-stable.log
+```
+
+- **non è un log**: fino al 26/10/2026 lo script ci scriveva l'output di `rsync -av`, file per file,
+  e il `DEPLOY.md` di bernispa era arrivato a 4 MB e 105.000 righe. L'elenco dei file ora sta in
+  `var/deploy/AAAAMMGG-HHMM-<canale>.log`;
+- **a mano si aggiunge una riga sola**, sotto il blocco dello script, quando il deploy ha fatto
+  qualcosa che lo script non vede: un passo a mano sul target, una patch del database applicata,
+  un ritorno indietro. Il perché va nel `DONE.md`, qui solo il fatto;
+- un `DEPLOY.md` vecchio troppo grosso per `less` si sposta in `var/AAAAMMGG-deploy-storico/` e si
+  riparte da un file nuovo, con una riga che ci rimanda;
+- `chiusura.py` legge da qui gli `--exclude` dell'ultimo `rsync`: il comando resta scritto per intero.
+
+### `DOWNTIME.md`: i periodi di down del sito ( dal 04/11/2026 )
+
+È il settimo file canonico: risponde a **"quando il sito è stato giù, e per quanto"**. Lo genera
+glisweb-check-24x7, il controllo di uptime che ha preso il posto di Site24x7 ( fuori dal framework
+dal 05/11/2026, in `/opt/glisweb-check-24x7` ), ogni volta che un sito del deploy cambia stato: una
+riga per periodo, dal più recente, con inizio, fine, durata, conferma e motivo. La fonte è il
+registro `/var/lib/glisweb-check-24x7/registro.jsonl` del server, e il file si riscrive intero da lì:
+
+- **non si modifica a mano**: la prossima riscrittura cancellerebbe la modifica. Una nota su un
+  periodo ( la causa vera, cosa si è fatto ) va nel `DONE.md`;
+- un periodo **non confermato** l'ha visto giù un server solo, mentre gli altri non rispondevano:
+  di solito è un problema di quel server, non del sito;
+- il capitano lo legge nel suo giro; cosa fornisce il deploy al controllo è nel capitolo
+  `125.uptime` del manuale sviluppatore, il funzionamento nel manuale del progetto.
+
+### La cartella del progetto: i file canonici, e niente altro ( dal 26/10/2026 )
+
+Nella cartella del progetto ( `/var/www/<progetto>/`, quella che contiene `dev/` ) stanno solo:
+
+| cosa                     | quali                                                              |
+|--------------------------|--------------------------------------------------------------------|
+| i file di progetto       | `CLAUDE.md` `READ.md` `TODO.md` `DONE.md` `CHAT.md` `DEPLOY.md`    |
+| generati                 | `burndown.md` `CHAT.md.flock` `phpmalwarefinder.log` `DOWNTIME.md` |
+| aggiornamento e gabbie   | `update.*.conf` `devuser.conf` `ftpuser.conf`                      |
+| cartelle                 | `dev/ stable/ test/ var/ backups/ disallineamenti/ .claude/`       |
+
+Tutto il resto va in `var/AAAAMMGG-scopo/`. L'elenco vero è in `bin/cartella-progetto.py`, che lo
+controlla ( senza argomenti guarda tutti i progetti di `/var/www` ); lo usano `chiusura.py`, l'hook
+`niente-rusco` del server, che blocca la creazione di un file nuovo fuori elenco, e il controllo
+di chiusura del capitano. Un progetto che ha davvero bisogno di un file in più lo elenca in
+`.claude/cartella-progetto.consentiti`, un nome per riga, e scrive il perché nel `CLAUDE.md`.
+
+### Come si scrive un .md di progetto: si legge con `mcedit` e `less` ( dal 26/10/2026 )
+
+Fabio i file di progetto li apre **come testo**, non in un'anteprima markdown. Quello che conta è
+come appaiono in un terminale:
+
+1. **righe di 100 caratteri al massimo**. Si va a capo a mano. Fanno eccezione i blocchi di
+   codice ( ``` o rientro di quattro spazi ), dove un URL o un comando lungo può stare intero, e
+   ⚠ **le voci del `TODO.md`, che restano su una riga sola**: `todo.py`, `giornata.py`, il
+   burndown e `issue-todo.py` leggono la voce solo sulla riga `- [`, e testo e
+   `( aperta GG/MM/AAAA )` mandati a capo sparirebbero da ricerche e conteggi ( obiezione di
+   glisweb, 26/10/2026 ). La voce si tiene corta; il dettaglio va nelle note `--` sotto, o in un
+   file in `var/`;
+2. **tabelle di 5 colonne al massimo, con le colonne allineate** nel testo, così si leggono senza
+   anteprima. `bin/md-leggibile.py --allinea` le allinea da solo. Una tabella che anche allineata
+   supera i 100 caratteri **diventa un elenco**: un blocco per voce, coi campi su righe proprie;
+3. **percorsi e URL lunghi fuori dalle celle**: nella tabella il nome breve, sotto la tabella un
+   blocco di codice coi percorsi interi;
+4. **il `READ.md` dice com'è adesso**. "Il 04/10 è successo che…" è cronaca e va nel `DONE.md`; nel
+   READ al massimo una riga che ci rimanda. Ogni sezione comincia dal fatto, non dalla storia;
+5. **`⚠` e grassetto con parsimonia**: se metà del file è in grassetto, niente lo è. Il `⚠` va sulle
+   trappole vere, quelle che hanno già fatto danno;
+6. il `DONE.md` è un archivio: le regole valgono per i capitoli nuovi, quelli vecchi non si toccano.
+
+Prima di chiudere una sessione che ha scritto nei file di progetto si passa
+`bin/md-leggibile.py` dalla cartella del progetto; `chiusura.py` lo fa da solo e lo segnala come ⚠.
 
 ### Perché i tre file esistono
 
@@ -174,6 +297,27 @@ Da qui tre regole, in ordine di importanza:
 E una regola di buon senso che le risparmia quasi tutte: **se si sa che c'è un'altra sessione aperta
 sullo stesso progetto, i file di stato li scrive una sola**, e l'altra lo dice invece di farlo. Alla
 fine di un giro, dire quali dei tre si sono toccati costa una riga e fa risparmiare la ricostruzione.
+
+#### Appendere non vuol dire riscrivere ( dal 26/10/2026 )
+
+Il 26/10/2026 una sessione ha appeso al `DONE.md` di gimbe con
+`open( 'DONE.md', 'w' ).write( open( 'DONE.md' ).read() + x )`: Python apre in `'w'`, quindi **tronca
+prima di leggere**, e il `DONE.md` ( ~490 KB ) è rimasto col solo ultimo blocco. Fuori da git non c'era
+niente da cui ripescarlo. Da qui:
+
+- **per appendere si usa `open( f, 'a' )` o `>>`**, mai una lettura e una scrittura dello stesso file
+  nella stessa istruzione: vale anche per `cat F … > F` e `sed … F > F`, che troncano allo stesso modo;
+- **prima di riscrivere un file di stato** ( `CLAUDE.md`, `READ.md`, `TODO.md`, `DONE.md`, `CHAT.md`,
+  `var/chat/registro.jsonl` ) lo si legge tutto in una variabile, si costruisce il testo nuovo e si
+  controlla che **non sia più corto** del vecchio, a meno che accorciarlo sia proprio lo scopo ( una
+  pulizia del `TODO.md`, un trasloco nel `DONE.md` ).
+
+La rete sotto, che non sostituisce le due regole: `~/.claude/bin/storico-file-progetto.py`, da cron
+orario, copia ogni versione di questi file in `<progetto>/var/storico-file-progetto/AAAAMMGG-HH/`, e
+l'hook `storico-file-progetto.dopo.py` ( PostToolUse ) avvisa se uno è sceso di oltre il 20%. Se lo
+dice, **si ripristina da lì prima di qualsiasi altra cosa**, oppure si dice perché l'accorciamento era
+voluto. `var/storico-file-progetto/` è una cartella canonica del progetto: `bin/cartella-progetto.py` la
+riconosce come tema senza data.
 
 ### I cinque marcatori
 
@@ -264,6 +408,26 @@ Dopo il marcatore, **tre posizioni fisse** fra parentesi. `!` se sì, `-` se no:
 
 Senza questi tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere
 niente.
+
+#### La scadenza: `( scad: GG/MM/AAAA )` subito dopo i flag
+
+Regola approvata da Fabio il **24/11/2026**. Quando una voce ha una **data vera** entro cui va fatta, la
+data si scrive nella riga, **subito dopo i flag**:
+
+    - [ ] (!!-) ( scad: 15/12/2026 ) rinnovo del certificato del cliente ( aperta 24/11/2026 )
+    - [ ] (!!!) ( scad!: 31/12/2026 ) invio della dichiarazione, termine di legge ( aperta 24/11/2026 )
+
+- **`( scad: GG/MM/AAAA )`** è una scadenza **indicativa**: la data a cui si mira;
+- **`( scad!: GG/MM/AAAA )`** è una scadenza **tassativa**: passata quella data il danno è fatto;
+- l'anno si scrive intero, e la scadenza si mette **solo se è vera**: una data inventata per dare
+  priorità è un flag urgente travestito, e toglie valore alle scadenze vere;
+- le leggono `~/.claude/bin/todo.py -S oggi|scadute|N|tutte` ( `N` = entro N giorni, scadute comprese )
+  e `-T` ( solo le tassative ), e `~/.claude/bin/scadenze.py`, che le cerca in **tutti** i `TODO.md` del
+  server; `scadenze.py --candidati -p <progetto>` elenca le voci senza campo che parlano di scadenze, da
+  marcare se la scadenza è vera;
+- `tutto-ok.py` dà **KO** su una tassativa scaduta o in scadenza oggi e ancora aperta;
+- la data della scadenza vale anche come **data futura citata**: finché è davanti,
+  `normalizza-urgenze.py` non declassa la voce ( vedi sotto ).
 
 #### L'urgenza scade: dopo 14 giorni fermi il `!` cade da solo
 
@@ -389,6 +553,7 @@ senza scorrere tutto il file.
 
 ## <Nome Cognome> — <ruolo>
 
+Scheda: `READ.md`, voce 10 *Persone*.
 Ultimo contatto: mail 05/09, WhatsApp 08/09 11:22, telefono 07/09 (12 minuti).
 
 ### Aspetta lui — cosa gli abbiamo chiesto
@@ -605,6 +770,9 @@ impatto, `!` se sì e `-` se no:
 **urgente** = scadenza vicina o qualcuno fermo ad aspettare adesso; **rilevante** = c'è qualcuno che
 l'aspetta, altrimenti `-`; **impattante** = se non si fa qualcosa si rompe o resta bloccato. Senza questi
 tre elementi non si può decidere cosa lasciar cadere, e quindi non si lascia cadere niente.
+
+⚠ **La scadenza vera si scrive dopo i flag**: `( scad: GG/MM/AAAA )` indicativa, `( scad!: GG/MM/AAAA )`
+tassativa, p.es. `- [ ] (!!-) ( scad: 15/12/2026 ) testo ( aperta 24/11/2026 )` ( vedi *"La scadenza"* sopra ).
 
 ⚠ **L'urgenza scade**: un `!` fermo da più di 14 giorni lo toglie `/usr/local/bin/normalizza-urgenze.py`, ogni sera
 ( vedi *"L'urgenza scade"* sopra ).

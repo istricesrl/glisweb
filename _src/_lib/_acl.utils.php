@@ -330,7 +330,9 @@
         logger('richiesta di diritti per ' . $t . '/' . $id . '/' . $a, 'auth');
 
         // passaggio ricorsivo dei permessi
-        $i['__auth__'] = $_SESSION['account']['permissions'][$t];
+        // NOTA senza sessione ( un import con firma ) i permessi non ci sono: prima del 2026-10-30 qui partivano un notice
+        // e un warning di in_array(), che dove display_errors è acceso finivano nella risposta
+        $i['__auth__'] = $_SESSION['account']['permissions'][$t] ?? array();
 
         // verifico se l'utente ha il pieno controllo sulla tabella
         if (in_array(CONTROL_FULL, $i['__auth__'])) {
@@ -475,19 +477,25 @@
         // NOTA _attivi e _archiviati sono suffissi obsoleti
         // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
+        // account corrente: la funzione puo' essere chiamata senza un account in sessione, e su
+        // PHP 8 in_array() e implode() su un null sono un TypeError, non piu' un warning
+        $username = ( isset( $_SESSION['account']['username'] ) ) ? $_SESSION['account']['username'] : NULL;
+        $gruppi   = ( isset( $_SESSION['account']['gruppi'] ) ) ? (array) $_SESSION['account']['gruppi'] : array();
+        $permessi = ( isset( $_SESSION['account']['permissions'][ $t ] ) ) ? (array) $_SESSION['account']['permissions'][ $t ] : array();
+
         // verifico se l'utente non è root
-        if ($_SESSION['account']['username'] == 'root' || in_array('roots', $_SESSION['account']['gruppi'])) {
+        if ($username == 'root' || in_array('roots', $gruppi)) {
 
             // log
-            logger('accesso root concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+            logger('accesso root concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
             // default
             return NULL;
 
-        } elseif (in_array(CONTROL_FULL, $_SESSION['account']['permissions'][$t])) {
+        } elseif (in_array(CONTROL_FULL, $permessi)) {
 
             // log
-            logger('accesso FULL concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+            logger('accesso FULL concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
             // default
             return NULL;
@@ -502,14 +510,14 @@
             );
 
             // log
-            logger($_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth');
+            logger($username . ' (' . implode(',', $gruppi) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth');
 
             // risultato
             return $r;
         }
 
         // log
-        logger('accesso non filtrato concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',', $_SESSION['account']['gruppi']) . ') per ' . $t, 'auth');
+        logger('accesso non filtrato concesso a ' . $username . ' (' . implode(',', $gruppi) . ') per ' . $t, 'auth');
 
         // default
         return NULL;
@@ -578,12 +586,25 @@
      * vera ( 'X' == 0 ), quindi lascia passare chiunque, e su PHP 8 e' sempre falsa, quindi blocca
      * chiunque. Non va reintrodotta.
      *
+     * I privilegi del gruppo guests ( $cf['auth']['groups']['guests']['privilegi'], vuoto nello
+     * standard ) li ha chiunque, anche senza login: e' il modo canonico di aprire un task agli
+     * anonimi, assegnando il suo privilegio a guests nella configurazione del progetto invece di
+     * togliere checkTaskPrivilege() dal file. Valgono anche per gli utenti collegati, altrimenti un
+     * task aperto agli anonimi risponderebbe 403 proprio a chi ha fatto il login.
+     *
      * @param       string      $p      codice del privilegio
      *
      * @return      boolean             true se l'utente ha il privilegio, false altrimenti
      *
      */
     function getPrivilege( $p ) {
+
+        global $cf;
+
+        // i privilegi dei guests valgono per chiunque; senza privilegio richiesto non bastano
+        if( ! empty( $p ) && in_array( $p, (array)( $cf['auth']['groups']['guests']['privilegi'] ?? array() ), true ) ) {
+            return true;
+        }
 
         // senza gruppi non c'e' un utente autenticato: stessa semantica di getPagePermission()
         if( empty( $_SESSION['account']['gruppi'] ) ) {

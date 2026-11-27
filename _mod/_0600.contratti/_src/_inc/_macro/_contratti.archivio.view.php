@@ -12,8 +12,11 @@
      *
      */
 
-   // tabella della vista
-   $ct['view']['table'] = 'contratti_archiviati';
+   // contratti_archiviati non esiste in nessuno schema ( canone punto 8, 26/11/2026 ): come in _0010
+   // ( _anagrafica.archivio.view.php ) si filtrano i contratti con data_archiviazione valorizzata
+   // $ct['view']['table'] = 'contratti_archiviati';
+   $ct['view']['table'] = 'contratti';
+   $ct['view']['__restrict__']['data_archiviazione']['NN'] = true;
 
 	// tabella per l'apertura
 	$ct['view']['open']['table'] = 'contratti';
@@ -26,8 +29,7 @@
 	   'id' => '#',
 	   'data_inizio' => 'data inizio',
 	   'data_fine' => 'data fine',
-      'data_inizio_rapporto' => 'data inizio rapporto',
-      'data_fine_rapporto' => 'data fine rapporto',
+      'data_archiviazione' => 'archiviato',
 	   '__label__' => 'contratto'
    );
 

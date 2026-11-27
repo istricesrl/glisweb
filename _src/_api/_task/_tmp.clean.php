@@ -1,11 +1,11 @@
 <?php
 
     /**
+     * svuota la cartella dei file temporanei
      *
-     *
-     *
-     *
-     * @todo commentare
+     * Cancella il contenuto di tmp/ tranne il cestino tmp/.garbage/: i file che trashFile() ci sposta restano per i giorni
+     * di $cf['common']['garbage']['giorni'] ( runlevel 030 ), e li toglie solo _garbage.clean.php. Fino al 04/11/2026
+     * cancellava anche la cartella tmp/, che il bootstrap ricrea alla richiesta successiva.
      *
      * @file
      *
@@ -30,8 +30,8 @@
     // inizializzo l'array del risultato
 	$status = array();
 
-    // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_TMP );
+    // svuoto tmp/ tranne il cestino
+	$status['esito'] = recursiveDelete( DIR_TMP, false, array( basename( DIR_TMP_GARBAGE ) ) );
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {

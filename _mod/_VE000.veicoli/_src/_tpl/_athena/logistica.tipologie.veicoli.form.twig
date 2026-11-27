@@ -26,6 +26,8 @@
                     <div class="col-12 col-md-auto form-col">
                         <span class="label-top">genitore</span>
                         {{ frm.select({ 'field': { 'name': 'id_genitore' }, 'source': { 'values': etc.select.tipologie_veicoli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {# il ramo e' di veicoli: la tipologia nasce col flag di classe acceso #}
+                        {{ frm.input({ 'field': { 'name': 'se_veicoli', 'type': 'hidden', 'default': '1' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col form-col">
                         <span class="label-top">nome</span>

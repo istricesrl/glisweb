@@ -23,18 +23,23 @@
     $ct['form']['table'] = 'anagrafica';
 
     // tabella della vista
-    $ct['view']['table'] = 'contratti_completa';
+    // contratti_completa non esiste piu' in nessuno schema ( canone punto 8, 24/11/2026 ): il legame contratto-anagrafica sta in
+    // contratti_anagrafica, e contratti_anagrafica_view ha id_anagrafica per il filtro e id_contratto per l'apertura
+    // $ct['view']['table'] = 'contratti_completa';
+    $ct['view']['table'] = 'contratti_anagrafica_view';
 
     // tabella per la gestione
     $ct['view']['open']['table'] = 'contratti';
+    $ct['view']['open']['field'] = 'id_contratto';
 
      // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data_inizio' => 'data inizio',
         'data_fine' => 'data fine',
-        'data_inizio_rapporto' => 'data inizio rapporto',
-        'data_fine_rapporto' => 'data fine rapporto',
+//        'data_inizio_rapporto' => 'data inizio rapporto',
+//        'data_fine_rapporto' => 'data fine rapporto',
+        'ruolo' => 'ruolo',
 	    '__label__' => 'contratto'
 	);
 

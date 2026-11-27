@@ -21,10 +21,14 @@ deploy su cui stai lavorando: l'elenco qui sotto descrive stable, che è il depl
 
 Stato dei **template di pagina** standard:
 
-- **già su BS5** (`bootstrap@5.3.2`): `_src/_tpl/_athena`, `_src/_tpl/_cassandra`, `_src/_tpl/_minerva`,
+- **già su BS5** (`bootstrap@5.3.2`): `_src/_tpl/_athena`, `_src/_tpl/_cassandra`, `_src/_tpl/_lydia`, `_src/_tpl/_minerva`,
   `_src/_templates/_minerva`. Su questi la conversione del markup residuo BS4 è **corretta e sicura**
-  (le classi BS4 rimaste erano no-op silenziosi). Fatta il 2026-09-01.
-- **ancora su BS4** (`bootstrap/4.5.2`): tutti gli altri (`_src/_tpl/_arianna`, `_lydia`, e quasi tutto
+  (le classi BS4 rimaste erano no-op silenziosi). Fatta il 2026-09-01; `_src/_tpl/_lydia` convertito
+  per intero il 2026-11-10, per il sito di glisweb.it. Da allora il test
+  `unit staticoTemplateCest::classiBs4NeiTemplateBs5` legge i `.twig` di ogni `_src/_tpl/*` che carica
+  `bootstrap@5` e si ferma su una classe o un attributo BS4 rimasto ( il primo giro ha trovato otto
+  `btn-block` in `_athena` ); `form-row` e `jumbotron` li lascia stare, e i commenti Twig non li guarda.
+- **ancora su BS4** (`bootstrap/4.5.2`): tutti gli altri (`_src/_tpl/_arianna` e quasi tutto
   `_src/_templates/_*`: arianna, athena, caterina, eleonora, hellen, julia, lucia, lucrezia, monica,
   olga, sabina, sylvia, vladyslava, yana). Migrarli **non è un rinomina-e-vai**: serve bumpare la
   versione a BS5 *e* convertire tutto il markup *e* rifare il collaudo visivo del template, uno per uno.

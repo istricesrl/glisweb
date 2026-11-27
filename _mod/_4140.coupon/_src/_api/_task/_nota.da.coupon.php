@@ -28,8 +28,15 @@
         // recupero il coupon
         $status['coupon'] = getDettagliCoupon( $_REQUEST['coupon'] );
 
+        // NOTA la nota di credito la emette l'azienda gestita ( anagrafica in categoria 5 ): senza, emittente, sezionale e
+        // numero restavano false, l'INSERT di documenti falliva e il task rispondeva lo stesso senza errori ( gimbe, 03/11/2026 )
+        if( empty( trovaIdAziendaGestita() ) ) {
+
+            // segnalo che manca l'azienda gestita
+            $status['err'][] = 'Nessuna azienda gestita ( anagrafica in categoria 5 ): la nota di credito non ha un emittente';
+
         // se il coupon vale più di zero procedo
-        if( $status['coupon']['totale_finale'] > 0 ) {
+        } elseif( $status['coupon']['totale_finale'] > 0 ) {
 
             // creo una nota di credito intestata all'intestatario del coupon
             $status['nota_di_credito']['id'] = mysqlInsertRow(

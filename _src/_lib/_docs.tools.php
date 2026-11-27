@@ -118,12 +118,10 @@
             return false;
         }
 
-        $environment = League\CommonMark\Environment::createCommonMarkEnvironment();
-        $environment->addExtension( new League\CommonMark\Extension\GithubFlavoredMarkdownExtension() );
+        // GithubFlavoredMarkdownConverter c'e' sia in commonmark 1.6 sia in 2.x; convert() solo dalla 2
+        $converter = new League\CommonMark\GithubFlavoredMarkdownConverter();
 
-        $converter = new League\CommonMark\MarkdownConverter( $environment );
-
-        return (string) $converter->convertToHtml( $md );
+        return (string) ( method_exists( $converter, 'convert' ) ? $converter->convert( $md ) : $converter->convertToHtml( $md ) );
 
     }
 

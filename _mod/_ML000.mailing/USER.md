@@ -58,12 +58,14 @@ Chi si è tolto e poi si iscrive di nuovo dal sito torna a riceverla.
 1. dalla linguetta **invii** si crea un nuovo mailing: si dà un nome, la **data e l'ora di invio** e si
    scelgono le **liste** a cui mandarlo;
 2. nella linguetta **contenuti** si scrivono il **mittente**, l'**oggetto** e il **testo**, uno per ogni
-   lingua; in alternativa, dagli strumenti, *applica un template* copia il testo da un template mail già
+   lingua. Il testo è un editor **HTML**; dopo il primo salvataggio, accanto al titolo del riquadro
+   *contenuto della mail*, compare il link **vai all'editor visuale**, per scriverlo già impaginato; in alternativa, dagli strumenti, *applica un template* copia il testo da un template mail già
    pronto;
 3. nella linguetta **file** si aggiungono gli eventuali allegati;
-4. dagli strumenti, **invio di prova** manda la mail a un indirizzo a scelta, per vedere come arriva;
-5. dagli strumenti, **prepara invio** calcola l'elenco dei destinatari, che compare nella linguetta
-   **invio**. Le mail partono dalla data e ora indicate nel mailing.
+4. dalle azioni, **invio di test** manda la mail a un indirizzo a scelta, per vedere come arriva;
+5. dalle azioni, **prepara invio** calcola l'elenco dei destinatari, che compare nella linguetta
+   **invio**. Le mail partono dalla data e ora del campo **invio** del mailing, e *prepara invio*
+   compare solo dopo che quella data è stata salvata.
 
 Se dopo aver preparato l'invio si aggiungono iscritti alle liste, si può rilanciare *prepara invio*: si
 aggiungono solo i nuovi, nessuno riceve la mail due volte.
