@@ -10,8 +10,8 @@
     // inclusione del framework
     require '../../../../_src/_config.php';
 
-    // percorso
-    $s = 'https://calabash.videoarts.eu/va.current.version';
+    // percorso ( il dataserver di Istrice, come _copyFile.05.php: fino al 27/11/2026 era calabash.videoarts.eu, col certificato autofirmato )
+    $s = 'https://dataserver.istricesrl.com/geografia/01.update.stati.csv';
     $d = 'tmp/example/' . ( microtime( true ) + 1000.0 ) . '/';
     $f = ( microtime( true ) + 2000.00 ) . '.txt';
 
